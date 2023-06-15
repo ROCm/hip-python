@@ -1,4 +1,363 @@
 # AMD_COPYRIGHT
+
+"""
+Attributes:
+    HIP_VERSION_MAJOR (int):
+        Macro constant.
+
+    HIP_VERSION_MINOR (int):
+        Macro constant.
+
+    HIP_VERSION_PATCH (int):
+        Macro constant.
+
+    HIP_VERSION_GITHASH (bytes):
+        Macro constant.
+
+    HIP_VERSION_BUILD_ID (int):
+        Macro constant.
+
+    HIP_VERSION_BUILD_NAME (bytes):
+        Macro constant.
+
+    HIP_VERSION (int):
+        Macro constant.
+
+    HIP_TRSA_OVERRIDE_FORMAT (int):
+        Macro constant.
+
+    HIP_TRSF_READ_AS_INTEGER (int):
+        Macro constant.
+
+    HIP_TRSF_NORMALIZED_COORDINATES (int):
+        Macro constant.
+
+    HIP_TRSF_SRGB (int):
+        Macro constant.
+
+    hipTextureType1D (int):
+        Macro constant.
+
+    hipTextureType2D (int):
+        Macro constant.
+
+    hipTextureType3D (int):
+        Macro constant.
+
+    hipTextureTypeCubemap (int):
+        Macro constant.
+
+    hipTextureType1DLayered (int):
+        Macro constant.
+
+    hipTextureType2DLayered (int):
+        Macro constant.
+
+    hipTextureTypeCubemapLayered (int):
+        Macro constant.
+
+    HIP_IMAGE_OBJECT_SIZE_DWORD (int):
+        Macro constant.
+
+    HIP_SAMPLER_OBJECT_SIZE_DWORD (int):
+        Macro constant.
+
+    HIP_SAMPLER_OBJECT_OFFSET_DWORD (int):
+        Macro constant.
+
+    HIP_TEXTURE_OBJECT_SIZE_DWORD (int):
+        Macro constant.
+
+    HIP_LAUNCH_PARAM_BUFFER_POINTER (int):
+        Macro constant.
+
+    HIP_LAUNCH_PARAM_BUFFER_SIZE (int):
+        Macro constant.
+
+    HIP_LAUNCH_PARAM_END (int):
+        Macro constant.
+
+    hipIpcMemLazyEnablePeerAccess (int):
+        Macro constant.
+
+    HIP_IPC_HANDLE_SIZE (int):
+        Macro constant.
+
+    hipStreamDefault (int):
+        Macro constant.
+
+    hipStreamNonBlocking (int):
+        Macro constant.
+
+    hipEventDefault (int):
+        Macro constant.
+
+    hipEventBlockingSync (int):
+        Macro constant.
+
+    hipEventDisableTiming (int):
+        Macro constant.
+
+    hipEventInterprocess (int):
+        Macro constant.
+
+    hipEventReleaseToDevice (int):
+        Macro constant.
+
+    hipEventReleaseToSystem (int):
+        Macro constant.
+
+    hipHostMallocDefault (int):
+        Macro constant.
+
+    hipHostMallocPortable (int):
+        Macro constant.
+
+    hipHostMallocMapped (int):
+        Macro constant.
+
+    hipHostMallocWriteCombined (int):
+        Macro constant.
+
+    hipHostMallocNumaUser (int):
+        Macro constant.
+
+    hipHostMallocCoherent (int):
+        Macro constant.
+
+    hipHostMallocNonCoherent (int):
+        Macro constant.
+
+    hipMemAttachGlobal (int):
+        Macro constant.
+
+    hipMemAttachHost (int):
+        Macro constant.
+
+    hipMemAttachSingle (int):
+        Macro constant.
+
+    hipDeviceMallocDefault (int):
+        Macro constant.
+
+    hipDeviceMallocFinegrained (int):
+        Macro constant.
+
+    hipMallocSignalMemory (int):
+        Macro constant.
+
+    hipHostRegisterDefault (int):
+        Macro constant.
+
+    hipHostRegisterPortable (int):
+        Macro constant.
+
+    hipHostRegisterMapped (int):
+        Macro constant.
+
+    hipHostRegisterIoMemory (int):
+        Macro constant.
+
+    hipExtHostRegisterCoarseGrained (int):
+        Macro constant.
+
+    hipDeviceScheduleAuto (int):
+        Macro constant.
+
+    hipDeviceScheduleSpin (int):
+        Macro constant.
+
+    hipDeviceScheduleYield (int):
+        Macro constant.
+
+    hipDeviceScheduleBlockingSync (int):
+        Macro constant.
+
+    hipDeviceScheduleMask (int):
+        Macro constant.
+
+    hipDeviceMapHost (int):
+        Macro constant.
+
+    hipDeviceLmemResizeToMax (int):
+        Macro constant.
+
+    hipArrayDefault (int):
+        Macro constant.
+
+    hipArrayLayered (int):
+        Macro constant.
+
+    hipArraySurfaceLoadStore (int):
+        Macro constant.
+
+    hipArrayCubemap (int):
+        Macro constant.
+
+    hipArrayTextureGather (int):
+        Macro constant.
+
+    hipOccupancyDefault (int):
+        Macro constant.
+
+    hipCooperativeLaunchMultiDeviceNoPreSync (int):
+        Macro constant.
+
+    hipCooperativeLaunchMultiDeviceNoPostSync (int):
+        Macro constant.
+
+    hipCpuDeviceId (int):
+        Macro constant.
+
+    hipInvalidDeviceId (int):
+        Macro constant.
+
+    hipExtAnyOrderLaunch (int):
+        Macro constant.
+
+    hipStreamWaitValueGte (int):
+        Macro constant.
+
+    hipStreamWaitValueEq (int):
+        Macro constant.
+
+    hipStreamWaitValueAnd (int):
+        Macro constant.
+
+    hipStreamWaitValueNor (int):
+        Macro constant.
+
+    HIP_SUCCESS:
+        Enum constant.
+
+    HIP_ERROR_INVALID_VALUE:
+        Enum constant.
+
+    HIP_ERROR_NOT_INITIALIZED:
+        Enum constant.
+
+    HIP_ERROR_LAUNCH_OUT_OF_RESOURCES:
+        Enum constant.
+
+    hipUUID:
+        alias of `~.hipUUID_t`
+
+    hipArray_t:
+        alias of `~.hipArray`
+
+    hiparray:
+        alias of `~.hipArray_t`
+
+    hipArray_const_t:
+        alias of `~.hipArray`
+
+    hipMipmappedArray_t:
+        alias of `~.hipMipmappedArray`
+
+    hipMipmappedArray_const_t:
+        alias of `~.hipMipmappedArray`
+
+    HIPresourcetype:
+        alias of `~.HIPresourcetype_enum`
+
+    hipResourcetype:
+        alias of `~.HIPresourcetype_enum`
+
+    HIPaddress_mode:
+        alias of `~.HIPaddress_mode_enum`
+
+    HIPfilter_mode:
+        alias of `~.HIPfilter_mode_enum`
+
+    HIP_TEXTURE_DESC:
+        alias of `~.HIP_TEXTURE_DESC_st`
+
+    HIPresourceViewFormat:
+        alias of `~.HIPresourceViewFormat_enum`
+
+    HIP_RESOURCE_DESC:
+        alias of `~.HIP_RESOURCE_DESC_st`
+
+    HIP_RESOURCE_VIEW_DESC:
+        alias of `~.HIP_RESOURCE_VIEW_DESC_st`
+
+    hipTextureObject_t:
+        alias of `~.__hip_texture`
+
+    hipSurfaceObject_t:
+        alias of `~.__hip_surface`
+
+    hipCtx_t:
+        alias of `~.ihipCtx_t`
+
+    hipStream_t:
+        alias of `~.ihipStream_t`
+
+    hipIpcMemHandle_t:
+        alias of `~.hipIpcMemHandle_st`
+
+    hipIpcEventHandle_t:
+        alias of `~.hipIpcEventHandle_st`
+
+    hipModule_t:
+        alias of `~.ihipModule_t`
+
+    hipFunction_t:
+        alias of `~.ihipModuleSymbol_t`
+
+    hipMemPool_t:
+        alias of `~.ihipMemPoolHandle_t`
+
+    hipEvent_t:
+        alias of `~.ihipEvent_t`
+
+    hipLaunchParams:
+        alias of `~.hipLaunchParams_t`
+
+    hipExternalMemoryHandleType:
+        alias of `~.hipExternalMemoryHandleType_enum`
+
+    hipExternalMemoryHandleDesc:
+        alias of `~.hipExternalMemoryHandleDesc_st`
+
+    hipExternalMemoryBufferDesc:
+        alias of `~.hipExternalMemoryBufferDesc_st`
+
+    hipExternalSemaphoreHandleType:
+        alias of `~.hipExternalSemaphoreHandleType_enum`
+
+    hipExternalSemaphoreHandleDesc:
+        alias of `~.hipExternalSemaphoreHandleDesc_st`
+
+    hipExternalSemaphoreSignalParams:
+        alias of `~.hipExternalSemaphoreSignalParams_st`
+
+    hipExternalSemaphoreWaitParams:
+        alias of `~.hipExternalSemaphoreWaitParams_st`
+
+    hipGraphicsResource:
+        alias of `~._hipGraphicsResource`
+
+    hipGraphicsResource_t:
+        alias of `~._hipGraphicsResource`
+
+    hipGraph_t:
+        alias of `~.ihipGraph`
+
+    hipGraphNode_t:
+        alias of `~.hipGraphNode`
+
+    hipGraphExec_t:
+        alias of `~.hipGraphExec`
+
+    hipUserObject_t:
+        alias of `~.hipUserObject`
+
+    hipMemGenericAllocationHandle_t:
+        alias of `~.ihipMemGenericAllocationHandle`
+
+"""
+
 import cython
 import ctypes
 import enum
@@ -17413,7 +17772,7 @@ def hipCreateChannelDesc(int x, int y, int z, int w, object f):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipChannelFormatDesc`
     """
@@ -27306,7 +27665,7 @@ def hipInit(unsigned int flags):
     This API provides control over the timing of the initialization.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -27329,7 +27688,7 @@ def hipDriverGetVersion():
         `~.hipRuntimeGetVersion`
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.int`:
@@ -27353,7 +27712,7 @@ def hipRuntimeGetVersion():
         `~.hipDriverGetVersion`
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.int`:
@@ -27371,7 +27730,7 @@ def hipDeviceGet(int ordinal):
         ordinal (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
         * `~.int`:
@@ -27389,7 +27748,7 @@ def hipDeviceComputeCapability(int device):
         device (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
         * `~.int`:
@@ -27413,7 +27772,7 @@ def hipDeviceGetName(object name, int len, int device):
         device (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
     """
@@ -27436,7 +27795,7 @@ def hipDeviceGetUuid(object uuid, int device):
         device (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`,
             `~.hipErrorDeinitialized`
@@ -27458,7 +27817,7 @@ def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
         dstDevice (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
         * `~.int`:
@@ -27482,7 +27841,7 @@ def hipDeviceGetPCIBusId(object pciBusId, int len, int device):
         device (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
     """
@@ -27499,7 +27858,7 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
         PCI: **[in]** Bus ID
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
         * `~.int`: handle
@@ -27517,7 +27876,7 @@ def hipDeviceTotalMem(int device):
         device (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
         * `~.int`:
@@ -27538,7 +27897,7 @@ def hipDeviceSynchronize():
         `~.hipSetDevice`, `~.hipDeviceReset`
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -27558,7 +27917,7 @@ def hipDeviceReset():
         `~.hipDeviceSynchronize`
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -27599,7 +27958,7 @@ def hipSetDevice(int deviceId):
         deviceId (`~.int`): **[in]** Valid device in range 0...hipGetDeviceCount().
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorDeviceAlreadyInUse`
     """
@@ -27622,7 +27981,7 @@ def hipGetDevice():
         device: **[out]** device is written with the default device
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -27642,7 +28001,7 @@ def hipGetDeviceCount():
     devices can be found, then hipGetDeviceCount returns `~.hipSuccess`.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNoDevice`
     """
@@ -27663,7 +28022,7 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
         deviceId (`~.int`): **[in]** which device to query for information
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -27690,7 +28049,7 @@ def hipDeviceGetDefaultMemPool(int device):
         device (`~.int`): **[in]** Device index for query the default memory pool
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.chipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.ihipMemPoolHandle_t`: Default memory pool to return
@@ -27726,7 +28085,7 @@ def hipDeviceSetMemPool(int device, object mem_pool):
         mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Memory pool for update as the current on the specified device
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidDevice`, `~.hipErrorNotSupported`
     """
@@ -27756,7 +28115,7 @@ def hipDeviceGetMemPool(int device):
         device (`~.int`): **[in]** Device index to query the current memory pool
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.ihipMemPoolHandle_t`: Current memory pool on the specified device
@@ -27787,7 +28146,7 @@ def hipGetDeviceProperties(object prop, int deviceId):
         deviceId (`~.int`): **[in]** which device to query for information
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
     """
@@ -27804,7 +28163,7 @@ def hipDeviceSetCacheConfig(object cacheConfig):
         cacheConfig (`~.hipFuncCache_t`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotInitialized`
             Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
@@ -27821,7 +28180,7 @@ def hipDeviceGetCacheConfig():
     r"""Get Cache configuration for a specific Device
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotInitialized`
             Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
@@ -27841,7 +28200,7 @@ def hipDeviceGetLimit(object limit):
         limit (`~.hipLimit_t`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorUnsupportedLimit`, `~.hipErrorInvalidValue`
             Note: Currently, only hipLimitMallocHeapSize is available
@@ -27864,7 +28223,7 @@ def hipDeviceSetLimit(object limit, unsigned long value):
         value (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorUnsupportedLimit`, `~.hipErrorInvalidValue`
     """
@@ -27882,7 +28241,7 @@ def hipDeviceGetSharedMemConfig():
     ignored on those architectures.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
         * `~.hipSharedMemConfig`:
@@ -27897,7 +28256,7 @@ def hipGetDeviceFlags():
     r"""Gets the flags set for current device
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
         * `~.int`:
@@ -27918,7 +28277,7 @@ def hipDeviceSetSharedMemConfig(object config):
         config (`~.hipSharedMemConfig`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
@@ -27953,7 +28312,7 @@ def hipSetDeviceFlags(unsigned int flags):
         flags (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorSetOnActiveProcess`
     """
@@ -27966,7 +28325,7 @@ def hipChooseDevice(object prop):
     r"""Device which matches hipDeviceProp_t is returned
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.int`: ID
@@ -27990,7 +28349,7 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
         device2 (`~.int`): **[in]** Ordinal for device2
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipInvalidDevice`, `~.hipErrorRuntimeOther`
         * `~.int`: Returns the link type (See hsa_amd_link_info_type_t) between the two devices
@@ -28024,7 +28383,7 @@ def hipIpcGetMemHandle(object handle, object devPtr):
         devPtr (`~.hip._util.types.DataHandle`/`~.object`):  Base pointer to previously allocated device memory
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess,
             hipErrorInvalidHandle,
@@ -28071,7 +28430,7 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
         flags (`~.int`):  Flags for this operation. Must be specified as hipIpcMemLazyEnablePeerAccess
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess,
             hipErrorMapFailed,
@@ -28101,7 +28460,7 @@ def hipIpcCloseMemHandle(object devPtr):
         devPtr (`~.hip._util.types.DataHandle`/`~.object`):  Device pointer returned by hipIpcOpenMemHandle
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess,
             hipErrorMapFailed,
@@ -28127,7 +28486,7 @@ def hipIpcGetEventHandle(object handle, object event):
         event (`~.ihipEvent_t`/`~.object`): **[in]** Event allocated with hipEventInterprocess and hipEventDisableTiming flags
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidConfiguration`, `~.hipErrorInvalidValue`
     """
@@ -28151,7 +28510,7 @@ def hipIpcOpenEventHandle(object handle):
         handle (`~.hipIpcEventHandle_st`): **[in]** The opaque interprocess handle to open
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidContext`
         * `~.ihipEvent_t`: Pointer to hipEvent_t to return the event
@@ -28177,7 +28536,7 @@ def hipFuncSetAttribute(object func, object attr, int value):
         value (`~.int`): **[in]** ;
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDeviceFunction`, `~.hipErrorInvalidValue`
     """
@@ -28196,7 +28555,7 @@ def hipFuncSetCacheConfig(object func, object config):
         config (`~.hipFuncCache_t`): **[in]** ;
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotInitialized`
             Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
@@ -28222,7 +28581,7 @@ def hipFuncSetSharedMemConfig(object func, object config):
         config (`~.hipSharedMemConfig`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDeviceFunction`, `~.hipErrorInvalidValue`
     """
@@ -28245,7 +28604,7 @@ def hipGetLastError():
         `~.hipGetErrorString`, `~.hipGetLastError`, `~.hipPeakAtLastError`, `~.hipError_t`
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: return code from last HIP called from the active host thread
     """
@@ -28264,7 +28623,7 @@ def hipPeekAtLastError():
         `~.hipGetErrorString`, `~.hipGetLastError`, `~.hipPeakAtLastError`, `~.hipError_t`
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -28283,7 +28642,7 @@ def hipGetErrorName(object hip_error):
         hip_error (`~.hipError_t`): Error code to convert to name.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`: const char pointer to the NULL-terminated error name
     """
@@ -28304,7 +28663,7 @@ def hipGetErrorString(object hipError):
         hipError (`~.hipError_t`): Error code to convert to string.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`: const char pointer to the NULL-terminated error string
     """
@@ -28327,7 +28686,7 @@ def hipDrvGetErrorName(object hipError, object errorString):
         const: **[out]** char pointer to the NULL-terminated error string
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -28351,7 +28710,7 @@ def hipDrvGetErrorString(object hipError, object errorString):
         const: **[out]** char pointer to the NULL-terminated error string
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -28375,7 +28734,7 @@ def hipStreamCreate():
         `~.hipStreamCreateWithFlags`, `~.hipStreamCreateWithPriority`, `~.hipStreamSynchronize`, `~.hipStreamWaitEvent`, `~.hipStreamDestroy`
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipSuccess`, `~.hipErrorInvalidValue`
@@ -28404,7 +28763,7 @@ def hipStreamCreateWithFlags(unsigned int flags):
         flags (`~.int`): **[in]** to control stream creation.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.ihipStream_t`: Pointer to new stream
@@ -28433,7 +28792,7 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
         priority (`~.int`): **[in]** of the stream. Lower numbers represent higher priorities.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.ihipStream_t`: Pointer to new stream
@@ -28455,7 +28814,7 @@ def hipDeviceGetStreamPriorityRange():
     clamped to within the valid range.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`
         * `~.int`: pointer in which value corresponding to least priority is returned.
@@ -28488,7 +28847,7 @@ def hipStreamDestroy(object stream):
             newly created stream.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess` `~.hipErrorInvalidHandle`
     """
@@ -28514,7 +28873,7 @@ def hipStreamQuery(object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** stream to query
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotReady`, `~.hipErrorInvalidHandle`
     """
@@ -28543,7 +28902,7 @@ def hipStreamSynchronize(object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** stream identifier.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidHandle`
     """
@@ -28575,7 +28934,7 @@ def hipStreamWaitEvent(object stream, object event, unsigned int flags):
         flags (`~.int`): **[in]** control operation [must be 0]
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidHandle`
     """
@@ -28598,7 +28957,7 @@ def hipStreamGetFlags(object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** stream to be queried
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidHandle`
         * `~.hipSuccess` `~.hipErrorInvalidValue` `~.hipErrorInvalidHandle`
@@ -28623,7 +28982,7 @@ def hipStreamGetPriority(object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** stream to be queried
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidHandle`
         * `~.hipSuccess` `~.hipErrorInvalidValue` `~.hipErrorInvalidHandle`
@@ -28651,7 +29010,7 @@ def hipExtStreamCreateWithCUMask(unsigned int cuMaskSize):
         cuMaskSize (`~.int`): **[in]** Size of CU mask bit array passed in.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidHandle`, `~.hipErrorInvalidValue`
         * `~.ihipStream_t`: Pointer to new stream
@@ -28679,7 +29038,7 @@ def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
         cuMaskSize (`~.int`): **[in]** number of the block of memories (uint32_t *) allocated by user
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidHandle`, `~.hipErrorInvalidValue`
         * `~.int`: Pointer to a pre-allocated block of memories (uint32_t *) in which
@@ -28781,7 +29140,7 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
         flags (`~.int`): **[in]**  Reserved for future use, must be 0
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidHandle`, `~.hipErrorNotSupported`
     """
@@ -28833,7 +29192,7 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
             default value is set to enable every bit
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -28884,7 +29243,7 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
             default value is set to enable every bit
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -28919,7 +29278,7 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
         flags (`~.int`): **[in]**  reserved, ignored for now, will be used in future releases
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -28954,7 +29313,7 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
         flags (`~.int`): **[in]**  reserved, ignored for now, will be used in future releases
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -28986,7 +29345,7 @@ def hipEventCreateWithFlags(unsigned int flags):
             flag also must be set when hipEventInterprocess flag is set.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidValue`,
             `~.hipErrorLaunchFailure`, `~.hipErrorOutOfMemory`
@@ -29008,7 +29367,7 @@ def hipEventCreate():
         `~.hipEventDestroy`, `~.hipEventElapsedTime`
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidValue`,
             `~.hipErrorLaunchFailure`, `~.hipErrorOutOfMemory`
@@ -29024,7 +29383,7 @@ def hipEventRecord(object event, object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -29050,7 +29409,7 @@ def hipEventDestroy(object event):
         event (`~.ihipEvent_t`/`~.object`): **[in]** Event to destroy.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidValue`,
             `~.hipErrorLaunchFailure`
@@ -29080,7 +29439,7 @@ def hipEventSynchronize(object event):
         event (`~.ihipEvent_t`/`~.object`): **[in]** Event on which to wait.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`,
             `~.hipErrorInvalidHandle`, `~.hipErrorLaunchFailure`
@@ -29120,7 +29479,7 @@ def hipEventElapsedTime(object start, object stop):
         stop (`~.ihipEvent_t`/`~.object`): **[in]** Stop event.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotReady`, `~.hipErrorInvalidHandle`,
             `~.hipErrorNotInitialized`, `~.hipErrorLaunchFailure`
@@ -29150,7 +29509,7 @@ def hipEventQuery(object event):
         event (`~.ihipEvent_t`/`~.object`): **[in]** Event to query.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotReady`, `~.hipErrorInvalidHandle`, `~.hipErrorInvalidValue`,
             `~.hipErrorNotInitialized`, `~.hipErrorLaunchFailure`
@@ -29173,7 +29532,7 @@ def hipPointerGetAttributes(object attributes, object ptr):
         ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to get attributes for
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -29202,7 +29561,7 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
         ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to get attributes for
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -29231,7 +29590,7 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
         ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to get attributes for
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
         * `~.hipPointer_attribute`: attributes to query for
@@ -29258,7 +29617,7 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
         semHandleDesc (`~.hipExternalSemaphoreHandleDesc_st`/`~.object`): **[in]** Semaphore import handle descriptor
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -29284,7 +29643,7 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
         stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to enqueue the wait operations in
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -29311,7 +29670,7 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
         stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to enqueue the wait operations in
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -29332,7 +29691,7 @@ def hipDestroyExternalSemaphore(object extSem):
         extSem (`~.hip._util.types.DataHandle`/`~.object`): **[in]** handle to an external memory object
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -29353,7 +29712,7 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
         memHandleDesc (`~.hipExternalMemoryHandleDesc_st`/`~.object`): **[in]** Memory import handle descriptor
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -29375,7 +29734,7 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
         bufferDesc (`~.hipExternalMemoryBufferDesc_st`/`~.object`): **[in]** Buffer descriptor
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
         * `~.hip._util.types.DataHandle`/`~.object`: Returned device pointer to buffer
@@ -29398,7 +29757,7 @@ def hipDestroyExternalMemory(object extMem):
         extMem (`~.hip._util.types.DataHandle`/`~.object`): **[in]** External memory object to be destroyed
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -29421,7 +29780,7 @@ def hipMalloc(unsigned long size):
         size (`~.int`): **[in]** Requested memory size
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`, `~.hipErrorInvalidValue` (bad context, null *ptr)
         * `~.hip._util.types.DeviceArray`/`~.object`: Pointer to the allocated memory
@@ -29449,7 +29808,7 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
         flags (`~.int`): **[in]** Type of memory allocation
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`, `~.hipErrorInvalidValue` (bad context, null *ptr)
         * `~.hip._util.types.DeviceArray`/`~.object`: Pointer to the allocated memory
@@ -29474,7 +29833,7 @@ def hipMallocHost(unsigned long size):
         size (`~.int`): **[in]** Requested memory size
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
         * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated host pinned memory
@@ -29498,7 +29857,7 @@ def hipMemAllocHost(unsigned long size):
         size (`~.int`): **[in]** Requested memory size
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
         * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated host pinned memory
@@ -29524,7 +29883,7 @@ def hipHostMalloc(unsigned long size, unsigned int flags):
         flags (`~.int`): **[in]** Type of host memory allocation
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
         * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated host pinned memory
@@ -29546,7 +29905,7 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
             (defaults to hipMemAttachGlobal)
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorMemoryAllocation`, `~.hipErrorNotSupported`, `~.hipErrorInvalidValue`
         * `~.hip._util.types.DeviceArray`/`~.object`:  pointer to allocated device memory
@@ -29572,7 +29931,7 @@ def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object 
         stream (`~.ihipStream_t`/`~.object`): **[in]** stream to enqueue prefetch operation
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -29596,7 +29955,7 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
         device (`~.int`): **[in]** device to apply the advice for
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -29624,7 +29983,7 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
         count (`~.int`): **[in]** size of the range to query
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -29649,7 +30008,7 @@ def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsig
         count (`~.int`): **[in]** size of the range to query
 
     Returns:
-        A `tuple` of size 4 that contains (in that order):
+        A `~.tuple` of size 4 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hip._util.types.DataHandle`/`~.object`: a two-dimensional array containing pointers to memory locations
@@ -29682,7 +30041,7 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
             hipMemAttachSingle (defaults to hipMemAttachSingle)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -29729,7 +30088,7 @@ def hipMallocAsync(unsigned long size, object stream):
             the memory pool to allocate from
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`, `~.hipErrorOutOfMemory`
         * `~.hip._util.types.DeviceArray`/`~.object`: Returned device pointer of memory allocation
@@ -29769,7 +30128,7 @@ def hipFreeAsync(object dev_ptr, object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** The stream, where the destruciton will occur according to the execution order
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue, hipErrorNotSupported
     """
@@ -29811,7 +30170,7 @@ def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
             at least min_bytes_to_hold bytes reserved after the operation.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -29861,7 +30220,7 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
         value (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to the value to assign
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -29914,7 +30273,7 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
         value (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Retrieved value
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -29946,7 +30305,7 @@ def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
         count (`~.int`): **[in]** Number of descriptors in the map array.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -29976,7 +30335,7 @@ def hipMemPoolGetAccess(object mem_pool, object location):
         location (`~.hipMemLocation`/`~.object`): **[in]** Location/device for memory pool access
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipMemAccessFlags`: Accessibility of the memory pool from the specified location/device
@@ -30012,7 +30371,7 @@ def hipMemPoolCreate(object pool_props):
         pool_props (`~.hipMemPoolProps`/`~.object`): **[in]** Memory pool properties
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.ihipMemPoolHandle_t`: Contains createed memory pool
@@ -30051,7 +30410,7 @@ def hipMemPoolDestroy(object mem_pool):
         mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Memory pool for destruction
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -30097,7 +30456,7 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** The stream establishing the stream ordering semantic
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`, `~.hipErrorOutOfMemory`
         * `~.hip._util.types.DeviceArray`/`~.object`: Returned device pointer
@@ -30142,7 +30501,7 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
         flags (`~.int`): **[in]** Must be 0
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorOutOfMemory`
     """
@@ -30180,7 +30539,7 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
         flags (`~.int`): **[in]** Must be 0
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorOutOfMemory`
         * `~.ihipMemPoolHandle_t`: Returned memory pool
@@ -30214,7 +30573,7 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
         dev_ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to memory being exported
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorOutOfMemory`
     """
@@ -30254,7 +30613,7 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
         export_data (`~.hipMemPoolPtrExportData`/`~.object`): **[in]** Data specifying the memory to import
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`, `~.hipErrorOutOfMemory`
         * `~.hip._util.types.DataHandle`/`~.object`: Pointer to imported memory
@@ -30282,7 +30641,7 @@ def hipHostAlloc(unsigned long size, unsigned int flags):
         flags (`~.int`): **[in]** Type of host memory allocation
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
         * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated host pinned memory
@@ -30308,7 +30667,7 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
         flags (`~.int`): **[in]** Flags to be passed for extension
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorOutOfMemory`
     """
@@ -30330,7 +30689,7 @@ def hipHostGetFlags(object hostPtr):
         hostPtr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Host Pointer allocated through hipHostMalloc
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.int`: Memory location to store flags
@@ -30380,7 +30739,7 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
         flags (`~.int`): **[in]** .  See below.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
     """
@@ -30400,7 +30759,7 @@ def hipHostUnregister(object hostPtr):
         hostPtr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Host pointer previously registered with `~.hipHostRegister`
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: Error code
     """
@@ -30430,7 +30789,7 @@ def hipMallocPitch(unsigned long width, unsigned long height):
         height (`~.int`): **[in]** Requested pitched allocation height
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: Error code
         * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated device memory
@@ -30467,7 +30826,7 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
         height (`~.int`): **[in]** Requested pitched allocation height
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: Error code
         * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated device memory
@@ -30494,7 +30853,7 @@ def hipFree(object ptr):
         ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to memory to be freed
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
         * `~.hipErrorInvalidDevicePointer` (if pointer is invalid, including host pointers allocated
@@ -30516,7 +30875,7 @@ def hipFreeHost(object ptr):
         ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to memory to be freed
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`,
                        `~.hipErrorInvalidValue` (if pointer is invalid, including device pointers allocated with
@@ -30541,7 +30900,7 @@ def hipHostFree(object ptr):
         ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to memory to be freed
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`,
                      `~.hipErrorInvalidValue` (if pointer is invalid, including device pointers allocated with
@@ -30587,7 +30946,7 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
         copyType: **[in]** Memory copy type
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`, `~.hipErrorUnknowni`
     """
@@ -30604,7 +30963,7 @@ def hipMemcpyWithStream(object dst, object src, unsigned long sizeBytes, object 
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -30637,7 +30996,7 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorDeinitialized`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidContext`,
             `~.hipErrorInvalidValue`
@@ -30668,7 +31027,7 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorDeinitialized`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidContext`,
             `~.hipErrorInvalidValue`
@@ -30699,7 +31058,7 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorDeinitialized`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidContext`,
             `~.hipErrorInvalidValue`
@@ -30730,7 +31089,7 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorDeinitialized`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidContext`,
             `~.hipErrorInvalidValue`
@@ -30762,7 +31121,7 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorDeinitialized`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidContext`,
             `~.hipErrorInvalidValue`
@@ -30794,7 +31153,7 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorDeinitialized`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidContext`,
             `~.hipErrorInvalidValue`
@@ -30819,7 +31178,7 @@ def hipModuleGetGlobal(object hmod, const char * name):
         name (`~.bytes`): **[in]** Name of global to retrieve
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotFound`, `~.hipErrorInvalidContext`
         * `~.hip._util.types.DataHandle`/`~.object`: Returns global device pointer
@@ -30841,7 +31200,7 @@ def hipGetSymbolAddress(object symbol):
         symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the symbole of the device
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hip._util.types.DataHandle`/`~.object`: pointer to the device associated the symbole
@@ -30861,7 +31220,7 @@ def hipGetSymbolSize(object symbol):
         symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the device symbole
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.int`: pointer to the size
@@ -30894,7 +31253,7 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
         kind (`~.hipMemcpyKind`): **[in]** type of memory transfer
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -30924,7 +31283,7 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
         stream (`~.ihipStream_t`/`~.object`): **[in]** stream identifier
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -30953,7 +31312,7 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
         kind (`~.hipMemcpyKind`): **[in]** type of memory transfer
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -30983,7 +31342,7 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
         stream (`~.ihipStream_t`/`~.object`): **[in]** stream identifier
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -31032,7 +31391,7 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
         accelerator_view: **[in]** Accelerator view which the copy is being enqueued
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`, `~.hipErrorUnknown`
     """
@@ -31058,7 +31417,7 @@ def hipMemset(object dst, int value, unsigned long sizeBytes):
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
@@ -31080,7 +31439,7 @@ def hipMemsetD8(object dest, unsigned char value, unsigned long count):
         number: **[in]** of values to be set
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
@@ -31109,7 +31468,7 @@ def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, obje
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
@@ -31132,7 +31491,7 @@ def hipMemsetD16(object dest, unsigned short value, unsigned long count):
         number: **[in]** of values to be set
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
@@ -31161,7 +31520,7 @@ def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, ob
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
@@ -31184,7 +31543,7 @@ def hipMemsetD32(object dest, int value, unsigned long count):
         number: **[in]** of values to be set
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
@@ -31213,7 +31572,7 @@ def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
@@ -31243,7 +31602,7 @@ def hipMemsetD32Async(object dst, int value, unsigned long count, object stream)
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
@@ -31269,7 +31628,7 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
         height (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
@@ -31296,7 +31655,7 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
         stream (`~.ihipStream_t`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
@@ -31318,7 +31677,7 @@ def hipMemset3D(object pitchedDevPtr, int value, object extent):
         extent (`~.hipExtent`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
@@ -31342,7 +31701,7 @@ def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stre
         stream (`~.ihipStream_t`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
@@ -31365,7 +31724,7 @@ def hipMemGetInfo():
         optimistic.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
@@ -31380,7 +31739,7 @@ def hipMemPtrGetInfo(object ptr):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -31407,7 +31766,7 @@ def hipMallocArray(object desc, unsigned long width, unsigned long height, unsig
         flags (`~.int`): **[in]** Requested properties of allocated array
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
         * `~.hipArray`: Pointer to allocated array in device memory
@@ -31423,7 +31782,7 @@ def hipArrayCreate(object pAllocateArray):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -31438,7 +31797,7 @@ def hipArrayDestroy(object array):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -31452,7 +31811,7 @@ def hipArray3DCreate(object pAllocateArray):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -31467,7 +31826,7 @@ def hipMalloc3D(object pitchedDevPtr, object extent):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -31488,7 +31847,7 @@ def hipFreeArray(object array):
         array (`~.hipArray`/`~.object`): **[in]** Pointer to array to free
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
@@ -31505,7 +31864,7 @@ def hipFreeMipmappedArray(object mipmappedArray):
         mipmappedArray (`~.hipMipmappedArray`/`~.object`): **[in]**  Pointer to mipmapped array to free
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -31529,7 +31888,7 @@ def hipMalloc3DArray(object desc, object extent, unsigned int flags):
         flags (`~.int`): **[in]** Requested properties of allocated array
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
         * `~.hipArray`: Pointer to allocated array in device memory
@@ -31555,7 +31914,7 @@ def hipMallocMipmappedArray(object desc, object extent, unsigned int numLevels, 
         flags (`~.int`): **[in]**  Flags for extensions
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryAllocation`
         * `~.hipMipmappedArray`:  Pointer to allocated mipmapped array in device memory
@@ -31577,7 +31936,7 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
         level (`~.int`): **[in]**  Mipmap level
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipArray`:  Returned mipmap level HIP array
@@ -31612,7 +31971,7 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
         kind (`~.hipMemcpyKind`): **[in]** Type of transfer
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31637,7 +31996,7 @@ def hipMemcpyParam2D(object pCopy):
         pCopy (`~.hip_Memcpy2D`/`~.object`): **[in]** Parameters for the memory copy
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31661,7 +32020,7 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to use
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31698,7 +32057,7 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
         stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to use
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31738,7 +32097,7 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
         kind (`~.hipMemcpyKind`): **[in]** Type of transfer
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31779,7 +32138,7 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
         stream (`~.ihipStream_t`/`~.object`): **[in]** Accelerator view which the copy is being enqueued
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31815,7 +32174,7 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
         kind (`~.hipMemcpyKind`): **[in]** Type of transfer
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31850,7 +32209,7 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
         kind (`~.hipMemcpyKind`): **[in]** Type of transfer
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31889,7 +32248,7 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
         kind (`~.hipMemcpyKind`): **[in]** Type of transfer
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31930,7 +32289,7 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
         stream (`~.ihipStream_t`/`~.object`): **[in]** Accelerator view which the copy is being enqueued
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31962,7 +32321,7 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
         count (`~.int`): **[in]** Size of memory copy in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -31991,7 +32350,7 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
         count (`~.int`): **[in]** Size of memory copy in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -32014,7 +32373,7 @@ def hipMemcpy3D(object p):
         p (`~.hipMemcpy3DParms`/`~.object`): **[in]** 3D memory copy parameters
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -32038,7 +32397,7 @@ def hipMemcpy3DAsync(object p, object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to use
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -32061,7 +32420,7 @@ def hipDrvMemcpy3D(object pCopy):
         pCopy (`~.HIP_MEMCPY3D`/`~.object`): **[in]** 3D memory copy parameters
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -32085,7 +32444,7 @@ def hipDrvMemcpy3DAsync(object pCopy, object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to use
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidPitchValue`,
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
@@ -32112,7 +32471,7 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
         peerDevice: **[in]**  device where memory is physically located
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`,
         * `~.hipErrorInvalidDevice` if deviceId or peerDeviceId are not valid devices
@@ -32141,7 +32500,7 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
         flags (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipErrorPeerAccessAlreadyEnabled` if peer access is already enabled for this device.
     """
@@ -32161,7 +32520,7 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
         peerDeviceId (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorPeerAccessNotEnabled`
     """
@@ -32183,7 +32542,7 @@ def hipMemGetAddressRange(object pbase, object dptr):
         dptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Device Pointer
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevicePointer`
         * `~.int`:  Size of allocation
@@ -32211,7 +32570,7 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
         sizeBytes (`~.int`): **[in]**  Size of memory copy in bytes
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidDevice`
     """
@@ -32239,7 +32598,7 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidDevice`
     """
@@ -32264,7 +32623,7 @@ def hipCtxCreate(unsigned int flags, int device):
         associated: **[in]** device handle
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
         * `~.ihipCtx_t`:
@@ -32286,7 +32645,7 @@ def hipCtxDestroy(object ctx):
         ctx (`~.ihipCtx_t`/`~.object`): **[in]** Context to destroy
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -32304,7 +32663,7 @@ def hipCtxPopCurrent():
         `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidContext`
         * `~.ihipCtx_t`:
@@ -32326,7 +32685,7 @@ def hipCtxPushCurrent(object ctx):
         ctx (`~.ihipCtx_t`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidContext`
     """
@@ -32347,7 +32706,7 @@ def hipCtxSetCurrent(object ctx):
         ctx (`~.ihipCtx_t`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidContext`
     """
@@ -32365,7 +32724,7 @@ def hipCtxGetCurrent():
         `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidContext`
         * `~.ihipCtx_t`:
@@ -32384,7 +32743,7 @@ def hipCtxGetDevice():
         `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidContext`
         * `~.int`:
@@ -32413,7 +32772,7 @@ def hipCtxGetApiVersion(object ctx):
         ctx (`~.ihipCtx_t`/`~.object`): **[in]** Context to check
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
         * `~.int`:
@@ -32440,7 +32799,7 @@ def hipCtxGetCacheConfig():
         cacheConfiguration: **[out]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32465,7 +32824,7 @@ def hipCtxSetCacheConfig(object cacheConfig):
         cacheConfiguration: **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32491,7 +32850,7 @@ def hipCtxSetSharedMemConfig(object config):
         sharedMemoryConfiguration: **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32517,7 +32876,7 @@ def hipCtxGetSharedMemConfig():
         sharedMemoryConfiguration: **[out]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32539,7 +32898,7 @@ def hipCtxSynchronize():
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxGetDevice`
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32556,7 +32915,7 @@ def hipCtxGetFlags():
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
         * `~.int`:
@@ -32588,7 +32947,7 @@ def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
         flags (`~.int`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`,
             `~.hipErrorPeerAccessAlreadyEnabled`
@@ -32618,7 +32977,7 @@ def hipCtxDisablePeerAccess(object peerCtx):
         peerCtx (`~.ihipCtx_t`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorPeerAccessNotEnabled`
     """
@@ -32643,7 +33002,7 @@ def hipDevicePrimaryCtxGetState(int dev):
         Pointer: **[out]** to store context state; 0 = inactive, 1 = active
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32669,7 +33028,7 @@ def hipDevicePrimaryCtxRelease(int dev):
         Device: **[in]** which primary context is released
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32691,7 +33050,7 @@ def hipDevicePrimaryCtxRetain(int dev):
         Device: **[in]** which primary context is released
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32712,7 +33071,7 @@ def hipDevicePrimaryCtxReset(int dev):
         Device: **[in]** which primary context is reset
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`
     """
@@ -32734,7 +33093,7 @@ def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
         New: **[in]** flags for the device
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorContextAlreadyInUse`
     """
@@ -32753,7 +33112,7 @@ def hipModuleLoad(const char * fname):
         fname (`~.bytes`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
             hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
@@ -32772,7 +33131,7 @@ def hipModuleUnload(object module):
         module (`~.ihipModule_t`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidValue
             module is freed and the code objects associated with it are destroyed
@@ -32792,7 +33151,7 @@ def hipModuleGetFunction(object module, const char * kname):
         kname (`~.bytes`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
             hipErrorNotFound,
@@ -32814,7 +33173,7 @@ def hipFuncGetAttributes(object attr, object func):
         func (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
     """
@@ -32834,7 +33193,7 @@ def hipFuncGetAttribute(object attrib, object hfunc):
         hfunc (`~.ihipModuleSymbol_t`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
         * `~.int`:
@@ -32857,7 +33216,7 @@ def hipModuleGetTexRef(object hmod, const char * name):
         name (`~.bytes`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
         * `~.textureReference`:
@@ -32877,7 +33236,7 @@ def hipModuleLoadData(object image):
         image (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
         * `~.ihipModule_t`:
@@ -32901,7 +33260,7 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
         option: **[in]** values for JIT
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
         * `~.ihipModule_t`:
@@ -32955,7 +33314,7 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
             must be in the memory layout and alignment expected by the kernel.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
@@ -32991,7 +33350,7 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
             default stream is used with associated synchronization rules.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
@@ -33017,7 +33376,7 @@ def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevice
         flags (`~.int`): **[in]** Flags to control launch behavior.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
@@ -33039,7 +33398,7 @@ def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, 
         flags (`~.int`): **[in]** Flags to control launch behavior.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
@@ -33063,7 +33422,7 @@ def hipModuleOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMem
         blockSizeLimit (`~.int`): **[in]** the maximum block size for the kernel, use 0 for no limit
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorInvalidValue
         * `~.int`: minimum grid size for maximum potential occupancy
@@ -33093,7 +33452,7 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, unsigned long dyn
         flags (`~.int`): **[in]** Extra flags for occupancy calculation (only default supported)
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorInvalidValue
         * `~.int`: minimum grid size for maximum potential occupancy
@@ -33118,7 +33477,7 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, 
         dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`
         * `~.int`: Returned occupancy
@@ -33143,7 +33502,7 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int bl
         flags (`~.int`): **[in]** Extra flags for occupancy calculation (only default supported)
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`
         * `~.int`: Returned occupancy
@@ -33166,7 +33525,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsign
         dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`
         * `~.int`: Returned occupancy
@@ -33191,7 +33550,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
         flags (`~.int`): **[in]** Extra flags for occupancy calculation (currently ignored)
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`
         * `~.int`: Returned occupancy
@@ -33217,7 +33576,7 @@ def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk
         blockSizeLimit (`~.int`): **[in]** the maximum block size for the kernel, use 0 for no limit
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorInvalidValue
         * `~.int`: minimum grid size for maximum potential occupancy
@@ -33239,7 +33598,7 @@ def hipProfilerStart():
         hipProfilerStart API is under development.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33256,7 +33615,7 @@ def hipProfilerStop():
         hipProfilerStop API is under development.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33283,7 +33642,7 @@ def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, o
             default stream is used with associated synchronization rules.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
@@ -33306,7 +33665,7 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
         offset (`~.int`): **[in]** Offset of the argument on the argument stack.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
@@ -33323,7 +33682,7 @@ def hipLaunchByPtr(object func):
         func (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Kernel to launch.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
@@ -33352,7 +33711,7 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
             default stream is used with associated synchronization rules.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, hipInvalidDevice
     """
@@ -33381,7 +33740,7 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
         userData (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  User-specified data to be passed to the function.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidResourceHandle`, `~.hipErrorInvalidValue`,
             `~.hipErrorNotSupported`
@@ -33403,7 +33762,7 @@ def hipDrvMemcpy2DUnaligned(object pCopy):
         pCopy (`~.hip_Memcpy2D`/`~.object`):  Parameters for the memory copy
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -33441,7 +33800,7 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
             launched in any order.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
     """
@@ -33468,7 +33827,7 @@ def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object des
         desc (`~.hipChannelFormatDesc`/`~.object`): **[in]** opointer to the channel format
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
     """
@@ -33495,7 +33854,7 @@ def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc
         pResViewDesc (`~.hipResourceViewDesc`/`~.object`): **[in]** pointer to resource view descriptor
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue, hipErrorNotSupported, hipErrorOutOfMemory
         * `~.__hip_texture`: pointer to the texture object to create
@@ -33516,7 +33875,7 @@ def hipDestroyTextureObject(object textureObject):
         textureObject (`~.__hip_texture`/`~.object`): **[in]** texture object to destroy
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
     """
@@ -33535,7 +33894,7 @@ def hipGetChannelDesc(object desc, object array):
         array (`~.hipArray`/`~.object`): **[out]** memory array on the device
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
     """
@@ -33555,7 +33914,7 @@ def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
         textureObject (`~.__hip_texture`/`~.object`): **[in]** texture object
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
     """
@@ -33575,7 +33934,7 @@ def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObjec
         textureObject (`~.__hip_texture`/`~.object`): **[in]** texture object
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
     """
@@ -33595,7 +33954,7 @@ def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
         textureObject (`~.__hip_texture`/`~.object`): **[in]** texture object
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
     """
@@ -33617,7 +33976,7 @@ def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
         pResViewDesc (`~.HIP_RESOURCE_VIEW_DESC_st`/`~.object`): **[in]** pointer to resource view descriptor
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
         * `~.__hip_texture`: pointer to texture object to create
@@ -33638,7 +33997,7 @@ def hipTexObjectDestroy(object texObject):
         texObject (`~.__hip_texture`/`~.object`): **[in]** texture object to destroy
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
     """
@@ -33657,7 +34016,7 @@ def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
         texObject (`~.__hip_texture`/`~.object`): **[in]** texture object
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
@@ -33677,7 +34036,7 @@ def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
         texObject (`~.__hip_texture`/`~.object`): **[in]** texture object
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
@@ -33697,7 +34056,7 @@ def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
         texObject (`~.__hip_texture`/`~.object`): **[in]** texture object
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
@@ -33715,7 +34074,7 @@ def hipGetTextureReference(object symbol):
         symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the symbol related with the texture for the reference
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
         * `~.textureReference`: texture reference
@@ -33731,7 +34090,7 @@ def hipTexRefSetAddressMode(object texRef, int dim, object am):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33747,7 +34106,7 @@ def hipTexRefSetArray(object tex, object array, unsigned int flags):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33762,7 +34121,7 @@ def hipTexRefSetFilterMode(object texRef, object fm):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33778,7 +34137,7 @@ def hipTexRefSetFlags(object texRef, unsigned int Flags):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33792,7 +34151,7 @@ def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33808,7 +34167,7 @@ def hipBindTexture(object tex, object devPtr, object desc, unsigned long size):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33825,7 +34184,7 @@ def hipBindTexture2D(object tex, object devPtr, object desc, unsigned long width
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33842,7 +34201,7 @@ def hipBindTextureToArray(object tex, object array, object desc):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33858,7 +34217,7 @@ def hipGetTextureAlignmentOffset(object texref):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33873,7 +34232,7 @@ def hipUnbindTexture(object tex):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33887,7 +34246,7 @@ def hipTexRefGetAddress(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33903,7 +34262,7 @@ def hipTexRefGetAddressMode(object texRef, int dim):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33918,7 +34277,7 @@ def hipTexRefGetFilterMode(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33933,7 +34292,7 @@ def hipTexRefGetFlags(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33948,7 +34307,7 @@ def hipTexRefGetFormat(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33964,7 +34323,7 @@ def hipTexRefGetMaxAnisotropy(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33979,7 +34338,7 @@ def hipTexRefGetMipmapFilterMode(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -33994,7 +34353,7 @@ def hipTexRefGetMipmapLevelBias(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34009,7 +34368,7 @@ def hipTexRefGetMipmapLevelClamp(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34025,7 +34384,7 @@ def hipTexRefGetMipMappedArray(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34040,7 +34399,7 @@ def hipTexRefSetAddress(object texRef, object dptr, unsigned long bytes):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34056,7 +34415,7 @@ def hipTexRefSetAddress2D(object texRef, object desc, object dptr, unsigned long
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34072,7 +34431,7 @@ def hipTexRefSetMaxAnisotropy(object texRef, unsigned int maxAniso):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34086,7 +34445,7 @@ def hipTexRefSetBorderColor(object texRef):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34101,7 +34460,7 @@ def hipTexRefSetMipmapFilterMode(object texRef, object fm):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34117,7 +34476,7 @@ def hipTexRefSetMipmapLevelBias(object texRef, float bias):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34131,7 +34490,7 @@ def hipTexRefSetMipmapLevelClamp(object texRef, float minMipMapLevelClamp, float
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34145,7 +34504,7 @@ def hipTexRefSetMipmappedArray(object texRef, object mipmappedArray, unsigned in
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34164,7 +34523,7 @@ def hipMipmappedArrayCreate(object pMipmappedArrayDesc, unsigned int numMipmapLe
     This section describes the texture management functions currently unsupported in HIP runtime.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34179,7 +34538,7 @@ def hipMipmappedArrayDestroy(object hMipmappedArray):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34193,7 +34552,7 @@ def hipMipmappedArrayGetLevel(object hMipMappedArray, unsigned int level):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -34211,7 +34570,7 @@ def hipApiName(unsigned int id):
     This section describes the callback/Activity of HIP runtime API.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`
     """
@@ -34224,7 +34583,7 @@ def hipKernelNameRef(object f):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`
     """
@@ -34238,7 +34597,7 @@ def hipKernelNameRefByPtr(object hostFunction, object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`
     """
@@ -34253,7 +34612,7 @@ def hipGetStreamDeviceId(object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.int`
     """
@@ -34277,7 +34636,7 @@ def hipStreamBeginCapture(object stream, object mode):
             are not safe.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -34300,7 +34659,7 @@ def hipStreamEndCapture(object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream to end capture.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.ihipGraph`:  returns the graph captured.
@@ -34323,7 +34682,7 @@ def hipStreamGetCaptureInfo(object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream under capture.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorStreamCaptureImplicit`
         * `~.hipStreamCaptureStatus`:  returns current status of the capture.
@@ -34350,7 +34709,7 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
         dependencies_out (`~.hip._util.types.DataHandle`/`~.object`): **[out]**  returns pointer to an array of nodes.
 
     Returns:
-        A `tuple` of size 5 that contains (in that order):
+        A `~.tuple` of size 5 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorStreamCaptureImplicit`
         * `~.hipStreamCaptureStatus`:  returns current status of the capture.
@@ -34380,7 +34739,7 @@ def hipStreamIsCapturing(object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream under capture.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorStreamCaptureImplicit`
         * `~.hipStreamCaptureStatus`:  returns current status of the capture.
@@ -34405,7 +34764,7 @@ def hipStreamUpdateCaptureDependencies(object stream, unsigned long numDependenc
         numDependencies (`~.int`): **[in]**  size of the array in dependencies.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorIllegalState`
         * `~.hipGraphNode`:  pointer to an array of nodes to Add/Replace.
@@ -34425,7 +34784,7 @@ def hipThreadExchangeStreamCaptureMode():
         it is still open to changes and may have outstanding issues.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipStreamCaptureMode`:  Pointer to mode value to swap with the current mode
@@ -34447,7 +34806,7 @@ def hipGraphCreate(unsigned int flags):
         flags (`~.int`): **[in]**  flags for graph creation, must be 0.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryAllocation`
         * `~.ihipGraph`:  pointer to graph to create.
@@ -34469,7 +34828,7 @@ def hipGraphDestroy(object graph):
         graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to destroy.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -34492,7 +34851,7 @@ def hipGraphAddDependencies(object graph, unsigned long numDependencies):
         numDependencies (`~.int`): **[in]**  the number of dependencies to add.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to the graph nodes with dependenties to add from.
@@ -34519,7 +34878,7 @@ def hipGraphRemoveDependencies(object graph, unsigned long numDependencies):
         numDependencies (`~.int`): **[in]**  the number of dependencies to remove.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  Array of nodes that provide the dependencies.
@@ -34549,7 +34908,7 @@ def hipGraphGetEdges(object graph):
         graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to get the edges from.
 
     Returns:
-        A `tuple` of size 4 that contains (in that order):
+        A `~.tuple` of size 4 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to the graph nodes to return edge endpoints.
@@ -34581,7 +34940,7 @@ def hipGraphGetNodes(object graph):
         graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to get the nodes.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to return the  graph nodes.
@@ -34611,7 +34970,7 @@ def hipGraphGetRootNodes(object graph):
         graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to get the nodes.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to return the graph's root nodes.
@@ -34641,7 +35000,7 @@ def hipGraphNodeGetDependencies(object node):
         node (`~.hipGraphNode`/`~.object`): **[in]**  graph node to get the dependencies from.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to to return the dependencies.
@@ -34672,7 +35031,7 @@ def hipGraphNodeGetDependentNodes(object node):
         node (`~.hipGraphNode`/`~.object`): **[in]**  graph node to get the Dependent nodes from.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to return the graph dependent nodes.
@@ -34697,7 +35056,7 @@ def hipGraphNodeGetType(object node):
         node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the graph to add dependencies.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNodeType`:  pointer to the return the type
@@ -34720,7 +35079,7 @@ def hipGraphDestroyNode(object node):
         node (`~.hipGraphNode`/`~.object`): **[in]**  graph node to remove
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -34741,7 +35100,7 @@ def hipGraphClone(object originalGraph):
         originalGraph (`~.ihipGraph`/`~.object`): **[in]**  original graph to clone from.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryAllocation`
         * `~.ihipGraph`:  Returns newly created cloned graph.
@@ -34766,7 +35125,7 @@ def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
         clonedGraph (`~.ihipGraph`/`~.object`): **[in]**  Cloned graph to query.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  Returns the cloned node.
@@ -34794,7 +35153,7 @@ def hipGraphInstantiate(object graph, char * pLogBuffer, unsigned long bufferSiz
         bufferSize (`~.int`): **[out]**  the size of log buffer.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
         * `~.hipGraphExec`:  pointer to instantiated executable graph that is created.
@@ -34822,7 +35181,7 @@ def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
         flags (`~.int`): **[in]**  Flags to control instantiation.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphExec`:  pointer to instantiated executable graph that is created.
@@ -34847,7 +35206,7 @@ def hipGraphLaunch(object graphExec, object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]**  instance of stream in which to launch executable graph.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -34871,7 +35230,7 @@ def hipGraphUpload(object graphExec, object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]**  instance of stream in which to launch executable graph.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -34893,7 +35252,7 @@ def hipGraphExecDestroy(object graphExec):
         pGraphExec: **[in]**  instance of executable graph to destry.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`.
     """
@@ -34917,7 +35276,7 @@ def hipGraphExecUpdate(object hGraphExec, object hGraph):
         hGraph (`~.ihipGraph`/`~.object`): **[in]**  graph that contains the updated parameters.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorGraphExecUpdateFailure`
         * `~.hipGraphNode`:   node which caused the permissibility check to forbid the update.
@@ -34947,7 +35306,7 @@ def hipGraphAddKernelNode(object graph, unsigned long numDependencies, object pN
         pNodeParams (`~.hipKernelNodeParams`/`~.object`): **[in]**  pointer to the parameters to the kernel execution node on the GPU.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidDeviceFunction`
         * `~.hipGraphNode`:  pointer to graph node to create.
@@ -34975,7 +35334,7 @@ def hipGraphKernelNodeGetParams(object node, object pNodeParams):
         pNodeParams (`~.hipKernelNodeParams`/`~.object`): **[out]**  pointer to the parameters
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -34999,7 +35358,7 @@ def hipGraphKernelNodeSetParams(object node, object pNodeParams):
         pNodeParams (`~.hipKernelNodeParams`/`~.object`): **[in]**  const pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35025,7 +35384,7 @@ def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNode
         pNodeParams (`~.hipKernelNodeParams`/`~.object`): **[in]**  const pointer to the kernel node parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35052,7 +35411,7 @@ def hipGraphAddMemcpyNode(object graph, unsigned long numDependencies, object pC
         pCopyParams (`~.hipMemcpy3DParms`/`~.object`): **[in]**  const pointer to the parameters for the memory copy.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to graph node to create.
@@ -35080,7 +35439,7 @@ def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
         pNodeParams (`~.hipMemcpy3DParms`/`~.object`): **[out]**  pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35104,7 +35463,7 @@ def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
         pNodeParams (`~.hipMemcpy3DParms`/`~.object`): **[in]**  const pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35130,7 +35489,7 @@ def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
         value (`~.hipKernelNodeAttrValue`/`~.object`): **[in]**  const pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35158,7 +35517,7 @@ def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
         value (`~.hipKernelNodeAttrValue`/`~.object`): **[in]**  const pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35186,7 +35545,7 @@ def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNode
         pNodeParams (`~.hipMemcpy3DParms`/`~.object`): **[in]**  const pointer to the kernel node parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35219,7 +35578,7 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to graph node to create.
@@ -35256,7 +35615,7 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35292,7 +35651,7 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35330,7 +35689,7 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to graph node to create.
@@ -35369,7 +35728,7 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35407,7 +35766,7 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35445,7 +35804,7 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to graph node to create.
@@ -35484,7 +35843,7 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35522,7 +35881,7 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
         kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35552,7 +35911,7 @@ def hipGraphAddMemsetNode(object graph, unsigned long numDependencies, object pM
         pMemsetParams (`~.hipMemsetParams`/`~.object`): **[in]**  const pointer to the parameters for the memory set.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to the graph node to create.
@@ -35580,7 +35939,7 @@ def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
         pNodeParams (`~.hipMemsetParams`/`~.object`): **[out]**  pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35604,7 +35963,7 @@ def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
         pNodeParams (`~.hipMemsetParams`/`~.object`): **[in]**  pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35630,7 +35989,7 @@ def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNode
         pNodeParams (`~.hipMemsetParams`/`~.object`): **[in]**  pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35657,7 +36016,7 @@ def hipGraphAddHostNode(object graph, unsigned long numDependencies, object pNod
         pNodeParams (`~.hipHostNodeParams`/`~.object`): **[in]** pointer to the parameters.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to the graph node to create.
@@ -35685,7 +36044,7 @@ def hipGraphHostNodeGetParams(object node, object pNodeParams):
         pNodeParams (`~.hipHostNodeParams`/`~.object`): **[out]**  pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35709,7 +36068,7 @@ def hipGraphHostNodeSetParams(object node, object pNodeParams):
         pNodeParams (`~.hipHostNodeParams`/`~.object`): **[in]**  pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35735,7 +36094,7 @@ def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodePa
         pNodeParams (`~.hipHostNodeParams`/`~.object`): **[in]**  pointer to the parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35762,7 +36121,7 @@ def hipGraphAddChildGraphNode(object graph, unsigned long numDependencies, objec
         childGraph (`~.ihipGraph`/`~.object`): **[in]**  the graph to clone into this node
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to the graph node to create.
@@ -35788,7 +36147,7 @@ def hipGraphChildGraphNodeGetGraph(object node):
         node (`~.hipGraphNode`/`~.object`): **[in]**  instane of the node to get child graph.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.ihipGraph`:  pointer to get the graph.
@@ -35815,7 +36174,7 @@ def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object c
         childGraph (`~.ihipGraph`/`~.object`): **[in]**  child graph with updated parameters.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35840,7 +36199,7 @@ def hipGraphAddEmptyNode(object graph, unsigned long numDependencies):
         numDependencies (`~.int`): **[in]**  the number of dependencies.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to the graph node to create and add to the graph.
@@ -35869,7 +36228,7 @@ def hipGraphAddEventRecordNode(object graph, unsigned long numDependencies, obje
         event (`~.ihipEvent_t`/`~.object`): **[in]**  Event for the node.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to the graph node to create and add to the graph.
@@ -35895,7 +36254,7 @@ def hipGraphEventRecordNodeGetEvent(object node):
         node (`~.hipGraphNode`/`~.object`): **[in]**   instane of the node to get event from.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.ihipEvent_t`:  Pointer to return the event.
@@ -35920,7 +36279,7 @@ def hipGraphEventRecordNodeSetEvent(object node, object event):
         event (`~.ihipEvent_t`/`~.object`): **[in]**  pointer to the event.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35946,7 +36305,7 @@ def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object 
         event (`~.ihipEvent_t`/`~.object`): **[in]**  pointer to the event.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -35973,7 +36332,7 @@ def hipGraphAddEventWaitNode(object graph, unsigned long numDependencies, object
         event (`~.ihipEvent_t`/`~.object`): **[in]**  Event for the node.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipGraphNode`:  pointer to the graph node to create and add to the graph.
@@ -35999,7 +36358,7 @@ def hipGraphEventWaitNodeGetEvent(object node):
         node (`~.hipGraphNode`/`~.object`): **[in]**   instane of the node to get event from.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.ihipEvent_t`:  Pointer to return the event.
@@ -36024,7 +36383,7 @@ def hipGraphEventWaitNodeSetEvent(object node, object event):
         event (`~.ihipEvent_t`/`~.object`): **[in]**  pointer to the event.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -36050,7 +36409,7 @@ def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object ev
         event (`~.ihipEvent_t`/`~.object`): **[in]**  pointer to the event.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -36077,7 +36436,7 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
         value (`~.hip._util.types.DataHandle`/`~.object`): **[out]**  value for specific attr.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
     """
@@ -36104,7 +36463,7 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
         value (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  value for specific attr.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
     """
@@ -36127,7 +36486,7 @@ def hipDeviceGraphMemTrim(int device):
         device (`~.int`): **[in]**  device the memory is used for graphs
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36153,7 +36512,7 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
         flags (`~.int`): **[in]**  flags passed to API.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipUserObject`:  pointer to instace of userobj.
@@ -36179,7 +36538,7 @@ def hipUserObjectRelease(object object, unsigned int count):
         count (`~.int`): **[in]**  reference to resource to be retained.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -36202,7 +36561,7 @@ def hipUserObjectRetain(object object, unsigned int count):
         count (`~.int`): **[in]**  reference to resource to be retained.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -36229,7 +36588,7 @@ def hipGraphRetainUserObject(object graph, object object, unsigned int count, un
         flags (`~.int`): **[in]**  flags passed to API.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -36255,7 +36614,7 @@ def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
         count (`~.int`): **[in]**  reference to resource to be retained.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
@@ -36279,7 +36638,7 @@ def hipMemAddressFree(object devPtr, unsigned long size):
         size (`~.int`): **[in]**  size of the range.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
@@ -36306,7 +36665,7 @@ def hipMemAddressReserve(unsigned long size, unsigned long alignment, object add
         flags (`~.int`): **[in]**  currently unused, must be zero.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.hip._util.types.DataHandle`/`~.object`:  starting address of the reserved range.
@@ -36334,7 +36693,7 @@ def hipMemCreate(unsigned long size, object prop, unsigned long long flags):
         flags (`~.int`): **[in]**  currently unused, must be zero.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.ihipMemGenericAllocationHandle`:  value of the returned handle.
@@ -36363,7 +36722,7 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
         flags (`~.int`): **[in]**  currently unused, must be zero.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
@@ -36389,7 +36748,7 @@ def hipMemGetAccess(object location, object ptr):
         ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  address to check the access flags.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.int`:  flags for this location.
@@ -36415,7 +36774,7 @@ def hipMemGetAllocationGranularity(object prop, object option):
         option (`~.hipMemAllocationGranularity_flags`): **[in]**  determines which granularity to return.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.int`:  returned granularity.
@@ -36442,7 +36801,7 @@ def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
         handle (`~.ihipMemGenericAllocationHandle`/`~.object`): **[in]**  handle to perform the query on.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
@@ -36466,7 +36825,7 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
         shHandleType (`~.hipMemAllocationHandleType`): **[in]**  handle type.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.ihipMemGenericAllocationHandle`:  returned value.
@@ -36499,7 +36858,7 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
         flags (`~.int`): **[in]**  currently unused, must be zero.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
@@ -36525,7 +36884,7 @@ def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
         stream (`~.ihipStream_t`/`~.object`): **[in]**  stream identifier for the stream to use for map or unmap operations.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
@@ -36547,7 +36906,7 @@ def hipMemRelease(object handle):
         handle (`~.ihipMemGenericAllocationHandle`/`~.object`): **[in]**  handle of the memory allocation.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
@@ -36568,7 +36927,7 @@ def hipMemRetainAllocationHandle(object addr):
         addr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  address to look up.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
         * `~.ihipMemGenericAllocationHandle`:  handle representing addr.
@@ -36597,7 +36956,7 @@ def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long c
         count (`~.int`): **[in]**  number of hipMemAccessDesc in desc.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
@@ -36621,7 +36980,7 @@ def hipMemUnmap(object ptr, unsigned long size):
         size (`~.int`): **[in]**  size of the virtual address range.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
@@ -36635,7 +36994,7 @@ def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36652,7 +37011,7 @@ def hipGraphicsGLRegisterBuffer(unsigned int buffer, unsigned int flags):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36666,7 +37025,7 @@ def hipGraphicsGLRegisterImage(unsigned int image, unsigned int target, unsigned
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36680,7 +37039,7 @@ def hipGraphicsMapResources(int count, object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36695,7 +37054,7 @@ def hipGraphicsSubResourceGetMappedArray(object resource, unsigned int arrayInde
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36710,7 +37069,7 @@ def hipGraphicsResourceGetMappedPointer(object resource):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36727,7 +37086,7 @@ def hipGraphicsUnmapResources(int count, object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36742,7 +37101,7 @@ def hipGraphicsUnregisterResource(object resource):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36756,7 +37115,7 @@ def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36773,7 +37132,7 @@ def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, un
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36790,7 +37149,7 @@ def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, 
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36807,7 +37166,7 @@ def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long 
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36824,7 +37183,7 @@ def hipMemcpy2DFromArray_spt(object dst, unsigned long dpitch, object src, unsig
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36841,7 +37200,7 @@ def hipMemcpy3D_spt(object p):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36855,7 +37214,7 @@ def hipMemset_spt(object dst, int value, unsigned long sizeBytes):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36869,7 +37228,7 @@ def hipMemsetAsync_spt(object dst, int value, unsigned long sizeBytes, object st
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36884,7 +37243,7 @@ def hipMemset2D_spt(object dst, unsigned long pitch, int value, unsigned long wi
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36898,7 +37257,7 @@ def hipMemset2DAsync_spt(object dst, unsigned long pitch, int value, unsigned lo
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36913,7 +37272,7 @@ def hipMemset3DAsync_spt(object pitchedDevPtr, int value, object extent, object 
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36929,7 +37288,7 @@ def hipMemset3D_spt(object pitchedDevPtr, int value, object extent):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36944,7 +37303,7 @@ def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object k
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36962,7 +37321,7 @@ def hipMemcpy3DAsync_spt(object p, object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36977,7 +37336,7 @@ def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned 
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -36995,7 +37354,7 @@ def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBy
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37013,7 +37372,7 @@ def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeByte
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37031,7 +37390,7 @@ def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, uns
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37048,7 +37407,7 @@ def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOff
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37065,7 +37424,7 @@ def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, 
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37083,7 +37442,7 @@ def hipMemcpy2DToArrayAsync_spt(object dst, unsigned long wOffset, unsigned long
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37101,7 +37460,7 @@ def hipStreamQuery_spt(object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37115,7 +37474,7 @@ def hipStreamSynchronize_spt(object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37129,7 +37488,7 @@ def hipStreamGetPriority_spt(object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37144,7 +37503,7 @@ def hipStreamWaitEvent_spt(object stream, object event, unsigned int flags):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37159,7 +37518,7 @@ def hipStreamGetFlags_spt(object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37174,7 +37533,7 @@ def hipStreamAddCallback_spt(object stream, object callback, object userData, un
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37190,7 +37549,7 @@ def hipEventRecord_spt(object event, object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37205,7 +37564,7 @@ def hipLaunchCooperativeKernel_spt(object f, object gridDim, object blockDim, ob
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37223,7 +37582,7 @@ def hipLaunchKernel_spt(object function_address, object numBlocks, object dimBlo
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37241,7 +37600,7 @@ def hipGraphLaunch_spt(object graphExec, object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37256,7 +37615,7 @@ def hipStreamBeginCapture_spt(object stream, object mode):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37272,7 +37631,7 @@ def hipStreamEndCapture_spt(object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37287,7 +37646,7 @@ def hipStreamIsCapturing_spt(object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37302,7 +37661,7 @@ def hipStreamGetCaptureInfo_spt(object stream):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37318,7 +37677,7 @@ def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """
@@ -37337,7 +37696,7 @@ def hipLaunchHostFunc_spt(object stream, object fn, object userData):
     r"""(No short description)
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipError_t`
     """

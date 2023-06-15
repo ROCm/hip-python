@@ -1,4 +1,42 @@
 # AMD_COPYRIGHT
+
+"""
+Attributes:
+    NCCL_MAJOR (int):
+        Macro constant.
+
+    NCCL_MINOR (int):
+        Macro constant.
+
+    NCCL_PATCH (int):
+        Macro constant.
+
+    NCCL_SUFFIX (bytes):
+        Macro constant.
+
+    NCCL_VERSION_CODE (int):
+        Macro constant.
+
+    RCCL_BFLOAT16 (int):
+        Macro constant.
+
+    RCCL_GATHER_SCATTER (int):
+        Macro constant.
+
+    RCCL_ALLTOALLV (int):
+        Macro constant.
+
+    RCCL_MULTIRANKPERGPU (int):
+        Macro constant.
+
+    NCCL_UNIQUE_ID_BYTES (int):
+        Macro constant.
+
+    ncclComm_t:
+        alias of `~.ncclComm`
+
+"""
+
 import cython
 import ctypes
 import enum
@@ -50,8 +88,8 @@ cdef class ncclComm:
         returns it directly. No new ``ncclComm`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ncclComm``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `ncclComm`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -134,7 +172,7 @@ cdef class ncclUniqueId:
         given ``crccl.ncclUniqueId`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -152,8 +190,8 @@ cdef class ncclUniqueId:
         returns it directly. No new ``ncclUniqueId`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ncclUniqueId``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `ncclUniqueId`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -310,7 +348,7 @@ def ncclGetVersion():
     NCCL library
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -324,7 +362,7 @@ def pncclGetVersion():
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -346,7 +384,7 @@ def ncclGetUniqueId(object uniqueId):
             pointer to uniqueId
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -360,7 +398,7 @@ def pncclGetUniqueId(object uniqueId):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -380,7 +418,7 @@ def ncclCommInitRank(int nranks, object commId, int rank):
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.ncclResult_t`
         * `~.ncclComm`: ncclComm_t*
@@ -397,7 +435,7 @@ def pncclCommInitRank(int nranks, object commId, int rank):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -421,7 +459,7 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.ncclResult_t`
         * `~.ncclComm`: ncclComm_t*
@@ -438,7 +476,7 @@ def pncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -459,7 +497,7 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
     Order of devlist defines user-order of processors within the communicator.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -474,7 +512,7 @@ def pncclCommInitAll(object comm, int ndev, object devlist):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -489,7 +527,7 @@ def ncclCommDestroy(object comm):
     r"""Frees resources associated with communicator object, but waits for any operations that might still be running on the device */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -503,7 +541,7 @@ def pncclCommDestroy(object comm):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -517,7 +555,7 @@ def ncclCommAbort(object comm):
     r"""Frees resources associated with communicator object and aborts any operations that might still be running on the device. */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -531,7 +569,7 @@ def pncclCommAbort(object comm):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -545,7 +583,7 @@ def ncclGetErrorString(object result):
     r"""Returns a string for each error code. */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`
     """
@@ -560,7 +598,7 @@ def pncclGetErrorString(object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`
     """
@@ -576,7 +614,7 @@ def ncclGetLastError(object comm):
     comm is currently unused and can be set to NULL
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`
     """
@@ -590,7 +628,7 @@ def pncclGetError(object comm):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`
     """
@@ -604,7 +642,7 @@ def ncclCommGetAsyncError(object comm, object asyncError):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -619,7 +657,7 @@ def pncclCommGetAsyncError(object comm, object asyncError):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -634,7 +672,7 @@ def ncclCommCount(object comm):
     r"""Gets the number of ranks in the communicator clique. */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -649,7 +687,7 @@ def pncclCommCount(object comm):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -664,7 +702,7 @@ def ncclCommCuDevice(object comm):
     r"""Returns the rocm device number associated with the communicator. */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -679,7 +717,7 @@ def pncclCommCuDevice(object comm):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -694,7 +732,7 @@ def ncclCommUserRank(object comm):
     r"""Returns the user-ordered "rank" associated with the communicator. */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -709,7 +747,7 @@ def pncclCommUserRank(object comm):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -794,7 +832,7 @@ def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object r
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -814,7 +852,7 @@ def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -834,7 +872,7 @@ def ncclRedOpDestroy(object op, object comm):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -850,7 +888,7 @@ def pncclRedOpDestroy(object op, object comm):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -874,7 +912,7 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
     In-place operation will happen if sendbuff == recvbuff.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -895,7 +933,7 @@ def pncclReduce(object sendbuff, object recvbuff, unsigned long count, object da
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -922,7 +960,7 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
     This operation is implicitely in place.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -940,7 +978,7 @@ def pncclBcast(object buff, unsigned long count, object datatype, int root, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -964,7 +1002,7 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
     In-place operation will happen if sendbuff == recvbuff.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -983,7 +1021,7 @@ def pncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1007,7 +1045,7 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
     In-place operation will happen if sendbuff == recvbuff.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1028,7 +1066,7 @@ def pncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1057,7 +1095,7 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1078,7 +1116,7 @@ def pncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1106,7 +1144,7 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1125,7 +1163,7 @@ def pncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1152,7 +1190,7 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
     ncclGroupEnd section.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1170,7 +1208,7 @@ def pncclSend(object sendbuff, unsigned long count, object datatype, int peer, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1196,7 +1234,7 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
     ncclGroupEnd section.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1214,7 +1252,7 @@ def pncclRecv(object recvbuff, unsigned long count, object datatype, int peer, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1240,7 +1278,7 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1259,7 +1297,7 @@ def pncclGather(object sendbuff, object recvbuff, unsigned long sendcount, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1286,7 +1324,7 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1305,7 +1343,7 @@ def pncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1330,7 +1368,7 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
     In-place operation will happen if sendbuff == recvbuff.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1349,7 +1387,7 @@ def pncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1377,7 +1415,7 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
     In-place operation will happen if sendbuff == recvbuff.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1400,7 +1438,7 @@ def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object re
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1427,7 +1465,7 @@ def ncclGroupStart():
     ncclGroupEnd.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1440,7 +1478,7 @@ def pncclGroupStart():
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1457,7 +1495,7 @@ def ncclGroupEnd():
     need to be called after ncclGroupEnd.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """
@@ -1470,7 +1508,7 @@ def pncclGroupEnd():
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
     """

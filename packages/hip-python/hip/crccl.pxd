@@ -10,7 +10,7 @@ cdef extern from "rccl/rccl.h":
 
     cdef int NCCL_PATCH
 
-    cdef char* NCCL_SUFFIX
+    cdef char * NCCL_SUFFIX
 
     cdef int NCCL_VERSION_CODE
 

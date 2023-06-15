@@ -1,4 +1,15 @@
 # AMD_COPYRIGHT
+
+"""
+Attributes:
+    hiprtcLinkState:
+        alias of `~.ihiprtcLinkState`
+
+    hiprtcProgram:
+        alias of `~._hiprtcProgram`
+
+"""
+
 import cython
 import ctypes
 import enum
@@ -198,7 +209,7 @@ def hiprtcGetErrorString(object result):
         result (`~.hiprtcResult`): **[in]** code to convert to string.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`: const char pointer to the NULL-terminated error string
     """
@@ -213,7 +224,7 @@ def hiprtcVersion():
     r"""Sets the parameters as major and minor version.
 
     Returns:
-        A `tuple` of size 3 that contains (in that order):
+        A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hiprtcResult`
         * `~.int`: HIP Runtime Compilation major version.
@@ -338,7 +349,7 @@ def hiprtcAddNameExpression(object prog, const char * name_expression):
         name_expression (`~.bytes`): **[in]** const char pointer to the name expression.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -365,7 +376,7 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
         options (`~.hip._util.types.ListOfBytes`/`~.object`): **[in]** compiler options as const array of strins.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -400,7 +411,7 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
         includeNames (`~.hip._util.types.ListOfBytes`/`~.object`): **[in]** array of strings pointing to names included in program source.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
         * `~._hiprtcProgram`: runtime compilation program instance.
@@ -425,7 +436,7 @@ def hiprtcDestroyProgram(object prog):
         prog (`~.hip._util.types.DataHandle`/`~.object`): **[in]** runtime compilation program instance.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -454,7 +465,7 @@ def hiprtcGetLoweredName(object prog, const char * name_expression):
         name_expression (`~.bytes`): **[in]** const char pointer to the name expression.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
         * `~.bytes`: const char array to the lowered (mangled) name.
@@ -478,7 +489,7 @@ def hiprtcGetProgramLog(object prog, object log):
         log (`~.hip._util.types.DataHandle`/`~.object`): **[out]** memory pointer to the generated log.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -499,7 +510,7 @@ def hiprtcGetProgramLogSize(object prog):
         prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
         * `~.int`: size of generated log.
@@ -523,7 +534,7 @@ def hiprtcGetCode(object prog, object code):
         code (`~.hip._util.types.DataHandle`/`~.object`): **[out]** char pointer to binary.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -546,7 +557,7 @@ def hiprtcGetCodeSize(object prog):
         code: **[out]** the size of binary.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -569,7 +580,7 @@ def hiprtcGetBitcode(object prog, object bitcode):
         code: **[out]** char pointer to bitcode.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -592,7 +603,7 @@ def hiprtcGetBitcodeSize(object prog):
         code: **[out]** the size of bitcode.
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -615,7 +626,7 @@ def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_
         hiprtc: **[out]** link state instance
 
     Returns:
-        A `tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
@@ -642,7 +653,7 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
         None: **[out]** .
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
         * HIPRTC_ERROR_INVALID_INPUT
@@ -672,7 +683,7 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, un
         None: **[out]** .
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
         * HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
@@ -704,7 +715,7 @@ def hiprtcLinkComplete(object hip_link_state):
         linked_binary_size: **[out]** .
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
         * HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
@@ -732,7 +743,7 @@ def hiprtcLinkDestroy(object hip_link_state):
         code: **[out]** the size of binary.
 
     Returns:
-        A `tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
         * HIPRTC_ERROR_LINKING

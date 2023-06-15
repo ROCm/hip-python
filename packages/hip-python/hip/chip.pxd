@@ -9,11 +9,11 @@ cdef extern from "hip/hip_runtime.h":
 
     cdef int HIP_VERSION_PATCH
 
-    cdef char* HIP_VERSION_GITHASH
+    cdef char * HIP_VERSION_GITHASH
 
     cdef int HIP_VERSION_BUILD_ID
 
-    cdef char* HIP_VERSION_BUILD_NAME
+    cdef char * HIP_VERSION_BUILD_NAME
 
     cdef int HIP_VERSION
 
@@ -47,11 +47,11 @@ cdef extern from "hip/hip_runtime.h":
 
     cdef int HIP_TEXTURE_OBJECT_SIZE_DWORD
 
-    cdef unsigned long int HIP_LAUNCH_PARAM_BUFFER_POINTER
+    cdef unsigned long HIP_LAUNCH_PARAM_BUFFER_POINTER
 
-    cdef unsigned long int HIP_LAUNCH_PARAM_BUFFER_SIZE
+    cdef unsigned long HIP_LAUNCH_PARAM_BUFFER_SIZE
 
-    cdef unsigned long int HIP_LAUNCH_PARAM_END
+    cdef unsigned long HIP_LAUNCH_PARAM_END
 
     cdef int hipIpcMemLazyEnablePeerAccess
 

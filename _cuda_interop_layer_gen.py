@@ -164,7 +164,7 @@ def generate_cuda_interop_package_files(
 
             attribute = textwrap.dedent(f"""\
                 {python_enum_hallucinate_var_name}:
-                    Make {cuda_name} hallucinate values for non-existing enum constants. Disabled by default
+                    Make {python_interface_pyobj_role_template.format(name=cuda_name)} hallucinate values for non-existing enum constants. Disabled by default
                     if default is not modified via environment variable.
 
                     Default value can be set/unset via environment variable ``{python_enum_hallucinate_var_name}``.
