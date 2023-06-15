@@ -2935,41 +2935,38 @@ cdef hipError_t hipDestroyExternalSemaphore(void * extSem) nogil
 
 
 # 
-#   @brief Imports an external memory object.
+# @brief Imports an external memory object.
 # 
-#   @param[out] extMem_out  Returned handle to an external memory object
-#   @param[in]  memHandleDesc Memory import handle descriptor
+# @param[out] extMem_out  Returned handle to an external memory object
+# @param[in]  memHandleDesc Memory import handle descriptor
 # 
-#   @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
-#   @see
-# /
+# @see
 cdef hipError_t hipImportExternalMemory(void ** extMem_out,hipExternalMemoryHandleDesc_st * memHandleDesc) nogil
 
 
 # 
-#   @brief Maps a buffer onto an imported memory object.
+# @brief Maps a buffer onto an imported memory object.
 # 
-#   @param[out] devPtr Returned device pointer to buffer
-#   @param[in]  extMem  Handle to external memory object
-#   @param[in]  bufferDesc  Buffer descriptor
+# @param[out] devPtr Returned device pointer to buffer
+# @param[in]  extMem  Handle to external memory object
+# @param[in]  bufferDesc  Buffer descriptor
 # 
-#   @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
-#   @see
-# /
+# @see
 cdef hipError_t hipExternalMemoryGetMappedBuffer(void ** devPtr,void * extMem,hipExternalMemoryBufferDesc_st * bufferDesc) nogil
 
 
 # 
-#   @brief Destroys an external memory object.
+# @brief Destroys an external memory object.
 # 
-#   @param[in] extMem  External memory object to be destroyed
+# @param[in] extMem  External memory object to be destroyed
 # 
-#   @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
-#   @see
-# /
+# @see
 cdef hipError_t hipDestroyExternalMemory(void * extMem) nogil
 
 
@@ -4238,27 +4235,25 @@ cdef hipError_t hipMemcpy2D(void * dst,unsigned long dpitch,const void * src,uns
 
 
 # 
-#    @brief Copies memory for 2D arrays.
-#    @param[in]   pCopy Parameters for the memory copy
-#    @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-#    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+#  @brief Copies memory for 2D arrays.
+#  @param[in]   pCopy Parameters for the memory copy
+#  @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+#  #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # 
-#    @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-#   hipMemcpyToSymbol, hipMemcpyAsync
-# /
+#  @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+# hipMemcpyToSymbol, hipMemcpyAsync
 cdef hipError_t hipMemcpyParam2D(hip_Memcpy2D * pCopy) nogil
 
 
 # 
-#    @brief Copies memory for 2D arrays.
-#    @param[in]   pCopy Parameters for the memory copy
-#    @param[in]   stream Stream to use
-#    @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-#   #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+#  @brief Copies memory for 2D arrays.
+#  @param[in]   pCopy Parameters for the memory copy
+#  @param[in]   stream Stream to use
+#  @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+# #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # 
-#    @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-#   hipMemcpyToSymbol, hipMemcpyAsync
-# /
+#  @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+# hipMemcpyToSymbol, hipMemcpyAsync
 cdef hipError_t hipMemcpyParam2DAsync(hip_Memcpy2D * pCopy,hipStream_t stream) nogil
 
 

@@ -72,12 +72,14 @@ cdef class bsrsv2Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<bsrsv2Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -168,12 +170,14 @@ cdef class bsrsm2Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<bsrsm2Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -264,12 +268,14 @@ cdef class bsrilu02Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<bsrilu02Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -360,12 +366,14 @@ cdef class bsric02Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<bsric02Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -456,12 +464,14 @@ cdef class csrsv2Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<csrsv2Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -552,12 +562,14 @@ cdef class csrsm2Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<csrsm2Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -648,12 +660,14 @@ cdef class csrilu02Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<csrilu02Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -744,12 +758,14 @@ cdef class csric02Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<csric02Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -840,12 +856,14 @@ cdef class csrgemm2Info:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<csrgemm2Info object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -936,12 +954,14 @@ cdef class pruneInfo:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<pruneInfo object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -1032,12 +1052,14 @@ cdef class csru2csrInfo:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<csru2csrInfo object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -1236,6 +1258,11 @@ def hipsparseCreate(object handle):
     initialized before any other hipSPARSE API function is invoked and must be passed to
     all subsequent library function calls. The handle should be destroyed at the end
     using hipsparseDestroy().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCreate__retval = hipsparseStatus_t(chipsparse.hipsparseCreate(
         <void **>hip._util.types.DataHandle.from_pyobj(handle)._ptr))    # fully specified
@@ -1248,6 +1275,11 @@ def hipsparseDestroy(object handle):
 
     ``hipsparseDestroy`` destroys the hipSPARSE library context and releases all
     resources used by the hipSPARSE library.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroy__retval = hipsparseStatus_t(chipsparse.hipsparseDestroy(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr))    # fully specified
@@ -1262,6 +1294,11 @@ def hipsparseGetVersion(object handle, object version):
     - patch = version % 100
     - minor = version / 100 % 1000
     - major = version / 100000
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseGetVersion__retval = hipsparseStatus_t(chipsparse.hipsparseGetVersion(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -1274,6 +1311,11 @@ def hipsparseGetGitRevision(object handle, char * rev):
     r"""Get hipSPARSE git revision
 
     ``hipsparseGetGitRevision`` gets the hipSPARSE library git commit revision (SHA-1).
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseGetGitRevision__retval = hipsparseStatus_t(chipsparse.hipsparseGetGitRevision(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,rev))    # fully specified
@@ -1286,6 +1328,11 @@ def hipsparseSetStream(object handle, object streamId):
 
     ``hipsparseSetStream`` specifies the stream to be used by the hipSPARSE library
     context and all subsequent function calls.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSetStream__retval = hipsparseStatus_t(chipsparse.hipsparseSetStream(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -1299,6 +1346,11 @@ def hipsparseGetStream(object handle):
 
     ``hipsparseGetStream`` gets the hipSPARSE library context stream which is currently
     used for all subsequent function calls.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     streamId = ihipStream_t.from_ptr(NULL)
     _hipsparseGetStream__retval = hipsparseStatus_t(chipsparse.hipsparseGetStream(
@@ -1314,6 +1366,11 @@ def hipsparseSetPointerMode(object handle, object mode):
     library context and all subsequent function calls. By default, all values are passed
     by reference on the host. Valid pointer modes are ``HIPSPARSE_POINTER_MODE_HOST`` 
     or ``HIPSPARSE_POINTER_MODE_DEVICE.``
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(mode,_hipsparsePointerMode_t__Base):
         raise TypeError("argument 'mode' must be of type '_hipsparsePointerMode_t__Base'")
@@ -1328,6 +1385,11 @@ def hipsparseGetPointerMode(object handle, object mode):
 
     ``hipsparseGetPointerMode`` gets the hipSPARSE library context pointer mode which
     is currently used for all subsequent function calls.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseGetPointerMode__retval = hipsparseStatus_t(chipsparse.hipsparseGetPointerMode(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -1343,6 +1405,11 @@ def hipsparseCreateMatDescr(object descrA):
     ``hipsparseMatrixType_t`` to ``HIPSPARSE_MATRIX_TYPE_GENERAL`` and
     ``hipsparseIndexBase_t`` to ``HIPSPARSE_INDEX_BASE_ZERO`` . It should be destroyed
     at the end using hipsparseDestroyMatDescr().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCreateMatDescr__retval = hipsparseStatus_t(chipsparse.hipsparseCreateMatDescr(
         <void **>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
@@ -1355,6 +1422,11 @@ def hipsparseDestroyMatDescr(object descrA):
 
     ``hipsparseDestroyMatDescr`` destroys a matrix descriptor and releases all
     resources used by the descriptor.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyMatDescr__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyMatDescr(
         <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
@@ -1367,6 +1439,11 @@ def hipsparseCopyMatDescr(object dest, object src):
 
     ``hipsparseCopyMatDescr`` copies a matrix descriptor. Both, source and destination
     matrix descriptors must be initialized prior to calling ``hipsparseCopyMatDescr.``
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCopyMatDescr__retval = hipsparseStatus_t(chipsparse.hipsparseCopyMatDescr(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,
@@ -1382,6 +1459,11 @@ def hipsparseSetMatType(object descrA, object type):
     matrix types are ``HIPSPARSE_MATRIX_TYPE_GENERAL`` ,
     ``HIPSPARSE_MATRIX_TYPE_SYMMETRIC`` , ``HIPSPARSE_MATRIX_TYPE_HERMITIAN`` or
     ``HIPSPARSE_MATRIX_TYPE_TRIANGULAR`` .
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(type,_hipsparseMatrixType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipsparseMatrixType_t__Base'")
@@ -1395,6 +1477,11 @@ def hipsparseGetMatType(object descrA):
     r"""Get the matrix type of a matrix descriptor
 
     ``hipsparseGetMatType`` returns the matrix type of a matrix descriptor.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseMatrixType_t`
     """
     _hipsparseGetMatType__retval = hipsparseMatrixType_t(chipsparse.hipsparseGetMatType(
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
@@ -1408,6 +1495,11 @@ def hipsparseSetMatFillMode(object descrA, object fillMode):
     ``hipsparseSetMatFillMode`` sets the matrix fill mode of a matrix descriptor.
     Valid fill modes are ``HIPSPARSE_FILL_MODE_LOWER`` or
     ``HIPSPARSE_FILL_MODE_UPPER`` .
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(fillMode,_hipsparseFillMode_t__Base):
         raise TypeError("argument 'fillMode' must be of type '_hipsparseFillMode_t__Base'")
@@ -1421,6 +1513,11 @@ def hipsparseGetMatFillMode(object descrA):
     r"""Get the matrix fill mode of a matrix descriptor
 
     ``hipsparseGetMatFillMode`` returns the matrix fill mode of a matrix descriptor.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseFillMode_t`
     """
     _hipsparseGetMatFillMode__retval = hipsparseFillMode_t(chipsparse.hipsparseGetMatFillMode(
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
@@ -1434,6 +1531,11 @@ def hipsparseSetMatDiagType(object descrA, object diagType):
     ``hipsparseSetMatDiagType`` sets the matrix diagonal type of a matrix
     descriptor. Valid diagonal types are ``HIPSPARSE_DIAG_TYPE_UNIT`` or
     ``HIPSPARSE_DIAG_TYPE_NON_UNIT`` .
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(diagType,_hipsparseDiagType_t__Base):
         raise TypeError("argument 'diagType' must be of type '_hipsparseDiagType_t__Base'")
@@ -1448,6 +1550,11 @@ def hipsparseGetMatDiagType(object descrA):
 
     ``hipsparseGetMatDiagType`` returns the matrix diagonal type of a matrix
     descriptor.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseDiagType_t`
     """
     _hipsparseGetMatDiagType__retval = hipsparseDiagType_t(chipsparse.hipsparseGetMatDiagType(
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
@@ -1460,6 +1567,11 @@ def hipsparseSetMatIndexBase(object descrA, object base):
 
     ``hipsparseSetMatIndexBase`` sets the index base of a matrix descriptor. Valid
     options are ``HIPSPARSE_INDEX_BASE_ZERO`` or ``HIPSPARSE_INDEX_BASE_ONE`` .
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(base,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'base' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1473,6 +1585,11 @@ def hipsparseGetMatIndexBase(object descrA):
     r"""Get the index base of a matrix descriptor
 
     ``hipsparseGetMatIndexBase`` returns the index base of a matrix descriptor.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseIndexBase_t`
     """
     _hipsparseGetMatIndexBase__retval = hipsparseIndexBase_t(chipsparse.hipsparseGetMatIndexBase(
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
@@ -1485,6 +1602,11 @@ def hipsparseCreateHybMat(object hybA):
 
     ``hipsparseCreateHybMat`` creates a structure that holds the matrix in ``HYB``
     storage format. It should be destroyed at the end using hipsparseDestroyHybMat().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCreateHybMat__retval = hipsparseStatus_t(chipsparse.hipsparseCreateHybMat(
         <void **>hip._util.types.DataHandle.from_pyobj(hybA)._ptr))    # fully specified
@@ -1496,6 +1618,11 @@ def hipsparseDestroyHybMat(object hybA):
     r"""Destroy a ``HYB`` matrix structure
 
     ``hipsparseDestroyHybMat`` destroys a ``HYB`` structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyHybMat__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyHybMat(
         <void *>hip._util.types.DataHandle.from_pyobj(hybA)._ptr))    # fully specified
@@ -1509,6 +1636,11 @@ def hipsparseCreateBsrsv2Info():
     ``hipsparseCreateBsrsv2Info`` creates a structure that holds the bsrsv2 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyBsrsv2Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = bsrsv2Info.from_ptr(NULL)
     _hipsparseCreateBsrsv2Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateBsrsv2Info(&info._ptr))    # fully specified
@@ -1520,6 +1652,11 @@ def hipsparseDestroyBsrsv2Info(object info):
     r"""Destroy a bsrsv2 info structure
 
     ``hipsparseDestroyBsrsv2Info`` destroys a bsrsv2 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyBsrsv2Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyBsrsv2Info(
         bsrsv2Info.from_pyobj(info)._ptr))    # fully specified
@@ -1533,6 +1670,11 @@ def hipsparseCreateBsrsm2Info():
     ``hipsparseCreateBsrsm2Info`` creates a structure that holds the bsrsm2 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyBsrsm2Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = bsrsm2Info.from_ptr(NULL)
     _hipsparseCreateBsrsm2Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateBsrsm2Info(&info._ptr))    # fully specified
@@ -1544,6 +1686,11 @@ def hipsparseDestroyBsrsm2Info(object info):
     r"""Destroy a bsrsm2 info structure
 
     ``hipsparseDestroyBsrsm2Info`` destroys a bsrsm2 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyBsrsm2Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyBsrsm2Info(
         bsrsm2Info.from_pyobj(info)._ptr))    # fully specified
@@ -1557,6 +1704,11 @@ def hipsparseCreateBsrilu02Info():
     ``hipsparseCreateBsrilu02Info`` creates a structure that holds the bsrilu02 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyBsrilu02Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = bsrilu02Info.from_ptr(NULL)
     _hipsparseCreateBsrilu02Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateBsrilu02Info(&info._ptr))    # fully specified
@@ -1568,6 +1720,11 @@ def hipsparseDestroyBsrilu02Info(object info):
     r"""Destroy a bsrilu02 info structure
 
     ``hipsparseDestroyBsrilu02Info`` destroys a bsrilu02 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyBsrilu02Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyBsrilu02Info(
         bsrilu02Info.from_pyobj(info)._ptr))    # fully specified
@@ -1581,6 +1738,11 @@ def hipsparseCreateBsric02Info():
     ``hipsparseCreateBsric02Info`` creates a structure that holds the bsric02 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyBsric02Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = bsric02Info.from_ptr(NULL)
     _hipsparseCreateBsric02Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateBsric02Info(&info._ptr))    # fully specified
@@ -1592,6 +1754,11 @@ def hipsparseDestroyBsric02Info(object info):
     r"""Destroy a bsric02 info structure
 
     ``hipsparseDestroyBsric02Info`` destroys a bsric02 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyBsric02Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyBsric02Info(
         bsric02Info.from_pyobj(info)._ptr))    # fully specified
@@ -1605,6 +1772,11 @@ def hipsparseCreateCsrsv2Info():
     ``hipsparseCreateCsrsv2Info`` creates a structure that holds the csrsv2 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsrsv2Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = csrsv2Info.from_ptr(NULL)
     _hipsparseCreateCsrsv2Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsrsv2Info(&info._ptr))    # fully specified
@@ -1616,6 +1788,11 @@ def hipsparseDestroyCsrsv2Info(object info):
     r"""Destroy a csrsv2 info structure
 
     ``hipsparseDestroyCsrsv2Info`` destroys a csrsv2 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyCsrsv2Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyCsrsv2Info(
         csrsv2Info.from_pyobj(info)._ptr))    # fully specified
@@ -1629,6 +1806,11 @@ def hipsparseCreateCsrsm2Info():
     ``hipsparseCreateCsrsm2Info`` creates a structure that holds the csrsm2 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsrsm2Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = csrsm2Info.from_ptr(NULL)
     _hipsparseCreateCsrsm2Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsrsm2Info(&info._ptr))    # fully specified
@@ -1640,6 +1822,11 @@ def hipsparseDestroyCsrsm2Info(object info):
     r"""Destroy a csrsm2 info structure
 
     ``hipsparseDestroyCsrsm2Info`` destroys a csrsm2 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyCsrsm2Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyCsrsm2Info(
         csrsm2Info.from_pyobj(info)._ptr))    # fully specified
@@ -1653,6 +1840,11 @@ def hipsparseCreateCsrilu02Info():
     ``hipsparseCreateCsrilu02Info`` creates a structure that holds the csrilu02 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsrilu02Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = csrilu02Info.from_ptr(NULL)
     _hipsparseCreateCsrilu02Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsrilu02Info(&info._ptr))    # fully specified
@@ -1664,6 +1856,11 @@ def hipsparseDestroyCsrilu02Info(object info):
     r"""Destroy a csrilu02 info structure
 
     ``hipsparseDestroyCsrilu02Info`` destroys a csrilu02 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyCsrilu02Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyCsrilu02Info(
         csrilu02Info.from_pyobj(info)._ptr))    # fully specified
@@ -1677,6 +1874,11 @@ def hipsparseCreateCsric02Info():
     ``hipsparseCreateCsric02Info`` creates a structure that holds the csric02 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsric02Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = csric02Info.from_ptr(NULL)
     _hipsparseCreateCsric02Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsric02Info(&info._ptr))    # fully specified
@@ -1688,6 +1890,11 @@ def hipsparseDestroyCsric02Info(object info):
     r"""Destroy a csric02 info structure
 
     ``hipsparseDestroyCsric02Info`` destroys a csric02 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyCsric02Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyCsric02Info(
         csric02Info.from_pyobj(info)._ptr))    # fully specified
@@ -1701,6 +1908,11 @@ def hipsparseCreateCsru2csrInfo():
     ``hipsparseCreateCsru2csrInfo`` creates a structure that holds the csru2csr info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsru2csrInfo().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = csru2csrInfo.from_ptr(NULL)
     _hipsparseCreateCsru2csrInfo__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsru2csrInfo(&info._ptr))    # fully specified
@@ -1712,6 +1924,11 @@ def hipsparseDestroyCsru2csrInfo(object info):
     r"""Destroy a csru2csr info structure
 
     ``hipsparseDestroyCsru2csrInfo`` destroys a csru2csr info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyCsru2csrInfo__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyCsru2csrInfo(
         csru2csrInfo.from_pyobj(info)._ptr))    # fully specified
@@ -1725,6 +1942,11 @@ def hipsparseCreateColorInfo(object info):
     ``hipsparseCreateColorInfo`` creates a structure that holds the color info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyColorInfo().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCreateColorInfo__retval = hipsparseStatus_t(chipsparse.hipsparseCreateColorInfo(
         <void **>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -1736,6 +1958,11 @@ def hipsparseDestroyColorInfo(object info):
     r"""Destroy a color info structure
 
     ``hipsparseDestroyColorInfo`` destroys a color info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyColorInfo__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyColorInfo(
         <void *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -1749,6 +1976,11 @@ def hipsparseCreateCsrgemm2Info():
     ``hipsparseCreateCsrgemm2Info`` creates a structure that holds the csrgemm2 info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsrgemm2Info().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = csrgemm2Info.from_ptr(NULL)
     _hipsparseCreateCsrgemm2Info__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsrgemm2Info(&info._ptr))    # fully specified
@@ -1760,6 +1992,11 @@ def hipsparseDestroyCsrgemm2Info(object info):
     r"""Destroy a csrgemm2 info structure
 
     ``hipsparseDestroyCsrgemm2Info`` destroys a csrgemm2 info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyCsrgemm2Info__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyCsrgemm2Info(
         csrgemm2Info.from_pyobj(info)._ptr))    # fully specified
@@ -1773,6 +2010,11 @@ def hipsparseCreatePruneInfo():
     ``hipsparseCreatePruneInfo`` creates a structure that holds the prune info data
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyPruneInfo().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     info = pruneInfo.from_ptr(NULL)
     _hipsparseCreatePruneInfo__retval = hipsparseStatus_t(chipsparse.hipsparseCreatePruneInfo(&info._ptr))    # fully specified
@@ -1784,6 +2026,11 @@ def hipsparseDestroyPruneInfo(object info):
     r"""Destroy a prune info structure
 
     ``hipsparseDestroyPruneInfo`` destroys a prune info structure.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyPruneInfo__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyPruneInfo(
         pruneInfo.from_pyobj(info)._ptr))    # fully specified
@@ -1794,8 +2041,8 @@ def hipsparseDestroyPruneInfo(object info):
 def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
     r"""Scale a sparse vector and add it to a dense vector.
 
-    ``hipsparseXaxpyi`` multiplies the sparse vector math:`x` with scalar math:`\alpha` and
-    adds the result to the dense vector math:`y`, such that
+    ``hipsparseXaxpyi`` multiplies the sparse vector :math:`x` with scalar :math:`\alpha` and
+    adds the result to the dense vector :math:`y`, such that
 
     .. math::
 
@@ -1810,9 +2057,12 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1828,6 +2078,11 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 @cython.embedsignature(True)
 def hipsparseDaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1843,6 +2098,11 @@ def hipsparseDaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 @cython.embedsignature(True)
 def hipsparseCaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1858,6 +2118,11 @@ def hipsparseCaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 @cython.embedsignature(True)
 def hipsparseZaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1874,8 +2139,8 @@ def hipsparseZaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     r"""Compute the dot product of a sparse vector with a dense vector.
 
-    ``hipsparseXdoti`` computes the dot product of the sparse vector math:`x` with the
-    dense vector math:`y`, such that
+    ``hipsparseXdoti`` computes the dot product of the sparse vector :math:`x` with the
+    dense vector :math:`y`, such that
 
     .. math::
 
@@ -1890,9 +2155,12 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1908,6 +2176,11 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
 @cython.embedsignature(True)
 def hipsparseDdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1923,6 +2196,11 @@ def hipsparseDdoti(object handle, int nnz, object xVal, object xInd, object y, o
 @cython.embedsignature(True)
 def hipsparseCdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1938,6 +2216,11 @@ def hipsparseCdoti(object handle, int nnz, object xVal, object xInd, object y, o
 @cython.embedsignature(True)
 def hipsparseZdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1953,10 +2236,10 @@ def hipsparseZdoti(object handle, int nnz, object xVal, object xInd, object y, o
 @cython.embedsignature(True)
 def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     r"""Compute the dot product of a complex conjugate sparse vector with a dense
-      vector.
+    vector.
 
     ``hipsparseXdotci`` computes the dot product of the complex conjugate sparse vector
-    math:`x` with the dense vector math:`y`, such that
+    :math:`x` with the dense vector :math:`y`, such that
 
     .. math::
 
@@ -1971,9 +2254,12 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -1989,6 +2275,11 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
 @cython.embedsignature(True)
 def hipsparseZdotci(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2006,7 +2297,7 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
     r"""Gather elements from a dense vector and store them into a sparse vector.
 
     ``hipsparseXgthr`` gathers the elements that are listed in ``x_ind`` from the dense
-    vector math:`y` and stores them in the sparse vector math:`x`.
+    vector :math:`y` and stores them in the sparse vector :math:`x`.
 
     .. code-block::
 
@@ -2017,9 +2308,12 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2034,6 +2328,11 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
 @cython.embedsignature(True)
 def hipsparseDgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2048,6 +2347,11 @@ def hipsparseDgthr(object handle, int nnz, object y, object xVal, object xInd, o
 @cython.embedsignature(True)
 def hipsparseCgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2062,6 +2366,11 @@ def hipsparseCgthr(object handle, int nnz, object y, object xVal, object xInd, o
 @cython.embedsignature(True)
 def hipsparseZgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2076,11 +2385,11 @@ def hipsparseZgthr(object handle, int nnz, object y, object xVal, object xInd, o
 @cython.embedsignature(True)
 def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     r"""Gather and zero out elements from a dense vector and store them into a sparse
-      vector.
+    vector.
 
     ``hipsparseXgthrz`` gathers the elements that are listed in ``x_ind`` from the dense
-    vector math:`y` and stores them in the sparse vector math:`x`. The gathered elements
-    in math:`y` are replaced by zero.
+    vector :math:`y` and stores them in the sparse vector :math:`x`. The gathered elements
+    in :math:`y` are replaced by zero.
 
     .. code-block::
 
@@ -2092,9 +2401,12 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2109,6 +2421,11 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 @cython.embedsignature(True)
 def hipsparseDgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2123,6 +2440,11 @@ def hipsparseDgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 @cython.embedsignature(True)
 def hipsparseCgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2137,6 +2459,11 @@ def hipsparseCgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 @cython.embedsignature(True)
 def hipsparseZgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2152,8 +2479,8 @@ def hipsparseZgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, object c, object s, object idxBase):
     r"""Apply Givens rotation to a dense and a sparse vector.
 
-    ``hipsparseXroti`` applies the Givens rotation matrix math:`G` to the sparse vector
-    math:`x` and the dense vector math:`y`, where
+    ``hipsparseXroti`` applies the Givens rotation matrix :math:`G` to the sparse vector
+    :math:`x` and the dense vector :math:`y`, where
 
     .. math::
 
@@ -2172,9 +2499,12 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2191,6 +2521,11 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
 @cython.embedsignature(True)
 def hipsparseDroti(object handle, int nnz, object xVal, object xInd, object y, object c, object s, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2209,7 +2544,7 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
     r"""Scatter elements from a dense vector across a sparse vector.
 
     ``hipsparseXsctr`` scatters the elements that are listed in ``x_ind`` from the sparse
-    vector math:`x` into the dense vector math:`y`. Indices of math:`y` that are not listed
+    vector :math:`x` into the dense vector :math:`y`. Indices of :math:`y` that are not listed
     in ``x_ind`` remain unchanged.
 
     .. code-block::
@@ -2221,9 +2556,12 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2238,6 +2576,11 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
 @cython.embedsignature(True)
 def hipsparseDsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2252,6 +2595,11 @@ def hipsparseDsctr(object handle, int nnz, object xVal, object xInd, object y, o
 @cython.embedsignature(True)
 def hipsparseCsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2266,6 +2614,11 @@ def hipsparseCsctr(object handle, int nnz, object xVal, object xInd, object y, o
 @cython.embedsignature(True)
 def hipsparseZsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -2281,9 +2634,9 @@ def hipsparseZsctr(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
     r"""Sparse matrix vector multiplication using CSR storage format
 
-    ``hipsparseXcsrmv`` multiplies the scalar math:`\alpha` with a sparse math:`m \times n`
-    matrix, defined in CSR storage format, and the dense vector math:`x` and adds the
-    result to the dense vector math:`y` that is multiplied by the scalar math:`\beta`,
+    ``hipsparseXcsrmv`` multiplies the scalar :math:`\alpha` with a sparse :math:`m \times n`
+    matrix, defined in CSR storage format, and the dense vector :math:`x` and adds the
+    result to the dense vector :math:`y` that is multiplied by the scalar :math:`\beta`,
     such that
 
     .. math::
@@ -2320,8 +2673,11 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
 
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
-        /
-          @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2341,6 +2697,11 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
 @cython.embedsignature(True)
 def hipsparseDcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2360,6 +2721,11 @@ def hipsparseDcsrmv(object handle, object transA, int m, int n, int nnz, object 
 @cython.embedsignature(True)
 def hipsparseCcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2379,6 +2745,11 @@ def hipsparseCcsrmv(object handle, object transA, int m, int n, int nnz, object 
 @cython.embedsignature(True)
 def hipsparseZcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2402,7 +2773,7 @@ def hipsparseXcsrsv2_zeroPivot(object handle, object info, object position):
     ``hipsparseXcsrsv2_zeroPivot`` returns ``HIPSPARSE_STATUS_ZERO_PIVOT`` , if either a
     structural or numerical zero has been found during hipsparseScsrsv2_solve(),
     hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() or hipsparseZcsrsv2_solve()
-    computation. The first zero pivot math:`j` at math:`A_{j,j}` is stored in ``position,``
+    computation. The first zero pivot :math:`j` at :math:`A_{j,j}` is stored in ``position,``
     using same index base as the CSR matrix.
 
     ``position`` can be in host or device memory. If no zero pivot has been found,
@@ -2410,8 +2781,12 @@ def hipsparseXcsrsv2_zeroPivot(object handle, object info, object position):
 
     Note:
         ``hipsparseXcsrsv2_zeroPivot`` is a blocking function. It might influence
-          performance negatively.
-        /
+        performance negatively.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrsv2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsv2_zeroPivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -2425,12 +2800,15 @@ def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     r"""Sparse triangular solve using CSR storage format
 
     ``hipsparseXcsrsv2_bufferSize`` returns the size of the temporary storage buffer that
-      is required by hipsparseScsrsv2_analysis(), hipsparseDcsrsv2_analysis(),
-      hipsparseCcsrsv2_analysis(), hipsparseZcsrsv2_analysis(), hipsparseScsrsv2_solve(),
-      hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    is required by hipsparseScsrsv2_analysis(), hipsparseDcsrsv2_analysis(),
+    hipsparseCcsrsv2_analysis(), hipsparseZcsrsv2_analysis(), hipsparseScsrsv2_solve(),
+    hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2448,6 +2826,11 @@ def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 @cython.embedsignature(True)
 def hipsparseDcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2465,6 +2848,11 @@ def hipsparseDcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 @cython.embedsignature(True)
 def hipsparseCcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2482,6 +2870,11 @@ def hipsparseCcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 @cython.embedsignature(True)
 def hipsparseZcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2501,12 +2894,15 @@ def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     r"""Sparse triangular solve using CSR storage format
 
     ``hipsparseXcsrsv2_bufferSizeExt`` returns the size of the temporary storage buffer that
-      is required by hipsparseScsrsv2_analysis(), hipsparseDcsrsv2_analysis(),
-      hipsparseCcsrsv2_analysis(), hipsparseZcsrsv2_analysis(), hipsparseScsrsv2_solve(),
-      hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    is required by hipsparseScsrsv2_analysis(), hipsparseDcsrsv2_analysis(),
+    hipsparseCcsrsv2_analysis(), hipsparseZcsrsv2_analysis(), hipsparseScsrsv2_solve(),
+    hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2524,6 +2920,11 @@ def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 @cython.embedsignature(True)
 def hipsparseDcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2541,6 +2942,11 @@ def hipsparseDcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 @cython.embedsignature(True)
 def hipsparseCcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2558,6 +2964,11 @@ def hipsparseCcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 @cython.embedsignature(True)
 def hipsparseZcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2581,9 +2992,12 @@ def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -2603,6 +3017,11 @@ def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 @cython.embedsignature(True)
 def hipsparseDcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -2622,6 +3041,11 @@ def hipsparseDcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 @cython.embedsignature(True)
 def hipsparseCcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -2641,6 +3065,11 @@ def hipsparseCcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 @cython.embedsignature(True)
 def hipsparseZcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -2662,8 +3091,8 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
     r"""Sparse triangular solve using CSR storage format
 
     ``hipsparseXcsrsv2_solve`` solves a sparse triangular linear system of a sparse
-    math:`m \times m` matrix, defined in CSR storage format, a dense solution vector
-    math:`y` and the right-hand side math:`x` that is multiplied by math:`\alpha`, such that
+    :math:`m \times m` matrix, defined in CSR storage format, a dense solution vector
+    :math:`y` and the right-hand side :math:`x` that is multiplied by :math:`\alpha`, such that
 
     .. math::
 
@@ -2691,9 +3120,12 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
 
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` and
-          ``trans`` == ``HIPSPARSE_OPERATION_TRANSPOSE`` is supported.
-        /
-          @{*/
+        ``trans`` == ``HIPSPARSE_OPERATION_TRANSPOSE`` is supported.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -2716,6 +3148,11 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
 @cython.embedsignature(True)
 def hipsparseDcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -2738,6 +3175,11 @@ def hipsparseDcsrsv2_solve(object handle, object transA, int m, int nnz, object 
 @cython.embedsignature(True)
 def hipsparseCcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -2760,6 +3202,11 @@ def hipsparseCcsrsv2_solve(object handle, object transA, int m, int nnz, object 
 @cython.embedsignature(True)
 def hipsparseZcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -2783,9 +3230,9 @@ def hipsparseZcsrsv2_solve(object handle, object transA, int m, int nnz, object 
 def hipsparseShybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
     r"""Sparse matrix vector multiplication using HYB storage format
 
-    ``hipsparseXhybmv`` multiplies the scalar math:`\alpha` with a sparse math:`m \times n`
-    matrix, defined in HYB storage format, and the dense vector math:`x` and adds the
-    result to the dense vector math:`y` that is multiplied by the scalar math:`\beta`,
+    ``hipsparseXhybmv`` multiplies the scalar :math:`\alpha` with a sparse :math:`m \times n`
+    matrix, defined in HYB storage format, and the dense vector :math:`x` and adds the
+    result to the dense vector :math:`y` that is multiplied by the scalar :math:`\beta`,
     such that
 
     .. math::
@@ -2810,8 +3257,11 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
 
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
-        /
-          @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2829,6 +3279,11 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
 @cython.embedsignature(True)
 def hipsparseDhybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2846,6 +3301,11 @@ def hipsparseDhybmv(object handle, object transA, object alpha, object descrA, o
 @cython.embedsignature(True)
 def hipsparseChybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2863,6 +3323,11 @@ def hipsparseChybmv(object handle, object transA, object alpha, object descrA, o
 @cython.embedsignature(True)
 def hipsparseZhybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -2881,11 +3346,11 @@ def hipsparseZhybmv(object handle, object transA, object alpha, object descrA, o
 def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
     r"""Sparse matrix vector multiplication using BSR storage format
 
-    ``hipsparseXbsrmv`` multiplies the scalar math:`\alpha` with a sparse
+    ``hipsparseXbsrmv`` multiplies the scalar :math:`\alpha` with a sparse
 
     math:`(mb \cdot \text{block_dim}) \times (nb \cdot \text{block_dim})`
-    matrix, defined in BSR storage format, and the dense vector math:`x` and adds the
-    result to the dense vector math:`y` that is multiplied by the scalar math:`\beta`,
+    matrix, defined in BSR storage format, and the dense vector :math:`x` and adds the
+    result to the dense vector :math:`y` that is multiplied by the scalar :math:`\beta`,
     such that
 
     .. math::
@@ -2910,8 +3375,11 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
-        /
-          @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -2933,6 +3401,11 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 @cython.embedsignature(True)
 def hipsparseDbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -2954,6 +3427,11 @@ def hipsparseDbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 @cython.embedsignature(True)
 def hipsparseCbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -2975,6 +3453,11 @@ def hipsparseCbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 @cython.embedsignature(True)
 def hipsparseZbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -2997,11 +3480,11 @@ def hipsparseZbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
     r"""Sparse matrix vector multiplication with mask operation using BSR storage format
 
-    ``hipsparseXbsrxmv`` multiplies the scalar math:`\alpha` with a sparse
+    ``hipsparseXbsrxmv`` multiplies the scalar :math:`\alpha` with a sparse
 
     math:`(mb \cdot \text{block_dim}) \times (nb \cdot \text{block_dim})`
-    modified matrix, defined in BSR storage format, and the dense vector math:`x` and adds the
-    result to the dense vector math:`y` that is multiplied by the scalar math:`\beta`,
+    modified matrix, defined in BSR storage format, and the dense vector :math:`x` and adds the
+    result to the dense vector :math:`y` that is multiplied by the scalar :math:`\beta`,
     such that
 
     .. math::
@@ -3026,9 +3509,12 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
-          Currently, ``block_dim`` == 1 is not supported.
-        /
-          @{*/
+        Currently, ``block_dim`` == 1 is not supported.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3052,6 +3538,11 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 @cython.embedsignature(True)
 def hipsparseDbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3075,6 +3566,11 @@ def hipsparseDbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 @cython.embedsignature(True)
 def hipsparseCbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3098,6 +3594,11 @@ def hipsparseCbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 @cython.embedsignature(True)
 def hipsparseZbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3124,7 +3625,7 @@ def hipsparseXbsrsv2_zeroPivot(object handle, object info, object position):
 
     ``hipsparseXbsrsv2_zeroPivot`` returns ``HIPSPARSE_STATUS_ZERO_PIVOT`` , if either a
     structural or numerical zero has been found during hipsparseXbsrsv2_analysis() or
-    hipsparseXbsrsv2_solve() computation. The first zero pivot math:`j` at math:`A_{j,j}`
+    hipsparseXbsrsv2_solve() computation. The first zero pivot :math:`j` at :math:`A_{j,j}`
     is stored in ``position,`` using same index base as the BSR matrix.
 
     ``position`` can be in host or device memory. If no zero pivot has been found,
@@ -3132,8 +3633,12 @@ def hipsparseXbsrsv2_zeroPivot(object handle, object info, object position):
 
     Note:
         ``hipsparseXbsrsv2_zeroPivot`` is a blocking function. It might influence
-          performance negatively.
-        /
+        performance negatively.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXbsrsv2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsrsv2_zeroPivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -3147,10 +3652,13 @@ def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     r"""Sparse triangular solve using BSR storage format
 
     ``hipsparseXbsrsv2_bufferSize`` returns the size of the temporary storage buffer that
-      is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3170,6 +3678,11 @@ def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 @cython.embedsignature(True)
 def hipsparseDbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3189,6 +3702,11 @@ def hipsparseDbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 @cython.embedsignature(True)
 def hipsparseCbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3208,6 +3726,11 @@ def hipsparseCbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 @cython.embedsignature(True)
 def hipsparseZbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3229,10 +3752,13 @@ def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     r"""Sparse triangular solve using BSR storage format
 
     ``hipsparseXbsrsv2_bufferSizeExt`` returns the size of the temporary storage buffer that
-      is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3252,6 +3778,11 @@ def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 @cython.embedsignature(True)
 def hipsparseDbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3271,6 +3802,11 @@ def hipsparseDbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 @cython.embedsignature(True)
 def hipsparseCbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3290,6 +3826,11 @@ def hipsparseCbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 @cython.embedsignature(True)
 def hipsparseZbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3317,9 +3858,12 @@ def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3341,6 +3885,11 @@ def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 @cython.embedsignature(True)
 def hipsparseDbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3362,6 +3911,11 @@ def hipsparseDbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 @cython.embedsignature(True)
 def hipsparseCbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3383,6 +3937,11 @@ def hipsparseCbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 @cython.embedsignature(True)
 def hipsparseZbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3406,8 +3965,8 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     r"""Sparse triangular solve using BSR storage format
 
     ``hipsparseXbsrsv2_solve`` solves a sparse triangular linear system of a sparse
-    math:`m \times m` matrix, defined in BSR storage format, a dense solution vector
-    math:`y` and the right-hand side math:`x` that is multiplied by math:`\alpha`, such that
+    :math:`m \times m` matrix, defined in BSR storage format, a dense solution vector
+    :math:`y` and the right-hand side :math:`x` that is multiplied by :math:`\alpha`, such that
 
     .. math::
 
@@ -3434,9 +3993,12 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` and
-          ``trans`` == ``HIPSPARSE_OPERATION_TRANSPOSE`` is supported.
-        /
-          @{*/
+        ``trans`` == ``HIPSPARSE_OPERATION_TRANSPOSE`` is supported.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3461,6 +4023,11 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 @cython.embedsignature(True)
 def hipsparseDbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3485,6 +4052,11 @@ def hipsparseDbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 @cython.embedsignature(True)
 def hipsparseCbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3509,6 +4081,11 @@ def hipsparseCbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 @cython.embedsignature(True)
 def hipsparseZbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3538,7 +4115,10 @@ def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int n
     required by hipsparseXgemvi(). The temporary storage buffer must be allocated by the
     user.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -3551,6 +4131,11 @@ def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int n
 @cython.embedsignature(True)
 def hipsparseDgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -3563,6 +4148,11 @@ def hipsparseDgemvi_bufferSize(object handle, object transA, int m, int n, int n
 @cython.embedsignature(True)
 def hipsparseCgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -3575,6 +4165,11 @@ def hipsparseCgemvi_bufferSize(object handle, object transA, int m, int n, int n
 @cython.embedsignature(True)
 def hipsparseZgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -3588,9 +4183,9 @@ def hipsparseZgemvi_bufferSize(object handle, object transA, int m, int n, int n
 def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
     r"""Dense matrix sparse vector multiplication
 
-    ``hipsparseXgemvi`` multiplies the scalar math:`\alpha` with a dense math:`m \times n`
-    matrix math:`A` and the sparse vector math:`x` and adds the result to the dense vector
-    math:`y` that is multiplied by the scalar math:`\beta`, such that
+    ``hipsparseXgemvi`` multiplies the scalar :math:`\alpha` with a dense :math:`m \times n`
+    matrix :math:`A` and the sparse vector :math:`x` and adds the result to the dense vector
+    :math:`y` that is multiplied by the scalar :math:`\beta`, such that
 
     .. math::
 
@@ -3615,7 +4210,10 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -3636,6 +4234,11 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
 @cython.embedsignature(True)
 def hipsparseDgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -3656,6 +4259,11 @@ def hipsparseDgemvi(object handle, object transA, int m, int n, object alpha, ob
 @cython.embedsignature(True)
 def hipsparseCgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -3676,6 +4284,11 @@ def hipsparseCgemvi(object handle, object transA, int m, int n, object alpha, ob
 @cython.embedsignature(True)
 def hipsparseZgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -3697,11 +4310,11 @@ def hipsparseZgemvi(object handle, object transA, int m, int n, object alpha, ob
 def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
     r"""Sparse matrix dense matrix multiplication using BSR storage format
 
-    ``hipsparseXbsrmm`` multiplies the scalar math:`\alpha` with a sparse math:`mb \times kb`
-    matrix math:`A`, defined in BSR storage format, and the dense math:`k \times n`
-    matrix math:`B` (where math:`k = block\_dim \times kb`) and adds the result to the dense
-    math:`m \times n` matrix math:`C` (where math:`m = block\_dim \times mb`) that
-    is multiplied by the scalar math:`\beta`, such that
+    ``hipsparseXbsrmm`` multiplies the scalar :math:`\alpha` with a sparse :math:`mb \times kb`
+    matrix :math:`A`, defined in BSR storage format, and the dense :math:`k \times n`
+    matrix :math:`B` (where :math:`k = block\_dim \times kb`) and adds the result to the dense
+    :math:`m \times n` matrix :math:`C` (where :math:`m = block\_dim \times mb`) that
+    is multiplied by the scalar :math:`\beta`, such that
 
     .. math::
 
@@ -3735,7 +4348,10 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
     Note:
         Currently, only ``trans_A`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3759,6 +4375,11 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
 @cython.embedsignature(True)
 def hipsparseDbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3782,6 +4403,11 @@ def hipsparseDbsrmm(object handle, object dirA, object transA, object transB, in
 @cython.embedsignature(True)
 def hipsparseCbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3805,6 +4431,11 @@ def hipsparseCbsrmm(object handle, object dirA, object transA, object transB, in
 @cython.embedsignature(True)
 def hipsparseZbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -3829,10 +4460,10 @@ def hipsparseZbsrmm(object handle, object dirA, object transA, object transB, in
 def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""Sparse matrix dense matrix multiplication using CSR storage format
 
-    ``hipsparseXcsrmm`` multiplies the scalar math:`\alpha` with a sparse math:`m \times k`
-    matrix math:`A`, defined in CSR storage format, and the dense math:`k \times n`
-    matrix math:`B` and adds the result to the dense math:`m \times n` matrix math:`C` that
-    is multiplied by the scalar math:`\beta`, such that
+    ``hipsparseXcsrmm`` multiplies the scalar :math:`\alpha` with a sparse :math:`m \times k`
+    matrix :math:`A`, defined in CSR storage format, and the dense :math:`k \times n`
+    matrix :math:`B` and adds the result to the dense :math:`m \times n` matrix :math:`C` that
+    is multiplied by the scalar :math:`\beta`, such that
 
     .. math::
 
@@ -3867,9 +4498,12 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -3889,6 +4523,11 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 @cython.embedsignature(True)
 def hipsparseDcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -3908,6 +4547,11 @@ def hipsparseDcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 @cython.embedsignature(True)
 def hipsparseCcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -3927,6 +4571,11 @@ def hipsparseCcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 @cython.embedsignature(True)
 def hipsparseZcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
@@ -3947,10 +4596,10 @@ def hipsparseZcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""Sparse matrix dense matrix multiplication using CSR storage format
 
-    ``hipsparseXcsrmm2`` multiplies the scalar math:`\alpha` with a sparse math:`m \times k`
-    matrix math:`A`, defined in CSR storage format, and the dense math:`k \times n`
-    matrix math:`B` and adds the result to the dense math:`m \times n` matrix math:`C` that
-    is multiplied by the scalar math:`\beta`, such that
+    ``hipsparseXcsrmm2`` multiplies the scalar :math:`\alpha` with a sparse :math:`m \times k`
+    matrix :math:`A`, defined in CSR storage format, and the dense :math:`k \times n`
+    matrix :math:`B` and adds the result to the dense :math:`m \times n` matrix :math:`C` that
+    is multiplied by the scalar :math:`\beta`, such that
 
     .. math::
 
@@ -3997,9 +4646,12 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4021,6 +4673,11 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
 @cython.embedsignature(True)
 def hipsparseDcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4042,6 +4699,11 @@ def hipsparseDcsrmm2(object handle, object transA, object transB, int m, int n, 
 @cython.embedsignature(True)
 def hipsparseCcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4063,6 +4725,11 @@ def hipsparseCcsrmm2(object handle, object transA, object transB, int m, int n, 
 @cython.embedsignature(True)
 def hipsparseZcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4087,7 +4754,7 @@ def hipsparseXbsrsm2_zeroPivot(object handle, object info, object position):
 
     ``hipsparseXbsrsm2_zeroPivot`` returns ``HIPSPARSE_STATUS_ZERO_PIVOT`` , if either a
     structural or numerical zero has been found during hipsparseXbsrsm2_analysis() or
-    hipsparseXbsrsm2_solve() computation. The first zero pivot math:`j` at math:`A_{j,j}`
+    hipsparseXbsrsm2_solve() computation. The first zero pivot :math:`j` at :math:`A_{j,j}`
     is stored in ``position,`` using same index base as the BSR matrix.
 
     ``position`` can be in host or device memory. If no zero pivot has been found,
@@ -4095,8 +4762,12 @@ def hipsparseXbsrsm2_zeroPivot(object handle, object info, object position):
 
     Note:
         ``hipsparseXbsrsm2_zeroPivot`` is a blocking function. It might influence
-          performance negatively.
-        /
+        performance negatively.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXbsrsm2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsrsm2_zeroPivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -4110,10 +4781,13 @@ def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     r"""Sparse triangular system solve using BSR storage format
 
     ``hipsparseXbsrsm2_buffer_size`` returns the size of the temporary storage buffer that
-      is required by hipsparseXbsrsm2_analysis() and hipsparseXbsrsm2_solve(). The
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    is required by hipsparseXbsrsm2_analysis() and hipsparseXbsrsm2_solve(). The
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4135,6 +4809,11 @@ def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 @cython.embedsignature(True)
 def hipsparseDbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4156,6 +4835,11 @@ def hipsparseDbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 @cython.embedsignature(True)
 def hipsparseCbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4177,6 +4861,11 @@ def hipsparseCbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 @cython.embedsignature(True)
 def hipsparseZbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4206,9 +4895,12 @@ def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object 
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4232,6 +4924,11 @@ def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object 
 @cython.embedsignature(True)
 def hipsparseDbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4255,6 +4952,11 @@ def hipsparseDbsrsm2_analysis(object handle, object dirA, object transA, object 
 @cython.embedsignature(True)
 def hipsparseCbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4278,6 +4980,11 @@ def hipsparseCbsrsm2_analysis(object handle, object dirA, object transA, object 
 @cython.embedsignature(True)
 def hipsparseZbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4303,8 +5010,8 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
     r"""Sparse triangular system solve using BSR storage format
 
     ``hipsparseXbsrsm2_solve`` solves a sparse triangular linear system of a sparse
-    math:`m \times m` matrix, defined in BSR storage format, a dense solution matrix
-    math:`X` and the right-hand side matrix math:`B` that is multiplied by math:`\alpha`, such that
+    :math:`m \times m` matrix, defined in BSR storage format, a dense solution matrix
+    :math:`X` and the right-hand side matrix :math:`B` that is multiplied by :math:`\alpha`, such that
 
     .. math::
 
@@ -4338,7 +5045,7 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
         The sparse BSR matrix has to be sorted.
 
     Note:
-        Operation type of B and X must match, if math:`op(B)=B, op(X)=X`.
+        Operation type of B and X must match, if :math:`op(B)=B, op(X)=X`.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -4346,9 +5053,12 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
 
     Note:
         Currently, only ``trans_A`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` and
-          ``trans_X`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` is supported.
-        /
-          @{*/
+        ``trans_X`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` is supported.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4375,6 +5085,11 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
 @cython.embedsignature(True)
 def hipsparseDbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4401,6 +5116,11 @@ def hipsparseDbsrsm2_solve(object handle, object dirA, object transA, object tra
 @cython.embedsignature(True)
 def hipsparseCbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4427,6 +5147,11 @@ def hipsparseCbsrsm2_solve(object handle, object dirA, object transA, object tra
 @cython.embedsignature(True)
 def hipsparseZbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -4456,7 +5181,7 @@ def hipsparseXcsrsm2_zeroPivot(object handle, object info, object position):
 
     ``hipsparseXcsrsm2_zeroPivot`` returns ``HIPSPARSE_STATUS_ZERO_PIVOT`` , if either a
     structural or numerical zero has been found during hipsparseXcsrsm2_analysis() or
-    hipsparseXcsrsm2_solve() computation. The first zero pivot math:`j` at math:`A_{j,j}`
+    hipsparseXcsrsm2_solve() computation. The first zero pivot :math:`j` at :math:`A_{j,j}`
     is stored in ``position,`` using same index base as the CSR matrix.
 
     ``position`` can be in host or device memory. If no zero pivot has been found,
@@ -4464,8 +5189,12 @@ def hipsparseXcsrsm2_zeroPivot(object handle, object info, object position):
 
     Note:
         ``hipsparseXcsrsm2_zeroPivot`` is a blocking function. It might influence
-          performance negatively.
-        /
+        performance negatively.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrsm2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsm2_zeroPivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -4479,10 +5208,13 @@ def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     r"""Sparse triangular system solve using CSR storage format
 
     ``hipsparseXcsrsm2_bufferSizeExt`` returns the size of the temporary storage buffer
-      that is required by hipsparseXcsrsm2_analysis() and hipsparseXcsrsm2_solve(). The
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    that is required by hipsparseXcsrsm2_analysis() and hipsparseXcsrsm2_solve(). The
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4506,6 +5238,11 @@ def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 @cython.embedsignature(True)
 def hipsparseDcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4529,6 +5266,11 @@ def hipsparseDcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 @cython.embedsignature(True)
 def hipsparseCcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4552,6 +5294,11 @@ def hipsparseCcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 @cython.embedsignature(True)
 def hipsparseZcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4583,9 +5330,12 @@ def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object tra
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4609,6 +5359,11 @@ def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object tra
 @cython.embedsignature(True)
 def hipsparseDcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4632,6 +5387,11 @@ def hipsparseDcsrsm2_analysis(object handle, int algo, object transA, object tra
 @cython.embedsignature(True)
 def hipsparseCcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4655,6 +5415,11 @@ def hipsparseCcsrsm2_analysis(object handle, int algo, object transA, object tra
 @cython.embedsignature(True)
 def hipsparseZcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4680,8 +5445,8 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
     r"""Sparse triangular system solve using CSR storage format
 
     ``hipsparseXcsrsm2_solve`` solves a sparse triangular linear system of a sparse
-    math:`m \times m` matrix, defined in CSR storage format, a dense solution matrix
-    math:`X` and the right-hand side matrix math:`B` that is multiplied by math:`\alpha`, such that
+    :math:`m \times m` matrix, defined in CSR storage format, a dense solution matrix
+    :math:`X` and the right-hand side matrix :math:`B` that is multiplied by :math:`\alpha`, such that
 
     .. math::
 
@@ -4733,9 +5498,12 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
 
     Note:
         Currently, only ``trans_A`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` and
-          ``trans_B`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` is supported.
-        /
-          @{*/
+        ``trans_B`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` is supported.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4759,6 +5527,11 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
 @cython.embedsignature(True)
 def hipsparseDcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4782,6 +5555,11 @@ def hipsparseDcsrsm2_solve(object handle, int algo, object transA, object transB
 @cython.embedsignature(True)
 def hipsparseCcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4805,6 +5583,11 @@ def hipsparseCcsrsm2_solve(object handle, int algo, object transA, object transB
 @cython.embedsignature(True)
 def hipsparseZcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -4829,10 +5612,10 @@ def hipsparseZcsrsm2_solve(object handle, int algo, object transA, object transB
 def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, object A, int lda, object cscValB, object cscColPtrB, object cscRowIndB, object beta, object C, int ldc):
     r"""Dense matrix sparse matrix multiplication using CSR storage format
 
-    ``hipsparseXgemmi`` multiplies the scalar math:`\alpha` with a dense math:`m \times k`
-    matrix math:`A` and the sparse math:`k \times n` matrix math:`B`, defined in CSR
-    storage format and adds the result to the dense math:`m \times n` matrix math:`C` that
-    is multiplied by the scalar math:`\beta`, such that
+    ``hipsparseXgemmi`` multiplies the scalar :math:`\alpha` with a dense :math:`m \times k`
+    matrix :math:`A` and the sparse :math:`k \times n` matrix :math:`B`, defined in CSR
+    storage format and adds the result to the dense :math:`m \times n` matrix :math:`C` that
+    is multiplied by the scalar :math:`\beta`, such that
 
     .. math::
 
@@ -4864,9 +5647,12 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseSgemmi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,nnz,
@@ -4883,6 +5669,11 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
 @cython.embedsignature(True)
 def hipsparseDgemmi(object handle, int m, int n, int k, int nnz, object alpha, object A, int lda, object cscValB, object cscColPtrB, object cscRowIndB, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseDgemmi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,nnz,
@@ -4899,6 +5690,11 @@ def hipsparseDgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
 @cython.embedsignature(True)
 def hipsparseCgemmi(object handle, int m, int n, int k, int nnz, object alpha, object A, int lda, object cscValB, object cscColPtrB, object cscRowIndB, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseCgemmi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,nnz,
@@ -4915,6 +5711,11 @@ def hipsparseCgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
 @cython.embedsignature(True)
 def hipsparseZgemmi(object handle, int m, int n, int k, int nnz, object alpha, object A, int lda, object cscValB, object cscColPtrB, object cscRowIndB, object beta, object C, int ldc):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseZgemmi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,nnz,
@@ -4943,7 +5744,11 @@ def hipsparseXcsrgeamNnz(object handle, int m, int n, object descrA, int nnzA, o
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
-        /
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrgeamNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrgeamNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -4963,27 +5768,30 @@ def hipsparseXcsrgeamNnz(object handle, int m, int n, object descrA, int nnzA, o
 def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object beta, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""Sparse matrix sparse matrix addition using CSR storage format
 
-    ``hipsparseXcsrgeam`` multiplies the scalar math:`\alpha` with the sparse
-    math:`m \times n` matrix math:`A`, defined in CSR storage format, multiplies the
-    scalar math:`\beta` with the sparse math:`m \times n` matrix math:`B`, defined in CSR
+    ``hipsparseXcsrgeam`` multiplies the scalar :math:`\alpha` with the sparse
+    :math:`m \times n` matrix :math:`A`, defined in CSR storage format, multiplies the
+    scalar :math:`\beta` with the sparse :math:`m \times n` matrix :math:`B`, defined in CSR
     storage format, and adds both resulting matrices to obtain the sparse
-    math:`m \times n` matrix math:`C`, defined in CSR storage format, such that
+    :math:`m \times n` matrix :math:`C`, defined in CSR storage format, such that
 
     .. math::
 
        C := \alpha \cdot A + \beta \cdot B.
 
     Note:
-        Both scalars math:`\alpha` and math:`beta` have to be valid.
+        Both scalars :math:`\alpha` and :math:`beta` have to be valid.
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the
-                host. It may return before the actual computation has finished.
-        /
-          @{*/
+        host. It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgeam(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5007,6 +5815,11 @@ def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, 
 @cython.embedsignature(True)
 def hipsparseDcsrgeam(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object beta, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgeam(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5030,6 +5843,11 @@ def hipsparseDcsrgeam(object handle, int m, int n, object alpha, object descrA, 
 @cython.embedsignature(True)
 def hipsparseCcsrgeam(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object beta, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgeam(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5053,6 +5871,11 @@ def hipsparseCcsrgeam(object handle, int m, int n, object alpha, object descrA, 
 @cython.embedsignature(True)
 def hipsparseZcsrgeam(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object beta, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgeam(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5083,8 +5906,11 @@ def hipsparseScsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
-        /
-          @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgeam2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgeam2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5109,6 +5935,11 @@ def hipsparseScsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
 @cython.embedsignature(True)
 def hipsparseDcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgeam2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgeam2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5133,6 +5964,11 @@ def hipsparseDcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
 @cython.embedsignature(True)
 def hipsparseCcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgeam2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgeam2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5157,6 +5993,11 @@ def hipsparseCcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
 @cython.embedsignature(True)
 def hipsparseZcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgeam2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgeam2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5193,7 +6034,11 @@ def hipsparseXcsrgeam2Nnz(object handle, int m, int n, object descrA, int nnzA, 
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
-        /
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrgeam2Nnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrgeam2Nnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5214,27 +6059,30 @@ def hipsparseXcsrgeam2Nnz(object handle, int m, int n, object descrA, int nnzA, 
 def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBuffer):
     r"""Sparse matrix sparse matrix addition using CSR storage format
 
-    ``hipsparseXcsrgeam2`` multiplies the scalar math:`\alpha` with the sparse
-    math:`m \times n` matrix math:`A`, defined in CSR storage format, multiplies the
-    scalar math:`\beta` with the sparse math:`m \times n` matrix math:`B`, defined in CSR
+    ``hipsparseXcsrgeam2`` multiplies the scalar :math:`\alpha` with the sparse
+    :math:`m \times n` matrix :math:`A`, defined in CSR storage format, multiplies the
+    scalar :math:`\beta` with the sparse :math:`m \times n` matrix :math:`B`, defined in CSR
     storage format, and adds both resulting matrices to obtain the sparse
-    math:`m \times n` matrix math:`C`, defined in CSR storage format, such that
+    :math:`m \times n` matrix :math:`C`, defined in CSR storage format, such that
 
     .. math::
 
        C := \alpha \cdot A + \beta \cdot B.
 
     Note:
-        Both scalars math:`\alpha` and math:`beta` have to be valid.
+        Both scalars :math:`\alpha` and :math:`beta` have to be valid.
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the
-                host. It may return before the actual computation has finished.
-        /
-          @{*/
+        host. It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgeam2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5259,6 +6107,11 @@ def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA,
 @cython.embedsignature(True)
 def hipsparseDcsrgeam2(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgeam2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5283,6 +6136,11 @@ def hipsparseDcsrgeam2(object handle, int m, int n, object alpha, object descrA,
 @cython.embedsignature(True)
 def hipsparseCcsrgeam2(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgeam2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5307,6 +6165,11 @@ def hipsparseCcsrgeam2(object handle, int m, int n, object alpha, object descrA,
 @cython.embedsignature(True)
 def hipsparseZcsrgeam2(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgeam2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5351,7 +6214,11 @@ def hipsparseXcsrgemmNnz(object handle, object transA, object transB, int m, int
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
-        /
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -5375,9 +6242,9 @@ def hipsparseXcsrgemmNnz(object handle, object transA, object transB, int m, int
 def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""Sparse matrix sparse matrix multiplication using CSR storage format
 
-    ``hipsparseXcsrgemm`` multiplies the sparse math:`m \times k` matrix math:`A`, defined in
-    CSR storage format with the sparse math:`k \times n` matrix math:`B`, defined in CSR
-    storage format, and stores the result in the sparse math:`m \times n` matrix math:`C`,
+    ``hipsparseXcsrgemm`` multiplies the sparse :math:`m \times k` matrix :math:`A`, defined in
+    CSR storage format with the sparse :math:`k \times n` matrix :math:`B`, defined in CSR
+    storage format, and stores the result in the sparse :math:`m \times n` matrix :math:`C`,
     defined in CSR storage format, such that
 
     .. math::
@@ -5423,9 +6290,12 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
 
     Note:
         Please note, that for matrix products with more than 4096 non-zero entries per
-          row, additional temporary storage buffer is allocated by the algorithm.
-        /
-          @{*/
+        row, additional temporary storage buffer is allocated by the algorithm.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -5451,6 +6321,11 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
 @cython.embedsignature(True)
 def hipsparseDcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -5476,6 +6351,11 @@ def hipsparseDcsrgemm(object handle, object transA, object transB, int m, int n,
 @cython.embedsignature(True)
 def hipsparseCcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -5501,6 +6381,11 @@ def hipsparseCcsrgemm(object handle, object transA, object transB, int m, int n,
 @cython.embedsignature(True)
 def hipsparseZcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -5541,8 +6426,11 @@ def hipsparseScsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
-        /
-          @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgemm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgemm2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5565,6 +6453,11 @@ def hipsparseScsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
 @cython.embedsignature(True)
 def hipsparseDcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrRowPtrD, object csrColIndD, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgemm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgemm2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5587,6 +6480,11 @@ def hipsparseDcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
 @cython.embedsignature(True)
 def hipsparseCcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrRowPtrD, object csrColIndD, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgemm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgemm2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5609,6 +6507,11 @@ def hipsparseCcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
 @cython.embedsignature(True)
 def hipsparseZcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrRowPtrD, object csrColIndD, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgemm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgemm2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5648,7 +6551,11 @@ def hipsparseXcsrgemm2Nnz(object handle, int m, int n, int k, object descrA, int
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
-        /
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrgemm2Nnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrgemm2Nnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5673,11 +6580,11 @@ def hipsparseXcsrgemm2Nnz(object handle, int m, int n, int k, object descrA, int
 def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrValD, object csrRowPtrD, object csrColIndD, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object pBuffer):
     r"""Sparse matrix sparse matrix multiplication using CSR storage format
 
-    ``hipsparseXcsrgemm2`` multiplies the scalar math:`\alpha` with the sparse
-    math:`m \times k` matrix math:`A`, defined in CSR storage format, and the sparse
-    math:`k \times n` matrix math:`B`, defined in CSR storage format, and adds the result
-    to the sparse math:`m \times n` matrix math:`D` that is multiplied by math:`\beta`. The
-    final result is stored in the sparse math:`m \times n` matrix math:`C`, defined in CSR
+    ``hipsparseXcsrgemm2`` multiplies the scalar :math:`\alpha` with the sparse
+    :math:`m \times k` matrix :math:`A`, defined in CSR storage format, and the sparse
+    :math:`k \times n` matrix :math:`B`, defined in CSR storage format, and adds the result
+    to the sparse :math:`m \times n` matrix :math:`D` that is multiplied by :math:`\beta`. The
+    final result is stored in the sparse :math:`m \times n` matrix :math:`C`, defined in CSR
     storage format, such
     that
 
@@ -5686,10 +6593,10 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
        C := \alpha \cdot A \cdot B + \beta \cdot D
 
     Note:
-        If math:`\alpha == 0`, then math:`C = \beta \cdot D` will be computed.
+        If :math:`\alpha == 0`, then :math:`C = \beta \cdot D` will be computed.
 
     Note:
-        If math:`\beta == 0`, then math:`C = \alpha \cdot A \cdot B` will be computed.
+        If :math:`\beta == 0`, then :math:`C = \alpha \cdot A \cdot B` will be computed.
 
     Note:
         math:`\alpha == beta == 0` is invalid.
@@ -5703,9 +6610,12 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
 
     Note:
         Please note, that for matrix products with more than 4096 non-zero entries per
-          row, additional temporary storage buffer is allocated by the algorithm.
-        /
-          @{*/
+        row, additional temporary storage buffer is allocated by the algorithm.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgemm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5735,6 +6645,11 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
 @cython.embedsignature(True)
 def hipsparseDcsrgemm2(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrValD, object csrRowPtrD, object csrColIndD, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgemm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5764,6 +6679,11 @@ def hipsparseDcsrgemm2(object handle, int m, int n, int k, object alpha, object 
 @cython.embedsignature(True)
 def hipsparseCcsrgemm2(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrValD, object csrRowPtrD, object csrColIndD, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgemm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5793,6 +6713,11 @@ def hipsparseCcsrgemm2(object handle, int m, int n, int k, object alpha, object 
 @cython.embedsignature(True)
 def hipsparseZcsrgemm2(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrValD, object csrRowPtrD, object csrColIndD, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgemm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
@@ -5826,20 +6751,25 @@ def hipsparseXbsrilu02_zeroPivot(object handle, object info, object position):
 
     ``hipsparseXbsrilu02_zeroPivot`` returns ``HIPSPARSE_STATUS_ZERO_PIVOT`` , if either a
     structural or numerical zero has been found during hipsparseXbsrilu02_analysis() or
-    hipsparseXbsrilu02() computation. The first zero pivot math:`j` at math:`A_{j,j}` is
+    hipsparseXbsrilu02() computation. The first zero pivot :math:`j` at :math:`A_{j,j}` is
     stored in ``position,`` using same index base as the BSR matrix.
 
     ``position`` can be in host or device memory. If no zero pivot has been found,
     ``position`` is set to -1 and ``HIPSPARSE_STATUS_SUCCESS`` is returned instead.
 
     Note:
-        If a zero pivot is found, ``position`` math:`=j` means that either the diagonal block
-        math:`A_{j,j}` is missing (structural zero) or the diagonal block math:`A_{j,j}` is not
+        If a zero pivot is found, ``position`` :math:`=j` means that either the diagonal block
+        :math:`A_{j,j}` is missing (structural zero) or the diagonal block :math:`A_{j,j}` is not
         invertible (numerical zero).
 
     Note:
         ``hipsparseXbsrilu02_zeroPivot`` is a blocking function. It might influence
         performance negatively.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXbsrilu02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsrilu02_zeroPivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -5851,12 +6781,12 @@ def hipsparseXbsrilu02_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseSbsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage
-       format
+    format
 
     ``hipsparseXbsrilu02_numericBoost`` enables the user to replace a numerical value in
     an incomplete LU factorization. ``tol`` is used to determine whether a numerical value
-    is replaced by ``boost_val,`` such that math:`A_{j,j} = \text{boost_val}` if
-    math:`\text{tol} \ge \left|A_{j,j}\right|`.
+    is replaced by ``boost_val,`` such that :math:`A_{j,j} = \text{boost_val}` if
+    :math:`\text{tol} \ge \left|A_{j,j}\right|`.
 
     Note:
         The boost value is enabled by setting ``enable_boost`` to 1 or disabled by
@@ -5864,8 +6794,11 @@ def hipsparseSbsrilu02_numericBoost(object handle, object info, int enable_boost
 
     Note:
         ``tol`` and ``boost_val`` can be in host or device memory.
-        /
-          @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02_numericBoost(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -5878,6 +6811,11 @@ def hipsparseSbsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseDbsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrilu02_numericBoost(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -5890,6 +6828,11 @@ def hipsparseDbsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseCbsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrilu02_numericBoost(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -5902,6 +6845,11 @@ def hipsparseCbsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseZbsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrilu02_numericBoost(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -5914,13 +6862,16 @@ def hipsparseZbsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage
-       format
+    format
 
     ``hipsparseXbsrilu02_bufferSize`` returns the size of the temporary storage buffer
-       that is required by hipsparseXbsrilu02_analysis() and hipsparseXbsrilu02_solve().
-       The temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    that is required by hipsparseXbsrilu02_analysis() and hipsparseXbsrilu02_solve().
+    The temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -5938,6 +6889,11 @@ def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseDbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -5955,6 +6911,11 @@ def hipsparseDbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseCbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -5972,6 +6933,11 @@ def hipsparseCbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseZbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -5989,7 +6955,7 @@ def hipsparseZbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage
-     format
+    format
 
     ``hipsparseXbsrilu02_analysis`` performs the analysis step for hipsparseXbsrilu02().
 
@@ -6000,7 +6966,10 @@ def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6020,6 +6989,11 @@ def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 @cython.embedsignature(True)
 def hipsparseDbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6039,6 +7013,11 @@ def hipsparseDbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 @cython.embedsignature(True)
 def hipsparseCbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6058,6 +7037,11 @@ def hipsparseCbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 @cython.embedsignature(True)
 def hipsparseZbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6077,10 +7061,10 @@ def hipsparseZbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 @cython.embedsignature(True)
 def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage
-     format
+    format
 
     ``hipsparseXbsrilu02`` computes the incomplete LU factorization with 0 fill-ins and no
-    pivoting of a sparse math:`mb \times mb` BSR matrix math:`A`, such that
+    pivoting of a sparse :math:`mb \times mb` BSR matrix :math:`A`, such that
 
     .. math::
 
@@ -6090,7 +7074,10 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6110,6 +7097,11 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 @cython.embedsignature(True)
 def hipsparseDbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6129,6 +7121,11 @@ def hipsparseDbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 @cython.embedsignature(True)
 def hipsparseCbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6148,6 +7145,11 @@ def hipsparseCbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 @cython.embedsignature(True)
 def hipsparseZbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6167,11 +7169,11 @@ def hipsparseZbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 @cython.embedsignature(True)
 def hipsparseXcsrilu02_zeroPivot(object handle, object info, object position):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsrilu02_zeroPivot`` returns ``HIPSPARSE_STATUS_ZERO_PIVOT`` , if either a
     structural or numerical zero has been found during hipsparseXcsrilu02() computation.
-    The first zero pivot math:`j` at math:`A_{j,j}` is stored in ``position,`` using same
+    The first zero pivot :math:`j` at :math:`A_{j,j}` is stored in ``position,`` using same
     index base as the CSR matrix.
 
     ``position`` can be in host or device memory. If no zero pivot has been found,
@@ -6179,8 +7181,12 @@ def hipsparseXcsrilu02_zeroPivot(object handle, object info, object position):
 
     Note:
         ``hipsparseXcsrilu02_zeroPivot`` is a blocking function. It might influence
-          performance negatively.
-        /
+        performance negatively.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrilu02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrilu02_zeroPivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -6192,12 +7198,12 @@ def hipsparseXcsrilu02_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseScsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using CSR storage
-     format
+    format
 
     ``hipsparseXcsrilu02_numericBoost`` enables the user to replace a numerical value in
     an incomplete LU factorization. ``tol`` is used to determine whether a numerical value
-    is replaced by ``boost_val,`` such that math:`A_{j,j} = \text{boost_val}` if
-    math:`\text{tol} \ge \left|A_{j,j}\right|`.
+    is replaced by ``boost_val,`` such that :math:`A_{j,j} = \text{boost_val}` if
+    :math:`\text{tol} \ge \left|A_{j,j}\right|`.
 
     Note:
         The boost value is enabled by setting ``enable_boost`` to 1 or disabled by
@@ -6206,7 +7212,10 @@ def hipsparseScsrilu02_numericBoost(object handle, object info, int enable_boost
     Note:
         ``tol`` and ``boost_val`` can be in host or device memory.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_numericBoost(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -6219,6 +7228,11 @@ def hipsparseScsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseDcsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02_numericBoost(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -6231,6 +7245,11 @@ def hipsparseDcsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseCcsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02_numericBoost(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -6243,6 +7262,11 @@ def hipsparseCcsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseZcsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02_numericBoost(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -6255,13 +7279,16 @@ def hipsparseZcsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseScsrilu02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsrilu02_bufferSize`` returns the size of the temporary storage buffer
-      that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6277,6 +7304,11 @@ def hipsparseScsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
 @cython.embedsignature(True)
 def hipsparseDcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6292,6 +7324,11 @@ def hipsparseDcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
 @cython.embedsignature(True)
 def hipsparseCcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6307,6 +7344,11 @@ def hipsparseCcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
 @cython.embedsignature(True)
 def hipsparseZcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6322,13 +7364,16 @@ def hipsparseZcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
 @cython.embedsignature(True)
 def hipsparseScsrilu02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsrilu02_bufferSizeExt`` returns the size of the temporary storage buffer
-      that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6344,6 +7389,11 @@ def hipsparseScsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
 @cython.embedsignature(True)
 def hipsparseDcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6359,6 +7409,11 @@ def hipsparseDcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
 @cython.embedsignature(True)
 def hipsparseCcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6374,6 +7429,11 @@ def hipsparseCcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
 @cython.embedsignature(True)
 def hipsparseZcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6389,7 +7449,7 @@ def hipsparseZcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
 @cython.embedsignature(True)
 def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsrilu02_analysis`` performs the analysis step for hipsparseXcsrilu02().
 
@@ -6398,9 +7458,12 @@ def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -6418,6 +7481,11 @@ def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 @cython.embedsignature(True)
 def hipsparseDcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -6435,6 +7503,11 @@ def hipsparseDcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 @cython.embedsignature(True)
 def hipsparseCcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -6452,6 +7525,11 @@ def hipsparseCcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 @cython.embedsignature(True)
 def hipsparseZcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -6469,10 +7547,10 @@ def hipsparseZcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 @cython.embedsignature(True)
 def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""Incomplete LU factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsrilu02`` computes the incomplete LU factorization with 0 fill-ins and no
-    pivoting of a sparse math:`m \times m` CSR matrix math:`A`, such that
+    pivoting of a sparse :math:`m \times m` CSR matrix :math:`A`, such that
 
     .. math::
 
@@ -6484,9 +7562,12 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -6504,6 +7585,11 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
 @cython.embedsignature(True)
 def hipsparseDcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -6521,6 +7607,11 @@ def hipsparseDcsrilu02(object handle, int m, int nnz, object descrA, object csrS
 @cython.embedsignature(True)
 def hipsparseCcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -6538,6 +7629,11 @@ def hipsparseCcsrilu02(object handle, int m, int nnz, object descrA, object csrS
 @cython.embedsignature(True)
 def hipsparseZcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -6559,7 +7655,7 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
 
     ``hipsparseXbsric02_zeroPivot`` returns ``HIPSPARSE_STATUS_ZERO_PIVOT`` , if either a
     structural or numerical zero has been found during hipsparseXbsric02_analysis() or
-    hipsparseXbsric02() computation. The first zero pivot math:`j` at math:`A_{j,j}` is
+    hipsparseXbsric02() computation. The first zero pivot :math:`j` at :math:`A_{j,j}` is
     stored in ``position,`` using same index base as the BSR matrix.
 
     ``position`` can be in host or device memory. If no zero pivot has been found,
@@ -6573,6 +7669,11 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
     Note:
         ``hipsparseXbsric02_zeroPivot`` is a blocking function. It might influence
         performance negatively.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXbsric02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsric02_zeroPivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -6584,13 +7685,16 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR
-     storage format
+    storage format
 
     ``hipsparseXbsric02_bufferSize`` returns the size of the temporary storage buffer
     that is required by hipsparseXbsric02_analysis() and hipsparseXbsric02(). The
     temporary storage buffer must be allocated by the user.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -6608,6 +7712,11 @@ def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 @cython.embedsignature(True)
 def hipsparseDbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -6625,6 +7734,11 @@ def hipsparseDbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 @cython.embedsignature(True)
 def hipsparseCbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -6642,6 +7756,11 @@ def hipsparseCbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 @cython.embedsignature(True)
 def hipsparseZbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -6659,7 +7778,7 @@ def hipsparseZbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 @cython.embedsignature(True)
 def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR
-     storage format
+    storage format
 
     ``hipsparseXbsric02_analysis`` performs the analysis step for hipsparseXbsric02().
 
@@ -6670,7 +7789,10 @@ def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6690,6 +7812,11 @@ def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 @cython.embedsignature(True)
 def hipsparseDbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6709,6 +7836,11 @@ def hipsparseDbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 @cython.embedsignature(True)
 def hipsparseCbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6728,6 +7860,11 @@ def hipsparseCbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 @cython.embedsignature(True)
 def hipsparseZbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6747,10 +7884,10 @@ def hipsparseZbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 @cython.embedsignature(True)
 def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR
-     storage format
+    storage format
 
     ``hipsparseXbsric02`` computes the incomplete Cholesky factorization with 0 fill-ins
-    and no pivoting of a sparse math:`mb \times mb` BSR matrix math:`A`, such that
+    and no pivoting of a sparse :math:`mb \times mb` BSR matrix :math:`A`, such that
 
     .. math::
 
@@ -6760,7 +7897,10 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6780,6 +7920,11 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
 @cython.embedsignature(True)
 def hipsparseDbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6799,6 +7944,11 @@ def hipsparseDbsric02(object handle, object dirA, int mb, int nnzb, object descr
 @cython.embedsignature(True)
 def hipsparseCbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6818,6 +7968,11 @@ def hipsparseCbsric02(object handle, object dirA, int mb, int nnzb, object descr
 @cython.embedsignature(True)
 def hipsparseZbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
@@ -6837,11 +7992,11 @@ def hipsparseZbsric02(object handle, object dirA, int mb, int nnzb, object descr
 @cython.embedsignature(True)
 def hipsparseXcsric02_zeroPivot(object handle, object info, object position):
     r"""Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsric02_zeroPivot`` returns ``HIPSPARSE_STATUS_ZERO_PIVOT`` , if either a
     structural or numerical zero has been found during hipsparseXcsric02_analysis() or
-    hipsparseXcsric02() computation. The first zero pivot math:`j` at math:`A_{j,j}`
+    hipsparseXcsric02() computation. The first zero pivot :math:`j` at :math:`A_{j,j}`
     is stored in ``position,`` using same index base as the CSR matrix.
 
     ``position`` can be in host or device memory. If no zero pivot has been found,
@@ -6849,8 +8004,12 @@ def hipsparseXcsric02_zeroPivot(object handle, object info, object position):
 
     Note:
         ``hipsparseXcsric02_zeroPivot`` is a blocking function. It might influence
-          performance negatively.
-        /
+        performance negatively.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsric02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsric02_zeroPivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -6862,12 +8021,15 @@ def hipsparseXcsric02_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseScsric02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsric02_bufferSize`` returns the size of the temporary storage buffer
-      that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
-    /
-      @{*/
+    that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6883,6 +8045,11 @@ def hipsparseScsric02_bufferSize(object handle, int m, int nnz, object descrA, o
 @cython.embedsignature(True)
 def hipsparseDcsric02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDcsric02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6898,6 +8065,11 @@ def hipsparseDcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
 @cython.embedsignature(True)
 def hipsparseCcsric02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCcsric02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6913,6 +8085,11 @@ def hipsparseCcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
 @cython.embedsignature(True)
 def hipsparseZcsric02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZcsric02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6928,12 +8105,15 @@ def hipsparseZcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
 @cython.embedsignature(True)
 def hipsparseScsric02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsric02_bufferSizeExt`` returns the size of the temporary storage buffer
-      that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
-    /
-      @{*/
+    that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6949,6 +8129,11 @@ def hipsparseScsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
 @cython.embedsignature(True)
 def hipsparseDcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsric02_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6964,6 +8149,11 @@ def hipsparseDcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
 @cython.embedsignature(True)
 def hipsparseCcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsric02_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6979,6 +8169,11 @@ def hipsparseCcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
 @cython.embedsignature(True)
 def hipsparseZcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsric02_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -6994,7 +8189,7 @@ def hipsparseZcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
 @cython.embedsignature(True)
 def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsric02_analysis`` performs the analysis step for hipsparseXcsric02().
 
@@ -7003,9 +8198,12 @@ def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, obj
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -7023,6 +8221,11 @@ def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, obj
 @cython.embedsignature(True)
 def hipsparseDcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -7040,6 +8243,11 @@ def hipsparseDcsric02_analysis(object handle, int m, int nnz, object descrA, obj
 @cython.embedsignature(True)
 def hipsparseCcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -7057,6 +8265,11 @@ def hipsparseCcsric02_analysis(object handle, int m, int nnz, object descrA, obj
 @cython.embedsignature(True)
 def hipsparseZcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -7074,10 +8287,10 @@ def hipsparseZcsric02_analysis(object handle, int m, int nnz, object descrA, obj
 @cython.embedsignature(True)
 def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR
-      storage format
+    storage format
 
     ``hipsparseXcsric02`` computes the incomplete Cholesky factorization with 0 fill-ins
-    and no pivoting of a sparse math:`m \times m` CSR matrix math:`A`, such that
+    and no pivoting of a sparse :math:`m \times m` CSR matrix :math:`A`, such that
 
     .. math::
 
@@ -7089,9 +8302,12 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -7109,6 +8325,11 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
 @cython.embedsignature(True)
 def hipsparseDcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -7126,6 +8347,11 @@ def hipsparseDcsric02(object handle, int m, int nnz, object descrA, object csrSo
 @cython.embedsignature(True)
 def hipsparseCcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -7143,6 +8369,11 @@ def hipsparseCcsric02(object handle, int m, int nnz, object descrA, object csrSo
 @cython.embedsignature(True)
 def hipsparseZcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
@@ -7162,10 +8393,13 @@ def hipsparseSgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
     r"""Tridiagonal solver with pivoting
 
     ``hipsparseXgtsv2_bufferSize`` returns the size of the temporary storage buffer
-      that is required by hipsparseXgtsv2(). The temporary storage buffer must be
-      allocated by the user.
-    /
-      @{*/
+    that is required by hipsparseXgtsv2(). The temporary storage buffer must be
+    allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7180,6 +8414,11 @@ def hipsparseSgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
 @cython.embedsignature(True)
 def hipsparseDgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int db, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7194,6 +8433,11 @@ def hipsparseDgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
 @cython.embedsignature(True)
 def hipsparseCgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7208,6 +8452,11 @@ def hipsparseCgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
 @cython.embedsignature(True)
 def hipsparseZgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7227,9 +8476,12 @@ def hipsparseSgtsv2(object handle, int m, int n, object dl, object d, object du,
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7244,6 +8496,11 @@ def hipsparseSgtsv2(object handle, int m, int n, object dl, object d, object du,
 @cython.embedsignature(True)
 def hipsparseDgtsv2(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7258,6 +8515,11 @@ def hipsparseDgtsv2(object handle, int m, int n, object dl, object d, object du,
 @cython.embedsignature(True)
 def hipsparseCgtsv2(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7272,6 +8534,11 @@ def hipsparseCgtsv2(object handle, int m, int n, object dl, object d, object du,
 @cython.embedsignature(True)
 def hipsparseZgtsv2(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7288,10 +8555,13 @@ def hipsparseSgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
     r"""Tridiagonal solver (no pivoting)
 
     ``hipsparseXgtsv2_nopivot_bufferSizeExt`` returns the size of the temporary storage
-      buffer that is required by hipsparseXgtsv2_nopivot(). The temporary storage buffer
-      must be allocated by the user.
-    /
-      @{*/
+    buffer that is required by hipsparseXgtsv2_nopivot(). The temporary storage buffer
+    must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_nopivot_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7306,6 +8576,11 @@ def hipsparseSgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
 @cython.embedsignature(True)
 def hipsparseDgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int db, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2_nopivot_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7320,6 +8595,11 @@ def hipsparseDgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
 @cython.embedsignature(True)
 def hipsparseCgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2_nopivot_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7334,6 +8614,11 @@ def hipsparseCgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
 @cython.embedsignature(True)
 def hipsparseZgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2_nopivot_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7353,9 +8638,12 @@ def hipsparseSgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_nopivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7370,6 +8658,11 @@ def hipsparseSgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
 @cython.embedsignature(True)
 def hipsparseDgtsv2_nopivot(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2_nopivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7384,6 +8677,11 @@ def hipsparseDgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
 @cython.embedsignature(True)
 def hipsparseCgtsv2_nopivot(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2_nopivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7398,6 +8696,11 @@ def hipsparseCgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
 @cython.embedsignature(True)
 def hipsparseZgtsv2_nopivot(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2_nopivot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7414,10 +8717,13 @@ def hipsparseSgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
     r"""Strided Batch tridiagonal solver (no pivoting)
 
     ``hipsparseXgtsv2StridedBatch_bufferSizeExt`` returns the size of the temporary storage
-      buffer that is required by hipsparseXgtsv2StridedBatch(). The temporary storage buffer
-      must be allocated by the user.
-    /
-      @{*/
+    buffer that is required by hipsparseXgtsv2StridedBatch(). The temporary storage buffer
+    must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2StridedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -7432,6 +8738,11 @@ def hipsparseSgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
 @cython.embedsignature(True)
 def hipsparseDgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2StridedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -7446,6 +8757,11 @@ def hipsparseDgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
 @cython.embedsignature(True)
 def hipsparseCgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2StridedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -7460,6 +8776,11 @@ def hipsparseCgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
 @cython.embedsignature(True)
 def hipsparseZgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2StridedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -7479,9 +8800,12 @@ def hipsparseSgtsv2StridedBatch(object handle, int m, object dl, object d, objec
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2StridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -7496,6 +8820,11 @@ def hipsparseSgtsv2StridedBatch(object handle, int m, object dl, object d, objec
 @cython.embedsignature(True)
 def hipsparseDgtsv2StridedBatch(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2StridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -7510,6 +8839,11 @@ def hipsparseDgtsv2StridedBatch(object handle, int m, object dl, object d, objec
 @cython.embedsignature(True)
 def hipsparseCgtsv2StridedBatch(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2StridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -7524,6 +8858,11 @@ def hipsparseCgtsv2StridedBatch(object handle, int m, object dl, object d, objec
 @cython.embedsignature(True)
 def hipsparseZgtsv2StridedBatch(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2StridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -7540,10 +8879,13 @@ def hipsparseSgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     r"""Interleaved Batch tridiagonal solver
 
     ``hipsparseXgtsvInterleavedBatch_bufferSizeExt`` returns the size of the temporary storage
-      buffer that is required by hipsparseXgtsvInterleavedBatch(). The temporary storage buffer
-      must be allocated by the user.
-    /
-      @{*/
+    buffer that is required by hipsparseXgtsvInterleavedBatch(). The temporary storage buffer
+    must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsvInterleavedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7558,6 +8900,11 @@ def hipsparseSgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 @cython.embedsignature(True)
 def hipsparseDgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsvInterleavedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7572,6 +8919,11 @@ def hipsparseDgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 @cython.embedsignature(True)
 def hipsparseCgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsvInterleavedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7586,6 +8938,11 @@ def hipsparseCgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 @cython.embedsignature(True)
 def hipsparseZgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsvInterleavedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7605,9 +8962,12 @@ def hipsparseSgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsvInterleavedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7622,6 +8982,11 @@ def hipsparseSgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
 @cython.embedsignature(True)
 def hipsparseDgtsvInterleavedBatch(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsvInterleavedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7636,6 +9001,11 @@ def hipsparseDgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
 @cython.embedsignature(True)
 def hipsparseCgtsvInterleavedBatch(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsvInterleavedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7650,6 +9020,11 @@ def hipsparseCgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
 @cython.embedsignature(True)
 def hipsparseZgtsvInterleavedBatch(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsvInterleavedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7666,10 +9041,13 @@ def hipsparseSgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     r"""Interleaved Batch pentadiagonal solver
 
     ``hipsparseXgpsvInterleavedBatch_bufferSizeExt`` returns the size of the temporary storage
-      buffer that is required by hipsparseXgpsvInterleavedBatch(). The temporary storage buffer
-      must be allocated by the user.
-    /
-      @{*/
+    buffer that is required by hipsparseXgpsvInterleavedBatch(). The temporary storage buffer
+    must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgpsvInterleavedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7686,6 +9064,11 @@ def hipsparseSgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 @cython.embedsignature(True)
 def hipsparseDgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgpsvInterleavedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7702,6 +9085,11 @@ def hipsparseDgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 @cython.embedsignature(True)
 def hipsparseCgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgpsvInterleavedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7718,6 +9106,11 @@ def hipsparseCgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 @cython.embedsignature(True)
 def hipsparseZgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgpsvInterleavedBatch_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7739,9 +9132,12 @@ def hipsparseSgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgpsvInterleavedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7758,6 +9154,11 @@ def hipsparseSgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 @cython.embedsignature(True)
 def hipsparseDgpsvInterleavedBatch(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDgpsvInterleavedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7774,6 +9175,11 @@ def hipsparseDgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 @cython.embedsignature(True)
 def hipsparseCgpsvInterleavedBatch(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCgpsvInterleavedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7790,6 +9196,11 @@ def hipsparseCgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 @cython.embedsignature(True)
 def hipsparseZgpsvInterleavedBatch(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseZgpsvInterleavedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
@@ -7806,11 +9217,14 @@ def hipsparseZgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 @cython.embedsignature(True)
 def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
     r"""This function computes the number of nonzero elements per row or column and the total
-      number of nonzero elements in a dense matrix.
+    number of nonzero elements in a dense matrix.
 
     The routine does support asynchronous execution if the pointer mode is set to device.
-    /
-      @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -7826,6 +9240,11 @@ def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseDnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -7841,6 +9260,11 @@ def hipsparseDnnz(object handle, object dirA, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseCnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -7856,6 +9280,11 @@ def hipsparseCnnz(object handle, object dirA, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseZnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -7871,12 +9300,15 @@ def hipsparseZnnz(object handle, object dirA, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseSdense2csr(object handle, int m, int n, object descr, object A, int ld, object nnz_per_rows, object csr_val, object csr_row_ptr, object csr_col_ind):
     r"""This function converts the matrix A in dense format into a sparse matrix in CSR format.
-      All the parameters are assumed to have been pre-allocated by the user and the arrays
-      are filled in based on nnz_per_row, which can be pre-computed with hipsparseXnnz().
-      It is executed asynchronously with respect to the host and may return control to the
-      application on the host before the entire result is ready.
-    /
-      @{*/
+    All the parameters are assumed to have been pre-allocated by the user and the arrays
+    are filled in based on nnz_per_row, which can be pre-computed with hipsparseXnnz().
+    It is executed asynchronously with respect to the host and may return control to the
+    application on the host before the entire result is ready.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSdense2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7892,6 +9324,11 @@ def hipsparseSdense2csr(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseDdense2csr(object handle, int m, int n, object descr, object A, int ld, object nnz_per_rows, object csr_val, object csr_row_ptr, object csr_col_ind):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDdense2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7907,6 +9344,11 @@ def hipsparseDdense2csr(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseCdense2csr(object handle, int m, int n, object descr, object A, int ld, object nnz_per_rows, object csr_val, object csr_row_ptr, object csr_col_ind):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseCdense2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7922,6 +9364,11 @@ def hipsparseCdense2csr(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseZdense2csr(object handle, int m, int n, object descr, object A, int ld, object nnz_per_rows, object csr_val, object csr_row_ptr, object csr_col_ind):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZdense2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7937,13 +9384,16 @@ def hipsparseZdense2csr(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csr_bufferSize(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object bufferSize):
     r"""This function computes the the size of the user allocated temporary storage buffer used when converting and pruning
-      a dense matrix to a CSR matrix.
+    a dense matrix to a CSR matrix.
 
     ``hipsparseXpruneDense2csr_bufferSizeExt`` returns the size of the temporary storage buffer
-      that is required by hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr(). The
-      temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    that is required by hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr(). The
+    temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7960,6 +9410,11 @@ def hipsparseSpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csr_bufferSize(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7976,6 +9431,11 @@ def hipsparseDpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -7992,6 +9452,11 @@ def hipsparseSpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8008,12 +9473,15 @@ def hipsparseDpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csrNnz(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrRowPtr, object nnzTotalDevHostPtr, object buffer):
     r"""This function computes the number of nonzero elements per row and the total number of
-      nonzero elements in a dense matrix once elements less than the threshold are pruned
-      from the matrix.
+    nonzero elements in a dense matrix once elements less than the threshold are pruned
+    from the matrix.
 
     The routine does support asynchronous execution if the pointer mode is set to device.
-    /
-      @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8029,6 +9497,11 @@ def hipsparseSpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrNnz(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrRowPtr, object nnzTotalDevHostPtr, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8044,21 +9517,24 @@ def hipsparseDpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csr(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object buffer):
     r"""This function converts the matrix A in dense format into a sparse matrix in CSR format
-      while pruning values that are less than the threshold. All the parameters are assumed
-      to have been pre-allocated by the user.
+    while pruning values that are less than the threshold. All the parameters are assumed
+    to have been pre-allocated by the user.
 
     The user first allocates ``csrRowPtr`` to have ``m+1`` elements and then calls
-      hipsparseXpruneDense2csrNnz() which fills in the ``csrRowPtr`` array and stores the
-      number of elements that are larger than the pruning threshold in ``nnzTotalDevHostPtr.``
-      The user then allocates ``csrColInd`` and ``csrVal`` to have size ``nnzTotalDevHostPtr``
-      and completes the conversion by calling hipsparseXpruneDense2csr(). A temporary storage
-      buffer is used by both hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr() and
-      must be allocated by the user and whose size is determined by
-      hipsparseXpruneDense2csr_bufferSizeExt(). The routine hipsparseXpruneDense2csr() is
-      executed asynchronously with respect to the host and may return control to the
-      application on the host before the entire result is ready.
-    /
-      @{*/
+    hipsparseXpruneDense2csrNnz() which fills in the ``csrRowPtr`` array and stores the
+    number of elements that are larger than the pruning threshold in ``nnzTotalDevHostPtr.``
+    The user then allocates ``csrColInd`` and ``csrVal`` to have size ``nnzTotalDevHostPtr``
+    and completes the conversion by calling hipsparseXpruneDense2csr(). A temporary storage
+    buffer is used by both hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr() and
+    must be allocated by the user and whose size is determined by
+    hipsparseXpruneDense2csr_bufferSizeExt(). The routine hipsparseXpruneDense2csr() is
+    executed asynchronously with respect to the host and may return control to the
+    application on the host before the entire result is ready.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8075,6 +9551,11 @@ def hipsparseSpruneDense2csr(object handle, int m, int n, object A, int lda, obj
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csr(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8091,7 +9572,7 @@ def hipsparseDpruneDense2csr(object handle, int m, int n, object A, int lda, obj
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n, object A, int lda, float percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object bufferSize):
     r"""This function computes the size of the user allocated temporary storage buffer used
-      when converting and pruning by percentage a dense matrix to a CSR matrix.
+    when converting and pruning by percentage a dense matrix to a CSR matrix.
 
     When converting and pruning a dense matrix A to a CSR matrix by percentage the
     following steps are performed. First the user calls
@@ -8111,6 +9592,11 @@ def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
        pos = min(pos, m*n-1)
        pos = max(pos, 0)
        threshold = sorted_A[pos]
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8127,6 +9613,11 @@ def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrByPercentage_bufferSize(object handle, int m, int n, object A, int lda, double percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrByPercentage_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8143,7 +9634,7 @@ def hipsparseDpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int n, object A, int lda, float percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object bufferSize):
     r"""This function computes the size of the user allocated temporary storage buffer used
-      when converting and pruning by percentage a dense matrix to a CSR matrix.
+    when converting and pruning by percentage a dense matrix to a CSR matrix.
 
     When converting and pruning a dense matrix A to a CSR matrix by percentage the
     following steps are performed. First the user calls
@@ -8163,6 +9654,11 @@ def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
        pos = min(pos, m*n-1)
        pos = max(pos, 0)
        threshold = sorted_A[pos]
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8179,6 +9675,11 @@ def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int n, object A, int lda, double percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrByPercentage_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8195,8 +9696,8 @@ def hipsparseDpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object A, int lda, float percentage, object descr, object csrRowPtr, object nnzTotalDevHostPtr, object info, object buffer):
     r"""This function computes the number of nonzero elements per row and the total number of
-      nonzero elements in a dense matrix when converting and pruning by percentage a dense
-      matrix to a CSR matrix.
+    nonzero elements in a dense matrix when converting and pruning by percentage a dense
+    matrix to a CSR matrix.
 
     When converting and pruning a dense matrix A to a CSR matrix by percentage the
     following steps are performed. First the user calls
@@ -8216,6 +9717,11 @@ def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
        pos = min(pos, m*n-1)
        pos = max(pos, 0)
        threshold = sorted_A[pos]
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrNnzByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8231,6 +9737,11 @@ def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrNnzByPercentage(object handle, int m, int n, object A, int lda, double percentage, object descr, object csrRowPtr, object nnzTotalDevHostPtr, object info, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrNnzByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8246,8 +9757,8 @@ def hipsparseDpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, int lda, float percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object buffer):
     r"""This function computes the number of nonzero elements per row and the total number of
-      nonzero elements in a dense matrix when converting and pruning by percentage a dense
-      matrix to a CSR matrix.
+    nonzero elements in a dense matrix when converting and pruning by percentage a dense
+    matrix to a CSR matrix.
 
     When converting and pruning a dense matrix A to a CSR matrix by percentage the
     following steps are performed. First the user calls
@@ -8267,6 +9778,11 @@ def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, 
        pos = min(pos, m*n-1)
        pos = max(pos, 0)
        threshold = sorted_A[pos]
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8283,6 +9799,11 @@ def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrByPercentage(object handle, int m, int n, object A, int lda, double percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8301,10 +9822,13 @@ def hipsparseSdense2csc(object handle, int m, int n, object descr, object A, int
     r"""
 
     This function converts the matrix A in dense format into a sparse matrix in CSC format.
-      All the parameters are assumed to have been pre-allocated by the user and the arrays are filled in based on nnz_per_columns, which can be pre-computed with hipsparseXnnz().
-      It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
-    /
-      @{*/
+    All the parameters are assumed to have been pre-allocated by the user and the arrays are filled in based on nnz_per_columns, which can be pre-computed with hipsparseXnnz().
+    It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseSdense2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8320,6 +9844,11 @@ def hipsparseSdense2csc(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseDdense2csc(object handle, int m, int n, object descr, object A, int ld, object nnz_per_columns, object csc_val, object csc_row_ind, object csc_col_ptr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseDdense2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8335,6 +9864,11 @@ def hipsparseDdense2csc(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseCdense2csc(object handle, int m, int n, object descr, object A, int ld, object nnz_per_columns, object csc_val, object csc_row_ind, object csc_col_ptr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseCdense2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8350,6 +9884,11 @@ def hipsparseCdense2csc(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseZdense2csc(object handle, int m, int n, object descr, object A, int ld, object nnz_per_columns, object csc_val, object csc_row_ind, object csc_col_ptr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseZdense2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8365,9 +9904,12 @@ def hipsparseZdense2csc(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseScsr2dense(object handle, int m, int n, object descr, object csr_val, object csr_row_ptr, object csr_col_ind, object A, int ld):
     r"""This function converts the sparse matrix in CSR format into a dense matrix.
-      It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
-    /
-      @{*/
+    It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8382,6 +9924,11 @@ def hipsparseScsr2dense(object handle, int m, int n, object descr, object csr_va
 @cython.embedsignature(True)
 def hipsparseDcsr2dense(object handle, int m, int n, object descr, object csr_val, object csr_row_ptr, object csr_col_ind, object A, int ld):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8396,6 +9943,11 @@ def hipsparseDcsr2dense(object handle, int m, int n, object descr, object csr_va
 @cython.embedsignature(True)
 def hipsparseCcsr2dense(object handle, int m, int n, object descr, object csr_val, object csr_row_ptr, object csr_col_ind, object A, int ld):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8410,6 +9962,11 @@ def hipsparseCcsr2dense(object handle, int m, int n, object descr, object csr_va
 @cython.embedsignature(True)
 def hipsparseZcsr2dense(object handle, int m, int n, object descr, object csr_val, object csr_row_ptr, object csr_col_ind, object A, int ld):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8424,9 +9981,12 @@ def hipsparseZcsr2dense(object handle, int m, int n, object descr, object csr_va
 @cython.embedsignature(True)
 def hipsparseScsc2dense(object handle, int m, int n, object descr, object csc_val, object csc_row_ind, object csc_col_ptr, object A, int ld):
     r"""This function converts the sparse matrix in CSC format into a dense matrix.
-      It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
-    /
-      @{*/
+    It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseScsc2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8441,6 +10001,11 @@ def hipsparseScsc2dense(object handle, int m, int n, object descr, object csc_va
 @cython.embedsignature(True)
 def hipsparseDcsc2dense(object handle, int m, int n, object descr, object csc_val, object csc_row_ind, object csc_col_ptr, object A, int ld):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseDcsc2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8455,6 +10020,11 @@ def hipsparseDcsc2dense(object handle, int m, int n, object descr, object csc_va
 @cython.embedsignature(True)
 def hipsparseCcsc2dense(object handle, int m, int n, object descr, object csc_val, object csc_row_ind, object csc_col_ptr, object A, int ld):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseCcsc2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8469,6 +10039,11 @@ def hipsparseCcsc2dense(object handle, int m, int n, object descr, object csc_va
 @cython.embedsignature(True)
 def hipsparseZcsc2dense(object handle, int m, int n, object descr, object csc_val, object csc_row_ind, object csc_col_ptr, object A, int ld):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseZcsc2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8483,10 +10058,14 @@ def hipsparseZcsc2dense(object handle, int m, int n, object descr, object csc_va
 @cython.embedsignature(True)
 def hipsparseXcsr2bsrNnz(object handle, object dirA, int m, int n, object descrA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrRowPtrC, object bsrNnzb):
     r"""This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse
-      BSR matrix given a sparse CSR matrix as input.
+    BSR matrix given a sparse CSR matrix as input.
 
     The routine does support asynchronous execution if the pointer mode is set to device.
-    /
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -8506,10 +10085,13 @@ def hipsparseSnnz_compress(object handle, int m, object descrA, object csrValA, 
     r"""(No short description)
 
     Given a sparse CSR matrix and a non-negative tolerance, this function computes how many entries would be left
-      in each row of the matrix if elements less than the tolerance were removed. It also computes the total number
-      of remaining elements in the matrix.
-    /
-      @{*/
+    in each row of the matrix if elements less than the tolerance were removed. It also computes the total number
+    of remaining elements in the matrix.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSnnz_compress__retval = hipsparseStatus_t(chipsparse.hipsparseSnnz_compress(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -8524,6 +10106,11 @@ def hipsparseSnnz_compress(object handle, int m, object descrA, object csrValA, 
 @cython.embedsignature(True)
 def hipsparseDnnz_compress(object handle, int m, object descrA, object csrValA, object csrRowPtrA, object nnzPerRow, object nnzC, double tol):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnnz_compress__retval = hipsparseStatus_t(chipsparse.hipsparseDnnz_compress(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -8538,6 +10125,11 @@ def hipsparseDnnz_compress(object handle, int m, object descrA, object csrValA, 
 @cython.embedsignature(True)
 def hipsparseCnnz_compress(object handle, int m, object descrA, object csrValA, object csrRowPtrA, object nnzPerRow, object nnzC, object tol):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCnnz_compress__retval = hipsparseStatus_t(chipsparse.hipsparseCnnz_compress(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -8553,6 +10145,11 @@ def hipsparseCnnz_compress(object handle, int m, object descrA, object csrValA, 
 @cython.embedsignature(True)
 def hipsparseZnnz_compress(object handle, int m, object descrA, object csrValA, object csrRowPtrA, object nnzPerRow, object nnzC, object tol):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZnnz_compress__retval = hipsparseStatus_t(chipsparse.hipsparseZnnz_compress(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
@@ -8578,8 +10175,12 @@ def hipsparseXcsr2coo(object handle, object csrRowPtr, int nnz, int m, object co
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -8604,9 +10205,12 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(copyValues,_hipsparseAction_t__Base):
         raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
@@ -8626,6 +10230,11 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 @cython.embedsignature(True)
 def hipsparseDcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(copyValues,_hipsparseAction_t__Base):
         raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
@@ -8645,6 +10254,11 @@ def hipsparseDcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 @cython.embedsignature(True)
 def hipsparseCcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(copyValues,_hipsparseAction_t__Base):
         raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
@@ -8664,6 +10278,11 @@ def hipsparseCcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 @cython.embedsignature(True)
 def hipsparseZcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(copyValues,_hipsparseAction_t__Base):
         raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
@@ -8696,7 +10315,7 @@ class hipsparseCsr2CscAlg_t(_hipsparseCsr2CscAlg_t__Base):
 @cython.embedsignature(True)
 def hipsparseCsr2cscEx2_bufferSize(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object cscVal, object cscColPtr, object cscRowInd, object valType, object copyValues, object idxBase, object alg, object bufferSize):
     r"""This function computes the size of the user allocated temporary storage buffer used
-      when converting a sparse CSR matrix into a sparse CSC matrix.
+    when converting a sparse CSR matrix into a sparse CSC matrix.
 
     ``hipsparseXcsr2cscEx2_bufferSize`` calculates the required user allocated temporary buffer needed
     by ``hipsparseXcsr2cscEx2`` to convert a CSR matrix into a CSC matrix. ``hipsparseXcsr2cscEx2``
@@ -8709,8 +10328,12 @@ def hipsparseCsr2cscEx2_bufferSize(object handle, int m, int n, int nnz, object 
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(valType,_hipDataType__Base):
         raise TypeError("argument 'valType' must be of type '_hipDataType__Base'")                    
@@ -8746,8 +10369,12 @@ def hipsparseCsr2cscEx2(object handle, int m, int n, int nnz, object csrVal, obj
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(valType,_hipDataType__Base):
         raise TypeError("argument 'valType' must be of type '_hipDataType__Base'")                    
@@ -8782,9 +10409,12 @@ def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSort
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
         raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
@@ -8801,6 +10431,11 @@ def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSort
 @cython.embedsignature(True)
 def hipsparseDcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
         raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
@@ -8817,6 +10452,11 @@ def hipsparseDcsr2hyb(object handle, int m, int n, object descrA, object csrSort
 @cython.embedsignature(True)
 def hipsparseCcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
         raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
@@ -8833,6 +10473,11 @@ def hipsparseCcsr2hyb(object handle, int m, int n, object descrA, object csrSort
 @cython.embedsignature(True)
 def hipsparseZcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
         raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
@@ -8851,10 +10496,13 @@ def hipsparseSgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
     r"""Convert a sparse GEneral BSR matrix into a sparse GEneral BSC matrix
 
     ``hipsparseXgebsr2gebsc_bufferSize`` returns the size of the temporary storage buffer
-      required by hipsparseXgebsr2gebsc().
-      The temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    required by hipsparseXgebsr2gebsc().
+    The temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsc_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
@@ -8868,6 +10516,11 @@ def hipsparseSgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
 @cython.embedsignature(True)
 def hipsparseDgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2gebsc_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
@@ -8881,6 +10534,11 @@ def hipsparseDgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
 @cython.embedsignature(True)
 def hipsparseCgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2gebsc_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
@@ -8894,6 +10552,11 @@ def hipsparseCgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
 @cython.embedsignature(True)
 def hipsparseZgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2gebsc_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
@@ -8921,9 +10584,12 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(copy_values,_hipsparseAction_t__Base):
         raise TypeError("argument 'copy_values' must be of type '_hipsparseAction_t__Base'")                    
@@ -8944,6 +10610,11 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 @cython.embedsignature(True)
 def hipsparseDgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(copy_values,_hipsparseAction_t__Base):
         raise TypeError("argument 'copy_values' must be of type '_hipsparseAction_t__Base'")                    
@@ -8964,6 +10635,11 @@ def hipsparseDgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 @cython.embedsignature(True)
 def hipsparseCgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(copy_values,_hipsparseAction_t__Base):
         raise TypeError("argument 'copy_values' must be of type '_hipsparseAction_t__Base'")                    
@@ -8984,6 +10660,11 @@ def hipsparseCgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 @cython.embedsignature(True)
 def hipsparseZgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(copy_values,_hipsparseAction_t__Base):
         raise TypeError("argument 'copy_values' must be of type '_hipsparseAction_t__Base'")                    
@@ -9013,8 +10694,11 @@ def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     GEneral BSR matrix given a sparse CSR matrix as input.
 
     The routine does support asynchronous execution if the pointer mode is set to device.
-    /
-      @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9031,6 +10715,11 @@ def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 @cython.embedsignature(True)
 def hipsparseDcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9047,6 +10736,11 @@ def hipsparseDcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 @cython.embedsignature(True)
 def hipsparseCcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9063,6 +10757,11 @@ def hipsparseCcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 @cython.embedsignature(True)
 def hipsparseZcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9079,9 +10778,12 @@ def hipsparseZcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 @cython.embedsignature(True)
 def hipsparseXcsr2gebsrNnz(object handle, object dir, int m, int n, object csr_descr, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_row_ptr, int row_block_dim, int col_block_dim, object bsr_nnz_devhost, object p_buffer):
     r"""This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse
-      GEneral BSR matrix given a sparse CSR matrix as input.
+    GEneral BSR matrix given a sparse CSR matrix as input.
 
-    /
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9102,12 +10804,15 @@ def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     r"""Convert a sparse CSR matrix into a sparse GEneral BSR matrix
 
     ``hipsparseXcsr2gebsr`` converts a CSR matrix into a GEneral BSR matrix. It is assumed,
-      that ``bsr_val,`` ``bsr_col_ind`` and ``bsr_row_ptr`` are allocated. Allocation size
-      for ``bsr_row_ptr`` is computed as ``mb+1`` where ``mb`` is the number of block rows in
-      the GEneral BSR matrix. Allocation size for ``bsr_val`` and ``bsr_col_ind`` is computed using
-      ``csr2gebsr_nnz()`` which also fills in ``bsr_row_ptr.``
-    /
-      @{*/
+    that ``bsr_val,`` ``bsr_col_ind`` and ``bsr_row_ptr`` are allocated. Allocation size
+    for ``bsr_row_ptr`` is computed as ``mb+1`` where ``mb`` is the number of block rows in
+    the GEneral BSR matrix. Allocation size for ``bsr_val`` and ``bsr_col_ind`` is computed using
+    ``csr2gebsr_nnz()`` which also fills in ``bsr_row_ptr.``
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9128,6 +10833,11 @@ def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 @cython.embedsignature(True)
 def hipsparseDcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9148,6 +10858,11 @@ def hipsparseDcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 @cython.embedsignature(True)
 def hipsparseCcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9168,6 +10883,11 @@ def hipsparseCcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 @cython.embedsignature(True)
 def hipsparseZcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -9196,9 +10916,12 @@ def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     ``csr2bsr_nnz()`` which also fills in ``bsr_row_ptr.``
 
     ``hipsparseXcsr2bsr`` requires extra temporary storage that is allocated internally if
-      ``block_dim>16``
-    /
-      @{*/
+    ``block_dim>16``
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9218,6 +10941,11 @@ def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 @cython.embedsignature(True)
 def hipsparseDcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9237,6 +10965,11 @@ def hipsparseDcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 @cython.embedsignature(True)
 def hipsparseCcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9256,6 +10989,11 @@ def hipsparseCcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 @cython.embedsignature(True)
 def hipsparseZcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9284,9 +11022,12 @@ def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9306,6 +11047,11 @@ def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 @cython.embedsignature(True)
 def hipsparseDbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9325,6 +11071,11 @@ def hipsparseDbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 @cython.embedsignature(True)
 def hipsparseCbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9344,6 +11095,11 @@ def hipsparseCbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 @cython.embedsignature(True)
 def hipsparseZbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9372,9 +11128,12 @@ def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9394,6 +11153,11 @@ def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 @cython.embedsignature(True)
 def hipsparseDgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9413,6 +11177,11 @@ def hipsparseDgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 @cython.embedsignature(True)
 def hipsparseCgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9432,6 +11201,11 @@ def hipsparseCgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 @cython.embedsignature(True)
 def hipsparseZgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -9458,7 +11232,10 @@ def hipsparseScsr2csr_compress(object handle, int m, int n, object descrA, objec
     Note:
         In the case of complex matrices only the magnitude of the real part of ``tol`` is used.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2csr_compress(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -9476,6 +11253,11 @@ def hipsparseScsr2csr_compress(object handle, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseDcsr2csr_compress(object handle, int m, int n, object descrA, object csrValA, object csrColIndA, object csrRowPtrA, int nnzA, object nnzPerRow, object csrValC, object csrColIndC, object csrRowPtrC, double tol):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2csr_compress(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -9493,6 +11275,11 @@ def hipsparseDcsr2csr_compress(object handle, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseCcsr2csr_compress(object handle, int m, int n, object descrA, object csrValA, object csrColIndA, object csrRowPtrA, int nnzA, object nnzPerRow, object csrValC, object csrColIndC, object csrRowPtrC, object tol):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2csr_compress(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -9511,6 +11298,11 @@ def hipsparseCcsr2csr_compress(object handle, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseZcsr2csr_compress(object handle, int m, int n, object descrA, object csrValA, object csrColIndA, object csrRowPtrA, int nnzA, object nnzPerRow, object csrValC, object csrColIndC, object csrRowPtrC, object tol):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2csr_compress(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -9534,7 +11326,10 @@ def hipsparseSpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
     is required by ``hipsparseXpruneCsr2csrNnz`` and hipsparseXpruneCsr2csr. The
     temporary storage buffer must be allocated by the user.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9554,6 +11349,11 @@ def hipsparseSpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9578,7 +11378,10 @@ def hipsparseSpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
     is required by ``hipsparseXpruneCsr2csrNnz`` and hipsparseXpruneCsr2csr. The
     temporary storage buffer must be allocated by the user.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9598,6 +11401,11 @@ def hipsparseSpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9624,8 +11432,11 @@ def hipsparseSpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
 
     Note:
         The routine does support asynchronous execution if the pointer mode is set to device.
-        /
-          @{*/
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9644,6 +11455,11 @@ def hipsparseSpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrRowPtrC, object nnzTotalDevHostPtr, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9673,7 +11489,10 @@ def hipsparseSpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
     is executed asynchronously with respect to the host and may return control to the application on the host
     before the entire result is ready.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9693,6 +11512,11 @@ def hipsparseSpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9717,7 +11541,10 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
     is required by ``hipsparseXpruneCsr2csrNnzByPercentage.``
     The temporary storage buffer must be allocated by the user.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9737,6 +11564,11 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, double percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrByPercentage_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9761,7 +11593,10 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
     is required by ``hipsparseXpruneCsr2csrNnzByPercentage.``
     The temporary storage buffer must be allocated by the user.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9781,6 +11616,11 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, double percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrByPercentage_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9808,7 +11648,10 @@ def hipsparseSpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
     Note:
         The routine does support asynchronous execution if the pointer mode is set to device.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrNnzByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9827,6 +11670,11 @@ def hipsparseSpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, double percentage, object descrC, object csrRowPtrC, object nnzTotalDevHostPtr, object info, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrNnzByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9856,7 +11704,10 @@ def hipsparseSpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
     is executed asynchronously with respect to the host and may return control to the application on the host
     before the entire result is ready.
 
-    @{*/
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9876,6 +11727,11 @@ def hipsparseSpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, double percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
@@ -9900,9 +11756,12 @@ def hipsparseShyb2csr(object handle, object descrA, object hybA, object csrSorte
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
-          @{*/
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseShyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseShyb2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -9917,6 +11776,11 @@ def hipsparseShyb2csr(object handle, object descrA, object hybA, object csrSorte
 @cython.embedsignature(True)
 def hipsparseDhyb2csr(object handle, object descrA, object hybA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDhyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDhyb2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -9931,6 +11795,11 @@ def hipsparseDhyb2csr(object handle, object descrA, object hybA, object csrSorte
 @cython.embedsignature(True)
 def hipsparseChyb2csr(object handle, object descrA, object hybA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseChyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseChyb2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -9945,6 +11814,11 @@ def hipsparseChyb2csr(object handle, object descrA, object hybA, object csrSorte
 @cython.embedsignature(True)
 def hipsparseZhyb2csr(object handle, object descrA, object hybA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZhyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZhyb2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -9971,8 +11845,12 @@ def hipsparseXcoo2csr(object handle, object cooRowInd, int nnz, int m, object cs
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-           It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
@@ -9988,7 +11866,7 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
     r"""Create the identity map
 
     ``hipsparseCreateIdentityPermutation`` stores the identity map in ``p,`` such that
-    math:`p = 0:1:(n-1)`.
+    :math:`p = 0:1:(n-1)`.
 
     .. code-block::
 
@@ -9999,8 +11877,12 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCreateIdentityPermutation__retval = hipsparseStatus_t(chipsparse.hipsparseCreateIdentityPermutation(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -10013,9 +11895,13 @@ def hipsparseXcsrsort_bufferSizeExt(object handle, int m, int n, int nnz, object
     r"""Sort a sparse CSR matrix
 
     ``hipsparseXcsrsort_bufferSizeExt`` returns the size of the temporary storage buffer
-      required by hipsparseXcsrsort(). The temporary storage buffer must be allocated by
-      the user.
-    /
+    required by hipsparseXcsrsort(). The temporary storage buffer must be allocated by
+    the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrsort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsort_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10041,8 +11927,12 @@ def hipsparseXcsrsort(object handle, int m, int n, int nnz, object descrA, objec
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrsort__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsort(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10059,9 +11949,13 @@ def hipsparseXcscsort_bufferSizeExt(object handle, int m, int n, int nnz, object
     r"""Sort a sparse CSC matrix
 
     ``hipsparseXcscsort_bufferSizeExt`` returns the size of the temporary storage buffer
-      required by hipsparseXcscsort(). The temporary storage buffer must be allocated by
-      the user.
-    /
+    required by hipsparseXcscsort(). The temporary storage buffer must be allocated by
+    the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcscsort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcscsort_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10087,8 +11981,12 @@ def hipsparseXcscsort(object handle, int m, int n, int nnz, object descrA, objec
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcscsort__retval = hipsparseStatus_t(chipsparse.hipsparseXcscsort(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10105,9 +12003,13 @@ def hipsparseXcoosort_bufferSizeExt(object handle, int m, int n, int nnz, object
     r"""Sort a sparse COO matrix
 
     ``hipsparseXcoosort_bufferSizeExt`` returns the size of the temporary storage buffer
-      required by hipsparseXcoosort(). The temporary storage buffer must be allocated by
-      the user.
-    /
+    required by hipsparseXcoosort(). The temporary storage buffer must be allocated by
+    the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcoosort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosort_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10135,8 +12037,12 @@ def hipsparseXcoosortByRow(object handle, int m, int n, int nnz, object cooRows,
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcoosortByRow__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosortByRow(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10165,8 +12071,12 @@ def hipsparseXcoosortByColumn(object handle, int m, int n, int nnz, object cooRo
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
-          It may return before the actual computation has finished.
-        /
+        It may return before the actual computation has finished.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseXcoosortByColumn__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosortByColumn(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10180,13 +12090,16 @@ def hipsparseXcoosortByColumn(object handle, int m, int n, int nnz, object cooRo
 @cython.embedsignature(True)
 def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
     r"""This function computes the the size of the user allocated temporary storage buffer used when converting a sparse
-      general BSR matrix to another sparse general BSR matrix.
+    general BSR matrix to another sparse general BSR matrix.
 
     ``hipsparseXgebsr2gebsr_bufferSize`` returns the size of the temporary storage buffer
-      that is required by hipsparseXgebsr2gebsrNnz() and hipsparseXgebsr2gebsr().
-      The temporary storage buffer must be allocated by the user.
-    /
-      @{*/
+    that is required by hipsparseXgebsr2gebsrNnz() and hipsparseXgebsr2gebsr().
+    The temporary storage buffer must be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10203,6 +12116,11 @@ def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 @cython.embedsignature(True)
 def hipsparseDgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10219,6 +12137,11 @@ def hipsparseDgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 @cython.embedsignature(True)
 def hipsparseCgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10235,6 +12158,11 @@ def hipsparseCgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 @cython.embedsignature(True)
 def hipsparseZgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10251,11 +12179,15 @@ def hipsparseZgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 @cython.embedsignature(True)
 def hipsparseXgebsr2gebsrNnz(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrRowPtrC, int rowBlockDimC, int colBlockDimC, object nnzTotalDevHostPtr, object buffer):
     r"""This function is used when converting a general BSR sparse matrix ``A`` to another general BSR sparse matrix ``C.``
-      Specifically, this function determines the number of non-zero blocks that will exist in ``C`` (stored using either a host
-      or device pointer), and computes the row pointer array for ``C.``
+    Specifically, this function determines the number of non-zero blocks that will exist in ``C`` (stored using either a host
+    or device pointer), and computes the row pointer array for ``C.``
 
     The routine does support asynchronous execution.
-    /
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10276,14 +12208,17 @@ def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     r"""This function converts the general BSR sparse matrix ``A`` to another general BSR sparse matrix ``C.``
 
     The conversion uses three steps. First, the user calls hipsparseXgebsr2gebsr_bufferSize() to determine the size of
-      the required temporary storage buffer. The user then allocates this buffer. Secondly, the user then allocates ``mb_C+1``
-      integers for the row pointer array for ``C`` where ``mb_C=(m+row_block_dim_C-1)/row_block_dim_C.`` The user then calls
-      hipsparseXgebsr2gebsrNnz() to fill in the row pointer array for ``C`` ( ``bsr_row_ptr_C`` ) and determine the number of
-      non-zero blocks that will exist in ``C.`` Finally, the user allocates space for the colimn indices array of ``C`` to have
-      ``nnzb_C`` elements and space for the values array of ``C`` to have ``nnzb_C*roc_block_dim_C*col_block_dim_C`` and then calls
-      hipsparseXgebsr2gebsr() to complete the conversion.
-    /
-      @{*/
+    the required temporary storage buffer. The user then allocates this buffer. Secondly, the user then allocates ``mb_C+1``
+    integers for the row pointer array for ``C`` where ``mb_C=(m+row_block_dim_C-1)/row_block_dim_C.`` The user then calls
+    hipsparseXgebsr2gebsrNnz() to fill in the row pointer array for ``C`` ( ``bsr_row_ptr_C`` ) and determine the number of
+    non-zero blocks that will exist in ``C.`` Finally, the user allocates space for the colimn indices array of ``C`` to have
+    ``nnzb_C`` elements and space for the values array of ``C`` to have ``nnzb_C*roc_block_dim_C*col_block_dim_C`` and then calls
+    hipsparseXgebsr2gebsr() to complete the conversion.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10304,6 +12239,11 @@ def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseDgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10324,6 +12264,11 @@ def hipsparseDgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseCgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10344,6 +12289,11 @@ def hipsparseCgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseZgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
@@ -10364,9 +12314,12 @@ def hipsparseZgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseScsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object info, object pBufferSizeInBytes):
     r"""This function calculates the amount of temporary storage required for
-      hipsparseXcsru2csr() and hipsparseXcsr2csru().
-    /
-      @{*/
+    hipsparseXcsru2csr() and hipsparseXcsr2csru().
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsru2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10381,6 +12334,11 @@ def hipsparseScsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
 @cython.embedsignature(True)
 def hipsparseDcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsru2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10395,6 +12353,11 @@ def hipsparseDcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
 @cython.embedsignature(True)
 def hipsparseCcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsru2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10409,6 +12372,11 @@ def hipsparseCcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
 @cython.embedsignature(True)
 def hipsparseZcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object info, object pBufferSizeInBytes):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsru2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10423,9 +12391,12 @@ def hipsparseZcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
 @cython.embedsignature(True)
 def hipsparseScsru2csr(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     r"""This function converts unsorted CSR format to sorted CSR format. The required
-      temporary storage has to be allocated by the user.
-    /
-      @{*/
+    temporary storage has to be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseScsru2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10441,6 +12412,11 @@ def hipsparseScsru2csr(object handle, int m, int n, int nnz, object descrA, obje
 @cython.embedsignature(True)
 def hipsparseDcsru2csr(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDcsru2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10456,6 +12432,11 @@ def hipsparseDcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
 @cython.embedsignature(True)
 def hipsparseCcsru2csr(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseCcsru2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10471,6 +12452,11 @@ def hipsparseCcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
 @cython.embedsignature(True)
 def hipsparseZcsru2csr(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZcsru2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10486,9 +12472,12 @@ def hipsparseZcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
 @cython.embedsignature(True)
 def hipsparseScsr2csru(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     r"""This function converts sorted CSR format to unsorted CSR format. The required
-      temporary storage has to be allocated by the user.
-    /
-      @{*/
+    temporary storage has to be allocated by the user.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2csru(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10504,6 +12493,11 @@ def hipsparseScsr2csru(object handle, int m, int n, int nnz, object descrA, obje
 @cython.embedsignature(True)
 def hipsparseDcsr2csru(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2csru(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10519,6 +12513,11 @@ def hipsparseDcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
 @cython.embedsignature(True)
 def hipsparseCcsr2csru(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2csru(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10534,6 +12533,11 @@ def hipsparseCcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
 @cython.embedsignature(True)
 def hipsparseZcsr2csru(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2csru(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -10548,11 +12552,14 @@ def hipsparseZcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
 
 @cython.embedsignature(True)
 def hipsparseScsrcolor(object handle, int m, int nnz, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object fractionToColor, object ncolors, object coloring, object reordering, object info):
-    r"""Coloring of the adjacency graph of the matrix math:`A` stored in the CSR format.
+    r"""Coloring of the adjacency graph of the matrix :math:`A` stored in the CSR format.
 
-    ``hipsparseXcsrcolor`` performs the coloring of the undirected graph represented by the (symmetric) sparsity pattern of the matrix math:`A` stored in CSR format. Graph coloring is a way of coloring the nodes of a graph such that no two adjacent nodes are of the same color. The ``fraction_to_color`` is a parameter to only color a given percentage of the graph nodes, the remaining uncolored nodes receive distinct new colors. The optional ``reordering`` array is a permutation array such that unknowns of the same color are grouped. The matrix math:`A` must be stored as a general matrix with a symmetric sparsity pattern, and if the matrix math:`A` is non-symmetric then the user is responsible to provide the symmetric part math:`\frac{A+A^T}{2}`.
-    /
-      @{*/
+    ``hipsparseXcsrcolor`` performs the coloring of the undirected graph represented by the (symmetric) sparsity pattern of the matrix :math:`A` stored in CSR format. Graph coloring is a way of coloring the nodes of a graph such that no two adjacent nodes are of the same color. The ``fraction_to_color`` is a parameter to only color a given percentage of the graph nodes, the remaining uncolored nodes receive distinct new colors. The optional ``reordering`` array is a permutation array such that unknowns of the same color are grouped. The matrix :math:`A` must be stored as a general matrix with a symmetric sparsity pattern, and if the matrix :math:`A` is non-symmetric then the user is responsible to provide the symmetric part :math:`\frac{A+A^T}{2}`.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScsrcolor__retval = hipsparseStatus_t(chipsparse.hipsparseScsrcolor(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -10571,6 +12578,11 @@ def hipsparseScsrcolor(object handle, int m, int nnz, object descrA, object csrV
 @cython.embedsignature(True)
 def hipsparseDcsrcolor(object handle, int m, int nnz, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object fractionToColor, object ncolors, object coloring, object reordering, object info):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrcolor__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrcolor(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -10589,6 +12601,11 @@ def hipsparseDcsrcolor(object handle, int m, int nnz, object descrA, object csrV
 @cython.embedsignature(True)
 def hipsparseCcsrcolor(object handle, int m, int nnz, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object fractionToColor, object ncolors, object coloring, object reordering, object info):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrcolor__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrcolor(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -10607,6 +12624,11 @@ def hipsparseCcsrcolor(object handle, int m, int nnz, object descrA, object csrV
 @cython.embedsignature(True)
 def hipsparseZcsrcolor(object handle, int m, int nnz, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object fractionToColor, object ncolors, object coloring, object reordering, object info):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrcolor__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrcolor(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
@@ -10692,12 +12714,14 @@ cdef class hipsparseSpGEMMDescr:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<hipsparseSpGEMMDescr object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -10788,12 +12812,14 @@ cdef class hipsparseSpSVDescr:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<hipsparseSpSVDescr object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -10884,12 +12910,14 @@ cdef class hipsparseSpSMDescr:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<hipsparseSpSMDescr object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -11089,6 +13117,11 @@ class hipsparseSpGEMMAlg_t(_hipsparseSpGEMMAlg_t__Base):
 @cython.embedsignature(True)
 def hipsparseCreateSpVec(object spVecDescr, long size, long nnz, object indices, object values, object idxType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(idxType,_hipsparseIndexType_t__Base):
         raise TypeError("argument 'idxType' must be of type '_hipsparseIndexType_t__Base'")                    
@@ -11106,6 +13139,11 @@ def hipsparseCreateSpVec(object spVecDescr, long size, long nnz, object indices,
 @cython.embedsignature(True)
 def hipsparseDestroySpVec(object spVecDescr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroySpVec__retval = hipsparseStatus_t(chipsparse.hipsparseDestroySpVec(
         <void *>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr))    # fully specified
@@ -11115,6 +13153,11 @@ def hipsparseDestroySpVec(object spVecDescr):
 @cython.embedsignature(True)
 def hipsparseSpVecGet(object spVecDescr, object size, object nnz, object indices, object values, object idxType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpVecGet__retval = hipsparseStatus_t(chipsparse.hipsparseSpVecGet(
         <void *const>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,
@@ -11131,6 +13174,11 @@ def hipsparseSpVecGet(object spVecDescr, object size, object nnz, object indices
 @cython.embedsignature(True)
 def hipsparseSpVecGetIndexBase(object spVecDescr, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpVecGetIndexBase__retval = hipsparseStatus_t(chipsparse.hipsparseSpVecGetIndexBase(
         <void *const>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,
@@ -11141,6 +13189,11 @@ def hipsparseSpVecGetIndexBase(object spVecDescr, object idxBase):
 @cython.embedsignature(True)
 def hipsparseSpVecGetValues(object spVecDescr, object values):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpVecGetValues__retval = hipsparseStatus_t(chipsparse.hipsparseSpVecGetValues(
         <void *const>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,
@@ -11151,6 +13204,11 @@ def hipsparseSpVecGetValues(object spVecDescr, object values):
 @cython.embedsignature(True)
 def hipsparseSpVecSetValues(object spVecDescr, object values):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpVecSetValues__retval = hipsparseStatus_t(chipsparse.hipsparseSpVecSetValues(
         <void *>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,
@@ -11161,6 +13219,11 @@ def hipsparseSpVecSetValues(object spVecDescr, object values):
 @cython.embedsignature(True)
 def hipsparseCreateCoo(object spMatDescr, long rows, long cols, long nnz, object cooRowInd, object cooColInd, object cooValues, object cooIdxType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(cooIdxType,_hipsparseIndexType_t__Base):
         raise TypeError("argument 'cooIdxType' must be of type '_hipsparseIndexType_t__Base'")                    
@@ -11179,6 +13242,11 @@ def hipsparseCreateCoo(object spMatDescr, long rows, long cols, long nnz, object
 @cython.embedsignature(True)
 def hipsparseCreateCooAoS(object spMatDescr, long rows, long cols, long nnz, object cooInd, object cooValues, object cooIdxType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(cooIdxType,_hipsparseIndexType_t__Base):
         raise TypeError("argument 'cooIdxType' must be of type '_hipsparseIndexType_t__Base'")                    
@@ -11196,6 +13264,11 @@ def hipsparseCreateCooAoS(object spMatDescr, long rows, long cols, long nnz, obj
 @cython.embedsignature(True)
 def hipsparseCreateCsr(object spMatDescr, long rows, long cols, long nnz, object csrRowOffsets, object csrColInd, object csrValues, object csrRowOffsetsType, object csrColIndType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(csrRowOffsetsType,_hipsparseIndexType_t__Base):
         raise TypeError("argument 'csrRowOffsetsType' must be of type '_hipsparseIndexType_t__Base'")                    
@@ -11216,6 +13289,11 @@ def hipsparseCreateCsr(object spMatDescr, long rows, long cols, long nnz, object
 @cython.embedsignature(True)
 def hipsparseCreateCsc(object spMatDescr, long rows, long cols, long nnz, object cscColOffsets, object cscRowInd, object cscValues, object cscColOffsetsType, object cscRowIndType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(cscColOffsetsType,_hipsparseIndexType_t__Base):
         raise TypeError("argument 'cscColOffsetsType' must be of type '_hipsparseIndexType_t__Base'")                    
@@ -11236,6 +13314,11 @@ def hipsparseCreateCsc(object spMatDescr, long rows, long cols, long nnz, object
 @cython.embedsignature(True)
 def hipsparseCreateBlockedEll(object spMatDescr, long rows, long cols, long ellBlockSize, long ellCols, object ellColInd, object ellValue, object ellIdxType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(ellIdxType,_hipsparseIndexType_t__Base):
         raise TypeError("argument 'ellIdxType' must be of type '_hipsparseIndexType_t__Base'")                    
@@ -11253,6 +13336,11 @@ def hipsparseCreateBlockedEll(object spMatDescr, long rows, long cols, long ellB
 @cython.embedsignature(True)
 def hipsparseDestroySpMat(object spMatDescr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroySpMat__retval = hipsparseStatus_t(chipsparse.hipsparseDestroySpMat(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr))    # fully specified
@@ -11262,6 +13350,11 @@ def hipsparseDestroySpMat(object spMatDescr):
 @cython.embedsignature(True)
 def hipsparseCooGet(object spMatDescr, object rows, object cols, object nnz, object cooRowInd, object cooColInd, object cooValues, object idxType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCooGet__retval = hipsparseStatus_t(chipsparse.hipsparseCooGet(
         <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11280,6 +13373,11 @@ def hipsparseCooGet(object spMatDescr, object rows, object cols, object nnz, obj
 @cython.embedsignature(True)
 def hipsparseCooAoSGet(object spMatDescr, object rows, object cols, object nnz, object cooInd, object cooValues, object idxType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCooAoSGet__retval = hipsparseStatus_t(chipsparse.hipsparseCooAoSGet(
         <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11297,6 +13395,11 @@ def hipsparseCooAoSGet(object spMatDescr, object rows, object cols, object nnz, 
 @cython.embedsignature(True)
 def hipsparseCsrGet(object spMatDescr, object rows, object cols, object nnz, object csrRowOffsets, object csrColInd, object csrValues, object csrRowOffsetsType, object csrColIndType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCsrGet__retval = hipsparseStatus_t(chipsparse.hipsparseCsrGet(
         <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11316,6 +13419,11 @@ def hipsparseCsrGet(object spMatDescr, object rows, object cols, object nnz, obj
 @cython.embedsignature(True)
 def hipsparseBlockedEllGet(object spMatDescr, object rows, object cols, object ellBlockSize, object ellCols, object ellColInd, object ellValue, object ellIdxType, object idxBase, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseBlockedEllGet__retval = hipsparseStatus_t(chipsparse.hipsparseBlockedEllGet(
         <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11334,6 +13442,11 @@ def hipsparseBlockedEllGet(object spMatDescr, object rows, object cols, object e
 @cython.embedsignature(True)
 def hipsparseCsrSetPointers(object spMatDescr, object csrRowOffsets, object csrColInd, object csrValues):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCsrSetPointers__retval = hipsparseStatus_t(chipsparse.hipsparseCsrSetPointers(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11346,6 +13459,11 @@ def hipsparseCsrSetPointers(object spMatDescr, object csrRowOffsets, object csrC
 @cython.embedsignature(True)
 def hipsparseCscSetPointers(object spMatDescr, object cscColOffsets, object cscRowInd, object cscValues):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCscSetPointers__retval = hipsparseStatus_t(chipsparse.hipsparseCscSetPointers(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11358,6 +13476,11 @@ def hipsparseCscSetPointers(object spMatDescr, object cscColOffsets, object cscR
 @cython.embedsignature(True)
 def hipsparseCooSetPointers(object spMatDescr, object cooRowInd, object cooColInd, object cooValues):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCooSetPointers__retval = hipsparseStatus_t(chipsparse.hipsparseCooSetPointers(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11370,6 +13493,11 @@ def hipsparseCooSetPointers(object spMatDescr, object cooRowInd, object cooColIn
 @cython.embedsignature(True)
 def hipsparseSpMatGetSize(object spMatDescr, object rows, object cols, object nnz):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetSize(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11382,6 +13510,11 @@ def hipsparseSpMatGetSize(object spMatDescr, object rows, object cols, object nn
 @cython.embedsignature(True)
 def hipsparseSpMatGetFormat(object spMatDescr, object format):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetFormat__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetFormat(
         <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11392,6 +13525,11 @@ def hipsparseSpMatGetFormat(object spMatDescr, object format):
 @cython.embedsignature(True)
 def hipsparseSpMatGetIndexBase(object spMatDescr, object idxBase):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetIndexBase__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetIndexBase(
         <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11402,6 +13540,11 @@ def hipsparseSpMatGetIndexBase(object spMatDescr, object idxBase):
 @cython.embedsignature(True)
 def hipsparseSpMatGetValues(object spMatDescr, object values):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetValues__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetValues(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11412,6 +13555,11 @@ def hipsparseSpMatGetValues(object spMatDescr, object values):
 @cython.embedsignature(True)
 def hipsparseSpMatSetValues(object spMatDescr, object values):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatSetValues__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatSetValues(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11422,6 +13570,11 @@ def hipsparseSpMatSetValues(object spMatDescr, object values):
 @cython.embedsignature(True)
 def hipsparseSpMatGetStridedBatch(object spMatDescr, object batchCount):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetStridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
@@ -11432,6 +13585,11 @@ def hipsparseSpMatGetStridedBatch(object spMatDescr, object batchCount):
 @cython.embedsignature(True)
 def hipsparseSpMatSetStridedBatch(object spMatDescr, int batchCount):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatSetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatSetStridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,batchCount))    # fully specified
@@ -11441,6 +13599,11 @@ def hipsparseSpMatSetStridedBatch(object spMatDescr, int batchCount):
 @cython.embedsignature(True)
 def hipsparseCooSetStridedBatch(object spMatDescr, int batchCount, long batchStride):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCooSetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCooSetStridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,batchCount,batchStride))    # fully specified
@@ -11450,6 +13613,11 @@ def hipsparseCooSetStridedBatch(object spMatDescr, int batchCount, long batchStr
 @cython.embedsignature(True)
 def hipsparseCsrSetStridedBatch(object spMatDescr, int batchCount, long offsetsBatchStride, long columnsValuesBatchStride):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseCsrSetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCsrSetStridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,batchCount,offsetsBatchStride,columnsValuesBatchStride))    # fully specified
@@ -11459,6 +13627,11 @@ def hipsparseCsrSetStridedBatch(object spMatDescr, int batchCount, long offsetsB
 @cython.embedsignature(True)
 def hipsparseSpMatGetAttribute(object spMatDescr, object attribute, object data, unsigned long dataSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(attribute,_hipsparseSpMatAttribute_t__Base):
         raise TypeError("argument 'attribute' must be of type '_hipsparseSpMatAttribute_t__Base'")
@@ -11471,6 +13644,11 @@ def hipsparseSpMatGetAttribute(object spMatDescr, object attribute, object data,
 @cython.embedsignature(True)
 def hipsparseSpMatSetAttribute(object spMatDescr, object attribute, object data, unsigned long dataSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(attribute,_hipsparseSpMatAttribute_t__Base):
         raise TypeError("argument 'attribute' must be of type '_hipsparseSpMatAttribute_t__Base'")
@@ -11483,6 +13661,11 @@ def hipsparseSpMatSetAttribute(object spMatDescr, object attribute, object data,
 @cython.embedsignature(True)
 def hipsparseCreateDnVec(object dnVecDescr, long size, object values, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
@@ -11495,6 +13678,11 @@ def hipsparseCreateDnVec(object dnVecDescr, long size, object values, object val
 @cython.embedsignature(True)
 def hipsparseDestroyDnVec(object dnVecDescr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyDnVec__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyDnVec(
         <void *>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr))    # fully specified
@@ -11504,6 +13692,11 @@ def hipsparseDestroyDnVec(object dnVecDescr):
 @cython.embedsignature(True)
 def hipsparseDnVecGet(object dnVecDescr, object size, object values, object valueType):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnVecGet__retval = hipsparseStatus_t(chipsparse.hipsparseDnVecGet(
         <void *const>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr,
@@ -11516,6 +13709,11 @@ def hipsparseDnVecGet(object dnVecDescr, object size, object values, object valu
 @cython.embedsignature(True)
 def hipsparseDnVecGetValues(object dnVecDescr, object values):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnVecGetValues__retval = hipsparseStatus_t(chipsparse.hipsparseDnVecGetValues(
         <void *const>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr,
@@ -11526,6 +13724,11 @@ def hipsparseDnVecGetValues(object dnVecDescr, object values):
 @cython.embedsignature(True)
 def hipsparseDnVecSetValues(object dnVecDescr, object values):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnVecSetValues__retval = hipsparseStatus_t(chipsparse.hipsparseDnVecSetValues(
         <void *>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr,
@@ -11536,6 +13739,11 @@ def hipsparseDnVecSetValues(object dnVecDescr, object values):
 @cython.embedsignature(True)
 def hipsparseCreateDnMat(object dnMatDescr, long rows, long cols, long ld, object values, object valueType, object order):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")                    
@@ -11550,6 +13758,11 @@ def hipsparseCreateDnMat(object dnMatDescr, long rows, long cols, long ld, objec
 @cython.embedsignature(True)
 def hipsparseDestroyDnMat(object dnMatDescr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyDnMat__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyDnMat(
         <void *>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr))    # fully specified
@@ -11559,6 +13772,11 @@ def hipsparseDestroyDnMat(object dnMatDescr):
 @cython.embedsignature(True)
 def hipsparseDnMatGet(object dnMatDescr, object rows, object cols, object ld, object values, object valueType, object order):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatGet__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatGet(
         <void *const>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,
@@ -11574,6 +13792,11 @@ def hipsparseDnMatGet(object dnMatDescr, object rows, object cols, object ld, ob
 @cython.embedsignature(True)
 def hipsparseDnMatGetValues(object dnMatDescr, object values):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatGetValues__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatGetValues(
         <void *const>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,
@@ -11584,6 +13807,11 @@ def hipsparseDnMatGetValues(object dnMatDescr, object values):
 @cython.embedsignature(True)
 def hipsparseDnMatSetValues(object dnMatDescr, object values):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatSetValues__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatSetValues(
         <void *>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,
@@ -11594,6 +13822,11 @@ def hipsparseDnMatSetValues(object dnMatDescr, object values):
 @cython.embedsignature(True)
 def hipsparseDnMatGetStridedBatch(object dnMatDescr, object batchCount, object batchStride):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatGetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatGetStridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,
@@ -11605,6 +13838,11 @@ def hipsparseDnMatGetStridedBatch(object dnMatDescr, object batchCount, object b
 @cython.embedsignature(True)
 def hipsparseDnMatSetStridedBatch(object dnMatDescr, int batchCount, long batchStride):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatSetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatSetStridedBatch(
         <void *>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,batchCount,batchStride))    # fully specified
@@ -11614,6 +13852,11 @@ def hipsparseDnMatSetStridedBatch(object dnMatDescr, int batchCount, long batchS
 @cython.embedsignature(True)
 def hipsparseAxpby(object handle, object alpha, object vecX, object beta, object vecY):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseAxpby__retval = hipsparseStatus_t(chipsparse.hipsparseAxpby(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -11627,6 +13870,11 @@ def hipsparseAxpby(object handle, object alpha, object vecX, object beta, object
 @cython.embedsignature(True)
 def hipsparseGather(object handle, object vecY, object vecX):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseGather__retval = hipsparseStatus_t(chipsparse.hipsparseGather(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -11638,6 +13886,11 @@ def hipsparseGather(object handle, object vecY, object vecX):
 @cython.embedsignature(True)
 def hipsparseScatter(object handle, object vecX, object vecY):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseScatter__retval = hipsparseStatus_t(chipsparse.hipsparseScatter(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -11649,6 +13902,11 @@ def hipsparseScatter(object handle, object vecX, object vecY):
 @cython.embedsignature(True)
 def hipsparseRot(object handle, object c_coeff, object s_coeff, object vecX, object vecY):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseRot__retval = hipsparseStatus_t(chipsparse.hipsparseRot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -11662,6 +13920,11 @@ def hipsparseRot(object handle, object c_coeff, object s_coeff, object vecX, obj
 @cython.embedsignature(True)
 def hipsparseSparseToDense_bufferSize(object handle, object matA, object matB, object alg, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(alg,_hipsparseSparseToDenseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSparseToDenseAlg_t__Base'")
@@ -11676,6 +13939,11 @@ def hipsparseSparseToDense_bufferSize(object handle, object matA, object matB, o
 @cython.embedsignature(True)
 def hipsparseSparseToDense(object handle, object matA, object matB, object alg, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(alg,_hipsparseSparseToDenseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSparseToDenseAlg_t__Base'")
@@ -11690,6 +13958,11 @@ def hipsparseSparseToDense(object handle, object matA, object matB, object alg, 
 @cython.embedsignature(True)
 def hipsparseDenseToSparse_bufferSize(object handle, object matA, object matB, object alg, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
@@ -11704,6 +13977,11 @@ def hipsparseDenseToSparse_bufferSize(object handle, object matA, object matB, o
 @cython.embedsignature(True)
 def hipsparseDenseToSparse_analysis(object handle, object matA, object matB, object alg, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
@@ -11718,6 +13996,11 @@ def hipsparseDenseToSparse_analysis(object handle, object matA, object matB, obj
 @cython.embedsignature(True)
 def hipsparseDenseToSparse_convert(object handle, object matA, object matB, object alg, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
@@ -11732,6 +14015,11 @@ def hipsparseDenseToSparse_convert(object handle, object matA, object matB, obje
 @cython.embedsignature(True)
 def hipsparseSpVV_bufferSize(object handle, object opX, object vecX, object vecY, object result, object computeType, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opX,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opX' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11749,6 +14037,11 @@ def hipsparseSpVV_bufferSize(object handle, object opX, object vecX, object vecY
 @cython.embedsignature(True)
 def hipsparseSpVV(object handle, object opX, object vecX, object vecY, object result, object computeType, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opX,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opX' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11766,6 +14059,11 @@ def hipsparseSpVV(object handle, object opX, object vecX, object vecY, object re
 @cython.embedsignature(True)
 def hipsparseSpMV_bufferSize(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11787,6 +14085,11 @@ def hipsparseSpMV_bufferSize(object handle, object opA, object alpha, object mat
 @cython.embedsignature(True)
 def hipsparseSpMV_preprocess(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11808,6 +14111,11 @@ def hipsparseSpMV_preprocess(object handle, object opA, object alpha, object mat
 @cython.embedsignature(True)
 def hipsparseSpMV(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11829,6 +14137,11 @@ def hipsparseSpMV(object handle, object opA, object alpha, object matA, object v
 @cython.embedsignature(True)
 def hipsparseSpMM_bufferSize(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11852,6 +14165,11 @@ def hipsparseSpMM_bufferSize(object handle, object opA, object opB, object alpha
 @cython.embedsignature(True)
 def hipsparseSpMM_preprocess(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11875,6 +14193,11 @@ def hipsparseSpMM_preprocess(object handle, object opA, object opB, object alpha
 @cython.embedsignature(True)
 def hipsparseSpMM(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11898,6 +14221,11 @@ def hipsparseSpMM(object handle, object opA, object opB, object alpha, object ma
 @cython.embedsignature(True)
 def hipsparseSpGEMM_createDescr():
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     descr = hipsparseSpGEMMDescr.from_ptr(NULL)
     _hipsparseSpGEMM_createDescr__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMM_createDescr(&descr._ptr))    # fully specified
@@ -11907,6 +14235,11 @@ def hipsparseSpGEMM_createDescr():
 @cython.embedsignature(True)
 def hipsparseSpGEMM_destroyDescr(object descr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpGEMM_destroyDescr__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMM_destroyDescr(
         hipsparseSpGEMMDescr.from_pyobj(descr)._ptr))    # fully specified
@@ -11916,6 +14249,11 @@ def hipsparseSpGEMM_destroyDescr(object descr):
 @cython.embedsignature(True)
 def hipsparseSpGEMM_workEstimation(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr, object bufferSize1, object externalBuffer1):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11941,6 +14279,11 @@ def hipsparseSpGEMM_workEstimation(object handle, object opA, object opB, object
 @cython.embedsignature(True)
 def hipsparseSpGEMM_compute(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr, object bufferSize2, object externalBuffer2):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11966,6 +14309,11 @@ def hipsparseSpGEMM_compute(object handle, object opA, object opB, object alpha,
 @cython.embedsignature(True)
 def hipsparseSpGEMM_copy(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -11989,6 +14337,11 @@ def hipsparseSpGEMM_copy(object handle, object opA, object opB, object alpha, ob
 @cython.embedsignature(True)
 def hipsparseSpGEMMreuse_workEstimation(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize1, object externalBuffer1):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12010,6 +14363,11 @@ def hipsparseSpGEMMreuse_workEstimation(object handle, object opA, object opB, o
 @cython.embedsignature(True)
 def hipsparseSpGEMMreuse_nnz(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize2, object externalBuffer2, object bufferSize3, object externalBuffer3, object bufferSize4, object externalBuffer4):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12035,6 +14393,11 @@ def hipsparseSpGEMMreuse_nnz(object handle, object opA, object opB, object matA,
 @cython.embedsignature(True)
 def hipsparseSpGEMMreuse_compute(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12058,6 +14421,11 @@ def hipsparseSpGEMMreuse_compute(object handle, object opA, object opB, object a
 @cython.embedsignature(True)
 def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize5, object externalBuffer5):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12079,6 +14447,11 @@ def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA
 @cython.embedsignature(True)
 def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12102,6 +14475,11 @@ def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A
 @cython.embedsignature(True)
 def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12125,6 +14503,11 @@ def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alph
 @cython.embedsignature(True)
 def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12148,6 +14531,11 @@ def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alph
 @cython.embedsignature(True)
 def hipsparseSpSV_createDescr():
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     descr = hipsparseSpSVDescr.from_ptr(NULL)
     _hipsparseSpSV_createDescr__retval = hipsparseStatus_t(chipsparse.hipsparseSpSV_createDescr(&descr._ptr))    # fully specified
@@ -12157,6 +14545,11 @@ def hipsparseSpSV_createDescr():
 @cython.embedsignature(True)
 def hipsparseSpSV_destroyDescr(object descr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpSV_destroyDescr__retval = hipsparseStatus_t(chipsparse.hipsparseSpSV_destroyDescr(
         hipsparseSpSVDescr.from_pyobj(descr)._ptr))    # fully specified
@@ -12166,6 +14559,11 @@ def hipsparseSpSV_destroyDescr(object descr):
 @cython.embedsignature(True)
 def hipsparseSpSV_bufferSize(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12187,6 +14585,11 @@ def hipsparseSpSV_bufferSize(object handle, object opA, object alpha, object mat
 @cython.embedsignature(True)
 def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12208,6 +14611,11 @@ def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA,
 @cython.embedsignature(True)
 def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12229,6 +14637,11 @@ def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, ob
 @cython.embedsignature(True)
 def hipsparseSpSM_createDescr():
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     descr = hipsparseSpSMDescr.from_ptr(NULL)
     _hipsparseSpSM_createDescr__retval = hipsparseStatus_t(chipsparse.hipsparseSpSM_createDescr(&descr._ptr))    # fully specified
@@ -12238,6 +14651,11 @@ def hipsparseSpSM_createDescr():
 @cython.embedsignature(True)
 def hipsparseSpSM_destroyDescr(object descr):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     _hipsparseSpSM_destroyDescr__retval = hipsparseStatus_t(chipsparse.hipsparseSpSM_destroyDescr(
         hipsparseSpSMDescr.from_pyobj(descr)._ptr))    # fully specified
@@ -12247,6 +14665,11 @@ def hipsparseSpSM_destroyDescr(object descr):
 @cython.embedsignature(True)
 def hipsparseSpSM_bufferSize(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object bufferSize):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12270,6 +14693,11 @@ def hipsparseSpSM_bufferSize(object handle, object opA, object opB, object alpha
 @cython.embedsignature(True)
 def hipsparseSpSM_analysis(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
@@ -12293,6 +14721,11 @@ def hipsparseSpSM_analysis(object handle, object opA, object opB, object alpha, 
 @cython.embedsignature(True)
 def hipsparseSpSM_solve(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object externalBuffer):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
     """
     if not isinstance(opA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    

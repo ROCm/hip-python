@@ -1,5 +1,6 @@
 # AMD_COPYRIGHT
 from libc cimport stdlib
+from libc cimport string
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer

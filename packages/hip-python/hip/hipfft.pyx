@@ -140,12 +140,14 @@ cdef class hipfftHandle_t:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<hipfftHandle_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -177,16 +179,17 @@ def hipfftPlan1d(int nx, object type, int batch):
     Allocate and initialize a new one-dimensional FFT plan.
 
     Args:
-        nx: **[in]** FFT length.
+        nx (`~.int`): **[in]** FFT length.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
-        batch: **[in]** Number of batched transforms to compute.
+        batch (`~.int`): **[in]** Number of batched transforms to compute.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - plan: Pointer to the FFT plan handle.
+        * `~.hipfftResult_t`
+        * `~.hipfftHandle_t`: Pointer to the FFT plan handle.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     if not isinstance(type,_hipfftType_t__Base):
@@ -205,16 +208,17 @@ def hipfftPlan2d(int nx, int ny, object type):
     fastest.
 
     Args:
-        nx: **[in]** Number of elements in the x-direction (slow index).
+        nx (`~.int`): **[in]** Number of elements in the x-direction (slow index).
 
-        ny: **[in]** Number of elements in the y-direction (fast index).
+        ny (`~.int`): **[in]** Number of elements in the y-direction (fast index).
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - plan: Pointer to the FFT plan handle.
+        * `~.hipfftResult_t`
+        * `~.hipfftHandle_t`: Pointer to the FFT plan handle.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     if not isinstance(type,_hipfftType_t__Base):
@@ -233,18 +237,19 @@ def hipfftPlan3d(int nx, int ny, int nz, object type):
     fastest.
 
     Args:
-        nx: **[in]** Number of elements in the x-direction (slowest index).
+        nx (`~.int`): **[in]** Number of elements in the x-direction (slowest index).
 
-        ny: **[in]** Number of elements in the y-direction.
+        ny (`~.int`): **[in]** Number of elements in the y-direction.
 
-        nz: **[in]** Number of elements in the z-direction (fastest index).
+        nz (`~.int`): **[in]** Number of elements in the z-direction (fastest index).
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - plan: Pointer to the FFT plan handle.
+        * `~.hipfftResult_t`
+        * `~.hipfftHandle_t`: Pointer to the FFT plan handle.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     if not isinstance(type,_hipfftType_t__Base):
@@ -279,30 +284,31 @@ def hipfftPlanMany(int rank, object n, object inembed, int istride, int idist, o
     equivalent.
 
     Args:
-        rank: **[in]** Dimension of transform (1, 2, or 3).
+        rank (`~.int`): **[in]** Dimension of transform (1, 2, or 3).
 
-        n: **[in]** Number of elements to transform in the x/y/z directions.
+        n (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements to transform in the x/y/z directions.
 
-        inembed: **[in]** Number of elements in the input data in the x/y/z directions.
+        inembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the input data in the x/y/z directions.
 
-        istride: **[in]** Distance between two successive elements in the input data.
+        istride (`~.int`): **[in]** Distance between two successive elements in the input data.
 
-        idist: **[in]** Distance between input batches.
+        idist (`~.int`): **[in]** Distance between input batches.
 
-        onembed: **[in]** Number of elements in the output data in the x/y/z directions.
+        onembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the output data in the x/y/z directions.
 
-        ostride: **[in]** Distance between two successive elements in the output data.
+        ostride (`~.int`): **[in]** Distance between two successive elements in the output data.
 
-        odist: **[in]** Distance between output batches.
+        odist (`~.int`): **[in]** Distance between output batches.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
-        batch: **[in]** Number of batched transforms to perform.
+        batch (`~.int`): **[in]** Number of batched transforms to perform.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - plan: Pointer to the FFT plan handle.
+        * `~.hipfftResult_t`
+        * `~.hipfftHandle_t`: Pointer to the FFT plan handle.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     if not isinstance(type,_hipfftType_t__Base):
@@ -317,6 +323,11 @@ def hipfftPlanMany(int rank, object n, object inembed, int istride, int idist, o
 @cython.embedsignature(True)
 def hipfftCreate():
     r"""Allocate a new plan.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     _hipfftCreate__retval = hipfftResult_t(chipfft.hipfftCreate(&plan._ptr))    # fully specified
@@ -332,8 +343,13 @@ def hipfftExtPlanScaleFactor(object plan, double scalefactor):
     The supplied factor must be a finite number.  That is, it must neither be infinity nor NaN.
 
     This function must be called after the plan is allocated using
-    ::hipfftCreate, but before the plan is initialized by any of the
+    `~.hipfftCreate`, but before the plan is initialized by any of the
     "MakePlan" functions.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftExtPlanScaleFactor__retval = hipfftResult_t(chipfft.hipfftExtPlanScaleFactor(
         hipfftHandle_t.from_pyobj(plan)._ptr,scalefactor))    # fully specified
@@ -348,13 +364,18 @@ def hipfftMakePlan1d(object plan, int nx, object type, int batch):
     modifies the plan associated with the plan handle.
 
     Args:
-        plan: **[in]** Handle of the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Handle of the FFT plan.
 
-        nx: **[in]** FFT length.
+        nx (`~.int`): **[in]** FFT length.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
-        batch: **[in]** Number of batched transforms to compute.
+        batch (`~.int`): **[in]** Number of batched transforms to compute.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -375,18 +396,19 @@ def hipfftMakePlan2d(object plan, int nx, int ny, object type):
     fastest.
 
     Args:
-        plan: **[in]** Handle of the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Handle of the FFT plan.
 
-        nx: **[in]** Number of elements in the x-direction (slow index).
+        nx (`~.int`): **[in]** Number of elements in the x-direction (slow index).
 
-        ny: **[in]** Number of elements in the y-direction (fast index).
+        ny (`~.int`): **[in]** Number of elements in the y-direction (fast index).
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -407,20 +429,21 @@ def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type):
     fastest.
 
     Args:
-        plan: **[in]** Handle of the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Handle of the FFT plan.
 
-        nx: **[in]** Number of elements in the x-direction (slowest index).
+        nx (`~.int`): **[in]** Number of elements in the x-direction (slowest index).
 
-        ny: **[in]** Number of elements in the y-direction.
+        ny (`~.int`): **[in]** Number of elements in the y-direction.
 
-        nz: **[in]** Number of elements in the z-direction (fastest index).
+        nz (`~.int`): **[in]** Number of elements in the z-direction (fastest index).
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -457,32 +480,33 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
     equivalent.
 
     Args:
-        plan: **[out]** Pointer to the FFT plan handle.
+        plan (`~.hipfftHandle_t`/`~.object`): **[out]** Pointer to the FFT plan handle.
 
-        rank: **[in]** Dimension of transform (1, 2, or 3).
+        rank (`~.int`): **[in]** Dimension of transform (1, 2, or 3).
 
-        n: **[in]** Number of elements to transform in the x/y/z directions.
+        n (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements to transform in the x/y/z directions.
 
-        inembed: **[in]** Number of elements in the input data in the x/y/z directions.
+        inembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the input data in the x/y/z directions.
 
-        istride: **[in]** Distance between two successive elements in the input data.
+        istride (`~.int`): **[in]** Distance between two successive elements in the input data.
 
-        idist: **[in]** Distance between input batches.
+        idist (`~.int`): **[in]** Distance between input batches.
 
-        onembed: **[in]** Number of elements in the output data in the x/y/z directions.
+        onembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the output data in the x/y/z directions.
 
-        ostride: **[in]** Distance between two successive elements in the output data.
+        ostride (`~.int`): **[in]** Distance between two successive elements in the output data.
 
-        odist: **[in]** Distance between output batches.
+        odist (`~.int`): **[in]** Distance between output batches.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
-        batch: **[in]** Number of batched transforms to perform.
+        batch (`~.int`): **[in]** Number of batched transforms to perform.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -498,6 +522,11 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
 @cython.embedsignature(True)
 def hipfftMakePlanMany64(object plan, int rank, object n, object inembed, long long istride, long long idist, object onembed, long long ostride, long long odist, object type, long long batch):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -515,14 +544,15 @@ def hipfftEstimate1d(int nx, object type, int batch):
     r"""Return an estimate of the work area size required for a 1D plan.
 
     Args:
-        nx: **[in]** Number of elements in the x-direction.
+        nx (`~.int`): **[in]** Number of elements in the x-direction.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -536,16 +566,17 @@ def hipfftEstimate2d(int nx, int ny, object type):
     r"""Return an estimate of the work area size required for a 2D plan.
 
     Args:
-        nx: **[in]** Number of elements in the x-direction.
+        nx (`~.int`): **[in]** Number of elements in the x-direction.
 
-        ny: **[in]** Number of elements in the y-direction.
+        ny (`~.int`): **[in]** Number of elements in the y-direction.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -559,18 +590,19 @@ def hipfftEstimate3d(int nx, int ny, int nz, object type):
     r"""Return an estimate of the work area size required for a 3D plan.
 
     Args:
-        nx: **[in]** Number of elements in the x-direction.
+        nx (`~.int`): **[in]** Number of elements in the x-direction.
 
-        ny: **[in]** Number of elements in the y-direction.
+        ny (`~.int`): **[in]** Number of elements in the y-direction.
 
-        nz: **[in]** Number of elements in the z-direction.
+        nz (`~.int`): **[in]** Number of elements in the z-direction.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -584,30 +616,31 @@ def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idis
     r"""Return an estimate of the work area size required for a rank-dimensional plan.
 
     Args:
-        rank: **[in]** Dimension of FFT transform (1, 2, or 3).
+        rank (`~.int`): **[in]** Dimension of FFT transform (1, 2, or 3).
 
-        n: **[in]** Number of elements in the x/y/z directions.
+        n (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the x/y/z directions.
 
-        inembed: **[in]** 
+        inembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
 
-        istride: **[in]** 
+        istride (`~.int`): **[in]** 
 
-        idist: **[in]** Distance between input batches.
+        idist (`~.int`): **[in]** Distance between input batches.
 
-        onembed: **[in]** 
+        onembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
 
-        ostride: **[in]** 
+        ostride (`~.int`): **[in]** 
 
-        odist: **[in]** Distance between output batches.
+        odist (`~.int`): **[in]** Distance between output batches.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
-        batch: **[in]** Number of batched transforms to perform.
+        batch (`~.int`): **[in]** Number of batched transforms to perform.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -624,16 +657,17 @@ def hipfftGetSize1d(object plan, int nx, object type, int batch):
     r"""Return size of the work area size required for a 1D plan.
 
     Args:
-        plan: **[in]** Pointer to the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Pointer to the FFT plan.
 
-        nx: **[in]** Number of elements in the x-direction.
+        nx (`~.int`): **[in]** Number of elements in the x-direction.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -648,18 +682,19 @@ def hipfftGetSize2d(object plan, int nx, int ny, object type):
     r"""Return size of the work area size required for a 2D plan.
 
     Args:
-        plan: **[in]** Pointer to the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Pointer to the FFT plan.
 
-        nx: **[in]** Number of elements in the x-direction.
+        nx (`~.int`): **[in]** Number of elements in the x-direction.
 
-        ny: **[in]** Number of elements in the y-direction.
+        ny (`~.int`): **[in]** Number of elements in the y-direction.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -674,20 +709,21 @@ def hipfftGetSize3d(object plan, int nx, int ny, int nz, object type):
     r"""Return size of the work area size required for a 3D plan.
 
     Args:
-        plan: **[in]** Pointer to the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Pointer to the FFT plan.
 
-        nx: **[in]** Number of elements in the x-direction.
+        nx (`~.int`): **[in]** Number of elements in the x-direction.
 
-        ny: **[in]** Number of elements in the y-direction.
+        ny (`~.int`): **[in]** Number of elements in the y-direction.
 
-        nz: **[in]** Number of elements in the z-direction.
+        nz (`~.int`): **[in]** Number of elements in the z-direction.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -702,32 +738,33 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
     r"""Return size of the work area size required for a rank-dimensional plan.
 
     Args:
-        plan: **[in]** Pointer to the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Pointer to the FFT plan.
 
-        rank: **[in]** Dimension of FFT transform (1, 2, or 3).
+        rank (`~.int`): **[in]** Dimension of FFT transform (1, 2, or 3).
 
-        n: **[in]** Number of elements in the x/y/z directions.
+        n (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the x/y/z directions.
 
-        inembed: **[in]** 
+        inembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
 
-        istride: **[in]** 
+        istride (`~.int`): **[in]** 
 
-        idist: **[in]** Distance between input batches.
+        idist (`~.int`): **[in]** Distance between input batches.
 
-        onembed: **[in]** 
+        onembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
 
-        ostride: **[in]** 
+        ostride (`~.int`): **[in]** 
 
-        odist: **[in]** Distance between output batches.
+        odist (`~.int`): **[in]** Distance between output batches.
 
-        type: **[in]** FFT type.
+        type (`~.hipfftType_t`): **[in]** FFT type.
 
-        batch: **[in]** Number of batched transforms to perform.
+        batch (`~.int`): **[in]** Number of batched transforms to perform.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - workSize: Pointer to work area size (returned value).
+        * `~.hipfftResult_t`
+        * `~.int`: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -743,6 +780,11 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
 @cython.embedsignature(True)
 def hipfftGetSizeMany64(object plan, int rank, object n, object inembed, long long istride, long long idist, object onembed, long long ostride, long long odist, object type, long long batch):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -760,7 +802,12 @@ def hipfftGetSize(object plan):
     r"""Return size of the work area size required for a rank-dimensional plan.
 
     Args:
-        plan: **[in]** Pointer to the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Pointer to the FFT plan.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     cdef unsigned long workSize
     _hipfftGetSize__retval = hipfftResult_t(chipfft.hipfftGetSize(
@@ -773,9 +820,14 @@ def hipfftSetAutoAllocation(object plan, int autoAllocate):
     r"""Set the plan's auto-allocation flag.  The plan will allocate its own workarea.
 
     Args:
-        plan: **[in]** Pointer to the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Pointer to the FFT plan.
 
-        autoAllocate: **[in]** 0 to disable auto-allocation, non-zero to enable.
+        autoAllocate (`~.int`): **[in]** 0 to disable auto-allocation, non-zero to enable.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftSetAutoAllocation__retval = hipfftResult_t(chipfft.hipfftSetAutoAllocation(
         hipfftHandle_t.from_pyobj(plan)._ptr,autoAllocate))    # fully specified
@@ -787,9 +839,14 @@ def hipfftSetWorkArea(object plan, object workArea):
     r"""Set the plan's work area.
 
     Args:
-        plan: **[in]** Pointer to the FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): **[in]** Pointer to the FFT plan.
 
-        workArea: **[in]** Pointer to the work area (on device).
+        workArea (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to the work area (on device).
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftSetWorkArea__retval = hipfftResult_t(chipfft.hipfftSetWorkArea(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -805,13 +862,18 @@ def hipfftExecC2C(object plan, object idata, object odata, int direction):
     transform is performed.
 
     Args:
-        plan: The FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        idata: Input data (on device).
+        idata (`~.float2`/`~.object`): Input data (on device).
 
-        odata: Output data (on device).
+        odata (`~.float2`/`~.object`): Output data (on device).
 
-        direction: Either `HIPFFT_FORWARD` or `HIPFFT_BACKWARD`.
+        direction (`~.int`): Either `HIPFFT_FORWARD` or `HIPFFT_BACKWARD`.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftExecC2C__retval = hipfftResult_t(chipfft.hipfftExecC2C(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -828,11 +890,16 @@ def hipfftExecR2C(object plan, object idata, object odata):
     transform is performed.
 
     Args:
-        plan: The FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        idata: Input data (on device).
+        idata (`~.hip._util.types.DataHandle`/`~.object`): Input data (on device).
 
-        odata: Output data (on device).
+        odata (`~.float2`/`~.object`): Output data (on device).
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftExecR2C__retval = hipfftResult_t(chipfft.hipfftExecR2C(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -849,11 +916,16 @@ def hipfftExecC2R(object plan, object idata, object odata):
     transform is performed.
 
     Args:
-        plan: The FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        idata: Input data (on device).
+        idata (`~.float2`/`~.object`): Input data (on device).
 
-        odata: Output data (on device).
+        odata (`~.hip._util.types.DataHandle`/`~.object`): Output data (on device).
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftExecC2R__retval = hipfftResult_t(chipfft.hipfftExecC2R(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -870,13 +942,18 @@ def hipfftExecZ2Z(object plan, object idata, object odata, int direction):
     transform is performed.
 
     Args:
-        plan: The FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        idata: Input data (on device).
+        idata (`~.double2`/`~.object`): Input data (on device).
 
-        odata: Output data (on device).
+        odata (`~.double2`/`~.object`): Output data (on device).
 
-        direction: Either `HIPFFT_FORWARD` or `HIPFFT_BACKWARD`.
+        direction (`~.int`): Either `HIPFFT_FORWARD` or `HIPFFT_BACKWARD`.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftExecZ2Z__retval = hipfftResult_t(chipfft.hipfftExecZ2Z(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -893,11 +970,16 @@ def hipfftExecD2Z(object plan, object idata, object odata):
     transform is performed.
 
     Args:
-        plan: The FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        idata: Input data (on device).
+        idata (`~.hip._util.types.DataHandle`/`~.object`): Input data (on device).
 
-        odata: Output data (on device).
+        odata (`~.double2`/`~.object`): Output data (on device).
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftExecD2Z__retval = hipfftResult_t(chipfft.hipfftExecD2Z(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -914,11 +996,16 @@ def hipfftExecZ2D(object plan, object idata, object odata):
     transform is performed.
 
     Args:
-        plan: The FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        idata: Input data (on device).
+        idata (`~.double2`/`~.object`): Input data (on device).
 
-        odata: Output data (on device).
+        odata (`~.hip._util.types.DataHandle`/`~.object`): Output data (on device).
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftExecZ2D__retval = hipfftResult_t(chipfft.hipfftExecZ2D(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -935,9 +1022,14 @@ def hipfftSetStream(object plan, object stream):
     launched by this plan are associated with the provided stream.
 
     Args:
-        plan: The FFT plan.
+        plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        stream: The HIP stream.
+        stream (`~.ihipStream_t`/`~.object`): The HIP stream.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftSetStream__retval = hipfftResult_t(chipfft.hipfftSetStream(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -948,6 +1040,11 @@ def hipfftSetStream(object plan, object stream):
 @cython.embedsignature(True)
 def hipfftDestroy(object plan):
     r"""Destroy and deallocate an existing plan.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftDestroy__retval = hipfftResult_t(chipfft.hipfftDestroy(
         hipfftHandle_t.from_pyobj(plan)._ptr))    # fully specified
@@ -959,7 +1056,12 @@ def hipfftGetVersion(object version):
     r"""Get rocFFT/cuFFT version.
 
     Args:
-        version: **[out]** cuFFT/rocFFT version (returned value).
+        version (`~.hip._util.types.DataHandle`/`~.object`): **[out]** cuFFT/rocFFT version (returned value).
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     _hipfftGetVersion__retval = hipfftResult_t(chipfft.hipfftGetVersion(
         <int *>hip._util.types.DataHandle.from_pyobj(version)._ptr))    # fully specified
@@ -971,9 +1073,14 @@ def hipfftGetProperty(object type, object value):
     r"""Get library property.
 
     Args:
-        type: **[in]** Property type.
+        type (`~.hipfftLibraryPropertyType_t`): **[in]** Property type.
 
-        value: **[out]** Returned value.
+        value (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Returned value.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.hipfftResult_t`
     """
     if not isinstance(type,_hipfftLibraryPropertyType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftLibraryPropertyType_t__Base'")

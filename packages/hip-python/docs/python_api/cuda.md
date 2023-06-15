@@ -2,7 +2,8 @@
 
 ```{eval-rst}
 .. automodule:: cuda.cuda
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :noindex:
 ```

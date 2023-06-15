@@ -1,5 +1,6 @@
 # AMD_COPYRIGHT
 from libc cimport stdlib
+from libc cimport string
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
@@ -34,3 +35,5 @@ cdef class ncclUniqueId:
     cdef __allocate(crccl.ncclUniqueId** ptr)
     @staticmethod
     cdef ncclUniqueId new()
+    @staticmethod
+    cdef ncclUniqueId from_value(crccl.ncclUniqueId other)

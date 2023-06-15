@@ -1,5 +1,6 @@
 # AMD_COPYRIGHT
 from libc cimport stdlib
+from libc cimport string
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
@@ -22,6 +23,8 @@ cdef class uint4:
     cdef __allocate(chiprand.uint4** ptr)
     @staticmethod
     cdef uint4 new()
+    @staticmethod
+    cdef uint4 from_value(chiprand.uint4 other)
 
 
 cdef class rocrand_discrete_distribution_st:
@@ -38,6 +41,8 @@ cdef class rocrand_discrete_distribution_st:
     cdef __allocate(chiprand.rocrand_discrete_distribution_st** ptr)
     @staticmethod
     cdef rocrand_discrete_distribution_st new()
+    @staticmethod
+    cdef rocrand_discrete_distribution_st from_value(chiprand.rocrand_discrete_distribution_st other)
 
 
 cdef class rocrand_generator_base_type:

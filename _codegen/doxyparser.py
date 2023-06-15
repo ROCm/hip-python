@@ -15,6 +15,9 @@ pyp.ParserElement.setDefaultWhitespaceChars(' \t')
 def remove_doxygen_cpp_comments(text: str, dedent=True):
     """Strip away doxygen C++ comment delimiters.
 
+    Note:
+        Aims to preserve the indentation of the text with respect to a prefix
+        composed of all whitespace and doxygen comment characters from line column 0 on.
     Args:
         dedent (bool): If the result should be dedented, i.e. the outermost level of indentation removed. Defaults to True.
     """
@@ -35,17 +38,17 @@ def remove_doxygen_cpp_comments(text: str, dedent=True):
                 result_line = ln.rstrip()
                 if i == 0:
                     idx = result_line.find("/*")
-                    result_line = result_line.replace(result_line[idx:idx+3]," "*3,1)
+                    result_line = result_line.replace(result_line[idx:idx+3]," "*3,1) # preserve indentation, note: /** or /*!
                 elif i == len(lines)-1:
                     idx = result_line.rfind("*/")
-                    if idx > 0:
+                    if idx >= 0:
                         result_line = result_line[:idx]
                 if result_line.lstrip().startswith("*"):
-                    result_line = result_line.replace("*"," ",1)
+                    result_line = result_line.replace("*"," ",1) # preserve indentation
                 result += result_line
                 if has_linebreak:
-                        result += "\n"
-        else: # other commnet
+                    result += "\n"
+        else: # other comment
             result += comment
         last_end = end
     result += text[last_end:]
@@ -86,7 +89,7 @@ class format:
                 return f"**{arg}**"
             else:  # if cmd in ("p","c"): # monotype
                 return f"``{arg}``"
-            
+
         @staticmethod
         def fdollar(tokens):
             r"""\f$ .. \f$
@@ -102,10 +105,10 @@ class format:
             return f"`{tokens[1]}`"
         
         @staticmethod
-        def see_reference(tokens):
+        def reference(tokens):
             reference: str = tokens[0].replace("#",".")
             reference = reference.replace("::",".")
-            return f":py:obj:`{reference}`"
+            return f":py:obj:`{reference.lstrip('.')}`"
 
 # for structuring the input
 
@@ -793,7 +796,7 @@ class DoxygenGrammar:
         # class::member
         # #class#member
         see_reference = pyp.Regex(r"(#|::)?(\w+(#|::)?)+")
-        #reference_with_prefix = pyp.Regex(r"(#|::)(\w+(#|::)?)+")
+        in_text_reference = pyp.Regex(r"(#|::)(\w+(#|::)?)+")
 
         # \file [<name>]
         file = self._pyp_cmd("file") + OPT_WORD_OF_PRINTABLES
@@ -923,7 +926,7 @@ class DoxygenGrammar:
         section <<= section_no_args | param | tparam | retval | xrefitem | par | with_exceptionobject
         verbatim = code | verbatim_no_args | verbatim_with_caption | startuml
         math_block = fbr | fcurly
-        formatting = escaped | with_word | fdollar | frnd
+        formatting = escaped | with_word | fdollar | frnd | in_text_reference
         other = (
             no_args
             |with_single_line_text

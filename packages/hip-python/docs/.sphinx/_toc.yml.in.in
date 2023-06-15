@@ -19,6 +19,8 @@ subtrees:
   - caption: "HIP Python: Python API"
     entries:
 {PYTHON_API_FILE_NAMES}
+      - file: python_api/_hip_helpers
+      - file: python_api/_util_types
   - caption: "CUDA Python Interoperability Layer: Python API"
     entries:
 {PYTHON_API_FILE_NAMES_CUDA}

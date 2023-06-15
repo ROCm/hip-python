@@ -23,6 +23,8 @@ project = 'HIP Python'
 copyright = '2023, AMD_AUTHOR'
 author = 'AMD_AUTHOR'
 
+default_role = "py:obj" # this means that `test` will be expanded to :py:obj`test`
+
 # From rocm-docs-core
 
 external_projects_remote_repository = ""
