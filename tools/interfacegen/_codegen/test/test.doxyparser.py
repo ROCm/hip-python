@@ -131,7 +131,7 @@ for node in grammar.parse_structure(doxygen_input).walk():
 import pyparsing as pyp
 
 
-comments = """\
+comments = r"""\
 
 /// My /// docu line 1
 /// My /// docu line 2
@@ -157,9 +157,16 @@ comments = """\
       My /** docu line 2
    */
 
+
+  /** My /** docu ending with *\/ line 1
+      My /** docu ending with *\/ line 2*/
+
 /* Normal C comment */
 
 // Normal C comment
+
+/*!
+*/
 """
 
 #for tokens,start,end in pyp.cppStyleComment.scanString(comments):

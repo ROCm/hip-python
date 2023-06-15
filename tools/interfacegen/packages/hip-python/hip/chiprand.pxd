@@ -289,25 +289,24 @@ cdef hiprandStatus hiprandGenerateUniformDouble(hiprandGenerator_t generator,dou
 
 
 # 
-#  \brief Generates uniformly distributed half-precision floating-point values.
+# \brief Generates uniformly distributed half-precision floating-point values.
 # 
-#  Generates \p n uniformly distributed 16-bit half-precision floating-point
-#  values and saves them to \p output_data.
+# Generates \p n uniformly distributed 16-bit half-precision floating-point
+# values and saves them to \p output_data.
 # 
-#  Generated numbers are between \p 0.0 and \p 1.0, excluding \p 0.0 and
-#  including \p 1.0.
+# Generated numbers are between \p 0.0 and \p 1.0, excluding \p 0.0 and
+# including \p 1.0.
 # 
-#  \param generator - Generator to use
-#  \param output_data - Pointer to memory to store generated numbers
-#  \param n - Number of halfs to generate
+# \param generator - Generator to use
+# \param output_data - Pointer to memory to store generated numbers
+# \param n - Number of halfs to generate
 # 
-#  \return
-#  - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n
-#  - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n
-#  - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-#  of used quasi-random generator \n
-#  - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-# /
+# \return
+# - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n
+# - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n
+# - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
+# of used quasi-random generator \n
+# - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
 cdef hiprandStatus hiprandGenerateUniformHalf(hiprandGenerator_t generator,int * output_data,unsigned long n) nogil
 
 
@@ -422,25 +421,24 @@ cdef hiprandStatus hiprandGenerateLogNormalDouble(hiprandGenerator_t generator,d
 
 
 # 
-#  \brief Generates log-normally distributed halfs.
+# \brief Generates log-normally distributed halfs.
 # 
-#  Generates \p n log-normally distributed 16-bit half-precision floating-point
-#  values and saves them to \p output_data.
+# Generates \p n log-normally distributed 16-bit half-precision floating-point
+# values and saves them to \p output_data.
 # 
-#  \param generator - Generator to use
-#  \param output_data - Pointer to memory to store generated numbers
-#  \param n - Number of halfs to generate
-#  \param mean - Mean value of log normal distribution
-#  \param stddev - Standard deviation value of log normal distribution
+# \param generator - Generator to use
+# \param output_data - Pointer to memory to store generated numbers
+# \param n - Number of halfs to generate
+# \param mean - Mean value of log normal distribution
+# \param stddev - Standard deviation value of log normal distribution
 # 
-#  \return
-#  - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n
-#  - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n
-#  - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not even, \p output_data is not
-#  aligned to \p sizeof(half2) bytes, or \p n is not a multiple of the dimension
-#  of used quasi-random generator \n
-#  - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-# /
+# \return
+# - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n
+# - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n
+# - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not even, \p output_data is not
+# aligned to \p sizeof(half2) bytes, or \p n is not a multiple of the dimension
+# of used quasi-random generator \n
+# - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
 cdef hiprandStatus hiprandGenerateLogNormalHalf(hiprandGenerator_t generator,int * output_data,unsigned long n,int mean,int stddev) nogil
 
 

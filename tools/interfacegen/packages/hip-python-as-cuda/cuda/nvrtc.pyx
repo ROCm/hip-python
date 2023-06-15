@@ -1,5 +1,80 @@
 # AMD_COPYRIGHT
 
+"""
+Attributes:
+    HIP_PYTHON_nvrtcResult_HALLUCINATE:
+        Make nvrtcResult hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_nvrtcResult_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUjitInputType_HALLUCINATE:
+        Make CUjitInputType hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUjitInputType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUjitInputType_enum_HALLUCINATE:
+        Make CUjitInputType_enum hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUjitInputType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUlinkState:
+        alias of `.hiprtcLinkState`
+    nvrtcGetErrorString:
+        alias of `.hiprtcGetErrorString`
+    nvrtcVersion:
+        alias of `.hiprtcVersion`
+    nvrtcProgram:
+        alias of `.hiprtcProgram`
+    nvrtcAddNameExpression:
+        alias of `.hiprtcAddNameExpression`
+    nvrtcCompileProgram:
+        alias of `.hiprtcCompileProgram`
+    nvrtcCreateProgram:
+        alias of `.hiprtcCreateProgram`
+    nvrtcDestroyProgram:
+        alias of `.hiprtcDestroyProgram`
+    nvrtcGetLoweredName:
+        alias of `.hiprtcGetLoweredName`
+    nvrtcGetProgramLog:
+        alias of `.hiprtcGetProgramLog`
+    nvrtcGetProgramLogSize:
+        alias of `.hiprtcGetProgramLogSize`
+    nvrtcGetPTX:
+        alias of `.hiprtcGetCode`
+    nvrtcGetPTXSize:
+        alias of `.hiprtcGetCodeSize`
+    nvrtcGetCUBIN:
+        alias of `.hiprtcGetBitcode`
+    nvrtcGetCUBINSize:
+        alias of `.hiprtcGetBitcodeSize`
+    cuLinkCreate:
+        alias of `.hiprtcLinkCreate`
+    cuLinkCreate_v2:
+        alias of `.hiprtcLinkCreate`
+    cuLinkAddFile:
+        alias of `.hiprtcLinkAddFile`
+    cuLinkAddFile_v2:
+        alias of `.hiprtcLinkAddFile`
+    cuLinkAddData:
+        alias of `.hiprtcLinkAddData`
+    cuLinkAddData_v2:
+        alias of `.hiprtcLinkAddData`
+    cuLinkComplete:
+        alias of `.hiprtcLinkComplete`
+    cuLinkDestroy:
+        alias of `.hiprtcLinkDestroy`
+
+"""
+
 __author__ = "AMD_AUTHOR"
 
 import os

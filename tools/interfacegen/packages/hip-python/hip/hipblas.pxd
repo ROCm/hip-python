@@ -1,5 +1,6 @@
 # AMD_COPYRIGHT
 from libc cimport stdlib
+from libc cimport string
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
@@ -22,6 +23,8 @@ cdef class hipblasBfloat16:
     cdef __allocate(chipblas.hipblasBfloat16** ptr)
     @staticmethod
     cdef hipblasBfloat16 new()
+    @staticmethod
+    cdef hipblasBfloat16 from_value(chipblas.hipblasBfloat16 other)
 
 
 cdef class hipblasComplex:
@@ -38,6 +41,8 @@ cdef class hipblasComplex:
     cdef __allocate(chipblas.hipblasComplex** ptr)
     @staticmethod
     cdef hipblasComplex new()
+    @staticmethod
+    cdef hipblasComplex from_value(chipblas.hipblasComplex other)
 
 
 cdef class hipblasDoubleComplex:
@@ -54,3 +59,5 @@ cdef class hipblasDoubleComplex:
     cdef __allocate(chipblas.hipblasDoubleComplex** ptr)
     @staticmethod
     cdef hipblasDoubleComplex new()
+    @staticmethod
+    cdef hipblasDoubleComplex from_value(chipblas.hipblasDoubleComplex other)

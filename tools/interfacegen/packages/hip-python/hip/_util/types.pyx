@@ -26,7 +26,7 @@ cdef class DataHandle:
 
     cdef void init_from_pyobj(self, object pyobj):
         """
-        NOTE:
+        Note:
             If ``pyobj`` is an instance of DataHandle, only the pointer is copied.
             Releasing an acquired Py_buffer handles is still an obligation of the original object.
         """
@@ -88,14 +88,16 @@ cdef class DataHandle:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     @property
     def is_ptr_null(self):
-        """If data pointer is NULL."""
+        """If data pointer is NULL.
+        """
         return self._ptr == NULL
     def __int__(self):
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<DataHandle object, _ptr={int(self)}>"
     def as_c_void_p(self):
-        """"Data pointer as ``ctypes.c_void_p``."""
+        """"Data pointer as ``ctypes.c_void_p``.
+        """
         return ctypes.c_void_p(int(self))
 
     def __getitem__(self,offset):
@@ -340,18 +342,23 @@ cdef class DeviceArray(DataHandle):
         return -1
 
     def configure(self, **kwargs):
-        """
+        """(Re-)configure this device array.
+
         Args:
             \*\*kwargs: Keyword arguments.
             
-        Keyword Arguments:
+        Keyword Args:
 
-            shape (tuple): A tuple that describes the extent per dimension. The length of the tuple is the number of dimensions.
-            typestr (str): A numpy typestr, see the notes for more details.
-            stream (int or None): The stream to synchronize before consuming this array. See first note for more details.
-            itemsize (int): Size in bytes of each item. Defaults to 1. See the notes.
-            read_only (bool): DeviceArray is read_only. Second entry of the CUDA array interface 'data' tuple. Defaults to False.
-            _force(bool): Ignore changes in the total number of bytes when overriding shape, typestr, and/or itemsize.
+        * shape (`tuple`): A tuple that describes the extent per dimension. 
+            The length of the tuple is the number of dimensions.
+        * typestr (`str`): A numpy typestr, see the notes for more details.
+        * stream (`int` or `None`): The stream to synchronize before consuming
+            this array. See first note for more details.
+        * itemsize (`int`): Size in bytes of each item. Defaults to 1. See the notes.
+        * read_only (`bool`): `DeviceArray` is read_only. Second entry of the 
+            CUDA array interface 'data' tuple. Defaults to False.
+        * _force(`bool`): Ignore changes in the total number of bytes when 
+            overriding shape, typestr, and/or itemsize.
 
         Note:
             More details on the keyword arguments can be found here:
@@ -469,16 +476,17 @@ cdef class DeviceArray(DataHandle):
     cdef DeviceArray from_pyobj(object pyobj):
         """Derives a DeviceArray from the given object.
 
-        In case ``pyobj`` is itself an ``DeviceArray`` instance, this method
+        In case ``pyobj`` is itself an `DeviceArray` instance, this method
         returns it directly. No new DeviceArray is created.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``DeviceArray``, ``int``, or ``ctypes.c_void_p``
+        
+        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+            or of type `DeviceArray`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of DeviceArray.
+            if ``pyobj`` is an instance of `DeviceArray`.
         """
         cdef DeviceArray wrapper = DeviceArray.__new__(DeviceArray)
         
@@ -535,11 +543,12 @@ cdef class DeviceArray(DataHandle):
         """Returns a contiguous subarray according to the subscript expression.
 
         Args:
-            Subscript: Either an integer, a slice, or a tuple of slices and integers.
+        
+        * subscript (`int`/`slice`/`tuple`): Either an integer, a slice, or a tuple of slices and integers.
 
         Note:
             If the subscript is a single integer, only the first axis ("axis 0") of the 
-            array is accessed. A KeyError is raised if the extent
+            array is accessed. A `KeyError` is raised if the extent
             of axis 0 is surpassed. This behavior is identical to that of numpy.
         
         Raise:
@@ -633,8 +642,8 @@ cdef class ListOfBytes(DataHandle):
 
     cdef void init_from_pyobj(self, object pyobj):
         """
-        NOTE:
-            If ``pyobj`` is an instance of ListOfBytes, only the pointer is copied.
+        Note:
+            If ``pyobj`` is an instance of `ListOfBytes`, only the pointer is copied.
             Releasing an acquired Py_buffer and temporary memory are still obligations 
             of the original object.
         """
@@ -661,12 +670,13 @@ cdef class ListOfBytes(DataHandle):
     cdef ListOfBytes from_pyobj(object pyobj):
         """Derives a ListOfBytes from the given object.
 
-        In case ``pyobj`` is itself an ``ListOfBytes`` instance, this method
+        In case ``pyobj`` is itself an `ListOfBytes` instance, this method
         returns it directly. No new ListOfBytes is created.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ListOfBytes``, ``int``, or ``ctypes.c_void_p``
+
+        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+            or of type `ListOfBytes`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original pyobj
@@ -708,8 +718,8 @@ cdef class ListOfDataHandle(DataHandle):
 
     cdef void init_from_pyobj(self, object pyobj):
         """
-        NOTE:
-            If ``pyobj`` is an instance of ListOfDataHandle, only the pointer is copied.
+        Note:
+            If ``pyobj`` is an instance of `ListOfDataHandle`, only the pointer is copied.
             Releasing an acquired Py_buffer and temporary memory are still obligations 
             of the original object.
         """
@@ -731,16 +741,17 @@ cdef class ListOfDataHandle(DataHandle):
     cdef ListOfDataHandle from_pyobj(object pyobj):
         """Derives a ListOfDataHandle from the given object.
 
-        In case ``pyobj`` is itself an ``ListOfDataHandle`` instance, this method
-        returns it directly. No new ListOfDataHandle is created.
+        In case ``pyobj`` is itself an `ListOfDataHandle` instance, this method
+        returns it directly. No new `ListOfDataHandle` is created.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ListOfDataHandle``, ``int``, or ``ctypes.c_void_p``
+
+        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+            or of type `ListOfDataHandle`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of ListOfDataHandle.
+            if `pyobj` is an instance of ListOfDataHandle.
         Note:
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
@@ -778,7 +789,7 @@ cdef class ListOfInt(DataHandle):
 
     cdef void init_from_pyobj(self, object pyobj):
         """
-        NOTE:
+        Note:
             If ``pyobj`` is an instance of ListOfInt, only the pointer is copied.
             Releasing an acquired Py_buffer and temporary memory are still obligations 
             of the original object.
@@ -822,12 +833,13 @@ cdef class ListOfInt(DataHandle):
         returns it directly. No new ListOfInt is created.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ListOfInt``, ``int``, or ``ctypes.c_void_p``
+        
+        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+            or of type `ListOfInt`, `int`, or `ctypes.c_void_p`
 
         Note:
-            This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of ListOfInt.
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of `ListOfInt`.
         Note:
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
@@ -865,9 +877,9 @@ cdef class ListOfUnsigned(DataHandle):
 
     cdef void init_from_pyobj(self, object pyobj):
         """
-        NOTE:
-            If ``pyobj`` is an instance of ListOfUnsigned, only the pointer is copied.
-            Releasing an acquired Py_buffer and temporary memory are still obligations 
+        Note:
+            If ``pyobj`` is an instance of `ListOfUnsigned`, only the pointer is copied.
+            Releasing an acquired `Py_buffer` and temporary memory are still obligations 
             of the original object.
         """
         self._py_buffer_acquired = False
@@ -905,16 +917,17 @@ cdef class ListOfUnsigned(DataHandle):
     cdef ListOfUnsigned from_pyobj(object pyobj):
         """Derives a ListOfUnsigned from the given object.
 
-        In case ``pyobj`` is itself an ``ListOfUnsigned`` instance, this method
+        In case ``pyobj`` is itself an `ListOfUnsigned` instance, this method
         returns it directly. No new ListOfUnsigned is created.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ListOfUnsigned``, ``unsigned int``, or ``ctypes.c_void_p``
+
+        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+            or of type `ListOfUnsigned`, ``unsigned int``, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of ListOfUnsigned.
+            if ``pyobj`` is an instance of `ListOfUnsigned`.
         Note:
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
@@ -952,9 +965,9 @@ cdef class ListOfUnsignedLong(DataHandle):
 
     cdef void init_from_pyobj(self, object pyobj):
         """
-        NOTE:
-            If ``pyobj`` is an instance of ListOfUnsignedLong, only the pointer is copied.
-            Releasing an acquired Py_buffer and temporary memory are still obligations 
+        Note:
+            If ``pyobj`` is an instance of `ListOfUnsignedLong`, only the pointer is copied.
+            Releasing an acquired `Py_buffer` and temporary memory are still obligations 
             of the original object.
         """
         self._py_buffer_acquired = False
@@ -996,11 +1009,12 @@ cdef class ListOfUnsignedLong(DataHandle):
         returns it directly. No new ListOfUnsignedLong is created.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ListOfUnsignedLong``, ``unsigned long``, or ``ctypes.c_void_p``
+        
+        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+            or of type `ListOfUnsignedLong`, `unsigned long`, or `ctypes.c_void_p`
 
         Note:
-            This routine does not perform a copy but returns the original pyobj
+            This routine does not perform a copy but returns the original ``pyobj``
             if ``pyobj`` is an instance of ListOfUnsignedLong.
         Note:
             This routines assumes that the original input is not garbage

@@ -53,18 +53,17 @@ cdef ncclResult_t ncclGetVersion(int * version) nogil
 cdef ncclResult_t pncclGetVersion(int * version) nogil
 
 
-#    @brief Generates an ID for ncclCommInitRank
+# @brief Generates an ID for ncclCommInitRank
 # 
-#    @details
-#    Generates an ID to be used in ncclCommInitRank. ncclGetUniqueId should be
-#    called once and the Id should be distributed to all ranks in the
-#    communicator before calling ncclCommInitRank.
+# @details
+# Generates an ID to be used in ncclCommInitRank. ncclGetUniqueId should be
+# called once and the Id should be distributed to all ranks in the
+# communicator before calling ncclCommInitRank.
 # 
-#    @param[in]
-#    uniqueId     ncclUniqueId*
-#                 pointer to uniqueId
-# 
-# /
+# @param[in]
+# uniqueId     ncclUniqueId*
+#              pointer to uniqueId
+#
 cdef ncclResult_t ncclGetUniqueId(ncclUniqueId * uniqueId) nogil
 
 

@@ -31,6 +31,8 @@ Based on HIP version 5.4.22804-474e8620.
 - {doc}`python_api/hiprand`
 - {doc}`python_api/hipfft`
 - {doc}`python_api/hipsparse`
+- {doc}`python_api/_hip_helpers`
+- {doc}`python_api/_util_types`
 :::
 
 :::{grid-item-card} CUDA Python Interoperability Layer: Python API

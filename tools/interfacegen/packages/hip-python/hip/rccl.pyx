@@ -92,12 +92,14 @@ cdef class ncclComm:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<ncclComm object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -194,6 +196,7 @@ cdef class ncclUniqueId:
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
+
     @staticmethod
     cdef __allocate(crccl.ncclUniqueId** ptr):
         ptr[0] = <crccl.ncclUniqueId*>stdlib.malloc(sizeof(crccl.ncclUniqueId))
@@ -209,6 +212,14 @@ cdef class ncclUniqueId:
         cdef crccl.ncclUniqueId* ptr
         ncclUniqueId.__allocate(&ptr)
         return ncclUniqueId.from_ptr(ptr, owner=True)
+
+    @staticmethod
+    cdef ncclUniqueId from_value(crccl.ncclUniqueId other):
+        """Allocate new C type and copy from ``other``.
+        """
+        wrapper = ncclUniqueId.new()
+        string.memcpy(wrapper._ptr, &other, sizeof(crccl.ncclUniqueId))
+        return wrapper
    
     def __init__(self,*args,**kwargs):
         ncclUniqueId.__allocate(&self._ptr)
@@ -229,12 +240,14 @@ cdef class ncclUniqueId:
             setattr(self,k,v)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<ncclUniqueId object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     def get_internal(self, i):
         """Get value of ``internal`` of ``self._ptr[i]``.
@@ -295,6 +308,11 @@ def ncclGetVersion():
 
     This integer is coded with the MAJOR, MINOR and PATCH level of the
     NCCL library
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int version
     _ncclGetVersion__retval = ncclResult_t(crccl.ncclGetVersion(&version))    # fully specified
@@ -304,6 +322,11 @@ def ncclGetVersion():
 @cython.embedsignature(True)
 def pncclGetVersion():
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int version
     _pncclGetVersion__retval = ncclResult_t(crccl.pncclGetVersion(&version))    # fully specified
@@ -318,11 +341,14 @@ def ncclGetUniqueId(object uniqueId):
     called once and the Id should be distributed to all ranks in the
     communicator before calling ncclCommInitRank.
 
-    /
-
     Args:
-        uniqueId: **[in]** ncclUniqueId*
+        uniqueId (`~.ncclUniqueId`/`~.object`): **[in]** ncclUniqueId*
             pointer to uniqueId
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclGetUniqueId__retval = ncclResult_t(crccl.ncclGetUniqueId(
         ncclUniqueId.from_pyobj(uniqueId)._ptr))    # fully specified
@@ -332,6 +358,11 @@ def ncclGetUniqueId(object uniqueId):
 @cython.embedsignature(True)
 def pncclGetUniqueId(object uniqueId):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclGetUniqueId__retval = ncclResult_t(crccl.pncclGetUniqueId(
         ncclUniqueId.from_pyobj(uniqueId)._ptr))    # fully specified
@@ -349,9 +380,10 @@ def ncclCommInitRank(int nranks, object commId, int rank):
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - comm: ncclComm_t*
+        * `~.ncclResult_t`
+        * `~.ncclComm`: ncclComm_t*
                 communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
@@ -363,6 +395,11 @@ def ncclCommInitRank(int nranks, object commId, int rank):
 @cython.embedsignature(True)
 def pncclCommInitRank(int nranks, object commId, int rank):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     comm = ncclComm.from_ptr(NULL)
     _pncclCommInitRank__retval = ncclResult_t(crccl.pncclCommInitRank(&comm._ptr,nranks,
@@ -384,9 +421,10 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A ``tuple`` of size 2 that contains (in that order):
 
-        - comm: ncclComm_t*
+        * `~.ncclResult_t`
+        * `~.ncclComm`: ncclComm_t*
                 communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
@@ -398,6 +436,11 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
 @cython.embedsignature(True)
 def pncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     comm = ncclComm.from_ptr(NULL)
     _pncclCommInitRankMulti__retval = ncclResult_t(crccl.pncclCommInitRankMulti(&comm._ptr,nranks,
@@ -414,6 +457,11 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
     comm should be pre-allocated with size at least ndev*sizeof(ncclComm_t).
     If devlist is NULL, the first ndev HIP devices are used.
     Order of devlist defines user-order of processors within the communicator.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclCommInitAll__retval = ncclResult_t(crccl.ncclCommInitAll(
         <crccl.ncclComm_t*>hip._util.types.DataHandle.from_pyobj(comm)._ptr,ndev,
@@ -424,6 +472,11 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
 @cython.embedsignature(True)
 def pncclCommInitAll(object comm, int ndev, object devlist):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclCommInitAll__retval = ncclResult_t(crccl.pncclCommInitAll(
         <crccl.ncclComm_t*>hip._util.types.DataHandle.from_pyobj(comm)._ptr,ndev,
@@ -434,6 +487,11 @@ def pncclCommInitAll(object comm, int ndev, object devlist):
 @cython.embedsignature(True)
 def ncclCommDestroy(object comm):
     r"""Frees resources associated with communicator object, but waits for any operations that might still be running on the device */
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclCommDestroy__retval = ncclResult_t(crccl.ncclCommDestroy(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -443,6 +501,11 @@ def ncclCommDestroy(object comm):
 @cython.embedsignature(True)
 def pncclCommDestroy(object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclCommDestroy__retval = ncclResult_t(crccl.pncclCommDestroy(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -452,6 +515,11 @@ def pncclCommDestroy(object comm):
 @cython.embedsignature(True)
 def ncclCommAbort(object comm):
     r"""Frees resources associated with communicator object and aborts any operations that might still be running on the device. */
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclCommAbort__retval = ncclResult_t(crccl.ncclCommAbort(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -461,6 +529,11 @@ def ncclCommAbort(object comm):
 @cython.embedsignature(True)
 def pncclCommAbort(object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclCommAbort__retval = ncclResult_t(crccl.pncclCommAbort(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -470,6 +543,11 @@ def pncclCommAbort(object comm):
 @cython.embedsignature(True)
 def ncclGetErrorString(object result):
     r"""Returns a string for each error code. */
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.bytes`
     """
     if not isinstance(result,_ncclResult_t__Base):
         raise TypeError("argument 'result' must be of type '_ncclResult_t__Base'")
@@ -480,6 +558,11 @@ def ncclGetErrorString(object result):
 @cython.embedsignature(True)
 def pncclGetErrorString(object result):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.bytes`
     """
     if not isinstance(result,_ncclResult_t__Base):
         raise TypeError("argument 'result' must be of type '_ncclResult_t__Base'")
@@ -491,6 +574,11 @@ def pncclGetErrorString(object result):
 def ncclGetLastError(object comm):
     r"""Returns a human-readable message of the last error that occurred.
     comm is currently unused and can be set to NULL
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.bytes`
     """
     cdef const char * _ncclGetLastError__retval = crccl.ncclGetLastError(
         ncclComm.from_pyobj(comm)._ptr)    # fully specified
@@ -500,6 +588,11 @@ def ncclGetLastError(object comm):
 @cython.embedsignature(True)
 def pncclGetError(object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.bytes`
     """
     cdef const char * _pncclGetError__retval = crccl.pncclGetError(
         ncclComm.from_pyobj(comm)._ptr)    # fully specified
@@ -509,6 +602,11 @@ def pncclGetError(object comm):
 @cython.embedsignature(True)
 def ncclCommGetAsyncError(object comm, object asyncError):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclCommGetAsyncError__retval = ncclResult_t(crccl.ncclCommGetAsyncError(
         ncclComm.from_pyobj(comm)._ptr,
@@ -519,6 +617,11 @@ def ncclCommGetAsyncError(object comm, object asyncError):
 @cython.embedsignature(True)
 def pncclCommGetAsyncError(object comm, object asyncError):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclCommGetAsyncError__retval = ncclResult_t(crccl.pncclCommGetAsyncError(
         ncclComm.from_pyobj(comm)._ptr,
@@ -529,6 +632,11 @@ def pncclCommGetAsyncError(object comm, object asyncError):
 @cython.embedsignature(True)
 def ncclCommCount(object comm):
     r"""Gets the number of ranks in the communicator clique. */
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int count
     _ncclCommCount__retval = ncclResult_t(crccl.ncclCommCount(
@@ -539,6 +647,11 @@ def ncclCommCount(object comm):
 @cython.embedsignature(True)
 def pncclCommCount(object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int count
     _pncclCommCount__retval = ncclResult_t(crccl.pncclCommCount(
@@ -549,6 +662,11 @@ def pncclCommCount(object comm):
 @cython.embedsignature(True)
 def ncclCommCuDevice(object comm):
     r"""Returns the rocm device number associated with the communicator. */
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int device
     _ncclCommCuDevice__retval = ncclResult_t(crccl.ncclCommCuDevice(
@@ -559,6 +677,11 @@ def ncclCommCuDevice(object comm):
 @cython.embedsignature(True)
 def pncclCommCuDevice(object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int device
     _pncclCommCuDevice__retval = ncclResult_t(crccl.pncclCommCuDevice(
@@ -569,6 +692,11 @@ def pncclCommCuDevice(object comm):
 @cython.embedsignature(True)
 def ncclCommUserRank(object comm):
     r"""Returns the user-ordered "rank" associated with the communicator. */
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int rank
     _ncclCommUserRank__retval = ncclResult_t(crccl.ncclCommUserRank(
@@ -579,6 +707,11 @@ def ncclCommUserRank(object comm):
 @cython.embedsignature(True)
 def pncclCommUserRank(object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int rank
     _pncclCommUserRank__retval = ncclResult_t(crccl.pncclCommUserRank(
@@ -659,6 +792,11 @@ class ncclScalarResidence_t(_ncclScalarResidence_t__Base):
 @cython.embedsignature(True)
 def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -674,6 +812,11 @@ def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object r
 @cython.embedsignature(True)
 def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -689,6 +832,11 @@ def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object 
 @cython.embedsignature(True)
 def ncclRedOpDestroy(object op, object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
@@ -700,6 +848,11 @@ def ncclRedOpDestroy(object op, object comm):
 @cython.embedsignature(True)
 def pncclRedOpDestroy(object op, object comm):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
@@ -719,6 +872,11 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
     operation is complete.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -735,6 +893,11 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
 @cython.embedsignature(True)
 def pncclReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, int root, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -757,6 +920,11 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
     operation is started.
 
     This operation is implicitely in place.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -770,6 +938,11 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
 @cython.embedsignature(True)
 def pncclBcast(object buff, unsigned long count, object datatype, int root, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -789,6 +962,11 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
     operation is started.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -803,6 +981,11 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
 @cython.embedsignature(True)
 def pncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object datatype, int root, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -822,6 +1005,11 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
     leaves identical copies of result on each recvbuff.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -838,6 +1026,11 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
 @cython.embedsignature(True)
 def pncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -862,6 +1055,11 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
     should have a size of at least nranks*recvcount elements.
 
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -878,6 +1076,11 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
 @cython.embedsignature(True)
 def pncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, object op, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -901,6 +1104,11 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
     should have a size of at least nranks*sendcount elements.
 
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -915,6 +1123,11 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
 @cython.embedsignature(True)
 def pncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -937,6 +1150,11 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
     This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
     need to progress concurrently to complete, they must be fused within a ncclGroupStart/
     ncclGroupEnd section.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -950,6 +1168,11 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
 @cython.embedsignature(True)
 def pncclSend(object sendbuff, unsigned long count, object datatype, int peer, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -971,6 +1194,11 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
     This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
     need to progress concurrently to complete, they must be fused within a ncclGroupStart/
     ncclGroupEnd section.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -984,6 +1212,11 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
 @cython.embedsignature(True)
 def pncclRecv(object recvbuff, unsigned long count, object datatype, int peer, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1005,6 +1238,11 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
     should have a size of at least nranks*sendcount elements.
 
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1019,6 +1257,11 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
 @cython.embedsignature(True)
 def pncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, int root, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1041,6 +1284,11 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
     should have a size of at least nranks*recvcount elements.
 
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1055,6 +1303,11 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
 @cython.embedsignature(True)
 def pncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, int root, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1075,6 +1328,11 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
     that recvbuff and sendbuff should have a size of nranks*count elements.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1089,6 +1347,11 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
 @cython.embedsignature(True)
 def pncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object datatype, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1112,6 +1375,11 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
     of datatype, not bytes.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1130,6 +1398,11 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
 @cython.embedsignature(True)
 def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object recvbuff, object recvcounts, object rdispls, object datatype, object comm, object stream):
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1152,6 +1425,11 @@ def ncclGroupStart():
     Start a group call. All calls to NCCL until ncclGroupEnd will be fused into
     a single NCCL operation. Nothing will be started on the CUDA stream until
     ncclGroupEnd.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclGroupStart__retval = ncclResult_t(crccl.ncclGroupStart())    # fully specified
     return (_ncclGroupStart__retval,)
@@ -1160,6 +1438,11 @@ def ncclGroupStart():
 @cython.embedsignature(True)
 def pncclGroupStart():
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclGroupStart__retval = ncclResult_t(crccl.pncclGroupStart())    # fully specified
     return (_pncclGroupStart__retval,)
@@ -1172,6 +1455,11 @@ def ncclGroupEnd():
     End a group call. Start a fused NCCL operation consisting of all calls since
     ncclGroupStart. Operations on the CUDA stream depending on the NCCL operations
     need to be called after ncclGroupEnd.
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclGroupEnd__retval = ncclResult_t(crccl.ncclGroupEnd())    # fully specified
     return (_ncclGroupEnd__retval,)
@@ -1180,6 +1468,11 @@ def ncclGroupEnd():
 @cython.embedsignature(True)
 def pncclGroupEnd():
     r"""(No short description)
+
+    Returns:
+        A ``tuple`` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclGroupEnd__retval = ncclResult_t(crccl.pncclGroupEnd())    # fully specified
     return (_pncclGroupEnd__retval,)

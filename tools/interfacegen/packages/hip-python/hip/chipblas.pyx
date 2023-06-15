@@ -99,7 +99,6 @@ cdef void* _hipblasSetVector__funptr = NULL
 # @param[in]
 # incy        [int]
 #             specifies the increment for the elements of the vector
-#   ******************************************************************
 cdef hipblasStatus_t hipblasSetVector(int n,int elemSize,const void * x,int incx,void * y,int incy) nogil:
     global _hipblasSetVector__funptr
     __init_symbol(&_hipblasSetVector__funptr,"hipblasSetVector")
@@ -124,7 +123,6 @@ cdef void* _hipblasGetVector__funptr = NULL
 # @param[in]
 # incy        [int]
 #             specifies the increment for the elements of the vector
-#   ******************************************************************
 cdef hipblasStatus_t hipblasGetVector(int n,int elemSize,const void * x,int incx,void * y,int incy) nogil:
     global _hipblasGetVector__funptr
     __init_symbol(&_hipblasGetVector__funptr,"hipblasGetVector")
@@ -152,7 +150,6 @@ cdef void* _hipblasSetMatrix__funptr = NULL
 # @param[in]
 # ldb         [int]
 #             specifies the leading dimension of B, ldb >= rows
-#   ******************************************************************
 cdef hipblasStatus_t hipblasSetMatrix(int rows,int cols,int elemSize,const void * AP,int lda,void * BP,int ldb) nogil:
     global _hipblasSetMatrix__funptr
     __init_symbol(&_hipblasSetMatrix__funptr,"hipblasSetMatrix")
@@ -180,7 +177,6 @@ cdef void* _hipblasGetMatrix__funptr = NULL
 # @param[in]
 # ldb         [int]
 #             specifies the leading dimension of B, ldb >= rows
-#   ******************************************************************
 cdef hipblasStatus_t hipblasGetMatrix(int rows,int cols,int elemSize,const void * AP,int lda,void * BP,int ldb) nogil:
     global _hipblasGetMatrix__funptr
     __init_symbol(&_hipblasGetMatrix__funptr,"hipblasGetMatrix")
@@ -210,7 +206,6 @@ cdef void* _hipblasSetVectorAsync__funptr = NULL
 #             specifies the increment for the elements of the vector
 # @param[in]
 # stream      specifies the stream into which this transfer request is queued
-#   ******************************************************************
 cdef hipblasStatus_t hipblasSetVectorAsync(int n,int elemSize,const void * x,int incx,void * y,int incy,hipStream_t stream) nogil:
     global _hipblasSetVectorAsync__funptr
     __init_symbol(&_hipblasSetVectorAsync__funptr,"hipblasSetVectorAsync")
@@ -240,7 +235,6 @@ cdef void* _hipblasGetVectorAsync__funptr = NULL
 #             specifies the increment for the elements of the vector
 # @param[in]
 # stream      specifies the stream into which this transfer request is queued
-#   ******************************************************************
 cdef hipblasStatus_t hipblasGetVectorAsync(int n,int elemSize,const void * x,int incx,void * y,int incy,hipStream_t stream) nogil:
     global _hipblasGetVectorAsync__funptr
     __init_symbol(&_hipblasGetVectorAsync__funptr,"hipblasGetVectorAsync")
@@ -273,7 +267,6 @@ cdef void* _hipblasSetMatrixAsync__funptr = NULL
 #             specifies the leading dimension of B, ldb >= rows
 # @param[in]
 # stream      specifies the stream into which this transfer request is queued
-#   ******************************************************************
 cdef hipblasStatus_t hipblasSetMatrixAsync(int rows,int cols,int elemSize,const void * AP,int lda,void * BP,int ldb,hipStream_t stream) nogil:
     global _hipblasSetMatrixAsync__funptr
     __init_symbol(&_hipblasSetMatrixAsync__funptr,"hipblasSetMatrixAsync")
@@ -306,7 +299,6 @@ cdef void* _hipblasGetMatrixAsync__funptr = NULL
 #             specifies the leading dimension of B, ldb >= rows
 # @param[in]
 # stream      specifies the stream into which this transfer request is queued
-#   ******************************************************************
 cdef hipblasStatus_t hipblasGetMatrixAsync(int rows,int cols,int elemSize,const void * AP,int lda,void * BP,int ldb,hipStream_t stream) nogil:
     global _hipblasGetMatrixAsync__funptr
     __init_symbol(&_hipblasGetMatrixAsync__funptr,"hipblasGetMatrixAsync")
@@ -354,7 +346,6 @@ cdef void* _hipblasIsamax__funptr = NULL
 # result
 #           device pointer or host pointer to store the amax index.
 #           return is 0.0 if n, incx<=0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasIsamax(void * handle,int n,const float * x,int incx,int * result) nogil:
     global _hipblasIsamax__funptr
     __init_symbol(&_hipblasIsamax__funptr,"hipblasIsamax")
@@ -410,7 +401,6 @@ cdef void* _hipblasIsamaxBatched__funptr = NULL
 # result
 #           device or host array of pointers of batchCount size for results.
 #           return is 0 if n, incx<=0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasIsamaxBatched(void * handle,int n,const float *const* x,int incx,int batchCount,int * result) nogil:
     global _hipblasIsamaxBatched__funptr
     __init_symbol(&_hipblasIsamaxBatched__funptr,"hipblasIsamaxBatched")
@@ -469,8 +459,7 @@ cdef void* _hipblasIsamaxStridedBatched__funptr = NULL
 # result
 #           device or host pointer for storing contiguous batchCount results.
 #           return is 0 if n <= 0, incx<=0.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasIsamaxStridedBatched(void * handle,int n,const float * x,int incx,long stridex,int batchCount,int * result) nogil:
     global _hipblasIsamaxStridedBatched__funptr
     __init_symbol(&_hipblasIsamaxStridedBatched__funptr,"hipblasIsamaxStridedBatched")
@@ -523,7 +512,6 @@ cdef void* _hipblasIsamin__funptr = NULL
 # result
 #           device pointer or host pointer to store the amin index.
 #           return is 0.0 if n, incx<=0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasIsamin(void * handle,int n,const float * x,int incx,int * result) nogil:
     global _hipblasIsamin__funptr
     __init_symbol(&_hipblasIsamin__funptr,"hipblasIsamin")
@@ -579,7 +567,6 @@ cdef void* _hipblasIsaminBatched__funptr = NULL
 # result
 #           device or host pointers to array of batchCount size for results.
 #           return is 0 if n, incx<=0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasIsaminBatched(void * handle,int n,const float *const* x,int incx,int batchCount,int * result) nogil:
     global _hipblasIsaminBatched__funptr
     __init_symbol(&_hipblasIsaminBatched__funptr,"hipblasIsaminBatched")
@@ -638,8 +625,7 @@ cdef void* _hipblasIsaminStridedBatched__funptr = NULL
 # result
 #           device or host pointer to array for storing contiguous batchCount results.
 #           return is 0 if n <= 0, incx<=0.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasIsaminStridedBatched(void * handle,int n,const float * x,int incx,long stridex,int batchCount,int * result) nogil:
     global _hipblasIsaminStridedBatched__funptr
     __init_symbol(&_hipblasIsaminStridedBatched__funptr,"hipblasIsaminStridedBatched")
@@ -693,8 +679,7 @@ cdef void* _hipblasSasum__funptr = NULL
 # result
 #           device pointer or host pointer to store the asum product.
 #           return is 0.0 if n <= 0.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSasum(void * handle,int n,const float * x,int incx,float * result) nogil:
     global _hipblasSasum__funptr
     __init_symbol(&_hipblasSasum__funptr,"hipblasSasum")
@@ -752,7 +737,6 @@ cdef void* _hipblasSasumBatched__funptr = NULL
 # result
 #           device array or host array of batchCount size for results.
 #           return is 0.0 if n, incx<=0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSasumBatched(void * handle,int n,const float *const* x,int incx,int batchCount,float * result) nogil:
     global _hipblasSasumBatched__funptr
     __init_symbol(&_hipblasSasumBatched__funptr,"hipblasSasumBatched")
@@ -816,7 +800,6 @@ cdef void* _hipblasSasumStridedBatched__funptr = NULL
 # result
 #           device pointer or host pointer to array for storing contiguous batchCount results.
 #           return is 0.0 if n, incx<=0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSasumStridedBatched(void * handle,int n,const float * x,int incx,long stridex,int batchCount,float * result) nogil:
     global _hipblasSasumStridedBatched__funptr
     __init_symbol(&_hipblasSasumStridedBatched__funptr,"hipblasSasumStridedBatched")
@@ -874,8 +857,7 @@ cdef void* _hipblasHaxpy__funptr = NULL
 # @param[inout]
 # incy      [int]
 #           specifies the increment for the elements of y.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasHaxpy(void * handle,int n,const unsigned short * alpha,const unsigned short * x,int incx,unsigned short * y,int incy) nogil:
     global _hipblasHaxpy__funptr
     __init_symbol(&_hipblasHaxpy__funptr,"hipblasHaxpy")
@@ -942,7 +924,6 @@ cdef void* _hipblasHaxpyBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #           number of instances in the batch
-#  ******************************************************************
 cdef hipblasStatus_t hipblasHaxpyBatched(void * handle,int n,const unsigned short * alpha,const unsigned short *const* x,int incx,unsigned short *const* y,int incy,int batchCount) nogil:
     global _hipblasHaxpyBatched__funptr
     __init_symbol(&_hipblasHaxpyBatched__funptr,"hipblasHaxpyBatched")
@@ -1014,8 +995,7 @@ cdef void* _hipblasHaxpyStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #           number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasHaxpyStridedBatched(void * handle,int n,const unsigned short * alpha,const unsigned short * x,int incx,long stridex,unsigned short * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasHaxpyStridedBatched__funptr
     __init_symbol(&_hipblasHaxpyStridedBatched__funptr,"hipblasHaxpyStridedBatched")
@@ -1078,8 +1058,7 @@ cdef void* _hipblasScopy__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasScopy(void * handle,int n,const float * x,int incx,float * y,int incy) nogil:
     global _hipblasScopy__funptr
     __init_symbol(&_hipblasScopy__funptr,"hipblasScopy")
@@ -1141,8 +1120,7 @@ cdef void* _hipblasScopyBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasScopyBatched(void * handle,int n,const float *const* x,int incx,float *const* y,int incy,int batchCount) nogil:
     global _hipblasScopyBatched__funptr
     __init_symbol(&_hipblasScopyBatched__funptr,"hipblasScopyBatched")
@@ -1216,8 +1194,7 @@ cdef void* _hipblasScopyStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasScopyStridedBatched(void * handle,int n,const float * x,int incx,long stridex,float * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasScopyStridedBatched__funptr
     __init_symbol(&_hipblasScopyStridedBatched__funptr,"hipblasScopyStridedBatched")
@@ -1281,8 +1258,7 @@ cdef void* _hipblasHdot__funptr = NULL
 # result
 #           device pointer or host pointer to store the dot product.
 #           return is 0.0 if n <= 0.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasHdot(void * handle,int n,const unsigned short * x,int incx,const unsigned short * y,int incy,unsigned short * result) nogil:
     global _hipblasHdot__funptr
     __init_symbol(&_hipblasHdot__funptr,"hipblasHdot")
@@ -1380,8 +1356,7 @@ cdef void* _hipblasHdotBatched__funptr = NULL
 # result
 #           device array or host array of batchCount size to store the dot products of each batch.
 #           return 0.0 for each element if n <= 0.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasHdotBatched(void * handle,int n,const unsigned short *const* x,int incx,const unsigned short *const* y,int incy,int batchCount,unsigned short * result) nogil:
     global _hipblasHdotBatched__funptr
     __init_symbol(&_hipblasHdotBatched__funptr,"hipblasHdotBatched")
@@ -1485,8 +1460,7 @@ cdef void* _hipblasHdotStridedBatched__funptr = NULL
 # result
 #           device array or host array of batchCount size to store the dot products of each batch.
 #           return 0.0 for each element if n <= 0.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasHdotStridedBatched(void * handle,int n,const unsigned short * x,int incx,long stridex,const unsigned short * y,int incy,long stridey,int batchCount,unsigned short * result) nogil:
     global _hipblasHdotStridedBatched__funptr
     __init_symbol(&_hipblasHdotStridedBatched__funptr,"hipblasHdotStridedBatched")
@@ -1570,7 +1544,6 @@ cdef void* _hipblasSnrm2__funptr = NULL
 # result
 #           device pointer or host pointer to store the nrm2 product.
 #           return is 0.0 if n, incx<=0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSnrm2(void * handle,int n,const float * x,int incx,float * result) nogil:
     global _hipblasSnrm2__funptr
     __init_symbol(&_hipblasSnrm2__funptr,"hipblasSnrm2")
@@ -1629,8 +1602,7 @@ cdef void* _hipblasSnrm2Batched__funptr = NULL
 # result
 #           device pointer or host pointer to array of batchCount size for nrm2 results.
 #           return is 0.0 for each element if n <= 0, incx<=0.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSnrm2Batched(void * handle,int n,const float *const* x,int incx,int batchCount,float * result) nogil:
     global _hipblasSnrm2Batched__funptr
     __init_symbol(&_hipblasSnrm2Batched__funptr,"hipblasSnrm2Batched")
@@ -1695,8 +1667,7 @@ cdef void* _hipblasSnrm2StridedBatched__funptr = NULL
 # result
 #           device pointer or host pointer to array for storing contiguous batchCount results.
 #           return is 0.0 for each element if n <= 0, incx<=0.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSnrm2StridedBatched(void * handle,int n,const float * x,int incx,long stridex,int batchCount,float * result) nogil:
     global _hipblasSnrm2StridedBatched__funptr
     __init_symbol(&_hipblasSnrm2StridedBatched__funptr,"hipblasSnrm2StridedBatched")
@@ -1755,8 +1726,7 @@ cdef void* _hipblasSrot__funptr = NULL
 # c       device pointer or host pointer storing scalar cosine component of the rotation matrix.
 # @param[in]
 # s       device pointer or host pointer storing scalar sine component of the rotation matrix.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrot(void * handle,int n,float * x,int incx,float * y,int incy,const float * c,const float * s) nogil:
     global _hipblasSrot__funptr
     __init_symbol(&_hipblasSrot__funptr,"hipblasSrot")
@@ -1832,8 +1802,7 @@ cdef void* _hipblasSrotBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             the number of x and y arrays, i.e. the number of batches.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotBatched(void * handle,int n,float *const* x,int incx,float *const* y,int incy,const float * c,const float * s,int batchCount) nogil:
     global _hipblasSrotBatched__funptr
     __init_symbol(&_hipblasSrotBatched__funptr,"hipblasSrotBatched")
@@ -1915,8 +1884,7 @@ cdef void* _hipblasSrotStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #         the number of x and y arrays, i.e. the number of batches.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotStridedBatched(void * handle,int n,float * x,int incx,long stridex,float * y,int incy,long stridey,const float * c,const float * s,int batchCount) nogil:
     global _hipblasSrotStridedBatched__funptr
     __init_symbol(&_hipblasSrotStridedBatched__funptr,"hipblasSrotStridedBatched")
@@ -1982,8 +1950,7 @@ cdef void* _hipblasSrotg__funptr = NULL
 # c       device pointer or host pointer to cosine element of Givens rotation.
 # @param[inout]
 # s       device pointer or host pointer sine element of Givens rotation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotg(void * handle,float * a,float * b,float * c,float * s) nogil:
     global _hipblasSrotg__funptr
     __init_symbol(&_hipblasSrotg__funptr,"hipblasSrotg")
@@ -2038,8 +2005,7 @@ cdef void* _hipblasSrotgBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of batches (length of arrays a, b, c, and s).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotgBatched(void * handle,float *const* a,float *const* b,float *const* c,float *const* s,int batchCount) nogil:
     global _hipblasSrotgBatched__funptr
     __init_symbol(&_hipblasSrotgBatched__funptr,"hipblasSrotgBatched")
@@ -2106,8 +2072,7 @@ cdef void* _hipblasSrotgStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of batches (length of arrays a, b, c, and s).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotgStridedBatched(void * handle,float * a,long stridea,float * b,long strideb,float * c,long stridec,float * s,long strides,int batchCount) nogil:
     global _hipblasSrotgStridedBatched__funptr
     __init_symbol(&_hipblasSrotgStridedBatched__funptr,"hipblasSrotgStridedBatched")
@@ -2174,8 +2139,7 @@ cdef void* _hipblasSrotm__funptr = NULL
 #         flag =  1 => H = ( H11 1.0 -1.0 H22 )
 #         flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
 #         param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotm(void * handle,int n,float * x,int incx,float * y,int incy,const float * param) nogil:
     global _hipblasSrotm__funptr
     __init_symbol(&_hipblasSrotm__funptr,"hipblasSrotm")
@@ -2231,8 +2195,7 @@ cdef void* _hipblasSrotmBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             the number of x and y arrays, i.e. the number of batches.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotmBatched(void * handle,int n,float *const* x,int incx,float *const* y,int incy,const float *const* param,int batchCount) nogil:
     global _hipblasSrotmBatched__funptr
     __init_symbol(&_hipblasSrotmBatched__funptr,"hipblasSrotmBatched")
@@ -2297,8 +2260,7 @@ cdef void* _hipblasSrotmStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             the number of x and y arrays, i.e. the number of batches.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotmStridedBatched(void * handle,int n,float * x,int incx,long stridex,float * y,int incy,long stridey,const float * param,long strideParam,int batchCount) nogil:
     global _hipblasSrotmStridedBatched__funptr
     __init_symbol(&_hipblasSrotmStridedBatched__funptr,"hipblasSrotmStridedBatched")
@@ -2349,8 +2311,7 @@ cdef void* _hipblasSrotmg__funptr = NULL
 #         flag =  1 => H = ( H11 1.0 -1.0 H22 )
 #         flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
 #         param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotmg(void * handle,float * d1,float * d2,float * x1,const float * y1,float * param) nogil:
     global _hipblasSrotmg__funptr
     __init_symbol(&_hipblasSrotmg__funptr,"hipblasSrotmg")
@@ -2404,8 +2365,7 @@ cdef void* _hipblasSrotmgBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             the number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotmgBatched(void * handle,float *const* d1,float *const* d2,float *const* x1,const float *const* y1,float *const* param,int batchCount) nogil:
     global _hipblasSrotmgBatched__funptr
     __init_symbol(&_hipblasSrotmgBatched__funptr,"hipblasSrotmgBatched")
@@ -2474,8 +2434,7 @@ cdef void* _hipblasSrotmgStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             the number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSrotmgStridedBatched(void * handle,float * d1,long strided1,float * d2,long strided2,float * x1,long stridex1,const float * y1,long stridey1,float * param,long strideParam,int batchCount) nogil:
     global _hipblasSrotmgStridedBatched__funptr
     __init_symbol(&_hipblasSrotmgStridedBatched__funptr,"hipblasSrotmgStridedBatched")
@@ -2515,8 +2474,7 @@ cdef void* _hipblasSscal__funptr = NULL
 # incx      [int]
 #           specifies the increment for the elements of x.
 # 
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSscal(void * handle,int n,const float * alpha,float * x,int incx) nogil:
     global _hipblasSscal__funptr
     __init_symbol(&_hipblasSscal__funptr,"hipblasSscal")
@@ -2587,7 +2545,6 @@ cdef void* _hipblasSscalBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             specifies the number of batches in x.
-#   ******************************************************************
 cdef hipblasStatus_t hipblasSscalBatched(void * handle,int n,const float * alpha,float *const* x,int incx,int batchCount) nogil:
     global _hipblasSscalBatched__funptr
     __init_symbol(&_hipblasSscalBatched__funptr,"hipblasSscalBatched")
@@ -2664,7 +2621,6 @@ cdef void* _hipblasSscalStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             specifies the number of batches in x.
-#   ******************************************************************
 cdef hipblasStatus_t hipblasSscalStridedBatched(void * handle,int n,const float * alpha,float * x,int incx,long stridex,int batchCount) nogil:
     global _hipblasSscalStridedBatched__funptr
     __init_symbol(&_hipblasSscalStridedBatched__funptr,"hipblasSscalStridedBatched")
@@ -2734,8 +2690,7 @@ cdef void* _hipblasSswap__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSswap(void * handle,int n,float * x,int incx,float * y,int incy) nogil:
     global _hipblasSswap__funptr
     __init_symbol(&_hipblasSswap__funptr,"hipblasSswap")
@@ -2794,8 +2749,7 @@ cdef void* _hipblasSswapBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSswapBatched(void * handle,int n,float ** x,int incx,float ** y,int incy,int batchCount) nogil:
     global _hipblasSswapBatched__funptr
     __init_symbol(&_hipblasSswapBatched__funptr,"hipblasSswapBatched")
@@ -2866,8 +2820,7 @@ cdef void* _hipblasSswapStridedBatched__funptr = NULL
 #  @param[in]
 #  batchCount [int]
 #              number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSswapStridedBatched(void * handle,int n,float * x,int incx,long stridex,float * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasSswapStridedBatched__funptr
     __init_symbol(&_hipblasSswapStridedBatched__funptr,"hipblasSswapStridedBatched")
@@ -2964,8 +2917,7 @@ cdef void* _hipblasSgbmv__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgbmv(void * handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSgbmv__funptr
     __init_symbol(&_hipblasSgbmv__funptr,"hipblasSgbmv")
@@ -3067,8 +3019,7 @@ cdef void* _hipblasSgbmvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             specifies the number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgbmvBatched(void * handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const float * alpha,const float *const* AP,int lda,const float *const* x,int incx,const float * beta,float *const* y,int incy,int batchCount) nogil:
     global _hipblasSgbmvBatched__funptr
     __init_symbol(&_hipblasSgbmvBatched__funptr,"hipblasSgbmvBatched")
@@ -3179,8 +3130,7 @@ cdef void* _hipblasSgbmvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             specifies the number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgbmvStridedBatched(void * handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const float * alpha,const float * AP,int lda,long strideA,const float * x,int incx,long stridex,const float * beta,float * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasSgbmvStridedBatched__funptr
     __init_symbol(&_hipblasSgbmvStridedBatched__funptr,"hipblasSgbmvStridedBatched")
@@ -3256,8 +3206,7 @@ cdef void* _hipblasSgemv__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgemv(void * handle,hipblasOperation_t trans,int m,int n,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSgemv__funptr
     __init_symbol(&_hipblasSgemv__funptr,"hipblasSgemv")
@@ -3337,8 +3286,7 @@ cdef void* _hipblasSgemvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgemvBatched(void * handle,hipblasOperation_t trans,int m,int n,const float * alpha,const float *const* AP,int lda,const float *const* x,int incx,const float * beta,float *const* y,int incy,int batchCount) nogil:
     global _hipblasSgemvBatched__funptr
     __init_symbol(&_hipblasSgemvBatched__funptr,"hipblasSgemvBatched")
@@ -3433,8 +3381,7 @@ cdef void* _hipblasSgemvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgemvStridedBatched(void * handle,hipblasOperation_t transA,int m,int n,const float * alpha,const float * AP,int lda,long strideA,const float * x,int incx,long stridex,const float * beta,float * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasSgemvStridedBatched__funptr
     __init_symbol(&_hipblasSgemvStridedBatched__funptr,"hipblasSgemvStridedBatched")
@@ -3505,8 +3452,7 @@ cdef void* _hipblasSger__funptr = NULL
 # @param[in]
 # lda       [int]
 #           specifies the leading dimension of A.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSger(void * handle,int m,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP,int lda) nogil:
     global _hipblasSger__funptr
     __init_symbol(&_hipblasSger__funptr,"hipblasSger")
@@ -3595,8 +3541,7 @@ cdef void* _hipblasSgerBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgerBatched(void * handle,int m,int n,const float * alpha,const float *const* x,int incx,const float *const* y,int incy,float *const* AP,int lda,int batchCount) nogil:
     global _hipblasSgerBatched__funptr
     __init_symbol(&_hipblasSgerBatched__funptr,"hipblasSgerBatched")
@@ -3700,8 +3645,7 @@ cdef void* _hipblasSgerStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgerStridedBatched(void * handle,int m,int n,const float * alpha,const float * x,int incx,long stridex,const float * y,int incy,long stridey,float * AP,int lda,long strideA,int batchCount) nogil:
     global _hipblasSgerStridedBatched__funptr
     __init_symbol(&_hipblasSgerStridedBatched__funptr,"hipblasSgerStridedBatched")
@@ -3818,8 +3762,7 @@ cdef void* _hipblasChbmv__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChbmv(void * handle,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasChbmv__funptr
     __init_symbol(&_hipblasChbmv__funptr,"hipblasChbmv")
@@ -3911,8 +3854,7 @@ cdef void* _hipblasChbmvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChbmvBatched(void * handle,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* x,int incx,hipblasComplex * beta,hipblasComplex *const* y,int incy,int batchCount) nogil:
     global _hipblasChbmvBatched__funptr
     __init_symbol(&_hipblasChbmvBatched__funptr,"hipblasChbmvBatched")
@@ -4013,8 +3955,7 @@ cdef void* _hipblasChbmvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChbmvStridedBatched(void * handle,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,long strideA,hipblasComplex * x,int incx,long stridex,hipblasComplex * beta,hipblasComplex * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasChbmvStridedBatched__funptr
     __init_symbol(&_hipblasChbmvStridedBatched__funptr,"hipblasChbmvStridedBatched")
@@ -4082,8 +4023,7 @@ cdef void* _hipblasChemv__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChemv(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasChemv__funptr
     __init_symbol(&_hipblasChemv__funptr,"hipblasChemv")
@@ -4154,8 +4094,7 @@ cdef void* _hipblasChemvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChemvBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* x,int incx,hipblasComplex * beta,hipblasComplex *const* y,int incy,int batchCount) nogil:
     global _hipblasChemvBatched__funptr
     __init_symbol(&_hipblasChemvBatched__funptr,"hipblasChemvBatched")
@@ -4236,8 +4175,7 @@ cdef void* _hipblasChemvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChemvStridedBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,long strideA,hipblasComplex * x,int incx,long stridex,hipblasComplex * beta,hipblasComplex * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasChemvStridedBatched__funptr
     __init_symbol(&_hipblasChemvStridedBatched__funptr,"hipblasChemvStridedBatched")
@@ -4299,7 +4237,6 @@ cdef void* _hipblasCher__funptr = NULL
 # @param[in]
 # lda       [int]
 #           specifies the leading dimension of A. Must be at least max(1, n).
-#  ******************************************************************
 cdef hipblasStatus_t hipblasCher(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,hipblasComplex * AP,int lda) nogil:
     global _hipblasCher__funptr
     __init_symbol(&_hipblasCher__funptr,"hipblasCher")
@@ -4364,7 +4301,6 @@ cdef void* _hipblasCherBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasCherBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex *const* x,int incx,hipblasComplex *const* AP,int lda,int batchCount) nogil:
     global _hipblasCherBatched__funptr
     __init_symbol(&_hipblasCherBatched__funptr,"hipblasCherBatched")
@@ -4435,7 +4371,6 @@ cdef void* _hipblasCherStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasCherStridedBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,long stridex,hipblasComplex * AP,int lda,long strideA,int batchCount) nogil:
     global _hipblasCherStridedBatched__funptr
     __init_symbol(&_hipblasCherStridedBatched__funptr,"hipblasCherStridedBatched")
@@ -4502,7 +4437,6 @@ cdef void* _hipblasCher2__funptr = NULL
 # @param[in]
 # lda       [int]
 #           specifies the leading dimension of A. Must be at least max(lda, 1).
-#  ******************************************************************
 cdef hipblasStatus_t hipblasCher2(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _hipblasCher2__funptr
     __init_symbol(&_hipblasCher2__funptr,"hipblasCher2")
@@ -4572,7 +4506,6 @@ cdef void* _hipblasCher2Batched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasCher2Batched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex *const* x,int incx,hipblasComplex *const* y,int incy,hipblasComplex *const* AP,int lda,int batchCount) nogil:
     global _hipblasCher2Batched__funptr
     __init_symbol(&_hipblasCher2Batched__funptr,"hipblasCher2Batched")
@@ -4651,7 +4584,6 @@ cdef void* _hipblasCher2StridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasCher2StridedBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,long stridex,hipblasComplex * y,int incy,long stridey,hipblasComplex * AP,int lda,long strideA,int batchCount) nogil:
     global _hipblasCher2StridedBatched__funptr
     __init_symbol(&_hipblasCher2StridedBatched__funptr,"hipblasCher2StridedBatched")
@@ -4731,8 +4663,7 @@ cdef void* _hipblasChpmv__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChpmv(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasChpmv__funptr
     __init_symbol(&_hipblasChpmv__funptr,"hipblasChpmv")
@@ -4816,8 +4747,7 @@ cdef void* _hipblasChpmvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChpmvBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex *const* AP,hipblasComplex *const* x,int incx,hipblasComplex * beta,hipblasComplex *const* y,int incy,int batchCount) nogil:
     global _hipblasChpmvBatched__funptr
     __init_symbol(&_hipblasChpmvBatched__funptr,"hipblasChpmvBatched")
@@ -4910,8 +4840,7 @@ cdef void* _hipblasChpmvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChpmvStridedBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,long strideA,hipblasComplex * x,int incx,long stridex,hipblasComplex * beta,hipblasComplex * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasChpmvStridedBatched__funptr
     __init_symbol(&_hipblasChpmvStridedBatched__funptr,"hipblasChpmvStridedBatched")
@@ -4986,7 +4915,6 @@ cdef void* _hipblasChpr__funptr = NULL
 #                     (4,-9) (5,-3) (6,0)
 #         Note that the imaginary part of the diagonal elements are not accessed and are assumed
 #         to be 0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasChpr(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,hipblasComplex * AP) nogil:
     global _hipblasChpr__funptr
     __init_symbol(&_hipblasChpr__funptr,"hipblasChpr")
@@ -5064,7 +4992,6 @@ cdef void* _hipblasChprBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasChprBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex *const* x,int incx,hipblasComplex *const* AP,int batchCount) nogil:
     global _hipblasChprBatched__funptr
     __init_symbol(&_hipblasChprBatched__funptr,"hipblasChprBatched")
@@ -5148,7 +5075,6 @@ cdef void* _hipblasChprStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasChprStridedBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,long stridex,hipblasComplex * AP,long strideA,int batchCount) nogil:
     global _hipblasChprStridedBatched__funptr
     __init_symbol(&_hipblasChprStridedBatched__funptr,"hipblasChprStridedBatched")
@@ -5228,7 +5154,6 @@ cdef void* _hipblasChpr2__funptr = NULL
 #                     (4,-9) (5,-3) (6,0)
 #         Note that the imaginary part of the diagonal elements are not accessed and are assumed
 #         to be 0.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasChpr2(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP) nogil:
     global _hipblasChpr2__funptr
     __init_symbol(&_hipblasChpr2__funptr,"hipblasChpr2")
@@ -5311,7 +5236,6 @@ cdef void* _hipblasChpr2Batched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasChpr2Batched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex *const* x,int incx,hipblasComplex *const* y,int incy,hipblasComplex *const* AP,int batchCount) nogil:
     global _hipblasChpr2Batched__funptr
     __init_symbol(&_hipblasChpr2Batched__funptr,"hipblasChpr2Batched")
@@ -5403,7 +5327,6 @@ cdef void* _hipblasChpr2StridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasChpr2StridedBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,long stridex,hipblasComplex * y,int incy,long stridey,hipblasComplex * AP,long strideA,int batchCount) nogil:
     global _hipblasChpr2StridedBatched__funptr
     __init_symbol(&_hipblasChpr2StridedBatched__funptr,"hipblasChpr2StridedBatched")
@@ -5465,8 +5388,7 @@ cdef void* _hipblasSsbmv__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsbmv(void * handle,hipblasFillMode_t uplo,int n,int k,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSsbmv__funptr
     __init_symbol(&_hipblasSsbmv__funptr,"hipblasSsbmv")
@@ -5534,8 +5456,7 @@ cdef void* _hipblasSsbmvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsbmvBatched(void * handle,hipblasFillMode_t uplo,int n,int k,const float * alpha,const float *const* AP,int lda,const float *const* x,int incx,const float * beta,float ** y,int incy,int batchCount) nogil:
     global _hipblasSsbmvBatched__funptr
     __init_symbol(&_hipblasSsbmvBatched__funptr,"hipblasSsbmvBatched")
@@ -5618,8 +5539,7 @@ cdef void* _hipblasSsbmvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsbmvStridedBatched(void * handle,hipblasFillMode_t uplo,int n,int k,const float * alpha,const float * AP,int lda,long strideA,const float * x,int incx,long stridex,const float * beta,float * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasSsbmvStridedBatched__funptr
     __init_symbol(&_hipblasSsbmvStridedBatched__funptr,"hipblasSsbmvStridedBatched")
@@ -5675,8 +5595,7 @@ cdef void* _hipblasSspmv__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSspmv(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSspmv__funptr
     __init_symbol(&_hipblasSspmv__funptr,"hipblasSspmv")
@@ -5738,8 +5657,7 @@ cdef void* _hipblasSspmvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSspmvBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* AP,const float *const* x,int incx,const float * beta,float ** y,int incy,int batchCount) nogil:
     global _hipblasSspmvBatched__funptr
     __init_symbol(&_hipblasSspmvBatched__funptr,"hipblasSspmvBatched")
@@ -5816,8 +5734,7 @@ cdef void* _hipblasSspmvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSspmvStridedBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,long strideA,const float * x,int incx,long stridex,const float * beta,float * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasSspmvStridedBatched__funptr
     __init_symbol(&_hipblasSspmvStridedBatched__funptr,"hipblasSspmvStridedBatched")
@@ -5892,7 +5809,6 @@ cdef void* _hipblasSspr__funptr = NULL
 #                     2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 #                     3 6 8 9
 #                     4 7 9 0
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSspr(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,float * AP) nogil:
     global _hipblasSspr__funptr
     __init_symbol(&_hipblasSspr__funptr,"hipblasSspr")
@@ -5984,7 +5900,6 @@ cdef void* _hipblasSsprBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSsprBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* x,int incx,float *const* AP,int batchCount) nogil:
     global _hipblasSsprBatched__funptr
     __init_symbol(&_hipblasSsprBatched__funptr,"hipblasSsprBatched")
@@ -6082,7 +5997,6 @@ cdef void* _hipblasSsprStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSsprStridedBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,long stridex,float * AP,long strideA,int batchCount) nogil:
     global _hipblasSsprStridedBatched__funptr
     __init_symbol(&_hipblasSsprStridedBatched__funptr,"hipblasSsprStridedBatched")
@@ -6176,7 +6090,6 @@ cdef void* _hipblasSspr2__funptr = NULL
 #                     2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 #                     3 6 8 9
 #                     4 7 9 0
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSspr2(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP) nogil:
     global _hipblasSspr2__funptr
     __init_symbol(&_hipblasSspr2__funptr,"hipblasSspr2")
@@ -6259,7 +6172,6 @@ cdef void* _hipblasSspr2Batched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSspr2Batched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* x,int incx,const float *const* y,int incy,float *const* AP,int batchCount) nogil:
     global _hipblasSspr2Batched__funptr
     __init_symbol(&_hipblasSspr2Batched__funptr,"hipblasSspr2Batched")
@@ -6351,7 +6263,6 @@ cdef void* _hipblasSspr2StridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSspr2StridedBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,long stridex,const float * y,int incy,long stridey,float * AP,long strideA,int batchCount) nogil:
     global _hipblasSspr2StridedBatched__funptr
     __init_symbol(&_hipblasSspr2StridedBatched__funptr,"hipblasSspr2StridedBatched")
@@ -6410,8 +6321,7 @@ cdef void* _hipblasSsymv__funptr = NULL
 # @param[in]
 # incy      [int]
 #           specifies the increment for the elements of y
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsymv(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSsymv__funptr
     __init_symbol(&_hipblasSsymv__funptr,"hipblasSsymv")
@@ -6491,8 +6401,7 @@ cdef void* _hipblasSsymvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsymvBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* AP,int lda,const float *const* x,int incx,const float * beta,float ** y,int incy,int batchCount) nogil:
     global _hipblasSsymvBatched__funptr
     __init_symbol(&_hipblasSsymvBatched__funptr,"hipblasSsymvBatched")
@@ -6587,8 +6496,7 @@ cdef void* _hipblasSsymvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsymvStridedBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,int lda,long strideA,const float * x,int incx,long stridex,const float * beta,float * y,int incy,long stridey,int batchCount) nogil:
     global _hipblasSsymvStridedBatched__funptr
     __init_symbol(&_hipblasSsymvStridedBatched__funptr,"hipblasSsymvStridedBatched")
@@ -6656,8 +6564,7 @@ cdef void* _hipblasSsyr__funptr = NULL
 # @param[in]
 # lda       [int]
 #           specifies the leading dimension of A.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyr(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,float * AP,int lda) nogil:
     global _hipblasSsyr__funptr
     __init_symbol(&_hipblasSsyr__funptr,"hipblasSsyr")
@@ -6727,8 +6634,7 @@ cdef void* _hipblasSsyrBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyrBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* x,int incx,float *const* AP,int lda,int batchCount) nogil:
     global _hipblasSsyrBatched__funptr
     __init_symbol(&_hipblasSsyrBatched__funptr,"hipblasSsyrBatched")
@@ -6804,8 +6710,7 @@ cdef void* _hipblasSsyrStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #           number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyrStridedBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,long stridex,float * AP,int lda,long strideA,int batchCount) nogil:
     global _hipblasSsyrStridedBatched__funptr
     __init_symbol(&_hipblasSsyrStridedBatched__funptr,"hipblasSsyrStridedBatched")
@@ -6878,8 +6783,7 @@ cdef void* _hipblasSsyr2__funptr = NULL
 # @param[in]
 # lda       [int]
 #           specifies the leading dimension of A.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyr2(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP,int lda) nogil:
     global _hipblasSsyr2__funptr
     __init_symbol(&_hipblasSsyr2__funptr,"hipblasSsyr2")
@@ -6954,8 +6858,7 @@ cdef void* _hipblasSsyr2Batched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyr2Batched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* x,int incx,const float *const* y,int incy,float *const* AP,int lda,int batchCount) nogil:
     global _hipblasSsyr2Batched__funptr
     __init_symbol(&_hipblasSsyr2Batched__funptr,"hipblasSsyr2Batched")
@@ -7039,8 +6942,7 @@ cdef void* _hipblasSsyr2StridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #           number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyr2StridedBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,long stridex,const float * y,int incy,long stridey,float * AP,int lda,long strideA,int batchCount) nogil:
     global _hipblasSsyr2StridedBatched__funptr
     __init_symbol(&_hipblasSsyr2StridedBatched__funptr,"hipblasSsyr2StridedBatched")
@@ -7144,8 +7046,7 @@ cdef void* _hipblasStbmv__funptr = NULL
 # @param[in]
 # incx      [int]
 #           specifies the increment for the elements of x.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStbmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const float * AP,int lda,float * x,int incx) nogil:
     global _hipblasStbmv__funptr
     __init_symbol(&_hipblasStbmv__funptr,"hipblasStbmv")
@@ -7253,8 +7154,7 @@ cdef void* _hipblasStbmvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStbmvBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const float *const* AP,int lda,float *const* x,int incx,int batchCount) nogil:
     global _hipblasStbmvBatched__funptr
     __init_symbol(&_hipblasStbmvBatched__funptr,"hipblasStbmvBatched")
@@ -7368,8 +7268,7 @@ cdef void* _hipblasStbmvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStbmvStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const float * AP,int lda,long strideA,float * x,int incx,long stridex,int batchCount) nogil:
     global _hipblasStbmvStridedBatched__funptr
     __init_symbol(&_hipblasStbmvStridedBatched__funptr,"hipblasStbmvStridedBatched")
@@ -7457,8 +7356,7 @@ cdef void* _hipblasStbsv__funptr = NULL
 # @param[in]
 # incx      [int]
 #           specifies the increment for the elements of x.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStbsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const float * AP,int lda,float * x,int incx) nogil:
     global _hipblasStbsv__funptr
     __init_symbol(&_hipblasStbsv__funptr,"hipblasStbsv")
@@ -7552,8 +7450,7 @@ cdef void* _hipblasStbsvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStbsvBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const float *const* AP,int lda,float *const* x,int incx,int batchCount) nogil:
     global _hipblasStbsvBatched__funptr
     __init_symbol(&_hipblasStbsvBatched__funptr,"hipblasStbsvBatched")
@@ -7652,8 +7549,7 @@ cdef void* _hipblasStbsvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStbsvStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const float * AP,int lda,long strideA,float * x,int incx,long stridex,int batchCount) nogil:
     global _hipblasStbsvStridedBatched__funptr
     __init_symbol(&_hipblasStbsvStridedBatched__funptr,"hipblasStbsvStridedBatched")
@@ -7738,8 +7634,7 @@ cdef void* _hipblasStpmv__funptr = NULL
 # @param[in]
 # incx    [int]
 #         specifies the increment for the elements of x. incx must not be zero.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStpmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,float * x,int incx) nogil:
     global _hipblasStpmv__funptr
     __init_symbol(&_hipblasStpmv__funptr,"hipblasStpmv")
@@ -7819,8 +7714,7 @@ cdef void* _hipblasStpmvBatched__funptr = NULL
 # batchCount [int]
 #           The number of batched matrices/vectors.
 # 
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStpmvBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float *const* AP,float *const* x,int incx,int batchCount) nogil:
     global _hipblasStpmvBatched__funptr
     __init_symbol(&_hipblasStpmvBatched__funptr,"hipblasStpmvBatched")
@@ -7909,8 +7803,7 @@ cdef void* _hipblasStpmvStridedBatched__funptr = NULL
 # batchCount [int]
 #           The number of batched matrices/vectors.
 # 
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStpmvStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,long strideA,float * x,int incx,long stridex,int batchCount) nogil:
     global _hipblasStpmvStridedBatched__funptr
     __init_symbol(&_hipblasStpmvStridedBatched__funptr,"hipblasStpmvStridedBatched")
@@ -7989,8 +7882,7 @@ cdef void* _hipblasStpsv__funptr = NULL
 # @param[in]
 # incx      [int]
 #           specifies the increment for the elements of x.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStpsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,float * x,int incx) nogil:
     global _hipblasStpsv__funptr
     __init_symbol(&_hipblasStpsv__funptr,"hipblasStpsv")
@@ -8073,8 +7965,7 @@ cdef void* _hipblasStpsvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             specifies the number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStpsvBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float *const* AP,float *const* x,int incx,int batchCount) nogil:
     global _hipblasStpsvBatched__funptr
     __init_symbol(&_hipblasStpsvBatched__funptr,"hipblasStpsvBatched")
@@ -8164,8 +8055,7 @@ cdef void* _hipblasStpsvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             specifies the number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStpsvStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,long strideA,float * x,int incx,long stridex,int batchCount) nogil:
     global _hipblasStpsvStridedBatched__funptr
     __init_symbol(&_hipblasStpsvStridedBatched__funptr,"hipblasStpsvStridedBatched")
@@ -8245,8 +8135,7 @@ cdef void* _hipblasStrmv__funptr = NULL
 # @param[in]
 # incx      [int]
 #           specifies the increment for the elements of x.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStrmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,float * x,int incx) nogil:
     global _hipblasStrmv__funptr
     __init_symbol(&_hipblasStrmv__funptr,"hipblasStrmv")
@@ -8331,8 +8220,7 @@ cdef void* _hipblasStrmvBatched__funptr = NULL
 # batchCount [int]
 #           The number of batched matrices/vectors.
 # 
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStrmvBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float *const* AP,int lda,float *const* x,int incx,int batchCount) nogil:
     global _hipblasStrmvBatched__funptr
     __init_symbol(&_hipblasStrmvBatched__funptr,"hipblasStrmvBatched")
@@ -8426,8 +8314,7 @@ cdef void* _hipblasStrmvStridedBatched__funptr = NULL
 # batchCount [int]
 #           The number of batched matrices/vectors.
 # 
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStrmvStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,long strideA,float * x,int incx,long stridex,int batchCount) nogil:
     global _hipblasStrmvStridedBatched__funptr
     __init_symbol(&_hipblasStrmvStridedBatched__funptr,"hipblasStrmvStridedBatched")
@@ -8507,8 +8394,7 @@ cdef void* _hipblasStrsv__funptr = NULL
 # @param[in]
 # incx      [int]
 #           specifies the increment for the elements of x.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStrsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,float * x,int incx) nogil:
     global _hipblasStrsv__funptr
     __init_symbol(&_hipblasStrsv__funptr,"hipblasStrsv")
@@ -8593,8 +8479,7 @@ cdef void* _hipblasStrsvBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStrsvBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float *const* AP,int lda,float *const* x,int incx,int batchCount) nogil:
     global _hipblasStrsvBatched__funptr
     __init_symbol(&_hipblasStrsvBatched__funptr,"hipblasStrsvBatched")
@@ -8686,8 +8571,7 @@ cdef void* _hipblasStrsvStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStrsvStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,long strideA,float * x,int incx,long stridex,int batchCount) nogil:
     global _hipblasStrsvStridedBatched__funptr
     __init_symbol(&_hipblasStrsvStridedBatched__funptr,"hipblasStrsvStridedBatched")
@@ -8774,8 +8658,7 @@ cdef void* _hipblasHgemm__funptr = NULL
 # @param[in]
 # ldc       [int]
 #           specifies the leading dimension of C.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasHgemm(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const unsigned short * alpha,const unsigned short * AP,int lda,const unsigned short * BP,int ldb,const unsigned short * beta,unsigned short * CP,int ldc) nogil:
     global _hipblasHgemm__funptr
     __init_symbol(&_hipblasHgemm__funptr,"hipblasHgemm")
@@ -8869,7 +8752,6 @@ cdef void* _hipblasHgemmBatched__funptr = NULL
 # batchCount
 #           [int]
 #           number of gemm operations in the batch
-#   ******************************************************************
 cdef hipblasStatus_t hipblasHgemmBatched(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const unsigned short * alpha,const unsigned short *const* AP,int lda,const unsigned short *const* BP,int ldb,const unsigned short * beta,unsigned short *const* CP,int ldc,int batchCount) nogil:
     global _hipblasHgemmBatched__funptr
     __init_symbol(&_hipblasHgemmBatched__funptr,"hipblasHgemmBatched")
@@ -8977,8 +8859,7 @@ cdef void* _hipblasHgemmStridedBatched__funptr = NULL
 # batchCount
 #           [int]
 #           number of gemm operatons in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasHgemmStridedBatched(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const unsigned short * alpha,const unsigned short * AP,int lda,long long strideA,const unsigned short * BP,int ldb,long long strideB,const unsigned short * beta,unsigned short * CP,int ldc,long long strideC,int batchCount) nogil:
     global _hipblasHgemmStridedBatched__funptr
     __init_symbol(&_hipblasHgemmStridedBatched__funptr,"hipblasHgemmStridedBatched")
@@ -9083,8 +8964,7 @@ cdef void* _hipblasCherk__funptr = NULL
 # @param[in]
 # ldc    [int]
 #        ldc specifies the first dimension of C. ldc >= max( 1, n ).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCherk(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,hipblasComplex * AP,int lda,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCherk__funptr
     __init_symbol(&_hipblasCherk__funptr,"hipblasCherk")
@@ -9170,8 +9050,7 @@ cdef void* _hipblasCherkBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCherkBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,hipblasComplex *const* AP,int lda,const float * beta,hipblasComplex *const* CP,int ldc,int batchCount) nogil:
     global _hipblasCherkBatched__funptr
     __init_symbol(&_hipblasCherkBatched__funptr,"hipblasCherkBatched")
@@ -9266,8 +9145,7 @@ cdef void* _hipblasCherkStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCherkStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,hipblasComplex * AP,int lda,long strideA,const float * beta,hipblasComplex * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasCherkStridedBatched__funptr
     __init_symbol(&_hipblasCherkStridedBatched__funptr,"hipblasCherkStridedBatched")
@@ -9362,8 +9240,7 @@ cdef void* _hipblasCherkx__funptr = NULL
 # @param[in]
 # ldc    [int]
 #        ldc specifies the first dimension of C. ldc >= max( 1, n ).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCherkx(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCherkx__funptr
     __init_symbol(&_hipblasCherkx__funptr,"hipblasCherkx")
@@ -9461,8 +9338,7 @@ cdef void* _hipblasCherkxBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCherkxBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* BP,int ldb,const float * beta,hipblasComplex *const* CP,int ldc,int batchCount) nogil:
     global _hipblasCherkxBatched__funptr
     __init_symbol(&_hipblasCherkxBatched__funptr,"hipblasCherkxBatched")
@@ -9572,8 +9448,7 @@ cdef void* _hipblasCherkxStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCherkxStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,long strideA,hipblasComplex * BP,int ldb,long strideB,const float * beta,hipblasComplex * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasCherkxStridedBatched__funptr
     __init_symbol(&_hipblasCherkxStridedBatched__funptr,"hipblasCherkxStridedBatched")
@@ -9666,8 +9541,7 @@ cdef void* _hipblasCher2k__funptr = NULL
 # @param[in]
 # ldc    [int]
 #        ldc specifies the first dimension of C. ldc >= max( 1, n ).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCher2k(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCher2k__funptr
     __init_symbol(&_hipblasCher2k__funptr,"hipblasCher2k")
@@ -9761,8 +9635,7 @@ cdef void* _hipblasCher2kBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCher2kBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* BP,int ldb,const float * beta,hipblasComplex *const* CP,int ldc,int batchCount) nogil:
     global _hipblasCher2kBatched__funptr
     __init_symbol(&_hipblasCher2kBatched__funptr,"hipblasCher2kBatched")
@@ -9871,8 +9744,7 @@ cdef void* _hipblasCher2kStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasCher2kStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,long strideA,hipblasComplex * BP,int ldb,long strideB,const float * beta,hipblasComplex * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasCher2kStridedBatched__funptr
     __init_symbol(&_hipblasCher2kStridedBatched__funptr,"hipblasCher2kStridedBatched")
@@ -9962,8 +9834,7 @@ cdef void* _hipblasSsymm__funptr = NULL
 # @param[in]
 # ldc    [int]
 #        ldc specifies the first dimension of C. ldc >= max( 1, m )
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsymm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSsymm__funptr
     __init_symbol(&_hipblasSsymm__funptr,"hipblasSsymm")
@@ -10071,8 +9942,7 @@ cdef void* _hipblasSsymmBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsymmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const float * alpha,const float *const* AP,int lda,const float *const* BP,int ldb,const float * beta,float *const* CP,int ldc,int batchCount) nogil:
     global _hipblasSsymmBatched__funptr
     __init_symbol(&_hipblasSsymmBatched__funptr,"hipblasSsymmBatched")
@@ -10189,8 +10059,7 @@ cdef void* _hipblasSsymmStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsymmStridedBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const float * alpha,const float * AP,int lda,long strideA,const float * BP,int ldb,long strideB,const float * beta,float * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasSsymmStridedBatched__funptr
     __init_symbol(&_hipblasSsymmStridedBatched__funptr,"hipblasSsymmStridedBatched")
@@ -10291,8 +10160,7 @@ cdef void* _hipblasSsyrk__funptr = NULL
 # @param[in]
 # ldc    [int]
 #        ldc specifies the first dimension of C. ldc >= max( 1, n ).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyrk(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSsyrk__funptr
     __init_symbol(&_hipblasSsyrk__funptr,"hipblasSsyrk")
@@ -10395,8 +10263,7 @@ cdef void* _hipblasSsyrkBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyrkBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float *const* AP,int lda,const float * beta,float *const* CP,int ldc,int batchCount) nogil:
     global _hipblasSsyrkBatched__funptr
     __init_symbol(&_hipblasSsyrkBatched__funptr,"hipblasSsyrkBatched")
@@ -10508,8 +10375,7 @@ cdef void* _hipblasSsyrkStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyrkStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,long strideA,const float * beta,float * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasSsyrkStridedBatched__funptr
     __init_symbol(&_hipblasSsyrkStridedBatched__funptr,"hipblasSsyrkStridedBatched")
@@ -10615,8 +10481,7 @@ cdef void* _hipblasSsyr2k__funptr = NULL
 # @param[in]
 # ldc    [int]
 #        ldc specifies the first dimension of C. ldc >= max( 1, n ).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyr2k(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSsyr2k__funptr
     __init_symbol(&_hipblasSsyr2k__funptr,"hipblasSsyr2k")
@@ -10722,8 +10587,7 @@ cdef void* _hipblasSsyr2kBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyr2kBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float *const* AP,int lda,const float *const* BP,int ldb,const float * beta,float *const* CP,int ldc,int batchCount) nogil:
     global _hipblasSsyr2kBatched__funptr
     __init_symbol(&_hipblasSsyr2kBatched__funptr,"hipblasSsyr2kBatched")
@@ -10845,8 +10709,7 @@ cdef void* _hipblasSsyr2kStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyr2kStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,long strideA,const float * BP,int ldb,long strideB,const float * beta,float * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasSsyr2kStridedBatched__funptr
     __init_symbol(&_hipblasSsyr2kStridedBatched__funptr,"hipblasSsyr2kStridedBatched")
@@ -10955,8 +10818,7 @@ cdef void* _hipblasSsyrkx__funptr = NULL
 # @param[in]
 # ldc    [int]
 #        ldc specifies the first dimension of C. ldc >= max( 1, n ).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyrkx(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSsyrkx__funptr
     __init_symbol(&_hipblasSsyrkx__funptr,"hipblasSsyrkx")
@@ -11067,8 +10929,7 @@ cdef void* _hipblasSsyrkxBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #         number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyrkxBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float *const* AP,int lda,const float *const* BP,int ldb,const float * beta,float *const* CP,int ldc,int batchCount) nogil:
     global _hipblasSsyrkxBatched__funptr
     __init_symbol(&_hipblasSsyrkxBatched__funptr,"hipblasSsyrkxBatched")
@@ -11191,8 +11052,7 @@ cdef void* _hipblasSsyrkxStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSsyrkxStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,long strideA,const float * BP,int ldb,long strideB,const float * beta,float * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasSsyrkxStridedBatched__funptr
     __init_symbol(&_hipblasSsyrkxStridedBatched__funptr,"hipblasSsyrkxStridedBatched")
@@ -11275,8 +11135,7 @@ cdef void* _hipblasSgeam__funptr = NULL
 # @param[in]
 # ldc       [int]
 #           specifies the leading dimension of C.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgeam(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const float * alpha,const float * AP,int lda,const float * beta,const float * BP,int ldb,float * CP,int ldc) nogil:
     global _hipblasSgeam__funptr
     __init_symbol(&_hipblasSgeam__funptr,"hipblasSgeam")
@@ -11367,8 +11226,7 @@ cdef void* _hipblasSgeamBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances i in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgeamBatched(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const float * alpha,const float *const* AP,int lda,const float * beta,const float *const* BP,int ldb,float *const* CP,int ldc,int batchCount) nogil:
     global _hipblasSgeamBatched__funptr
     __init_symbol(&_hipblasSgeamBatched__funptr,"hipblasSgeamBatched")
@@ -11484,8 +11342,7 @@ cdef void* _hipblasSgeamStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances i in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgeamStridedBatched(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const float * alpha,const float * AP,int lda,long strideA,const float * beta,const float * BP,int ldb,long strideB,float * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasSgeamStridedBatched__funptr
     __init_symbol(&_hipblasSgeamStridedBatched__funptr,"hipblasSgeamStridedBatched")
@@ -11590,8 +11447,7 @@ cdef void* _hipblasChemm__funptr = NULL
 # @param[in]
 # ldc    [int]
 #        ldc specifies the first dimension of C. ldc >= max( 1, m )
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChemm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasChemm__funptr
     __init_symbol(&_hipblasChemm__funptr,"hipblasChemm")
@@ -11686,8 +11542,7 @@ cdef void* _hipblasChemmBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChemmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* BP,int ldb,hipblasComplex * beta,hipblasComplex *const* CP,int ldc,int batchCount) nogil:
     global _hipblasChemmBatched__funptr
     __init_symbol(&_hipblasChemmBatched__funptr,"hipblasChemmBatched")
@@ -11794,8 +11649,7 @@ cdef void* _hipblasChemmStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasChemmStridedBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,long strideA,hipblasComplex * BP,int ldb,long strideB,hipblasComplex * beta,hipblasComplex * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasChemmStridedBatched__funptr
     __init_symbol(&_hipblasChemmStridedBatched__funptr,"hipblasChemmStridedBatched")
@@ -11905,8 +11759,7 @@ cdef void* _hipblasStrmm__funptr = NULL
 # @param[in]
 # ldb    [int]
 #        ldb specifies the first dimension of B. ldb >= max( 1, m ).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStrmm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,float * BP,int ldb) nogil:
     global _hipblasStrmm__funptr
     __init_symbol(&_hipblasStrmm__funptr,"hipblasStrmm")
@@ -12033,7 +11886,6 @@ cdef void* _hipblasStrmmBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances i in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasStrmmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float *const* AP,int lda,float *const* BP,int ldb,int batchCount) nogil:
     global _hipblasStrmmBatched__funptr
     __init_symbol(&_hipblasStrmmBatched__funptr,"hipblasStrmmBatched")
@@ -12167,7 +12019,6 @@ cdef void* _hipblasStrmmStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances i in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasStrmmStridedBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,long strideA,float * BP,int ldb,long strideB,int batchCount) nogil:
     global _hipblasStrmmStridedBatched__funptr
     __init_symbol(&_hipblasStrmmStridedBatched__funptr,"hipblasStrmmStridedBatched")
@@ -12284,8 +12135,7 @@ cdef void* _hipblasStrsm__funptr = NULL
 # @param[in]
 # ldb    [int]
 #        ldb specifies the first dimension of B. ldb >= max( 1, m ).
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasStrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float * AP,int lda,float * BP,int ldb) nogil:
     global _hipblasStrsm__funptr
     __init_symbol(&_hipblasStrsm__funptr,"hipblasStrsm")
@@ -12390,7 +12240,6 @@ cdef void* _hipblasStrsmBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of trsm operatons in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasStrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float *const* AP,int lda,float ** BP,int ldb,int batchCount) nogil:
     global _hipblasStrsmBatched__funptr
     __init_symbol(&_hipblasStrsmBatched__funptr,"hipblasStrsmBatched")
@@ -12502,7 +12351,6 @@ cdef void* _hipblasStrsmStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of trsm operatons in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasStrsmStridedBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float * AP,int lda,long strideA,float * BP,int ldb,long strideB,int batchCount) nogil:
     global _hipblasStrsmStridedBatched__funptr
     __init_symbol(&_hipblasStrsmStridedBatched__funptr,"hipblasStrsmStridedBatched")
@@ -12531,44 +12379,43 @@ cdef hipblasStatus_t hipblasZtrsmStridedBatched(void * handle,hipblasSideMode_t 
 
 
 cdef void* _hipblasStrtri__funptr = NULL
-#    @{
-#    \brief BLAS Level 3 API
+# @{
+# \brief BLAS Level 3 API
 # 
-#    \details
-#    trtri  compute the inverse of a matrix A, namely, invA
+# \details
+# trtri  compute the inverse of a matrix A, namely, invA
 # 
-#        and write the result into invA;
+#     and write the result into invA;
 # 
-#    - Supported precisions in rocBLAS : s,d,c,z
-#    - Supported precisions in cuBLAS  : No support
+# - Supported precisions in rocBLAS : s,d,c,z
+# - Supported precisions in cuBLAS  : No support
 # 
-#    @param[in]
-#    handle    [hipblasHandle_t]
-#              handle to the hipblas library context queue.
-#    @param[in]
-#    uplo      [hipblasFillMode_t]
-#              specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-#              if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-#              if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
-#    @param[in]
-#    diag      [hipblasDiagType_t]
-#              = 'HIPBLAS_DIAG_NON_UNIT', A is non-unit triangular;
-#              = 'HIPBLAS_DIAG_UNIT', A is unit triangular;
-#    @param[in]
-#    n         [int]
-#              size of matrix A and invA
-#    @param[in]
-#    AP         device pointer storing matrix A.
-#    @param[in]
-#    lda       [int]
-#              specifies the leading dimension of A.
-#    @param[out]
-#    invA      device pointer storing matrix invA.
-#    @param[in]
-#    ldinvA    [int]
-#              specifies the leading dimension of invA.
-# 
-# ******************************************************************
+# @param[in]
+# handle    [hipblasHandle_t]
+#           handle to the hipblas library context queue.
+# @param[in]
+# uplo      [hipblasFillMode_t]
+#           specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+#           if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+#           if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+# @param[in]
+# diag      [hipblasDiagType_t]
+#           = 'HIPBLAS_DIAG_NON_UNIT', A is non-unit triangular;
+#           = 'HIPBLAS_DIAG_UNIT', A is unit triangular;
+# @param[in]
+# n         [int]
+#           size of matrix A and invA
+# @param[in]
+# AP         device pointer storing matrix A.
+# @param[in]
+# lda       [int]
+#           specifies the leading dimension of A.
+# @param[out]
+# invA      device pointer storing matrix invA.
+# @param[in]
+# ldinvA    [int]
+#           specifies the leading dimension of invA.
+#
 cdef hipblasStatus_t hipblasStrtri(void * handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const float * AP,int lda,float * invA,int ldinvA) nogil:
     global _hipblasStrtri__funptr
     __init_symbol(&_hipblasStrtri__funptr,"hipblasStrtri")
@@ -12640,7 +12487,6 @@ cdef void* _hipblasStrtriBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #           numbers of matrices in the batch
-#  ******************************************************************
 cdef hipblasStatus_t hipblasStrtriBatched(void * handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const float *const* AP,int lda,float ** invA,int ldinvA,int batchCount) nogil:
     global _hipblasStrtriBatched__funptr
     __init_symbol(&_hipblasStrtriBatched__funptr,"hipblasStrtriBatched")
@@ -12718,7 +12564,6 @@ cdef void* _hipblasStrtriStridedBatched__funptr = NULL
 # @param[in]
 # batchCount  [int]
 #              numbers of matrices in the batch
-#  ******************************************************************
 cdef hipblasStatus_t hipblasStrtriStridedBatched(void * handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const float * AP,int lda,long strideA,float * invA,int ldinvA,long stride_invA,int batchCount) nogil:
     global _hipblasStrtriStridedBatched__funptr
     __init_symbol(&_hipblasStrtriStridedBatched__funptr,"hipblasStrtriStridedBatched")
@@ -12790,8 +12635,7 @@ cdef void* _hipblasSdgmm__funptr = NULL
 # @param[in]
 # ldc       [int]
 #           specifies the leading dimension of C.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSdgmm(void * handle,hipblasSideMode_t side,int m,int n,const float * AP,int lda,const float * x,int incx,float * CP,int ldc) nogil:
     global _hipblasSdgmm__funptr
     __init_symbol(&_hipblasSdgmm__funptr,"hipblasSdgmm")
@@ -12870,8 +12714,7 @@ cdef void* _hipblasSdgmmBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSdgmmBatched(void * handle,hipblasSideMode_t side,int m,int n,const float *const* AP,int lda,const float *const* x,int incx,float *const* CP,int ldc,int batchCount) nogil:
     global _hipblasSdgmmBatched__funptr
     __init_symbol(&_hipblasSdgmmBatched__funptr,"hipblasSdgmmBatched")
@@ -12959,8 +12802,7 @@ cdef void* _hipblasSdgmmStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of instances i in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSdgmmStridedBatched(void * handle,hipblasSideMode_t side,int m,int n,const float * AP,int lda,long strideA,const float * x,int incx,long stridex,float * CP,int ldc,long strideC,int batchCount) nogil:
     global _hipblasSdgmmStridedBatched__funptr
     __init_symbol(&_hipblasSdgmmStridedBatched__funptr,"hipblasSdgmmStridedBatched")
@@ -13040,7 +12882,6 @@ cdef void* _hipblasSgetrf__funptr = NULL
 # info      pointer to a int on the GPU.\n
 #           If info = 0, successful exit.
 #           If info = j > 0, U is singular. U[j,j] is the first zero pivot.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSgetrf(void * handle,const int n,float * A,const int lda,int * ipiv,int * info) nogil:
     global _hipblasSgetrf__funptr
     __init_symbol(&_hipblasSgetrf__funptr,"hipblasSgetrf")
@@ -13125,7 +12966,6 @@ cdef void* _hipblasSgetrfBatched__funptr = NULL
 # @param[in]
 # batchCount int. batchCount >= 0.\n
 #             Number of matrices in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSgetrfBatched(void * handle,const int n,float *const* A,const int lda,int * ipiv,int * info,const int batchCount) nogil:
     global _hipblasSgetrfBatched__funptr
     __init_symbol(&_hipblasSgetrfBatched__funptr,"hipblasSgetrfBatched")
@@ -13218,7 +13058,6 @@ cdef void* _hipblasSgetrfStridedBatched__funptr = NULL
 # @param[in]
 # batchCount int. batchCount >= 0.\n
 #             Number of matrices in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSgetrfStridedBatched(void * handle,const int n,float * A,const int lda,const long strideA,int * ipiv,const long strideP,int * info,const int batchCount) nogil:
     global _hipblasSgetrfStridedBatched__funptr
     __init_symbol(&_hipblasSgetrfStridedBatched__funptr,"hipblasSgetrfStridedBatched")
@@ -13301,7 +13140,6 @@ cdef void* _hipblasSgetrs__funptr = NULL
 # info      pointer to a int on the host.\n
 #           If info = 0, successful exit.
 #           If info = j < 0, the j-th argument is invalid.
-# ******************************************************************
 cdef hipblasStatus_t hipblasSgetrs(void * handle,hipblasOperation_t trans,const int n,const int nrhs,float * A,const int lda,const int * ipiv,float * B,const int ldb,int * info) nogil:
     global _hipblasSgetrs__funptr
     __init_symbol(&_hipblasSgetrs__funptr,"hipblasSgetrs")
@@ -13386,8 +13224,7 @@ cdef void* _hipblasSgetrsBatched__funptr = NULL
 # @param[in]
 # batchCount int. batchCount >= 0.\n
 #             Number of instances (systems) in the batch.
-# 
-# ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgetrsBatched(void * handle,hipblasOperation_t trans,const int n,const int nrhs,float *const* A,const int lda,const int * ipiv,float *const* B,const int ldb,int * info,const int batchCount) nogil:
     global _hipblasSgetrsBatched__funptr
     __init_symbol(&_hipblasSgetrsBatched__funptr,"hipblasSgetrsBatched")
@@ -13485,8 +13322,7 @@ cdef void* _hipblasSgetrsStridedBatched__funptr = NULL
 # @param[in]
 # batchCount int. batchCount >= 0.\n
 #             Number of instances (systems) in the batch.
-# 
-# ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgetrsStridedBatched(void * handle,hipblasOperation_t trans,const int n,const int nrhs,float * A,const int lda,const long strideA,const int * ipiv,const long strideP,float * B,const int ldb,const long strideB,int * info,const int batchCount) nogil:
     global _hipblasSgetrsStridedBatched__funptr
     __init_symbol(&_hipblasSgetrsStridedBatched__funptr,"hipblasSgetrsStridedBatched")
@@ -13560,8 +13396,7 @@ cdef void* _hipblasSgetriBatched__funptr = NULL
 # @param[in]
 # batchCount int. batchCount >= 0.\n
 #             Number of matrices in the batch.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgetriBatched(void * handle,const int n,float *const* A,const int lda,int * ipiv,float *const* C,const int ldc,int * info,const int batchCount) nogil:
     global _hipblasSgetriBatched__funptr
     __init_symbol(&_hipblasSgetriBatched__funptr,"hipblasSgetriBatched")
@@ -13657,7 +13492,6 @@ cdef void* _hipblasSgels__funptr = NULL
 #             If info = 0, successful exit.
 #             If info = i > 0, the solution could not be computed because input matrix A is
 #             rank deficient; the i-th diagonal element of its triangular factor is zero.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSgels(void * handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,float * A,const int lda,float * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _hipblasSgels__funptr
     __init_symbol(&_hipblasSgels__funptr,"hipblasSgels")
@@ -13758,7 +13592,6 @@ cdef void* _hipblasSgelsBatched__funptr = NULL
 # @param[in]
 # batchCount  int. batchCount >= 0.\n
 #             Number of matrices in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSgelsBatched(void * handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,float *const* A,const int lda,float *const* B,const int ldb,int * info,int * deviceInfo,const int batchCount) nogil:
     global _hipblasSgelsBatched__funptr
     __init_symbol(&_hipblasSgelsBatched__funptr,"hipblasSgelsBatched")
@@ -13867,7 +13700,6 @@ cdef void* _hipblasSgelsStridedBatched__funptr = NULL
 # @param[in]
 # batchCount  int. batchCount >= 0.\n
 #             Number of matrices in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSgelsStridedBatched(void * handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,float * A,const int lda,const long strideA,float * B,const int ldb,const long strideB,int * info,int * deviceInfo,const int batch_count) nogil:
     global _hipblasSgelsStridedBatched__funptr
     __init_symbol(&_hipblasSgelsStridedBatched__funptr,"hipblasSgelsStridedBatched")
@@ -13953,8 +13785,7 @@ cdef void* _hipblasSgeqrf__funptr = NULL
 # info      pointer to a int on the host.\n
 #           If info = 0, successful exit.
 #           If info = j < 0, the j-th argument is invalid.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasSgeqrf(void * handle,const int m,const int n,float * A,const int lda,float * ipiv,int * info) nogil:
     global _hipblasSgeqrf__funptr
     __init_symbol(&_hipblasSgeqrf__funptr,"hipblasSgeqrf")
@@ -14045,7 +13876,6 @@ cdef void* _hipblasSgeqrfBatched__funptr = NULL
 # @param[in]
 # batchCount  int. batchCount >= 0.\n
 #              Number of matrices in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSgeqrfBatched(void * handle,const int m,const int n,float *const* A,const int lda,float *const* ipiv,int * info,const int batchCount) nogil:
     global _hipblasSgeqrfBatched__funptr
     __init_symbol(&_hipblasSgeqrfBatched__funptr,"hipblasSgeqrfBatched")
@@ -14144,7 +13974,6 @@ cdef void* _hipblasSgeqrfStridedBatched__funptr = NULL
 # @param[in]
 # batchCount  int. batchCount >= 0.\n
 #              Number of matrices in the batch.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasSgeqrfStridedBatched(void * handle,const int m,const int n,float * A,const int lda,const long strideA,float * ipiv,const long strideP,int * info,const int batchCount) nogil:
     global _hipblasSgeqrfStridedBatched__funptr
     __init_symbol(&_hipblasSgeqrfStridedBatched__funptr,"hipblasSgeqrfStridedBatched")
@@ -14253,8 +14082,7 @@ cdef void* _hipblasGemmEx__funptr = NULL
 # @param[in]
 # algo      [hipblasGemmAlgo_t]
 #           enumerant specifying the algorithm type.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasGemmEx(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const void * alpha,const void * A,hipblasDatatype_t aType,int lda,const void * B,hipblasDatatype_t bType,int ldb,const void * beta,void * C,hipblasDatatype_t cType,int ldc,hipblasDatatype_t computeType,hipblasGemmAlgo_t algo) nogil:
     global _hipblasGemmEx__funptr
     __init_symbol(&_hipblasGemmEx__funptr,"hipblasGemmEx")
@@ -14345,8 +14173,7 @@ cdef void* _hipblasGemmBatchedEx__funptr = NULL
 # @param[in]
 # algo      [hipblasGemmAlgo_t]
 #           enumerant specifying the algorithm type.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasGemmBatchedEx(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const void * alpha,const void ** A,hipblasDatatype_t aType,int lda,const void ** B,hipblasDatatype_t bType,int ldb,const void * beta,void ** C,hipblasDatatype_t cType,int ldc,int batchCount,hipblasDatatype_t computeType,hipblasGemmAlgo_t algo) nogil:
     global _hipblasGemmBatchedEx__funptr
     __init_symbol(&_hipblasGemmBatchedEx__funptr,"hipblasGemmBatchedEx")
@@ -14452,8 +14279,7 @@ cdef void* _hipblasGemmStridedBatchedEx__funptr = NULL
 # @param[in]
 # algo      [hipblasGemmAlgo_t]
 #           enumerant specifying the algorithm type.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasGemmStridedBatchedEx(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const void * alpha,const void * A,hipblasDatatype_t aType,int lda,long strideA,const void * B,hipblasDatatype_t bType,int ldb,long strideB,const void * beta,void * C,hipblasDatatype_t cType,int ldc,long strideC,int batchCount,hipblasDatatype_t computeType,hipblasGemmAlgo_t algo) nogil:
     global _hipblasGemmStridedBatchedEx__funptr
     __init_symbol(&_hipblasGemmStridedBatchedEx__funptr,"hipblasGemmStridedBatchedEx")
@@ -14580,8 +14406,7 @@ cdef void* _hipblasTrsmEx__funptr = NULL
 # @param[in]
 # computeType [hipblasDatatype_t]
 #         specifies the datatype of computation
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasTrsmEx(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const void * alpha,void * A,int lda,void * B,int ldb,const void * invA,int invAsize,hipblasDatatype_t computeType) nogil:
     global _hipblasTrsmEx__funptr
     __init_symbol(&_hipblasTrsmEx__funptr,"hipblasTrsmEx")
@@ -14713,8 +14538,7 @@ cdef void* _hipblasTrsmBatchedEx__funptr = NULL
 # @param[in]
 # computeType [hipblasDatatype_t]
 #         specifies the datatype of computation
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasTrsmBatchedEx(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const void * alpha,void * A,int lda,void * B,int ldb,int batchCount,const void * invA,int invAsize,hipblasDatatype_t computeType) nogil:
     global _hipblasTrsmBatchedEx__funptr
     __init_symbol(&_hipblasTrsmBatchedEx__funptr,"hipblasTrsmBatchedEx")
@@ -14859,8 +14683,7 @@ cdef void* _hipblasTrsmStridedBatchedEx__funptr = NULL
 # @param[in]
 # computeType [hipblasDatatype_t]
 #         specifies the datatype of computation
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasTrsmStridedBatchedEx(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const void * alpha,void * A,int lda,long strideA,void * B,int ldb,long strideB,int batchCount,const void * invA,int invAsize,long strideInvA,hipblasDatatype_t computeType) nogil:
     global _hipblasTrsmStridedBatchedEx__funptr
     __init_symbol(&_hipblasTrsmStridedBatchedEx__funptr,"hipblasTrsmStridedBatchedEx")
@@ -14907,8 +14730,7 @@ cdef void* _hipblasAxpyEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasAxpyEx(void * handle,int n,const void * alpha,hipblasDatatype_t alphaType,const void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,hipblasDatatype_t executionType) nogil:
     global _hipblasAxpyEx__funptr
     __init_symbol(&_hipblasAxpyEx__funptr,"hipblasAxpyEx")
@@ -14959,8 +14781,7 @@ cdef void* _hipblasAxpyBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasAxpyBatchedEx(void * handle,int n,const void * alpha,hipblasDatatype_t alphaType,const void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,int batchCount,hipblasDatatype_t executionType) nogil:
     global _hipblasAxpyBatchedEx__funptr
     __init_symbol(&_hipblasAxpyBatchedEx__funptr,"hipblasAxpyBatchedEx")
@@ -15023,8 +14844,7 @@ cdef void* _hipblasAxpyStridedBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasAxpyStridedBatchedEx(void * handle,int n,const void * alpha,hipblasDatatype_t alphaType,const void * x,hipblasDatatype_t xType,int incx,long stridex,void * y,hipblasDatatype_t yType,int incy,long stridey,int batchCount,hipblasDatatype_t executionType) nogil:
     global _hipblasAxpyStridedBatchedEx__funptr
     __init_symbol(&_hipblasAxpyStridedBatchedEx__funptr,"hipblasAxpyStridedBatchedEx")
@@ -15078,8 +14898,7 @@ cdef void* _hipblasDotEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasDotEx(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,const void * y,hipblasDatatype_t yType,int incy,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasDotEx__funptr
     __init_symbol(&_hipblasDotEx__funptr,"hipblasDotEx")
@@ -15146,8 +14965,7 @@ cdef void* _hipblasDotBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasDotBatchedEx(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,const void * y,hipblasDatatype_t yType,int incy,int batchCount,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasDotBatchedEx__funptr
     __init_symbol(&_hipblasDotBatchedEx__funptr,"hipblasDotBatchedEx")
@@ -15220,8 +15038,7 @@ cdef void* _hipblasDotStridedBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasDotStridedBatchedEx(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,long stridex,const void * y,hipblasDatatype_t yType,int incy,long stridey,int batchCount,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasDotStridedBatchedEx__funptr
     __init_symbol(&_hipblasDotStridedBatchedEx__funptr,"hipblasDotStridedBatchedEx")
@@ -15271,7 +15088,6 @@ cdef void* _hipblasNrm2Ex__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-#  ******************************************************************
 cdef hipblasStatus_t hipblasNrm2Ex(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasNrm2Ex__funptr
     __init_symbol(&_hipblasNrm2Ex__funptr,"hipblasNrm2Ex")
@@ -15316,8 +15132,7 @@ cdef void* _hipblasNrm2BatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasNrm2BatchedEx(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,int batchCount,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasNrm2BatchedEx__funptr
     __init_symbol(&_hipblasNrm2BatchedEx__funptr,"hipblasNrm2BatchedEx")
@@ -15368,8 +15183,7 @@ cdef void* _hipblasNrm2StridedBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #               specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasNrm2StridedBatchedEx(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,long stridex,int batchCount,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasNrm2StridedBatchedEx__funptr
     __init_symbol(&_hipblasNrm2StridedBatchedEx__funptr,"hipblasNrm2StridedBatchedEx")
@@ -15425,8 +15239,7 @@ cdef void* _hipblasRotEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #                specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasRotEx(void * handle,int n,void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,const void * c,const void * s,hipblasDatatype_t csType,hipblasDatatype_t executionType) nogil:
     global _hipblasRotEx__funptr
     __init_symbol(&_hipblasRotEx__funptr,"hipblasRotEx")
@@ -15485,8 +15298,7 @@ cdef void* _hipblasRotBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #                specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasRotBatchedEx(void * handle,int n,void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,const void * c,const void * s,hipblasDatatype_t csType,int batchCount,hipblasDatatype_t executionType) nogil:
     global _hipblasRotBatchedEx__funptr
     __init_symbol(&_hipblasRotBatchedEx__funptr,"hipblasRotBatchedEx")
@@ -15551,8 +15363,7 @@ cdef void* _hipblasRotStridedBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #                specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasRotStridedBatchedEx(void * handle,int n,void * x,hipblasDatatype_t xType,int incx,long stridex,void * y,hipblasDatatype_t yType,int incy,long stridey,const void * c,const void * s,hipblasDatatype_t csType,int batchCount,hipblasDatatype_t executionType) nogil:
     global _hipblasRotStridedBatchedEx__funptr
     __init_symbol(&_hipblasRotStridedBatchedEx__funptr,"hipblasRotStridedBatchedEx")
@@ -15591,8 +15402,7 @@ cdef void* _hipblasScalEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #                specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasScalEx(void * handle,int n,const void * alpha,hipblasDatatype_t alphaType,void * x,hipblasDatatype_t xType,int incx,hipblasDatatype_t executionType) nogil:
     global _hipblasScalEx__funptr
     __init_symbol(&_hipblasScalEx__funptr,"hipblasScalEx")
@@ -15634,8 +15444,7 @@ cdef void* _hipblasScalBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #                specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasScalBatchedEx(void * handle,int n,const void * alpha,hipblasDatatype_t alphaType,void * x,hipblasDatatype_t xType,int incx,int batchCount,hipblasDatatype_t executionType) nogil:
     global _hipblasScalBatchedEx__funptr
     __init_symbol(&_hipblasScalBatchedEx__funptr,"hipblasScalBatchedEx")
@@ -15684,8 +15493,7 @@ cdef void* _hipblasScalStridedBatchedEx__funptr = NULL
 # @param[in]
 # executionType [hipblasDatatype_t]
 #                specifies the datatype of computation.
-# 
-#  ******************************************************************
+#
 cdef hipblasStatus_t hipblasScalStridedBatchedEx(void * handle,int n,const void * alpha,hipblasDatatype_t alphaType,void * x,hipblasDatatype_t xType,int incx,long stridex,int batchCount,hipblasDatatype_t executionType) nogil:
     global _hipblasScalStridedBatchedEx__funptr
     __init_symbol(&_hipblasScalStridedBatchedEx__funptr,"hipblasScalStridedBatchedEx")
@@ -15693,17 +15501,16 @@ cdef hipblasStatus_t hipblasScalStridedBatchedEx(void * handle,int n,const void 
 
 
 cdef void* _hipblasStatusToString__funptr = NULL
-#    HIPBLAS Auxiliary API
+# HIPBLAS Auxiliary API
 # 
-#    \details
-#    hipblasStatusToString
+# \details
+# hipblasStatusToString
 # 
-#    Returns string representing hipblasStatus_t value
+# Returns string representing hipblasStatus_t value
 # 
-#    @param[in]
-#    status  [hipblasStatus_t]
-#            hipBLAS status to convert to string
-# /
+# @param[in]
+# status  [hipblasStatus_t]
+#         hipBLAS status to convert to string
 cdef const char * hipblasStatusToString(hipblasStatus_t status) nogil:
     global _hipblasStatusToString__funptr
     __init_symbol(&_hipblasStatusToString__funptr,"hipblasStatusToString")

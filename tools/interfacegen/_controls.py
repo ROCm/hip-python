@@ -1,3 +1,5 @@
+import pyparsing as pyp
+
 from _codegen.cparser import TypeHandler
 
 TypeCategory = TypeHandler.TypeCategory
@@ -168,6 +170,11 @@ class hip:
         if parm.is_pointer_to_void(degree=2):
             if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
                 return ParmIntent.OUT
+        if (parm.parent.name, parm.name) in (
+            ("hipDeviceGetName", "name"),
+            ("hipDeviceGetPCIBusId","pciBusId"),
+        ):
+            return ParmIntent.INOUT
         return ParmIntent.IN
 
     @staticmethod
@@ -324,6 +331,14 @@ class hipblas:
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
+    
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans hipBLAS doxygen documentation strings.
+        
+        Removes the ******************************************************************
+        """
+        return raw_comment.replace("******************************************************************","")
 
 # RCCL
 
@@ -545,3 +560,19 @@ class hipsparse:
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
+    
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans hipSPARSE doxygen documentation strings.
+        
+        Removes the doxygen @{ group start parts from the comments.
+        """
+        parts = []
+        for tokens, _, __ in pyp.cppStyleComment.scanString(raw_comment):
+            stripped = tokens[0].replace(" ","").replace("\n","").replace("!","")
+            if stripped != "/**@{*/":
+                parts.append(tokens[0])
+                if "@}" in stripped or "@{" in stripped:
+                    print(tokens[0])
+                
+        return "\n".join(parts)

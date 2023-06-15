@@ -25,6 +25,8 @@ Based on HIP version {HIP_VERSION_NAME}.
 
 :::{grid-item-card} HIP Python: Python API
 {PYTHON_API_DOC_NAMES}
+- {doc}`python_api/_hip_helpers`
+- {doc}`python_api/_util_types`
 :::
 
 :::{grid-item-card} CUDA Python Interoperability Layer: Python API

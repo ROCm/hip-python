@@ -16,6 +16,7 @@ import enum
 import textwrap
 import argparse
 
+# configure warnings
 original_formatwarning = warnings.formatwarning
 def custom_formatwarning(warnobj,*args,**kwargs):
     global original_formatwarning
@@ -28,6 +29,12 @@ warnings.formatwarning = custom_formatwarning
 import _controls
 import _cuda_interop_layer_gen
 import _gitversion
+import _codegen.cython
+
+# configure codegen
+# see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
+_codegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
+_cuda_interop_layer_gen.python_interface_pyobj_role_template = r"`.{name}`" # note: here we want to keep the qualifier
 
 from _codegen.cython import (
     CythonPackageGenerator,
@@ -45,7 +52,6 @@ from _codegen.tree import (
 )
 
 from _parse_hipify_perl import parse_hipify_perl
-
 
 def parse_options():
     global ROCM_INC
@@ -319,6 +325,7 @@ def generate_hipblas_package_files():
         node_filter=_controls.hipblas.node_filter,
         ptr_parm_intent=_controls.hipblas.ptr_parm_intent,
         ptr_rank=_controls.hipblas.ptr_rank,
+        raw_comment_cleaner=_controls.hipblas.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
     generator.c_interface_decl_preamble += textwrap.dedent(
@@ -443,6 +450,7 @@ def generate_hipsparse_package_files():
         macro_type=_controls.hipsparse.macro_type,
         ptr_parm_intent=_controls.hipsparse.ptr_parm_intent,
         ptr_rank=_controls.hipsparse.ptr_rank,
+        raw_comment_cleaner=_controls.hipsparse.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
     generator.c_interface_decl_preamble += textwrap.dedent(
@@ -575,7 +583,7 @@ if __name__ == "__main__":
     # hip-python docs
     # files per api
 
-    def write_pkg_markdown_file_(pkg,lib):
+    def write_pkg_markdown_file_(pkg,lib,extra=""):
         with open(os.path.join(HIP_PYTHON_DOCS, "python_api", f"{lib}.md"),"w") as outfile:
             outfile.write(textwrap.dedent(
                 f"""\
@@ -583,9 +591,10 @@ if __name__ == "__main__":
 
                 ```{{eval-rst}}
                 .. automodule:: {pkg}.{lib}
-                    :members:
-                    :undoc-members:
-                    :show-inheritance:
+                   :members:
+                   :undoc-members:
+                   :show-inheritance:
+                {extra}
                 ```
                 """
             ))
@@ -595,7 +604,7 @@ if __name__ == "__main__":
         write_pkg_markdown_file_("hip",lib)
     CUDA_PYTHON_LIB_NAMES = ["cuda","cudart","nvrtc"]
     for lib in CUDA_PYTHON_LIB_NAMES:
-        write_pkg_markdown_file_("cuda",lib)
+        write_pkg_markdown_file_("cuda",lib,extra="   :noindex:") # noindex, prevents ambiguity issues with enum constants
     # index.md from index.md.in
     index_md = os.path.join(
         HIP_PYTHON_DOCS, "index.md"

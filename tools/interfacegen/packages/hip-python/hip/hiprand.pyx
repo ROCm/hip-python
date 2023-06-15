@@ -84,6 +84,7 @@ cdef class uint4:
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
+
     @staticmethod
     cdef __allocate(chiprand.uint4** ptr):
         ptr[0] = <chiprand.uint4*>stdlib.malloc(sizeof(chiprand.uint4))
@@ -99,6 +100,14 @@ cdef class uint4:
         cdef chiprand.uint4* ptr
         uint4.__allocate(&ptr)
         return uint4.from_ptr(ptr, owner=True)
+
+    @staticmethod
+    cdef uint4 from_value(chiprand.uint4 other):
+        """Allocate new C type and copy from ``other``.
+        """
+        wrapper = uint4.new()
+        string.memcpy(wrapper._ptr, &other, sizeof(chiprand.uint4))
+        return wrapper
    
     def __init__(self,*args,**kwargs):
         uint4.__allocate(&self._ptr)
@@ -119,12 +128,14 @@ cdef class uint4:
             setattr(self,k,v)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<uint4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
@@ -279,6 +290,7 @@ cdef class rocrand_discrete_distribution_st:
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
+
     @staticmethod
     cdef __allocate(chiprand.rocrand_discrete_distribution_st** ptr):
         ptr[0] = <chiprand.rocrand_discrete_distribution_st*>stdlib.malloc(sizeof(chiprand.rocrand_discrete_distribution_st))
@@ -294,6 +306,14 @@ cdef class rocrand_discrete_distribution_st:
         cdef chiprand.rocrand_discrete_distribution_st* ptr
         rocrand_discrete_distribution_st.__allocate(&ptr)
         return rocrand_discrete_distribution_st.from_ptr(ptr, owner=True)
+
+    @staticmethod
+    cdef rocrand_discrete_distribution_st from_value(chiprand.rocrand_discrete_distribution_st other):
+        """Allocate new C type and copy from ``other``.
+        """
+        wrapper = rocrand_discrete_distribution_st.new()
+        string.memcpy(wrapper._ptr, &other, sizeof(chiprand.rocrand_discrete_distribution_st))
+        return wrapper
    
     def __init__(self,*args,**kwargs):
         rocrand_discrete_distribution_st.__allocate(&self._ptr)
@@ -314,12 +334,14 @@ cdef class rocrand_discrete_distribution_st:
             setattr(self,k,v)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<rocrand_discrete_distribution_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     def get_size(self, i):
         """Get value ``size`` of ``self._ptr[i]``.
@@ -512,12 +534,14 @@ cdef class rocrand_generator_base_type:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<rocrand_generator_base_type object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -664,12 +688,12 @@ def hiprandCreateGenerator(object rng_type):
     - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64
 
     Args:
-        rng_type:  Type of random number generator to create
+        rng_type (`~.hiprandRngType`):  Type of random number generator to create
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
 
-        - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
+        * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
             - HIPRAND_STATUS_INITIALIZATION_FAILED if there was a problem setting up the GPU 
 
@@ -681,7 +705,7 @@ def hiprandCreateGenerator(object rng_type):
             - HIPRAND_STATUS_NOT_IMPLEMENTED if generator of type ``rng_type`` is not implemented yet 
 
             - HIPRAND_STATUS_SUCCESS if generator was created successfully
-        - generator:  Pointer to generator
+        * `~.rocrand_generator_base_type`:  Pointer to generator
     """
     generator = rocrand_generator_base_type.from_ptr(NULL)
     if not isinstance(rng_type,_hiprandRngType__Base):
@@ -712,12 +736,12 @@ def hiprandCreateGeneratorHost(object rng_type):
     - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64
 
     Args:
-        rng_type:  Type of random number generator to create
+        rng_type (`~.hiprandRngType`):  Type of random number generator to create
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
 
-        - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
+        * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
             - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the
               dynamically linked library version 
@@ -727,7 +751,7 @@ def hiprandCreateGeneratorHost(object rng_type):
             - HIPRAND_STATUS_NOT_IMPLEMENTED if host generator of type ``rng_type`` is not implemented yet 
 
             - HIPRAND_STATUS_SUCCESS if generator was created successfully
-        - generator:  Pointer to generator
+        * `~.rocrand_generator_base_type`:  Pointer to generator
     """
     generator = rocrand_generator_base_type.from_ptr(NULL)
     if not isinstance(rng_type,_hiprandRngType__Base):
@@ -743,12 +767,12 @@ def hiprandDestroyGenerator(object generator):
     Destroys random number generator and frees related memory.
 
     Args:
-        generator:  Generator to be destroyed
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to be destroyed
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if generator was destroyed successfully
     """
@@ -768,16 +792,16 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
     excluding ``2^32.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of 32-bit unsigned integers to generate
+        n (`~.int`):  Number of 32-bit unsigned integers to generate
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -800,16 +824,16 @@ def hiprandGenerateChar(object generator, object output_data, unsigned long n):
     excluding ``2^8.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of 8-bit unsigned integers to generate
+        n (`~.int`):  Number of 8-bit unsigned integers to generate
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -832,16 +856,16 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
     excluding ``2^16.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of 16-bit unsigned integers to generate
+        n (`~.int`):  Number of 16-bit unsigned integers to generate
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -864,16 +888,16 @@ def hiprandGenerateUniform(object generator, object output_data, unsigned long n
     including ``1.0f.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of floats to generate
+        n (`~.int`):  Number of floats to generate
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -904,16 +928,16 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
     each (one <tt>unsigned int</tt> value per one generated ``double).``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of floats to generate
+        n (`~.int`):  Number of floats to generate
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -939,25 +963,23 @@ def hiprandGenerateUniformHalf(object generator, object output_data, unsigned lo
     including ``1.0.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of halfs to generate
+        n (`~.int`):  Number of halfs to generate
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+            - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-             - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
-             of used quasi-random generator 
+            - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
+            of used quasi-random generator 
 
-             - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
-
-            /
+            - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
     """
     _hiprandGenerateUniformHalf__retval = hiprandStatus(chiprand.hiprandGenerateUniformHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -973,20 +995,20 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
     values and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of floats to generate
+        n (`~.int`):  Number of floats to generate
 
-        mean:  Mean value of normal distribution
+        mean (`~.float`/`~.int`):  Mean value of normal distribution
 
-        stddev:  Standard deviation value of normal distribution
+        stddev (`~.float`/`~.int`):  Standard deviation value of normal distribution
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1010,20 +1032,20 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
     numbers and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of doubles to generate
+        n (`~.int`):  Number of doubles to generate
 
-        mean:  Mean value of normal distribution
+        mean (`~.float`/`~.int`):  Mean value of normal distribution
 
-        stddev:  Standard deviation value of normal distribution
+        stddev (`~.float`/`~.int`):  Standard deviation value of normal distribution
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1047,20 +1069,20 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
     numbers and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of halfs to generate
+        n (`~.int`):  Number of halfs to generate
 
-        mean:  Mean value of normal distribution
+        mean (`~.int`):  Mean value of normal distribution
 
-        stddev:  Standard deviation value of normal distribution
+        stddev (`~.int`):  Standard deviation value of normal distribution
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1084,20 +1106,20 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
     and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of floats to generate
+        n (`~.int`):  Number of floats to generate
 
-        mean:  Mean value of log normal distribution
+        mean (`~.float`/`~.int`):  Mean value of log normal distribution
 
-        stddev:  Standard deviation value of log normal distribution
+        stddev (`~.float`/`~.int`):  Standard deviation value of log normal distribution
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1121,20 +1143,20 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
     values and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of doubles to generate
+        n (`~.int`):  Number of doubles to generate
 
-        mean:  Mean value of log normal distribution
+        mean (`~.float`/`~.int`):  Mean value of log normal distribution
 
-        stddev:  Standard deviation value of log normal distribution
+        stddev (`~.float`/`~.int`):  Standard deviation value of log normal distribution
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1158,30 +1180,28 @@ def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned 
     values and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of halfs to generate
+        n (`~.int`):  Number of halfs to generate
 
-        mean:  Mean value of log normal distribution
+        mean (`~.int`):  Mean value of log normal distribution
 
-        stddev:  Standard deviation value of log normal distribution
+        stddev (`~.int`):  Standard deviation value of log normal distribution
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+            - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-             - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
-             aligned to ``sizeof(half2)`` bytes, or ``n`` is not a multiple of the dimension
-             of used quasi-random generator 
+            - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
+            aligned to ``sizeof(half2)`` bytes, or ``n`` is not a multiple of the dimension
+            of used quasi-random generator 
 
-             - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
-
-            /
+            - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
     """
     _hiprandGenerateLogNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -1197,18 +1217,18 @@ def hiprandGeneratePoisson(object generator, object output_data, unsigned long n
     saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
 
-        n:  Number of 32-bit unsigned integers to generate
+        n (`~.int`):  Number of 32-bit unsigned integers to generate
 
-        lambda:  lambda for the Poisson distribution
+        lambda (`~.float`/`~.int`):  lambda for the Poisson distribution
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1236,12 +1256,12 @@ def hiprandGenerateSeeds(object generator):
     hiprandGenerate(), hiprandGenerateUniform(), hiprandGenerateNormal() etc.
 
     Args:
-        generator:  Generator to initialize
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to initialize
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created 
 
             - HIPRAND_STATUS_PREEXISTING_FAILURE if there was an existing error from
               a previous kernel launch 
@@ -1263,14 +1283,14 @@ def hiprandSetStream(object generator, object stream):
     All functions will use this stream.
 
     Args:
-        generator:  Generator to modify
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to modify
 
-        stream:  Stream to use or NULL for default stream
+        stream (`~.ihipStream_t`/`~.object`):  Stream to use or NULL for default stream
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if stream was set successfully
     """
@@ -1290,14 +1310,14 @@ def hiprandSetPseudoRandomGeneratorSeed(object generator, unsigned long long see
     - This operation does not change the generator's offset.
 
     Args:
-        generator:  Pseudo-random number generator
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Pseudo-random number generator
 
-        seed:  New seed value
+        seed (`~.int`):  New seed value
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_TYPE_ERROR if the generator is a quasi random number generator 
 
@@ -1321,14 +1341,14 @@ def hiprandSetGeneratorOffset(object generator, unsigned long long offset):
     HIPRAND_RNG_PSEUDO_MTGP32 or HIPRAND_RNG_PSEUDO_MT19937.
 
     Args:
-        generator:  Random number generator
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Random number generator
 
-        offset:  New absolute offset
+        offset (`~.int`):  New absolute offset
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if offset was successfully set 
 
@@ -1351,14 +1371,14 @@ def hiprandSetQuasiRandomGeneratorDimensions(object generator, unsigned int dime
     - This operation does not change the generator's offset.
 
     Args:
-        generator:  Quasi-random number generator
+        generator (`~.rocrand_generator_base_type`/`~.object`):  Quasi-random number generator
 
-        dimensions:  Number of dimensions
+        dimensions (`~.int`):  Number of dimensions
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_NOT_CREATED if the generator wasn't created 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_CREATED if the generator wasn't created 
 
             - HIPRAND_STATUS_TYPE_ERROR if the generator is not a quasi-random number generator 
 
@@ -1381,10 +1401,10 @@ def hiprandGetVersion():
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
 
-        - HIPRAND_STATUS_OUT_OF_RANGE if ``version`` is NULL 
+        * `~.hiprandStatus`: HIPRAND_STATUS_OUT_OF_RANGE if ``version`` is NULL 
 
             - HIPRAND_STATUS_SUCCESS if the version number was successfully returned
-        - version:  Version of the library
+        * `~.int`:  Version of the library
     """
     cdef int version
     _hiprandGetVersion__retval = hiprandStatus(chiprand.hiprandGetVersion(&version))    # fully specified
@@ -1398,19 +1418,19 @@ def hiprandCreatePoissonDistribution(double lambda_):
     Construct the histogram for the Poisson distribution with lambda ``lambda.``
 
     Args:
-        lambda:  lambda for the Poisson distribution
+        lambda (`~.float`/`~.int`):  lambda for the Poisson distribution
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
 
-        - HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated 
+        * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated 
 
             - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` pointer was null 
 
             - HIPRAND_STATUS_OUT_OF_RANGE if lambda is non-positive 
 
             - HIPRAND_STATUS_SUCCESS if the histogram was constructed successfully
-        - discrete_distribution:  pointer to the histogram in device memory
+        * `~.rocrand_discrete_distribution_st`:  pointer to the histogram in device memory
     """
     discrete_distribution = rocrand_discrete_distribution_st.from_ptr(NULL)
     _hiprandCreatePoissonDistribution__retval = hiprandStatus(chiprand.hiprandCreatePoissonDistribution(lambda_,&discrete_distribution._ptr))    # fully specified
@@ -1425,12 +1445,12 @@ def hiprandDestroyDistribution(object discrete_distribution):
     hiprandCreatePoissonDistribution.
 
     Args:
-        discrete_distribution:  pointer to the histogram in device memory
+        discrete_distribution (`~.rocrand_discrete_distribution_st`/`~.object`):  pointer to the histogram in device memory
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
 
-        - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` was null 
+        * `~.hiprandStatus`: HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` was null 
 
             - HIPRAND_STATUS_SUCCESS if the histogram was destroyed successfully
     """

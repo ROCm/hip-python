@@ -2,7 +2,8 @@
 
 ```{eval-rst}
 .. automodule:: hip.rccl
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ```

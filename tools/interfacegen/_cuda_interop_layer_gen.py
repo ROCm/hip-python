@@ -2,6 +2,8 @@ import os
 import textwrap
 import warnings
 
+python_interface_pyobj_role_template = r":py:obj:`~.{name}`"
+
 from _codegen.cython import (
     CythonPackageGenerator,
 )
@@ -61,24 +63,30 @@ def generate_cuda_interop_package_files(
         ),
         f"cimport {pkg_dir}.c{cuda_pkg_name}",  # for checking compiler errors
     ]
+
+    python_interface_impl_part_preamble = textwrap.dedent(
+        f"""\
+        # AMD_COPYRIGHT
+
+        \"""
+        Attributes:
+        [ATTRIBUTES]
+        \"""
+
+        __author__ = "AMD_AUTHOR"
+
+        import os
+        import enum
+
+        import hip.{pkg_name}
+        {pkg_name} = hip.{pkg_name} # makes {pkg_name} types and routines accessible without import
+                                    # allows checks such as `hasattr(cuda.{cuda_pkg_name},"{pkg_name}")`
+
+        HIP_PYTHON_MOD = {pkg_name}
+        globals()["HIP_PYTHON"] = True
+        """
+    )
     python_interface_impl_part = [
-        textwrap.dedent(
-            f"""\
-            # AMD_COPYRIGHT
-
-            __author__ = "AMD_AUTHOR"
-
-            import os
-            import enum
-
-            import hip.{pkg_name}
-            {pkg_name} = hip.{pkg_name} # makes {pkg_name} types and routines accessible without import
-                                        # allows checks such as `hasattr(cuda.{cuda_pkg_name},"{pkg_name}")`
-
-            HIP_PYTHON_MOD = {pkg_name}
-            globals()["HIP_PYTHON"] = True
-            """
-        ),
         textwrap.dedent(
             """\
             def _hip_python_get_bool_environ_var(env_var, default):
@@ -118,8 +126,10 @@ def generate_cuda_interop_package_files(
             msg += f"; most similar hipify-perl HIP symbols (Levenshtein ratio > {cutoff}): [{candidates_formatted}]"
         warnings.warn(msg)
 
+    docstring_attributes = []
     def handle_enum_(node, hip_name, cuda_name):
         nonlocal indent
+        nonlocal docstring_attributes
         nonlocal c_interface_decl_part
         nonlocal python_interface_impl_part
         enum = node if isinstance(node, Enum) else node.lookup_innermost_type()
@@ -151,6 +161,19 @@ def generate_cuda_interop_package_files(
             python_enum_hallucinate_var_name = (
                 f"HIP_PYTHON_{cuda_name}_HALLUCINATE"
             )
+
+            attribute = textwrap.dedent(f"""\
+                {python_enum_hallucinate_var_name}:
+                    Make {cuda_name} hallucinate values for non-existing enum constants. Disabled by default
+                    if default is not modified via environment variable.
+
+                    Default value can be set/unset via environment variable ``{python_enum_hallucinate_var_name}``.
+                    
+                    * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+                    * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+                """)
+            docstring_attributes.append(attribute)
+
             python_enum_metaclass = textwrap.dedent(
                 f"""\
                 
@@ -278,6 +301,7 @@ def generate_cuda_interop_package_files(
                     c_interface_decl_part.append(
                         f"from {cpkg_name} cimport {hip_name} as {cuda_name}"
                     )
+                    docstring_attributes.append((cuda_name, pkg_name, hip_name))
                     python_interface_impl_part.append(
                         f"{cuda_name} = {pkg_name}.{hip_name}"
                     )
@@ -319,4 +343,22 @@ def generate_cuda_interop_package_files(
     with open(python_interface_decl_path, "w") as outfile:
         outfile.write("\n".join(python_interface_decl_part))
     with open(python_interface_impl_path, "w") as outfile:
+        DOCSTRING_ATTRIBS = ""
+        for attribute in (docstring_attributes):
+            if isinstance(attribute,tuple):
+                cuda_name, pkg_name, hip_name = attribute
+                docstring_attrib = textwrap.dedent(
+                        f"""\
+                        {cuda_name}:
+                            alias of {python_interface_pyobj_role_template.format(name=hip_name)}
+                        """
+                    )
+            else: # raw string
+                docstring_attrib = attribute
+            DOCSTRING_ATTRIBS += textwrap.indent(docstring_attrib," "*4)
+                
+        python_interface_impl_part.insert(
+            0,
+            python_interface_impl_part_preamble.replace("[ATTRIBUTES]",DOCSTRING_ATTRIBS)
+        )
         outfile.write("\n".join(python_interface_impl_part))
