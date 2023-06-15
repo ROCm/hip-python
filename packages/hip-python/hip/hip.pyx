@@ -2,229 +2,229 @@
 
 """
 Attributes:
-    HIP_VERSION_MAJOR (int):
+    HIP_VERSION_MAJOR (`~.int`):
         Macro constant.
 
-    HIP_VERSION_MINOR (int):
+    HIP_VERSION_MINOR (`~.int`):
         Macro constant.
 
-    HIP_VERSION_PATCH (int):
+    HIP_VERSION_PATCH (`~.int`):
         Macro constant.
 
-    HIP_VERSION_GITHASH (bytes):
+    HIP_VERSION_GITHASH (`~.bytes`):
         Macro constant.
 
-    HIP_VERSION_BUILD_ID (int):
+    HIP_VERSION_BUILD_ID (`~.int`):
         Macro constant.
 
-    HIP_VERSION_BUILD_NAME (bytes):
+    HIP_VERSION_BUILD_NAME (`~.bytes`):
         Macro constant.
 
-    HIP_VERSION (int):
+    HIP_VERSION (`~.int`):
         Macro constant.
 
-    HIP_TRSA_OVERRIDE_FORMAT (int):
+    HIP_TRSA_OVERRIDE_FORMAT (`~.int`):
         Macro constant.
 
-    HIP_TRSF_READ_AS_INTEGER (int):
+    HIP_TRSF_READ_AS_INTEGER (`~.int`):
         Macro constant.
 
-    HIP_TRSF_NORMALIZED_COORDINATES (int):
+    HIP_TRSF_NORMALIZED_COORDINATES (`~.int`):
         Macro constant.
 
-    HIP_TRSF_SRGB (int):
+    HIP_TRSF_SRGB (`~.int`):
         Macro constant.
 
-    hipTextureType1D (int):
+    hipTextureType1D (`~.int`):
         Macro constant.
 
-    hipTextureType2D (int):
+    hipTextureType2D (`~.int`):
         Macro constant.
 
-    hipTextureType3D (int):
+    hipTextureType3D (`~.int`):
         Macro constant.
 
-    hipTextureTypeCubemap (int):
+    hipTextureTypeCubemap (`~.int`):
         Macro constant.
 
-    hipTextureType1DLayered (int):
+    hipTextureType1DLayered (`~.int`):
         Macro constant.
 
-    hipTextureType2DLayered (int):
+    hipTextureType2DLayered (`~.int`):
         Macro constant.
 
-    hipTextureTypeCubemapLayered (int):
+    hipTextureTypeCubemapLayered (`~.int`):
         Macro constant.
 
-    HIP_IMAGE_OBJECT_SIZE_DWORD (int):
+    HIP_IMAGE_OBJECT_SIZE_DWORD (`~.int`):
         Macro constant.
 
-    HIP_SAMPLER_OBJECT_SIZE_DWORD (int):
+    HIP_SAMPLER_OBJECT_SIZE_DWORD (`~.int`):
         Macro constant.
 
-    HIP_SAMPLER_OBJECT_OFFSET_DWORD (int):
+    HIP_SAMPLER_OBJECT_OFFSET_DWORD (`~.int`):
         Macro constant.
 
-    HIP_TEXTURE_OBJECT_SIZE_DWORD (int):
+    HIP_TEXTURE_OBJECT_SIZE_DWORD (`~.int`):
         Macro constant.
 
-    HIP_LAUNCH_PARAM_BUFFER_POINTER (int):
+    HIP_LAUNCH_PARAM_BUFFER_POINTER (`~.int`):
         Macro constant.
 
-    HIP_LAUNCH_PARAM_BUFFER_SIZE (int):
+    HIP_LAUNCH_PARAM_BUFFER_SIZE (`~.int`):
         Macro constant.
 
-    HIP_LAUNCH_PARAM_END (int):
+    HIP_LAUNCH_PARAM_END (`~.int`):
         Macro constant.
 
-    hipIpcMemLazyEnablePeerAccess (int):
+    hipIpcMemLazyEnablePeerAccess (`~.int`):
         Macro constant.
 
-    HIP_IPC_HANDLE_SIZE (int):
+    HIP_IPC_HANDLE_SIZE (`~.int`):
         Macro constant.
 
-    hipStreamDefault (int):
+    hipStreamDefault (`~.int`):
         Macro constant.
 
-    hipStreamNonBlocking (int):
+    hipStreamNonBlocking (`~.int`):
         Macro constant.
 
-    hipEventDefault (int):
+    hipEventDefault (`~.int`):
         Macro constant.
 
-    hipEventBlockingSync (int):
+    hipEventBlockingSync (`~.int`):
         Macro constant.
 
-    hipEventDisableTiming (int):
+    hipEventDisableTiming (`~.int`):
         Macro constant.
 
-    hipEventInterprocess (int):
+    hipEventInterprocess (`~.int`):
         Macro constant.
 
-    hipEventReleaseToDevice (int):
+    hipEventReleaseToDevice (`~.int`):
         Macro constant.
 
-    hipEventReleaseToSystem (int):
+    hipEventReleaseToSystem (`~.int`):
         Macro constant.
 
-    hipHostMallocDefault (int):
+    hipHostMallocDefault (`~.int`):
         Macro constant.
 
-    hipHostMallocPortable (int):
+    hipHostMallocPortable (`~.int`):
         Macro constant.
 
-    hipHostMallocMapped (int):
+    hipHostMallocMapped (`~.int`):
         Macro constant.
 
-    hipHostMallocWriteCombined (int):
+    hipHostMallocWriteCombined (`~.int`):
         Macro constant.
 
-    hipHostMallocNumaUser (int):
+    hipHostMallocNumaUser (`~.int`):
         Macro constant.
 
-    hipHostMallocCoherent (int):
+    hipHostMallocCoherent (`~.int`):
         Macro constant.
 
-    hipHostMallocNonCoherent (int):
+    hipHostMallocNonCoherent (`~.int`):
         Macro constant.
 
-    hipMemAttachGlobal (int):
+    hipMemAttachGlobal (`~.int`):
         Macro constant.
 
-    hipMemAttachHost (int):
+    hipMemAttachHost (`~.int`):
         Macro constant.
 
-    hipMemAttachSingle (int):
+    hipMemAttachSingle (`~.int`):
         Macro constant.
 
-    hipDeviceMallocDefault (int):
+    hipDeviceMallocDefault (`~.int`):
         Macro constant.
 
-    hipDeviceMallocFinegrained (int):
+    hipDeviceMallocFinegrained (`~.int`):
         Macro constant.
 
-    hipMallocSignalMemory (int):
+    hipMallocSignalMemory (`~.int`):
         Macro constant.
 
-    hipHostRegisterDefault (int):
+    hipHostRegisterDefault (`~.int`):
         Macro constant.
 
-    hipHostRegisterPortable (int):
+    hipHostRegisterPortable (`~.int`):
         Macro constant.
 
-    hipHostRegisterMapped (int):
+    hipHostRegisterMapped (`~.int`):
         Macro constant.
 
-    hipHostRegisterIoMemory (int):
+    hipHostRegisterIoMemory (`~.int`):
         Macro constant.
 
-    hipExtHostRegisterCoarseGrained (int):
+    hipExtHostRegisterCoarseGrained (`~.int`):
         Macro constant.
 
-    hipDeviceScheduleAuto (int):
+    hipDeviceScheduleAuto (`~.int`):
         Macro constant.
 
-    hipDeviceScheduleSpin (int):
+    hipDeviceScheduleSpin (`~.int`):
         Macro constant.
 
-    hipDeviceScheduleYield (int):
+    hipDeviceScheduleYield (`~.int`):
         Macro constant.
 
-    hipDeviceScheduleBlockingSync (int):
+    hipDeviceScheduleBlockingSync (`~.int`):
         Macro constant.
 
-    hipDeviceScheduleMask (int):
+    hipDeviceScheduleMask (`~.int`):
         Macro constant.
 
-    hipDeviceMapHost (int):
+    hipDeviceMapHost (`~.int`):
         Macro constant.
 
-    hipDeviceLmemResizeToMax (int):
+    hipDeviceLmemResizeToMax (`~.int`):
         Macro constant.
 
-    hipArrayDefault (int):
+    hipArrayDefault (`~.int`):
         Macro constant.
 
-    hipArrayLayered (int):
+    hipArrayLayered (`~.int`):
         Macro constant.
 
-    hipArraySurfaceLoadStore (int):
+    hipArraySurfaceLoadStore (`~.int`):
         Macro constant.
 
-    hipArrayCubemap (int):
+    hipArrayCubemap (`~.int`):
         Macro constant.
 
-    hipArrayTextureGather (int):
+    hipArrayTextureGather (`~.int`):
         Macro constant.
 
-    hipOccupancyDefault (int):
+    hipOccupancyDefault (`~.int`):
         Macro constant.
 
-    hipCooperativeLaunchMultiDeviceNoPreSync (int):
+    hipCooperativeLaunchMultiDeviceNoPreSync (`~.int`):
         Macro constant.
 
-    hipCooperativeLaunchMultiDeviceNoPostSync (int):
+    hipCooperativeLaunchMultiDeviceNoPostSync (`~.int`):
         Macro constant.
 
-    hipCpuDeviceId (int):
+    hipCpuDeviceId (`~.int`):
         Macro constant.
 
-    hipInvalidDeviceId (int):
+    hipInvalidDeviceId (`~.int`):
         Macro constant.
 
-    hipExtAnyOrderLaunch (int):
+    hipExtAnyOrderLaunch (`~.int`):
         Macro constant.
 
-    hipStreamWaitValueGte (int):
+    hipStreamWaitValueGte (`~.int`):
         Macro constant.
 
-    hipStreamWaitValueEq (int):
+    hipStreamWaitValueEq (`~.int`):
         Macro constant.
 
-    hipStreamWaitValueAnd (int):
+    hipStreamWaitValueAnd (`~.int`):
         Macro constant.
 
-    hipStreamWaitValueNor (int):
+    hipStreamWaitValueNor (`~.int`):
         Macro constant.
 
     HIP_SUCCESS:

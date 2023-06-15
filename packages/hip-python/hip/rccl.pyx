@@ -2,34 +2,34 @@
 
 """
 Attributes:
-    NCCL_MAJOR (int):
+    NCCL_MAJOR (`~.int`):
         Macro constant.
 
-    NCCL_MINOR (int):
+    NCCL_MINOR (`~.int`):
         Macro constant.
 
-    NCCL_PATCH (int):
+    NCCL_PATCH (`~.int`):
         Macro constant.
 
-    NCCL_SUFFIX (bytes):
+    NCCL_SUFFIX (`~.bytes`):
         Macro constant.
 
-    NCCL_VERSION_CODE (int):
+    NCCL_VERSION_CODE (`~.int`):
         Macro constant.
 
-    RCCL_BFLOAT16 (int):
+    RCCL_BFLOAT16 (`~.int`):
         Macro constant.
 
-    RCCL_GATHER_SCATTER (int):
+    RCCL_GATHER_SCATTER (`~.int`):
         Macro constant.
 
-    RCCL_ALLTOALLV (int):
+    RCCL_ALLTOALLV (`~.int`):
         Macro constant.
 
-    RCCL_MULTIRANKPERGPU (int):
+    RCCL_MULTIRANKPERGPU (`~.int`):
         Macro constant.
 
-    NCCL_UNIQUE_ID_BYTES (int):
+    NCCL_UNIQUE_ID_BYTES (`~.int`):
         Macro constant.
 
     ncclComm_t:

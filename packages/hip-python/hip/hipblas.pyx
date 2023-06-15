@@ -2,16 +2,16 @@
 
 """
 Attributes:
-    hipblasVersionMajor (int):
+    hipblasVersionMajor (`~.int`):
         Macro constant.
 
-    hipblaseVersionMinor (int):
+    hipblaseVersionMinor (`~.int`):
         Macro constant.
 
-    hipblasVersionMinor (int):
+    hipblasVersionMinor (`~.int`):
         Macro constant.
 
-    hipblasVersionPatch (int):
+    hipblasVersionPatch (`~.int`):
         Macro constant.
 
 """
