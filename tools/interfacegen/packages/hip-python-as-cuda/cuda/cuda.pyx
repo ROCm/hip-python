@@ -185,7 +185,7 @@ Attributes:
     cudaUUID_t:
         alias of `.hipUUID`
     HIP_PYTHON_CUmemorytype_HALLUCINATE:
-        Make CUmemorytype hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemorytype` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemorytype_HALLUCINATE``.
@@ -193,7 +193,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemorytype_enum_HALLUCINATE:
-        Make CUmemorytype_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemorytype_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemorytype_enum_HALLUCINATE``.
@@ -201,7 +201,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaMemoryType_HALLUCINATE:
-        Make cudaMemoryType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemoryType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemoryType_HALLUCINATE``.
@@ -209,7 +209,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUresult_HALLUCINATE:
-        Make CUresult hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUresult` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUresult_HALLUCINATE``.
@@ -217,7 +217,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaError_HALLUCINATE:
-        Make cudaError hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaError` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_HALLUCINATE``.
@@ -225,7 +225,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaError_enum_HALLUCINATE:
-        Make cudaError_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaError_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_enum_HALLUCINATE``.
@@ -233,7 +233,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaError_t_HALLUCINATE:
-        Make cudaError_t hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaError_t` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_t_HALLUCINATE``.
@@ -241,7 +241,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUdevice_attribute_HALLUCINATE:
-        Make CUdevice_attribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUdevice_attribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_attribute_HALLUCINATE``.
@@ -249,7 +249,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE:
-        Make CUdevice_attribute_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUdevice_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE``.
@@ -257,7 +257,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaDeviceAttr_HALLUCINATE:
-        Make cudaDeviceAttr hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaDeviceAttr` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaDeviceAttr_HALLUCINATE``.
@@ -265,7 +265,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUcomputemode_HALLUCINATE:
-        Make CUcomputemode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUcomputemode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUcomputemode_HALLUCINATE``.
@@ -273,7 +273,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUcomputemode_enum_HALLUCINATE:
-        Make CUcomputemode_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUcomputemode_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUcomputemode_enum_HALLUCINATE``.
@@ -281,7 +281,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaComputeMode_HALLUCINATE:
-        Make cudaComputeMode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaComputeMode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaComputeMode_HALLUCINATE``.
@@ -289,7 +289,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE:
-        Make cudaChannelFormatKind hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaChannelFormatKind` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE``.
@@ -297,7 +297,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUarray_format_HALLUCINATE:
-        Make CUarray_format hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUarray_format` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUarray_format_HALLUCINATE``.
@@ -305,7 +305,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUarray_format_enum_HALLUCINATE:
-        Make CUarray_format_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUarray_format_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUarray_format_enum_HALLUCINATE``.
@@ -325,7 +325,7 @@ Attributes:
     cudaMipmappedArray_const_t:
         alias of `.hipMipmappedArray_const_t`
     HIP_PYTHON_cudaResourceType_HALLUCINATE:
-        Make cudaResourceType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaResourceType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaResourceType_HALLUCINATE``.
@@ -333,7 +333,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUresourcetype_enum_HALLUCINATE:
-        Make CUresourcetype_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUresourcetype_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourcetype_enum_HALLUCINATE``.
@@ -341,7 +341,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUresourcetype_HALLUCINATE:
-        Make CUresourcetype hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUresourcetype` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourcetype_HALLUCINATE``.
@@ -349,7 +349,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE:
-        Make CUaddress_mode_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUaddress_mode_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE``.
@@ -357,7 +357,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUaddress_mode_HALLUCINATE:
-        Make CUaddress_mode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUaddress_mode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUaddress_mode_HALLUCINATE``.
@@ -365,7 +365,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE:
-        Make CUfilter_mode_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUfilter_mode_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE``.
@@ -373,7 +373,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUfilter_mode_HALLUCINATE:
-        Make CUfilter_mode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUfilter_mode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUfilter_mode_HALLUCINATE``.
@@ -385,7 +385,7 @@ Attributes:
     CUDA_TEXTURE_DESC_v1:
         alias of `.HIP_TEXTURE_DESC`
     HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE:
-        Make cudaResourceViewFormat hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaResourceViewFormat` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE``.
@@ -393,7 +393,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE:
-        Make CUresourceViewFormat_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUresourceViewFormat_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE``.
@@ -401,7 +401,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUresourceViewFormat_HALLUCINATE:
-        Make CUresourceViewFormat hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUresourceViewFormat` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourceViewFormat_HALLUCINATE``.
@@ -417,7 +417,7 @@ Attributes:
     CUDA_RESOURCE_VIEW_DESC_v1:
         alias of `.HIP_RESOURCE_VIEW_DESC`
     HIP_PYTHON_cudaMemcpyKind_HALLUCINATE:
-        Make cudaMemcpyKind hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemcpyKind` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemcpyKind_HALLUCINATE``.
@@ -425,7 +425,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUfunction_attribute_HALLUCINATE:
-        Make CUfunction_attribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUfunction_attribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunction_attribute_HALLUCINATE``.
@@ -433,7 +433,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE:
-        Make CUfunction_attribute_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUfunction_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE``.
@@ -441,7 +441,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUpointer_attribute_HALLUCINATE:
-        Make CUpointer_attribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUpointer_attribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUpointer_attribute_HALLUCINATE``.
@@ -449,7 +449,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE:
-        Make CUpointer_attribute_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUpointer_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE``.
@@ -465,7 +465,7 @@ Attributes:
     cudaTextureObject_t:
         alias of `.hipTextureObject_t`
     HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE:
-        Make cudaTextureAddressMode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaTextureAddressMode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE``.
@@ -473,7 +473,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE:
-        Make cudaTextureFilterMode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaTextureFilterMode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE``.
@@ -481,7 +481,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaTextureReadMode_HALLUCINATE:
-        Make cudaTextureReadMode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaTextureReadMode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureReadMode_HALLUCINATE``.
@@ -495,7 +495,7 @@ Attributes:
     cudaSurfaceObject_t:
         alias of `.hipSurfaceObject_t`
     HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE:
-        Make cudaSurfaceBoundaryMode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaSurfaceBoundaryMode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE``.
@@ -505,7 +505,7 @@ Attributes:
     CUcontext:
         alias of `.hipCtx_t`
     HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE:
-        Make CUdevice_P2PAttribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUdevice_P2PAttribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE``.
@@ -513,7 +513,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE:
-        Make CUdevice_P2PAttribute_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUdevice_P2PAttribute_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE``.
@@ -521,7 +521,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE:
-        Make cudaDeviceP2PAttr hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaDeviceP2PAttr` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE``.
@@ -559,7 +559,7 @@ Attributes:
     cudaEvent_t:
         alias of `.hipEvent_t`
     HIP_PYTHON_CUlimit_HALLUCINATE:
-        Make CUlimit hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUlimit` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUlimit_HALLUCINATE``.
@@ -567,7 +567,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUlimit_enum_HALLUCINATE:
-        Make CUlimit_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUlimit_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUlimit_enum_HALLUCINATE``.
@@ -575,7 +575,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaLimit_HALLUCINATE:
-        Make cudaLimit hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaLimit` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaLimit_HALLUCINATE``.
@@ -583,7 +583,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmem_advise_HALLUCINATE:
-        Make CUmem_advise hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmem_advise` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_advise_HALLUCINATE``.
@@ -591,7 +591,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmem_advise_enum_HALLUCINATE:
-        Make CUmem_advise_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmem_advise_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_advise_enum_HALLUCINATE``.
@@ -599,7 +599,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE:
-        Make cudaMemoryAdvise hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemoryAdvise` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE``.
@@ -607,7 +607,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmem_range_attribute_HALLUCINATE:
-        Make CUmem_range_attribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmem_range_attribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_range_attribute_HALLUCINATE``.
@@ -615,7 +615,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE:
-        Make CUmem_range_attribute_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmem_range_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE``.
@@ -623,7 +623,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE:
-        Make cudaMemRangeAttribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemRangeAttribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE``.
@@ -631,7 +631,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemPool_attribute_HALLUCINATE:
-        Make CUmemPool_attribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemPool_attribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemPool_attribute_HALLUCINATE``.
@@ -639,7 +639,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE:
-        Make CUmemPool_attribute_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemPool_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE``.
@@ -647,7 +647,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE:
-        Make cudaMemPoolAttr hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemPoolAttr` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE``.
@@ -655,7 +655,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemLocationType_HALLUCINATE:
-        Make CUmemLocationType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemLocationType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemLocationType_HALLUCINATE``.
@@ -663,7 +663,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE:
-        Make CUmemLocationType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemLocationType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE``.
@@ -671,7 +671,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaMemLocationType_HALLUCINATE:
-        Make cudaMemLocationType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemLocationType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemLocationType_HALLUCINATE``.
@@ -679,7 +679,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemAccess_flags_HALLUCINATE:
-        Make CUmemAccess_flags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemAccess_flags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAccess_flags_HALLUCINATE``.
@@ -687,7 +687,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE:
-        Make CUmemAccess_flags_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemAccess_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE``.
@@ -695,7 +695,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE:
-        Make cudaMemAccessFlags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemAccessFlags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE``.
@@ -703,7 +703,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemAllocationType_HALLUCINATE:
-        Make CUmemAllocationType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemAllocationType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationType_HALLUCINATE``.
@@ -711,7 +711,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE:
-        Make CUmemAllocationType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemAllocationType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE``.
@@ -719,7 +719,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaMemAllocationType_HALLUCINATE:
-        Make cudaMemAllocationType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemAllocationType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAllocationType_HALLUCINATE``.
@@ -727,7 +727,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE:
-        Make CUmemAllocationHandleType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemAllocationHandleType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE``.
@@ -735,7 +735,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE:
-        Make CUmemAllocationHandleType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemAllocationHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE``.
@@ -743,7 +743,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE:
-        Make cudaMemAllocationHandleType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaMemAllocationHandleType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE``.
@@ -751,7 +751,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUjit_option_HALLUCINATE:
-        Make CUjit_option hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUjit_option` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUjit_option_HALLUCINATE``.
@@ -759,7 +759,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUjit_option_enum_HALLUCINATE:
-        Make CUjit_option_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUjit_option_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUjit_option_enum_HALLUCINATE``.
@@ -767,7 +767,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaFuncAttribute_HALLUCINATE:
-        Make cudaFuncAttribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaFuncAttribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaFuncAttribute_HALLUCINATE``.
@@ -775,7 +775,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUfunc_cache_HALLUCINATE:
-        Make CUfunc_cache hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUfunc_cache` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunc_cache_HALLUCINATE``.
@@ -783,7 +783,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE:
-        Make CUfunc_cache_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUfunc_cache_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE``.
@@ -791,7 +791,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaFuncCache_HALLUCINATE:
-        Make cudaFuncCache hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaFuncCache` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaFuncCache_HALLUCINATE``.
@@ -799,7 +799,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUsharedconfig_HALLUCINATE:
-        Make CUsharedconfig hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUsharedconfig` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUsharedconfig_HALLUCINATE``.
@@ -807,7 +807,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE:
-        Make CUsharedconfig_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUsharedconfig_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE``.
@@ -815,7 +815,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE:
-        Make cudaSharedMemConfig hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaSharedMemConfig` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE``.
@@ -825,7 +825,7 @@ Attributes:
     cudaLaunchParams:
         alias of `.hipLaunchParams`
     HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE:
-        Make CUexternalMemoryHandleType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUexternalMemoryHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE``.
@@ -833,7 +833,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE:
-        Make CUexternalMemoryHandleType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUexternalMemoryHandleType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE``.
@@ -841,7 +841,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE:
-        Make cudaExternalMemoryHandleType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaExternalMemoryHandleType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE``.
@@ -861,7 +861,7 @@ Attributes:
     cudaExternalMemoryBufferDesc:
         alias of `.hipExternalMemoryBufferDesc`
     HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE:
-        Make CUexternalSemaphoreHandleType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUexternalSemaphoreHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE``.
@@ -869,7 +869,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE:
-        Make CUexternalSemaphoreHandleType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUexternalSemaphoreHandleType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE``.
@@ -877,7 +877,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE:
-        Make cudaExternalSemaphoreHandleType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaExternalSemaphoreHandleType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE``.
@@ -907,7 +907,7 @@ Attributes:
     cudaExternalSemaphoreWaitParams_v1:
         alias of `.hipExternalSemaphoreWaitParams`
     HIP_PYTHON_CUGLDeviceList_HALLUCINATE:
-        Make CUGLDeviceList hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUGLDeviceList` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUGLDeviceList_HALLUCINATE``.
@@ -915,7 +915,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE:
-        Make CUGLDeviceList_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUGLDeviceList_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE``.
@@ -923,7 +923,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaGLDeviceList_HALLUCINATE:
-        Make cudaGLDeviceList hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaGLDeviceList` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGLDeviceList_HALLUCINATE``.
@@ -931,7 +931,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE:
-        Make CUgraphicsRegisterFlags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphicsRegisterFlags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE``.
@@ -939,7 +939,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE:
-        Make CUgraphicsRegisterFlags_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphicsRegisterFlags_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE``.
@@ -947,7 +947,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE:
-        Make cudaGraphicsRegisterFlags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaGraphicsRegisterFlags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE``.
@@ -979,7 +979,7 @@ Attributes:
     cudaUserObject_t:
         alias of `.hipUserObject_t`
     HIP_PYTHON_CUgraphNodeType_HALLUCINATE:
-        Make CUgraphNodeType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphNodeType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphNodeType_HALLUCINATE``.
@@ -987,7 +987,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE:
-        Make CUgraphNodeType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphNodeType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE``.
@@ -995,7 +995,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaGraphNodeType_HALLUCINATE:
-        Make cudaGraphNodeType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaGraphNodeType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphNodeType_HALLUCINATE``.
@@ -1003,7 +1003,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE:
-        Make CUkernelNodeAttrID hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUkernelNodeAttrID` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE``.
@@ -1011,7 +1011,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE:
-        Make CUkernelNodeAttrID_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUkernelNodeAttrID_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE``.
@@ -1019,7 +1019,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE:
-        Make cudaKernelNodeAttrID hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaKernelNodeAttrID` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE``.
@@ -1027,7 +1027,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUaccessProperty_HALLUCINATE:
-        Make CUaccessProperty hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUaccessProperty` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUaccessProperty_HALLUCINATE``.
@@ -1035,7 +1035,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE:
-        Make CUaccessProperty_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUaccessProperty_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE``.
@@ -1043,7 +1043,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaAccessProperty_HALLUCINATE:
-        Make cudaAccessProperty hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaAccessProperty` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaAccessProperty_HALLUCINATE``.
@@ -1051,7 +1051,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE:
-        Make CUgraphExecUpdateResult hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphExecUpdateResult` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE``.
@@ -1059,7 +1059,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE:
-        Make CUgraphExecUpdateResult_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphExecUpdateResult_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE``.
@@ -1067,7 +1067,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE:
-        Make cudaGraphExecUpdateResult hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaGraphExecUpdateResult` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE``.
@@ -1075,7 +1075,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE:
-        Make CUstreamCaptureMode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUstreamCaptureMode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE``.
@@ -1083,7 +1083,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE:
-        Make CUstreamCaptureMode_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUstreamCaptureMode_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE``.
@@ -1091,7 +1091,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE:
-        Make cudaStreamCaptureMode hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaStreamCaptureMode` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE``.
@@ -1099,7 +1099,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE:
-        Make CUstreamCaptureStatus hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUstreamCaptureStatus` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE``.
@@ -1107,7 +1107,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE:
-        Make CUstreamCaptureStatus_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUstreamCaptureStatus_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE``.
@@ -1115,7 +1115,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE:
-        Make cudaStreamCaptureStatus hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaStreamCaptureStatus` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE``.
@@ -1123,7 +1123,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE:
-        Make CUstreamUpdateCaptureDependencies_flags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUstreamUpdateCaptureDependencies_flags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE``.
@@ -1131,7 +1131,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE:
-        Make CUstreamUpdateCaptureDependencies_flags_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUstreamUpdateCaptureDependencies_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE``.
@@ -1139,7 +1139,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE:
-        Make cudaStreamUpdateCaptureDependenciesFlags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaStreamUpdateCaptureDependenciesFlags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE``.
@@ -1147,7 +1147,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE:
-        Make CUgraphMem_attribute hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphMem_attribute` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE``.
@@ -1155,7 +1155,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE:
-        Make CUgraphMem_attribute_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphMem_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE``.
@@ -1163,7 +1163,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE:
-        Make cudaGraphMemAttributeType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaGraphMemAttributeType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE``.
@@ -1171,7 +1171,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUuserObject_flags_HALLUCINATE:
-        Make CUuserObject_flags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUuserObject_flags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObject_flags_HALLUCINATE``.
@@ -1179,7 +1179,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE:
-        Make CUuserObject_flags_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUuserObject_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE``.
@@ -1187,7 +1187,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE:
-        Make cudaUserObjectFlags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaUserObjectFlags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE``.
@@ -1195,7 +1195,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE:
-        Make CUuserObjectRetain_flags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUuserObjectRetain_flags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE``.
@@ -1203,7 +1203,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE:
-        Make CUuserObjectRetain_flags_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUuserObjectRetain_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE``.
@@ -1211,7 +1211,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE:
-        Make cudaUserObjectRetainFlags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaUserObjectRetainFlags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE``.
@@ -1219,7 +1219,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE:
-        Make CUgraphInstantiate_flags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphInstantiate_flags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE``.
@@ -1227,7 +1227,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE:
-        Make CUgraphInstantiate_flags_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUgraphInstantiate_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE``.
@@ -1235,7 +1235,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE:
-        Make cudaGraphInstantiateFlags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.cudaGraphInstantiateFlags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE``.
@@ -1247,7 +1247,7 @@ Attributes:
     CUmemGenericAllocationHandle_v1:
         alias of `.hipMemGenericAllocationHandle_t`
     HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE:
-        Make CUmemAllocationGranularity_flags hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemAllocationGranularity_flags` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE``.
@@ -1255,7 +1255,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE:
-        Make CUmemAllocationGranularity_flags_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemAllocationGranularity_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE``.
@@ -1263,7 +1263,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemHandleType_HALLUCINATE:
-        Make CUmemHandleType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemHandleType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemHandleType_HALLUCINATE``.
@@ -1271,7 +1271,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE:
-        Make CUmemHandleType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE``.
@@ -1279,7 +1279,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemOperationType_HALLUCINATE:
-        Make CUmemOperationType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemOperationType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemOperationType_HALLUCINATE``.
@@ -1287,7 +1287,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE:
-        Make CUmemOperationType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUmemOperationType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE``.
@@ -1295,7 +1295,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE:
-        Make CUarraySparseSubresourceType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUarraySparseSubresourceType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE``.
@@ -1303,7 +1303,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE:
-        Make CUarraySparseSubresourceType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUarraySparseSubresourceType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE``.
@@ -2400,6 +2400,12 @@ Attributes:
         alias of `.hipGraphicsUnregisterResource`
     cudaGraphicsUnregisterResource:
         alias of `.hipGraphicsUnregisterResource`
+    HIP_PYTHON (`.bool`):
+        `True`.
+    HIP_PYTHON_MOD (module):
+        A reference to the package `.hip.hip`.
+    hip (module):
+        A reference to the package `.hip.hip`.
 
 """
 

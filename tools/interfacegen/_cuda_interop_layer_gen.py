@@ -344,7 +344,17 @@ def generate_cuda_interop_package_files(
         outfile.write("\n".join(python_interface_decl_part))
     with open(python_interface_impl_path, "w") as outfile:
         DOCSTRING_ATTRIBS = ""
-        for attribute in (docstring_attributes):
+        docstring_attributes.append(textwrap.dedent(
+            f"""\
+            HIP_PYTHON ({python_interface_pyobj_role_template.format(name="bool")}):
+                `True`.
+            HIP_PYTHON_MOD (module):
+                A reference to the package {python_interface_pyobj_role_template.format(name=f"hip.{pkg_name}")}.
+            {pkg_name} (module):
+                A reference to the package {python_interface_pyobj_role_template.format(name=f"hip.{pkg_name}")}.
+            """
+        ))
+        for attribute in docstring_attributes:
             if isinstance(attribute,tuple):
                 cuda_name, pkg_name, hip_name = attribute
                 docstring_attrib = textwrap.dedent(

@@ -2,10 +2,10 @@
 
 """
 Attributes:
-    HIPFFT_FORWARD (int):
+    HIPFFT_FORWARD (`~.int`):
         Macro constant.
 
-    HIPFFT_BACKWARD (int):
+    HIPFFT_BACKWARD (`~.int`):
         Macro constant.
 
     hipfftResult:

@@ -3,7 +3,7 @@
 """
 Attributes:
     HIP_PYTHON_nvrtcResult_HALLUCINATE:
-        Make nvrtcResult hallucinate values for non-existing enum constants. Disabled by default
+        Make `.nvrtcResult` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_nvrtcResult_HALLUCINATE``.
@@ -11,7 +11,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUjitInputType_HALLUCINATE:
-        Make CUjitInputType hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUjitInputType` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUjitInputType_HALLUCINATE``.
@@ -19,7 +19,7 @@ Attributes:
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     HIP_PYTHON_CUjitInputType_enum_HALLUCINATE:
-        Make CUjitInputType_enum hallucinate values for non-existing enum constants. Disabled by default
+        Make `.CUjitInputType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
 
         Default value can be set/unset via environment variable ``HIP_PYTHON_CUjitInputType_enum_HALLUCINATE``.
@@ -72,6 +72,12 @@ Attributes:
         alias of `.hiprtcLinkComplete`
     cuLinkDestroy:
         alias of `.hiprtcLinkDestroy`
+    HIP_PYTHON (`.bool`):
+        `True`.
+    HIP_PYTHON_MOD (module):
+        A reference to the package `.hip.hiprtc`.
+    hiprtc (module):
+        A reference to the package `.hip.hiprtc`.
 
 """
 

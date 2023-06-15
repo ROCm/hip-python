@@ -593,6 +593,8 @@ if __name__ == "__main__":
                 .. automodule:: {pkg}.{lib}
                    :members:
                    :undoc-members:
+                   :private-members:
+                   :special-members:
                    :show-inheritance:
                 {extra}
                 ```

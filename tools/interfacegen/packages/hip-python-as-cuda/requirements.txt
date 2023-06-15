@@ -7,4 +7,4 @@ setuptools>=42
 cython
 wheel
 build
-hip-python==5.4.22804.41.dev114
+hip-python==5.4.22804.41.dev116

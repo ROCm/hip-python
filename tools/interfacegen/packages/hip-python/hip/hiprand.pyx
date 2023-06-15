@@ -2,13 +2,13 @@
 
 """
 Attributes:
-    HIPRAND_VERSION (int):
+    HIPRAND_VERSION (`~.int`):
         Macro constant.
 
-    HIPRAND_DEFAULT_MAX_BLOCK_SIZE (int):
+    HIPRAND_DEFAULT_MAX_BLOCK_SIZE (`~.int`):
         Macro constant.
 
-    HIPRAND_DEFAULT_MIN_WARPS_PER_EU (int):
+    HIPRAND_DEFAULT_MIN_WARPS_PER_EU (`~.int`):
         Macro constant.
 
     rocrand_discrete_distribution:
