@@ -522,7 +522,7 @@ class MacroDefinitionMixin(CythonMixin):
         self.docstring_attributes.append(
                 textwrap.dedent(
                         f"""\
-                        {name} ({CYTHON_AUTOCONV_TO_PYTHON_TYPES(self.macro_type(self))}):
+                        {name} ({self.to_sphinx_pyobj(CYTHON_AUTOCONV_TO_PYTHON_TYPES(self.macro_type(self)))}):
                             Macro constant.
                         """
                 )
