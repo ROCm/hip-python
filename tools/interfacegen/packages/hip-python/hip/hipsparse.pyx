@@ -1,4 +1,51 @@
 # AMD_COPYRIGHT
+
+"""
+Attributes:
+    bsrsv2Info_t:
+        alias of `~.bsrsv2Info`
+
+    bsrsm2Info_t:
+        alias of `~.bsrsm2Info`
+
+    bsrilu02Info_t:
+        alias of `~.bsrilu02Info`
+
+    bsric02Info_t:
+        alias of `~.bsric02Info`
+
+    csrsv2Info_t:
+        alias of `~.csrsv2Info`
+
+    csrsm2Info_t:
+        alias of `~.csrsm2Info`
+
+    csrilu02Info_t:
+        alias of `~.csrilu02Info`
+
+    csric02Info_t:
+        alias of `~.csric02Info`
+
+    csrgemm2Info_t:
+        alias of `~.csrgemm2Info`
+
+    pruneInfo_t:
+        alias of `~.pruneInfo`
+
+    csru2csrInfo_t:
+        alias of `~.csru2csrInfo`
+
+    hipsparseSpGEMMDescr_t:
+        alias of `~.hipsparseSpGEMMDescr`
+
+    hipsparseSpSVDescr_t:
+        alias of `~.hipsparseSpSVDescr`
+
+    hipsparseSpSMDescr_t:
+        alias of `~.hipsparseSpSMDescr`
+
+"""
+
 import cython
 import ctypes
 import enum
@@ -30,8 +77,8 @@ cdef class bsrsv2Info:
         returns it directly. No new ``bsrsv2Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``bsrsv2Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `bsrsv2Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -128,8 +175,8 @@ cdef class bsrsm2Info:
         returns it directly. No new ``bsrsm2Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``bsrsm2Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `bsrsm2Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -226,8 +273,8 @@ cdef class bsrilu02Info:
         returns it directly. No new ``bsrilu02Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``bsrilu02Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `bsrilu02Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -324,8 +371,8 @@ cdef class bsric02Info:
         returns it directly. No new ``bsric02Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``bsric02Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `bsric02Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -422,8 +469,8 @@ cdef class csrsv2Info:
         returns it directly. No new ``csrsv2Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``csrsv2Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `csrsv2Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -520,8 +567,8 @@ cdef class csrsm2Info:
         returns it directly. No new ``csrsm2Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``csrsm2Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `csrsm2Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -618,8 +665,8 @@ cdef class csrilu02Info:
         returns it directly. No new ``csrilu02Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``csrilu02Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `csrilu02Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -716,8 +763,8 @@ cdef class csric02Info:
         returns it directly. No new ``csric02Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``csric02Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `csric02Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -814,8 +861,8 @@ cdef class csrgemm2Info:
         returns it directly. No new ``csrgemm2Info`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``csrgemm2Info``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `csrgemm2Info`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -912,8 +959,8 @@ cdef class pruneInfo:
         returns it directly. No new ``pruneInfo`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``pruneInfo``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `pruneInfo`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -1010,8 +1057,8 @@ cdef class csru2csrInfo:
         returns it directly. No new ``csru2csrInfo`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``csru2csrInfo``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `csru2csrInfo`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -1260,7 +1307,7 @@ def hipsparseCreate(object handle):
     using hipsparseDestroy().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1277,7 +1324,7 @@ def hipsparseDestroy(object handle):
     resources used by the hipSPARSE library.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1296,7 +1343,7 @@ def hipsparseGetVersion(object handle, object version):
     - major = version / 100000
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1313,7 +1360,7 @@ def hipsparseGetGitRevision(object handle, char * rev):
     ``hipsparseGetGitRevision`` gets the hipSPARSE library git commit revision (SHA-1).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1330,7 +1377,7 @@ def hipsparseSetStream(object handle, object streamId):
     context and all subsequent function calls.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1348,7 +1395,7 @@ def hipsparseGetStream(object handle):
     used for all subsequent function calls.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1368,7 +1415,7 @@ def hipsparseSetPointerMode(object handle, object mode):
     or ``HIPSPARSE_POINTER_MODE_DEVICE.``
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1387,7 +1434,7 @@ def hipsparseGetPointerMode(object handle, object mode):
     is currently used for all subsequent function calls.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1407,7 +1454,7 @@ def hipsparseCreateMatDescr(object descrA):
     at the end using hipsparseDestroyMatDescr().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1424,7 +1471,7 @@ def hipsparseDestroyMatDescr(object descrA):
     resources used by the descriptor.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1441,7 +1488,7 @@ def hipsparseCopyMatDescr(object dest, object src):
     matrix descriptors must be initialized prior to calling ``hipsparseCopyMatDescr.``
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1461,7 +1508,7 @@ def hipsparseSetMatType(object descrA, object type):
     ``HIPSPARSE_MATRIX_TYPE_TRIANGULAR`` .
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1479,7 +1526,7 @@ def hipsparseGetMatType(object descrA):
     ``hipsparseGetMatType`` returns the matrix type of a matrix descriptor.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseMatrixType_t`
     """
@@ -1497,7 +1544,7 @@ def hipsparseSetMatFillMode(object descrA, object fillMode):
     ``HIPSPARSE_FILL_MODE_UPPER`` .
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1515,7 +1562,7 @@ def hipsparseGetMatFillMode(object descrA):
     ``hipsparseGetMatFillMode`` returns the matrix fill mode of a matrix descriptor.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseFillMode_t`
     """
@@ -1533,7 +1580,7 @@ def hipsparseSetMatDiagType(object descrA, object diagType):
     ``HIPSPARSE_DIAG_TYPE_NON_UNIT`` .
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1552,7 +1599,7 @@ def hipsparseGetMatDiagType(object descrA):
     descriptor.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseDiagType_t`
     """
@@ -1569,7 +1616,7 @@ def hipsparseSetMatIndexBase(object descrA, object base):
     options are ``HIPSPARSE_INDEX_BASE_ZERO`` or ``HIPSPARSE_INDEX_BASE_ONE`` .
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1587,7 +1634,7 @@ def hipsparseGetMatIndexBase(object descrA):
     ``hipsparseGetMatIndexBase`` returns the index base of a matrix descriptor.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseIndexBase_t`
     """
@@ -1604,7 +1651,7 @@ def hipsparseCreateHybMat(object hybA):
     storage format. It should be destroyed at the end using hipsparseDestroyHybMat().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1620,7 +1667,7 @@ def hipsparseDestroyHybMat(object hybA):
     ``hipsparseDestroyHybMat`` destroys a ``HYB`` structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1638,7 +1685,7 @@ def hipsparseCreateBsrsv2Info():
     at the end using hipsparseDestroyBsrsv2Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1654,7 +1701,7 @@ def hipsparseDestroyBsrsv2Info(object info):
     ``hipsparseDestroyBsrsv2Info`` destroys a bsrsv2 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1672,7 +1719,7 @@ def hipsparseCreateBsrsm2Info():
     at the end using hipsparseDestroyBsrsm2Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1688,7 +1735,7 @@ def hipsparseDestroyBsrsm2Info(object info):
     ``hipsparseDestroyBsrsm2Info`` destroys a bsrsm2 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1706,7 +1753,7 @@ def hipsparseCreateBsrilu02Info():
     at the end using hipsparseDestroyBsrilu02Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1722,7 +1769,7 @@ def hipsparseDestroyBsrilu02Info(object info):
     ``hipsparseDestroyBsrilu02Info`` destroys a bsrilu02 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1740,7 +1787,7 @@ def hipsparseCreateBsric02Info():
     at the end using hipsparseDestroyBsric02Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1756,7 +1803,7 @@ def hipsparseDestroyBsric02Info(object info):
     ``hipsparseDestroyBsric02Info`` destroys a bsric02 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1774,7 +1821,7 @@ def hipsparseCreateCsrsv2Info():
     at the end using hipsparseDestroyCsrsv2Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1790,7 +1837,7 @@ def hipsparseDestroyCsrsv2Info(object info):
     ``hipsparseDestroyCsrsv2Info`` destroys a csrsv2 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1808,7 +1855,7 @@ def hipsparseCreateCsrsm2Info():
     at the end using hipsparseDestroyCsrsm2Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1824,7 +1871,7 @@ def hipsparseDestroyCsrsm2Info(object info):
     ``hipsparseDestroyCsrsm2Info`` destroys a csrsm2 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1842,7 +1889,7 @@ def hipsparseCreateCsrilu02Info():
     at the end using hipsparseDestroyCsrilu02Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1858,7 +1905,7 @@ def hipsparseDestroyCsrilu02Info(object info):
     ``hipsparseDestroyCsrilu02Info`` destroys a csrilu02 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1876,7 +1923,7 @@ def hipsparseCreateCsric02Info():
     at the end using hipsparseDestroyCsric02Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1892,7 +1939,7 @@ def hipsparseDestroyCsric02Info(object info):
     ``hipsparseDestroyCsric02Info`` destroys a csric02 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1910,7 +1957,7 @@ def hipsparseCreateCsru2csrInfo():
     at the end using hipsparseDestroyCsru2csrInfo().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1926,7 +1973,7 @@ def hipsparseDestroyCsru2csrInfo(object info):
     ``hipsparseDestroyCsru2csrInfo`` destroys a csru2csr info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1944,7 +1991,7 @@ def hipsparseCreateColorInfo(object info):
     at the end using hipsparseDestroyColorInfo().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1960,7 +2007,7 @@ def hipsparseDestroyColorInfo(object info):
     ``hipsparseDestroyColorInfo`` destroys a color info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1978,7 +2025,7 @@ def hipsparseCreateCsrgemm2Info():
     at the end using hipsparseDestroyCsrgemm2Info().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -1994,7 +2041,7 @@ def hipsparseDestroyCsrgemm2Info(object info):
     ``hipsparseDestroyCsrgemm2Info`` destroys a csrgemm2 info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2012,7 +2059,7 @@ def hipsparseCreatePruneInfo():
     at the end using hipsparseDestroyPruneInfo().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2028,7 +2075,7 @@ def hipsparseDestroyPruneInfo(object info):
     ``hipsparseDestroyPruneInfo`` destroys a prune info structure.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2060,7 +2107,7 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2080,7 +2127,7 @@ def hipsparseDaxpyi(object handle, int nnz, object alpha, object xVal, object xI
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2100,7 +2147,7 @@ def hipsparseCaxpyi(object handle, int nnz, object alpha, object xVal, object xI
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2120,7 +2167,7 @@ def hipsparseZaxpyi(object handle, int nnz, object alpha, object xVal, object xI
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2158,7 +2205,7 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2178,7 +2225,7 @@ def hipsparseDdoti(object handle, int nnz, object xVal, object xInd, object y, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2198,7 +2245,7 @@ def hipsparseCdoti(object handle, int nnz, object xVal, object xInd, object y, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2218,7 +2265,7 @@ def hipsparseZdoti(object handle, int nnz, object xVal, object xInd, object y, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2257,7 +2304,7 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2277,7 +2324,7 @@ def hipsparseZdotci(object handle, int nnz, object xVal, object xInd, object y, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2311,7 +2358,7 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2330,7 +2377,7 @@ def hipsparseDgthr(object handle, int nnz, object y, object xVal, object xInd, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2349,7 +2396,7 @@ def hipsparseCgthr(object handle, int nnz, object y, object xVal, object xInd, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2368,7 +2415,7 @@ def hipsparseZgthr(object handle, int nnz, object y, object xVal, object xInd, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2404,7 +2451,7 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2423,7 +2470,7 @@ def hipsparseDgthrz(object handle, int nnz, object y, object xVal, object xInd, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2442,7 +2489,7 @@ def hipsparseCgthrz(object handle, int nnz, object y, object xVal, object xInd, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2461,7 +2508,7 @@ def hipsparseZgthrz(object handle, int nnz, object y, object xVal, object xInd, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2502,7 +2549,7 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2523,7 +2570,7 @@ def hipsparseDroti(object handle, int nnz, object xVal, object xInd, object y, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2559,7 +2606,7 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2578,7 +2625,7 @@ def hipsparseDsctr(object handle, int nnz, object xVal, object xInd, object y, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2597,7 +2644,7 @@ def hipsparseCsctr(object handle, int nnz, object xVal, object xInd, object y, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2616,7 +2663,7 @@ def hipsparseZsctr(object handle, int nnz, object xVal, object xInd, object y, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2675,7 +2722,7 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2699,7 +2746,7 @@ def hipsparseDcsrmv(object handle, object transA, int m, int n, int nnz, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2723,7 +2770,7 @@ def hipsparseCcsrmv(object handle, object transA, int m, int n, int nnz, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2747,7 +2794,7 @@ def hipsparseZcsrmv(object handle, object transA, int m, int n, int nnz, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2784,7 +2831,7 @@ def hipsparseXcsrsv2_zeroPivot(object handle, object info, object position):
         performance negatively.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2806,7 +2853,7 @@ def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2828,7 +2875,7 @@ def hipsparseDcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2850,7 +2897,7 @@ def hipsparseCcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2872,7 +2919,7 @@ def hipsparseZcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2900,7 +2947,7 @@ def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2922,7 +2969,7 @@ def hipsparseDcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2944,7 +2991,7 @@ def hipsparseCcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2966,7 +3013,7 @@ def hipsparseZcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -2995,7 +3042,7 @@ def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, obje
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3019,7 +3066,7 @@ def hipsparseDcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3043,7 +3090,7 @@ def hipsparseCcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3067,7 +3114,7 @@ def hipsparseZcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3123,7 +3170,7 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
         ``trans`` == ``HIPSPARSE_OPERATION_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3150,7 +3197,7 @@ def hipsparseDcsrsv2_solve(object handle, object transA, int m, int nnz, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3177,7 +3224,7 @@ def hipsparseCcsrsv2_solve(object handle, object transA, int m, int nnz, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3204,7 +3251,7 @@ def hipsparseZcsrsv2_solve(object handle, object transA, int m, int nnz, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3259,7 +3306,7 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3281,7 +3328,7 @@ def hipsparseDhybmv(object handle, object transA, object alpha, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3303,7 +3350,7 @@ def hipsparseChybmv(object handle, object transA, object alpha, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3325,7 +3372,7 @@ def hipsparseZhybmv(object handle, object transA, object alpha, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3377,7 +3424,7 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3403,7 +3450,7 @@ def hipsparseDbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3429,7 +3476,7 @@ def hipsparseCbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3455,7 +3502,7 @@ def hipsparseZbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3512,7 +3559,7 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
         Currently, ``block_dim`` == 1 is not supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3540,7 +3587,7 @@ def hipsparseDbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3568,7 +3615,7 @@ def hipsparseCbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3596,7 +3643,7 @@ def hipsparseZbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3636,7 +3683,7 @@ def hipsparseXbsrsv2_zeroPivot(object handle, object info, object position):
         performance negatively.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3656,7 +3703,7 @@ def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3680,7 +3727,7 @@ def hipsparseDbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3704,7 +3751,7 @@ def hipsparseCbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3728,7 +3775,7 @@ def hipsparseZbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3756,7 +3803,7 @@ def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3780,7 +3827,7 @@ def hipsparseDbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3804,7 +3851,7 @@ def hipsparseCbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3828,7 +3875,7 @@ def hipsparseZbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3861,7 +3908,7 @@ def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb,
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3887,7 +3934,7 @@ def hipsparseDbsrsv2_analysis(object handle, object dirA, object transA, int mb,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3913,7 +3960,7 @@ def hipsparseCbsrsv2_analysis(object handle, object dirA, object transA, int mb,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3939,7 +3986,7 @@ def hipsparseZbsrsv2_analysis(object handle, object dirA, object transA, int mb,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -3996,7 +4043,7 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
         ``trans`` == ``HIPSPARSE_OPERATION_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4025,7 +4072,7 @@ def hipsparseDbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4054,7 +4101,7 @@ def hipsparseCbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4083,7 +4130,7 @@ def hipsparseZbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4116,7 +4163,7 @@ def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int n
     user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4133,7 +4180,7 @@ def hipsparseDgemvi_bufferSize(object handle, object transA, int m, int n, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4150,7 +4197,7 @@ def hipsparseCgemvi_bufferSize(object handle, object transA, int m, int n, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4167,7 +4214,7 @@ def hipsparseZgemvi_bufferSize(object handle, object transA, int m, int n, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4211,7 +4258,7 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4236,7 +4283,7 @@ def hipsparseDgemvi(object handle, object transA, int m, int n, object alpha, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4261,7 +4308,7 @@ def hipsparseCgemvi(object handle, object transA, int m, int n, object alpha, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4286,7 +4333,7 @@ def hipsparseZgemvi(object handle, object transA, int m, int n, object alpha, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4349,7 +4396,7 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
         Currently, only ``trans_A`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4377,7 +4424,7 @@ def hipsparseDbsrmm(object handle, object dirA, object transA, object transB, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4405,7 +4452,7 @@ def hipsparseCbsrmm(object handle, object dirA, object transA, object transB, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4433,7 +4480,7 @@ def hipsparseZbsrmm(object handle, object dirA, object transA, object transB, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4501,7 +4548,7 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4525,7 +4572,7 @@ def hipsparseDcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4549,7 +4596,7 @@ def hipsparseCcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4573,7 +4620,7 @@ def hipsparseZcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4649,7 +4696,7 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4675,7 +4722,7 @@ def hipsparseDcsrmm2(object handle, object transA, object transB, int m, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4701,7 +4748,7 @@ def hipsparseCcsrmm2(object handle, object transA, object transB, int m, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4727,7 +4774,7 @@ def hipsparseZcsrmm2(object handle, object transA, object transB, int m, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4765,7 +4812,7 @@ def hipsparseXbsrsm2_zeroPivot(object handle, object info, object position):
         performance negatively.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4785,7 +4832,7 @@ def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4811,7 +4858,7 @@ def hipsparseDbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4837,7 +4884,7 @@ def hipsparseCbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4863,7 +4910,7 @@ def hipsparseZbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4898,7 +4945,7 @@ def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object 
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4926,7 +4973,7 @@ def hipsparseDbsrsm2_analysis(object handle, object dirA, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4954,7 +5001,7 @@ def hipsparseCbsrsm2_analysis(object handle, object dirA, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -4982,7 +5029,7 @@ def hipsparseZbsrsm2_analysis(object handle, object dirA, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5056,7 +5103,7 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
         ``trans_X`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5087,7 +5134,7 @@ def hipsparseDbsrsm2_solve(object handle, object dirA, object transA, object tra
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5118,7 +5165,7 @@ def hipsparseCbsrsm2_solve(object handle, object dirA, object transA, object tra
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5149,7 +5196,7 @@ def hipsparseZbsrsm2_solve(object handle, object dirA, object transA, object tra
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5192,7 +5239,7 @@ def hipsparseXcsrsm2_zeroPivot(object handle, object info, object position):
         performance negatively.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5212,7 +5259,7 @@ def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5240,7 +5287,7 @@ def hipsparseDcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5268,7 +5315,7 @@ def hipsparseCcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5296,7 +5343,7 @@ def hipsparseZcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5333,7 +5380,7 @@ def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object tra
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5361,7 +5408,7 @@ def hipsparseDcsrsm2_analysis(object handle, int algo, object transA, object tra
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5389,7 +5436,7 @@ def hipsparseCcsrsm2_analysis(object handle, int algo, object transA, object tra
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5417,7 +5464,7 @@ def hipsparseZcsrsm2_analysis(object handle, int algo, object transA, object tra
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5501,7 +5548,7 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
         ``trans_B`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5529,7 +5576,7 @@ def hipsparseDcsrsm2_solve(object handle, int algo, object transA, object transB
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5557,7 +5604,7 @@ def hipsparseCcsrsm2_solve(object handle, int algo, object transA, object transB
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5585,7 +5632,7 @@ def hipsparseZcsrsm2_solve(object handle, int algo, object transA, object transB
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5650,7 +5697,7 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5671,7 +5718,7 @@ def hipsparseDgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5692,7 +5739,7 @@ def hipsparseCgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5713,7 +5760,7 @@ def hipsparseZgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5746,7 +5793,7 @@ def hipsparseXcsrgeamNnz(object handle, int m, int n, object descrA, int nnzA, o
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5789,7 +5836,7 @@ def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, 
         host. It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5817,7 +5864,7 @@ def hipsparseDcsrgeam(object handle, int m, int n, object alpha, object descrA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5845,7 +5892,7 @@ def hipsparseCcsrgeam(object handle, int m, int n, object alpha, object descrA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5873,7 +5920,7 @@ def hipsparseZcsrgeam(object handle, int m, int n, object alpha, object descrA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5908,7 +5955,7 @@ def hipsparseScsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5937,7 +5984,7 @@ def hipsparseDcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5966,7 +6013,7 @@ def hipsparseCcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -5995,7 +6042,7 @@ def hipsparseZcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6036,7 +6083,7 @@ def hipsparseXcsrgeam2Nnz(object handle, int m, int n, object descrA, int nnzA, 
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6080,7 +6127,7 @@ def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA,
         host. It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6109,7 +6156,7 @@ def hipsparseDcsrgeam2(object handle, int m, int n, object alpha, object descrA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6138,7 +6185,7 @@ def hipsparseCcsrgeam2(object handle, int m, int n, object alpha, object descrA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6167,7 +6214,7 @@ def hipsparseZcsrgeam2(object handle, int m, int n, object alpha, object descrA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6216,7 +6263,7 @@ def hipsparseXcsrgemmNnz(object handle, object transA, object transB, int m, int
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6293,7 +6340,7 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
         row, additional temporary storage buffer is allocated by the algorithm.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6323,7 +6370,7 @@ def hipsparseDcsrgemm(object handle, object transA, object transB, int m, int n,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6353,7 +6400,7 @@ def hipsparseCcsrgemm(object handle, object transA, object transB, int m, int n,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6383,7 +6430,7 @@ def hipsparseZcsrgemm(object handle, object transA, object transB, int m, int n,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6428,7 +6475,7 @@ def hipsparseScsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6455,7 +6502,7 @@ def hipsparseDcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6482,7 +6529,7 @@ def hipsparseCcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6509,7 +6556,7 @@ def hipsparseZcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6553,7 +6600,7 @@ def hipsparseXcsrgemm2Nnz(object handle, int m, int n, int k, object descrA, int
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6613,7 +6660,7 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
         row, additional temporary storage buffer is allocated by the algorithm.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6647,7 +6694,7 @@ def hipsparseDcsrgemm2(object handle, int m, int n, int k, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6681,7 +6728,7 @@ def hipsparseCcsrgemm2(object handle, int m, int n, int k, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6715,7 +6762,7 @@ def hipsparseZcsrgemm2(object handle, int m, int n, int k, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6767,7 +6814,7 @@ def hipsparseXbsrilu02_zeroPivot(object handle, object info, object position):
         performance negatively.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6796,7 +6843,7 @@ def hipsparseSbsrilu02_numericBoost(object handle, object info, int enable_boost
         ``tol`` and ``boost_val`` can be in host or device memory.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6813,7 +6860,7 @@ def hipsparseDbsrilu02_numericBoost(object handle, object info, int enable_boost
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6830,7 +6877,7 @@ def hipsparseCbsrilu02_numericBoost(object handle, object info, int enable_boost
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6847,7 +6894,7 @@ def hipsparseZbsrilu02_numericBoost(object handle, object info, int enable_boost
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6869,7 +6916,7 @@ def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     The temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6891,7 +6938,7 @@ def hipsparseDbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6913,7 +6960,7 @@ def hipsparseCbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6935,7 +6982,7 @@ def hipsparseZbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6967,7 +7014,7 @@ def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -6991,7 +7038,7 @@ def hipsparseDbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7015,7 +7062,7 @@ def hipsparseCbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7039,7 +7086,7 @@ def hipsparseZbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7075,7 +7122,7 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7099,7 +7146,7 @@ def hipsparseDbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7123,7 +7170,7 @@ def hipsparseCbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7147,7 +7194,7 @@ def hipsparseZbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7184,7 +7231,7 @@ def hipsparseXcsrilu02_zeroPivot(object handle, object info, object position):
         performance negatively.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7213,7 +7260,7 @@ def hipsparseScsrilu02_numericBoost(object handle, object info, int enable_boost
         ``tol`` and ``boost_val`` can be in host or device memory.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7230,7 +7277,7 @@ def hipsparseDcsrilu02_numericBoost(object handle, object info, int enable_boost
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7247,7 +7294,7 @@ def hipsparseCcsrilu02_numericBoost(object handle, object info, int enable_boost
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7264,7 +7311,7 @@ def hipsparseZcsrilu02_numericBoost(object handle, object info, int enable_boost
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7286,7 +7333,7 @@ def hipsparseScsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7306,7 +7353,7 @@ def hipsparseDcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7326,7 +7373,7 @@ def hipsparseCcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7346,7 +7393,7 @@ def hipsparseZcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7371,7 +7418,7 @@ def hipsparseScsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7391,7 +7438,7 @@ def hipsparseDcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7411,7 +7458,7 @@ def hipsparseCcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7431,7 +7478,7 @@ def hipsparseZcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7461,7 +7508,7 @@ def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7483,7 +7530,7 @@ def hipsparseDcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7505,7 +7552,7 @@ def hipsparseCcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7527,7 +7574,7 @@ def hipsparseZcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7565,7 +7612,7 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7587,7 +7634,7 @@ def hipsparseDcsrilu02(object handle, int m, int nnz, object descrA, object csrS
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7609,7 +7656,7 @@ def hipsparseCcsrilu02(object handle, int m, int nnz, object descrA, object csrS
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7631,7 +7678,7 @@ def hipsparseZcsrilu02(object handle, int m, int nnz, object descrA, object csrS
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7671,7 +7718,7 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
         performance negatively.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7692,7 +7739,7 @@ def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7714,7 +7761,7 @@ def hipsparseDbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7736,7 +7783,7 @@ def hipsparseCbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7758,7 +7805,7 @@ def hipsparseZbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7790,7 +7837,7 @@ def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7814,7 +7861,7 @@ def hipsparseDbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7838,7 +7885,7 @@ def hipsparseCbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7862,7 +7909,7 @@ def hipsparseZbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7898,7 +7945,7 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7922,7 +7969,7 @@ def hipsparseDbsric02(object handle, object dirA, int mb, int nnzb, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7946,7 +7993,7 @@ def hipsparseCbsric02(object handle, object dirA, int mb, int nnzb, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -7970,7 +8017,7 @@ def hipsparseZbsric02(object handle, object dirA, int mb, int nnzb, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8007,7 +8054,7 @@ def hipsparseXcsric02_zeroPivot(object handle, object info, object position):
         performance negatively.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8027,7 +8074,7 @@ def hipsparseScsric02_bufferSize(object handle, int m, int nnz, object descrA, o
     that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8047,7 +8094,7 @@ def hipsparseDcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8067,7 +8114,7 @@ def hipsparseCcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8087,7 +8134,7 @@ def hipsparseZcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8111,7 +8158,7 @@ def hipsparseScsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
     that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8131,7 +8178,7 @@ def hipsparseDcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8151,7 +8198,7 @@ def hipsparseCcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8171,7 +8218,7 @@ def hipsparseZcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8201,7 +8248,7 @@ def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, obj
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8223,7 +8270,7 @@ def hipsparseDcsric02_analysis(object handle, int m, int nnz, object descrA, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8245,7 +8292,7 @@ def hipsparseCcsric02_analysis(object handle, int m, int nnz, object descrA, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8267,7 +8314,7 @@ def hipsparseZcsric02_analysis(object handle, int m, int nnz, object descrA, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8305,7 +8352,7 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8327,7 +8374,7 @@ def hipsparseDcsric02(object handle, int m, int nnz, object descrA, object csrSo
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8349,7 +8396,7 @@ def hipsparseCcsric02(object handle, int m, int nnz, object descrA, object csrSo
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8371,7 +8418,7 @@ def hipsparseZcsric02(object handle, int m, int nnz, object descrA, object csrSo
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8397,7 +8444,7 @@ def hipsparseSgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
     allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8416,7 +8463,7 @@ def hipsparseDgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8435,7 +8482,7 @@ def hipsparseCgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8454,7 +8501,7 @@ def hipsparseZgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8479,7 +8526,7 @@ def hipsparseSgtsv2(object handle, int m, int n, object dl, object d, object du,
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8498,7 +8545,7 @@ def hipsparseDgtsv2(object handle, int m, int n, object dl, object d, object du,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8517,7 +8564,7 @@ def hipsparseCgtsv2(object handle, int m, int n, object dl, object d, object du,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8536,7 +8583,7 @@ def hipsparseZgtsv2(object handle, int m, int n, object dl, object d, object du,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8559,7 +8606,7 @@ def hipsparseSgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
     must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8578,7 +8625,7 @@ def hipsparseDgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8597,7 +8644,7 @@ def hipsparseCgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8616,7 +8663,7 @@ def hipsparseZgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8641,7 +8688,7 @@ def hipsparseSgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8660,7 +8707,7 @@ def hipsparseDgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8679,7 +8726,7 @@ def hipsparseCgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8698,7 +8745,7 @@ def hipsparseZgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8721,7 +8768,7 @@ def hipsparseSgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
     must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8740,7 +8787,7 @@ def hipsparseDgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8759,7 +8806,7 @@ def hipsparseCgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8778,7 +8825,7 @@ def hipsparseZgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8803,7 +8850,7 @@ def hipsparseSgtsv2StridedBatch(object handle, int m, object dl, object d, objec
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8822,7 +8869,7 @@ def hipsparseDgtsv2StridedBatch(object handle, int m, object dl, object d, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8841,7 +8888,7 @@ def hipsparseCgtsv2StridedBatch(object handle, int m, object dl, object d, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8860,7 +8907,7 @@ def hipsparseZgtsv2StridedBatch(object handle, int m, object dl, object d, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8883,7 +8930,7 @@ def hipsparseSgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8902,7 +8949,7 @@ def hipsparseDgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8921,7 +8968,7 @@ def hipsparseCgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8940,7 +8987,7 @@ def hipsparseZgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8965,7 +9012,7 @@ def hipsparseSgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -8984,7 +9031,7 @@ def hipsparseDgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9003,7 +9050,7 @@ def hipsparseCgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9022,7 +9069,7 @@ def hipsparseZgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9045,7 +9092,7 @@ def hipsparseSgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9066,7 +9113,7 @@ def hipsparseDgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9087,7 +9134,7 @@ def hipsparseCgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9108,7 +9155,7 @@ def hipsparseZgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9135,7 +9182,7 @@ def hipsparseSgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9156,7 +9203,7 @@ def hipsparseDgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9177,7 +9224,7 @@ def hipsparseCgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9198,7 +9245,7 @@ def hipsparseZgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9222,7 +9269,7 @@ def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, objec
     The routine does support asynchronous execution if the pointer mode is set to device.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9242,7 +9289,7 @@ def hipsparseDnnz(object handle, object dirA, int m, int n, object descrA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9262,7 +9309,7 @@ def hipsparseCnnz(object handle, object dirA, int m, int n, object descrA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9282,7 +9329,7 @@ def hipsparseZnnz(object handle, object dirA, int m, int n, object descrA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9306,7 +9353,7 @@ def hipsparseSdense2csr(object handle, int m, int n, object descr, object A, int
     application on the host before the entire result is ready.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9326,7 +9373,7 @@ def hipsparseDdense2csr(object handle, int m, int n, object descr, object A, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9346,7 +9393,7 @@ def hipsparseCdense2csr(object handle, int m, int n, object descr, object A, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9366,7 +9413,7 @@ def hipsparseZdense2csr(object handle, int m, int n, object descr, object A, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9391,7 +9438,7 @@ def hipsparseSpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9412,7 +9459,7 @@ def hipsparseDpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9433,7 +9480,7 @@ def hipsparseSpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9454,7 +9501,7 @@ def hipsparseDpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9479,7 +9526,7 @@ def hipsparseSpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
     The routine does support asynchronous execution if the pointer mode is set to device.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9499,7 +9546,7 @@ def hipsparseDpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9532,7 +9579,7 @@ def hipsparseSpruneDense2csr(object handle, int m, int n, object A, int lda, obj
     application on the host before the entire result is ready.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9553,7 +9600,7 @@ def hipsparseDpruneDense2csr(object handle, int m, int n, object A, int lda, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9594,7 +9641,7 @@ def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
        threshold = sorted_A[pos]
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9615,7 +9662,7 @@ def hipsparseDpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9656,7 +9703,7 @@ def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
        threshold = sorted_A[pos]
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9677,7 +9724,7 @@ def hipsparseDpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9719,7 +9766,7 @@ def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
        threshold = sorted_A[pos]
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9739,7 +9786,7 @@ def hipsparseDpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9780,7 +9827,7 @@ def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, 
        threshold = sorted_A[pos]
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9801,7 +9848,7 @@ def hipsparseDpruneDense2csrByPercentage(object handle, int m, int n, object A, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9826,7 +9873,7 @@ def hipsparseSdense2csc(object handle, int m, int n, object descr, object A, int
     It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9846,7 +9893,7 @@ def hipsparseDdense2csc(object handle, int m, int n, object descr, object A, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9866,7 +9913,7 @@ def hipsparseCdense2csc(object handle, int m, int n, object descr, object A, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9886,7 +9933,7 @@ def hipsparseZdense2csc(object handle, int m, int n, object descr, object A, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9907,7 +9954,7 @@ def hipsparseScsr2dense(object handle, int m, int n, object descr, object csr_va
     It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9926,7 +9973,7 @@ def hipsparseDcsr2dense(object handle, int m, int n, object descr, object csr_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9945,7 +9992,7 @@ def hipsparseCcsr2dense(object handle, int m, int n, object descr, object csr_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9964,7 +10011,7 @@ def hipsparseZcsr2dense(object handle, int m, int n, object descr, object csr_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -9984,7 +10031,7 @@ def hipsparseScsc2dense(object handle, int m, int n, object descr, object csc_va
     It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10003,7 +10050,7 @@ def hipsparseDcsc2dense(object handle, int m, int n, object descr, object csc_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10022,7 +10069,7 @@ def hipsparseCcsc2dense(object handle, int m, int n, object descr, object csc_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10041,7 +10088,7 @@ def hipsparseZcsc2dense(object handle, int m, int n, object descr, object csc_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10063,7 +10110,7 @@ def hipsparseXcsr2bsrNnz(object handle, object dirA, int m, int n, object descrA
     The routine does support asynchronous execution if the pointer mode is set to device.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10089,7 +10136,7 @@ def hipsparseSnnz_compress(object handle, int m, object descrA, object csrValA, 
     of remaining elements in the matrix.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10108,7 +10155,7 @@ def hipsparseDnnz_compress(object handle, int m, object descrA, object csrValA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10127,7 +10174,7 @@ def hipsparseCnnz_compress(object handle, int m, object descrA, object csrValA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10147,7 +10194,7 @@ def hipsparseZnnz_compress(object handle, int m, object descrA, object csrValA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10178,7 +10225,7 @@ def hipsparseXcsr2coo(object handle, object csrRowPtr, int nnz, int m, object co
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10208,7 +10255,7 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10232,7 +10279,7 @@ def hipsparseDcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10256,7 +10303,7 @@ def hipsparseCcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10280,7 +10327,7 @@ def hipsparseZcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10331,7 +10378,7 @@ def hipsparseCsr2cscEx2_bufferSize(object handle, int m, int n, int nnz, object 
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10372,7 +10419,7 @@ def hipsparseCsr2cscEx2(object handle, int m, int n, int nnz, object csrVal, obj
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10412,7 +10459,7 @@ def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSort
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10433,7 +10480,7 @@ def hipsparseDcsr2hyb(object handle, int m, int n, object descrA, object csrSort
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10454,7 +10501,7 @@ def hipsparseCcsr2hyb(object handle, int m, int n, object descrA, object csrSort
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10475,7 +10522,7 @@ def hipsparseZcsr2hyb(object handle, int m, int n, object descrA, object csrSort
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10500,7 +10547,7 @@ def hipsparseSgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
     The temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10518,7 +10565,7 @@ def hipsparseDgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10536,7 +10583,7 @@ def hipsparseCgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10554,7 +10601,7 @@ def hipsparseZgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10587,7 +10634,7 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10612,7 +10659,7 @@ def hipsparseDgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10637,7 +10684,7 @@ def hipsparseCgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10662,7 +10709,7 @@ def hipsparseZgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10696,7 +10743,7 @@ def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     The routine does support asynchronous execution if the pointer mode is set to device.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10717,7 +10764,7 @@ def hipsparseDcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10738,7 +10785,7 @@ def hipsparseCcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10759,7 +10806,7 @@ def hipsparseZcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10781,7 +10828,7 @@ def hipsparseXcsr2gebsrNnz(object handle, object dir, int m, int n, object csr_d
     GEneral BSR matrix given a sparse CSR matrix as input.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10810,7 +10857,7 @@ def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     ``csr2gebsr_nnz()`` which also fills in ``bsr_row_ptr.``
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10835,7 +10882,7 @@ def hipsparseDcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10860,7 +10907,7 @@ def hipsparseCcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10885,7 +10932,7 @@ def hipsparseZcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10919,7 +10966,7 @@ def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     ``block_dim>16``
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10943,7 +10990,7 @@ def hipsparseDcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10967,7 +11014,7 @@ def hipsparseCcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -10991,7 +11038,7 @@ def hipsparseZcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11025,7 +11072,7 @@ def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11049,7 +11096,7 @@ def hipsparseDbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11073,7 +11120,7 @@ def hipsparseCbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11097,7 +11144,7 @@ def hipsparseZbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11131,7 +11178,7 @@ def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descr
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11155,7 +11202,7 @@ def hipsparseDgebsr2csr(object handle, object dirA, int mb, int nb, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11179,7 +11226,7 @@ def hipsparseCgebsr2csr(object handle, object dirA, int mb, int nb, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11203,7 +11250,7 @@ def hipsparseZgebsr2csr(object handle, object dirA, int mb, int nb, object descr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11233,7 +11280,7 @@ def hipsparseScsr2csr_compress(object handle, int m, int n, object descrA, objec
         In the case of complex matrices only the magnitude of the real part of ``tol`` is used.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11255,7 +11302,7 @@ def hipsparseDcsr2csr_compress(object handle, int m, int n, object descrA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11277,7 +11324,7 @@ def hipsparseCcsr2csr_compress(object handle, int m, int n, object descrA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11300,7 +11347,7 @@ def hipsparseZcsr2csr_compress(object handle, int m, int n, object descrA, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11327,7 +11374,7 @@ def hipsparseSpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11351,7 +11398,7 @@ def hipsparseDpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11379,7 +11426,7 @@ def hipsparseSpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
     temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11403,7 +11450,7 @@ def hipsparseDpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11434,7 +11481,7 @@ def hipsparseSpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
         The routine does support asynchronous execution if the pointer mode is set to device.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11457,7 +11504,7 @@ def hipsparseDpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11490,7 +11537,7 @@ def hipsparseSpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
     before the entire result is ready.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11514,7 +11561,7 @@ def hipsparseDpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11542,7 +11589,7 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
     The temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11566,7 +11613,7 @@ def hipsparseDpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11594,7 +11641,7 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
     The temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11618,7 +11665,7 @@ def hipsparseDpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11649,7 +11696,7 @@ def hipsparseSpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
         The routine does support asynchronous execution if the pointer mode is set to device.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11672,7 +11719,7 @@ def hipsparseDpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11705,7 +11752,7 @@ def hipsparseSpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
     before the entire result is ready.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11729,7 +11776,7 @@ def hipsparseDpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11759,7 +11806,7 @@ def hipsparseShyb2csr(object handle, object descrA, object hybA, object csrSorte
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11778,7 +11825,7 @@ def hipsparseDhyb2csr(object handle, object descrA, object hybA, object csrSorte
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11797,7 +11844,7 @@ def hipsparseChyb2csr(object handle, object descrA, object hybA, object csrSorte
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11816,7 +11863,7 @@ def hipsparseZhyb2csr(object handle, object descrA, object hybA, object csrSorte
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11848,7 +11895,7 @@ def hipsparseXcoo2csr(object handle, object cooRowInd, int nnz, int m, object cs
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11880,7 +11927,7 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11899,7 +11946,7 @@ def hipsparseXcsrsort_bufferSizeExt(object handle, int m, int n, int nnz, object
     the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11930,7 +11977,7 @@ def hipsparseXcsrsort(object handle, int m, int n, int nnz, object descrA, objec
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11953,7 +12000,7 @@ def hipsparseXcscsort_bufferSizeExt(object handle, int m, int n, int nnz, object
     the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -11984,7 +12031,7 @@ def hipsparseXcscsort(object handle, int m, int n, int nnz, object descrA, objec
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12007,7 +12054,7 @@ def hipsparseXcoosort_bufferSizeExt(object handle, int m, int n, int nnz, object
     the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12040,7 +12087,7 @@ def hipsparseXcoosortByRow(object handle, int m, int n, int nnz, object cooRows,
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12074,7 +12121,7 @@ def hipsparseXcoosortByColumn(object handle, int m, int n, int nnz, object cooRo
         It may return before the actual computation has finished.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12097,7 +12144,7 @@ def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     The temporary storage buffer must be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12118,7 +12165,7 @@ def hipsparseDgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12139,7 +12186,7 @@ def hipsparseCgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12160,7 +12207,7 @@ def hipsparseZgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12185,7 +12232,7 @@ def hipsparseXgebsr2gebsrNnz(object handle, object dirA, int mb, int nb, int nnz
     The routine does support asynchronous execution.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12216,7 +12263,7 @@ def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     hipsparseXgebsr2gebsr() to complete the conversion.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12241,7 +12288,7 @@ def hipsparseDgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12266,7 +12313,7 @@ def hipsparseCgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12291,7 +12338,7 @@ def hipsparseZgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12317,7 +12364,7 @@ def hipsparseScsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
     hipsparseXcsru2csr() and hipsparseXcsr2csru().
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12336,7 +12383,7 @@ def hipsparseDcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12355,7 +12402,7 @@ def hipsparseCcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12374,7 +12421,7 @@ def hipsparseZcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12394,7 +12441,7 @@ def hipsparseScsru2csr(object handle, int m, int n, int nnz, object descrA, obje
     temporary storage has to be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12414,7 +12461,7 @@ def hipsparseDcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12434,7 +12481,7 @@ def hipsparseCcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12454,7 +12501,7 @@ def hipsparseZcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12475,7 +12522,7 @@ def hipsparseScsr2csru(object handle, int m, int n, int nnz, object descrA, obje
     temporary storage has to be allocated by the user.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12495,7 +12542,7 @@ def hipsparseDcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12515,7 +12562,7 @@ def hipsparseCcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12535,7 +12582,7 @@ def hipsparseZcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12557,7 +12604,7 @@ def hipsparseScsrcolor(object handle, int m, int nnz, object descrA, object csrV
     ``hipsparseXcsrcolor`` performs the coloring of the undirected graph represented by the (symmetric) sparsity pattern of the matrix :math:`A` stored in CSR format. Graph coloring is a way of coloring the nodes of a graph such that no two adjacent nodes are of the same color. The ``fraction_to_color`` is a parameter to only color a given percentage of the graph nodes, the remaining uncolored nodes receive distinct new colors. The optional ``reordering`` array is a permutation array such that unknowns of the same color are grouped. The matrix :math:`A` must be stored as a general matrix with a symmetric sparsity pattern, and if the matrix :math:`A` is non-symmetric then the user is responsible to provide the symmetric part :math:`\frac{A+A^T}{2}`.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12580,7 +12627,7 @@ def hipsparseDcsrcolor(object handle, int m, int nnz, object descrA, object csrV
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12603,7 +12650,7 @@ def hipsparseCcsrcolor(object handle, int m, int nnz, object descrA, object csrV
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12626,7 +12673,7 @@ def hipsparseZcsrcolor(object handle, int m, int nnz, object descrA, object csrV
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -12672,8 +12719,8 @@ cdef class hipsparseSpGEMMDescr:
         returns it directly. No new ``hipsparseSpGEMMDescr`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``hipsparseSpGEMMDescr``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `hipsparseSpGEMMDescr`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -12770,8 +12817,8 @@ cdef class hipsparseSpSVDescr:
         returns it directly. No new ``hipsparseSpSVDescr`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``hipsparseSpSVDescr``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `hipsparseSpSVDescr`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -12868,8 +12915,8 @@ cdef class hipsparseSpSMDescr:
         returns it directly. No new ``hipsparseSpSMDescr`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``hipsparseSpSMDescr``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `hipsparseSpSMDescr`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -13119,7 +13166,7 @@ def hipsparseCreateSpVec(object spVecDescr, long size, long nnz, object indices,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13141,7 +13188,7 @@ def hipsparseDestroySpVec(object spVecDescr):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13155,7 +13202,7 @@ def hipsparseSpVecGet(object spVecDescr, object size, object nnz, object indices
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13176,7 +13223,7 @@ def hipsparseSpVecGetIndexBase(object spVecDescr, object idxBase):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13191,7 +13238,7 @@ def hipsparseSpVecGetValues(object spVecDescr, object values):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13206,7 +13253,7 @@ def hipsparseSpVecSetValues(object spVecDescr, object values):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13221,7 +13268,7 @@ def hipsparseCreateCoo(object spMatDescr, long rows, long cols, long nnz, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13244,7 +13291,7 @@ def hipsparseCreateCooAoS(object spMatDescr, long rows, long cols, long nnz, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13266,7 +13313,7 @@ def hipsparseCreateCsr(object spMatDescr, long rows, long cols, long nnz, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13291,7 +13338,7 @@ def hipsparseCreateCsc(object spMatDescr, long rows, long cols, long nnz, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13316,7 +13363,7 @@ def hipsparseCreateBlockedEll(object spMatDescr, long rows, long cols, long ellB
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13338,7 +13385,7 @@ def hipsparseDestroySpMat(object spMatDescr):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13352,7 +13399,7 @@ def hipsparseCooGet(object spMatDescr, object rows, object cols, object nnz, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13375,7 +13422,7 @@ def hipsparseCooAoSGet(object spMatDescr, object rows, object cols, object nnz, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13397,7 +13444,7 @@ def hipsparseCsrGet(object spMatDescr, object rows, object cols, object nnz, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13421,7 +13468,7 @@ def hipsparseBlockedEllGet(object spMatDescr, object rows, object cols, object e
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13444,7 +13491,7 @@ def hipsparseCsrSetPointers(object spMatDescr, object csrRowOffsets, object csrC
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13461,7 +13508,7 @@ def hipsparseCscSetPointers(object spMatDescr, object cscColOffsets, object cscR
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13478,7 +13525,7 @@ def hipsparseCooSetPointers(object spMatDescr, object cooRowInd, object cooColIn
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13495,7 +13542,7 @@ def hipsparseSpMatGetSize(object spMatDescr, object rows, object cols, object nn
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13512,7 +13559,7 @@ def hipsparseSpMatGetFormat(object spMatDescr, object format):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13527,7 +13574,7 @@ def hipsparseSpMatGetIndexBase(object spMatDescr, object idxBase):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13542,7 +13589,7 @@ def hipsparseSpMatGetValues(object spMatDescr, object values):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13557,7 +13604,7 @@ def hipsparseSpMatSetValues(object spMatDescr, object values):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13572,7 +13619,7 @@ def hipsparseSpMatGetStridedBatch(object spMatDescr, object batchCount):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13587,7 +13634,7 @@ def hipsparseSpMatSetStridedBatch(object spMatDescr, int batchCount):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13601,7 +13648,7 @@ def hipsparseCooSetStridedBatch(object spMatDescr, int batchCount, long batchStr
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13615,7 +13662,7 @@ def hipsparseCsrSetStridedBatch(object spMatDescr, int batchCount, long offsetsB
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13629,7 +13676,7 @@ def hipsparseSpMatGetAttribute(object spMatDescr, object attribute, object data,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13646,7 +13693,7 @@ def hipsparseSpMatSetAttribute(object spMatDescr, object attribute, object data,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13663,7 +13710,7 @@ def hipsparseCreateDnVec(object dnVecDescr, long size, object values, object val
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13680,7 +13727,7 @@ def hipsparseDestroyDnVec(object dnVecDescr):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13694,7 +13741,7 @@ def hipsparseDnVecGet(object dnVecDescr, object size, object values, object valu
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13711,7 +13758,7 @@ def hipsparseDnVecGetValues(object dnVecDescr, object values):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13726,7 +13773,7 @@ def hipsparseDnVecSetValues(object dnVecDescr, object values):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13741,7 +13788,7 @@ def hipsparseCreateDnMat(object dnMatDescr, long rows, long cols, long ld, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13760,7 +13807,7 @@ def hipsparseDestroyDnMat(object dnMatDescr):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13774,7 +13821,7 @@ def hipsparseDnMatGet(object dnMatDescr, object rows, object cols, object ld, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13794,7 +13841,7 @@ def hipsparseDnMatGetValues(object dnMatDescr, object values):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13809,7 +13856,7 @@ def hipsparseDnMatSetValues(object dnMatDescr, object values):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13824,7 +13871,7 @@ def hipsparseDnMatGetStridedBatch(object dnMatDescr, object batchCount, object b
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13840,7 +13887,7 @@ def hipsparseDnMatSetStridedBatch(object dnMatDescr, int batchCount, long batchS
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13854,7 +13901,7 @@ def hipsparseAxpby(object handle, object alpha, object vecX, object beta, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13872,7 +13919,7 @@ def hipsparseGather(object handle, object vecY, object vecX):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13888,7 +13935,7 @@ def hipsparseScatter(object handle, object vecX, object vecY):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13904,7 +13951,7 @@ def hipsparseRot(object handle, object c_coeff, object s_coeff, object vecX, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13922,7 +13969,7 @@ def hipsparseSparseToDense_bufferSize(object handle, object matA, object matB, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13941,7 +13988,7 @@ def hipsparseSparseToDense(object handle, object matA, object matB, object alg, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13960,7 +14007,7 @@ def hipsparseDenseToSparse_bufferSize(object handle, object matA, object matB, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13979,7 +14026,7 @@ def hipsparseDenseToSparse_analysis(object handle, object matA, object matB, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -13998,7 +14045,7 @@ def hipsparseDenseToSparse_convert(object handle, object matA, object matB, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14017,7 +14064,7 @@ def hipsparseSpVV_bufferSize(object handle, object opX, object vecX, object vecY
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14039,7 +14086,7 @@ def hipsparseSpVV(object handle, object opX, object vecX, object vecY, object re
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14061,7 +14108,7 @@ def hipsparseSpMV_bufferSize(object handle, object opA, object alpha, object mat
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14087,7 +14134,7 @@ def hipsparseSpMV_preprocess(object handle, object opA, object alpha, object mat
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14113,7 +14160,7 @@ def hipsparseSpMV(object handle, object opA, object alpha, object matA, object v
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14139,7 +14186,7 @@ def hipsparseSpMM_bufferSize(object handle, object opA, object opB, object alpha
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14167,7 +14214,7 @@ def hipsparseSpMM_preprocess(object handle, object opA, object opB, object alpha
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14195,7 +14242,7 @@ def hipsparseSpMM(object handle, object opA, object opB, object alpha, object ma
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14223,7 +14270,7 @@ def hipsparseSpGEMM_createDescr():
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14237,7 +14284,7 @@ def hipsparseSpGEMM_destroyDescr(object descr):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14251,7 +14298,7 @@ def hipsparseSpGEMM_workEstimation(object handle, object opA, object opB, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14281,7 +14328,7 @@ def hipsparseSpGEMM_compute(object handle, object opA, object opB, object alpha,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14311,7 +14358,7 @@ def hipsparseSpGEMM_copy(object handle, object opA, object opB, object alpha, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14339,7 +14386,7 @@ def hipsparseSpGEMMreuse_workEstimation(object handle, object opA, object opB, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14365,7 +14412,7 @@ def hipsparseSpGEMMreuse_nnz(object handle, object opA, object opB, object matA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14395,7 +14442,7 @@ def hipsparseSpGEMMreuse_compute(object handle, object opA, object opB, object a
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14423,7 +14470,7 @@ def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14449,7 +14496,7 @@ def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14477,7 +14524,7 @@ def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alph
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14505,7 +14552,7 @@ def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alph
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14533,7 +14580,7 @@ def hipsparseSpSV_createDescr():
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14547,7 +14594,7 @@ def hipsparseSpSV_destroyDescr(object descr):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14561,7 +14608,7 @@ def hipsparseSpSV_bufferSize(object handle, object opA, object alpha, object mat
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14587,7 +14634,7 @@ def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14613,7 +14660,7 @@ def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14639,7 +14686,7 @@ def hipsparseSpSM_createDescr():
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14653,7 +14700,7 @@ def hipsparseSpSM_destroyDescr(object descr):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14667,7 +14714,7 @@ def hipsparseSpSM_bufferSize(object handle, object opA, object opB, object alpha
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14695,7 +14742,7 @@ def hipsparseSpSM_analysis(object handle, object opA, object opB, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """
@@ -14723,7 +14770,7 @@ def hipsparseSpSM_solve(object handle, object opA, object opB, object alpha, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipsparseStatus_t`
     """

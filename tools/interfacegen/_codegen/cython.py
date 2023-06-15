@@ -164,6 +164,11 @@ ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 
 default_python_interface_impl_preamble = """\
 # AMD_COPYRIGHT
+
+\"""
+[ATTRIBUTES]
+\"""
+
 import cython
 import ctypes
 import enum
@@ -514,6 +519,14 @@ class MacroDefinitionMixin(CythonMixin):
 
         assert isinstance(self, tree.MacroDefinition)
         name = self.renamer(self.name)
+        self.docstring_attributes.append(
+                textwrap.dedent(
+                        f"""\
+                        {name} ({CYTHON_AUTOCONV_TO_PYTHON_TYPES(self.macro_type(self))}):
+                            Macro constant.
+                        """
+                )
+            )
         return f"{name} = {cprefix}{name}"
 
 
@@ -856,6 +869,16 @@ class EnumMixin(CythonMixin):
         global python_interface_int_enum_base_class
 
         if self.is_anonymous:
+            for child_cursor in self.cursor.get_children():
+                name = self.renamer(child_cursor.spelling)
+                self.docstring_attributes.append(
+                        textwrap.dedent(
+                                f"""\
+                                {name}:
+                                    Enum constant.
+                                """
+                        )
+                    )
             return "\n".join(self._render_python_enums(cprefix))
         else:
             name = self.cython_global_name
@@ -919,7 +942,16 @@ class TypedefMixin(CythonMixin, Typed):
         assert isinstance(self, tree.Typedef)
         name = self.cython_global_name
         if self.is_pointer_to_record(degree=(0,-1)) or self.is_pointer_to_enum(degree=(0,-1)):
-            return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
+            aliased = self.renamer(self.typeref.global_name(self.sep))
+            self.docstring_attributes.append(
+                textwrap.dedent(
+                        f"""\
+                        {name}:
+                            alias of {self.to_sphinx_pyobj(aliased)}
+                        """
+                )
+            )
+            return f"{name} = {aliased}"
         return None
 
 
@@ -1278,7 +1310,7 @@ cdef void* {funptr_name} = NULL
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"
             if len(docstring_returns) > 1 or python_interface_always_return_tuple:
-                docstring_body += f"{single_level_indent}A `tuple` of size {len(docstring_returns)} that contains (in that order):\n\n"
+                docstring_body += f"{single_level_indent}A {self.to_sphinx_pyobj('tuple')} of size {len(docstring_returns)} that contains (in that order):\n\n"
                 prefix = "* "
             else:
                 prefix = ""
@@ -1780,11 +1812,13 @@ class CythonBackend:
 
         result = []
         cprefix = f"{cmodule}."
+        docstring_attributes = []
         for node in self.walk_filtered_nodes():
+            setattr(node,"docstring_attributes",docstring_attributes)
             contrib = node.render_python_interface_impl(cprefix=cprefix)
             if contrib != None:
                 result.append(contrib)
-        return result
+        return result, docstring_attributes
 
     def render_python_interface_decl_part(self, cython_c_bindings_module: str):
         """Returns the Python interface file content for the given headers."""
@@ -1795,10 +1829,10 @@ class CythonBackend:
 
     def render_python_interface_impl_part(self, cython_c_bindings_module: str):
         """Returns the Python interface file content for the given headers."""
-        result = self.create_python_interface_impl_part(cython_c_bindings_module)
+        result, docstring_attributes = self.create_python_interface_impl_part(cython_c_bindings_module)
         nl = "\n\n"
-        return f"""\
-{nl.join(result)}"""
+        return ( f"""\
+{nl.join(result)}""", docstring_attributes )
 
 
 class CythonPackageGenerator:
@@ -1921,7 +1955,8 @@ class CythonPackageGenerator:
             )
 
         with open(f"{output_dir}/{self.pkg_name}.pyx", "w") as outfile:
-            outfile.write(self.python_interface_impl_preamble)
-            outfile.write(
-                self.backend.render_python_interface_impl_part(f"c{self.pkg_name}")
-            )
+            content, docstring_attributes = self.backend.render_python_interface_impl_part(f"c{self.pkg_name}")
+            if len(docstring_attributes):
+                DOCSTRING_ATTRIBS = "Attributes:\n" + textwrap.indent("\n".join(docstring_attributes)," "*4)
+            outfile.write(self.python_interface_impl_preamble.replace("[ATTRIBUTES]",DOCSTRING_ATTRIBS))
+            outfile.write(content)

@@ -33,9 +33,9 @@ class hip:
         "HIP_VERSION_MAJOR",
         "HIP_VERSION_MINOR",
         "HIP_VERSION_PATCH",
-        # "HIP_VERSION_GITHASH", # no int, is char*
+        # "HIP_VERSION_GITHASH", # no int, is char *
         "HIP_VERSION_BUILD_ID",
-        # "HIP_VERSION_BUILD_NAME", # is char*
+        # "HIP_VERSION_BUILD_NAME", # is char *
         "HIP_VERSION",
         # from hip/hip_texture_types.h
         "hipTextureType1D",
@@ -133,9 +133,9 @@ class hip:
         if node.name in hip.int_macros:
             return "int"
         if node.name in hip.void_p_macros:
-            return "unsigned long int"
+            return "unsigned long"
         if node.name in hip.str_macros:
-            return "char*"
+            return "char *"
         assert False, "Not implemented!"
 
     @staticmethod
@@ -150,7 +150,7 @@ class hip:
         work with typed arrays, so every pointer
         of basic type is actually a return value
         that is created internally by the function.
-        Exceptions are ``char*`` parameters, which
+        Exceptions are ``char *`` parameters, which
         are C-style strings.
 
         2. All ``void``, ``struct``, ``union``, ``enum`` double (``**``) pointers are
@@ -368,7 +368,7 @@ class rccl:
     def macro_type(node: MacroDefinition):
         rccl_str_macros = "NCCL_SUFFIX"
         if node.name in rccl_str_macros:
-            return "char*"
+            return "char *"
         return "int"
 
     @staticmethod

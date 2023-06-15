@@ -1,4 +1,42 @@
 # AMD_COPYRIGHT
+
+"""
+Attributes:
+    HIPRAND_VERSION (int):
+        Macro constant.
+
+    HIPRAND_DEFAULT_MAX_BLOCK_SIZE (int):
+        Macro constant.
+
+    HIPRAND_DEFAULT_MIN_WARPS_PER_EU (int):
+        Macro constant.
+
+    rocrand_discrete_distribution:
+        alias of `~.rocrand_discrete_distribution_st`
+
+    rocrand_generator:
+        alias of `~.rocrand_generator_base_type`
+
+    hiprandGenerator_st:
+        alias of `~.rocrand_generator_base_type`
+
+    hiprandDiscreteDistribution_st:
+        alias of `~.rocrand_discrete_distribution_st`
+
+    hiprandGenerator_t:
+        alias of `~.rocrand_generator_base_type`
+
+    hiprandDiscreteDistribution_t:
+        alias of `~.rocrand_discrete_distribution_st`
+
+    hiprandStatus_t:
+        alias of `~.hiprandStatus`
+
+    hiprandRngType_t:
+        alias of `~.hiprandRngType`
+
+"""
+
 import cython
 import ctypes
 import enum
@@ -22,7 +60,7 @@ cdef class uint4:
         given ``chiprand.uint4`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -40,8 +78,8 @@ cdef class uint4:
         returns it directly. No new ``uint4`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``uint4``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `uint4`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -228,7 +266,7 @@ cdef class rocrand_discrete_distribution_st:
         given ``chiprand.rocrand_discrete_distribution_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -246,8 +284,8 @@ cdef class rocrand_discrete_distribution_st:
         returns it directly. No new ``rocrand_discrete_distribution_st`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``rocrand_discrete_distribution_st``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `rocrand_discrete_distribution_st`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -492,8 +530,8 @@ cdef class rocrand_generator_base_type:
         returns it directly. No new ``rocrand_generator_base_type`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``rocrand_generator_base_type``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `rocrand_generator_base_type`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -691,7 +729,7 @@ def hiprandCreateGenerator(object rng_type):
         rng_type (`~.hiprandRngType`):  Type of random number generator to create
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
@@ -739,7 +777,7 @@ def hiprandCreateGeneratorHost(object rng_type):
         rng_type (`~.hiprandRngType`):  Type of random number generator to create
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
@@ -770,7 +808,7 @@ def hiprandDestroyGenerator(object generator):
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to be destroyed
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -799,7 +837,7 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
         n (`~.int`):  Number of 32-bit unsigned integers to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -831,7 +869,7 @@ def hiprandGenerateChar(object generator, object output_data, unsigned long n):
         n (`~.int`):  Number of 8-bit unsigned integers to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -863,7 +901,7 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
         n (`~.int`):  Number of 16-bit unsigned integers to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -895,7 +933,7 @@ def hiprandGenerateUniform(object generator, object output_data, unsigned long n
         n (`~.int`):  Number of floats to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -935,7 +973,7 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
         n (`~.int`):  Number of floats to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -970,7 +1008,7 @@ def hiprandGenerateUniformHalf(object generator, object output_data, unsigned lo
         n (`~.int`):  Number of halfs to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1006,7 +1044,7 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
         stddev (`~.float`/`~.int`):  Standard deviation value of normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1043,7 +1081,7 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
         stddev (`~.float`/`~.int`):  Standard deviation value of normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1080,7 +1118,7 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
         stddev (`~.int`):  Standard deviation value of normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1117,7 +1155,7 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
         stddev (`~.float`/`~.int`):  Standard deviation value of log normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1154,7 +1192,7 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
         stddev (`~.float`/`~.int`):  Standard deviation value of log normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1191,7 +1229,7 @@ def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned 
         stddev (`~.int`):  Standard deviation value of log normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1226,7 +1264,7 @@ def hiprandGeneratePoisson(object generator, object output_data, unsigned long n
         lambda (`~.float`/`~.int`):  lambda for the Poisson distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1259,7 +1297,7 @@ def hiprandGenerateSeeds(object generator):
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to initialize
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created 
 
@@ -1288,7 +1326,7 @@ def hiprandSetStream(object generator, object stream):
         stream (`~.ihipStream_t`/`~.object`):  Stream to use or NULL for default stream
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1315,7 +1353,7 @@ def hiprandSetPseudoRandomGeneratorSeed(object generator, unsigned long long see
         seed (`~.int`):  New seed value
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1346,7 +1384,7 @@ def hiprandSetGeneratorOffset(object generator, unsigned long long offset):
         offset (`~.int`):  New absolute offset
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
@@ -1376,7 +1414,7 @@ def hiprandSetQuasiRandomGeneratorDimensions(object generator, unsigned int dime
         dimensions (`~.int`):  Number of dimensions
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_NOT_CREATED if the generator wasn't created 
 
@@ -1399,7 +1437,7 @@ def hiprandGetVersion():
     rocRAND library.
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_OUT_OF_RANGE if ``version`` is NULL 
 
@@ -1421,7 +1459,7 @@ def hiprandCreatePoissonDistribution(double lambda_):
         lambda (`~.float`/`~.int`):  lambda for the Poisson distribution
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated 
 
@@ -1448,7 +1486,7 @@ def hiprandDestroyDistribution(object discrete_distribution):
         discrete_distribution (`~.rocrand_discrete_distribution_st`/`~.object`):  pointer to the histogram in device memory
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hiprandStatus`: HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` was null 
 

@@ -1,4 +1,21 @@
 # AMD_COPYRIGHT
+
+"""
+Attributes:
+    hipblasVersionMajor (int):
+        Macro constant.
+
+    hipblaseVersionMinor (int):
+        Macro constant.
+
+    hipblasVersionMinor (int):
+        Macro constant.
+
+    hipblasVersionPatch (int):
+        Macro constant.
+
+"""
+
 import cython
 import ctypes
 import enum
@@ -24,7 +41,7 @@ cdef class hipblasBfloat16:
         given ``chipblas.hipblasBfloat16`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -42,8 +59,8 @@ cdef class hipblasBfloat16:
         returns it directly. No new ``hipblasBfloat16`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``hipblasBfloat16``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `hipblasBfloat16`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -185,7 +202,7 @@ cdef class hipblasComplex:
         given ``chipblas.hipblasComplex`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -203,8 +220,8 @@ cdef class hipblasComplex:
         returns it directly. No new ``hipblasComplex`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``hipblasComplex``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `hipblasComplex`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -361,7 +378,7 @@ cdef class hipblasDoubleComplex:
         given ``chipblas.hipblasDoubleComplex`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -379,8 +396,8 @@ cdef class hipblasDoubleComplex:
         returns it directly. No new ``hipblasDoubleComplex`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``hipblasDoubleComplex``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `hipblasDoubleComplex`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -685,7 +702,7 @@ def hipblasCreate():
     r"""Create hipblas handle. */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -700,7 +717,7 @@ def hipblasDestroy(object handle):
     r"""Destroys the library context created using hipblasCreate() */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -714,7 +731,7 @@ def hipblasSetStream(object handle, object streamId):
     r"""Set stream for handle */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -729,7 +746,7 @@ def hipblasGetStream(object handle, object streamId):
     r"""Get stream[0] for handle */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -744,7 +761,7 @@ def hipblasSetPointerMode(object handle, object mode):
     r"""Set hipblas pointer mode */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -760,7 +777,7 @@ def hipblasGetPointerMode(object handle, object mode):
     r"""Get hipblas pointer mode */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -775,7 +792,7 @@ def hipblasSetInt8Datatype(object handle, object int8Type):
     r"""Set hipblas int8 Datatype */
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -791,7 +808,7 @@ def hipblasGetInt8Datatype(object handle, object int8Type):
     r"""Get hipblas int8 Datatype*/
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -823,7 +840,7 @@ def hipblasSetVector(int n, int elemSize, object x, int incx, object y, int incy
             specifies the increment for the elements of the vector
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -855,7 +872,7 @@ def hipblasGetVector(int n, int elemSize, object x, int incx, object y, int incy
             specifies the increment for the elements of the vector
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -890,7 +907,7 @@ def hipblasSetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
             specifies the leading dimension of B, ldb >= rows
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -925,7 +942,7 @@ def hipblasGetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
             specifies the leading dimension of B, ldb >= rows
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -962,7 +979,7 @@ def hipblasSetVectorAsync(int n, int elemSize, object x, int incx, object y, int
         stream (`~.ihipStream_t`/`~.object`): **[in]** specifies the stream into which this transfer request is queued
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1000,7 +1017,7 @@ def hipblasGetVectorAsync(int n, int elemSize, object x, int incx, object y, int
         stream (`~.ihipStream_t`/`~.object`): **[in]** specifies the stream into which this transfer request is queued
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1041,7 +1058,7 @@ def hipblasSetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
         stream (`~.ihipStream_t`/`~.object`): **[in]** specifies the stream into which this transfer request is queued
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1082,7 +1099,7 @@ def hipblasGetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
         stream (`~.ihipStream_t`/`~.object`): **[in]** specifies the stream into which this transfer request is queued
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1098,7 +1115,7 @@ def hipblasSetAtomicsMode(object handle, object atomics_mode):
     r"""Set hipblasSetAtomicsMode*/
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1114,7 +1131,7 @@ def hipblasGetAtomicsMode(object handle, object atomics_mode):
     r"""Get hipblasSetAtomicsMode*/
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1149,7 +1166,7 @@ def hipblasIsamax(object handle, int n, object x, int incx, object result):
             return is 0.0 if n, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1165,7 +1182,7 @@ def hipblasIdamax(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1181,7 +1198,7 @@ def hipblasIcamax(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1197,7 +1214,7 @@ def hipblasIzamax(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1236,7 +1253,7 @@ def hipblasIsamaxBatched(object handle, int n, object x, int incx, int batchCoun
             return is 0 if n, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1252,7 +1269,7 @@ def hipblasIdamaxBatched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1268,7 +1285,7 @@ def hipblasIcamaxBatched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1284,7 +1301,7 @@ def hipblasIzamaxBatched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1326,7 +1343,7 @@ def hipblasIsamaxStridedBatched(object handle, int n, object x, int incx, long s
             return is 0 if n <= 0, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1342,7 +1359,7 @@ def hipblasIdamaxStridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1358,7 +1375,7 @@ def hipblasIcamaxStridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1374,7 +1391,7 @@ def hipblasIzamaxStridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1410,7 +1427,7 @@ def hipblasIsamin(object handle, int n, object x, int incx, object result):
             return is 0.0 if n, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1426,7 +1443,7 @@ def hipblasIdamin(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1442,7 +1459,7 @@ def hipblasIcamin(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1458,7 +1475,7 @@ def hipblasIzamin(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1497,7 +1514,7 @@ def hipblasIsaminBatched(object handle, int n, object x, int incx, int batchCoun
             return is 0 if n, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1513,7 +1530,7 @@ def hipblasIdaminBatched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1529,7 +1546,7 @@ def hipblasIcaminBatched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1545,7 +1562,7 @@ def hipblasIzaminBatched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1587,7 +1604,7 @@ def hipblasIsaminStridedBatched(object handle, int n, object x, int incx, long s
             return is 0 if n <= 0, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1603,7 +1620,7 @@ def hipblasIdaminStridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1619,7 +1636,7 @@ def hipblasIcaminStridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1635,7 +1652,7 @@ def hipblasIzaminStridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1672,7 +1689,7 @@ def hipblasSasum(object handle, int n, object x, int incx, object result):
             return is 0.0 if n <= 0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1688,7 +1705,7 @@ def hipblasDasum(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1704,7 +1721,7 @@ def hipblasScasum(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1720,7 +1737,7 @@ def hipblasDzasum(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1761,7 +1778,7 @@ def hipblasSasumBatched(object handle, int n, object x, int incx, int batchCount
             return is 0.0 if n, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1777,7 +1794,7 @@ def hipblasDasumBatched(object handle, int n, object x, int incx, int batchCount
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1793,7 +1810,7 @@ def hipblasScasumBatched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1809,7 +1826,7 @@ def hipblasDzasumBatched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1856,7 +1873,7 @@ def hipblasSasumStridedBatched(object handle, int n, object x, int incx, long st
             return is 0.0 if n, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1872,7 +1889,7 @@ def hipblasDasumStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1888,7 +1905,7 @@ def hipblasScasumStridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1904,7 +1921,7 @@ def hipblasDzasumStridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1946,7 +1963,7 @@ def hipblasHaxpy(object handle, int n, object alpha, object x, int incx, object 
             specifies the increment for the elements of y.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1963,7 +1980,7 @@ def hipblasSaxpy(object handle, int n, object alpha, object x, int incx, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1980,7 +1997,7 @@ def hipblasDaxpy(object handle, int n, object alpha, object x, int incx, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -1997,7 +2014,7 @@ def hipblasCaxpy(object handle, int n, object alpha, object x, int incx, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2014,7 +2031,7 @@ def hipblasZaxpy(object handle, int n, object alpha, object x, int incx, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2058,7 +2075,7 @@ def hipblasHaxpyBatched(object handle, int n, object alpha, object x, int incx, 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2075,7 +2092,7 @@ def hipblasSaxpyBatched(object handle, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2092,7 +2109,7 @@ def hipblasDaxpyBatched(object handle, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2109,7 +2126,7 @@ def hipblasCaxpyBatched(object handle, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2126,7 +2143,7 @@ def hipblasZaxpyBatched(object handle, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2175,7 +2192,7 @@ def hipblasHaxpyStridedBatched(object handle, int n, object alpha, object x, int
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2192,7 +2209,7 @@ def hipblasSaxpyStridedBatched(object handle, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2209,7 +2226,7 @@ def hipblasDaxpyStridedBatched(object handle, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2226,7 +2243,7 @@ def hipblasCaxpyStridedBatched(object handle, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2243,7 +2260,7 @@ def hipblasZaxpyStridedBatched(object handle, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2284,7 +2301,7 @@ def hipblasScopy(object handle, int n, object x, int incx, object y, int incy):
             specifies the increment for the elements of y.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2300,7 +2317,7 @@ def hipblasDcopy(object handle, int n, object x, int incx, object y, int incy):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2316,7 +2333,7 @@ def hipblasCcopy(object handle, int n, object x, int incx, object y, int incy):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2332,7 +2349,7 @@ def hipblasZcopy(object handle, int n, object x, int incx, object y, int incy):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2378,7 +2395,7 @@ def hipblasScopyBatched(object handle, int n, object x, int incx, object y, int 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2394,7 +2411,7 @@ def hipblasDcopyBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2410,7 +2427,7 @@ def hipblasCcopyBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2426,7 +2443,7 @@ def hipblasZcopyBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2484,7 +2501,7 @@ def hipblasScopyStridedBatched(object handle, int n, object x, int incx, long st
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2500,7 +2517,7 @@ def hipblasDcopyStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2516,7 +2533,7 @@ def hipblasCcopyStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2532,7 +2549,7 @@ def hipblasZcopyStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2579,7 +2596,7 @@ def hipblasHdot(object handle, int n, object x, int incx, object y, int incy, ob
             return is 0.0 if n <= 0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2596,7 +2613,7 @@ def hipblasBfdot(object handle, int n, object x, int incx, object y, int incy, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2613,7 +2630,7 @@ def hipblasSdot(object handle, int n, object x, int incx, object y, int incy, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2630,7 +2647,7 @@ def hipblasDdot(object handle, int n, object x, int incx, object y, int incy, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2647,7 +2664,7 @@ def hipblasCdotc(object handle, int n, object x, int incx, object y, int incy, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2664,7 +2681,7 @@ def hipblasCdotu(object handle, int n, object x, int incx, object y, int incy, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2681,7 +2698,7 @@ def hipblasZdotc(object handle, int n, object x, int incx, object y, int incy, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2698,7 +2715,7 @@ def hipblasZdotu(object handle, int n, object x, int incx, object y, int incy, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2752,7 +2769,7 @@ def hipblasHdotBatched(object handle, int n, object x, int incx, object y, int i
             return 0.0 for each element if n <= 0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2769,7 +2786,7 @@ def hipblasBfdotBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2786,7 +2803,7 @@ def hipblasSdotBatched(object handle, int n, object x, int incx, object y, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2803,7 +2820,7 @@ def hipblasDdotBatched(object handle, int n, object x, int incx, object y, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2820,7 +2837,7 @@ def hipblasCdotcBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2837,7 +2854,7 @@ def hipblasCdotuBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2854,7 +2871,7 @@ def hipblasZdotcBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2871,7 +2888,7 @@ def hipblasZdotuBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2931,7 +2948,7 @@ def hipblasHdotStridedBatched(object handle, int n, object x, int incx, long str
             return 0.0 for each element if n <= 0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2948,7 +2965,7 @@ def hipblasBfdotStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2965,7 +2982,7 @@ def hipblasSdotStridedBatched(object handle, int n, object x, int incx, long str
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2982,7 +2999,7 @@ def hipblasDdotStridedBatched(object handle, int n, object x, int incx, long str
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -2999,7 +3016,7 @@ def hipblasCdotcStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3016,7 +3033,7 @@ def hipblasCdotuStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3033,7 +3050,7 @@ def hipblasZdotcStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3050,7 +3067,7 @@ def hipblasZdotuStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3090,7 +3107,7 @@ def hipblasSnrm2(object handle, int n, object x, int incx, object result):
             return is 0.0 if n, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3106,7 +3123,7 @@ def hipblasDnrm2(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3122,7 +3139,7 @@ def hipblasScnrm2(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3138,7 +3155,7 @@ def hipblasDznrm2(object handle, int n, object x, int incx, object result):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3180,7 +3197,7 @@ def hipblasSnrm2Batched(object handle, int n, object x, int incx, int batchCount
             return is 0.0 for each element if n <= 0, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3196,7 +3213,7 @@ def hipblasDnrm2Batched(object handle, int n, object x, int incx, int batchCount
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3212,7 +3229,7 @@ def hipblasScnrm2Batched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3228,7 +3245,7 @@ def hipblasDznrm2Batched(object handle, int n, object x, int incx, int batchCoun
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3276,7 +3293,7 @@ def hipblasSnrm2StridedBatched(object handle, int n, object x, int incx, long st
             return is 0.0 for each element if n <= 0, incx<=0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3292,7 +3309,7 @@ def hipblasDnrm2StridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3308,7 +3325,7 @@ def hipblasScnrm2StridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3324,7 +3341,7 @@ def hipblasDznrm2StridedBatched(object handle, int n, object x, int incx, long s
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3367,7 +3384,7 @@ def hipblasSrot(object handle, int n, object x, int incx, object y, int incy, ob
         s (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer storing scalar sine component of the rotation matrix.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3385,7 +3402,7 @@ def hipblasDrot(object handle, int n, object x, int incx, object y, int incy, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3403,7 +3420,7 @@ def hipblasCrot(object handle, int n, object x, int incx, object y, int incy, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3421,7 +3438,7 @@ def hipblasCsrot(object handle, int n, object x, int incx, object y, int incy, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3439,7 +3456,7 @@ def hipblasZrot(object handle, int n, object x, int incx, object y, int incy, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3457,7 +3474,7 @@ def hipblasZdrot(object handle, int n, object x, int incx, object y, int incy, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3505,7 +3522,7 @@ def hipblasSrotBatched(object handle, int n, object x, int incx, object y, int i
             the number of x and y arrays, i.e. the number of batches.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3523,7 +3540,7 @@ def hipblasDrotBatched(object handle, int n, object x, int incx, object y, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3541,7 +3558,7 @@ def hipblasCrotBatched(object handle, int n, object x, int incx, object y, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3559,7 +3576,7 @@ def hipblasCsrotBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3577,7 +3594,7 @@ def hipblasZrotBatched(object handle, int n, object x, int incx, object y, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3595,7 +3612,7 @@ def hipblasZdrotBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3649,7 +3666,7 @@ def hipblasSrotStridedBatched(object handle, int n, object x, int incx, long str
             the number of x and y arrays, i.e. the number of batches.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3667,7 +3684,7 @@ def hipblasDrotStridedBatched(object handle, int n, object x, int incx, long str
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3685,7 +3702,7 @@ def hipblasCrotStridedBatched(object handle, int n, object x, int incx, long str
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3703,7 +3720,7 @@ def hipblasCsrotStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3721,7 +3738,7 @@ def hipblasZrotStridedBatched(object handle, int n, object x, int incx, long str
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3739,7 +3756,7 @@ def hipblasZdrotStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3777,7 +3794,7 @@ def hipblasSrotg(object handle, object a, object b, object c, object s):
         s (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer sine element of Givens rotation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3795,7 +3812,7 @@ def hipblasDrotg(object handle, object a, object b, object c, object s):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3813,7 +3830,7 @@ def hipblasCrotg(object handle, object a, object b, object c, object s):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3831,7 +3848,7 @@ def hipblasZrotg(object handle, object a, object b, object c, object s):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3872,7 +3889,7 @@ def hipblasSrotgBatched(object handle, object a, object b, object c, object s, i
             number of batches (length of arrays a, b, c, and s).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3890,7 +3907,7 @@ def hipblasDrotgBatched(object handle, object a, object b, object c, object s, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3908,7 +3925,7 @@ def hipblasCrotgBatched(object handle, object a, object b, object c, object s, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3926,7 +3943,7 @@ def hipblasZrotgBatched(object handle, object a, object b, object c, object s, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3979,7 +3996,7 @@ def hipblasSrotgStridedBatched(object handle, object a, long stridea, object b, 
             number of batches (length of arrays a, b, c, and s).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -3997,7 +4014,7 @@ def hipblasDrotgStridedBatched(object handle, object a, long stridea, object b, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4015,7 +4032,7 @@ def hipblasCrotgStridedBatched(object handle, object a, long stridea, object b, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4033,7 +4050,7 @@ def hipblasZrotgStridedBatched(object handle, object a, long stridea, object b, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4086,7 +4103,7 @@ def hipblasSrotm(object handle, int n, object x, int incx, object y, int incy, o
             param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4103,7 +4120,7 @@ def hipblasDrotm(object handle, int n, object x, int incx, object y, int incy, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4158,7 +4175,7 @@ def hipblasSrotmBatched(object handle, int n, object x, int incx, object y, int 
             the number of x and y arrays, i.e. the number of batches.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4175,7 +4192,7 @@ def hipblasDrotmBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4239,7 +4256,7 @@ def hipblasSrotmStridedBatched(object handle, int n, object x, int incx, long st
             the number of x and y arrays, i.e. the number of batches.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4256,7 +4273,7 @@ def hipblasDrotmStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4306,7 +4323,7 @@ def hipblasSrotmg(object handle, object d1, object d2, object x1, object y1, obj
             param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4325,7 +4342,7 @@ def hipblasDrotmg(object handle, object d1, object d2, object x1, object y1, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4380,7 +4397,7 @@ def hipblasSrotmgBatched(object handle, object d1, object d2, object x1, object 
             the number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4399,7 +4416,7 @@ def hipblasDrotmgBatched(object handle, object d1, object d2, object x1, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4469,7 +4486,7 @@ def hipblasSrotmgStridedBatched(object handle, object d1, long strided1, object 
             the number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4488,7 +4505,7 @@ def hipblasDrotmgStridedBatched(object handle, object d1, long strided1, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4528,7 +4545,7 @@ def hipblasSscal(object handle, int n, object alpha, object x, int incx):
             specifies the increment for the elements of x.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4544,7 +4561,7 @@ def hipblasDscal(object handle, int n, object alpha, object x, int incx):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4560,7 +4577,7 @@ def hipblasCscal(object handle, int n, object alpha, object x, int incx):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4576,7 +4593,7 @@ def hipblasCsscal(object handle, int n, object alpha, object x, int incx):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4592,7 +4609,7 @@ def hipblasZscal(object handle, int n, object alpha, object x, int incx):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4608,7 +4625,7 @@ def hipblasZdscal(object handle, int n, object alpha, object x, int incx):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4650,7 +4667,7 @@ def hipblasSscalBatched(object handle, int n, object alpha, object x, int incx, 
             specifies the number of batches in x.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4666,7 +4683,7 @@ def hipblasDscalBatched(object handle, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4682,7 +4699,7 @@ def hipblasCscalBatched(object handle, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4698,7 +4715,7 @@ def hipblasZscalBatched(object handle, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4714,7 +4731,7 @@ def hipblasCsscalBatched(object handle, int n, object alpha, object x, int incx,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4730,7 +4747,7 @@ def hipblasZdscalBatched(object handle, int n, object alpha, object x, int incx,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4778,7 +4795,7 @@ def hipblasSscalStridedBatched(object handle, int n, object alpha, object x, int
             specifies the number of batches in x.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4794,7 +4811,7 @@ def hipblasDscalStridedBatched(object handle, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4810,7 +4827,7 @@ def hipblasCscalStridedBatched(object handle, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4826,7 +4843,7 @@ def hipblasZscalStridedBatched(object handle, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4842,7 +4859,7 @@ def hipblasCsscalStridedBatched(object handle, int n, object alpha, object x, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4858,7 +4875,7 @@ def hipblasZdscalStridedBatched(object handle, int n, object alpha, object x, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4898,7 +4915,7 @@ def hipblasSswap(object handle, int n, object x, int incx, object y, int incy):
             specifies the increment for the elements of y.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4914,7 +4931,7 @@ def hipblasDswap(object handle, int n, object x, int incx, object y, int incy):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4930,7 +4947,7 @@ def hipblasCswap(object handle, int n, object x, int incx, object y, int incy):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4946,7 +4963,7 @@ def hipblasZswap(object handle, int n, object x, int incx, object y, int incy):
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -4989,7 +5006,7 @@ def hipblasSswapBatched(object handle, int n, object x, int incx, object y, int 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5005,7 +5022,7 @@ def hipblasDswapBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5021,7 +5038,7 @@ def hipblasCswapBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5037,7 +5054,7 @@ def hipblasZswapBatched(object handle, int n, object x, int incx, object y, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5092,7 +5109,7 @@ def hipblasSswapStridedBatched(object handle, int n, object x, int incx, long st
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5108,7 +5125,7 @@ def hipblasDswapStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5124,7 +5141,7 @@ def hipblasCswapStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5140,7 +5157,7 @@ def hipblasZswapStridedBatched(object handle, int n, object x, int incx, long st
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5221,7 +5238,7 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
             specifies the increment for the elements of y.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5242,7 +5259,7 @@ def hipblasDgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5263,7 +5280,7 @@ def hipblasCgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5284,7 +5301,7 @@ def hipblasZgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5375,7 +5392,7 @@ def hipblasSgbmvBatched(object handle, object trans, int m, int n, int kl, int k
             specifies the number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5396,7 +5413,7 @@ def hipblasDgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5417,7 +5434,7 @@ def hipblasCgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5438,7 +5455,7 @@ def hipblasZgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5538,7 +5555,7 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
             specifies the number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5559,7 +5576,7 @@ def hipblasDgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5580,7 +5597,7 @@ def hipblasCgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5601,7 +5618,7 @@ def hipblasZgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5666,7 +5683,7 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
             specifies the increment for the elements of y.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5687,7 +5704,7 @@ def hipblasDgemv(object handle, object trans, int m, int n, object alpha, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5708,7 +5725,7 @@ def hipblasCgemv(object handle, object trans, int m, int n, object alpha, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5729,7 +5746,7 @@ def hipblasZgemv(object handle, object trans, int m, int n, object alpha, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5798,7 +5815,7 @@ def hipblasSgemvBatched(object handle, object trans, int m, int n, object alpha,
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5819,7 +5836,7 @@ def hipblasDgemvBatched(object handle, object trans, int m, int n, object alpha,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5840,7 +5857,7 @@ def hipblasCgemvBatched(object handle, object trans, int m, int n, object alpha,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5861,7 +5878,7 @@ def hipblasZgemvBatched(object handle, object trans, int m, int n, object alpha,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5945,7 +5962,7 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5966,7 +5983,7 @@ def hipblasDgemvStridedBatched(object handle, object transA, int m, int n, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -5987,7 +6004,7 @@ def hipblasCgemvStridedBatched(object handle, object transA, int m, int n, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6008,7 +6025,7 @@ def hipblasZgemvStridedBatched(object handle, object transA, int m, int n, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6067,7 +6084,7 @@ def hipblasSger(object handle, int m, int n, object alpha, object x, int incx, o
             specifies the leading dimension of A.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6085,7 +6102,7 @@ def hipblasDger(object handle, int m, int n, object alpha, object x, int incx, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6103,7 +6120,7 @@ def hipblasCgeru(object handle, int m, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6121,7 +6138,7 @@ def hipblasCgerc(object handle, int m, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6139,7 +6156,7 @@ def hipblasZgeru(object handle, int m, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6157,7 +6174,7 @@ def hipblasZgerc(object handle, int m, int n, object alpha, object x, int incx, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6217,7 +6234,7 @@ def hipblasSgerBatched(object handle, int m, int n, object alpha, object x, int 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6235,7 +6252,7 @@ def hipblasDgerBatched(object handle, int m, int n, object alpha, object x, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6253,7 +6270,7 @@ def hipblasCgeruBatched(object handle, int m, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6271,7 +6288,7 @@ def hipblasCgercBatched(object handle, int m, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6289,7 +6306,7 @@ def hipblasZgeruBatched(object handle, int m, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6307,7 +6324,7 @@ def hipblasZgercBatched(object handle, int m, int n, object alpha, object x, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6382,7 +6399,7 @@ def hipblasSgerStridedBatched(object handle, int m, int n, object alpha, object 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6400,7 +6417,7 @@ def hipblasDgerStridedBatched(object handle, int m, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6418,7 +6435,7 @@ def hipblasCgeruStridedBatched(object handle, int m, int n, object alpha, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6436,7 +6453,7 @@ def hipblasCgercStridedBatched(object handle, int m, int n, object alpha, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6454,7 +6471,7 @@ def hipblasZgeruStridedBatched(object handle, int m, int n, object alpha, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6472,7 +6489,7 @@ def hipblasZgercStridedBatched(object handle, int m, int n, object alpha, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6561,7 +6578,7 @@ def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object 
             specifies the increment for the elements of y.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6582,7 +6599,7 @@ def hipblasZhbmv(object handle, object uplo, int n, int k, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6677,7 +6694,7 @@ def hipblasChbmvBatched(object handle, object uplo, int n, int k, object alpha, 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6698,7 +6715,7 @@ def hipblasZhbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6802,7 +6819,7 @@ def hipblasChbmvStridedBatched(object handle, object uplo, int n, int k, object 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6823,7 +6840,7 @@ def hipblasZhbmvStridedBatched(object handle, object uplo, int n, int k, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6894,7 +6911,7 @@ def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int
             specifies the increment for the elements of y.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6915,7 +6932,7 @@ def hipblasZhemv(object handle, object uplo, int n, object alpha, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -6989,7 +7006,7 @@ def hipblasChemvBatched(object handle, object uplo, int n, object alpha, object 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7010,7 +7027,7 @@ def hipblasZhemvBatched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7093,7 +7110,7 @@ def hipblasChemvStridedBatched(object handle, object uplo, int n, object alpha, 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7114,7 +7131,7 @@ def hipblasZhemvStridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7178,7 +7195,7 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
             specifies the leading dimension of A. Must be at least max(1, n).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7197,7 +7214,7 @@ def hipblasZher(object handle, object uplo, int n, object alpha, object x, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7262,7 +7279,7 @@ def hipblasCherBatched(object handle, object uplo, int n, object alpha, object x
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7281,7 +7298,7 @@ def hipblasZherBatched(object handle, object uplo, int n, object alpha, object x
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7352,7 +7369,7 @@ def hipblasCherStridedBatched(object handle, object uplo, int n, object alpha, o
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7371,7 +7388,7 @@ def hipblasZherStridedBatched(object handle, object uplo, int n, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7438,7 +7455,7 @@ def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int 
             specifies the leading dimension of A. Must be at least max(lda, 1).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7458,7 +7475,7 @@ def hipblasZher2(object handle, object uplo, int n, object alpha, object x, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7529,7 +7546,7 @@ def hipblasCher2Batched(object handle, object uplo, int n, object alpha, object 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7549,7 +7566,7 @@ def hipblasZher2Batched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7629,7 +7646,7 @@ def hipblasCher2StridedBatched(object handle, object uplo, int n, object alpha, 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7649,7 +7666,7 @@ def hipblasZher2StridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7731,7 +7748,7 @@ def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, obj
             specifies the increment for the elements of y.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7752,7 +7769,7 @@ def hipblasZhpmv(object handle, object uplo, int n, object alpha, object AP, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7839,7 +7856,7 @@ def hipblasChpmvBatched(object handle, object uplo, int n, object alpha, object 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7860,7 +7877,7 @@ def hipblasZhpmvBatched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7956,7 +7973,7 @@ def hipblasChpmvStridedBatched(object handle, object uplo, int n, object alpha, 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -7977,7 +7994,7 @@ def hipblasZhpmvStridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8054,7 +8071,7 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
             to be 0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8073,7 +8090,7 @@ def hipblasZhpr(object handle, object uplo, int n, object alpha, object x, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8151,7 +8168,7 @@ def hipblasChprBatched(object handle, object uplo, int n, object alpha, object x
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8170,7 +8187,7 @@ def hipblasZhprBatched(object handle, object uplo, int n, object alpha, object x
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8254,7 +8271,7 @@ def hipblasChprStridedBatched(object handle, object uplo, int n, object alpha, o
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8273,7 +8290,7 @@ def hipblasZhprStridedBatched(object handle, object uplo, int n, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8353,7 +8370,7 @@ def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int 
             to be 0.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8373,7 +8390,7 @@ def hipblasZhpr2(object handle, object uplo, int n, object alpha, object x, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8457,7 +8474,7 @@ def hipblasChpr2Batched(object handle, object uplo, int n, object alpha, object 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8477,7 +8494,7 @@ def hipblasZhpr2Batched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8570,7 +8587,7 @@ def hipblasChpr2StridedBatched(object handle, object uplo, int n, object alpha, 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8590,7 +8607,7 @@ def hipblasZhpr2StridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8653,7 +8670,7 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
             specifies the increment for the elements of y
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8674,7 +8691,7 @@ def hipblasDsbmv(object handle, object uplo, int n, int k, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8744,7 +8761,7 @@ def hipblasSsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8765,7 +8782,7 @@ def hipblasDsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8850,7 +8867,7 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8871,7 +8888,7 @@ def hipblasDsbmvStridedBatched(object handle, object uplo, int n, int k, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8929,7 +8946,7 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
             specifies the increment for the elements of y
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -8950,7 +8967,7 @@ def hipblasDspmv(object handle, object uplo, int n, object alpha, object AP, obj
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9014,7 +9031,7 @@ def hipblasSspmvBatched(object handle, object uplo, int n, object alpha, object 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9035,7 +9052,7 @@ def hipblasDspmvBatched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9114,7 +9131,7 @@ def hipblasSspmvStridedBatched(object handle, object uplo, int n, object alpha, 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9135,7 +9152,7 @@ def hipblasDspmvStridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9212,7 +9229,7 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
                         4 7 9 0
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9231,7 +9248,7 @@ def hipblasDspr(object handle, object uplo, int n, object alpha, object x, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9250,7 +9267,7 @@ def hipblasCspr(object handle, object uplo, int n, object alpha, object x, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9269,7 +9286,7 @@ def hipblasZspr(object handle, object uplo, int n, object alpha, object x, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9347,7 +9364,7 @@ def hipblasSsprBatched(object handle, object uplo, int n, object alpha, object x
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9366,7 +9383,7 @@ def hipblasDsprBatched(object handle, object uplo, int n, object alpha, object x
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9385,7 +9402,7 @@ def hipblasCsprBatched(object handle, object uplo, int n, object alpha, object x
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9404,7 +9421,7 @@ def hipblasZsprBatched(object handle, object uplo, int n, object alpha, object x
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9488,7 +9505,7 @@ def hipblasSsprStridedBatched(object handle, object uplo, int n, object alpha, o
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9507,7 +9524,7 @@ def hipblasDsprStridedBatched(object handle, object uplo, int n, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9526,7 +9543,7 @@ def hipblasCsprStridedBatched(object handle, object uplo, int n, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9545,7 +9562,7 @@ def hipblasZsprStridedBatched(object handle, object uplo, int n, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9625,7 +9642,7 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
                         4 7 9 0
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9645,7 +9662,7 @@ def hipblasDspr2(object handle, object uplo, int n, object alpha, object x, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9729,7 +9746,7 @@ def hipblasSspr2Batched(object handle, object uplo, int n, object alpha, object 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9749,7 +9766,7 @@ def hipblasDspr2Batched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9842,7 +9859,7 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9862,7 +9879,7 @@ def hipblasDspr2StridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9922,7 +9939,7 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
             specifies the increment for the elements of y
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9943,7 +9960,7 @@ def hipblasDsymv(object handle, object uplo, int n, object alpha, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9964,7 +9981,7 @@ def hipblasCsymv(object handle, object uplo, int n, object alpha, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -9985,7 +10002,7 @@ def hipblasZsymv(object handle, object uplo, int n, object alpha, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10053,7 +10070,7 @@ def hipblasSsymvBatched(object handle, object uplo, int n, object alpha, object 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10074,7 +10091,7 @@ def hipblasDsymvBatched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10095,7 +10112,7 @@ def hipblasCsymvBatched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10116,7 +10133,7 @@ def hipblasZsymvBatched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10199,7 +10216,7 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10220,7 +10237,7 @@ def hipblasDsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10241,7 +10258,7 @@ def hipblasCsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10262,7 +10279,7 @@ def hipblasZsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10317,7 +10334,7 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
             specifies the leading dimension of A.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10336,7 +10353,7 @@ def hipblasDsyr(object handle, object uplo, int n, object alpha, object x, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10355,7 +10372,7 @@ def hipblasCsyr(object handle, object uplo, int n, object alpha, object x, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10374,7 +10391,7 @@ def hipblasZsyr(object handle, object uplo, int n, object alpha, object x, int i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10430,7 +10447,7 @@ def hipblasSsyrBatched(object handle, object uplo, int n, object alpha, object x
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10449,7 +10466,7 @@ def hipblasDsyrBatched(object handle, object uplo, int n, object alpha, object x
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10468,7 +10485,7 @@ def hipblasCsyrBatched(object handle, object uplo, int n, object alpha, object x
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10487,7 +10504,7 @@ def hipblasZsyrBatched(object handle, object uplo, int n, object alpha, object x
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10549,7 +10566,7 @@ def hipblasSsyrStridedBatched(object handle, object uplo, int n, object alpha, o
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10568,7 +10585,7 @@ def hipblasDsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10587,7 +10604,7 @@ def hipblasCsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10606,7 +10623,7 @@ def hipblasZsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10664,7 +10681,7 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
             specifies the leading dimension of A.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10684,7 +10701,7 @@ def hipblasDsyr2(object handle, object uplo, int n, object alpha, object x, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10704,7 +10721,7 @@ def hipblasCsyr2(object handle, object uplo, int n, object alpha, object x, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10724,7 +10741,7 @@ def hipblasZsyr2(object handle, object uplo, int n, object alpha, object x, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10786,7 +10803,7 @@ def hipblasSsyr2Batched(object handle, object uplo, int n, object alpha, object 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10806,7 +10823,7 @@ def hipblasDsyr2Batched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10826,7 +10843,7 @@ def hipblasCsyr2Batched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10846,7 +10863,7 @@ def hipblasZsyr2Batched(object handle, object uplo, int n, object alpha, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10917,7 +10934,7 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10937,7 +10954,7 @@ def hipblasDsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10957,7 +10974,7 @@ def hipblasCsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -10977,7 +10994,7 @@ def hipblasZsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11069,7 +11086,7 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
             specifies the increment for the elements of x.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11091,7 +11108,7 @@ def hipblasDtbmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11113,7 +11130,7 @@ def hipblasCtbmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11135,7 +11152,7 @@ def hipblasZtbmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11233,7 +11250,7 @@ def hipblasStbmvBatched(object handle, object uplo, object transA, object diag, 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11255,7 +11272,7 @@ def hipblasDtbmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11277,7 +11294,7 @@ def hipblasCtbmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11299,7 +11316,7 @@ def hipblasZtbmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11403,7 +11420,7 @@ def hipblasStbmvStridedBatched(object handle, object uplo, object transA, object
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11425,7 +11442,7 @@ def hipblasDtbmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11447,7 +11464,7 @@ def hipblasCtbmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11469,7 +11486,7 @@ def hipblasZtbmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11539,7 +11556,7 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
             specifies the increment for the elements of x.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11561,7 +11578,7 @@ def hipblasDtbsv(object handle, object uplo, object transA, object diag, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11583,7 +11600,7 @@ def hipblasCtbsv(object handle, object uplo, object transA, object diag, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11605,7 +11622,7 @@ def hipblasZtbsv(object handle, object uplo, object transA, object diag, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11682,7 +11699,7 @@ def hipblasStbsvBatched(object handle, object uplo, object transA, object diag, 
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11704,7 +11721,7 @@ def hipblasDtbsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11726,7 +11743,7 @@ def hipblasCtbsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11748,7 +11765,7 @@ def hipblasZtbsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11830,7 +11847,7 @@ def hipblasStbsvStridedBatched(object handle, object uplo, object transA, object
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11852,7 +11869,7 @@ def hipblasDtbsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11874,7 +11891,7 @@ def hipblasCtbsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11896,7 +11913,7 @@ def hipblasZtbsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11964,7 +11981,7 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
             specifies the increment for the elements of x. incx must not be zero.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -11986,7 +12003,7 @@ def hipblasDtpmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12008,7 +12025,7 @@ def hipblasCtpmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12030,7 +12047,7 @@ def hipblasZtpmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12091,7 +12108,7 @@ def hipblasStpmvBatched(object handle, object uplo, object transA, object diag, 
             The number of batched matrices/vectors.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12113,7 +12130,7 @@ def hipblasDtpmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12135,7 +12152,7 @@ def hipblasCtpmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12157,7 +12174,7 @@ def hipblasZtpmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12225,7 +12242,7 @@ def hipblasStpmvStridedBatched(object handle, object uplo, object transA, object
             The number of batched matrices/vectors.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12247,7 +12264,7 @@ def hipblasDtpmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12269,7 +12286,7 @@ def hipblasCtpmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12291,7 +12308,7 @@ def hipblasZtpmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12353,7 +12370,7 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
             specifies the increment for the elements of x.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12375,7 +12392,7 @@ def hipblasDtpsv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12397,7 +12414,7 @@ def hipblasCtpsv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12419,7 +12436,7 @@ def hipblasZtpsv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12485,7 +12502,7 @@ def hipblasStpsvBatched(object handle, object uplo, object transA, object diag, 
             specifies the number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12507,7 +12524,7 @@ def hipblasDtpsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12529,7 +12546,7 @@ def hipblasCtpsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12551,7 +12568,7 @@ def hipblasZtpsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12623,7 +12640,7 @@ def hipblasStpsvStridedBatched(object handle, object uplo, object transA, object
             specifies the number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12645,7 +12662,7 @@ def hipblasDtpsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12667,7 +12684,7 @@ def hipblasCtpsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12689,7 +12706,7 @@ def hipblasZtpsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12751,7 +12768,7 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
             specifies the increment for the elements of x.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12773,7 +12790,7 @@ def hipblasDtrmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12795,7 +12812,7 @@ def hipblasCtrmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12817,7 +12834,7 @@ def hipblasZtrmv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12882,7 +12899,7 @@ def hipblasStrmvBatched(object handle, object uplo, object transA, object diag, 
             The number of batched matrices/vectors.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12904,7 +12921,7 @@ def hipblasDtrmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12926,7 +12943,7 @@ def hipblasCtrmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -12948,7 +12965,7 @@ def hipblasZtrmvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13020,7 +13037,7 @@ def hipblasStrmvStridedBatched(object handle, object uplo, object transA, object
             The number of batched matrices/vectors.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13042,7 +13059,7 @@ def hipblasDtrmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13064,7 +13081,7 @@ def hipblasCtrmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13086,7 +13103,7 @@ def hipblasZtrmvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13148,7 +13165,7 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
             specifies the increment for the elements of x.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13170,7 +13187,7 @@ def hipblasDtrsv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13192,7 +13209,7 @@ def hipblasCtrsv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13214,7 +13231,7 @@ def hipblasZtrsv(object handle, object uplo, object transA, object diag, int m, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13280,7 +13297,7 @@ def hipblasStrsvBatched(object handle, object uplo, object transA, object diag, 
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13302,7 +13319,7 @@ def hipblasDtrsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13324,7 +13341,7 @@ def hipblasCtrsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13346,7 +13363,7 @@ def hipblasZtrsvBatched(object handle, object uplo, object transA, object diag, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13417,7 +13434,7 @@ def hipblasStrsvStridedBatched(object handle, object uplo, object transA, object
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13439,7 +13456,7 @@ def hipblasDtrsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13461,7 +13478,7 @@ def hipblasCtrsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13483,7 +13500,7 @@ def hipblasZtrsvStridedBatched(object handle, object uplo, object transA, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13560,7 +13577,7 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
             specifies the leading dimension of C.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13583,7 +13600,7 @@ def hipblasSgemm(object handle, object transA, object transB, int m, int n, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13606,7 +13623,7 @@ def hipblasDgemm(object handle, object transA, object transB, int m, int n, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13629,7 +13646,7 @@ def hipblasCgemm(object handle, object transA, object transB, int m, int n, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13652,7 +13669,7 @@ def hipblasZgemm(object handle, object transA, object transB, int m, int n, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13730,7 +13747,7 @@ def hipblasHgemmBatched(object handle, object transA, object transB, int m, int 
             number of gemm operations in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13753,7 +13770,7 @@ def hipblasSgemmBatched(object handle, object transA, object transB, int m, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13776,7 +13793,7 @@ def hipblasDgemmBatched(object handle, object transA, object transB, int m, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13799,7 +13816,7 @@ def hipblasCgemmBatched(object handle, object transA, object transB, int m, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13822,7 +13839,7 @@ def hipblasZgemmBatched(object handle, object transA, object transB, int m, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13913,7 +13930,7 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
             number of gemm operatons in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13936,7 +13953,7 @@ def hipblasSgemmStridedBatched(object handle, object transA, object transB, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13959,7 +13976,7 @@ def hipblasDgemmStridedBatched(object handle, object transA, object transB, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -13982,7 +13999,7 @@ def hipblasCgemmStridedBatched(object handle, object transA, object transB, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14005,7 +14022,7 @@ def hipblasZgemmStridedBatched(object handle, object transA, object transB, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14081,7 +14098,7 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14103,7 +14120,7 @@ def hipblasZherk(object handle, object uplo, object transA, int n, int k, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14180,7 +14197,7 @@ def hipblasCherkBatched(object handle, object uplo, object transA, int n, int k,
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14202,7 +14219,7 @@ def hipblasZherkBatched(object handle, object uplo, object transA, int n, int k,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14285,7 +14302,7 @@ def hipblasCherkStridedBatched(object handle, object uplo, object transA, int n,
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14307,7 +14324,7 @@ def hipblasZherkStridedBatched(object handle, object uplo, object transA, int n,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14392,7 +14409,7 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14415,7 +14432,7 @@ def hipblasZherkx(object handle, object uplo, object transA, int n, int k, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14502,7 +14519,7 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14525,7 +14542,7 @@ def hipblasZherkxBatched(object handle, object uplo, object transA, int n, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14621,7 +14638,7 @@ def hipblasCherkxStridedBatched(object handle, object uplo, object transA, int n
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14644,7 +14661,7 @@ def hipblasZherkxStridedBatched(object handle, object uplo, object transA, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14729,7 +14746,7 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14752,7 +14769,7 @@ def hipblasZher2k(object handle, object uplo, object transA, int n, int k, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14838,7 +14855,7 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14861,7 +14878,7 @@ def hipblasZher2kBatched(object handle, object uplo, object transA, int n, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14956,7 +14973,7 @@ def hipblasCher2kStridedBatched(object handle, object uplo, object transA, int n
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -14979,7 +14996,7 @@ def hipblasZher2kStridedBatched(object handle, object uplo, object transA, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15059,7 +15076,7 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
             ldc specifies the first dimension of C. ldc >= max( 1, m )
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15082,7 +15099,7 @@ def hipblasDsymm(object handle, object side, object uplo, int m, int n, object a
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15105,7 +15122,7 @@ def hipblasCsymm(object handle, object side, object uplo, int m, int n, object a
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15128,7 +15145,7 @@ def hipblasZsymm(object handle, object side, object uplo, int m, int n, object a
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15211,7 +15228,7 @@ def hipblasSsymmBatched(object handle, object side, object uplo, int m, int n, o
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15234,7 +15251,7 @@ def hipblasDsymmBatched(object handle, object side, object uplo, int m, int n, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15257,7 +15274,7 @@ def hipblasCsymmBatched(object handle, object side, object uplo, int m, int n, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15280,7 +15297,7 @@ def hipblasZsymmBatched(object handle, object side, object uplo, int m, int n, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15370,7 +15387,7 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15393,7 +15410,7 @@ def hipblasDsymmStridedBatched(object handle, object side, object uplo, int m, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15416,7 +15433,7 @@ def hipblasCsymmStridedBatched(object handle, object side, object uplo, int m, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15439,7 +15456,7 @@ def hipblasZsymmStridedBatched(object handle, object side, object uplo, int m, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15518,7 +15535,7 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15540,7 +15557,7 @@ def hipblasDsyrk(object handle, object uplo, object transA, int n, int k, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15562,7 +15579,7 @@ def hipblasCsyrk(object handle, object uplo, object transA, int n, int k, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15584,7 +15601,7 @@ def hipblasZsyrk(object handle, object uplo, object transA, int n, int k, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15664,7 +15681,7 @@ def hipblasSsyrkBatched(object handle, object uplo, object transA, int n, int k,
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15686,7 +15703,7 @@ def hipblasDsyrkBatched(object handle, object uplo, object transA, int n, int k,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15708,7 +15725,7 @@ def hipblasCsyrkBatched(object handle, object uplo, object transA, int n, int k,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15730,7 +15747,7 @@ def hipblasZsyrkBatched(object handle, object uplo, object transA, int n, int k,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15816,7 +15833,7 @@ def hipblasSsyrkStridedBatched(object handle, object uplo, object transA, int n,
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15838,7 +15855,7 @@ def hipblasDsyrkStridedBatched(object handle, object uplo, object transA, int n,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15860,7 +15877,7 @@ def hipblasCsyrkStridedBatched(object handle, object uplo, object transA, int n,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15882,7 +15899,7 @@ def hipblasZsyrkStridedBatched(object handle, object uplo, object transA, int n,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15965,7 +15982,7 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -15988,7 +16005,7 @@ def hipblasDsyr2k(object handle, object uplo, object transA, int n, int k, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16011,7 +16028,7 @@ def hipblasCsyr2k(object handle, object uplo, object transA, int n, int k, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16034,7 +16051,7 @@ def hipblasZsyr2k(object handle, object uplo, object transA, int n, int k, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16119,7 +16136,7 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16142,7 +16159,7 @@ def hipblasDsyr2kBatched(object handle, object uplo, object transA, int n, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16165,7 +16182,7 @@ def hipblasCsyr2kBatched(object handle, object uplo, object transA, int n, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16188,7 +16205,7 @@ def hipblasZsyr2kBatched(object handle, object uplo, object transA, int n, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16282,7 +16299,7 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16305,7 +16322,7 @@ def hipblasDsyr2kStridedBatched(object handle, object uplo, object transA, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16328,7 +16345,7 @@ def hipblasCsyr2kStridedBatched(object handle, object uplo, object transA, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16351,7 +16368,7 @@ def hipblasZsyr2kStridedBatched(object handle, object uplo, object transA, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16436,7 +16453,7 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16459,7 +16476,7 @@ def hipblasDsyrkx(object handle, object uplo, object transA, int n, int k, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16482,7 +16499,7 @@ def hipblasCsyrkx(object handle, object uplo, object transA, int n, int k, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16505,7 +16522,7 @@ def hipblasZsyrkx(object handle, object uplo, object transA, int n, int k, objec
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16591,7 +16608,7 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16614,7 +16631,7 @@ def hipblasDsyrkxBatched(object handle, object uplo, object transA, int n, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16637,7 +16654,7 @@ def hipblasCsyrkxBatched(object handle, object uplo, object transA, int n, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16660,7 +16677,7 @@ def hipblasZsyrkxBatched(object handle, object uplo, object transA, int n, int k
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16755,7 +16772,7 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16778,7 +16795,7 @@ def hipblasDsyrkxStridedBatched(object handle, object uplo, object transA, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16801,7 +16818,7 @@ def hipblasCsyrkxStridedBatched(object handle, object uplo, object transA, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16824,7 +16841,7 @@ def hipblasZsyrkxStridedBatched(object handle, object uplo, object transA, int n
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16898,7 +16915,7 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
             specifies the leading dimension of C.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16921,7 +16938,7 @@ def hipblasDgeam(object handle, object transA, object transB, int m, int n, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16944,7 +16961,7 @@ def hipblasCgeam(object handle, object transA, object transB, int m, int n, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -16967,7 +16984,7 @@ def hipblasZgeam(object handle, object transA, object transB, int m, int n, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17048,7 +17065,7 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
             number of instances i in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17071,7 +17088,7 @@ def hipblasDgeamBatched(object handle, object transA, object transB, int m, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17094,7 +17111,7 @@ def hipblasCgeamBatched(object handle, object transA, object transB, int m, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17117,7 +17134,7 @@ def hipblasZgeamBatched(object handle, object transA, object transB, int m, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17207,7 +17224,7 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
             number of instances i in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17230,7 +17247,7 @@ def hipblasDgeamStridedBatched(object handle, object transA, object transB, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17253,7 +17270,7 @@ def hipblasCgeamStridedBatched(object handle, object transA, object transB, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17276,7 +17293,7 @@ def hipblasZgeamStridedBatched(object handle, object transA, object transB, int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17357,7 +17374,7 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
             ldc specifies the first dimension of C. ldc >= max( 1, m )
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17380,7 +17397,7 @@ def hipblasZhemm(object handle, object side, object uplo, int n, int k, object a
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17464,7 +17481,7 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17487,7 +17504,7 @@ def hipblasZhemmBatched(object handle, object side, object uplo, int n, int k, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17580,7 +17597,7 @@ def hipblasChemmStridedBatched(object handle, object side, object uplo, int n, i
             number of instances in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17603,7 +17620,7 @@ def hipblasZhemmStridedBatched(object handle, object side, object uplo, int n, i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17704,7 +17721,7 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
             ldb specifies the first dimension of B. ldb >= max( 1, m ).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17729,7 +17746,7 @@ def hipblasDtrmm(object handle, object side, object uplo, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17754,7 +17771,7 @@ def hipblasCtrmm(object handle, object side, object uplo, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17779,7 +17796,7 @@ def hipblasZtrmm(object handle, object side, object uplo, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17885,7 +17902,7 @@ def hipblasStrmmBatched(object handle, object side, object uplo, object transA, 
             number of instances i in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17910,7 +17927,7 @@ def hipblasDtrmmBatched(object handle, object side, object uplo, object transA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17935,7 +17952,7 @@ def hipblasCtrmmBatched(object handle, object side, object uplo, object transA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -17960,7 +17977,7 @@ def hipblasZtrmmBatched(object handle, object side, object uplo, object transA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18072,7 +18089,7 @@ def hipblasStrmmStridedBatched(object handle, object side, object uplo, object t
             number of instances i in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18097,7 +18114,7 @@ def hipblasDtrmmStridedBatched(object handle, object side, object uplo, object t
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18122,7 +18139,7 @@ def hipblasCtrmmStridedBatched(object handle, object side, object uplo, object t
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18147,7 +18164,7 @@ def hipblasZtrmmStridedBatched(object handle, object side, object uplo, object t
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18244,7 +18261,7 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
             ldb specifies the first dimension of B. ldb >= max( 1, m ).
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18269,7 +18286,7 @@ def hipblasDtrsm(object handle, object side, object uplo, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18294,7 +18311,7 @@ def hipblasCtrsm(object handle, object side, object uplo, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18319,7 +18336,7 @@ def hipblasZtrsm(object handle, object side, object uplo, object transA, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18417,7 +18434,7 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
             number of trsm operatons in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18442,7 +18459,7 @@ def hipblasDtrsmBatched(object handle, object side, object uplo, object transA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18467,7 +18484,7 @@ def hipblasCtrsmBatched(object handle, object side, object uplo, object transA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18492,7 +18509,7 @@ def hipblasZtrsmBatched(object handle, object side, object uplo, object transA, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18597,7 +18614,7 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
             number of trsm operatons in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18622,7 +18639,7 @@ def hipblasDtrsmStridedBatched(object handle, object side, object uplo, object t
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18647,7 +18664,7 @@ def hipblasCtrsmStridedBatched(object handle, object side, object uplo, object t
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18672,7 +18689,7 @@ def hipblasZtrsmStridedBatched(object handle, object side, object uplo, object t
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18730,7 +18747,7 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
             specifies the leading dimension of invA.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18750,7 +18767,7 @@ def hipblasDtrtri(object handle, object uplo, object diag, int n, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18770,7 +18787,7 @@ def hipblasCtrtri(object handle, object uplo, object diag, int n, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18790,7 +18807,7 @@ def hipblasZtrtri(object handle, object uplo, object diag, int n, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18850,7 +18867,7 @@ def hipblasStrtriBatched(object handle, object uplo, object diag, int n, object 
             numbers of matrices in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18870,7 +18887,7 @@ def hipblasDtrtriBatched(object handle, object uplo, object diag, int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18890,7 +18907,7 @@ def hipblasCtrtriBatched(object handle, object uplo, object diag, int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18910,7 +18927,7 @@ def hipblasZtrtriBatched(object handle, object uplo, object diag, int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18976,7 +18993,7 @@ def hipblasStrtriStridedBatched(object handle, object uplo, object diag, int n, 
             numbers of matrices in the batch
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -18996,7 +19013,7 @@ def hipblasDtrtriStridedBatched(object handle, object uplo, object diag, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19016,7 +19033,7 @@ def hipblasCtrtriStridedBatched(object handle, object uplo, object diag, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19036,7 +19053,7 @@ def hipblasZtrtriStridedBatched(object handle, object uplo, object diag, int n, 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19096,7 +19113,7 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
             specifies the leading dimension of C.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19115,7 +19132,7 @@ def hipblasDdgmm(object handle, object side, int m, int n, object AP, int lda, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19134,7 +19151,7 @@ def hipblasCdgmm(object handle, object side, int m, int n, object AP, int lda, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19153,7 +19170,7 @@ def hipblasZdgmm(object handle, object side, int m, int n, object AP, int lda, o
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19219,7 +19236,7 @@ def hipblasSdgmmBatched(object handle, object side, int m, int n, object AP, int
             number of instances in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19238,7 +19255,7 @@ def hipblasDdgmmBatched(object handle, object side, int m, int n, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19257,7 +19274,7 @@ def hipblasCdgmmBatched(object handle, object side, int m, int n, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19276,7 +19293,7 @@ def hipblasZdgmmBatched(object handle, object side, int m, int n, object AP, int
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19351,7 +19368,7 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
             number of instances i in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19370,7 +19387,7 @@ def hipblasDdgmmStridedBatched(object handle, object side, int m, int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19389,7 +19406,7 @@ def hipblasCdgmmStridedBatched(object handle, object side, int m, int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19408,7 +19425,7 @@ def hipblasZdgmmStridedBatched(object handle, object side, int m, int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19477,7 +19494,7 @@ def hipblasSgetrf(object handle, const int n, object A, const int lda, object ip
             If info = j > 0, U is singular. U[j,j] is the first zero pivot.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19494,7 +19511,7 @@ def hipblasDgetrf(object handle, const int n, object A, const int lda, object ip
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19511,7 +19528,7 @@ def hipblasCgetrf(object handle, const int n, object A, const int lda, object ip
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19528,7 +19545,7 @@ def hipblasZgetrf(object handle, const int n, object A, const int lda, object ip
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19601,7 +19618,7 @@ def hipblasSgetrfBatched(object handle, const int n, object A, const int lda, ob
             Number of matrices in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19618,7 +19635,7 @@ def hipblasDgetrfBatched(object handle, const int n, object A, const int lda, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19635,7 +19652,7 @@ def hipblasCgetrfBatched(object handle, const int n, object A, const int lda, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19652,7 +19669,7 @@ def hipblasZgetrfBatched(object handle, const int n, object A, const int lda, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19735,7 +19752,7 @@ def hipblasSgetrfStridedBatched(object handle, const int n, object A, const int 
             Number of matrices in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19752,7 +19769,7 @@ def hipblasDgetrfStridedBatched(object handle, const int n, object A, const int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19769,7 +19786,7 @@ def hipblasCgetrfStridedBatched(object handle, const int n, object A, const int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19786,7 +19803,7 @@ def hipblasZgetrfStridedBatched(object handle, const int n, object A, const int 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19857,7 +19874,7 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
             If info = j < 0, the j-th argument is invalid.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19877,7 +19894,7 @@ def hipblasDgetrs(object handle, object trans, const int n, const int nrhs, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19897,7 +19914,7 @@ def hipblasCgetrs(object handle, object trans, const int n, const int nrhs, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19917,7 +19934,7 @@ def hipblasZgetrs(object handle, object trans, const int n, const int nrhs, obje
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -19996,7 +20013,7 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
             Number of instances (systems) in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20016,7 +20033,7 @@ def hipblasDgetrsBatched(object handle, object trans, const int n, const int nrh
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20036,7 +20053,7 @@ def hipblasCgetrsBatched(object handle, object trans, const int n, const int nrh
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20056,7 +20073,7 @@ def hipblasZgetrsBatched(object handle, object trans, const int n, const int nrh
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20150,7 +20167,7 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
             Number of instances (systems) in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20170,7 +20187,7 @@ def hipblasDgetrsStridedBatched(object handle, object trans, const int n, const 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20190,7 +20207,7 @@ def hipblasCgetrsStridedBatched(object handle, object trans, const int n, const 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20210,7 +20227,7 @@ def hipblasZgetrsStridedBatched(object handle, object trans, const int n, const 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20275,7 +20292,7 @@ def hipblasSgetriBatched(object handle, const int n, object A, const int lda, ob
             Number of matrices in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20293,7 +20310,7 @@ def hipblasDgetriBatched(object handle, const int n, object A, const int lda, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20311,7 +20328,7 @@ def hipblasCgetriBatched(object handle, const int n, object A, const int lda, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20329,7 +20346,7 @@ def hipblasZgetriBatched(object handle, const int n, object A, const int lda, ob
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20415,7 +20432,7 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
             rank deficient; the i-th diagonal element of its triangular factor is zero.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20435,7 +20452,7 @@ def hipblasDgels(object handle, object trans, const int m, const int n, const in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20455,7 +20472,7 @@ def hipblasCgels(object handle, object trans, const int m, const int n, const in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20475,7 +20492,7 @@ def hipblasZgels(object handle, object trans, const int m, const int n, const in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20568,7 +20585,7 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
             Number of matrices in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20588,7 +20605,7 @@ def hipblasDgelsBatched(object handle, object trans, const int m, const int n, c
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20608,7 +20625,7 @@ def hipblasCgelsBatched(object handle, object trans, const int m, const int n, c
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20628,7 +20645,7 @@ def hipblasZgelsBatched(object handle, object trans, const int m, const int n, c
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20732,7 +20749,7 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
             Number of matrices in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20752,7 +20769,7 @@ def hipblasDgelsStridedBatched(object handle, object trans, const int m, const i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20772,7 +20789,7 @@ def hipblasCgelsStridedBatched(object handle, object trans, const int m, const i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20792,7 +20809,7 @@ def hipblasZgelsStridedBatched(object handle, object trans, const int m, const i
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20867,7 +20884,7 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
             If info = j < 0, the j-th argument is invalid.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20884,7 +20901,7 @@ def hipblasDgeqrf(object handle, const int m, const int n, object A, const int l
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20901,7 +20918,7 @@ def hipblasCgeqrf(object handle, const int m, const int n, object A, const int l
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20918,7 +20935,7 @@ def hipblasZgeqrf(object handle, const int m, const int n, object A, const int l
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -20996,7 +21013,7 @@ def hipblasSgeqrfBatched(object handle, const int m, const int n, object A, cons
             Number of matrices in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21013,7 +21030,7 @@ def hipblasDgeqrfBatched(object handle, const int m, const int n, object A, cons
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21030,7 +21047,7 @@ def hipblasCgeqrfBatched(object handle, const int m, const int n, object A, cons
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21047,7 +21064,7 @@ def hipblasZgeqrfBatched(object handle, const int m, const int n, object A, cons
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21135,7 +21152,7 @@ def hipblasSgeqrfStridedBatched(object handle, const int m, const int n, object 
             Number of matrices in the batch.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21152,7 +21169,7 @@ def hipblasDgeqrfStridedBatched(object handle, const int m, const int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21169,7 +21186,7 @@ def hipblasCgeqrfStridedBatched(object handle, const int m, const int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21186,7 +21203,7 @@ def hipblasZgeqrfStridedBatched(object handle, const int m, const int n, object 
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21280,7 +21297,7 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
             enumerant specifying the algorithm type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21393,7 +21410,7 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
             enumerant specifying the algorithm type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21520,7 +21537,7 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
             enumerant specifying the algorithm type.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21658,7 +21675,7 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
             specifies the datatype of computation
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21795,7 +21812,7 @@ def hipblasTrsmBatchedEx(object handle, object side, object uplo, object transA,
             specifies the datatype of computation
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -21942,7 +21959,7 @@ def hipblasTrsmStridedBatchedEx(object handle, object side, object uplo, object 
             specifies the datatype of computation
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22007,7 +22024,7 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22073,7 +22090,7 @@ def hipblasAxpyBatchedEx(object handle, int n, object alpha, object alphaType, o
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22151,7 +22168,7 @@ def hipblasAxpyStridedBatchedEx(object handle, int n, object alpha, object alpha
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22218,7 +22235,7 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22243,7 +22260,7 @@ def hipblasDotcEx(object handle, int n, object x, object xType, int incx, object
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22316,7 +22333,7 @@ def hipblasDotBatchedEx(object handle, int n, object x, object xType, int incx, 
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22341,7 +22358,7 @@ def hipblasDotcBatchedEx(object handle, int n, object x, object xType, int incx,
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22420,7 +22437,7 @@ def hipblasDotStridedBatchedEx(object handle, int n, object x, object xType, int
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22445,7 +22462,7 @@ def hipblasDotcStridedBatchedEx(object handle, int n, object x, object xType, in
     r"""(No short description)
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22501,7 +22518,7 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22557,7 +22574,7 @@ def hipblasNrm2BatchedEx(object handle, int n, object x, object xType, int incx,
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22619,7 +22636,7 @@ def hipblasNrm2StridedBatchedEx(object handle, int n, object x, object xType, in
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22687,7 +22704,7 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22762,7 +22779,7 @@ def hipblasRotBatchedEx(object handle, int n, object x, object xType, int incx, 
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22843,7 +22860,7 @@ def hipblasRotStridedBatchedEx(object handle, int n, object x, object xType, int
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22898,7 +22915,7 @@ def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -22952,7 +22969,7 @@ def hipblasScalBatchedEx(object handle, int n, object alpha, object alphaType, o
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -23013,7 +23030,7 @@ def hipblasScalStridedBatchedEx(object handle, int n, object alpha, object alpha
             specifies the datatype of computation.
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.hipblasStatus_t`
     """
@@ -23045,7 +23062,7 @@ def hipblasStatusToString(object status):
             hipBLAS status to convert to string
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.bytes`
     """
