@@ -18,8 +18,10 @@ cdef void __init_symbol(void** result, const char* name) nogil:
 
 
 cdef void* _hipfftPlan1d__funptr = NULL
-# ! @brief Create a new one-dimensional FFT plan.
+# @brief Create a new one-dimensional FFT plan.
+# 
 # @details Allocate and initialize a new one-dimensional FFT plan.
+# 
 # @param[out] plan Pointer to the FFT plan handle.
 # @param[in] nx FFT length.
 # @param[in] type FFT type.
@@ -31,11 +33,13 @@ cdef hipfftResult_t hipfftPlan1d(hipfftHandle* plan,int nx,hipfftType_t type,int
 
 
 cdef void* _hipfftPlan2d__funptr = NULL
-# ! @brief Create a new two-dimensional FFT plan.
+# @brief Create a new two-dimensional FFT plan.
+# 
 # @details Allocate and initialize a new two-dimensional FFT plan.
 # Two-dimensional data should be stored in C ordering (row-major
 # format), so that indexes in y-direction (j index) vary the
 # fastest.
+# 
 # @param[out] plan Pointer to the FFT plan handle.
 # @param[in] nx Number of elements in the x-direction (slow index).
 # @param[in] ny Number of elements in the y-direction (fast index).
@@ -47,11 +51,13 @@ cdef hipfftResult_t hipfftPlan2d(hipfftHandle* plan,int nx,int ny,hipfftType_t t
 
 
 cdef void* _hipfftPlan3d__funptr = NULL
-# ! @brief Create a new three-dimensional FFT plan.
+# @brief Create a new three-dimensional FFT plan.
+# 
 # @details Allocate and initialize a new three-dimensional FFT plan.
 # Three-dimensional data should be stored in C ordering (row-major
 # format), so that indexes in z-direction (k index) vary the
 # fastest.
+# 
 # @param[out] plan Pointer to the FFT plan handle.
 # @param[in] nx Number of elements in the x-direction (slowest index).
 # @param[in] ny Number of elements in the y-direction.
@@ -64,35 +70,40 @@ cdef hipfftResult_t hipfftPlan3d(hipfftHandle* plan,int nx,int ny,int nz,hipfftT
 
 
 cdef void* _hipfftPlanMany__funptr = NULL
-# ! @brief Create a new batched rank-dimensional FFT plan with advanced data layout.
+#  @brief Create a new batched rank-dimensional FFT plan with advanced data layout.
+# 
 # @details Allocate and initialize a new batched rank-dimensional
-# FFT plan. The number of elements to transform in each direction of
-# the input data is specified in n.
-# The batch parameter tells hipFFT how many transforms to perform. 
-# The distance between the first elements of two consecutive batches 
-# of the input and output data are specified with the idist and odist 
-# parameters.
-# The inembed and onembed parameters define the input and output data
-# layouts. The number of elements in the data is assumed to be larger 
-# than the number of elements in the transform. Strided data layouts 
-# are also supported. Strides along the fastest direction in the input
-# and output data are specified via the istride and ostride parameters.  
-# If both inembed and onembed parameters are set to NULL, all the 
-# advanced data layout parameters are ignored and reverted to default 
-# values, i.e., the batched transform is performed with non-strided data
-# access and the number of data/transform elements are assumed to be  
-# equivalent.
-# @param[out] plan Pointer to the FFT plan handle.
-# @param[in] rank Dimension of transform (1, 2, or 3).
-# @param[in] n Number of elements to transform in the x/y/z directions.
-# @param[in] inembed Number of elements in the input data in the x/y/z directions.
-# @param[in] istride Distance between two successive elements in the input data.
-# @param[in] idist Distance between input batches.
-# @param[in] onembed Number of elements in the output data in the x/y/z directions.
-# @param[in] ostride Distance between two successive elements in the output data.
-# @param[in] odist Distance between output batches.
-# @param[in] type FFT type.
-# @param[in] batch Number of batched transforms to perform.
+#  FFT plan. The number of elements to transform in each direction of
+#  the input data is specified in n.
+# 
+#  The batch parameter tells hipFFT how many transforms to perform.
+#  The distance between the first elements of two consecutive batches
+#  of the input and output data are specified with the idist and odist
+#  parameters.
+# 
+#  The inembed and onembed parameters define the input and output data
+#  layouts. The number of elements in the data is assumed to be larger
+#  than the number of elements in the transform. Strided data layouts
+#  are also supported. Strides along the fastest direction in the input
+#  and output data are specified via the istride and ostride parameters.
+# 
+#  If both inembed and onembed parameters are set to NULL, all the
+#  advanced data layout parameters are ignored and reverted to default
+#  values, i.e., the batched transform is performed with non-strided data
+#  access and the number of data/transform elements are assumed to be
+#  equivalent.
+# 
+#  @param[out] plan Pointer to the FFT plan handle.
+#  @param[in] rank Dimension of transform (1, 2, or 3).
+#  @param[in] n Number of elements to transform in the x/y/z directions.
+#  @param[in] inembed Number of elements in the input data in the x/y/z directions.
+#  @param[in] istride Distance between two successive elements in the input data.
+#  @param[in] idist Distance between input batches.
+#  @param[in] onembed Number of elements in the output data in the x/y/z directions.
+#  @param[in] ostride Distance between two successive elements in the output data.
+#  @param[in] odist Distance between output batches.
+#  @param[in] type FFT type.
+#  @param[in] batch Number of batched transforms to perform.
 cdef hipfftResult_t hipfftPlanMany(hipfftHandle* plan,int rank,int * n,int * inembed,int istride,int idist,int * onembed,int ostride,int odist,hipfftType_t type,int batch) nogil:
     global _hipfftPlanMany__funptr
     __init_symbol(&_hipfftPlanMany__funptr,"hipfftPlanMany")
@@ -100,7 +111,7 @@ cdef hipfftResult_t hipfftPlanMany(hipfftHandle* plan,int rank,int * n,int * ine
 
 
 cdef void* _hipfftCreate__funptr = NULL
-# ! @brief Allocate a new plan.
+# @brief Allocate a new plan.
 cdef hipfftResult_t hipfftCreate(hipfftHandle* plan) nogil:
     global _hipfftCreate__funptr
     __init_symbol(&_hipfftCreate__funptr,"hipfftCreate")
@@ -108,12 +119,16 @@ cdef hipfftResult_t hipfftCreate(hipfftHandle* plan) nogil:
 
 
 cdef void* _hipfftExtPlanScaleFactor__funptr = NULL
-# ! @brief Set scaling factor.
+# @brief Set scaling factor.
+# 
 # @details hipFFT multiplies each element of the result by the given factor at the end of the transform.
+# 
 # The supplied factor must be a finite number.  That is, it must neither be infinity nor NaN.
+# 
 # This function must be called after the plan is allocated using
 # ::hipfftCreate, but before the plan is initialized by any of the
 # "MakePlan" functions.
+#
 cdef hipfftResult_t hipfftExtPlanScaleFactor(hipfftHandle plan,double scalefactor) nogil:
     global _hipfftExtPlanScaleFactor__funptr
     __init_symbol(&_hipfftExtPlanScaleFactor__funptr,"hipfftExtPlanScaleFactor")
@@ -121,9 +136,11 @@ cdef hipfftResult_t hipfftExtPlanScaleFactor(hipfftHandle plan,double scalefacto
 
 
 cdef void* _hipfftMakePlan1d__funptr = NULL
-# ! @brief Initialize a new one-dimensional FFT plan.
+# @brief Initialize a new one-dimensional FFT plan.
+# 
 # @details Assumes that the plan has been created already, and
 # modifies the plan associated with the plan handle.
+# 
 # @param[in] plan Handle of the FFT plan.
 # @param[in] nx FFT length.
 # @param[in] type FFT type.
@@ -135,12 +152,14 @@ cdef hipfftResult_t hipfftMakePlan1d(hipfftHandle plan,int nx,hipfftType_t type,
 
 
 cdef void* _hipfftMakePlan2d__funptr = NULL
-# ! @brief Initialize a new two-dimensional FFT plan.
+# @brief Initialize a new two-dimensional FFT plan.
+# 
 # @details Assumes that the plan has been created already, and
 # modifies the plan associated with the plan handle.
 # Two-dimensional data should be stored in C ordering (row-major
 # format), so that indexes in y-direction (j index) vary the
 # fastest.
+# 
 # @param[in] plan Handle of the FFT plan.
 # @param[in] nx Number of elements in the x-direction (slow index).
 # @param[in] ny Number of elements in the y-direction (fast index).
@@ -153,12 +172,14 @@ cdef hipfftResult_t hipfftMakePlan2d(hipfftHandle plan,int nx,int ny,hipfftType_
 
 
 cdef void* _hipfftMakePlan3d__funptr = NULL
-# ! @brief Initialize a new two-dimensional FFT plan.
+# @brief Initialize a new two-dimensional FFT plan.
+# 
 # @details Assumes that the plan has been created already, and
 # modifies the plan associated with the plan handle.
 # Three-dimensional data should be stored in C ordering (row-major
 # format), so that indexes in z-direction (k index) vary the
 # fastest.
+# 
 # @param[in] plan Handle of the FFT plan.
 # @param[in] nx Number of elements in the x-direction (slowest index).
 # @param[in] ny Number of elements in the y-direction.
@@ -172,25 +193,30 @@ cdef hipfftResult_t hipfftMakePlan3d(hipfftHandle plan,int nx,int ny,int nz,hipf
 
 
 cdef void* _hipfftMakePlanMany__funptr = NULL
-# ! @brief Initialize a new batched rank-dimensional FFT plan with advanced data layout.
+# @brief Initialize a new batched rank-dimensional FFT plan with advanced data layout.
+# 
 # @details Assumes that the plan has been created already, and
-# modifies the plan associated with the plan handle. The number 
-# of elements to transform in each direction of the input data 
+# modifies the plan associated with the plan handle. The number
+# of elements to transform in each direction of the input data
 # in the FFT plan is specified in n.
-# The batch parameter tells hipFFT how many transforms to perform. 
-# The distance between the first elements of two consecutive batches 
-# of the input and output data are specified with the idist and odist 
+# 
+# The batch parameter tells hipFFT how many transforms to perform.
+# The distance between the first elements of two consecutive batches
+# of the input and output data are specified with the idist and odist
 # parameters.
+# 
 # The inembed and onembed parameters define the input and output data
-# layouts. The number of elements in the data is assumed to be larger 
-# than the number of elements in the transform. Strided data layouts 
+# layouts. The number of elements in the data is assumed to be larger
+# than the number of elements in the transform. Strided data layouts
 # are also supported. Strides along the fastest direction in the input
-# and output data are specified via the istride and ostride parameters.  
-# If both inembed and onembed parameters are set to NULL, all the 
-# advanced data layout parameters are ignored and reverted to default 
+# and output data are specified via the istride and ostride parameters.
+# 
+# If both inembed and onembed parameters are set to NULL, all the
+# advanced data layout parameters are ignored and reverted to default
 # values, i.e., the batched transform is performed with non-strided data
-# access and the number of data/transform elements are assumed to be  
+# access and the number of data/transform elements are assumed to be
 # equivalent.
+# 
 # @param[out] plan Pointer to the FFT plan handle.
 # @param[in] rank Dimension of transform (1, 2, or 3).
 # @param[in] n Number of elements to transform in the x/y/z directions.
@@ -217,7 +243,8 @@ cdef hipfftResult_t hipfftMakePlanMany64(hipfftHandle plan,int rank,long long * 
 
 
 cdef void* _hipfftEstimate1d__funptr = NULL
-# ! @brief Return an estimate of the work area size required for a 1D plan.
+# @brief Return an estimate of the work area size required for a 1D plan.
+# 
 # @param[in] nx Number of elements in the x-direction.
 # @param[in] type FFT type.
 # @param[out] workSize Pointer to work area size (returned value).
@@ -228,7 +255,8 @@ cdef hipfftResult_t hipfftEstimate1d(int nx,hipfftType_t type,int batch,unsigned
 
 
 cdef void* _hipfftEstimate2d__funptr = NULL
-# ! @brief Return an estimate of the work area size required for a 2D plan.
+# @brief Return an estimate of the work area size required for a 2D plan.
+# 
 # @param[in] nx Number of elements in the x-direction.
 # @param[in] ny Number of elements in the y-direction.
 # @param[in] type FFT type.
@@ -240,7 +268,8 @@ cdef hipfftResult_t hipfftEstimate2d(int nx,int ny,hipfftType_t type,unsigned lo
 
 
 cdef void* _hipfftEstimate3d__funptr = NULL
-# ! @brief Return an estimate of the work area size required for a 3D plan.
+# @brief Return an estimate of the work area size required for a 3D plan.
+# 
 # @param[in] nx Number of elements in the x-direction.
 # @param[in] ny Number of elements in the y-direction.
 # @param[in] nz Number of elements in the z-direction.
@@ -253,7 +282,8 @@ cdef hipfftResult_t hipfftEstimate3d(int nx,int ny,int nz,hipfftType_t type,unsi
 
 
 cdef void* _hipfftEstimateMany__funptr = NULL
-# ! @brief Return an estimate of the work area size required for a rank-dimensional plan.
+# @brief Return an estimate of the work area size required for a rank-dimensional plan.
+# 
 # @param[in] rank Dimension of FFT transform (1, 2, or 3).
 # @param[in] n Number of elements in the x/y/z directions.
 # @param[in] inembed
@@ -272,7 +302,8 @@ cdef hipfftResult_t hipfftEstimateMany(int rank,int * n,int * inembed,int istrid
 
 
 cdef void* _hipfftGetSize1d__funptr = NULL
-# ! @brief Return size of the work area size required for a 1D plan.
+# @brief Return size of the work area size required for a 1D plan.
+# 
 # @param[in] plan Pointer to the FFT plan.
 # @param[in] nx Number of elements in the x-direction.
 # @param[in] type FFT type.
@@ -284,7 +315,8 @@ cdef hipfftResult_t hipfftGetSize1d(hipfftHandle plan,int nx,hipfftType_t type,i
 
 
 cdef void* _hipfftGetSize2d__funptr = NULL
-# ! @brief Return size of the work area size required for a 2D plan.
+# @brief Return size of the work area size required for a 2D plan.
+# 
 # @param[in] plan Pointer to the FFT plan.
 # @param[in] nx Number of elements in the x-direction.
 # @param[in] ny Number of elements in the y-direction.
@@ -297,7 +329,8 @@ cdef hipfftResult_t hipfftGetSize2d(hipfftHandle plan,int nx,int ny,hipfftType_t
 
 
 cdef void* _hipfftGetSize3d__funptr = NULL
-# ! @brief Return size of the work area size required for a 3D plan.
+# @brief Return size of the work area size required for a 3D plan.
+# 
 # @param[in] plan Pointer to the FFT plan.
 # @param[in] nx Number of elements in the x-direction.
 # @param[in] ny Number of elements in the y-direction.
@@ -311,7 +344,8 @@ cdef hipfftResult_t hipfftGetSize3d(hipfftHandle plan,int nx,int ny,int nz,hipff
 
 
 cdef void* _hipfftGetSizeMany__funptr = NULL
-# ! @brief Return size of the work area size required for a rank-dimensional plan.
+# @brief Return size of the work area size required for a rank-dimensional plan.
+# 
 # @param[in] plan Pointer to the FFT plan.
 # @param[in] rank Dimension of FFT transform (1, 2, or 3).
 # @param[in] n Number of elements in the x/y/z directions.
@@ -338,7 +372,8 @@ cdef hipfftResult_t hipfftGetSizeMany64(hipfftHandle plan,int rank,long long * n
 
 
 cdef void* _hipfftGetSize__funptr = NULL
-# ! @brief Return size of the work area size required for a rank-dimensional plan.
+# @brief Return size of the work area size required for a rank-dimensional plan.
+# 
 # @param[in] plan Pointer to the FFT plan.
 cdef hipfftResult_t hipfftGetSize(hipfftHandle plan,unsigned long * workSize) nogil:
     global _hipfftGetSize__funptr
@@ -347,7 +382,8 @@ cdef hipfftResult_t hipfftGetSize(hipfftHandle plan,unsigned long * workSize) no
 
 
 cdef void* _hipfftSetAutoAllocation__funptr = NULL
-# ! @brief Set the plan's auto-allocation flag.  The plan will allocate its own workarea.
+# @brief Set the plan's auto-allocation flag.  The plan will allocate its own workarea.
+# 
 # @param[in] plan Pointer to the FFT plan.
 # @param[in] autoAllocate 0 to disable auto-allocation, non-zero to enable.
 cdef hipfftResult_t hipfftSetAutoAllocation(hipfftHandle plan,int autoAllocate) nogil:
@@ -357,7 +393,8 @@ cdef hipfftResult_t hipfftSetAutoAllocation(hipfftHandle plan,int autoAllocate) 
 
 
 cdef void* _hipfftSetWorkArea__funptr = NULL
-# ! @brief Set the plan's work area.
+# @brief Set the plan's work area.
+# 
 # @param[in] plan Pointer to the FFT plan.
 # @param[in] workArea Pointer to the work area (on device).
 cdef hipfftResult_t hipfftSetWorkArea(hipfftHandle plan,void * workArea) nogil:
@@ -367,9 +404,11 @@ cdef hipfftResult_t hipfftSetWorkArea(hipfftHandle plan,void * workArea) nogil:
 
 
 cdef void* _hipfftExecC2C__funptr = NULL
-# ! @brief Execute a (float) complex-to-complex FFT.
+# @brief Execute a (float) complex-to-complex FFT.
+# 
 # @details If the input and output buffers are equal, an in-place
 # transform is performed.
+# 
 # @param plan The FFT plan.
 # @param idata Input data (on device).
 # @param odata Output data (on device).
@@ -381,9 +420,11 @@ cdef hipfftResult_t hipfftExecC2C(hipfftHandle plan,float2 * idata,float2 * odat
 
 
 cdef void* _hipfftExecR2C__funptr = NULL
-# ! @brief Execute a (float) real-to-complex FFT.
+# @brief Execute a (float) real-to-complex FFT.
+# 
 # @details If the input and output buffers are equal, an in-place
 # transform is performed.
+# 
 # @param plan The FFT plan.
 # @param idata Input data (on device).
 # @param odata Output data (on device).
@@ -394,9 +435,11 @@ cdef hipfftResult_t hipfftExecR2C(hipfftHandle plan,float * idata,float2 * odata
 
 
 cdef void* _hipfftExecC2R__funptr = NULL
-# ! @brief Execute a (float) complex-to-real FFT.
+# @brief Execute a (float) complex-to-real FFT.
+# 
 # @details If the input and output buffers are equal, an in-place
 # transform is performed.
+# 
 # @param plan The FFT plan.
 # @param idata Input data (on device).
 # @param odata Output data (on device).
@@ -407,9 +450,11 @@ cdef hipfftResult_t hipfftExecC2R(hipfftHandle plan,float2 * idata,float * odata
 
 
 cdef void* _hipfftExecZ2Z__funptr = NULL
-# ! @brief Execute a (double) complex-to-complex FFT.
+# @brief Execute a (double) complex-to-complex FFT.
+# 
 # @details If the input and output buffers are equal, an in-place
 # transform is performed.
+# 
 # @param plan The FFT plan.
 # @param idata Input data (on device).
 # @param odata Output data (on device).
@@ -421,9 +466,11 @@ cdef hipfftResult_t hipfftExecZ2Z(hipfftHandle plan,double2 * idata,double2 * od
 
 
 cdef void* _hipfftExecD2Z__funptr = NULL
-# ! @brief Execute a (double) real-to-complex FFT.
+# @brief Execute a (double) real-to-complex FFT.
+# 
 # @details If the input and output buffers are equal, an in-place
 # transform is performed.
+# 
 # @param plan The FFT plan.
 # @param idata Input data (on device).
 # @param odata Output data (on device).
@@ -434,9 +481,11 @@ cdef hipfftResult_t hipfftExecD2Z(hipfftHandle plan,double * idata,double2 * oda
 
 
 cdef void* _hipfftExecZ2D__funptr = NULL
-# ! @brief Execute a (double) complex-to-real FFT.
+# @brief Execute a (double) complex-to-real FFT.
+# 
 # @details If the input and output buffers are equal, an in-place
 # transform is performed.
+# 
 # @param plan The FFT plan.
 # @param idata Input data (on device).
 # @param odata Output data (on device).
@@ -447,9 +496,11 @@ cdef hipfftResult_t hipfftExecZ2D(hipfftHandle plan,double2 * idata,double * oda
 
 
 cdef void* _hipfftSetStream__funptr = NULL
-# ! @brief Set HIP stream to execute plan on.
+#  @brief Set HIP stream to execute plan on.
+# 
 # @details Associates a HIP stream with a hipFFT plan.  All kernels
 # launched by this plan are associated with the provided stream.
+# 
 # @param plan The FFT plan.
 # @param stream The HIP stream.
 cdef hipfftResult_t hipfftSetStream(hipfftHandle plan,hipStream_t stream) nogil:
@@ -459,7 +510,7 @@ cdef hipfftResult_t hipfftSetStream(hipfftHandle plan,hipStream_t stream) nogil:
 
 
 cdef void* _hipfftDestroy__funptr = NULL
-# ! @brief Destroy and deallocate an existing plan.
+# @brief Destroy and deallocate an existing plan.
 cdef hipfftResult_t hipfftDestroy(hipfftHandle plan) nogil:
     global _hipfftDestroy__funptr
     __init_symbol(&_hipfftDestroy__funptr,"hipfftDestroy")
@@ -467,7 +518,8 @@ cdef hipfftResult_t hipfftDestroy(hipfftHandle plan) nogil:
 
 
 cdef void* _hipfftGetVersion__funptr = NULL
-# ! @brief Get rocFFT/cuFFT version.
+# @brief Get rocFFT/cuFFT version.
+# 
 # @param[out] version cuFFT/rocFFT version (returned value).
 cdef hipfftResult_t hipfftGetVersion(int * version) nogil:
     global _hipfftGetVersion__funptr
@@ -476,7 +528,8 @@ cdef hipfftResult_t hipfftGetVersion(int * version) nogil:
 
 
 cdef void* _hipfftGetProperty__funptr = NULL
-# ! @brief Get library property.
+# @brief Get library property.
+# 
 # @param[in] type Property type.
 # @param[out] value Returned value.
 cdef hipfftResult_t hipfftGetProperty(hipfftLibraryPropertyType_t type,int * value) nogil:

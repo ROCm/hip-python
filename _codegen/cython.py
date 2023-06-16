@@ -2,10 +2,12 @@
 
 __author__ = "AMD_AUTHOR"
 
+import re
 import sys
 import os
 import keyword
 import textwrap
+import warnings
 
 import clang.cindex
 
@@ -13,6 +15,8 @@ import Cython.Tempita
 
 from . import cparser
 from . import control
+
+from . import doxyparser
 
 indent = " " * 4
 
@@ -367,9 +371,10 @@ def {{attr}}(self):
 
 # Mixins
 class CythonMixin:
+
     def __init__(self):  # Will not be called, attribs specified for type hinting
         self.renamer = DEFAULT_RENAMER
-        self.sep = "_"
+        self.sep = "_"        
 
     @property
     def cython_name(self):
@@ -483,19 +488,19 @@ class Typed:
     def is_out_ptr(self):
         """If this parameter has been specified as out parameter."""
         assert self.is_ptr
-        return self.ptr_intent(self) == control.PointerParamIntent.OUT
+        return self.ptr_intent(self) == control.ParmIntent.OUT
 
     @property
     def is_inout_ptr(self):
         """If this is an inout parameter."""
         assert self.is_ptr
-        return self.ptr_intent(self) == control.PointerParamIntent.INOUT
+        return self.ptr_intent(self) == control.ParmIntent.INOUT
 
     @property
     def is_in_ptr(self):
         """If this is an inout parameter."""
         assert self.is_ptr
-        return self.ptr_intent(self) == control.PointerParamIntent.IN
+        return self.ptr_intent(self) == control.ParmIntent.IN
 
 
     @property
@@ -886,7 +891,7 @@ class ParmMixin(CythonMixin, Typed):
         global DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
-        self.ptr_intent = control.DEFAULT_PTR_PARAM_INTENT
+        self.ptr_intent = control.DEFAULT_PTR_PARM_INTENT
         self.ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
 
     @property
@@ -899,6 +904,16 @@ class ParmMixin(CythonMixin, Typed):
         return f"{typename} {name}"
 
 class FunctionMixin(CythonMixin, Typed):
+    
+    def _raw_comment_stripped(self):
+        from . import tree
+
+        assert isinstance(self, tree.Function)
+        if self.raw_comment != None:
+            return doxyparser.remove_doxygen_cpp_comments(self.raw_comment)
+        else:
+            return ""
+
     def _raw_comment_as_python_comment(self):
         from . import tree
 
@@ -926,16 +941,6 @@ class FunctionMixin(CythonMixin, Typed):
         if not self.has_python_body_epilog:
             setattr(self, "_python_body_epilog", [])
         self._python_body_epilog.append(code)
-
-    # TODO Identify and extract doxygen params and other sections to create higher quality docstring
-    # doxygen param is terminated by blank line or new section/paragraph
-    # Can be used to build parser for args
-    # More details https://doxygen.nl/manual/commands.html#cmdparam
-    def _raw_comment_as_docstring(self):
-        from . import tree
-
-        assert isinstance(self, tree.Function)
-        return f'"""{"".join(self._raw_comment_stripped()).rstrip()}\n"""'
 
     @property
     def _has_funptr_parm(self):
@@ -987,12 +992,185 @@ cdef void* {funptr_name} = NULL
     return (<{typename} (*)({parm_types}){modifiers}> {funptr_name})({parm_names})
 """
 
+    @staticmethod
+    def _render_doxygen_section_body(section,single_level_indent,outer_indent) -> str:
+        """Renders the body of a doxygen section.
+        """
+        result = ""
+        for block in section.blocks:
+            if isinstance(block,doxyparser.TextBlock):
+                # variants we've seen
+                # \note: texttext => firstline == ": texttext"
+                # \note texttext
+                # \note texttext
+                #    texttext
+                lines = block.transformed_text.lstrip(":\n\t ").rstrip().splitlines()
+                if len(lines):
+                    firstline = lines[0]
+                    other_lines = lines[1:]
+                    if len(other_lines):
+                        transformed_text = (
+                            firstline + "\n"
+                            + textwrap.dedent("\n".join(other_lines))
+                        )
+                    else:
+                        transformed_text = firstline
+                    result += textwrap.indent(transformed_text,outer_indent) + "\n"
+            elif isinstance(block,doxyparser.VerbatimBlock):
+                result += f"\n{outer_indent}.. code-block::"
+                if block.kind == "code": # \code { lang } TEXT \endcode
+                    if block.tokens == 6:
+                        lang = block.tokens[2][1:]
+                        result += lang
+                result += "\n\n"
+                inner_indent = outer_indent+" "*3
+                code = textwrap.dedent(block.code)
+                result += textwrap.indent(code,inner_indent) + "\n\n"
+            elif isinstance(block,doxyparser.MathBlock):
+                inner_indent = outer_indent+" "*3
+                result += f"\n{outer_indent}.. math::\n"
+                if block.env != None:
+                    result += "{inner_indent}:nowrap:"
+                    result += rf"{inner_indent}\begin{{{block.env}}}\n"
+                result += "\n"
+                code = textwrap.dedent(block.code)
+                result += textwrap.indent(code,inner_indent).rstrip() + "\n"
+                if block.env != None:
+                    result += rf"{inner_indent}\end{{{block.env}}}\n"
+                result += "\n"
+        return result
+    
+    @staticmethod
+    def _dedent_first_line(text: str) -> str:
+        lines = text.splitlines(keepends=True)
+        result = lines[0].strip(" \t")
+        if len(lines) > 1:
+            result += "".join(lines[1:])
+        return result
+
+    def _raw_comment_as_docstring(self,out_parms): # TODO make optional
+        """Converts doxygen comment to a Python docstring using the doxyparser API.
+        """
+        # TODO handle groups; issue detecting addgroup; detecting ingroup is easier
+        from . import tree
+
+        assert isinstance(self, tree.Function)
+        single_level_indent = " "*4
+        doxygen_brief = None
+        docstring_returns = []
+        docstring_out_arg_returns = []
+        docstring_args = []
+
+        # Strip everything above @brief (or equivalent) away
+        translater = doxyparser.DoxygenGrammar()
+        translater.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
+        translater.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
+        translater.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
+        translater.frnd.setParseAction(doxyparser.format.PythonDocstrings.frnd)
+        def other_parse_action(tokens):
+            cmd = tokens[0][1:]
+            if cmd == "ref":
+                return f"``{tokens[1]}`` "
+            return [] # suppress all others
+        translater.other.setParseAction(other_parse_action)
+
+        tree = translater.parse_structure(self._raw_comment_stripped())
+        sections = list(tree.children)
+        # brief
+        doxygen_brief = next((sec for sec in sections if sec.kind in ("brief","short")),None)
+        if doxygen_brief != None:
+            # clip other sections before the brief, TODO make option
+            sections = sections[sections.index(doxygen_brief)+1:]
+            if len(doxygen_brief[0]) > 1:
+                warnings.warn(f"function {self.name}: doxygen: more than one text/verbatim/math block in section 'brief'. Ignore others.")
+            if not isinstance(doxygen_brief.first_block,doxyparser.TextBlock):
+                raise RuntimeError(f"function {self.name}: doxygen: expected single text block in section 'brief'")
+            docstring_body = doxygen_brief.first_block.transformed_text.strip() +"\n\n"
+        else:
+            docstring_body = "(No short description)\n\n"
+        # other sections
+        undocumented_parms_dict = dict(
+            [(parm.name,parm) for parm in self.parms]
+        )
+        out_parms_dict = dict(
+            [(parm.name,parm) for parm in out_parms]
+        )
+        for section in sections:
+            if section.kind in (
+              "result",
+              "return",
+              "returns",
+            ):
+                descr = self._render_doxygen_section_body(section,single_level_indent,outer_indent=single_level_indent).lstrip("-* \t")
+                docstring_returns.append(descr)
+            elif section.kind == "param":
+                # ['\\param', '[in]', 'param1', 'Description text is here.']
+                names = section.tokens[2]
+                # Args:
+                #    <arg>: line1
+                #       line2
+                # ^ hence, 2x indent for descr
+                descr = self._dedent_first_line(self._render_doxygen_section_body(section,single_level_indent,outer_indent=single_level_indent*2).rstrip()+"\n")
+                descr = descr.lstrip("-*")
+                dir = (f"**{section.tokens[1].replace(' ','')}** ") if section.tokens[1] != None else ""
+                for name in names:
+                    if not len(descr.strip()):
+                        warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' has empty documentation")
+                    if not name in undocumented_parms_dict:
+                        warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' is not part of function signature")
+                    else:
+                        del undocumented_parms_dict[name]
+                    if name in out_parms_dict:
+                        docstring_out_arg_returns.append(f"{single_level_indent}{out_parms_dict[name].cython_name}: {descr}")
+                    else:
+                        docstring_args.append((name,dir,descr))
+            else:
+                docstring_body += "\n"
+                if section.kind in ("details","details*"):
+                    outer_indent = ""
+                    if self.name == "hipsparseScsrmm2":
+                        print(section.kind)
+                        print(section.first_block.text)
+                else:
+                    docstring_body += f"\n{section.kind[0].upper() + section.kind[1:]}:\n"
+                    outer_indent = single_level_indent
+                docstring_body += self._render_doxygen_section_body(section,single_level_indent,outer_indent)
+        # Args
+        if len(undocumented_parms_dict):
+            for name in undocumented_parms_dict:
+                warnings.warn(f"function {self.name}: doxygen: function arg '{name}' is not documented")
+
+        if len(docstring_args):
+            docstring_body += "\nArgs:\n"
+
+            for (name, dir, descr) in docstring_args:
+                docstring_body += f"{single_level_indent}{name}: {dir}{descr}\n"
+        # Return values
+        if not len(docstring_returns) and not self.is_void:
+            warnings.warn(f"function {self.name}: doxygen: undocumented return value")
+        docstring_returns += docstring_out_arg_returns # add the additional return parameter
+        if len(docstring_returns):
+            docstring_body += "\nReturns:\n"
+            if len(docstring_returns) > 1 or python_interface_always_return_tuple:
+                docstring_body += f"{single_level_indent}A ``tuple`` of size {len(docstring_returns)} that contains (in that order):\n"
+                prefix = "- "
+            else:
+                prefix = ""
+            for descr in docstring_returns:
+                docstring_body += textwrap.indent(
+                    prefix + descr.lstrip(" \t\n*-"),
+                    single_level_indent
+                ).rstrip() + "\n"
+        # remove multiple blank lines
+        docstring_body = re.sub(r"(\n\s*)+\n+", "\n\n", docstring_body).rstrip()
+        return f'r"""{docstring_body}\n"""' # r required if verbatim/code is in body
+
     def _analyze_parms(self, cprefix: str):
         from . import tree
 
         sig_args = []  # argument definitions that appear in the signature
         out_args = []  # return values, might include conversions
-        out_arg_names = (
+        out_parms = (
             []
         )  # names of the return values, required for identifying doxygen parameters
         c_interface_call_args = []  # arguments that are passed to the C interface
@@ -1026,13 +1204,14 @@ cdef void* {funptr_name} = NULL
 
         def handle_out_ptr_parm(parm: tree.Parm):
             nonlocal out_args
-            nonlocal out_arg_names
+            nonlocal out_parms
             nonlocal c_interface_call_args
             nonlocal prolog
             nonlocal cprefix
 
             parm_name = parm.cython_name
-
+            out_parms.append(parm) # append original name as we need to compare vs the documentation
+            
             if parm.is_pointer_to_basic_type(degree=1) or parm.is_pointer_to_char(
                 degree=2
             ):
@@ -1065,6 +1244,12 @@ cdef void* {funptr_name} = NULL
                     f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr"
                 )
                 out_args.append(parm_name)
+            else:
+                # If the argument was not removed from the parameter list,
+                # we did not add an additional return value.
+                # Hence, we remove the previously added original 
+                # name (see top of routine) from the out_arg_names list.
+                out_parms.pop(-1)
 
         def handle_in_inout_ptr_no_char_ptr_(parm: tree.Parm):
             global indent
@@ -1145,7 +1330,7 @@ cdef void* {funptr_name} = NULL
             fully_specified,
             sig_args,
             out_args,
-            out_arg_names,
+            out_parms,
             c_interface_call_args,
             prolog,
         )
@@ -1184,7 +1369,7 @@ cdef void* {funptr_name} = NULL
             fully_specified,
             sig_args,
             out_args,
-            out_arg_names,  # required for parsing parameter documentation
+            out_parms,  # required for parsing parameter documentation
             call_args,
             prolog,
         ) = self._analyze_parms(cprefix)
@@ -1194,7 +1379,7 @@ cdef void* {funptr_name} = NULL
         result = "@cython.embedsignature(True)\n"
         result += (
             f"def {self.cython_name}({', '.join(sig_args)}):\n"
-            + textwrap.indent(self._raw_comment_as_docstring(), indent).rstrip()
+            + textwrap.indent(self._raw_comment_as_docstring(out_parms), indent).rstrip()
             + "\n"
         )
         if self.has_python_body_prolog:
@@ -1228,7 +1413,7 @@ class CythonBackend:
         filename: str,
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
-        ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
+        ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
@@ -1254,7 +1439,7 @@ class CythonBackend:
         filename: str,
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
-        ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
+        ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
@@ -1476,7 +1661,7 @@ class CythonPackageGenerator:
         dll: str = None,
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
-        ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
+        ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
