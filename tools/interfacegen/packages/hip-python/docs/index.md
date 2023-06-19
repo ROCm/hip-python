@@ -12,7 +12,8 @@ Based on HIP version 5.4.22804-474e8620.
 - {doc}`/user_guide/0_install`
 - {doc}`/user_guide/1_usage`
 - {doc}`/user_guide/2_cuda_python_interop`
-- {doc}`/user_guide/3_report_bugs`
+- {doc}`/user_guide/3_datatypes`
+- {doc}`/user_guide/4_report_bugs`
 :::
 
 :::{grid-item-card} Developer Guide
@@ -42,3 +43,5 @@ Based on HIP version 5.4.22804-474e8620.
 :::
 
 ::::
+
+
