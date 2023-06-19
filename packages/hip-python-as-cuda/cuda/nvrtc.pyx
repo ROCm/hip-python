@@ -2,6 +2,12 @@
 
 """
 Attributes:
+    HIP_PYTHON (`.bool`):
+        `True`.
+    HIP_PYTHON_MOD (module):
+        A reference to the package `.hip.hiprtc`.
+    hiprtc (module):
+        A reference to the package `.hip.hiprtc`.
     HIP_PYTHON_nvrtcResult_HALLUCINATE:
         Make `.nvrtcResult` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
@@ -72,12 +78,6 @@ Attributes:
         alias of `.hiprtcLinkComplete`
     cuLinkDestroy:
         alias of `.hiprtcLinkDestroy`
-    HIP_PYTHON (`.bool`):
-        `True`.
-    HIP_PYTHON_MOD (module):
-        A reference to the package `.hip.hiprtc`.
-    hiprtc (module):
-        A reference to the package `.hip.hiprtc`.
 
 """
 

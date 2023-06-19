@@ -1,10 +1,8 @@
-# CUDA Python Interoperability Layer
+# CUDA Python Interoperability
 
 ## Installation
 
-## Examples
+## Python Example
 
-### Python example
-
-### Cython example
+## Cython Example
 

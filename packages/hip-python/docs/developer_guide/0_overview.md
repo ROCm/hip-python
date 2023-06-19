@@ -18,12 +18,12 @@ For developers, all sections of this guide are of interest.
 
 ### Advanced Users
 
-Users will typically not be involved with the code generation infrastructure.
-Instead they will download the prebuilt packages from a source like PIP
-or download the pregenerated package sources for a specific ROCm release from the
+Most users will likely not want to get their hands on the code generation infrastructure.
+Instead they will download and install prebuilt packages via `pip` or `conda`,
+or they download the pregenerated package sources for a specific ROCm release from the
 corresponding branch of the HIP Python git repository.
-If you want to follow the second approach, then the [Building and Packaging](2_packaging.md) 
-chapter is of interest to you. If you want to further tailor the code generation
+We refer users interested in the second approach to chapter [Building and Packaging](2_packaging.md) 
+If you want to further tailor the code generation 
 output according to your needs, then take a look into chapter [Code Generation](1_code_generation.md)
 too. If you think your modifications should be made available to other users too and are about
 to create a pull request, please first take a look at chapter [Commit Guidelines](4_commit_guide.md).

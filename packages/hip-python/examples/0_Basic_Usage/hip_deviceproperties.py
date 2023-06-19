@@ -16,7 +16,6 @@ def hip_check(call_result):
 props = hip.hipDeviceProp_t()
 hip_check(hip.hipGetDeviceProperties(props,0))
 
-#print(f"{props.arch=}") # TODO why is not working?
 print(f"{props.asicRevision=}")
 print(f"{props.canMapHostMemory=}")
 print(f"{props.clockInstructionRate=}")

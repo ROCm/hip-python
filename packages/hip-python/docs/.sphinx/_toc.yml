@@ -8,7 +8,8 @@ subtrees:
       - file: user_guide/0_install
       - file: user_guide/1_usage
       - file: user_guide/2_cuda_python_interop
-      - file: user_guide/3_report_bugs
+      - file: user_guide/3_datatypes
+      - file: user_guide/4_report_bugs
   - caption: "HIP Python: Python API"
     entries:
       - file: python_api/hip

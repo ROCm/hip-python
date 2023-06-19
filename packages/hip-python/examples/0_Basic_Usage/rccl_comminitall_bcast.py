@@ -1,3 +1,7 @@
+# AMD_COPYRIGHT
+
+__author__ = "AMD_AUTHOR"
+
 import numpy as np
 from hip import hip, rccl
 

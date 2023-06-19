@@ -1,12 +1,15 @@
+# AMD_COPYRIGHT
+
+__author__ = "AMD_AUTHOR"
+
 """This example demonstrates the usage of HIP Python's HIPFFT library.
 
 This example demonstrates the usage of HIP Python's HIPFFT library.
 We perform a double-complex-to-double-complex in-place forward FFT
 of a constant time signal f(t) = 1-1j of which we have N samples.
 The resulting FFT coefficients are all zero, 
-except the first one, which equals N-Nj.
+except the first one, which has the value N-Nj.
 """
-
 
 import numpy as np
 from hip import hip, hipfft

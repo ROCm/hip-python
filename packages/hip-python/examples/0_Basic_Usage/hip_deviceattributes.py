@@ -21,7 +21,6 @@ for attrib in (
    hip.hipDeviceAttribute_t.hipDeviceAttributeAccessPolicyMaxWindowSize,
    hip.hipDeviceAttribute_t.hipDeviceAttributeAmdSpecificBegin,
    hip.hipDeviceAttribute_t.hipDeviceAttributeAmdSpecificEnd,
-   hip.hipDeviceAttribute_t.hipDeviceAttributeArch,
    hip.hipDeviceAttribute_t.hipDeviceAttributeAsicRevision,
    hip.hipDeviceAttribute_t.hipDeviceAttributeAsyncEngineCount,
    hip.hipDeviceAttribute_t.hipDeviceAttributeCanMapHostMemory,
@@ -45,8 +44,6 @@ for attrib in (
    hip.hipDeviceAttribute_t.hipDeviceAttributeDeviceOverlap,
    hip.hipDeviceAttribute_t.hipDeviceAttributeDirectManagedMemAccessFromHost,
    hip.hipDeviceAttribute_t.hipDeviceAttributeFineGrainSupport,
-   hip.hipDeviceAttribute_t.hipDeviceAttributeGcnArch,
-   hip.hipDeviceAttribute_t.hipDeviceAttributeGcnArchName,
    hip.hipDeviceAttribute_t.hipDeviceAttributeGlobalL1CacheSupported,
    hip.hipDeviceAttribute_t.hipDeviceAttributeHdpMemFlushCntl,
    hip.hipDeviceAttribute_t.hipDeviceAttributeHdpRegFlushCntl,
@@ -104,7 +101,6 @@ for attrib in (
    hip.hipDeviceAttribute_t.hipDeviceAttributeMemoryPoolsSupported,
    hip.hipDeviceAttribute_t.hipDeviceAttributeMultiGpuBoardGroupID,
    hip.hipDeviceAttribute_t.hipDeviceAttributeMultiprocessorCount,
-   hip.hipDeviceAttribute_t.hipDeviceAttributeName,
    hip.hipDeviceAttribute_t.hipDeviceAttributePageableMemoryAccess,
    hip.hipDeviceAttribute_t.hipDeviceAttributePageableMemoryAccessUsesHostPageTables,
    hip.hipDeviceAttribute_t.hipDeviceAttributePciBusId,
@@ -130,20 +126,7 @@ for attrib in (
    hip.hipDeviceAttribute_t.hipDeviceAttributeWallClockRate,
    hip.hipDeviceAttribute_t.hipDeviceAttributeWarpSize,
 ):
-    try:
-        if attrib in (
-            hip.hipDeviceAttribute_t.hipDeviceAttributeArch,
-            hip.hipDeviceAttribute_t.hipDeviceAttributeName,
-            hip.hipDeviceAttribute_t.hipDeviceAttributeGcnArch,
-            hip.hipDeviceAttribute_t.hipDeviceAttributeGcnArchName,
-        ):
-            buffer = bytearray(256) # TODO all string attribs fail, need to check if this is expected.
-            hip_check(hip.hipDeviceGetAttribute(buffer,attrib,device_num))
-            print(f"{attrib.name}: {buffer}")
-        else:
-            result = ctypes.c_int(device_num)
-            hip_check(hip.hipDeviceGetAttribute(ctypes.addressof(result),attrib,device_num))
-            print(f"{attrib.name}: {result.value}")
-    except:
-        print(f"{attrib.name}: hipErrorInvalidValue")
+    result = ctypes.c_int(0)
+    hip_check(hip.hipDeviceGetAttribute(ctypes.addressof(result),attrib,device_num))
+    print(f"{attrib.name}: {result.value}")
 print("ok")

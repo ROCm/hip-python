@@ -11,13 +11,17 @@
 import os
 import sys
 
-#sys.path.insert(0, os.path.abspath('..'))
-#sys.path.insert(0, os.path.abspath('../hip-python-as-cuda'))
+# NOTE: always install the HIP Python packages, do not add the source folders
+# to the sys path, i.e. do not add .. and ../hip-python-as-cuda!
+# This breaks autodoc's automodule routine.
 
 extensions = [
   "sphinx.ext.autodoc",  # Parses docstrings
   "myst_parser", # Allows to embed reST code in Markdown code
 ]
+
+# TODO only for debugging
+exclude_patterns = [ "python_api/" ]
 
 project = 'HIP Python'
 copyright = '2023, AMD_AUTHOR'

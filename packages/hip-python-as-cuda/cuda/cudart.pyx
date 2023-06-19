@@ -2,6 +2,12 @@
 
 """
 Attributes:
+    HIP_PYTHON (`.bool`):
+        `True`.
+    HIP_PYTHON_MOD (module):
+        A reference to the package `.hip.hip`.
+    hip (module):
+        A reference to the package `.hip.hip`.
     CU_TRSA_OVERRIDE_FORMAT:
         alias of `.HIP_TRSA_OVERRIDE_FORMAT`
     CU_TRSF_READ_AS_INTEGER:
@@ -2400,12 +2406,6 @@ Attributes:
         alias of `.hipGraphicsUnregisterResource`
     cudaGraphicsUnregisterResource:
         alias of `.hipGraphicsUnregisterResource`
-    HIP_PYTHON (`.bool`):
-        `True`.
-    HIP_PYTHON_MOD (module):
-        A reference to the package `.hip.hip`.
-    hip (module):
-        A reference to the package `.hip.hip`.
 
 """
 

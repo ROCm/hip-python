@@ -52,9 +52,9 @@ def calculate_pi(n):
     return estimate
 
 print(f"#samples\testimate\trelative error")
-k = 100
-nmax = 5
-for n in range(1,nmax):
-    k *= 10
-    estimate = calculate_pi(k)
-    print(f"{k:12}\t{estimate:1.9f}\t{abs(estimate-math.pi)/math.pi:1.9f}")
+n = 100
+imax = 5
+for i in range(1,imax):
+    n *= 10
+    estimate = calculate_pi(n)
+    print(f"{n:12}\t{estimate:1.9f}\t{abs(estimate-math.pi)/math.pi:1.9f}")
