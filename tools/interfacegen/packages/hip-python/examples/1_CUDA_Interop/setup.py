@@ -2,7 +2,7 @@
 
 __author__ = "AMD_AUTHOR"
 
-import os, sys
+import os
 
 from setuptools import Extension, setup
 from Cython.Build import cythonize
@@ -18,7 +18,6 @@ def create_extension(name, sources):
     global HIP_PLATFORM
     rocm_inc = os.path.join(ROCM_PATH,"include")
     rocm_lib_dir = os.path.join(ROCM_PATH,"lib")
-    rocm_libs = ["amdhip64"]
     platform = HIP_PLATFORM.upper()
     cflags = ["-D", f"__HIP_PLATFORM_{platform}__"]
  
@@ -27,7 +26,6 @@ def create_extension(name, sources):
         sources=sources,
         include_dirs=[rocm_inc],
         library_dirs=[rocm_lib_dir],
-        libraries=rocm_libs,
         language="c",
         extra_compile_args=cflags,
     )
