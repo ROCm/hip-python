@@ -9,6 +9,8 @@ This chapter describes the HIP Python packaging process.
 * cython
 * setuptools
 
+### Known issues
+
 ## Packaging
 
 ### Requirements
