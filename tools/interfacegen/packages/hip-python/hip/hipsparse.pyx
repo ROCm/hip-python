@@ -1312,7 +1312,7 @@ def hipsparseCreate(object handle):
         * `~.hipsparseStatus_t`
     """
     _hipsparseCreate__retval = hipsparseStatus_t(chipsparse.hipsparseCreate(
-        <void **>hip._util.types.DataHandle.from_pyobj(handle)._ptr))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(handle)._ptr))    # fully specified
     return (_hipsparseCreate__retval,)
 
 
@@ -1329,7 +1329,7 @@ def hipsparseDestroy(object handle):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDestroy__retval = hipsparseStatus_t(chipsparse.hipsparseDestroy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr))    # fully specified
     return (_hipsparseDestroy__retval,)
 
 
@@ -1348,8 +1348,8 @@ def hipsparseGetVersion(object handle, object version):
         * `~.hipsparseStatus_t`
     """
     _hipsparseGetVersion__retval = hipsparseStatus_t(chipsparse.hipsparseGetVersion(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(version)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(version)._ptr))    # fully specified
     return (_hipsparseGetVersion__retval,)
 
 
@@ -1365,7 +1365,7 @@ def hipsparseGetGitRevision(object handle, char * rev):
         * `~.hipsparseStatus_t`
     """
     _hipsparseGetGitRevision__retval = hipsparseStatus_t(chipsparse.hipsparseGetGitRevision(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,rev))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,rev))    # fully specified
     return (_hipsparseGetGitRevision__retval,)
 
 
@@ -1382,7 +1382,7 @@ def hipsparseSetStream(object handle, object streamId):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSetStream__retval = hipsparseStatus_t(chipsparse.hipsparseSetStream(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         ihipStream_t.from_pyobj(streamId)._ptr))    # fully specified
     return (_hipsparseSetStream__retval,)
 
@@ -1401,7 +1401,7 @@ def hipsparseGetStream(object handle):
     """
     streamId = ihipStream_t.from_ptr(NULL)
     _hipsparseGetStream__retval = hipsparseStatus_t(chipsparse.hipsparseGetStream(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,&streamId._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,&streamId._ptr))    # fully specified
     return (_hipsparseGetStream__retval,streamId)
 
 
@@ -1422,7 +1422,7 @@ def hipsparseSetPointerMode(object handle, object mode):
     if not isinstance(mode,_hipsparsePointerMode_t__Base):
         raise TypeError("argument 'mode' must be of type '_hipsparsePointerMode_t__Base'")
     _hipsparseSetPointerMode__retval = hipsparseStatus_t(chipsparse.hipsparseSetPointerMode(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mode.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mode.value))    # fully specified
     return (_hipsparseSetPointerMode__retval,)
 
 
@@ -1439,8 +1439,8 @@ def hipsparseGetPointerMode(object handle, object mode):
         * `~.hipsparseStatus_t`
     """
     _hipsparseGetPointerMode__retval = hipsparseStatus_t(chipsparse.hipsparseGetPointerMode(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <chipsparse.hipsparsePointerMode_t *>hip._util.types.DataHandle.from_pyobj(mode)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <chipsparse.hipsparsePointerMode_t *>hip._util.types.Pointer.from_pyobj(mode)._ptr))    # fully specified
     return (_hipsparseGetPointerMode__retval,)
 
 
@@ -1459,7 +1459,7 @@ def hipsparseCreateMatDescr(object descrA):
         * `~.hipsparseStatus_t`
     """
     _hipsparseCreateMatDescr__retval = hipsparseStatus_t(chipsparse.hipsparseCreateMatDescr(
-        <void **>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(descrA)._ptr))    # fully specified
     return (_hipsparseCreateMatDescr__retval,)
 
 
@@ -1476,7 +1476,7 @@ def hipsparseDestroyMatDescr(object descrA):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyMatDescr__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyMatDescr(
-        <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(descrA)._ptr))    # fully specified
     return (_hipsparseDestroyMatDescr__retval,)
 
 
@@ -1493,8 +1493,8 @@ def hipsparseCopyMatDescr(object dest, object src):
         * `~.hipsparseStatus_t`
     """
     _hipsparseCopyMatDescr__retval = hipsparseStatus_t(chipsparse.hipsparseCopyMatDescr(
-        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(src)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dest)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(src)._ptr))    # fully specified
     return (_hipsparseCopyMatDescr__retval,)
 
 
@@ -1515,7 +1515,7 @@ def hipsparseSetMatType(object descrA, object type):
     if not isinstance(type,_hipsparseMatrixType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipsparseMatrixType_t__Base'")
     _hipsparseSetMatType__retval = hipsparseStatus_t(chipsparse.hipsparseSetMatType(
-        <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,type.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(descrA)._ptr,type.value))    # fully specified
     return (_hipsparseSetMatType__retval,)
 
 
@@ -1531,7 +1531,7 @@ def hipsparseGetMatType(object descrA):
         * `~.hipsparseMatrixType_t`
     """
     _hipsparseGetMatType__retval = hipsparseMatrixType_t(chipsparse.hipsparseGetMatType(
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr))    # fully specified
     return (_hipsparseGetMatType__retval,)
 
 
@@ -1551,7 +1551,7 @@ def hipsparseSetMatFillMode(object descrA, object fillMode):
     if not isinstance(fillMode,_hipsparseFillMode_t__Base):
         raise TypeError("argument 'fillMode' must be of type '_hipsparseFillMode_t__Base'")
     _hipsparseSetMatFillMode__retval = hipsparseStatus_t(chipsparse.hipsparseSetMatFillMode(
-        <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,fillMode.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(descrA)._ptr,fillMode.value))    # fully specified
     return (_hipsparseSetMatFillMode__retval,)
 
 
@@ -1567,7 +1567,7 @@ def hipsparseGetMatFillMode(object descrA):
         * `~.hipsparseFillMode_t`
     """
     _hipsparseGetMatFillMode__retval = hipsparseFillMode_t(chipsparse.hipsparseGetMatFillMode(
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr))    # fully specified
     return (_hipsparseGetMatFillMode__retval,)
 
 
@@ -1587,7 +1587,7 @@ def hipsparseSetMatDiagType(object descrA, object diagType):
     if not isinstance(diagType,_hipsparseDiagType_t__Base):
         raise TypeError("argument 'diagType' must be of type '_hipsparseDiagType_t__Base'")
     _hipsparseSetMatDiagType__retval = hipsparseStatus_t(chipsparse.hipsparseSetMatDiagType(
-        <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,diagType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(descrA)._ptr,diagType.value))    # fully specified
     return (_hipsparseSetMatDiagType__retval,)
 
 
@@ -1604,7 +1604,7 @@ def hipsparseGetMatDiagType(object descrA):
         * `~.hipsparseDiagType_t`
     """
     _hipsparseGetMatDiagType__retval = hipsparseDiagType_t(chipsparse.hipsparseGetMatDiagType(
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr))    # fully specified
     return (_hipsparseGetMatDiagType__retval,)
 
 
@@ -1623,7 +1623,7 @@ def hipsparseSetMatIndexBase(object descrA, object base):
     if not isinstance(base,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSetMatIndexBase__retval = hipsparseStatus_t(chipsparse.hipsparseSetMatIndexBase(
-        <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,base.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(descrA)._ptr,base.value))    # fully specified
     return (_hipsparseSetMatIndexBase__retval,)
 
 
@@ -1639,7 +1639,7 @@ def hipsparseGetMatIndexBase(object descrA):
         * `~.hipsparseIndexBase_t`
     """
     _hipsparseGetMatIndexBase__retval = hipsparseIndexBase_t(chipsparse.hipsparseGetMatIndexBase(
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr))    # fully specified
     return (_hipsparseGetMatIndexBase__retval,)
 
 
@@ -1656,7 +1656,7 @@ def hipsparseCreateHybMat(object hybA):
         * `~.hipsparseStatus_t`
     """
     _hipsparseCreateHybMat__retval = hipsparseStatus_t(chipsparse.hipsparseCreateHybMat(
-        <void **>hip._util.types.DataHandle.from_pyobj(hybA)._ptr))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(hybA)._ptr))    # fully specified
     return (_hipsparseCreateHybMat__retval,)
 
 
@@ -1672,7 +1672,7 @@ def hipsparseDestroyHybMat(object hybA):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyHybMat__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyHybMat(
-        <void *>hip._util.types.DataHandle.from_pyobj(hybA)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(hybA)._ptr))    # fully specified
     return (_hipsparseDestroyHybMat__retval,)
 
 
@@ -1996,7 +1996,7 @@ def hipsparseCreateColorInfo(object info):
         * `~.hipsparseStatus_t`
     """
     _hipsparseCreateColorInfo__retval = hipsparseStatus_t(chipsparse.hipsparseCreateColorInfo(
-        <void **>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(info)._ptr))    # fully specified
     return (_hipsparseCreateColorInfo__retval,)
 
 
@@ -2012,7 +2012,7 @@ def hipsparseDestroyColorInfo(object info):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyColorInfo__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyColorInfo(
-        <void *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(info)._ptr))    # fully specified
     return (_hipsparseDestroyColorInfo__retval,)
 
 
@@ -2114,11 +2114,11 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSaxpyi__retval = hipsparseStatus_t(chipsparse.hipsparseSaxpyi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,idxBase.value))    # fully specified
     return (_hipsparseSaxpyi__retval,)
 
 
@@ -2134,11 +2134,11 @@ def hipsparseDaxpyi(object handle, int nnz, object alpha, object xVal, object xI
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDaxpyi__retval = hipsparseStatus_t(chipsparse.hipsparseDaxpyi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,idxBase.value))    # fully specified
     return (_hipsparseDaxpyi__retval,)
 
 
@@ -2154,10 +2154,10 @@ def hipsparseCaxpyi(object handle, int nnz, object alpha, object xVal, object xI
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCaxpyi__retval = hipsparseStatus_t(chipsparse.hipsparseCaxpyi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(alpha)._ptr,
         float2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         float2.from_pyobj(y)._ptr,idxBase.value))    # fully specified
     return (_hipsparseCaxpyi__retval,)
 
@@ -2174,10 +2174,10 @@ def hipsparseZaxpyi(object handle, int nnz, object alpha, object xVal, object xI
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZaxpyi__retval = hipsparseStatus_t(chipsparse.hipsparseZaxpyi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(alpha)._ptr,
         double2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         double2.from_pyobj(y)._ptr,idxBase.value))    # fully specified
     return (_hipsparseZaxpyi__retval,)
 
@@ -2212,11 +2212,11 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSdoti__retval = hipsparseStatus_t(chipsparse.hipsparseSdoti(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr,idxBase.value))    # fully specified
     return (_hipsparseSdoti__retval,)
 
 
@@ -2232,11 +2232,11 @@ def hipsparseDdoti(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDdoti__retval = hipsparseStatus_t(chipsparse.hipsparseDdoti(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr,idxBase.value))    # fully specified
     return (_hipsparseDdoti__retval,)
 
 
@@ -2252,9 +2252,9 @@ def hipsparseCdoti(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCdoti__retval = hipsparseStatus_t(chipsparse.hipsparseCdoti(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         float2.from_pyobj(y)._ptr,
         float2.from_pyobj(result)._ptr,idxBase.value))    # fully specified
     return (_hipsparseCdoti__retval,)
@@ -2272,9 +2272,9 @@ def hipsparseZdoti(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZdoti__retval = hipsparseStatus_t(chipsparse.hipsparseZdoti(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         double2.from_pyobj(y)._ptr,
         double2.from_pyobj(result)._ptr,idxBase.value))    # fully specified
     return (_hipsparseZdoti__retval,)
@@ -2311,9 +2311,9 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCdotci__retval = hipsparseStatus_t(chipsparse.hipsparseCdotci(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         float2.from_pyobj(y)._ptr,
         float2.from_pyobj(result)._ptr,idxBase.value))    # fully specified
     return (_hipsparseCdotci__retval,)
@@ -2331,9 +2331,9 @@ def hipsparseZdotci(object handle, int nnz, object xVal, object xInd, object y, 
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZdotci__retval = hipsparseStatus_t(chipsparse.hipsparseZdotci(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         double2.from_pyobj(y)._ptr,
         double2.from_pyobj(result)._ptr,idxBase.value))    # fully specified
     return (_hipsparseZdotci__retval,)
@@ -2365,10 +2365,10 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSgthr__retval = hipsparseStatus_t(chipsparse.hipsparseSgthr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseSgthr__retval,)
 
 
@@ -2384,10 +2384,10 @@ def hipsparseDgthr(object handle, int nnz, object y, object xVal, object xInd, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDgthr__retval = hipsparseStatus_t(chipsparse.hipsparseDgthr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseDgthr__retval,)
 
 
@@ -2403,10 +2403,10 @@ def hipsparseCgthr(object handle, int nnz, object y, object xVal, object xInd, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCgthr__retval = hipsparseStatus_t(chipsparse.hipsparseCgthr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(y)._ptr,
         float2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseCgthr__retval,)
 
 
@@ -2422,10 +2422,10 @@ def hipsparseZgthr(object handle, int nnz, object y, object xVal, object xInd, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZgthr__retval = hipsparseStatus_t(chipsparse.hipsparseZgthr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(y)._ptr,
         double2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseZgthr__retval,)
 
 
@@ -2458,10 +2458,10 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSgthrz__retval = hipsparseStatus_t(chipsparse.hipsparseSgthrz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseSgthrz__retval,)
 
 
@@ -2477,10 +2477,10 @@ def hipsparseDgthrz(object handle, int nnz, object y, object xVal, object xInd, 
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDgthrz__retval = hipsparseStatus_t(chipsparse.hipsparseDgthrz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseDgthrz__retval,)
 
 
@@ -2496,10 +2496,10 @@ def hipsparseCgthrz(object handle, int nnz, object y, object xVal, object xInd, 
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCgthrz__retval = hipsparseStatus_t(chipsparse.hipsparseCgthrz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(y)._ptr,
         float2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseCgthrz__retval,)
 
 
@@ -2515,10 +2515,10 @@ def hipsparseZgthrz(object handle, int nnz, object y, object xVal, object xInd, 
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZgthrz__retval = hipsparseStatus_t(chipsparse.hipsparseZgthrz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(y)._ptr,
         double2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseZgthrz__retval,)
 
 
@@ -2556,12 +2556,12 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSroti__retval = hipsparseStatus_t(chipsparse.hipsparseSroti(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(s)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <float *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(s)._ptr,idxBase.value))    # fully specified
     return (_hipsparseSroti__retval,)
 
 
@@ -2577,12 +2577,12 @@ def hipsparseDroti(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDroti__retval = hipsparseStatus_t(chipsparse.hipsparseDroti(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(s)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <double *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(s)._ptr,idxBase.value))    # fully specified
     return (_hipsparseDroti__retval,)
 
 
@@ -2613,10 +2613,10 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSsctr__retval = hipsparseStatus_t(chipsparse.hipsparseSsctr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,idxBase.value))    # fully specified
     return (_hipsparseSsctr__retval,)
 
 
@@ -2632,10 +2632,10 @@ def hipsparseDsctr(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDsctr__retval = hipsparseStatus_t(chipsparse.hipsparseDsctr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(xVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,idxBase.value))    # fully specified
     return (_hipsparseDsctr__retval,)
 
 
@@ -2651,9 +2651,9 @@ def hipsparseCsctr(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCsctr__retval = hipsparseStatus_t(chipsparse.hipsparseCsctr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         float2.from_pyobj(y)._ptr,idxBase.value))    # fully specified
     return (_hipsparseCsctr__retval,)
 
@@ -2670,9 +2670,9 @@ def hipsparseZsctr(object handle, int nnz, object xVal, object xInd, object y, o
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZsctr__retval = hipsparseStatus_t(chipsparse.hipsparseZsctr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(xVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         double2.from_pyobj(y)._ptr,idxBase.value))    # fully specified
     return (_hipsparseZsctr__retval,)
 
@@ -2729,15 +2729,15 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseScsrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr))    # fully specified
     return (_hipsparseScsrmv__retval,)
 
 
@@ -2753,15 +2753,15 @@ def hipsparseDcsrmv(object handle, object transA, int m, int n, int nnz, object 
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr))    # fully specified
     return (_hipsparseDcsrmv__retval,)
 
 
@@ -2777,12 +2777,12 @@ def hipsparseCcsrmv(object handle, object transA, int m, int n, int nnz, object 
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         float2.from_pyobj(x)._ptr,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(y)._ptr))    # fully specified
@@ -2801,12 +2801,12 @@ def hipsparseZcsrmv(object handle, object transA, int m, int n, int nnz, object 
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         double2.from_pyobj(x)._ptr,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(y)._ptr))    # fully specified
@@ -2836,9 +2836,9 @@ def hipsparseXcsrsv2_zeroPivot(object handle, object info, object position):
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrsv2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsv2_zeroPivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(position)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(position)._ptr))    # fully specified
     return (_hipsparseXcsrsv2_zeroPivot__retval,)
 
 
@@ -2860,13 +2860,13 @@ def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsv2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseScsrsv2_bufferSize__retval,)
 
 
@@ -2882,13 +2882,13 @@ def hipsparseDcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsv2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDcsrsv2_bufferSize__retval,)
 
 
@@ -2904,13 +2904,13 @@ def hipsparseCcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsv2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCcsrsv2_bufferSize__retval,)
 
 
@@ -2926,13 +2926,13 @@ def hipsparseZcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsv2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZcsrsv2_bufferSize__retval,)
 
 
@@ -2954,13 +2954,13 @@ def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseScsrsv2_bufferSizeExt__retval,)
 
 
@@ -2976,13 +2976,13 @@ def hipsparseDcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseDcsrsv2_bufferSizeExt__retval,)
 
 
@@ -2998,13 +2998,13 @@ def hipsparseCcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseCcsrsv2_bufferSizeExt__retval,)
 
 
@@ -3020,13 +3020,13 @@ def hipsparseZcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseZcsrsv2_bufferSizeExt__retval,)
 
 
@@ -3051,13 +3051,13 @@ def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, obje
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsv2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsrsv2_analysis__retval,)
 
 
@@ -3075,13 +3075,13 @@ def hipsparseDcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsv2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsrsv2_analysis__retval,)
 
 
@@ -3099,13 +3099,13 @@ def hipsparseCcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsv2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsrsv2_analysis__retval,)
 
 
@@ -3123,13 +3123,13 @@ def hipsparseZcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsv2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsrsv2_analysis__retval,)
 
 
@@ -3179,16 +3179,16 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsv2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <const float *>hip._util.types.Pointer.from_pyobj(f)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,policy.value,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsrsv2_solve__retval,)
 
 
@@ -3206,16 +3206,16 @@ def hipsparseDcsrsv2_solve(object handle, object transA, int m, int nnz, object 
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsv2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <const double *>hip._util.types.Pointer.from_pyobj(f)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,policy.value,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsrsv2_solve__retval,)
 
 
@@ -3233,16 +3233,16 @@ def hipsparseCcsrsv2_solve(object handle, object transA, int m, int nnz, object 
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsv2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
         float2.from_pyobj(f)._ptr,
         float2.from_pyobj(x)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsrsv2_solve__retval,)
 
 
@@ -3260,16 +3260,16 @@ def hipsparseZcsrsv2_solve(object handle, object transA, int m, int nnz, object 
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsv2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,nnz,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrsv2Info.from_pyobj(info)._ptr,
         double2.from_pyobj(f)._ptr,
         double2.from_pyobj(x)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsrsv2_solve__retval,)
 
 
@@ -3313,13 +3313,13 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseShybmv__retval = hipsparseStatus_t(chipsparse.hipsparseShybmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(hybA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr))    # fully specified
     return (_hipsparseShybmv__retval,)
 
 
@@ -3335,13 +3335,13 @@ def hipsparseDhybmv(object handle, object transA, object alpha, object descrA, o
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDhybmv__retval = hipsparseStatus_t(chipsparse.hipsparseDhybmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(hybA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr))    # fully specified
     return (_hipsparseDhybmv__retval,)
 
 
@@ -3357,10 +3357,10 @@ def hipsparseChybmv(object handle, object transA, object alpha, object descrA, o
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseChybmv__retval = hipsparseStatus_t(chipsparse.hipsparseChybmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(hybA)._ptr,
         float2.from_pyobj(x)._ptr,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(y)._ptr))    # fully specified
@@ -3379,10 +3379,10 @@ def hipsparseZhybmv(object handle, object transA, object alpha, object descrA, o
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZhybmv__retval = hipsparseStatus_t(chipsparse.hipsparseZhybmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(hybA)._ptr,
         double2.from_pyobj(x)._ptr,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(y)._ptr))    # fully specified
@@ -3433,15 +3433,15 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr))    # fully specified
     return (_hipsparseSbsrmv__retval,)
 
 
@@ -3459,15 +3459,15 @@ def hipsparseDbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr))    # fully specified
     return (_hipsparseDbsrmv__retval,)
 
 
@@ -3485,12 +3485,12 @@ def hipsparseCbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         float2.from_pyobj(x)._ptr,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(y)._ptr))    # fully specified
@@ -3511,12 +3511,12 @@ def hipsparseZbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         double2.from_pyobj(x)._ptr,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(y)._ptr))    # fully specified
@@ -3568,17 +3568,17 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
     if not isinstance(trans,_hipsparseOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrxmv__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrxmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrMaskPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrEndPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColInd)._ptr,blockDim,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrMaskPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrEndPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColInd)._ptr,blockDim,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr))    # fully specified
     return (_hipsparseSbsrxmv__retval,)
 
 
@@ -3596,17 +3596,17 @@ def hipsparseDbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
     if not isinstance(trans,_hipsparseOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrxmv__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrxmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrMaskPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrEndPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColInd)._ptr,blockDim,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrMaskPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrEndPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColInd)._ptr,blockDim,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr))    # fully specified
     return (_hipsparseDbsrxmv__retval,)
 
 
@@ -3624,14 +3624,14 @@ def hipsparseCbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
     if not isinstance(trans,_hipsparseOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrxmv__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrxmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         float2.from_pyobj(bsrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrMaskPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrEndPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColInd)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrMaskPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrEndPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColInd)._ptr,blockDim,
         float2.from_pyobj(x)._ptr,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(y)._ptr))    # fully specified
@@ -3652,14 +3652,14 @@ def hipsparseZbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
     if not isinstance(trans,_hipsparseOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrxmv__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrxmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         double2.from_pyobj(bsrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrMaskPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrEndPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColInd)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrMaskPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrEndPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColInd)._ptr,blockDim,
         double2.from_pyobj(x)._ptr,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(y)._ptr))    # fully specified
@@ -3688,9 +3688,9 @@ def hipsparseXbsrsv2_zeroPivot(object handle, object info, object position):
         * `~.hipsparseStatus_t`
     """
     _hipsparseXbsrsv2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsrsv2_zeroPivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(position)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(position)._ptr))    # fully specified
     return (_hipsparseXbsrsv2_zeroPivot__retval,)
 
 
@@ -3712,13 +3712,13 @@ def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsv2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSbsrsv2_bufferSize__retval,)
 
 
@@ -3736,13 +3736,13 @@ def hipsparseDbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsv2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDbsrsv2_bufferSize__retval,)
 
 
@@ -3760,13 +3760,13 @@ def hipsparseCbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsv2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCbsrsv2_bufferSize__retval,)
 
 
@@ -3784,13 +3784,13 @@ def hipsparseZbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsv2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZbsrsv2_bufferSize__retval,)
 
 
@@ -3812,13 +3812,13 @@ def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseSbsrsv2_bufferSizeExt__retval,)
 
 
@@ -3836,13 +3836,13 @@ def hipsparseDbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseDbsrsv2_bufferSizeExt__retval,)
 
 
@@ -3860,13 +3860,13 @@ def hipsparseCbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseCbsrsv2_bufferSizeExt__retval,)
 
 
@@ -3884,13 +3884,13 @@ def hipsparseZbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseZbsrsv2_bufferSizeExt__retval,)
 
 
@@ -3919,13 +3919,13 @@ def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb,
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsv2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSbsrsv2_analysis__retval,)
 
 
@@ -3945,13 +3945,13 @@ def hipsparseDbsrsv2_analysis(object handle, object dirA, object transA, int mb,
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsv2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDbsrsv2_analysis__retval,)
 
 
@@ -3971,13 +3971,13 @@ def hipsparseCbsrsv2_analysis(object handle, object dirA, object transA, int mb,
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsv2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCbsrsv2_analysis__retval,)
 
 
@@ -3997,13 +3997,13 @@ def hipsparseZbsrsv2_analysis(object handle, object dirA, object transA, int mb,
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsv2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZbsrsv2_analysis__retval,)
 
 
@@ -4054,16 +4054,16 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsv2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <const float *>hip._util.types.Pointer.from_pyobj(f)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,policy.value,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSbsrsv2_solve__retval,)
 
 
@@ -4083,16 +4083,16 @@ def hipsparseDbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsv2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <const double *>hip._util.types.Pointer.from_pyobj(f)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,policy.value,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDbsrsv2_solve__retval,)
 
 
@@ -4112,16 +4112,16 @@ def hipsparseCbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsv2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
         float2.from_pyobj(f)._ptr,
         float2.from_pyobj(x)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCbsrsv2_solve__retval,)
 
 
@@ -4141,16 +4141,16 @@ def hipsparseZbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsv2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsv2Info.from_pyobj(info)._ptr,
         double2.from_pyobj(f)._ptr,
         double2.from_pyobj(x)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZbsrsv2_solve__retval,)
 
 
@@ -4170,8 +4170,8 @@ def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int n
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSgemvi_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSgemvi_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseSgemvi_bufferSize__retval,)
 
 
@@ -4187,8 +4187,8 @@ def hipsparseDgemvi_bufferSize(object handle, object transA, int m, int n, int n
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDgemvi_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDgemvi_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseDgemvi_bufferSize__retval,)
 
 
@@ -4204,8 +4204,8 @@ def hipsparseCgemvi_bufferSize(object handle, object transA, int m, int n, int n
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCgemvi_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCgemvi_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseCgemvi_bufferSize__retval,)
 
 
@@ -4221,8 +4221,8 @@ def hipsparseZgemvi_bufferSize(object handle, object transA, int m, int n, int n
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZgemvi_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZgemvi_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseZgemvi_bufferSize__retval,)
 
 
@@ -4267,14 +4267,14 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSgemvi__retval = hipsparseStatus_t(chipsparse.hipsparseSgemvi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,idxBase.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,idxBase.value,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSgemvi__retval,)
 
 
@@ -4292,14 +4292,14 @@ def hipsparseDgemvi(object handle, object transA, int m, int n, object alpha, ob
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDgemvi__retval = hipsparseStatus_t(chipsparse.hipsparseDgemvi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,idxBase.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,idxBase.value,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDgemvi__retval,)
 
 
@@ -4317,14 +4317,14 @@ def hipsparseCgemvi(object handle, object transA, int m, int n, object alpha, ob
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCgemvi__retval = hipsparseStatus_t(chipsparse.hipsparseCgemvi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,
         float2.from_pyobj(alpha)._ptr,
         float2.from_pyobj(A)._ptr,lda,nnz,
         float2.from_pyobj(x)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(y)._ptr,idxBase.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCgemvi__retval,)
 
 
@@ -4342,14 +4342,14 @@ def hipsparseZgemvi(object handle, object transA, int m, int n, object alpha, ob
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZgemvi__retval = hipsparseStatus_t(chipsparse.hipsparseZgemvi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,
         double2.from_pyobj(alpha)._ptr,
         double2.from_pyobj(A)._ptr,lda,nnz,
         double2.from_pyobj(x)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(xInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(xInd)._ptr,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(y)._ptr,idxBase.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZgemvi__retval,)
 
 
@@ -4407,15 +4407,15 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
-        <const float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseSbsrmm__retval,)
 
 
@@ -4435,15 +4435,15 @@ def hipsparseDbsrmm(object handle, object dirA, object transA, object transB, in
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
-        <const double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseDbsrmm__retval,)
 
 
@@ -4463,12 +4463,12 @@ def hipsparseCbsrmm(object handle, object dirA, object transA, object transB, in
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         float2.from_pyobj(B)._ptr,ldb,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(C)._ptr,ldc))    # fully specified
@@ -4491,12 +4491,12 @@ def hipsparseZbsrmm(object handle, object dirA, object transA, object transB, in
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         double2.from_pyobj(B)._ptr,ldb,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(C)._ptr,ldc))    # fully specified
@@ -4555,15 +4555,15 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseScsrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseScsrmm__retval,)
 
 
@@ -4579,15 +4579,15 @@ def hipsparseDcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseDcsrmm__retval,)
 
 
@@ -4603,12 +4603,12 @@ def hipsparseCcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(C)._ptr,ldc))    # fully specified
@@ -4627,12 +4627,12 @@ def hipsparseZcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
     if not isinstance(transA,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(C)._ptr,ldc))    # fully specified
@@ -4705,15 +4705,15 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrmm2__retval = hipsparseStatus_t(chipsparse.hipsparseScsrmm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseScsrmm2__retval,)
 
 
@@ -4731,15 +4731,15 @@ def hipsparseDcsrmm2(object handle, object transA, object transB, int m, int n, 
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrmm2__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrmm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseDcsrmm2__retval,)
 
 
@@ -4757,12 +4757,12 @@ def hipsparseCcsrmm2(object handle, object transA, object transB, int m, int n, 
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrmm2__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrmm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(C)._ptr,ldc))    # fully specified
@@ -4783,12 +4783,12 @@ def hipsparseZcsrmm2(object handle, object transA, object transB, int m, int n, 
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrmm2__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrmm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(C)._ptr,ldc))    # fully specified
@@ -4817,9 +4817,9 @@ def hipsparseXbsrsm2_zeroPivot(object handle, object info, object position):
         * `~.hipsparseStatus_t`
     """
     _hipsparseXbsrsm2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsrsm2_zeroPivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         bsrsm2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(position)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(position)._ptr))    # fully specified
     return (_hipsparseXbsrsm2_zeroPivot__retval,)
 
 
@@ -4843,13 +4843,13 @@ def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     if not isinstance(transX,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrsm2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsm2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSbsrsm2_bufferSize__retval,)
 
 
@@ -4869,13 +4869,13 @@ def hipsparseDbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     if not isinstance(transX,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrsm2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsm2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDbsrsm2_bufferSize__retval,)
 
 
@@ -4895,13 +4895,13 @@ def hipsparseCbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     if not isinstance(transX,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrsm2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsm2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCbsrsm2_bufferSize__retval,)
 
 
@@ -4921,13 +4921,13 @@ def hipsparseZbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     if not isinstance(transX,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrsm2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsm2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZbsrsm2_bufferSize__retval,)
 
 
@@ -4958,13 +4958,13 @@ def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object 
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsm2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSbsrsm2_analysis__retval,)
 
 
@@ -4986,13 +4986,13 @@ def hipsparseDbsrsm2_analysis(object handle, object dirA, object transA, object 
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsm2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDbsrsm2_analysis__retval,)
 
 
@@ -5014,13 +5014,13 @@ def hipsparseCbsrsm2_analysis(object handle, object dirA, object transA, object 
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsm2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCbsrsm2_analysis__retval,)
 
 
@@ -5042,13 +5042,13 @@ def hipsparseZbsrsm2_analysis(object handle, object dirA, object transA, object 
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsm2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZbsrsm2_analysis__retval,)
 
 
@@ -5116,16 +5116,16 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsm2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <float *>hip._util.types.DataHandle.from_pyobj(X)._ptr,ldx,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <const float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <float *>hip._util.types.Pointer.from_pyobj(X)._ptr,ldx,policy.value,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSbsrsm2_solve__retval,)
 
 
@@ -5147,16 +5147,16 @@ def hipsparseDbsrsm2_solve(object handle, object dirA, object transA, object tra
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsm2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <double *>hip._util.types.DataHandle.from_pyobj(X)._ptr,ldx,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <const double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <double *>hip._util.types.Pointer.from_pyobj(X)._ptr,ldx,policy.value,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDbsrsm2_solve__retval,)
 
 
@@ -5178,16 +5178,16 @@ def hipsparseCbsrsm2_solve(object handle, object dirA, object transA, object tra
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsm2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
         float2.from_pyobj(X)._ptr,ldx,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCbsrsm2_solve__retval,)
 
 
@@ -5209,16 +5209,16 @@ def hipsparseZbsrsm2_solve(object handle, object dirA, object transA, object tra
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsm2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrsm2Info.from_pyobj(info)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
         double2.from_pyobj(X)._ptr,ldx,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZbsrsm2_solve__retval,)
 
 
@@ -5244,9 +5244,9 @@ def hipsparseXcsrsm2_zeroPivot(object handle, object info, object position):
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrsm2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsm2_zeroPivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         csrsm2Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(position)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(position)._ptr))    # fully specified
     return (_hipsparseXcsrsm2_zeroPivot__retval,)
 
 
@@ -5270,15 +5270,15 @@ def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsm2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseScsrsm2_bufferSizeExt__retval,)
 
 
@@ -5298,15 +5298,15 @@ def hipsparseDcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsm2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseDcsrsm2_bufferSizeExt__retval,)
 
 
@@ -5326,15 +5326,15 @@ def hipsparseCcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsm2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseCcsrsm2_bufferSizeExt__retval,)
 
 
@@ -5354,15 +5354,15 @@ def hipsparseZcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsm2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseZcsrsm2_bufferSizeExt__retval,)
 
 
@@ -5391,15 +5391,15 @@ def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object tra
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsm2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsrsm2_analysis__retval,)
 
 
@@ -5419,15 +5419,15 @@ def hipsparseDcsrsm2_analysis(object handle, int algo, object transA, object tra
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsm2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsrsm2_analysis__retval,)
 
 
@@ -5447,15 +5447,15 @@ def hipsparseCcsrsm2_analysis(object handle, int algo, object transA, object tra
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsm2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsrsm2_analysis__retval,)
 
 
@@ -5475,15 +5475,15 @@ def hipsparseZcsrsm2_analysis(object handle, int algo, object transA, object tra
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsm2_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsrsm2_analysis__retval,)
 
 
@@ -5559,15 +5559,15 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsm2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsrsm2_solve__retval,)
 
 
@@ -5587,15 +5587,15 @@ def hipsparseDcsrsm2_solve(object handle, int algo, object transA, object transB
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsm2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsrsm2_solve__retval,)
 
 
@@ -5615,15 +5615,15 @@ def hipsparseCcsrsm2_solve(object handle, int algo, object transA, object transB
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsm2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsrsm2_solve__retval,)
 
 
@@ -5643,15 +5643,15 @@ def hipsparseZcsrsm2_solve(object handle, int algo, object transA, object transB
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsm2_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
         csrsm2Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsrsm2_solve__retval,)
 
 
@@ -5702,14 +5702,14 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseSgemmi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(cscValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscColPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscRowIndB)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(cscValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscColPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscRowIndB)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseSgemmi__retval,)
 
 
@@ -5723,14 +5723,14 @@ def hipsparseDgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseDgemmi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(cscValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscColPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscRowIndB)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(cscValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscColPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscRowIndB)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseDgemmi__retval,)
 
 
@@ -5744,12 +5744,12 @@ def hipsparseCgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseCgemmi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,nnz,
         float2.from_pyobj(alpha)._ptr,
         float2.from_pyobj(A)._ptr,lda,
         float2.from_pyobj(cscValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscColPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscRowIndB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscColPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscRowIndB)._ptr,
         float2.from_pyobj(beta)._ptr,
         float2.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseCgemmi__retval,)
@@ -5765,12 +5765,12 @@ def hipsparseZgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseZgemmi(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,nnz,
         double2.from_pyobj(alpha)._ptr,
         double2.from_pyobj(A)._ptr,lda,
         double2.from_pyobj(cscValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscColPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscRowIndB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscColPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscRowIndB)._ptr,
         double2.from_pyobj(beta)._ptr,
         double2.from_pyobj(C)._ptr,ldc))    # fully specified
     return (_hipsparseZgemmi__retval,)
@@ -5798,16 +5798,16 @@ def hipsparseXcsrgeamNnz(object handle, int m, int n, object descrA, int nnzA, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrgeamNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrgeamNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
     return (_hipsparseXcsrgeamNnz__retval,)
 
 
@@ -5841,21 +5841,21 @@ def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgeam(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseScsrgeam__retval,)
 
 
@@ -5869,21 +5869,21 @@ def hipsparseDcsrgeam(object handle, int m, int n, object alpha, object descrA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgeam(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseDcsrgeam__retval,)
 
 
@@ -5897,21 +5897,21 @@ def hipsparseCcsrgeam(object handle, int m, int n, object alpha, object descrA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgeam(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         float2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
         float2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         float2.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseCcsrgeam__retval,)
 
 
@@ -5925,21 +5925,21 @@ def hipsparseZcsrgeam(object handle, int m, int n, object alpha, object descrA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgeam(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         double2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
         double2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         double2.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseZcsrgeam__retval,)
 
 
@@ -5960,22 +5960,22 @@ def hipsparseScsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgeam2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgeam2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndC)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndC)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseScsrgeam2_bufferSizeExt__retval,)
 
 
@@ -5989,22 +5989,22 @@ def hipsparseDcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgeam2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgeam2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndC)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndC)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDcsrgeam2_bufferSizeExt__retval,)
 
 
@@ -6018,22 +6018,22 @@ def hipsparseCcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgeam2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgeam2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         float2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         float2.from_pyobj(csrSortedValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(csrSortedValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndC)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndC)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCcsrgeam2_bufferSizeExt__retval,)
 
 
@@ -6047,22 +6047,22 @@ def hipsparseZcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgeam2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgeam2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         double2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         double2.from_pyobj(csrSortedValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(csrSortedValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndC)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndC)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZcsrgeam2_bufferSizeExt__retval,)
 
 
@@ -6088,17 +6088,17 @@ def hipsparseXcsrgeam2Nnz(object handle, int m, int n, object descrA, int nnzA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrgeam2Nnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrgeam2Nnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(workspace)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(workspace)._ptr))    # fully specified
     return (_hipsparseXcsrgeam2Nnz__retval,)
 
 
@@ -6132,22 +6132,22 @@ def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA,
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgeam2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndC)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsrgeam2__retval,)
 
 
@@ -6161,22 +6161,22 @@ def hipsparseDcsrgeam2(object handle, int m, int n, object alpha, object descrA,
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgeam2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndC)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsrgeam2__retval,)
 
 
@@ -6190,22 +6190,22 @@ def hipsparseCcsrgeam2(object handle, int m, int n, object alpha, object descrA,
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgeam2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         float2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         float2.from_pyobj(csrSortedValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(csrSortedValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndC)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsrgeam2__retval,)
 
 
@@ -6219,22 +6219,22 @@ def hipsparseZcsrgeam2(object handle, int m, int n, object alpha, object descrA,
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgeam2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         double2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         double2.from_pyobj(csrSortedValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(csrSortedValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndC)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsrgeam2__retval,)
 
 
@@ -6272,16 +6272,16 @@ def hipsparseXcsrgemmNnz(object handle, object transA, object transB, int m, int
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseXcsrgemmNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrgemmNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
     return (_hipsparseXcsrgemmNnz__retval,)
 
 
@@ -6349,19 +6349,19 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrgemm__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseScsrgemm__retval,)
 
 
@@ -6379,19 +6379,19 @@ def hipsparseDcsrgemm(object handle, object transA, object transB, int m, int n,
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrgemm__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseDcsrgemm__retval,)
 
 
@@ -6409,19 +6409,19 @@ def hipsparseCcsrgemm(object handle, object transA, object transB, int m, int n,
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrgemm__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         float2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         float2.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseCcsrgemm__retval,)
 
 
@@ -6439,19 +6439,19 @@ def hipsparseZcsrgemm(object handle, object transA, object transB, int m, int n,
     if not isinstance(transB,_hipsparseOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrgemm__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         double2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         double2.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseZcsrgemm__retval,)
 
 
@@ -6480,20 +6480,20 @@ def hipsparseScsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgemm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgemm2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseScsrgemm2_bufferSizeExt__retval,)
 
 
@@ -6507,20 +6507,20 @@ def hipsparseDcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgemm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgemm2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDcsrgemm2_bufferSizeExt__retval,)
 
 
@@ -6534,20 +6534,20 @@ def hipsparseCcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgemm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgemm2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
         float2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCcsrgemm2_bufferSizeExt__retval,)
 
 
@@ -6561,20 +6561,20 @@ def hipsparseZcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgemm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgemm2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
         double2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZcsrgemm2_bufferSizeExt__retval,)
 
 
@@ -6605,21 +6605,21 @@ def hipsparseXcsrgemm2Nnz(object handle, int m, int n, int k, object descrA, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrgemm2Nnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrgemm2Nnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseXcsrgemm2Nnz__retval,)
 
 
@@ -6665,27 +6665,27 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgemm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsrgemm2__retval,)
 
 
@@ -6699,27 +6699,27 @@ def hipsparseDcsrgemm2(object handle, int m, int n, int k, object alpha, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgemm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsrgemm2__retval,)
 
 
@@ -6733,27 +6733,27 @@ def hipsparseCcsrgemm2(object handle, int m, int n, int k, object alpha, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgemm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
         float2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         float2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         float2.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
         float2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
         float2.from_pyobj(csrValD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsrgemm2__retval,)
 
 
@@ -6767,27 +6767,27 @@ def hipsparseZcsrgemm2(object handle, int m, int n, int k, object alpha, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgemm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,k,
         double2.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,nnzA,
         double2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrB)._ptr,nnzB,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrB)._ptr,nnzB,
         double2.from_pyobj(csrValB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrB)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrB)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndB)._ptr,
         double2.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrD)._ptr,nnzD,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrD)._ptr,nnzD,
         double2.from_pyobj(csrValD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrD)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndD)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrD)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndD)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         csrgemm2Info.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsrgemm2__retval,)
 
 
@@ -6819,9 +6819,9 @@ def hipsparseXbsrilu02_zeroPivot(object handle, object info, object position):
         * `~.hipsparseStatus_t`
     """
     _hipsparseXbsrilu02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsrilu02_zeroPivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         bsrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(position)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(position)._ptr))    # fully specified
     return (_hipsparseXbsrilu02_zeroPivot__retval,)
 
 
@@ -6848,10 +6848,10 @@ def hipsparseSbsrilu02_numericBoost(object handle, object info, int enable_boost
         * `~.hipsparseStatus_t`
     """
     _hipsparseSbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02_numericBoost(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         bsrilu02Info.from_pyobj(info)._ptr,enable_boost,
-        <double *>hip._util.types.DataHandle.from_pyobj(tol)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(boost_val)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(tol)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(boost_val)._ptr))    # fully specified
     return (_hipsparseSbsrilu02_numericBoost__retval,)
 
 
@@ -6865,10 +6865,10 @@ def hipsparseDbsrilu02_numericBoost(object handle, object info, int enable_boost
         * `~.hipsparseStatus_t`
     """
     _hipsparseDbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrilu02_numericBoost(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         bsrilu02Info.from_pyobj(info)._ptr,enable_boost,
-        <double *>hip._util.types.DataHandle.from_pyobj(tol)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(boost_val)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(tol)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(boost_val)._ptr))    # fully specified
     return (_hipsparseDbsrilu02_numericBoost__retval,)
 
 
@@ -6882,9 +6882,9 @@ def hipsparseCbsrilu02_numericBoost(object handle, object info, int enable_boost
         * `~.hipsparseStatus_t`
     """
     _hipsparseCbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrilu02_numericBoost(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         bsrilu02Info.from_pyobj(info)._ptr,enable_boost,
-        <double *>hip._util.types.DataHandle.from_pyobj(tol)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(tol)._ptr,
         float2.from_pyobj(boost_val)._ptr))    # fully specified
     return (_hipsparseCbsrilu02_numericBoost__retval,)
 
@@ -6899,9 +6899,9 @@ def hipsparseZbsrilu02_numericBoost(object handle, object info, int enable_boost
         * `~.hipsparseStatus_t`
     """
     _hipsparseZbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrilu02_numericBoost(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         bsrilu02Info.from_pyobj(info)._ptr,enable_boost,
-        <double *>hip._util.types.DataHandle.from_pyobj(tol)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(tol)._ptr,
         double2.from_pyobj(boost_val)._ptr))    # fully specified
     return (_hipsparseZbsrilu02_numericBoost__retval,)
 
@@ -6923,13 +6923,13 @@ def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSbsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSbsrilu02_bufferSize__retval,)
 
 
@@ -6945,13 +6945,13 @@ def hipsparseDbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDbsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrilu02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDbsrilu02_bufferSize__retval,)
 
 
@@ -6967,13 +6967,13 @@ def hipsparseCbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCbsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrilu02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCbsrilu02_bufferSize__retval,)
 
 
@@ -6989,13 +6989,13 @@ def hipsparseZbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZbsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrilu02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZbsrilu02_bufferSize__retval,)
 
 
@@ -7023,13 +7023,13 @@ def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSbsrilu02_analysis__retval,)
 
 
@@ -7047,13 +7047,13 @@ def hipsparseDbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrilu02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDbsrilu02_analysis__retval,)
 
 
@@ -7071,13 +7071,13 @@ def hipsparseCbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrilu02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCbsrilu02_analysis__retval,)
 
 
@@ -7095,13 +7095,13 @@ def hipsparseZbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrilu02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZbsrilu02_analysis__retval,)
 
 
@@ -7131,13 +7131,13 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrSortedValA_valM)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSbsrilu02__retval,)
 
 
@@ -7155,13 +7155,13 @@ def hipsparseDbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrilu02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrSortedValA_valM)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDbsrilu02__retval,)
 
 
@@ -7179,13 +7179,13 @@ def hipsparseCbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrilu02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCbsrilu02__retval,)
 
 
@@ -7203,13 +7203,13 @@ def hipsparseZbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrilu02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrSortedColIndA)._ptr,blockDim,
         bsrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZbsrilu02__retval,)
 
 
@@ -7236,9 +7236,9 @@ def hipsparseXcsrilu02_zeroPivot(object handle, object info, object position):
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrilu02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrilu02_zeroPivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(position)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(position)._ptr))    # fully specified
     return (_hipsparseXcsrilu02_zeroPivot__retval,)
 
 
@@ -7265,10 +7265,10 @@ def hipsparseScsrilu02_numericBoost(object handle, object info, int enable_boost
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_numericBoost(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,enable_boost,
-        <double *>hip._util.types.DataHandle.from_pyobj(tol)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(boost_val)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(tol)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(boost_val)._ptr))    # fully specified
     return (_hipsparseScsrilu02_numericBoost__retval,)
 
 
@@ -7282,10 +7282,10 @@ def hipsparseDcsrilu02_numericBoost(object handle, object info, int enable_boost
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02_numericBoost(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,enable_boost,
-        <double *>hip._util.types.DataHandle.from_pyobj(tol)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(boost_val)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(tol)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(boost_val)._ptr))    # fully specified
     return (_hipsparseDcsrilu02_numericBoost__retval,)
 
 
@@ -7299,9 +7299,9 @@ def hipsparseCcsrilu02_numericBoost(object handle, object info, int enable_boost
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02_numericBoost(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,enable_boost,
-        <double *>hip._util.types.DataHandle.from_pyobj(tol)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(tol)._ptr,
         float2.from_pyobj(boost_val)._ptr))    # fully specified
     return (_hipsparseCcsrilu02_numericBoost__retval,)
 
@@ -7316,9 +7316,9 @@ def hipsparseZcsrilu02_numericBoost(object handle, object info, int enable_boost
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02_numericBoost(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,enable_boost,
-        <double *>hip._util.types.DataHandle.from_pyobj(tol)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(tol)._ptr,
         double2.from_pyobj(boost_val)._ptr))    # fully specified
     return (_hipsparseZcsrilu02_numericBoost__retval,)
 
@@ -7338,13 +7338,13 @@ def hipsparseScsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseScsrilu02_bufferSize__retval,)
 
 
@@ -7358,13 +7358,13 @@ def hipsparseDcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDcsrilu02_bufferSize__retval,)
 
 
@@ -7378,13 +7378,13 @@ def hipsparseCcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCcsrilu02_bufferSize__retval,)
 
 
@@ -7398,13 +7398,13 @@ def hipsparseZcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZcsrilu02_bufferSize__retval,)
 
 
@@ -7423,13 +7423,13 @@ def hipsparseScsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseScsrilu02_bufferSizeExt__retval,)
 
 
@@ -7443,13 +7443,13 @@ def hipsparseDcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseDcsrilu02_bufferSizeExt__retval,)
 
 
@@ -7463,13 +7463,13 @@ def hipsparseCcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseCcsrilu02_bufferSizeExt__retval,)
 
 
@@ -7483,13 +7483,13 @@ def hipsparseZcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseZcsrilu02_bufferSizeExt__retval,)
 
 
@@ -7515,13 +7515,13 @@ def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsrilu02_analysis__retval,)
 
 
@@ -7537,13 +7537,13 @@ def hipsparseDcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsrilu02_analysis__retval,)
 
 
@@ -7559,13 +7559,13 @@ def hipsparseCcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsrilu02_analysis__retval,)
 
 
@@ -7581,13 +7581,13 @@ def hipsparseZcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsrilu02_analysis__retval,)
 
 
@@ -7619,13 +7619,13 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA_valM)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsrilu02__retval,)
 
 
@@ -7641,13 +7641,13 @@ def hipsparseDcsrilu02(object handle, int m, int nnz, object descrA, object csrS
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA_valM)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsrilu02__retval,)
 
 
@@ -7663,13 +7663,13 @@ def hipsparseCcsrilu02(object handle, int m, int nnz, object descrA, object csrS
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsrilu02__retval,)
 
 
@@ -7685,13 +7685,13 @@ def hipsparseZcsrilu02(object handle, int m, int nnz, object descrA, object csrS
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csrilu02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsrilu02__retval,)
 
 
@@ -7723,9 +7723,9 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
         * `~.hipsparseStatus_t`
     """
     _hipsparseXbsric02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsric02_zeroPivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         bsric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(position)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(position)._ptr))    # fully specified
     return (_hipsparseXbsric02_zeroPivot__retval,)
 
 
@@ -7746,13 +7746,13 @@ def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSbsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSbsric02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSbsric02_bufferSize__retval,)
 
 
@@ -7768,13 +7768,13 @@ def hipsparseDbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDbsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDbsric02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDbsric02_bufferSize__retval,)
 
 
@@ -7790,13 +7790,13 @@ def hipsparseCbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCbsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCbsric02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCbsric02_bufferSize__retval,)
 
 
@@ -7812,13 +7812,13 @@ def hipsparseZbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZbsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZbsric02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZbsric02_bufferSize__retval,)
 
 
@@ -7846,13 +7846,13 @@ def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSbsric02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSbsric02_analysis__retval,)
 
 
@@ -7870,13 +7870,13 @@ def hipsparseDbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDbsric02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDbsric02_analysis__retval,)
 
 
@@ -7894,13 +7894,13 @@ def hipsparseCbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCbsric02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCbsric02_analysis__retval,)
 
 
@@ -7918,13 +7918,13 @@ def hipsparseZbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZbsric02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZbsric02_analysis__retval,)
 
 
@@ -7954,13 +7954,13 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsric02__retval = hipsparseStatus_t(chipsparse.hipsparseSbsric02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSbsric02__retval,)
 
 
@@ -7978,13 +7978,13 @@ def hipsparseDbsric02(object handle, object dirA, int mb, int nnzb, object descr
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsric02__retval = hipsparseStatus_t(chipsparse.hipsparseDbsric02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDbsric02__retval,)
 
 
@@ -8002,13 +8002,13 @@ def hipsparseCbsric02(object handle, object dirA, int mb, int nnzb, object descr
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsric02__retval = hipsparseStatus_t(chipsparse.hipsparseCbsric02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCbsric02__retval,)
 
 
@@ -8026,13 +8026,13 @@ def hipsparseZbsric02(object handle, object dirA, int mb, int nnzb, object descr
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsric02__retval = hipsparseStatus_t(chipsparse.hipsparseZbsric02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
         bsric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZbsric02__retval,)
 
 
@@ -8059,9 +8059,9 @@ def hipsparseXcsric02_zeroPivot(object handle, object info, object position):
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsric02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsric02_zeroPivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(position)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(position)._ptr))    # fully specified
     return (_hipsparseXcsric02_zeroPivot__retval,)
 
 
@@ -8079,13 +8079,13 @@ def hipsparseScsric02_bufferSize(object handle, int m, int nnz, object descrA, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseScsric02_bufferSize__retval,)
 
 
@@ -8099,13 +8099,13 @@ def hipsparseDcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDcsric02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDcsric02_bufferSize__retval,)
 
 
@@ -8119,13 +8119,13 @@ def hipsparseCcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCcsric02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCcsric02_bufferSize__retval,)
 
 
@@ -8139,13 +8139,13 @@ def hipsparseZcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZcsric02_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZcsric02_bufferSize__retval,)
 
 
@@ -8163,13 +8163,13 @@ def hipsparseScsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseScsric02_bufferSizeExt__retval,)
 
 
@@ -8183,13 +8183,13 @@ def hipsparseDcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsric02_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseDcsric02_bufferSizeExt__retval,)
 
 
@@ -8203,13 +8203,13 @@ def hipsparseCcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsric02_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseCcsric02_bufferSizeExt__retval,)
 
 
@@ -8223,13 +8223,13 @@ def hipsparseZcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsric02_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSize)._ptr))    # fully specified
     return (_hipsparseZcsric02_bufferSizeExt__retval,)
 
 
@@ -8255,13 +8255,13 @@ def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, obj
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsric02_analysis__retval,)
 
 
@@ -8277,13 +8277,13 @@ def hipsparseDcsric02_analysis(object handle, int m, int nnz, object descrA, obj
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDcsric02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsric02_analysis__retval,)
 
 
@@ -8299,13 +8299,13 @@ def hipsparseCcsric02_analysis(object handle, int m, int nnz, object descrA, obj
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCcsric02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsric02_analysis__retval,)
 
 
@@ -8321,13 +8321,13 @@ def hipsparseZcsric02_analysis(object handle, int m, int nnz, object descrA, obj
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZcsric02_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsric02_analysis__retval,)
 
 
@@ -8359,13 +8359,13 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsric02__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA_valM)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsric02__retval,)
 
 
@@ -8381,13 +8381,13 @@ def hipsparseDcsric02(object handle, int m, int nnz, object descrA, object csrSo
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsric02__retval = hipsparseStatus_t(chipsparse.hipsparseDcsric02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA_valM)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsric02__retval,)
 
 
@@ -8403,13 +8403,13 @@ def hipsparseCcsric02(object handle, int m, int nnz, object descrA, object csrSo
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsric02__retval = hipsparseStatus_t(chipsparse.hipsparseCcsric02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsric02__retval,)
 
 
@@ -8425,13 +8425,13 @@ def hipsparseZcsric02(object handle, int m, int nnz, object descrA, object csrSo
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
         raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsric02__retval = hipsparseStatus_t(chipsparse.hipsparseZcsric02(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA_valM)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
         csric02Info.from_pyobj(info)._ptr,policy.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsric02__retval,)
 
 
@@ -8449,12 +8449,12 @@ def hipsparseSgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSgtsv2_bufferSizeExt__retval,)
 
 
@@ -8468,12 +8468,12 @@ def hipsparseDgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,db,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(B)._ptr,db,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDgtsv2_bufferSizeExt__retval,)
 
 
@@ -8487,12 +8487,12 @@ def hipsparseCgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCgtsv2_bufferSizeExt__retval,)
 
 
@@ -8506,12 +8506,12 @@ def hipsparseZgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZgtsv2_bufferSizeExt__retval,)
 
 
@@ -8531,12 +8531,12 @@ def hipsparseSgtsv2(object handle, int m, int n, object dl, object d, object du,
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSgtsv2__retval,)
 
 
@@ -8550,12 +8550,12 @@ def hipsparseDgtsv2(object handle, int m, int n, object dl, object d, object du,
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDgtsv2__retval,)
 
 
@@ -8569,12 +8569,12 @@ def hipsparseCgtsv2(object handle, int m, int n, object dl, object d, object du,
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCgtsv2__retval,)
 
 
@@ -8588,12 +8588,12 @@ def hipsparseZgtsv2(object handle, int m, int n, object dl, object d, object du,
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZgtsv2__retval,)
 
 
@@ -8611,12 +8611,12 @@ def hipsparseSgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_nopivot_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSgtsv2_nopivot_bufferSizeExt__retval,)
 
 
@@ -8630,12 +8630,12 @@ def hipsparseDgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2_nopivot_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,db,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(B)._ptr,db,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDgtsv2_nopivot_bufferSizeExt__retval,)
 
 
@@ -8649,12 +8649,12 @@ def hipsparseCgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2_nopivot_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCgtsv2_nopivot_bufferSizeExt__retval,)
 
 
@@ -8668,12 +8668,12 @@ def hipsparseZgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2_nopivot_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZgtsv2_nopivot_bufferSizeExt__retval,)
 
 
@@ -8693,12 +8693,12 @@ def hipsparseSgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_nopivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSgtsv2_nopivot__retval,)
 
 
@@ -8712,12 +8712,12 @@ def hipsparseDgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2_nopivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDgtsv2_nopivot__retval,)
 
 
@@ -8731,12 +8731,12 @@ def hipsparseCgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2_nopivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(B)._ptr,ldb,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCgtsv2_nopivot__retval,)
 
 
@@ -8750,12 +8750,12 @@ def hipsparseZgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2_nopivot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(B)._ptr,ldb,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZgtsv2_nopivot__retval,)
 
 
@@ -8773,12 +8773,12 @@ def hipsparseSgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2StridedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,batchStride,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,batchStride,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSgtsv2StridedBatch_bufferSizeExt__retval,)
 
 
@@ -8792,12 +8792,12 @@ def hipsparseDgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2StridedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,batchStride,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,batchStride,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDgtsv2StridedBatch_bufferSizeExt__retval,)
 
 
@@ -8811,12 +8811,12 @@ def hipsparseCgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2StridedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(x)._ptr,batchCount,batchStride,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCgtsv2StridedBatch_bufferSizeExt__retval,)
 
 
@@ -8830,12 +8830,12 @@ def hipsparseZgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2StridedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(x)._ptr,batchCount,batchStride,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZgtsv2StridedBatch_bufferSizeExt__retval,)
 
 
@@ -8855,12 +8855,12 @@ def hipsparseSgtsv2StridedBatch(object handle, int m, object dl, object d, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2StridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,batchStride,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,batchStride,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSgtsv2StridedBatch__retval,)
 
 
@@ -8874,12 +8874,12 @@ def hipsparseDgtsv2StridedBatch(object handle, int m, object dl, object d, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsv2StridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,batchStride,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,batchStride,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDgtsv2StridedBatch__retval,)
 
 
@@ -8893,12 +8893,12 @@ def hipsparseCgtsv2StridedBatch(object handle, int m, object dl, object d, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsv2StridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(x)._ptr,batchCount,batchStride,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCgtsv2StridedBatch__retval,)
 
 
@@ -8912,12 +8912,12 @@ def hipsparseZgtsv2StridedBatch(object handle, int m, object dl, object d, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsv2StridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(x)._ptr,batchCount,batchStride,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZgtsv2StridedBatch__retval,)
 
 
@@ -8935,12 +8935,12 @@ def hipsparseSgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsvInterleavedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSgtsvInterleavedBatch_bufferSizeExt__retval,)
 
 
@@ -8954,12 +8954,12 @@ def hipsparseDgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsvInterleavedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDgtsvInterleavedBatch_bufferSizeExt__retval,)
 
 
@@ -8973,12 +8973,12 @@ def hipsparseCgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsvInterleavedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(x)._ptr,batchCount,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCgtsvInterleavedBatch_bufferSizeExt__retval,)
 
 
@@ -8992,12 +8992,12 @@ def hipsparseZgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsvInterleavedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(x)._ptr,batchCount,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZgtsvInterleavedBatch_bufferSizeExt__retval,)
 
 
@@ -9017,12 +9017,12 @@ def hipsparseSgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsvInterleavedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
-        <float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
+        <float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSgtsvInterleavedBatch__retval,)
 
 
@@ -9036,12 +9036,12 @@ def hipsparseDgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDgtsvInterleavedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
-        <double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
+        <double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDgtsvInterleavedBatch__retval,)
 
 
@@ -9055,12 +9055,12 @@ def hipsparseCgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCgtsvInterleavedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(x)._ptr,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCgtsvInterleavedBatch__retval,)
 
 
@@ -9074,12 +9074,12 @@ def hipsparseZgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseZgtsvInterleavedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(x)._ptr,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZgtsvInterleavedBatch__retval,)
 
 
@@ -9097,14 +9097,14 @@ def hipsparseSgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgpsvInterleavedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(ds)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(dw)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(ds)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(dw)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseSgpsvInterleavedBatch_bufferSizeExt__retval,)
 
 
@@ -9118,14 +9118,14 @@ def hipsparseDgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDgpsvInterleavedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(ds)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(dw)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(ds)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(dw)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDgpsvInterleavedBatch_bufferSizeExt__retval,)
 
 
@@ -9139,14 +9139,14 @@ def hipsparseCgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCgpsvInterleavedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
         float2.from_pyobj(ds)._ptr,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(dw)._ptr,
         float2.from_pyobj(x)._ptr,batchCount,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCgpsvInterleavedBatch_bufferSizeExt__retval,)
 
 
@@ -9160,14 +9160,14 @@ def hipsparseZgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZgpsvInterleavedBatch_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
         double2.from_pyobj(ds)._ptr,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(dw)._ptr,
         double2.from_pyobj(x)._ptr,batchCount,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZgpsvInterleavedBatch_bufferSizeExt__retval,)
 
 
@@ -9187,14 +9187,14 @@ def hipsparseSgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgpsvInterleavedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
-        <float *>hip._util.types.DataHandle.from_pyobj(ds)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(dw)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
+        <float *>hip._util.types.Pointer.from_pyobj(ds)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(dw)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseSgpsvInterleavedBatch__retval,)
 
 
@@ -9208,14 +9208,14 @@ def hipsparseDgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDgpsvInterleavedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
-        <double *>hip._util.types.DataHandle.from_pyobj(ds)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(dl)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(d)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(du)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(dw)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
+        <double *>hip._util.types.Pointer.from_pyobj(ds)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(dl)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(d)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(du)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(dw)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDgpsvInterleavedBatch__retval,)
 
 
@@ -9229,14 +9229,14 @@ def hipsparseCgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCgpsvInterleavedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
         float2.from_pyobj(ds)._ptr,
         float2.from_pyobj(dl)._ptr,
         float2.from_pyobj(d)._ptr,
         float2.from_pyobj(du)._ptr,
         float2.from_pyobj(dw)._ptr,
         float2.from_pyobj(x)._ptr,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCgpsvInterleavedBatch__retval,)
 
 
@@ -9250,14 +9250,14 @@ def hipsparseZgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseZgpsvInterleavedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,algo,m,
         double2.from_pyobj(ds)._ptr,
         double2.from_pyobj(dl)._ptr,
         double2.from_pyobj(d)._ptr,
         double2.from_pyobj(du)._ptr,
         double2.from_pyobj(dw)._ptr,
         double2.from_pyobj(x)._ptr,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZgpsvInterleavedBatch__retval,)
 
 
@@ -9276,11 +9276,11 @@ def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, objec
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSnnz__retval = hipsparseStatus_t(chipsparse.hipsparseSnnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzPerRowColumn)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzPerRowColumn)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
     return (_hipsparseSnnz__retval,)
 
 
@@ -9296,11 +9296,11 @@ def hipsparseDnnz(object handle, object dirA, int m, int n, object descrA, objec
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDnnz__retval = hipsparseStatus_t(chipsparse.hipsparseDnnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzPerRowColumn)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzPerRowColumn)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
     return (_hipsparseDnnz__retval,)
 
 
@@ -9316,11 +9316,11 @@ def hipsparseCnnz(object handle, object dirA, int m, int n, object descrA, objec
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCnnz__retval = hipsparseStatus_t(chipsparse.hipsparseCnnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzPerRowColumn)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(nnzPerRowColumn)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
     return (_hipsparseCnnz__retval,)
 
 
@@ -9336,11 +9336,11 @@ def hipsparseZnnz(object handle, object dirA, int m, int n, object descrA, objec
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZnnz__retval = hipsparseStatus_t(chipsparse.hipsparseZnnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzPerRowColumn)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(nnzPerRowColumn)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr))    # fully specified
     return (_hipsparseZnnz__retval,)
 
 
@@ -9358,13 +9358,13 @@ def hipsparseSdense2csr(object handle, int m, int n, object descr, object A, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseSdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSdense2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,ld,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnz_per_rows)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csr_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,ld,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnz_per_rows)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csr_val)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr))    # fully specified
     return (_hipsparseSdense2csr__retval,)
 
 
@@ -9378,13 +9378,13 @@ def hipsparseDdense2csr(object handle, int m, int n, object descr, object A, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseDdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDdense2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,ld,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnz_per_rows)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csr_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,ld,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnz_per_rows)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csr_val)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr))    # fully specified
     return (_hipsparseDdense2csr__retval,)
 
 
@@ -9398,13 +9398,13 @@ def hipsparseCdense2csr(object handle, int m, int n, object descr, object A, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseCdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseCdense2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         float2.from_pyobj(A)._ptr,ld,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnz_per_rows)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnz_per_rows)._ptr,
         float2.from_pyobj(csr_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr))    # fully specified
     return (_hipsparseCdense2csr__retval,)
 
 
@@ -9418,13 +9418,13 @@ def hipsparseZdense2csr(object handle, int m, int n, object descr, object A, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseZdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZdense2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         double2.from_pyobj(A)._ptr,ld,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnz_per_rows)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnz_per_rows)._ptr,
         double2.from_pyobj(csr_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr))    # fully specified
     return (_hipsparseZdense2csr__retval,)
 
 
@@ -9443,14 +9443,14 @@ def hipsparseSpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpruneDense2csr_bufferSize__retval,)
 
 
@@ -9464,14 +9464,14 @@ def hipsparseDpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDpruneDense2csr_bufferSize__retval,)
 
 
@@ -9485,14 +9485,14 @@ def hipsparseSpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csr_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpruneDense2csr_bufferSizeExt__retval,)
 
 
@@ -9506,14 +9506,14 @@ def hipsparseDpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csr_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDpruneDense2csr_bufferSizeExt__retval,)
 
 
@@ -9531,13 +9531,13 @@ def hipsparseSpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSpruneDense2csrNnz__retval,)
 
 
@@ -9551,13 +9551,13 @@ def hipsparseDpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDpruneDense2csrNnz__retval,)
 
 
@@ -9584,14 +9584,14 @@ def hipsparseSpruneDense2csr(object handle, int m, int n, object A, int lda, obj
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSpruneDense2csr__retval,)
 
 
@@ -9605,14 +9605,14 @@ def hipsparseDpruneDense2csr(object handle, int m, int n, object A, int lda, obj
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDpruneDense2csr__retval,)
 
 
@@ -9646,14 +9646,14 @@ def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpruneDense2csrByPercentage_bufferSize__retval,)
 
 
@@ -9667,14 +9667,14 @@ def hipsparseDpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrByPercentage_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDpruneDense2csrByPercentage_bufferSize__retval,)
 
 
@@ -9708,14 +9708,14 @@ def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpruneDense2csrByPercentage_bufferSizeExt__retval,)
 
 
@@ -9729,14 +9729,14 @@ def hipsparseDpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrByPercentage_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDpruneDense2csrByPercentage_bufferSizeExt__retval,)
 
 
@@ -9771,13 +9771,13 @@ def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrNnzByPercentage(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSpruneDense2csrNnzByPercentage__retval,)
 
 
@@ -9791,13 +9791,13 @@ def hipsparseDpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrNnzByPercentage(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDpruneDense2csrNnzByPercentage__retval,)
 
 
@@ -9832,14 +9832,14 @@ def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneDense2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSpruneDense2csrByPercentage__retval,)
 
 
@@ -9853,14 +9853,14 @@ def hipsparseDpruneDense2csrByPercentage(object handle, int m, int n, object A, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneDense2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneDense2csrByPercentage(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDpruneDense2csrByPercentage__retval,)
 
 
@@ -9878,13 +9878,13 @@ def hipsparseSdense2csc(object handle, int m, int n, object descr, object A, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseSdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseSdense2csc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,ld,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnz_per_columns)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csc_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csc_row_ind)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csc_col_ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(A)._ptr,ld,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnz_per_columns)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csc_val)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csc_row_ind)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csc_col_ptr)._ptr))    # fully specified
     return (_hipsparseSdense2csc__retval,)
 
 
@@ -9898,13 +9898,13 @@ def hipsparseDdense2csc(object handle, int m, int n, object descr, object A, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseDdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseDdense2csc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,ld,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnz_per_columns)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csc_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csc_row_ind)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csc_col_ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(A)._ptr,ld,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnz_per_columns)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csc_val)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csc_row_ind)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csc_col_ptr)._ptr))    # fully specified
     return (_hipsparseDdense2csc__retval,)
 
 
@@ -9918,13 +9918,13 @@ def hipsparseCdense2csc(object handle, int m, int n, object descr, object A, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseCdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseCdense2csc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         float2.from_pyobj(A)._ptr,ld,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnz_per_columns)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnz_per_columns)._ptr,
         float2.from_pyobj(csc_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csc_row_ind)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csc_col_ptr)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csc_row_ind)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csc_col_ptr)._ptr))    # fully specified
     return (_hipsparseCdense2csc__retval,)
 
 
@@ -9938,13 +9938,13 @@ def hipsparseZdense2csc(object handle, int m, int n, object descr, object A, int
         * `~.hipsparseStatus_t`
     """
     _hipsparseZdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseZdense2csc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         double2.from_pyobj(A)._ptr,ld,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnz_per_columns)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnz_per_columns)._ptr,
         double2.from_pyobj(csc_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csc_row_ind)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csc_col_ptr)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csc_row_ind)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csc_col_ptr)._ptr))    # fully specified
     return (_hipsparseZdense2csc__retval,)
 
 
@@ -9959,12 +9959,12 @@ def hipsparseScsr2dense(object handle, int m, int n, object descr, object csr_va
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2dense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,ld))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,ld))    # fully specified
     return (_hipsparseScsr2dense__retval,)
 
 
@@ -9978,12 +9978,12 @@ def hipsparseDcsr2dense(object handle, int m, int n, object descr, object csr_va
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2dense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,ld))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,ld))    # fully specified
     return (_hipsparseDcsr2dense__retval,)
 
 
@@ -9997,11 +9997,11 @@ def hipsparseCcsr2dense(object handle, int m, int n, object descr, object csr_va
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2dense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         float2.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
         float2.from_pyobj(A)._ptr,ld))    # fully specified
     return (_hipsparseCcsr2dense__retval,)
 
@@ -10016,11 +10016,11 @@ def hipsparseZcsr2dense(object handle, int m, int n, object descr, object csr_va
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2dense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         double2.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
         double2.from_pyobj(A)._ptr,ld))    # fully specified
     return (_hipsparseZcsr2dense__retval,)
 
@@ -10036,12 +10036,12 @@ def hipsparseScsc2dense(object handle, int m, int n, object descr, object csc_va
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseScsc2dense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csc_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csc_row_ind)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csc_col_ptr)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,ld))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csc_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csc_row_ind)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csc_col_ptr)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,ld))    # fully specified
     return (_hipsparseScsc2dense__retval,)
 
 
@@ -10055,12 +10055,12 @@ def hipsparseDcsc2dense(object handle, int m, int n, object descr, object csc_va
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseDcsc2dense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csc_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csc_row_ind)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csc_col_ptr)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,ld))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csc_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csc_row_ind)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csc_col_ptr)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,ld))    # fully specified
     return (_hipsparseDcsc2dense__retval,)
 
 
@@ -10074,11 +10074,11 @@ def hipsparseCcsc2dense(object handle, int m, int n, object descr, object csc_va
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseCcsc2dense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         float2.from_pyobj(csc_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csc_row_ind)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csc_col_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csc_row_ind)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csc_col_ptr)._ptr,
         float2.from_pyobj(A)._ptr,ld))    # fully specified
     return (_hipsparseCcsc2dense__retval,)
 
@@ -10093,11 +10093,11 @@ def hipsparseZcsc2dense(object handle, int m, int n, object descr, object csc_va
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseZcsc2dense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descr)._ptr,
         double2.from_pyobj(csc_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csc_row_ind)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csc_col_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csc_row_ind)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csc_col_ptr)._ptr,
         double2.from_pyobj(A)._ptr,ld))    # fully specified
     return (_hipsparseZcsc2dense__retval,)
 
@@ -10117,13 +10117,13 @@ def hipsparseXcsr2bsrNnz(object handle, object dirA, int m, int n, object descrA
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseXcsr2bsrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsr2bsrNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrNnzb)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrNnzb)._ptr))    # fully specified
     return (_hipsparseXcsr2bsrNnz__retval,)
 
 
@@ -10141,12 +10141,12 @@ def hipsparseSnnz_compress(object handle, int m, object descrA, object csrValA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseSnnz_compress__retval = hipsparseStatus_t(chipsparse.hipsparseSnnz_compress(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzPerRow)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzC)._ptr,tol))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzPerRow)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzC)._ptr,tol))    # fully specified
     return (_hipsparseSnnz_compress__retval,)
 
 
@@ -10160,12 +10160,12 @@ def hipsparseDnnz_compress(object handle, int m, object descrA, object csrValA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnnz_compress__retval = hipsparseStatus_t(chipsparse.hipsparseDnnz_compress(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzPerRow)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzC)._ptr,tol))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzPerRow)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzC)._ptr,tol))    # fully specified
     return (_hipsparseDnnz_compress__retval,)
 
 
@@ -10179,12 +10179,12 @@ def hipsparseCnnz_compress(object handle, int m, object descrA, object csrValA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseCnnz_compress__retval = hipsparseStatus_t(chipsparse.hipsparseCnnz_compress(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzPerRow)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzPerRow)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzC)._ptr,
         float2.from_pyobj(tol)._ptr[0]))    # fully specified
     return (_hipsparseCnnz_compress__retval,)
 
@@ -10199,12 +10199,12 @@ def hipsparseZnnz_compress(object handle, int m, object descrA, object csrValA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseZnnz_compress__retval = hipsparseStatus_t(chipsparse.hipsparseZnnz_compress(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzPerRow)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzPerRow)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzC)._ptr,
         double2.from_pyobj(tol)._ptr[0]))    # fully specified
     return (_hipsparseZnnz_compress__retval,)
 
@@ -10232,9 +10232,9 @@ def hipsparseXcsr2coo(object handle, object csrRowPtr, int nnz, int m, object co
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseXcsr2coo__retval = hipsparseStatus_t(chipsparse.hipsparseXcsr2coo(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,nnz,m,
-        <int *>hip._util.types.DataHandle.from_pyobj(cooRowInd)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,nnz,m,
+        <int *>hip._util.types.Pointer.from_pyobj(cooRowInd)._ptr,idxBase.value))    # fully specified
     return (_hipsparseXcsr2coo__retval,)
 
 
@@ -10264,13 +10264,13 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseScsr2csc__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2csc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColInd)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(cscSortedVal)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscSortedRowInd)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscSortedColPtr)._ptr,copyValues.value,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColInd)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(cscSortedVal)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscSortedRowInd)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscSortedColPtr)._ptr,copyValues.value,idxBase.value))    # fully specified
     return (_hipsparseScsr2csc__retval,)
 
 
@@ -10288,13 +10288,13 @@ def hipsparseDcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDcsr2csc__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2csc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColInd)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(cscSortedVal)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscSortedRowInd)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscSortedColPtr)._ptr,copyValues.value,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColInd)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(cscSortedVal)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscSortedRowInd)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscSortedColPtr)._ptr,copyValues.value,idxBase.value))    # fully specified
     return (_hipsparseDcsr2csc__retval,)
 
 
@@ -10312,13 +10312,13 @@ def hipsparseCcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCcsr2csc__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2csc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
         float2.from_pyobj(csrSortedVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColInd)._ptr,
         float2.from_pyobj(cscSortedVal)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscSortedRowInd)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscSortedColPtr)._ptr,copyValues.value,idxBase.value))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(cscSortedRowInd)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscSortedColPtr)._ptr,copyValues.value,idxBase.value))    # fully specified
     return (_hipsparseCcsr2csc__retval,)
 
 
@@ -10336,13 +10336,13 @@ def hipsparseZcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZcsr2csc__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2csc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
         double2.from_pyobj(csrSortedVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColInd)._ptr,
         double2.from_pyobj(cscSortedVal)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscSortedRowInd)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscSortedColPtr)._ptr,copyValues.value,idxBase.value))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(cscSortedRowInd)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscSortedColPtr)._ptr,copyValues.value,idxBase.value))    # fully specified
     return (_hipsparseZcsr2csc__retval,)
 
 
@@ -10391,14 +10391,14 @@ def hipsparseCsr2cscEx2_bufferSize(object handle, int m, int n, int nnz, object 
     if not isinstance(alg,_hipsparseCsr2CscAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseCsr2CscAlg_t__Base'")
     _hipsparseCsr2cscEx2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCsr2cscEx2_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <const void *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cscVal)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscColPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscRowInd)._ptr,valType.value,copyValues.value,idxBase.value,alg.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <const void *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cscVal)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscColPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscRowInd)._ptr,valType.value,copyValues.value,idxBase.value,alg.value,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseCsr2cscEx2_bufferSize__retval,)
 
 
@@ -10432,14 +10432,14 @@ def hipsparseCsr2cscEx2(object handle, int m, int n, int nnz, object csrVal, obj
     if not isinstance(alg,_hipsparseCsr2CscAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseCsr2CscAlg_t__Base'")
     _hipsparseCsr2cscEx2__retval = hipsparseStatus_t(chipsparse.hipsparseCsr2cscEx2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <const void *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cscVal)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscColPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscRowInd)._ptr,valType.value,copyValues.value,idxBase.value,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <const void *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cscVal)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscColPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscRowInd)._ptr,valType.value,copyValues.value,idxBase.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseCsr2cscEx2__retval,)
 
 
@@ -10466,12 +10466,12 @@ def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSort
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
         raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
     _hipsparseScsr2hyb__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2hyb(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,userEllWidth,partitionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(hybA)._ptr,userEllWidth,partitionType.value))    # fully specified
     return (_hipsparseScsr2hyb__retval,)
 
 
@@ -10487,12 +10487,12 @@ def hipsparseDcsr2hyb(object handle, int m, int n, object descrA, object csrSort
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
         raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
     _hipsparseDcsr2hyb__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2hyb(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,userEllWidth,partitionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(hybA)._ptr,userEllWidth,partitionType.value))    # fully specified
     return (_hipsparseDcsr2hyb__retval,)
 
 
@@ -10508,12 +10508,12 @@ def hipsparseCcsr2hyb(object handle, int m, int n, object descrA, object csrSort
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
         raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
     _hipsparseCcsr2hyb__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2hyb(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,userEllWidth,partitionType.value))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(hybA)._ptr,userEllWidth,partitionType.value))    # fully specified
     return (_hipsparseCcsr2hyb__retval,)
 
 
@@ -10529,12 +10529,12 @@ def hipsparseZcsr2hyb(object handle, int m, int n, object descrA, object csrSort
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
         raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
     _hipsparseZcsr2hyb__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2hyb(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,userEllWidth,partitionType.value))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(hybA)._ptr,userEllWidth,partitionType.value))    # fully specified
     return (_hipsparseZcsr2hyb__retval,)
 
 
@@ -10552,11 +10552,11 @@ def hipsparseSgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseSgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsc_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(p_buffer_size)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mb,nb,nnzb,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(p_buffer_size)._ptr))    # fully specified
     return (_hipsparseSgebsr2gebsc_bufferSize__retval,)
 
 
@@ -10570,11 +10570,11 @@ def hipsparseDgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseDgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2gebsc_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(p_buffer_size)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mb,nb,nnzb,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(p_buffer_size)._ptr))    # fully specified
     return (_hipsparseDgebsr2gebsc_bufferSize__retval,)
 
 
@@ -10588,11 +10588,11 @@ def hipsparseCgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseCgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2gebsc_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mb,nb,nnzb,
         float2.from_pyobj(bsr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(p_buffer_size)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(p_buffer_size)._ptr))    # fully specified
     return (_hipsparseCgebsr2gebsc_bufferSize__retval,)
 
 
@@ -10606,11 +10606,11 @@ def hipsparseZgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseZgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2gebsc_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mb,nb,nnzb,
         double2.from_pyobj(bsr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(p_buffer_size)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(p_buffer_size)._ptr))    # fully specified
     return (_hipsparseZgebsr2gebsc_bufferSize__retval,)
 
 
@@ -10643,14 +10643,14 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
     if not isinstance(idx_base,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idx_base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSgebsr2gebsc__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsc_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsc_row_ind)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsc_col_ptr)._ptr,copy_values.value,idx_base.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(temp_buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mb,nb,nnzb,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <float *>hip._util.types.Pointer.from_pyobj(bsc_val)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsc_row_ind)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsc_col_ptr)._ptr,copy_values.value,idx_base.value,
+        <void *>hip._util.types.Pointer.from_pyobj(temp_buffer)._ptr))    # fully specified
     return (_hipsparseSgebsr2gebsc__retval,)
 
 
@@ -10668,14 +10668,14 @@ def hipsparseDgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
     if not isinstance(idx_base,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idx_base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDgebsr2gebsc__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2gebsc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsc_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsc_row_ind)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsc_col_ptr)._ptr,copy_values.value,idx_base.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(temp_buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mb,nb,nnzb,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <double *>hip._util.types.Pointer.from_pyobj(bsc_val)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsc_row_ind)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsc_col_ptr)._ptr,copy_values.value,idx_base.value,
+        <void *>hip._util.types.Pointer.from_pyobj(temp_buffer)._ptr))    # fully specified
     return (_hipsparseDgebsr2gebsc__retval,)
 
 
@@ -10693,14 +10693,14 @@ def hipsparseCgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
     if not isinstance(idx_base,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idx_base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCgebsr2gebsc__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2gebsc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mb,nb,nnzb,
         float2.from_pyobj(bsr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
         float2.from_pyobj(bsc_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsc_row_ind)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsc_col_ptr)._ptr,copy_values.value,idx_base.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(temp_buffer)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(bsc_row_ind)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsc_col_ptr)._ptr,copy_values.value,idx_base.value,
+        <void *>hip._util.types.Pointer.from_pyobj(temp_buffer)._ptr))    # fully specified
     return (_hipsparseCgebsr2gebsc__retval,)
 
 
@@ -10718,14 +10718,14 @@ def hipsparseZgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
     if not isinstance(idx_base,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idx_base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZgebsr2gebsc__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2gebsc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mb,nb,nnzb,
         double2.from_pyobj(bsr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
         double2.from_pyobj(bsc_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsc_row_ind)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsc_col_ptr)._ptr,copy_values.value,idx_base.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(temp_buffer)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(bsc_row_ind)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsc_col_ptr)._ptr,copy_values.value,idx_base.value,
+        <void *>hip._util.types.Pointer.from_pyobj(temp_buffer)._ptr))    # fully specified
     return (_hipsparseZgebsr2gebsc__retval,)
 
 
@@ -10750,12 +10750,12 @@ def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseScsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2gebsr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(p_buffer_size)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(p_buffer_size)._ptr))    # fully specified
     return (_hipsparseScsr2gebsr_bufferSize__retval,)
 
 
@@ -10771,12 +10771,12 @@ def hipsparseDcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDcsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2gebsr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(p_buffer_size)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(p_buffer_size)._ptr))    # fully specified
     return (_hipsparseDcsr2gebsr_bufferSize__retval,)
 
 
@@ -10792,12 +10792,12 @@ def hipsparseCcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCcsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2gebsr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
         float2.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(p_buffer_size)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(p_buffer_size)._ptr))    # fully specified
     return (_hipsparseCcsr2gebsr_bufferSize__retval,)
 
 
@@ -10813,12 +10813,12 @@ def hipsparseZcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZcsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2gebsr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
         double2.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(p_buffer_size)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(p_buffer_size)._ptr))    # fully specified
     return (_hipsparseZcsr2gebsr_bufferSize__retval,)
 
 
@@ -10835,14 +10835,14 @@ def hipsparseXcsr2gebsrNnz(object handle, object dir, int m, int n, object csr_d
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseXcsr2gebsrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsr2gebsrNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(bsr_descr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,row_block_dim,col_block_dim,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_nnz_devhost)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(p_buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(bsr_descr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,row_block_dim,col_block_dim,
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_nnz_devhost)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(p_buffer)._ptr))    # fully specified
     return (_hipsparseXcsr2gebsrNnz__retval,)
 
 
@@ -10864,16 +10864,16 @@ def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseScsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2gebsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(bsr_descr)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsr_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <void *>hip._util.types.DataHandle.from_pyobj(p_buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(bsr_descr)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsr_val)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <void *>hip._util.types.Pointer.from_pyobj(p_buffer)._ptr))    # fully specified
     return (_hipsparseScsr2gebsr__retval,)
 
 
@@ -10889,16 +10889,16 @@ def hipsparseDcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDcsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2gebsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(bsr_descr)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsr_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <void *>hip._util.types.DataHandle.from_pyobj(p_buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csr_val)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(bsr_descr)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsr_val)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <void *>hip._util.types.Pointer.from_pyobj(p_buffer)._ptr))    # fully specified
     return (_hipsparseDcsr2gebsr__retval,)
 
 
@@ -10914,16 +10914,16 @@ def hipsparseCcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCcsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2gebsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
         float2.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(bsr_descr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(bsr_descr)._ptr,
         float2.from_pyobj(bsr_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <void *>hip._util.types.DataHandle.from_pyobj(p_buffer)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <void *>hip._util.types.Pointer.from_pyobj(p_buffer)._ptr))    # fully specified
     return (_hipsparseCcsr2gebsr__retval,)
 
 
@@ -10939,16 +10939,16 @@ def hipsparseZcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZcsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2gebsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dir.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(csr_descr)._ptr,
         double2.from_pyobj(csr_val)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_row_ptr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csr_col_ind)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(bsr_descr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_row_ptr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csr_col_ind)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(bsr_descr)._ptr,
         double2.from_pyobj(bsr_val)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_row_ptr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
-        <void *>hip._util.types.DataHandle.from_pyobj(p_buffer)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_row_ptr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsr_col_ind)._ptr,row_block_dim,col_block_dim,
+        <void *>hip._util.types.Pointer.from_pyobj(p_buffer)._ptr))    # fully specified
     return (_hipsparseZcsr2gebsr__retval,)
 
 
@@ -10973,15 +10973,15 @@ def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseScsr2bsr__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2bsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrColIndC)._ptr))    # fully specified
     return (_hipsparseScsr2bsr__retval,)
 
 
@@ -10997,15 +10997,15 @@ def hipsparseDcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDcsr2bsr__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2bsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrColIndC)._ptr))    # fully specified
     return (_hipsparseDcsr2bsr__retval,)
 
 
@@ -11021,15 +11021,15 @@ def hipsparseCcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCcsr2bsr__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2bsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(bsrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrColIndC)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrColIndC)._ptr))    # fully specified
     return (_hipsparseCcsr2bsr__retval,)
 
 
@@ -11045,15 +11045,15 @@ def hipsparseZcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZcsr2bsr__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2bsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(bsrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrColIndC)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrColIndC)._ptr))    # fully specified
     return (_hipsparseZcsr2bsr__retval,)
 
 
@@ -11079,15 +11079,15 @@ def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSbsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSbsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseSbsr2csr__retval,)
 
 
@@ -11103,15 +11103,15 @@ def hipsparseDbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDbsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDbsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseDbsr2csr__retval,)
 
 
@@ -11127,15 +11127,15 @@ def hipsparseCbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCbsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseCbsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseCbsr2csr__retval,)
 
 
@@ -11151,15 +11151,15 @@ def hipsparseZbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZbsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZbsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,blockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,blockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseZbsr2csr__retval,)
 
 
@@ -11185,15 +11185,15 @@ def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descr
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSgebsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDim,colBlockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDim,colBlockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseSgebsr2csr__retval,)
 
 
@@ -11209,15 +11209,15 @@ def hipsparseDgebsr2csr(object handle, object dirA, int mb, int nb, object descr
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDgebsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDim,colBlockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDim,colBlockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseDgebsr2csr__retval,)
 
 
@@ -11233,15 +11233,15 @@ def hipsparseCgebsr2csr(object handle, object dirA, int mb, int nb, object descr
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCgebsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDim,colBlockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDim,colBlockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseCgebsr2csr__retval,)
 
 
@@ -11257,15 +11257,15 @@ def hipsparseZgebsr2csr(object handle, object dirA, int mb, int nb, object descr
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZgebsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDim,colBlockDim,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDim,colBlockDim,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr))    # fully specified
     return (_hipsparseZgebsr2csr__retval,)
 
 
@@ -11285,15 +11285,15 @@ def hipsparseScsr2csr_compress(object handle, int m, int n, object descrA, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2csr_compress(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnzPerRow)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,tol))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnzPerRow)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,tol))    # fully specified
     return (_hipsparseScsr2csr_compress__retval,)
 
 
@@ -11307,15 +11307,15 @@ def hipsparseDcsr2csr_compress(object handle, int m, int n, object descrA, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2csr_compress(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnzPerRow)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,tol))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnzPerRow)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,tol))    # fully specified
     return (_hipsparseDcsr2csr_compress__retval,)
 
 
@@ -11329,15 +11329,15 @@ def hipsparseCcsr2csr_compress(object handle, int m, int n, object descrA, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2csr_compress(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnzPerRow)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnzPerRow)._ptr,
         float2.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
         float2.from_pyobj(tol)._ptr[0]))    # fully specified
     return (_hipsparseCcsr2csr_compress__retval,)
 
@@ -11352,15 +11352,15 @@ def hipsparseZcsr2csr_compress(object handle, int m, int n, object descrA, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2csr_compress(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,nnzA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(nnzPerRow)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,nnzA,
+        <const int *>hip._util.types.Pointer.from_pyobj(nnzPerRow)._ptr,
         double2.from_pyobj(csrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
         double2.from_pyobj(tol)._ptr[0]))    # fully specified
     return (_hipsparseZcsr2csr_compress__retval,)
 
@@ -11379,17 +11379,17 @@ def hipsparseSpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpruneCsr2csr_bufferSize__retval,)
 
 
@@ -11403,17 +11403,17 @@ def hipsparseDpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDpruneCsr2csr_bufferSize__retval,)
 
 
@@ -11431,17 +11431,17 @@ def hipsparseSpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpruneCsr2csr_bufferSizeExt__retval,)
 
 
@@ -11455,17 +11455,17 @@ def hipsparseDpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csr_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDpruneCsr2csr_bufferSizeExt__retval,)
 
 
@@ -11486,16 +11486,16 @@ def hipsparseSpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSpruneCsr2csrNnz__retval,)
 
 
@@ -11509,16 +11509,16 @@ def hipsparseDpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDpruneCsr2csrNnz__retval,)
 
 
@@ -11542,17 +11542,17 @@ def hipsparseSpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSpruneCsr2csr__retval,)
 
 
@@ -11566,17 +11566,17 @@ def hipsparseDpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(threshold)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(threshold)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDpruneCsr2csr__retval,)
 
 
@@ -11594,17 +11594,17 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpruneCsr2csrByPercentage_bufferSize__retval,)
 
 
@@ -11618,17 +11618,17 @@ def hipsparseDpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrByPercentage_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDpruneCsr2csrByPercentage_bufferSize__retval,)
 
 
@@ -11646,17 +11646,17 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpruneCsr2csrByPercentage_bufferSizeExt__retval,)
 
 
@@ -11670,17 +11670,17 @@ def hipsparseDpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrByPercentage_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDpruneCsr2csrByPercentage_bufferSizeExt__retval,)
 
 
@@ -11701,16 +11701,16 @@ def hipsparseSpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrNnzByPercentage(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSpruneCsr2csrNnzByPercentage__retval,)
 
 
@@ -11724,16 +11724,16 @@ def hipsparseDpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrNnzByPercentage(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDpruneCsr2csrNnzByPercentage__retval,)
 
 
@@ -11757,17 +11757,17 @@ def hipsparseSpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpruneCsr2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSpruneCsr2csrByPercentage__retval,)
 
 
@@ -11781,17 +11781,17 @@ def hipsparseDpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseDpruneCsr2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseDpruneCsr2csrByPercentage(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnzA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,percentage,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrValC)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColIndC)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnzA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,percentage,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrValC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColIndC)._ptr,
         pruneInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDpruneCsr2csrByPercentage__retval,)
 
 
@@ -11811,12 +11811,12 @@ def hipsparseShyb2csr(object handle, object descrA, object hybA, object csrSorte
         * `~.hipsparseStatus_t`
     """
     _hipsparseShyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseShyb2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(hybA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr))    # fully specified
     return (_hipsparseShyb2csr__retval,)
 
 
@@ -11830,12 +11830,12 @@ def hipsparseDhyb2csr(object handle, object descrA, object hybA, object csrSorte
         * `~.hipsparseStatus_t`
     """
     _hipsparseDhyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDhyb2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrSortedValA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(hybA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrSortedValA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr))    # fully specified
     return (_hipsparseDhyb2csr__retval,)
 
 
@@ -11849,12 +11849,12 @@ def hipsparseChyb2csr(object handle, object descrA, object hybA, object csrSorte
         * `~.hipsparseStatus_t`
     """
     _hipsparseChyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseChyb2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(hybA)._ptr,
         float2.from_pyobj(csrSortedValA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr))    # fully specified
     return (_hipsparseChyb2csr__retval,)
 
 
@@ -11868,12 +11868,12 @@ def hipsparseZhyb2csr(object handle, object descrA, object hybA, object csrSorte
         * `~.hipsparseStatus_t`
     """
     _hipsparseZhyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZhyb2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(hybA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(hybA)._ptr,
         double2.from_pyobj(csrSortedValA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedRowPtrA)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrSortedColIndA)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedRowPtrA)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrSortedColIndA)._ptr))    # fully specified
     return (_hipsparseZhyb2csr__retval,)
 
 
@@ -11902,9 +11902,9 @@ def hipsparseXcoo2csr(object handle, object cooRowInd, int nnz, int m, object cs
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
         raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseXcoo2csr__retval = hipsparseStatus_t(chipsparse.hipsparseXcoo2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cooRowInd)._ptr,nnz,m,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,idxBase.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cooRowInd)._ptr,nnz,m,
+        <int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,idxBase.value))    # fully specified
     return (_hipsparseXcoo2csr__retval,)
 
 
@@ -11932,8 +11932,8 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
         * `~.hipsparseStatus_t`
     """
     _hipsparseCreateIdentityPermutation__retval = hipsparseStatus_t(chipsparse.hipsparseCreateIdentityPermutation(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <int *>hip._util.types.DataHandle.from_pyobj(p)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <int *>hip._util.types.Pointer.from_pyobj(p)._ptr))    # fully specified
     return (_hipsparseCreateIdentityPermutation__retval,)
 
 
@@ -11951,10 +11951,10 @@ def hipsparseXcsrsort_bufferSizeExt(object handle, int m, int n, int nnz, object
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrsort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsort_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseXcsrsort_bufferSizeExt__retval,)
 
 
@@ -11982,12 +11982,12 @@ def hipsparseXcsrsort(object handle, int m, int n, int nnz, object descrA, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcsrsort__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsort(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(P)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(P)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseXcsrsort__retval,)
 
 
@@ -12005,10 +12005,10 @@ def hipsparseXcscsort_bufferSizeExt(object handle, int m, int n, int nnz, object
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcscsort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcscsort_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscColPtr)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscRowInd)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscColPtr)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscRowInd)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseXcscsort_bufferSizeExt__retval,)
 
 
@@ -12036,12 +12036,12 @@ def hipsparseXcscsort(object handle, int m, int n, int nnz, object descrA, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcscsort__retval = hipsparseStatus_t(chipsparse.hipsparseXcscsort(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cscColPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cscRowInd)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(P)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cscColPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cscRowInd)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(P)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseXcscsort__retval,)
 
 
@@ -12059,10 +12059,10 @@ def hipsparseXcoosort_bufferSizeExt(object handle, int m, int n, int nnz, object
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcoosort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosort_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cooRows)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(cooCols)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <const int *>hip._util.types.Pointer.from_pyobj(cooRows)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(cooCols)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseXcoosort_bufferSizeExt__retval,)
 
 
@@ -12092,11 +12092,11 @@ def hipsparseXcoosortByRow(object handle, int m, int n, int nnz, object cooRows,
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcoosortByRow__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosortByRow(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <int *>hip._util.types.DataHandle.from_pyobj(cooRows)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cooCols)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(P)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <int *>hip._util.types.Pointer.from_pyobj(cooRows)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cooCols)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(P)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseXcoosortByRow__retval,)
 
 
@@ -12126,11 +12126,11 @@ def hipsparseXcoosortByColumn(object handle, int m, int n, int nnz, object cooRo
         * `~.hipsparseStatus_t`
     """
     _hipsparseXcoosortByColumn__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosortByColumn(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <int *>hip._util.types.DataHandle.from_pyobj(cooRows)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(cooCols)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(P)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <int *>hip._util.types.Pointer.from_pyobj(cooRows)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(cooCols)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(P)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseXcoosortByColumn__retval,)
 
 
@@ -12151,12 +12151,12 @@ def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSgebsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,rowBlockDimC,colBlockDimC,
-        <int *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,rowBlockDimC,colBlockDimC,
+        <int *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSgebsr2gebsr_bufferSize__retval,)
 
 
@@ -12172,12 +12172,12 @@ def hipsparseDgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDgebsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2gebsr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,rowBlockDimC,colBlockDimC,
-        <int *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,rowBlockDimC,colBlockDimC,
+        <int *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDgebsr2gebsr_bufferSize__retval,)
 
 
@@ -12193,12 +12193,12 @@ def hipsparseCgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCgebsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2gebsr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,rowBlockDimC,colBlockDimC,
-        <int *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,rowBlockDimC,colBlockDimC,
+        <int *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseCgebsr2gebsr_bufferSize__retval,)
 
 
@@ -12214,12 +12214,12 @@ def hipsparseZgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZgebsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2gebsr_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,rowBlockDimC,colBlockDimC,
-        <int *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,rowBlockDimC,colBlockDimC,
+        <int *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseZgebsr2gebsr_bufferSize__retval,)
 
 
@@ -12239,14 +12239,14 @@ def hipsparseXgebsr2gebsrNnz(object handle, object dirA, int mb, int nb, int nnz
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseXgebsr2gebsrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXgebsr2gebsrNnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,rowBlockDimC,colBlockDimC,
-        <int *>hip._util.types.DataHandle.from_pyobj(nnzTotalDevHostPtr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,rowBlockDimC,colBlockDimC,
+        <int *>hip._util.types.Pointer.from_pyobj(nnzTotalDevHostPtr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseXgebsr2gebsrNnz__retval,)
 
 
@@ -12270,16 +12270,16 @@ def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSgebsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(bsrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrColIndC)._ptr,rowBlockDimC,colBlockDimC,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(bsrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrColIndC)._ptr,rowBlockDimC,colBlockDimC,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseSgebsr2gebsr__retval,)
 
 
@@ -12295,16 +12295,16 @@ def hipsparseDgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDgebsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2gebsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(bsrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrColIndC)._ptr,rowBlockDimC,colBlockDimC,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(bsrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(bsrValC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrColIndC)._ptr,rowBlockDimC,colBlockDimC,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseDgebsr2gebsr__retval,)
 
 
@@ -12320,16 +12320,16 @@ def hipsparseCgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCgebsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2gebsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         float2.from_pyobj(bsrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrColIndC)._ptr,rowBlockDimC,colBlockDimC,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrColIndC)._ptr,rowBlockDimC,colBlockDimC,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseCgebsr2gebsr__retval,)
 
 
@@ -12345,16 +12345,16 @@ def hipsparseZgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     if not isinstance(dirA,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZgebsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2gebsr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(bsrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrC)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(bsrColIndA)._ptr,rowBlockDimA,colBlockDimA,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrC)._ptr,
         double2.from_pyobj(bsrValC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrRowPtrC)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bsrColIndC)._ptr,rowBlockDimC,colBlockDimC,
-        <void *>hip._util.types.DataHandle.from_pyobj(buffer)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(bsrRowPtrC)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(bsrColIndC)._ptr,rowBlockDimC,colBlockDimC,
+        <void *>hip._util.types.Pointer.from_pyobj(buffer)._ptr))    # fully specified
     return (_hipsparseZgebsr2gebsr__retval,)
 
 
@@ -12369,12 +12369,12 @@ def hipsparseScsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsru2csr_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseScsru2csr_bufferSizeExt__retval,)
 
 
@@ -12388,12 +12388,12 @@ def hipsparseDcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsru2csr_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseDcsru2csr_bufferSizeExt__retval,)
 
 
@@ -12407,12 +12407,12 @@ def hipsparseCcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsru2csr_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
         float2.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseCcsru2csr_bufferSizeExt__retval,)
 
 
@@ -12426,12 +12426,12 @@ def hipsparseZcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsru2csr_bufferSizeExt(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
         double2.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(pBufferSizeInBytes)._ptr))    # fully specified
     return (_hipsparseZcsru2csr_bufferSizeExt__retval,)
 
 
@@ -12446,13 +12446,13 @@ def hipsparseScsru2csr(object handle, int m, int n, int nnz, object descrA, obje
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseScsru2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsru2csr__retval,)
 
 
@@ -12466,13 +12466,13 @@ def hipsparseDcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDcsru2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsru2csr__retval,)
 
 
@@ -12486,13 +12486,13 @@ def hipsparseCcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseCcsru2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsru2csr__retval,)
 
 
@@ -12506,13 +12506,13 @@ def hipsparseZcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZcsru2csr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsru2csr__retval,)
 
 
@@ -12527,13 +12527,13 @@ def hipsparseScsr2csru(object handle, int m, int n, int nnz, object descrA, obje
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2csru(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseScsr2csru__retval,)
 
 
@@ -12547,13 +12547,13 @@ def hipsparseDcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2csru(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(csrVal)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseDcsr2csru__retval,)
 
 
@@ -12567,13 +12567,13 @@ def hipsparseCcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2csru(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseCcsr2csru__retval,)
 
 
@@ -12587,13 +12587,13 @@ def hipsparseZcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2csru(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrVal)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
         csru2csrInfo.from_pyobj(info)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(pBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(pBuffer)._ptr))    # fully specified
     return (_hipsparseZcsr2csru__retval,)
 
 
@@ -12609,16 +12609,16 @@ def hipsparseScsrcolor(object handle, int m, int nnz, object descrA, object csrV
         * `~.hipsparseStatus_t`
     """
     _hipsparseScsrcolor__retval = hipsparseStatus_t(chipsparse.hipsparseScsrcolor(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(fractionToColor)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(ncolors)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(coloring)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(reordering)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(fractionToColor)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(ncolors)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(coloring)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(reordering)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(info)._ptr))    # fully specified
     return (_hipsparseScsrcolor__retval,)
 
 
@@ -12632,16 +12632,16 @@ def hipsparseDcsrcolor(object handle, int m, int nnz, object descrA, object csrV
         * `~.hipsparseStatus_t`
     """
     _hipsparseDcsrcolor__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrcolor(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(fractionToColor)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(ncolors)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(coloring)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(reordering)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(csrValA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(fractionToColor)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(ncolors)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(coloring)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(reordering)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(info)._ptr))    # fully specified
     return (_hipsparseDcsrcolor__retval,)
 
 
@@ -12655,16 +12655,16 @@ def hipsparseCcsrcolor(object handle, int m, int nnz, object descrA, object csrV
         * `~.hipsparseStatus_t`
     """
     _hipsparseCcsrcolor__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrcolor(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         float2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(fractionToColor)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(ncolors)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(coloring)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(reordering)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(fractionToColor)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(ncolors)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(coloring)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(reordering)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(info)._ptr))    # fully specified
     return (_hipsparseCcsrcolor__retval,)
 
 
@@ -12678,16 +12678,16 @@ def hipsparseZcsrcolor(object handle, int m, int nnz, object descrA, object csrV
         * `~.hipsparseStatus_t`
     """
     _hipsparseZcsrcolor__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrcolor(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
-        <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,nnz,
+        <void *const>hip._util.types.Pointer.from_pyobj(descrA)._ptr,
         double2.from_pyobj(csrValA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtrA)._ptr,
-        <const int *>hip._util.types.DataHandle.from_pyobj(csrColIndA)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(fractionToColor)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(ncolors)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(coloring)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(reordering)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <const int *>hip._util.types.Pointer.from_pyobj(csrRowPtrA)._ptr,
+        <const int *>hip._util.types.Pointer.from_pyobj(csrColIndA)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(fractionToColor)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(ncolors)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(coloring)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(reordering)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(info)._ptr))    # fully specified
     return (_hipsparseZcsrcolor__retval,)
 
 
@@ -13177,9 +13177,9 @@ def hipsparseCreateSpVec(object spVecDescr, long size, long nnz, object indices,
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateSpVec__retval = hipsparseStatus_t(chipsparse.hipsparseCreateSpVec(
-        <void **>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,size,nnz,
-        <void *>hip._util.types.DataHandle.from_pyobj(indices)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr,idxType.value,idxBase.value,valueType.value))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(spVecDescr)._ptr,size,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(indices)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(values)._ptr,idxType.value,idxBase.value,valueType.value))    # fully specified
     return (_hipsparseCreateSpVec__retval,)
 
 
@@ -13193,7 +13193,7 @@ def hipsparseDestroySpVec(object spVecDescr):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDestroySpVec__retval = hipsparseStatus_t(chipsparse.hipsparseDestroySpVec(
-        <void *>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spVecDescr)._ptr))    # fully specified
     return (_hipsparseDestroySpVec__retval,)
 
 
@@ -13207,14 +13207,14 @@ def hipsparseSpVecGet(object spVecDescr, object size, object nnz, object indices
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpVecGet__retval = hipsparseStatus_t(chipsparse.hipsparseSpVecGet(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(size)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(nnz)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(indices)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(values)._ptr,
-        <chipsparse.hipsparseIndexType_t *>hip._util.types.DataHandle.from_pyobj(idxType)._ptr,
-        <chipsparse.hipsparseIndexBase_t *>hip._util.types.DataHandle.from_pyobj(idxBase)._ptr,
-        <chipsparse.hipDataType *>hip._util.types.DataHandle.from_pyobj(valueType)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spVecDescr)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(size)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(nnz)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(indices)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(values)._ptr,
+        <chipsparse.hipsparseIndexType_t *>hip._util.types.Pointer.from_pyobj(idxType)._ptr,
+        <chipsparse.hipsparseIndexBase_t *>hip._util.types.Pointer.from_pyobj(idxBase)._ptr,
+        <chipsparse.hipDataType *>hip._util.types.Pointer.from_pyobj(valueType)._ptr))    # fully specified
     return (_hipsparseSpVecGet__retval,)
 
 
@@ -13228,8 +13228,8 @@ def hipsparseSpVecGetIndexBase(object spVecDescr, object idxBase):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpVecGetIndexBase__retval = hipsparseStatus_t(chipsparse.hipsparseSpVecGetIndexBase(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,
-        <chipsparse.hipsparseIndexBase_t *>hip._util.types.DataHandle.from_pyobj(idxBase)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spVecDescr)._ptr,
+        <chipsparse.hipsparseIndexBase_t *>hip._util.types.Pointer.from_pyobj(idxBase)._ptr))    # fully specified
     return (_hipsparseSpVecGetIndexBase__retval,)
 
 
@@ -13243,8 +13243,8 @@ def hipsparseSpVecGetValues(object spVecDescr, object values):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpVecGetValues__retval = hipsparseStatus_t(chipsparse.hipsparseSpVecGetValues(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(values)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spVecDescr)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(values)._ptr))    # fully specified
     return (_hipsparseSpVecGetValues__retval,)
 
 
@@ -13258,8 +13258,8 @@ def hipsparseSpVecSetValues(object spVecDescr, object values):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpVecSetValues__retval = hipsparseStatus_t(chipsparse.hipsparseSpVecSetValues(
-        <void *>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spVecDescr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(values)._ptr))    # fully specified
     return (_hipsparseSpVecSetValues__retval,)
 
 
@@ -13279,10 +13279,10 @@ def hipsparseCreateCoo(object spMatDescr, long rows, long cols, long nnz, object
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateCoo__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCoo(
-        <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
-        <void *>hip._util.types.DataHandle.from_pyobj(cooRowInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cooColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cooValues)._ptr,cooIdxType.value,idxBase.value,valueType.value))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(cooRowInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cooColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cooValues)._ptr,cooIdxType.value,idxBase.value,valueType.value))    # fully specified
     return (_hipsparseCreateCoo__retval,)
 
 
@@ -13302,9 +13302,9 @@ def hipsparseCreateCooAoS(object spMatDescr, long rows, long cols, long nnz, obj
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateCooAoS__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCooAoS(
-        <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
-        <void *>hip._util.types.DataHandle.from_pyobj(cooInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cooValues)._ptr,cooIdxType.value,idxBase.value,valueType.value))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(cooInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cooValues)._ptr,cooIdxType.value,idxBase.value,valueType.value))    # fully specified
     return (_hipsparseCreateCooAoS__retval,)
 
 
@@ -13326,10 +13326,10 @@ def hipsparseCreateCsr(object spMatDescr, long rows, long cols, long nnz, object
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateCsr__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsr(
-        <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
-        <void *>hip._util.types.DataHandle.from_pyobj(csrRowOffsets)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(csrValues)._ptr,csrRowOffsetsType.value,csrColIndType.value,idxBase.value,valueType.value))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(csrRowOffsets)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(csrValues)._ptr,csrRowOffsetsType.value,csrColIndType.value,idxBase.value,valueType.value))    # fully specified
     return (_hipsparseCreateCsr__retval,)
 
 
@@ -13351,10 +13351,10 @@ def hipsparseCreateCsc(object spMatDescr, long rows, long cols, long nnz, object
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateCsc__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsc(
-        <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
-        <void *>hip._util.types.DataHandle.from_pyobj(cscColOffsets)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cscRowInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cscValues)._ptr,cscColOffsetsType.value,cscRowIndType.value,idxBase.value,valueType.value))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
+        <void *>hip._util.types.Pointer.from_pyobj(cscColOffsets)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cscRowInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cscValues)._ptr,cscColOffsetsType.value,cscRowIndType.value,idxBase.value,valueType.value))    # fully specified
     return (_hipsparseCreateCsc__retval,)
 
 
@@ -13374,9 +13374,9 @@ def hipsparseCreateBlockedEll(object spMatDescr, long rows, long cols, long ellB
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateBlockedEll__retval = hipsparseStatus_t(chipsparse.hipsparseCreateBlockedEll(
-        <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,ellBlockSize,ellCols,
-        <void *>hip._util.types.DataHandle.from_pyobj(ellColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(ellValue)._ptr,ellIdxType.value,idxBase.value,valueType.value))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,rows,cols,ellBlockSize,ellCols,
+        <void *>hip._util.types.Pointer.from_pyobj(ellColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(ellValue)._ptr,ellIdxType.value,idxBase.value,valueType.value))    # fully specified
     return (_hipsparseCreateBlockedEll__retval,)
 
 
@@ -13390,7 +13390,7 @@ def hipsparseDestroySpMat(object spMatDescr):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDestroySpMat__retval = hipsparseStatus_t(chipsparse.hipsparseDestroySpMat(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr))    # fully specified
     return (_hipsparseDestroySpMat__retval,)
 
 
@@ -13404,16 +13404,16 @@ def hipsparseCooGet(object spMatDescr, object rows, object cols, object nnz, obj
         * `~.hipsparseStatus_t`
     """
     _hipsparseCooGet__retval = hipsparseStatus_t(chipsparse.hipsparseCooGet(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(rows)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(cols)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(nnz)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(cooRowInd)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(cooColInd)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(cooValues)._ptr,
-        <chipsparse.hipsparseIndexType_t *>hip._util.types.DataHandle.from_pyobj(idxType)._ptr,
-        <chipsparse.hipsparseIndexBase_t *>hip._util.types.DataHandle.from_pyobj(idxBase)._ptr,
-        <chipsparse.hipDataType *>hip._util.types.DataHandle.from_pyobj(valueType)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(rows)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(cols)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(nnz)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(cooRowInd)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(cooColInd)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(cooValues)._ptr,
+        <chipsparse.hipsparseIndexType_t *>hip._util.types.Pointer.from_pyobj(idxType)._ptr,
+        <chipsparse.hipsparseIndexBase_t *>hip._util.types.Pointer.from_pyobj(idxBase)._ptr,
+        <chipsparse.hipDataType *>hip._util.types.Pointer.from_pyobj(valueType)._ptr))    # fully specified
     return (_hipsparseCooGet__retval,)
 
 
@@ -13427,15 +13427,15 @@ def hipsparseCooAoSGet(object spMatDescr, object rows, object cols, object nnz, 
         * `~.hipsparseStatus_t`
     """
     _hipsparseCooAoSGet__retval = hipsparseStatus_t(chipsparse.hipsparseCooAoSGet(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(rows)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(cols)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(nnz)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(cooInd)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(cooValues)._ptr,
-        <chipsparse.hipsparseIndexType_t *>hip._util.types.DataHandle.from_pyobj(idxType)._ptr,
-        <chipsparse.hipsparseIndexBase_t *>hip._util.types.DataHandle.from_pyobj(idxBase)._ptr,
-        <chipsparse.hipDataType *>hip._util.types.DataHandle.from_pyobj(valueType)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(rows)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(cols)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(nnz)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(cooInd)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(cooValues)._ptr,
+        <chipsparse.hipsparseIndexType_t *>hip._util.types.Pointer.from_pyobj(idxType)._ptr,
+        <chipsparse.hipsparseIndexBase_t *>hip._util.types.Pointer.from_pyobj(idxBase)._ptr,
+        <chipsparse.hipDataType *>hip._util.types.Pointer.from_pyobj(valueType)._ptr))    # fully specified
     return (_hipsparseCooAoSGet__retval,)
 
 
@@ -13449,17 +13449,17 @@ def hipsparseCsrGet(object spMatDescr, object rows, object cols, object nnz, obj
         * `~.hipsparseStatus_t`
     """
     _hipsparseCsrGet__retval = hipsparseStatus_t(chipsparse.hipsparseCsrGet(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(rows)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(cols)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(nnz)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(csrRowOffsets)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(csrValues)._ptr,
-        <chipsparse.hipsparseIndexType_t *>hip._util.types.DataHandle.from_pyobj(csrRowOffsetsType)._ptr,
-        <chipsparse.hipsparseIndexType_t *>hip._util.types.DataHandle.from_pyobj(csrColIndType)._ptr,
-        <chipsparse.hipsparseIndexBase_t *>hip._util.types.DataHandle.from_pyobj(idxBase)._ptr,
-        <chipsparse.hipDataType *>hip._util.types.DataHandle.from_pyobj(valueType)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(rows)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(cols)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(nnz)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(csrRowOffsets)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(csrValues)._ptr,
+        <chipsparse.hipsparseIndexType_t *>hip._util.types.Pointer.from_pyobj(csrRowOffsetsType)._ptr,
+        <chipsparse.hipsparseIndexType_t *>hip._util.types.Pointer.from_pyobj(csrColIndType)._ptr,
+        <chipsparse.hipsparseIndexBase_t *>hip._util.types.Pointer.from_pyobj(idxBase)._ptr,
+        <chipsparse.hipDataType *>hip._util.types.Pointer.from_pyobj(valueType)._ptr))    # fully specified
     return (_hipsparseCsrGet__retval,)
 
 
@@ -13473,16 +13473,16 @@ def hipsparseBlockedEllGet(object spMatDescr, object rows, object cols, object e
         * `~.hipsparseStatus_t`
     """
     _hipsparseBlockedEllGet__retval = hipsparseStatus_t(chipsparse.hipsparseBlockedEllGet(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(rows)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(cols)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(ellBlockSize)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(ellCols)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(ellColInd)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(ellValue)._ptr,
-        <chipsparse.hipsparseIndexType_t *>hip._util.types.DataHandle.from_pyobj(ellIdxType)._ptr,
-        <chipsparse.hipsparseIndexBase_t *>hip._util.types.DataHandle.from_pyobj(idxBase)._ptr,
-        <chipsparse.hipDataType *>hip._util.types.DataHandle.from_pyobj(valueType)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(rows)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(cols)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(ellBlockSize)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(ellCols)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(ellColInd)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(ellValue)._ptr,
+        <chipsparse.hipsparseIndexType_t *>hip._util.types.Pointer.from_pyobj(ellIdxType)._ptr,
+        <chipsparse.hipsparseIndexBase_t *>hip._util.types.Pointer.from_pyobj(idxBase)._ptr,
+        <chipsparse.hipDataType *>hip._util.types.Pointer.from_pyobj(valueType)._ptr))    # fully specified
     return (_hipsparseBlockedEllGet__retval,)
 
 
@@ -13496,10 +13496,10 @@ def hipsparseCsrSetPointers(object spMatDescr, object csrRowOffsets, object csrC
         * `~.hipsparseStatus_t`
     """
     _hipsparseCsrSetPointers__retval = hipsparseStatus_t(chipsparse.hipsparseCsrSetPointers(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(csrRowOffsets)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(csrColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(csrValues)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(csrRowOffsets)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(csrColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(csrValues)._ptr))    # fully specified
     return (_hipsparseCsrSetPointers__retval,)
 
 
@@ -13513,10 +13513,10 @@ def hipsparseCscSetPointers(object spMatDescr, object cscColOffsets, object cscR
         * `~.hipsparseStatus_t`
     """
     _hipsparseCscSetPointers__retval = hipsparseStatus_t(chipsparse.hipsparseCscSetPointers(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cscColOffsets)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cscRowInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cscValues)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cscColOffsets)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cscRowInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cscValues)._ptr))    # fully specified
     return (_hipsparseCscSetPointers__retval,)
 
 
@@ -13530,10 +13530,10 @@ def hipsparseCooSetPointers(object spMatDescr, object cooRowInd, object cooColIn
         * `~.hipsparseStatus_t`
     """
     _hipsparseCooSetPointers__retval = hipsparseStatus_t(chipsparse.hipsparseCooSetPointers(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cooRowInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cooColInd)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(cooValues)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cooRowInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cooColInd)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(cooValues)._ptr))    # fully specified
     return (_hipsparseCooSetPointers__retval,)
 
 
@@ -13547,10 +13547,10 @@ def hipsparseSpMatGetSize(object spMatDescr, object rows, object cols, object nn
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(rows)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(cols)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(nnz)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(rows)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(cols)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(nnz)._ptr))    # fully specified
     return (_hipsparseSpMatGetSize__retval,)
 
 
@@ -13564,8 +13564,8 @@ def hipsparseSpMatGetFormat(object spMatDescr, object format):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetFormat__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetFormat(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <chipsparse.hipsparseFormat_t *>hip._util.types.DataHandle.from_pyobj(format)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <chipsparse.hipsparseFormat_t *>hip._util.types.Pointer.from_pyobj(format)._ptr))    # fully specified
     return (_hipsparseSpMatGetFormat__retval,)
 
 
@@ -13579,8 +13579,8 @@ def hipsparseSpMatGetIndexBase(object spMatDescr, object idxBase):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetIndexBase__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetIndexBase(
-        <void *const>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <chipsparse.hipsparseIndexBase_t *>hip._util.types.DataHandle.from_pyobj(idxBase)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <chipsparse.hipsparseIndexBase_t *>hip._util.types.Pointer.from_pyobj(idxBase)._ptr))    # fully specified
     return (_hipsparseSpMatGetIndexBase__retval,)
 
 
@@ -13594,8 +13594,8 @@ def hipsparseSpMatGetValues(object spMatDescr, object values):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetValues__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetValues(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(values)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(values)._ptr))    # fully specified
     return (_hipsparseSpMatGetValues__retval,)
 
 
@@ -13609,8 +13609,8 @@ def hipsparseSpMatSetValues(object spMatDescr, object values):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatSetValues__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatSetValues(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(values)._ptr))    # fully specified
     return (_hipsparseSpMatSetValues__retval,)
 
 
@@ -13624,8 +13624,8 @@ def hipsparseSpMatGetStridedBatch(object spMatDescr, object batchCount):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatGetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetStridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(batchCount)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(batchCount)._ptr))    # fully specified
     return (_hipsparseSpMatGetStridedBatch__retval,)
 
 
@@ -13639,7 +13639,7 @@ def hipsparseSpMatSetStridedBatch(object spMatDescr, int batchCount):
         * `~.hipsparseStatus_t`
     """
     _hipsparseSpMatSetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatSetStridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,batchCount))    # fully specified
     return (_hipsparseSpMatSetStridedBatch__retval,)
 
 
@@ -13653,7 +13653,7 @@ def hipsparseCooSetStridedBatch(object spMatDescr, int batchCount, long batchStr
         * `~.hipsparseStatus_t`
     """
     _hipsparseCooSetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCooSetStridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,batchCount,batchStride))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,batchCount,batchStride))    # fully specified
     return (_hipsparseCooSetStridedBatch__retval,)
 
 
@@ -13667,7 +13667,7 @@ def hipsparseCsrSetStridedBatch(object spMatDescr, int batchCount, long offsetsB
         * `~.hipsparseStatus_t`
     """
     _hipsparseCsrSetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseCsrSetStridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,batchCount,offsetsBatchStride,columnsValuesBatchStride))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,batchCount,offsetsBatchStride,columnsValuesBatchStride))    # fully specified
     return (_hipsparseCsrSetStridedBatch__retval,)
 
 
@@ -13683,8 +13683,8 @@ def hipsparseSpMatGetAttribute(object spMatDescr, object attribute, object data,
     if not isinstance(attribute,_hipsparseSpMatAttribute_t__Base):
         raise TypeError("argument 'attribute' must be of type '_hipsparseSpMatAttribute_t__Base'")
     _hipsparseSpMatGetAttribute__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetAttribute(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,attribute.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,dataSize))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,attribute.value,
+        <void *>hip._util.types.Pointer.from_pyobj(data)._ptr,dataSize))    # fully specified
     return (_hipsparseSpMatGetAttribute__retval,)
 
 
@@ -13700,8 +13700,8 @@ def hipsparseSpMatSetAttribute(object spMatDescr, object attribute, object data,
     if not isinstance(attribute,_hipsparseSpMatAttribute_t__Base):
         raise TypeError("argument 'attribute' must be of type '_hipsparseSpMatAttribute_t__Base'")
     _hipsparseSpMatSetAttribute__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatSetAttribute(
-        <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,attribute.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,dataSize))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(spMatDescr)._ptr,attribute.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(data)._ptr,dataSize))    # fully specified
     return (_hipsparseSpMatSetAttribute__retval,)
 
 
@@ -13717,8 +13717,8 @@ def hipsparseCreateDnVec(object dnVecDescr, long size, object values, object val
     if not isinstance(valueType,_hipDataType__Base):
         raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateDnVec__retval = hipsparseStatus_t(chipsparse.hipsparseCreateDnVec(
-        <void **>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr,size,
-        <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr,valueType.value))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(dnVecDescr)._ptr,size,
+        <void *>hip._util.types.Pointer.from_pyobj(values)._ptr,valueType.value))    # fully specified
     return (_hipsparseCreateDnVec__retval,)
 
 
@@ -13732,7 +13732,7 @@ def hipsparseDestroyDnVec(object dnVecDescr):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyDnVec__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyDnVec(
-        <void *>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dnVecDescr)._ptr))    # fully specified
     return (_hipsparseDestroyDnVec__retval,)
 
 
@@ -13746,10 +13746,10 @@ def hipsparseDnVecGet(object dnVecDescr, object size, object values, object valu
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnVecGet__retval = hipsparseStatus_t(chipsparse.hipsparseDnVecGet(
-        <void *const>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(size)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(values)._ptr,
-        <chipsparse.hipDataType *>hip._util.types.DataHandle.from_pyobj(valueType)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(dnVecDescr)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(size)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(values)._ptr,
+        <chipsparse.hipDataType *>hip._util.types.Pointer.from_pyobj(valueType)._ptr))    # fully specified
     return (_hipsparseDnVecGet__retval,)
 
 
@@ -13763,8 +13763,8 @@ def hipsparseDnVecGetValues(object dnVecDescr, object values):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnVecGetValues__retval = hipsparseStatus_t(chipsparse.hipsparseDnVecGetValues(
-        <void *const>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(values)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(dnVecDescr)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(values)._ptr))    # fully specified
     return (_hipsparseDnVecGetValues__retval,)
 
 
@@ -13778,8 +13778,8 @@ def hipsparseDnVecSetValues(object dnVecDescr, object values):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnVecSetValues__retval = hipsparseStatus_t(chipsparse.hipsparseDnVecSetValues(
-        <void *>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dnVecDescr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(values)._ptr))    # fully specified
     return (_hipsparseDnVecSetValues__retval,)
 
 
@@ -13797,8 +13797,8 @@ def hipsparseCreateDnMat(object dnMatDescr, long rows, long cols, long ld, objec
     if not isinstance(order,_hipsparseOrder_t__Base):
         raise TypeError("argument 'order' must be of type '_hipsparseOrder_t__Base'")
     _hipsparseCreateDnMat__retval = hipsparseStatus_t(chipsparse.hipsparseCreateDnMat(
-        <void **>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,rows,cols,ld,
-        <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr,valueType.value,order.value))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(dnMatDescr)._ptr,rows,cols,ld,
+        <void *>hip._util.types.Pointer.from_pyobj(values)._ptr,valueType.value,order.value))    # fully specified
     return (_hipsparseCreateDnMat__retval,)
 
 
@@ -13812,7 +13812,7 @@ def hipsparseDestroyDnMat(object dnMatDescr):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDestroyDnMat__retval = hipsparseStatus_t(chipsparse.hipsparseDestroyDnMat(
-        <void *>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dnMatDescr)._ptr))    # fully specified
     return (_hipsparseDestroyDnMat__retval,)
 
 
@@ -13826,13 +13826,13 @@ def hipsparseDnMatGet(object dnMatDescr, object rows, object cols, object ld, ob
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatGet__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatGet(
-        <void *const>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(rows)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(cols)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(ld)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(values)._ptr,
-        <chipsparse.hipDataType *>hip._util.types.DataHandle.from_pyobj(valueType)._ptr,
-        <chipsparse.hipsparseOrder_t *>hip._util.types.DataHandle.from_pyobj(order)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(dnMatDescr)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(rows)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(cols)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(ld)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(values)._ptr,
+        <chipsparse.hipDataType *>hip._util.types.Pointer.from_pyobj(valueType)._ptr,
+        <chipsparse.hipsparseOrder_t *>hip._util.types.Pointer.from_pyobj(order)._ptr))    # fully specified
     return (_hipsparseDnMatGet__retval,)
 
 
@@ -13846,8 +13846,8 @@ def hipsparseDnMatGetValues(object dnMatDescr, object values):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatGetValues__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatGetValues(
-        <void *const>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(values)._ptr))    # fully specified
+        <void *const>hip._util.types.Pointer.from_pyobj(dnMatDescr)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(values)._ptr))    # fully specified
     return (_hipsparseDnMatGetValues__retval,)
 
 
@@ -13861,8 +13861,8 @@ def hipsparseDnMatSetValues(object dnMatDescr, object values):
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatSetValues__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatSetValues(
-        <void *>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dnMatDescr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(values)._ptr))    # fully specified
     return (_hipsparseDnMatSetValues__retval,)
 
 
@@ -13876,9 +13876,9 @@ def hipsparseDnMatGetStridedBatch(object dnMatDescr, object batchCount, object b
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatGetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatGetStridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(batchCount)._ptr,
-        <long *>hip._util.types.DataHandle.from_pyobj(batchStride)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dnMatDescr)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(batchCount)._ptr,
+        <long *>hip._util.types.Pointer.from_pyobj(batchStride)._ptr))    # fully specified
     return (_hipsparseDnMatGetStridedBatch__retval,)
 
 
@@ -13892,7 +13892,7 @@ def hipsparseDnMatSetStridedBatch(object dnMatDescr, int batchCount, long batchS
         * `~.hipsparseStatus_t`
     """
     _hipsparseDnMatSetStridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseDnMatSetStridedBatch(
-        <void *>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,batchCount,batchStride))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dnMatDescr)._ptr,batchCount,batchStride))    # fully specified
     return (_hipsparseDnMatSetStridedBatch__retval,)
 
 
@@ -13906,11 +13906,11 @@ def hipsparseAxpby(object handle, object alpha, object vecX, object beta, object
         * `~.hipsparseStatus_t`
     """
     _hipsparseAxpby__retval = hipsparseStatus_t(chipsparse.hipsparseAxpby(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecY)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecX)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecY)._ptr))    # fully specified
     return (_hipsparseAxpby__retval,)
 
 
@@ -13924,9 +13924,9 @@ def hipsparseGather(object handle, object vecY, object vecX):
         * `~.hipsparseStatus_t`
     """
     _hipsparseGather__retval = hipsparseStatus_t(chipsparse.hipsparseGather(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecY)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecX)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecY)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecX)._ptr))    # fully specified
     return (_hipsparseGather__retval,)
 
 
@@ -13940,9 +13940,9 @@ def hipsparseScatter(object handle, object vecX, object vecY):
         * `~.hipsparseStatus_t`
     """
     _hipsparseScatter__retval = hipsparseStatus_t(chipsparse.hipsparseScatter(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecY)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecX)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecY)._ptr))    # fully specified
     return (_hipsparseScatter__retval,)
 
 
@@ -13956,11 +13956,11 @@ def hipsparseRot(object handle, object c_coeff, object s_coeff, object vecX, obj
         * `~.hipsparseStatus_t`
     """
     _hipsparseRot__retval = hipsparseStatus_t(chipsparse.hipsparseRot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(c_coeff)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(s_coeff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecY)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(c_coeff)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(s_coeff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecX)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecY)._ptr))    # fully specified
     return (_hipsparseRot__retval,)
 
 
@@ -13976,10 +13976,10 @@ def hipsparseSparseToDense_bufferSize(object handle, object matA, object matB, o
     if not isinstance(alg,_hipsparseSparseToDenseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSparseToDenseAlg_t__Base'")
     _hipsparseSparseToDense_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSparseToDense_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,alg.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,alg.value,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSparseToDense_bufferSize__retval,)
 
 
@@ -13995,10 +13995,10 @@ def hipsparseSparseToDense(object handle, object matA, object matB, object alg, 
     if not isinstance(alg,_hipsparseSparseToDenseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSparseToDenseAlg_t__Base'")
     _hipsparseSparseToDense__retval = hipsparseStatus_t(chipsparse.hipsparseSparseToDense(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSparseToDense__retval,)
 
 
@@ -14014,10 +14014,10 @@ def hipsparseDenseToSparse_bufferSize(object handle, object matA, object matB, o
     if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
     _hipsparseDenseToSparse_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDenseToSparse_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,alg.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,alg.value,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseDenseToSparse_bufferSize__retval,)
 
 
@@ -14033,10 +14033,10 @@ def hipsparseDenseToSparse_analysis(object handle, object matA, object matB, obj
     if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
     _hipsparseDenseToSparse_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDenseToSparse_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseDenseToSparse_analysis__retval,)
 
 
@@ -14052,10 +14052,10 @@ def hipsparseDenseToSparse_convert(object handle, object matA, object matB, obje
     if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
     _hipsparseDenseToSparse_convert__retval = hipsparseStatus_t(chipsparse.hipsparseDenseToSparse_convert(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseDenseToSparse_convert__retval,)
 
 
@@ -14073,11 +14073,11 @@ def hipsparseSpVV_bufferSize(object handle, object opX, object vecX, object vecY
     if not isinstance(computeType,_hipDataType__Base):
         raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")
     _hipsparseSpVV_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpVV_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opX.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecY)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,computeType.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opX.value,
+        <void *>hip._util.types.Pointer.from_pyobj(vecX)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecY)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,computeType.value,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpVV_bufferSize__retval,)
 
 
@@ -14095,11 +14095,11 @@ def hipsparseSpVV(object handle, object opX, object vecX, object vecY, object re
     if not isinstance(computeType,_hipDataType__Base):
         raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")
     _hipsparseSpVV__retval = hipsparseStatus_t(chipsparse.hipsparseSpVV(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opX.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(vecY)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,computeType.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opX.value,
+        <void *>hip._util.types.Pointer.from_pyobj(vecX)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(vecY)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,computeType.value,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpVV__retval,)
 
 
@@ -14119,13 +14119,13 @@ def hipsparseSpMV_bufferSize(object handle, object opA, object alpha, object mat
     if not isinstance(alg,_hipsparseSpMVAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpMVAlg_t__Base'")
     _hipsparseSpMV_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpMV_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(vecY)._ptr,computeType.value,alg.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(vecX)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(vecY)._ptr,computeType.value,alg.value,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpMV_bufferSize__retval,)
 
 
@@ -14145,13 +14145,13 @@ def hipsparseSpMV_preprocess(object handle, object opA, object alpha, object mat
     if not isinstance(alg,_hipsparseSpMVAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpMVAlg_t__Base'")
     _hipsparseSpMV_preprocess__retval = hipsparseStatus_t(chipsparse.hipsparseSpMV_preprocess(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(vecY)._ptr,computeType.value,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(vecX)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(vecY)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpMV_preprocess__retval,)
 
 
@@ -14171,13 +14171,13 @@ def hipsparseSpMV(object handle, object opA, object alpha, object matA, object v
     if not isinstance(alg,_hipsparseSpMVAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpMVAlg_t__Base'")
     _hipsparseSpMV__retval = hipsparseStatus_t(chipsparse.hipsparseSpMV(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(vecY)._ptr,computeType.value,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(vecX)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(vecY)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpMV__retval,)
 
 
@@ -14199,13 +14199,13 @@ def hipsparseSpMM_bufferSize(object handle, object opA, object opB, object alpha
     if not isinstance(alg,_hipsparseSpMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpMMAlg_t__Base'")
     _hipsparseSpMM_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpMM_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpMM_bufferSize__retval,)
 
 
@@ -14227,13 +14227,13 @@ def hipsparseSpMM_preprocess(object handle, object opA, object opB, object alpha
     if not isinstance(alg,_hipsparseSpMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpMMAlg_t__Base'")
     _hipsparseSpMM_preprocess__retval = hipsparseStatus_t(chipsparse.hipsparseSpMM_preprocess(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpMM_preprocess__retval,)
 
 
@@ -14255,13 +14255,13 @@ def hipsparseSpMM(object handle, object opA, object opB, object alpha, object ma
     if not isinstance(alg,_hipsparseSpMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpMMAlg_t__Base'")
     _hipsparseSpMM__retval = hipsparseStatus_t(chipsparse.hipsparseSpMM(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpMM__retval,)
 
 
@@ -14311,15 +14311,15 @@ def hipsparseSpGEMM_workEstimation(object handle, object opA, object opB, object
     if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMM_workEstimation__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMM_workEstimation(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
         hipsparseSpGEMMDescr.from_pyobj(spgemmDescr)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize1)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer1)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize1)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer1)._ptr))    # fully specified
     return (_hipsparseSpGEMM_workEstimation__retval,)
 
 
@@ -14341,15 +14341,15 @@ def hipsparseSpGEMM_compute(object handle, object opA, object opB, object alpha,
     if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMM_compute__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMM_compute(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
         hipsparseSpGEMMDescr.from_pyobj(spgemmDescr)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize2)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer2)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize2)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer2)._ptr))    # fully specified
     return (_hipsparseSpGEMM_compute__retval,)
 
 
@@ -14371,12 +14371,12 @@ def hipsparseSpGEMM_copy(object handle, object opA, object opB, object alpha, ob
     if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMM_copy__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMM_copy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
         hipsparseSpGEMMDescr.from_pyobj(spgemmDescr)._ptr))    # fully specified
     return (_hipsparseSpGEMM_copy__retval,)
 
@@ -14397,13 +14397,13 @@ def hipsparseSpGEMMreuse_workEstimation(object handle, object opA, object opB, o
     if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMMreuse_workEstimation__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMMreuse_workEstimation(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matC)._ptr,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matC)._ptr,alg.value,
         hipsparseSpGEMMDescr.from_pyobj(spgemmDescr)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize1)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer1)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize1)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer1)._ptr))    # fully specified
     return (_hipsparseSpGEMMreuse_workEstimation__retval,)
 
 
@@ -14423,17 +14423,17 @@ def hipsparseSpGEMMreuse_nnz(object handle, object opA, object opB, object matA,
     if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMMreuse_nnz__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMMreuse_nnz(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matC)._ptr,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matC)._ptr,alg.value,
         hipsparseSpGEMMDescr.from_pyobj(spgemmDescr)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize2)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer2)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize3)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer3)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize4)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer4)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize2)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer2)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize3)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer3)._ptr,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize4)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer4)._ptr))    # fully specified
     return (_hipsparseSpGEMMreuse_nnz__retval,)
 
 
@@ -14455,12 +14455,12 @@ def hipsparseSpGEMMreuse_compute(object handle, object opA, object opB, object a
     if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMMreuse_compute__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMMreuse_compute(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
         hipsparseSpGEMMDescr.from_pyobj(spgemmDescr)._ptr))    # fully specified
     return (_hipsparseSpGEMMreuse_compute__retval,)
 
@@ -14481,13 +14481,13 @@ def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA
     if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMMreuse_copy__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMMreuse_copy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(matC)._ptr,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <void *>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(matC)._ptr,alg.value,
         hipsparseSpGEMMDescr.from_pyobj(spgemmDescr)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize5)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer5)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize5)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer5)._ptr))    # fully specified
     return (_hipsparseSpGEMMreuse_copy__retval,)
 
 
@@ -14509,13 +14509,13 @@ def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A
     if not isinstance(alg,_hipsparseSDDMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSDDMMAlg_t__Base'")
     _hipsparseSDDMM__retval = hipsparseStatus_t(chipsparse.hipsparseSDDMM(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(A)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(B)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(C)._ptr,computeType.value,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(tempBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(A)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(B)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(C)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(tempBuffer)._ptr))    # fully specified
     return (_hipsparseSDDMM__retval,)
 
 
@@ -14537,13 +14537,13 @@ def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alph
     if not isinstance(alg,_hipsparseSDDMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSDDMMAlg_t__Base'")
     _hipsparseSDDMM_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSDDMM_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(A)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(B)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(C)._ptr,computeType.value,alg.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(A)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(B)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(C)._ptr,computeType.value,alg.value,
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSDDMM_bufferSize__retval,)
 
 
@@ -14565,13 +14565,13 @@ def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alph
     if not isinstance(alg,_hipsparseSDDMMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSDDMMAlg_t__Base'")
     _hipsparseSDDMM_preprocess__retval = hipsparseStatus_t(chipsparse.hipsparseSDDMM_preprocess(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(A)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(B)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(C)._ptr,computeType.value,alg.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(tempBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(A)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(B)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(C)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(tempBuffer)._ptr))    # fully specified
     return (_hipsparseSDDMM_preprocess__retval,)
 
 
@@ -14619,13 +14619,13 @@ def hipsparseSpSV_bufferSize(object handle, object opA, object alpha, object mat
     if not isinstance(alg,_hipsparseSpSVAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpSVAlg_t__Base'")
     _hipsparseSpSV_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpSV_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(y)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(y)._ptr,computeType.value,alg.value,
         hipsparseSpSVDescr.from_pyobj(spsvDescr)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpSV_bufferSize__retval,)
 
 
@@ -14645,13 +14645,13 @@ def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA,
     if not isinstance(alg,_hipsparseSpSVAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpSVAlg_t__Base'")
     _hipsparseSpSV_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSpSV_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(y)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(y)._ptr,computeType.value,alg.value,
         hipsparseSpSVDescr.from_pyobj(spsvDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpSV_analysis__retval,)
 
 
@@ -14671,13 +14671,13 @@ def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, ob
     if not isinstance(alg,_hipsparseSpSVAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpSVAlg_t__Base'")
     _hipsparseSpSV_solve__retval = hipsparseStatus_t(chipsparse.hipsparseSpSV_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(x)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(y)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(x)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(y)._ptr,computeType.value,alg.value,
         hipsparseSpSVDescr.from_pyobj(spsvDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpSV_solve__retval,)
 
 
@@ -14727,13 +14727,13 @@ def hipsparseSpSM_bufferSize(object handle, object opA, object opB, object alpha
     if not isinstance(alg,_hipsparseSpSMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpSMAlg_t__Base'")
     _hipsparseSpSM_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpSM_bufferSize(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
         hipsparseSpSMDescr.from_pyobj(spsmDescr)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bufferSize)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.Pointer.from_pyobj(bufferSize)._ptr))    # fully specified
     return (_hipsparseSpSM_bufferSize__retval,)
 
 
@@ -14755,13 +14755,13 @@ def hipsparseSpSM_analysis(object handle, object opA, object opB, object alpha, 
     if not isinstance(alg,_hipsparseSpSMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpSMAlg_t__Base'")
     _hipsparseSpSM_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSpSM_analysis(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
         hipsparseSpSMDescr.from_pyobj(spsmDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpSM_analysis__retval,)
 
 
@@ -14783,11 +14783,11 @@ def hipsparseSpSM_solve(object handle, object opA, object opB, object alpha, obj
     if not isinstance(alg,_hipsparseSpSMAlg_t__Base):
         raise TypeError("argument 'alg' must be of type '_hipsparseSpSMAlg_t__Base'")
     _hipsparseSpSM_solve__retval = hipsparseStatus_t(chipsparse.hipsparseSpSM_solve(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matB)._ptr,
-        <void *const>hip._util.types.DataHandle.from_pyobj(matC)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matB)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(matC)._ptr,computeType.value,alg.value,
         hipsparseSpSMDescr.from_pyobj(spsmDescr)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(externalBuffer)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpSM_solve__retval,)

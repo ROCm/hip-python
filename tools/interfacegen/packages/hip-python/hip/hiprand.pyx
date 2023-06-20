@@ -438,7 +438,7 @@ cdef class rocrand_discrete_distribution_st:
     def get_probability(self, i):
         """Get value ``probability`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].probability)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].probability)
     def set_probability(self, i, object value):
         """Set value ``probability`` of ``self._ptr[i]``.
 
@@ -446,7 +446,7 @@ cdef class rocrand_discrete_distribution_st:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].probability = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].probability = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def probability(self):
         """
@@ -462,7 +462,7 @@ cdef class rocrand_discrete_distribution_st:
     def get_cdf(self, i):
         """Get value ``cdf`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].cdf)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].cdf)
     def set_cdf(self, i, object value):
         """Set value ``cdf`` of ``self._ptr[i]``.
 
@@ -470,7 +470,7 @@ cdef class rocrand_discrete_distribution_st:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].cdf = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].cdf = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def cdf(self):
         """
@@ -832,7 +832,7 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of 32-bit unsigned integers to generate
 
@@ -847,7 +847,7 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
     """
     _hiprandGenerate__retval = hiprandStatus(chiprand.hiprandGenerate(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <unsigned int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <unsigned int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerate__retval,)
 
 
@@ -864,7 +864,7 @@ def hiprandGenerateChar(object generator, object output_data, unsigned long n):
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of 8-bit unsigned integers to generate
 
@@ -879,7 +879,7 @@ def hiprandGenerateChar(object generator, object output_data, unsigned long n):
     """
     _hiprandGenerateChar__retval = hiprandStatus(chiprand.hiprandGenerateChar(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <unsigned char *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <unsigned char *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateChar__retval,)
 
 
@@ -896,7 +896,7 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of 16-bit unsigned integers to generate
 
@@ -911,7 +911,7 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
     """
     _hiprandGenerateShort__retval = hiprandStatus(chiprand.hiprandGenerateShort(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateShort__retval,)
 
 
@@ -928,7 +928,7 @@ def hiprandGenerateUniform(object generator, object output_data, unsigned long n
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of floats to generate
 
@@ -946,7 +946,7 @@ def hiprandGenerateUniform(object generator, object output_data, unsigned long n
     """
     _hiprandGenerateUniform__retval = hiprandStatus(chiprand.hiprandGenerateUniform(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateUniform__retval,)
 
 
@@ -968,7 +968,7 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of floats to generate
 
@@ -986,7 +986,7 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
     """
     _hiprandGenerateUniformDouble__retval = hiprandStatus(chiprand.hiprandGenerateUniformDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateUniformDouble__retval,)
 
 
@@ -1003,7 +1003,7 @@ def hiprandGenerateUniformHalf(object generator, object output_data, unsigned lo
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of halfs to generate
 
@@ -1021,7 +1021,7 @@ def hiprandGenerateUniformHalf(object generator, object output_data, unsigned lo
     """
     _hiprandGenerateUniformHalf__retval = hiprandStatus(chiprand.hiprandGenerateUniformHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateUniformHalf__retval,)
 
 
@@ -1035,7 +1035,7 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of floats to generate
 
@@ -1058,7 +1058,7 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
     """
     _hiprandGenerateNormal__retval = hiprandStatus(chiprand.hiprandGenerateNormal(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateNormal__retval,)
 
 
@@ -1072,7 +1072,7 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of doubles to generate
 
@@ -1095,7 +1095,7 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
     """
     _hiprandGenerateNormalDouble__retval = hiprandStatus(chiprand.hiprandGenerateNormalDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateNormalDouble__retval,)
 
 
@@ -1109,7 +1109,7 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of halfs to generate
 
@@ -1132,7 +1132,7 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
     """
     _hiprandGenerateNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateNormalHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateNormalHalf__retval,)
 
 
@@ -1146,7 +1146,7 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of floats to generate
 
@@ -1169,7 +1169,7 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
     """
     _hiprandGenerateLogNormal__retval = hiprandStatus(chiprand.hiprandGenerateLogNormal(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateLogNormal__retval,)
 
 
@@ -1183,7 +1183,7 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of doubles to generate
 
@@ -1206,7 +1206,7 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
     """
     _hiprandGenerateLogNormalDouble__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateLogNormalDouble__retval,)
 
 
@@ -1220,7 +1220,7 @@ def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned 
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of halfs to generate
 
@@ -1243,7 +1243,7 @@ def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned 
     """
     _hiprandGenerateLogNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateLogNormalHalf__retval,)
 
 
@@ -1257,7 +1257,7 @@ def hiprandGeneratePoisson(object generator, object output_data, unsigned long n
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):  Generator to use
 
-        output_data (`~.hip._util.types.DataHandle`/`~.object`):  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):  Pointer to memory to store generated numbers
 
         n (`~.int`):  Number of 32-bit unsigned integers to generate
 
@@ -1279,7 +1279,7 @@ def hiprandGeneratePoisson(object generator, object output_data, unsigned long n
     """
     _hiprandGeneratePoisson__retval = hiprandStatus(chiprand.hiprandGeneratePoisson(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <unsigned int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,lambda_))    # fully specified
+        <unsigned int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,lambda_))    # fully specified
     return (_hiprandGeneratePoisson__retval,)
 
 

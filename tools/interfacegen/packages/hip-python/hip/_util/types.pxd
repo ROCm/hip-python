@@ -2,20 +2,20 @@
 
 __author__ = "AMD_AUTHOR"
 
-cdef class DataHandle:
+cdef class Pointer:
     cdef void* _ptr
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
 
     @staticmethod
-    cdef DataHandle from_ptr(void* ptr)
+    cdef Pointer from_ptr(void* ptr)
     
     cdef void init_from_pyobj(self, object pyobj)
 
     @staticmethod
-    cdef DataHandle from_pyobj(object pyobj)
+    cdef Pointer from_pyobj(object pyobj)
 
-cdef class DeviceArray(DataHandle):
+cdef class DeviceArray(Pointer):
     cdef size_t _itemsize
     cdef dict __dict__
 
@@ -35,18 +35,18 @@ cdef class DeviceArray(DataHandle):
     
     cdef tuple _handle_slice(self,slice subscript,size_t shape_dim)
 
-cdef class ListOfDataHandle(DataHandle):
+cdef class ListOfPointer(Pointer):
     cdef bint _owner
     
     @staticmethod
-    cdef ListOfDataHandle from_ptr(void* ptr)
+    cdef ListOfPointer from_ptr(void* ptr)
     
     cdef void init_from_pyobj(self, object pyobj)
     
     @staticmethod
-    cdef ListOfDataHandle from_pyobj(object pyobj)
+    cdef ListOfPointer from_pyobj(object pyobj)
 
-cdef class ListOfBytes(DataHandle):
+cdef class ListOfBytes(Pointer):
     cdef bint _owner
     
     @staticmethod
@@ -57,7 +57,7 @@ cdef class ListOfBytes(DataHandle):
     @staticmethod
     cdef ListOfBytes from_pyobj(object pyobj)
 
-cdef class ListOfInt(DataHandle):
+cdef class ListOfInt(Pointer):
     cdef bint _owner
     
     @staticmethod
@@ -68,7 +68,7 @@ cdef class ListOfInt(DataHandle):
     @staticmethod
     cdef ListOfInt from_pyobj(object pyobj)
 
-cdef class ListOfUnsigned(DataHandle):
+cdef class ListOfUnsigned(Pointer):
     cdef bint _owner
     
     @staticmethod
@@ -79,7 +79,7 @@ cdef class ListOfUnsigned(DataHandle):
     @staticmethod
     cdef ListOfUnsigned from_pyobj(object pyobj)
 
-cdef class ListOfUnsignedLong(DataHandle):
+cdef class ListOfUnsignedLong(Pointer):
     cdef bint _owner
     
     @staticmethod

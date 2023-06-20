@@ -14,6 +14,7 @@ Based on HIP version {HIP_VERSION_NAME}.
 - {doc}`/user_guide/2_cuda_python_interop`
 - {doc}`/user_guide/3_datatypes`
 - {doc}`/user_guide/4_report_bugs`
+- {doc}`/user_guide/5_license`
 :::
 
 :::{grid-item-card} Developer Guide
@@ -30,7 +31,7 @@ Based on HIP version {HIP_VERSION_NAME}.
 - {doc}`python_api/_util_types`
 :::
 
-:::{grid-item-card} CUDA Python Interoperability Layer: Python API
+:::{grid-item-card} CUDA Python Interoperability: Python API
 {PYTHON_API_DOC_NAMES_CUDA}
 :::
 

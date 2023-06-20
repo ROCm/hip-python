@@ -10,7 +10,7 @@ import ctypes
 # @param [in] extra Pointer to kernel arguments.   These are passed directly to the kernel and
 #                   must be in the memory layout and alignment expected by the kernel.
 
-cdef class HipModuleLaunchKernel_extra(hip._util.types.DataHandle):
+cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
     # members declared in declaration part (.pxd)
 
     def __cinit__(self):
@@ -72,7 +72,7 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.DataHandle):
                 if isinstance(entry,ctypes_types):
                     buffer_size += self._aligned_size(ctypes.sizeof(entry),MAX_ALIGN) # overestimate
                 else:
-                    ptr = hip._util.types.DataHandle(entry)._ptr # fails if cannot be converted to pointer
+                    ptr = hip._util.types.Pointer(entry)._ptr # fails if cannot be converted to pointer
                     buffer_size += sizeof(void *)
             #print(f"required: {buffer_size}")
             # 2. Allocate the args array
@@ -86,14 +86,14 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.DataHandle):
                     ptr = cpython.long.PyLong_AsVoidPtr(ctypes.addressof(entry))
                     num_bytes = ctypes.sizeof(entry)
                 else:
-                    ptr = &hip._util.types.DataHandle(entry)._ptr # fails if cannot be converted to pointer
+                    ptr = &hip._util.types.Pointer(entry)._ptr # fails if cannot be converted to pointer
                     num_bytes = sizeof(void *)
                 # TODO it is not confirmed that this is the correct alignment algorithm!
                 self._args_buffer_size = self._aligned_size(self._args_buffer_size, min(num_bytes,MAX_ALIGN))
                 libc.string.memcpy(<void*>&args[self._args_buffer_size], ptr, num_bytes)
                 self._args_buffer_size += num_bytes # TODO: self._aligned_size(num_bytes) # must be 8-byte aligned
         else:
-            hip._util.types.DataHandle.init_from_pyobj(self,pyobj)
+            hip._util.types.Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
     cdef HipModuleLaunchKernel_extra from_pyobj(object pyobj):
@@ -104,12 +104,12 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.DataHandle):
 
         Args:
             pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``_util.types.DataHandle``, ``HipModuleLaunchKernel_extra``, ``int``, or ``ctypes.c_void_p``
+                            or of type ``_util.types.Pointer``, ``HipModuleLaunchKernel_extra``, ``int``, or ``ctypes.c_void_p``
 
                             Furthermore, ``pyobj`` can be a list or tuple in the following shape, where
                             each entry can be either be
 
-                            * (1) pointer-like, i.e. can be directly translated to ``_util.types.DataHandle``,
+                            * (1) pointer-like, i.e. can be directly translated to ``_util.types.Pointer``,
                             * (2) A ctypes C datatype, which is always passed by value.
 
         Note:

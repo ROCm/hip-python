@@ -14,6 +14,7 @@ Based on HIP version 5.4.22804-474e8620.
 - {doc}`/user_guide/2_cuda_python_interop`
 - {doc}`/user_guide/3_datatypes`
 - {doc}`/user_guide/4_report_bugs`
+- {doc}`/user_guide/5_license`
 :::
 
 :::{grid-item-card} Developer Guide
@@ -36,12 +37,10 @@ Based on HIP version 5.4.22804-474e8620.
 - {doc}`python_api/_util_types`
 :::
 
-:::{grid-item-card} CUDA Python Interoperability Layer: Python API
+:::{grid-item-card} CUDA Python Interoperability: Python API
 - {doc}`python_api/cuda`
 - {doc}`python_api/cudart`
 - {doc}`python_api/nvrtc`
 :::
 
 ::::
-
-

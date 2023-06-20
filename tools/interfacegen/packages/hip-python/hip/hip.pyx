@@ -2257,7 +2257,7 @@ cdef class hipPointerAttribute_t:
     def get_devicePointer(self, i):
         """Get value ``devicePointer`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devicePointer)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].devicePointer)
     def set_devicePointer(self, i, object value):
         """Set value ``devicePointer`` of ``self._ptr[i]``.
 
@@ -2265,7 +2265,7 @@ cdef class hipPointerAttribute_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devicePointer = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].devicePointer = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devicePointer(self):
         """
@@ -2281,7 +2281,7 @@ cdef class hipPointerAttribute_t:
     def get_hostPointer(self, i):
         """Get value ``hostPointer`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].hostPointer)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].hostPointer)
     def set_hostPointer(self, i, object value):
         """Set value ``hostPointer`` of ``self._ptr[i]``.
 
@@ -2289,7 +2289,7 @@ cdef class hipPointerAttribute_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].hostPointer = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].hostPointer = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def hostPointer(self):
         """
@@ -3412,7 +3412,7 @@ cdef class hipArray:
     def get_data(self, i):
         """Get value ``data`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].data)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].data)
     def set_data(self, i, object value):
         """Set value ``data`` of ``self._ptr[i]``.
 
@@ -3420,7 +3420,7 @@ cdef class hipArray:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def data(self):
         """
@@ -3756,7 +3756,7 @@ cdef class hip_Memcpy2D:
     def get_srcHost(self, i):
         """Get value ``srcHost`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].srcHost)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].srcHost)
     def set_srcHost(self, i, object value):
         """Set value ``srcHost`` of ``self._ptr[i]``.
 
@@ -3764,7 +3764,7 @@ cdef class hip_Memcpy2D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def srcHost(self):
         """
@@ -3780,7 +3780,7 @@ cdef class hip_Memcpy2D:
     def get_srcDevice(self, i):
         """Get value ``srcDevice`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].srcDevice)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].srcDevice)
     def set_srcDevice(self, i, object value):
         """Set value ``srcDevice`` of ``self._ptr[i]``.
 
@@ -3788,7 +3788,7 @@ cdef class hip_Memcpy2D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def srcDevice(self):
         """
@@ -3866,7 +3866,7 @@ cdef class hip_Memcpy2D:
     def get_dstHost(self, i):
         """Get value ``dstHost`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dstHost)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].dstHost)
     def set_dstHost(self, i, object value):
         """Set value ``dstHost`` of ``self._ptr[i]``.
 
@@ -3874,7 +3874,7 @@ cdef class hip_Memcpy2D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dstHost(self):
         """
@@ -3890,7 +3890,7 @@ cdef class hip_Memcpy2D:
     def get_dstDevice(self, i):
         """Get value ``dstDevice`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dstDevice)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].dstDevice)
     def set_dstDevice(self, i, object value):
         """Set value ``dstDevice`` of ``self._ptr[i]``.
 
@@ -3898,7 +3898,7 @@ cdef class hip_Memcpy2D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dstDevice(self):
         """
@@ -4111,7 +4111,7 @@ cdef class hipMipmappedArray:
     def get_data(self, i):
         """Get value ``data`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].data)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].data)
     def set_data(self, i, object value):
         """Set value ``data`` of ``self._ptr[i]``.
 
@@ -4119,7 +4119,7 @@ cdef class hipMipmappedArray:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def data(self):
         """
@@ -5149,7 +5149,7 @@ cdef class hipResourceDesc_union_0_struct_2:
     def get_devPtr(self, i):
         """Get value ``devPtr`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devPtr)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].devPtr)
     def set_devPtr(self, i, object value):
         """Set value ``devPtr`` of ``self._ptr[i]``.
 
@@ -5157,7 +5157,7 @@ cdef class hipResourceDesc_union_0_struct_2:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devPtr(self):
         """
@@ -5342,7 +5342,7 @@ cdef class hipResourceDesc_union_0_struct_3:
     def get_devPtr(self, i):
         """Get value ``devPtr`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devPtr)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].devPtr)
     def set_devPtr(self, i, object value):
         """Set value ``devPtr`` of ``self._ptr[i]``.
 
@@ -5350,7 +5350,7 @@ cdef class hipResourceDesc_union_0_struct_3:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devPtr(self):
         """
@@ -6187,7 +6187,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     def get_devPtr(self, i):
         """Get value ``devPtr`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devPtr)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].devPtr)
     def set_devPtr(self, i, object value):
         """Set value ``devPtr`` of ``self._ptr[i]``.
 
@@ -6195,7 +6195,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devPtr(self):
         """
@@ -6404,7 +6404,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     def get_devPtr(self, i):
         """Get value ``devPtr`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devPtr)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].devPtr)
     def set_devPtr(self, i, object value):
         """Set value ``devPtr`` of ``self._ptr[i]``.
 
@@ -6412,7 +6412,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devPtr(self):
         """
@@ -7746,7 +7746,7 @@ cdef class hipPitchedPtr:
     def get_ptr(self, i):
         """Get value ``ptr`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].ptr)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].ptr)
     def set_ptr(self, i, object value):
         """Set value ``ptr`` of ``self._ptr[i]``.
 
@@ -7754,7 +7754,7 @@ cdef class hipPitchedPtr:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].ptr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].ptr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def ptr(self):
         """
@@ -8617,7 +8617,7 @@ cdef class HIP_MEMCPY3D:
     def get_srcHost(self, i):
         """Get value ``srcHost`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].srcHost)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].srcHost)
     def set_srcHost(self, i, object value):
         """Set value ``srcHost`` of ``self._ptr[i]``.
 
@@ -8625,7 +8625,7 @@ cdef class HIP_MEMCPY3D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def srcHost(self):
         """
@@ -8641,7 +8641,7 @@ cdef class HIP_MEMCPY3D:
     def get_srcDevice(self, i):
         """Get value ``srcDevice`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].srcDevice)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].srcDevice)
     def set_srcDevice(self, i, object value):
         """Set value ``srcDevice`` of ``self._ptr[i]``.
 
@@ -8649,7 +8649,7 @@ cdef class HIP_MEMCPY3D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def srcDevice(self):
         """
@@ -8772,7 +8772,7 @@ cdef class HIP_MEMCPY3D:
     def get_dstHost(self, i):
         """Get value ``dstHost`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dstHost)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].dstHost)
     def set_dstHost(self, i, object value):
         """Set value ``dstHost`` of ``self._ptr[i]``.
 
@@ -8780,7 +8780,7 @@ cdef class HIP_MEMCPY3D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dstHost(self):
         """
@@ -8796,7 +8796,7 @@ cdef class HIP_MEMCPY3D:
     def get_dstDevice(self, i):
         """Get value ``dstDevice`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dstDevice)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].dstDevice)
     def set_dstDevice(self, i, object value):
         """Set value ``dstDevice`` of ``self._ptr[i]``.
 
@@ -8804,7 +8804,7 @@ cdef class HIP_MEMCPY3D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dstDevice(self):
         """
@@ -20692,7 +20692,7 @@ cdef class hipMemPoolProps:
     def get_win32SecurityAttributes(self, i):
         """Get value ``win32SecurityAttributes`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].win32SecurityAttributes)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].win32SecurityAttributes)
     def set_win32SecurityAttributes(self, i, object value):
         """Set value ``win32SecurityAttributes`` of ``self._ptr[i]``.
 
@@ -20700,7 +20700,7 @@ cdef class hipMemPoolProps:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].win32SecurityAttributes = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].win32SecurityAttributes = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def win32SecurityAttributes(self):
         """
@@ -21305,7 +21305,7 @@ cdef class hipLaunchParams_t:
     def get_func(self, i):
         """Get value ``func`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].func)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].func)
     def set_func(self, i, object value):
         """Set value ``func`` of ``self._ptr[i]``.
 
@@ -21313,7 +21313,7 @@ cdef class hipLaunchParams_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def func(self):
         """
@@ -21345,7 +21345,7 @@ cdef class hipLaunchParams_t:
     def get_args(self, i):
         """Get value ``args`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].args)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].args)
     def set_args(self, i, object value):
         """Set value ``args`` of ``self._ptr[i]``.
 
@@ -21353,7 +21353,7 @@ cdef class hipLaunchParams_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].args = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].args = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def args(self):
         """
@@ -21552,7 +21552,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     def get_handle(self, i):
         """Get value ``handle`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].handle)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].handle)
     def set_handle(self, i, object value):
         """Set value ``handle`` of ``self._ptr[i]``.
 
@@ -21560,7 +21560,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def handle(self):
         """
@@ -21576,7 +21576,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     def get_name(self, i):
         """Get value ``name`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].name)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].name)
     def set_name(self, i, object value):
         """Set value ``name`` of ``self._ptr[i]``.
 
@@ -21584,7 +21584,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def name(self):
         """
@@ -22315,7 +22315,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     def get_handle(self, i):
         """Get value ``handle`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].handle)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].handle)
     def set_handle(self, i, object value):
         """Set value ``handle`` of ``self._ptr[i]``.
 
@@ -22323,7 +22323,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def handle(self):
         """
@@ -22339,7 +22339,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     def get_name(self, i):
         """Get value ``name`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].name)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].name)
     def set_name(self, i, object value):
         """Set value ``name`` of ``self._ptr[i]``.
 
@@ -22347,7 +22347,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def name(self):
         """
@@ -24857,7 +24857,7 @@ cdef class hipHostNodeParams:
     def get_userData(self, i):
         """Get value ``userData`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].userData)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].userData)
     def set_userData(self, i, object value):
         """Set value ``userData`` of ``self._ptr[i]``.
 
@@ -24865,7 +24865,7 @@ cdef class hipHostNodeParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].userData = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].userData = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def userData(self):
         """
@@ -25035,7 +25035,7 @@ cdef class hipKernelNodeParams:
     def get_extra(self, i):
         """Get value ``extra`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].extra)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].extra)
     def set_extra(self, i, object value):
         """Set value ``extra`` of ``self._ptr[i]``.
 
@@ -25043,7 +25043,7 @@ cdef class hipKernelNodeParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].extra = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].extra = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def extra(self):
         """
@@ -25059,7 +25059,7 @@ cdef class hipKernelNodeParams:
     def get_func(self, i):
         """Get value ``func`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].func)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].func)
     def set_func(self, i, object value):
         """Set value ``func`` of ``self._ptr[i]``.
 
@@ -25067,7 +25067,7 @@ cdef class hipKernelNodeParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def func(self):
         """
@@ -25091,7 +25091,7 @@ cdef class hipKernelNodeParams:
     def get_kernelParams(self, i):
         """Get value ``kernelParams`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].kernelParams)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].kernelParams)
     def set_kernelParams(self, i, object value):
         """Set value ``kernelParams`` of ``self._ptr[i]``.
 
@@ -25099,7 +25099,7 @@ cdef class hipKernelNodeParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].kernelParams = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].kernelParams = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def kernelParams(self):
         """
@@ -25276,7 +25276,7 @@ cdef class hipMemsetParams:
     def get_dst(self, i):
         """Get value ``dst`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dst)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].dst)
     def set_dst(self, i, object value):
         """Set value ``dst`` of ``self._ptr[i]``.
 
@@ -25284,7 +25284,7 @@ cdef class hipMemsetParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dst = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].dst = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dst(self):
         """
@@ -25548,7 +25548,7 @@ cdef class hipAccessPolicyWindow:
     def get_base_ptr(self, i):
         """Get value ``base_ptr`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].base_ptr)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].base_ptr)
     def set_base_ptr(self, i, object value):
         """Set value ``base_ptr`` of ``self._ptr[i]``.
 
@@ -25556,7 +25556,7 @@ cdef class hipAccessPolicyWindow:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].base_ptr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].base_ptr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def base_ptr(self):
         """
@@ -26282,7 +26282,7 @@ cdef class hipMemAllocationProp:
     def get_win32HandleMetaData(self, i):
         """Get value ``win32HandleMetaData`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].win32HandleMetaData)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].win32HandleMetaData)
     def set_win32HandleMetaData(self, i, object value):
         """Set value ``win32HandleMetaData`` of ``self._ptr[i]``.
 
@@ -26290,7 +26290,7 @@ cdef class hipMemAllocationProp:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].win32HandleMetaData = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].win32HandleMetaData = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def win32HandleMetaData(self):
         """
@@ -27765,7 +27765,7 @@ def hipDeviceGetName(object name, int len, int device):
     r"""Returns an identifer string for the device.
 
     Args:
-        name (`~.hip._util.types.DataHandle`/`~.object`): **[out]** 
+        name (`~.hip._util.types.Pointer`/`~.object`): **[out]** 
 
         len (`~.int`): **[in]** 
 
@@ -27777,7 +27777,7 @@ def hipDeviceGetName(object name, int len, int device):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
     """
     _hipDeviceGetName__retval = hipError_t(chip.hipDeviceGetName(
-        <char *>hip._util.types.DataHandle.from_pyobj(name)._ptr,len,device))    # fully specified
+        <char *>hip._util.types.Pointer.from_pyobj(name)._ptr,len,device))    # fully specified
     return (_hipDeviceGetName__retval,)
 
 
@@ -27834,7 +27834,7 @@ def hipDeviceGetPCIBusId(object pciBusId, int len, int device):
     r"""Returns a PCI Bus Id string for the device, overloaded to take int device ID.
 
     Args:
-        pciBusId (`~.hip._util.types.DataHandle`/`~.object`): **[out]** 
+        pciBusId (`~.hip._util.types.Pointer`/`~.object`): **[out]** 
 
         len (`~.int`): **[in]** 
 
@@ -27846,7 +27846,7 @@ def hipDeviceGetPCIBusId(object pciBusId, int len, int device):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`
     """
     _hipDeviceGetPCIBusId__retval = hipError_t(chip.hipDeviceGetPCIBusId(
-        <char *>hip._util.types.DataHandle.from_pyobj(pciBusId)._ptr,len,device))    # fully specified
+        <char *>hip._util.types.Pointer.from_pyobj(pciBusId)._ptr,len,device))    # fully specified
     return (_hipDeviceGetPCIBusId__retval,)
 
 
@@ -28015,7 +28015,7 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
     r"""Query for a specific device attribute.
 
     Args:
-        pi (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to value to return
+        pi (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to value to return
 
         attr (`~.hipDeviceAttribute_t`): **[in]** attribute to query
 
@@ -28029,7 +28029,7 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
     if not isinstance(attr,_hipDeviceAttribute_t__Base):
         raise TypeError("argument 'attr' must be of type '_hipDeviceAttribute_t__Base'")
     _hipDeviceGetAttribute__retval = hipError_t(chip.hipDeviceGetAttribute(
-        <int *>hip._util.types.DataHandle.from_pyobj(pi)._ptr,attr.value,deviceId))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(pi)._ptr,attr.value,deviceId))    # fully specified
     return (_hipDeviceGetAttribute__retval,)
 
 
@@ -28380,7 +28380,7 @@ def hipIpcGetMemHandle(object handle, object devPtr):
         handle (`~.hipIpcMemHandle_st`/`~.object`):  Pointer to user allocated hipIpcMemHandle to return
             the handle in.
 
-        devPtr (`~.hip._util.types.DataHandle`/`~.object`):  Base pointer to previously allocated device memory
+        devPtr (`~.hip._util.types.Pointer`/`~.object`):  Base pointer to previously allocated device memory
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -28392,7 +28392,7 @@ def hipIpcGetMemHandle(object handle, object devPtr):
     """
     _hipIpcGetMemHandle__retval = hipError_t(chip.hipIpcGetMemHandle(
         hipIpcMemHandle_st.from_pyobj(handle)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(devPtr)._ptr))    # fully specified
     return (_hipIpcGetMemHandle__retval,)
 
 
@@ -28436,9 +28436,9 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
             hipErrorMapFailed,
             hipErrorInvalidHandle,
             hipErrorTooManyPeers
-        * `~.hip._util.types.DataHandle`/`~.object`:  Returned device pointer
+        * `~.hip._util.types.Pointer`/`~.object`:  Returned device pointer
     """
-    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.Pointer.from_ptr(NULL)
     _hipIpcOpenMemHandle__retval = hipError_t(chip.hipIpcOpenMemHandle(
         <void **>&devPtr._ptr,
         hipIpcMemHandle_st.from_pyobj(handle)._ptr[0],flags))    # fully specified
@@ -28457,7 +28457,7 @@ def hipIpcCloseMemHandle(object devPtr):
     last mapping using them.
 
     Args:
-        devPtr (`~.hip._util.types.DataHandle`/`~.object`):  Device pointer returned by hipIpcOpenMemHandle
+        devPtr (`~.hip._util.types.Pointer`/`~.object`):  Device pointer returned by hipIpcOpenMemHandle
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -28467,7 +28467,7 @@ def hipIpcCloseMemHandle(object devPtr):
             hipErrorInvalidHandle,
     """
     _hipIpcCloseMemHandle__retval = hipError_t(chip.hipIpcCloseMemHandle(
-        <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(devPtr)._ptr))    # fully specified
     return (_hipIpcCloseMemHandle__retval,)
 
 
@@ -28529,7 +28529,7 @@ def hipFuncSetAttribute(object func, object attr, int value):
     ignored on those architectures.
 
     Args:
-        func (`~.hip._util.types.DataHandle`/`~.object`): **[in]** ;
+        func (`~.hip._util.types.Pointer`/`~.object`): **[in]** ;
 
         attr (`~.hipFuncAttribute`): **[in]** ;
 
@@ -28543,7 +28543,7 @@ def hipFuncSetAttribute(object func, object attr, int value):
     if not isinstance(attr,_hipFuncAttribute__Base):
         raise TypeError("argument 'attr' must be of type '_hipFuncAttribute__Base'")
     _hipFuncSetAttribute__retval = hipError_t(chip.hipFuncSetAttribute(
-        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,attr.value,value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(func)._ptr,attr.value,value))    # fully specified
     return (_hipFuncSetAttribute__retval,)
 
 
@@ -28564,7 +28564,7 @@ def hipFuncSetCacheConfig(object func, object config):
     if not isinstance(config,_hipFuncCache_t__Base):
         raise TypeError("argument 'config' must be of type '_hipFuncCache_t__Base'")
     _hipFuncSetCacheConfig__retval = hipError_t(chip.hipFuncSetCacheConfig(
-        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(func)._ptr,config.value))    # fully specified
     return (_hipFuncSetCacheConfig__retval,)
 
 
@@ -28576,7 +28576,7 @@ def hipFuncSetSharedMemConfig(object func, object config):
     ignored on those architectures.
 
     Args:
-        func (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        func (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
         config (`~.hipSharedMemConfig`): **[in]** 
 
@@ -28588,7 +28588,7 @@ def hipFuncSetSharedMemConfig(object func, object config):
     if not isinstance(config,_hipSharedMemConfig__Base):
         raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
     _hipFuncSetSharedMemConfig__retval = hipError_t(chip.hipFuncSetSharedMemConfig(
-        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(func)._ptr,config.value))    # fully specified
     return (_hipFuncSetSharedMemConfig__retval,)
 
 
@@ -28693,7 +28693,7 @@ def hipDrvGetErrorName(object hipError, object errorString):
     if not isinstance(hipError,_hipError_t__Base):
         raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
     _hipDrvGetErrorName__retval = hipError_t(chip.hipDrvGetErrorName(hipError.value,
-        <const char **>hip._util.types.DataHandle.from_pyobj(errorString)._ptr))    # fully specified
+        <const char **>hip._util.types.Pointer.from_pyobj(errorString)._ptr))    # fully specified
     return (_hipDrvGetErrorName__retval,)
 
 
@@ -28717,7 +28717,7 @@ def hipDrvGetErrorString(object hipError, object errorString):
     if not isinstance(hipError,_hipError_t__Base):
         raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
     _hipDrvGetErrorString__retval = hipError_t(chip.hipDrvGetErrorString(hipError.value,
-        <const char **>hip._util.types.DataHandle.from_pyobj(errorString)._ptr))    # fully specified
+        <const char **>hip._util.types.Pointer.from_pyobj(errorString)._ptr))    # fully specified
     return (_hipDrvGetErrorString__retval,)
 
 
@@ -29135,7 +29135,7 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
 
         callback (`~.hipStreamCallback_t`/`~.object`): **[in]**  The function to call once preceding stream operations are complete
 
-        userData (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  User specified data to be passed to the callback function
+        userData (`~.hip._util.types.Pointer`/`~.object`): **[in]**  User specified data to be passed to the callback function
 
         flags (`~.int`): **[in]**  Reserved for future use, must be 0
 
@@ -29147,7 +29147,7 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
     _hipStreamAddCallback__retval = hipError_t(chip.hipStreamAddCallback(
         ihipStream_t.from_pyobj(stream)._ptr,
         hipStreamCallback_t.from_pyobj(callback)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(userData)._ptr,flags))    # fully specified
     return (_hipStreamAddCallback__retval,)
 
 
@@ -29181,7 +29181,7 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
     Args:
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Pointer to memory object allocated using 'hipMallocSignalMemory' flag
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Pointer to memory object allocated using 'hipMallocSignalMemory' flag
 
         value (`~.int`): **[in]**  Value to be used in compare operation
 
@@ -29198,7 +29198,7 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
     """
     _hipStreamWaitValue32__retval = hipError_t(chip.hipStreamWaitValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
     return (_hipStreamWaitValue32__retval,)
 
 
@@ -29232,7 +29232,7 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
     Args:
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Pointer to memory object allocated using 'hipMallocSignalMemory' flag
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Pointer to memory object allocated using 'hipMallocSignalMemory' flag
 
         value (`~.int`): **[in]**  Value to be used in compare operation
 
@@ -29249,7 +29249,7 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
     """
     _hipStreamWaitValue64__retval = hipError_t(chip.hipStreamWaitValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
     return (_hipStreamWaitValue64__retval,)
 
 
@@ -29271,7 +29271,7 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
     Args:
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Pointer to a GPU accessible memory object
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Pointer to a GPU accessible memory object
 
         value (`~.int`): **[in]**  Value to be written
 
@@ -29284,7 +29284,7 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
     """
     _hipStreamWriteValue32__retval = hipError_t(chip.hipStreamWriteValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,value,flags))    # fully specified
     return (_hipStreamWriteValue32__retval,)
 
 
@@ -29306,7 +29306,7 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
     Args:
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
 
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Pointer to a GPU accessible memory object
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Pointer to a GPU accessible memory object
 
         value (`~.int`): **[in]**  Value to be written
 
@@ -29319,7 +29319,7 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
     """
     _hipStreamWriteValue64__retval = hipError_t(chip.hipStreamWriteValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,value,flags))    # fully specified
     return (_hipStreamWriteValue64__retval,)
 
 
@@ -29529,7 +29529,7 @@ def hipPointerGetAttributes(object attributes, object ptr):
     Args:
         attributes (`~.hipPointerAttribute_t`/`~.object`): **[out]** attributes for the specified pointer
 
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to get attributes for
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to get attributes for
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -29538,7 +29538,7 @@ def hipPointerGetAttributes(object attributes, object ptr):
     """
     _hipPointerGetAttributes__retval = hipError_t(chip.hipPointerGetAttributes(
         hipPointerAttribute_t.from_pyobj(attributes)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipPointerGetAttributes__retval,)
 
 
@@ -29554,11 +29554,11 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
         `~.hipPointerGetAttributes`
 
     Args:
-        data (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** returned pointer attribute value
+        data (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** returned pointer attribute value
 
         atribute: **[in]** attribute to query for
 
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to get attributes for
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to get attributes for
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -29568,8 +29568,8 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
     if not isinstance(attribute,_hipPointer_attribute__Base):
         raise TypeError("argument 'attribute' must be of type '_hipPointer_attribute__Base'")
     _hipPointerGetAttribute__retval = hipError_t(chip.hipPointerGetAttribute(
-        <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,attribute.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(data)._ptr,attribute.value,
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipPointerGetAttribute__retval,)
 
 
@@ -29587,21 +29587,21 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
     Args:
         numAttributes (`~.int`): **[in]** number of attributes to query for
 
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to get attributes for
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to get attributes for
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
         * `~.hipPointer_attribute`: attributes to query for
-        * `~.hip._util.types.DataHandle`/`~.object`: a two-dimensional containing pointers to memory locations
+        * `~.hip._util.types.Pointer`/`~.object`: a two-dimensional containing pointers to memory locations
                 where the result of each attribute query will be written to
     """
     cdef chip.hipPointer_attribute attributes
-    data = hip._util.types.DataHandle.from_ptr(NULL)
+    data = hip._util.types.Pointer.from_ptr(NULL)
     _hipDrvPointerGetAttributes__retval = hipError_t(chip.hipDrvPointerGetAttributes(numAttributes,&attributes,
         <void **>&data._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipDrvPointerGetAttributes__retval,hipPointer_attribute(attributes),data)
 
 
@@ -29612,7 +29612,7 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
     See:
 
     Args:
-        extSem_out (`~.hip._util.types.DataHandle`/`~.object`): **[out]** External semaphores to be waited on
+        extSem_out (`~.hip._util.types.Pointer`/`~.object`): **[out]** External semaphores to be waited on
 
         semHandleDesc (`~.hipExternalSemaphoreHandleDesc_st`/`~.object`): **[in]** Semaphore import handle descriptor
 
@@ -29622,7 +29622,7 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
     _hipImportExternalSemaphore__retval = hipError_t(chip.hipImportExternalSemaphore(
-        <void **>hip._util.types.DataHandle.from_pyobj(extSem_out)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(extSem_out)._ptr,
         hipExternalSemaphoreHandleDesc_st.from_pyobj(semHandleDesc)._ptr))    # fully specified
     return (_hipImportExternalSemaphore__retval,)
 
@@ -29648,7 +29648,7 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
     _hipSignalExternalSemaphoresAsync__retval = hipError_t(chip.hipSignalExternalSemaphoresAsync(
-        <void *const *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
+        <void *const *>hip._util.types.Pointer.from_pyobj(extSemArray)._ptr,
         hipExternalSemaphoreSignalParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipSignalExternalSemaphoresAsync__retval,)
@@ -29675,7 +29675,7 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
     _hipWaitExternalSemaphoresAsync__retval = hipError_t(chip.hipWaitExternalSemaphoresAsync(
-        <void *const *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
+        <void *const *>hip._util.types.Pointer.from_pyobj(extSemArray)._ptr,
         hipExternalSemaphoreWaitParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipWaitExternalSemaphoresAsync__retval,)
@@ -29688,7 +29688,7 @@ def hipDestroyExternalSemaphore(object extSem):
     See:
 
     Args:
-        extSem (`~.hip._util.types.DataHandle`/`~.object`): **[in]** handle to an external memory object
+        extSem (`~.hip._util.types.Pointer`/`~.object`): **[in]** handle to an external memory object
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -29696,7 +29696,7 @@ def hipDestroyExternalSemaphore(object extSem):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
     _hipDestroyExternalSemaphore__retval = hipError_t(chip.hipDestroyExternalSemaphore(
-        <void *>hip._util.types.DataHandle.from_pyobj(extSem)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(extSem)._ptr))    # fully specified
     return (_hipDestroyExternalSemaphore__retval,)
 
 
@@ -29707,7 +29707,7 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
     See:
 
     Args:
-        extMem_out (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Returned handle to an external memory object
+        extMem_out (`~.hip._util.types.Pointer`/`~.object`): **[out]** Returned handle to an external memory object
 
         memHandleDesc (`~.hipExternalMemoryHandleDesc_st`/`~.object`): **[in]** Memory import handle descriptor
 
@@ -29717,7 +29717,7 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
     _hipImportExternalMemory__retval = hipError_t(chip.hipImportExternalMemory(
-        <void **>hip._util.types.DataHandle.from_pyobj(extMem_out)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(extMem_out)._ptr,
         hipExternalMemoryHandleDesc_st.from_pyobj(memHandleDesc)._ptr))    # fully specified
     return (_hipImportExternalMemory__retval,)
 
@@ -29729,7 +29729,7 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
     See:
 
     Args:
-        extMem (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Handle to external memory object
+        extMem (`~.hip._util.types.Pointer`/`~.object`): **[in]** Handle to external memory object
 
         bufferDesc (`~.hipExternalMemoryBufferDesc_st`/`~.object`): **[in]** Buffer descriptor
 
@@ -29737,12 +29737,12 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
-        * `~.hip._util.types.DataHandle`/`~.object`: Returned device pointer to buffer
+        * `~.hip._util.types.Pointer`/`~.object`: Returned device pointer to buffer
     """
-    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.Pointer.from_ptr(NULL)
     _hipExternalMemoryGetMappedBuffer__retval = hipError_t(chip.hipExternalMemoryGetMappedBuffer(
         <void **>&devPtr._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(extMem)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(extMem)._ptr,
         hipExternalMemoryBufferDesc_st.from_pyobj(bufferDesc)._ptr))    # fully specified
     return (_hipExternalMemoryGetMappedBuffer__retval,devPtr)
 
@@ -29754,7 +29754,7 @@ def hipDestroyExternalMemory(object extMem):
     See:
 
     Args:
-        extMem (`~.hip._util.types.DataHandle`/`~.object`): **[in]** External memory object to be destroyed
+        extMem (`~.hip._util.types.Pointer`/`~.object`): **[in]** External memory object to be destroyed
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -29762,7 +29762,7 @@ def hipDestroyExternalMemory(object extMem):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
     """
     _hipDestroyExternalMemory__retval = hipError_t(chip.hipDestroyExternalMemory(
-        <void *>hip._util.types.DataHandle.from_pyobj(extMem)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(extMem)._ptr))    # fully specified
     return (_hipDestroyExternalMemory__retval,)
 
 
@@ -29836,9 +29836,9 @@ def hipMallocHost(unsigned long size):
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated host pinned memory
+        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated host pinned memory
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
         <void **>&ptr._ptr,size))    # fully specified
     return (_hipMallocHost__retval,ptr)
@@ -29860,9 +29860,9 @@ def hipMemAllocHost(unsigned long size):
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated host pinned memory
+        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated host pinned memory
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipMemAllocHost__retval = hipError_t(chip.hipMemAllocHost(
         <void **>&ptr._ptr,size))    # fully specified
     return (_hipMemAllocHost__retval,ptr)
@@ -29886,9 +29886,9 @@ def hipHostMalloc(unsigned long size, unsigned int flags):
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated host pinned memory
+        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated host pinned memory
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipHostMalloc__retval = hipError_t(chip.hipHostMalloc(
         <void **>&ptr._ptr,size,flags))    # fully specified
     return (_hipHostMalloc__retval,ptr)
@@ -29922,7 +29922,7 @@ def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object 
     r"""Prefetches memory to the specified destination device using HIP.
 
     Args:
-        dev_ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to be prefetched
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to be prefetched
 
         count (`~.int`): **[in]** size in bytes for prefetching
 
@@ -29936,7 +29936,7 @@ def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
     """
     _hipMemPrefetchAsync__retval = hipError_t(chip.hipMemPrefetchAsync(
-        <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count,device,
+        <const void *>hip._util.types.Pointer.from_pyobj(dev_ptr)._ptr,count,device,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemPrefetchAsync__retval,)
 
@@ -29946,7 +29946,7 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
     r"""Advise about the usage of a given memory range to HIP.
 
     Args:
-        dev_ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to memory to set the advice for
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to memory to set the advice for
 
         count (`~.int`): **[in]** size in bytes of the memory range
 
@@ -29962,7 +29962,7 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
     if not isinstance(advice,_hipMemoryAdvise__Base):
         raise TypeError("argument 'advice' must be of type '_hipMemoryAdvise__Base'")
     _hipMemAdvise__retval = hipError_t(chip.hipMemAdvise(
-        <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count,advice.value,device))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(dev_ptr)._ptr,count,advice.value,device))    # fully specified
     return (_hipMemAdvise__retval,)
 
 
@@ -29971,14 +29971,14 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
     r"""Query an attribute of a given memory range in HIP.
 
     Args:
-        data (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** a pointer to a memory location where the result of each
+        data (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** a pointer to a memory location where the result of each
             attribute query will be written to
 
         data_size (`~.int`): **[in]** the size of data
 
         attribute (`~.hipMemRangeAttribute`): **[in]** the attribute to query
 
-        dev_ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** start of the range to query
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** start of the range to query
 
         count (`~.int`): **[in]** size of the range to query
 
@@ -29990,8 +29990,8 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
     if not isinstance(attribute,_hipMemRangeAttribute__Base):
         raise TypeError("argument 'attribute' must be of type '_hipMemRangeAttribute__Base'")
     _hipMemRangeGetAttribute__retval = hipError_t(chip.hipMemRangeGetAttribute(
-        <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,data_size,attribute.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(data)._ptr,data_size,attribute.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(dev_ptr)._ptr,count))    # fully specified
     return (_hipMemRangeGetAttribute__retval,)
 
 
@@ -30003,7 +30003,7 @@ def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsig
         num_attributes (`~.int`): **[in]** an array of attributes to query (numAttributes and the number
             of attributes in this array should match)
 
-        dev_ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** start of the range to query
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** start of the range to query
 
         count (`~.int`): **[in]** size of the range to query
 
@@ -30011,17 +30011,17 @@ def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsig
         A `~.tuple` of size 4 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hip._util.types.DataHandle`/`~.object`: a two-dimensional array containing pointers to memory locations
+        * `~.hip._util.types.Pointer`/`~.object`: a two-dimensional array containing pointers to memory locations
                 where the result of each attribute query will be written to
         * `~.int`: an array, containing the sizes of each result
         * `~.hipMemRangeAttribute`: the attribute to query
     """
-    data = hip._util.types.DataHandle.from_ptr(NULL)
+    data = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long data_sizes
     cdef chip.hipMemRangeAttribute attributes
     _hipMemRangeGetAttributes__retval = hipError_t(chip.hipMemRangeGetAttributes(
         <void **>&data._ptr,&data_sizes,&attributes,num_attributes,
-        <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(dev_ptr)._ptr,count))    # fully specified
     return (_hipMemRangeGetAttributes__retval,data,data_sizes,hipMemRangeAttribute(attributes))
 
 
@@ -30032,7 +30032,7 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
     Args:
         stream (`~.ihipStream_t`/`~.object`): **[in]**  stream in which to enqueue the attach operation
 
-        dev_ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory (must be a pointer to managed memory or
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory (must be a pointer to managed memory or
             to a valid host-accessible region of system-allocated memory)
 
         length (`~.int`): **[in]**  length of memory (defaults to zero)
@@ -30047,7 +30047,7 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
     """
     _hipStreamAttachMemAsync__retval = hipError_t(chip.hipStreamAttachMemAsync(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,length,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dev_ptr)._ptr,length,flags))    # fully specified
     return (_hipStreamAttachMemAsync__retval,)
 
 
@@ -30123,7 +30123,7 @@ def hipFreeAsync(object dev_ptr, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        dev_ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to device memory to free
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to device memory to free
 
         stream (`~.ihipStream_t`/`~.object`): **[in]** The stream, where the destruciton will occur according to the execution order
 
@@ -30133,7 +30133,7 @@ def hipFreeAsync(object dev_ptr, object stream):
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue, hipErrorNotSupported
     """
     _hipFreeAsync__retval = hipError_t(chip.hipFreeAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(dev_ptr)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipFreeAsync__retval,)
 
@@ -30217,7 +30217,7 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
 
         attr (`~.hipMemPoolAttr`): **[in]** The attribute to modify
 
-        value (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to the value to assign
+        value (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to the value to assign
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -30228,7 +30228,7 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
         raise TypeError("argument 'attr' must be of type '_hipMemPoolAttr__Base'")
     _hipMemPoolSetAttribute__retval = hipError_t(chip.hipMemPoolSetAttribute(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(value)._ptr))    # fully specified
     return (_hipMemPoolSetAttribute__retval,)
 
 
@@ -30270,7 +30270,7 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
 
         attr (`~.hipMemPoolAttr`): **[in]** The attribute to get
 
-        value (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Retrieved value
+        value (`~.hip._util.types.Pointer`/`~.object`): **[in]** Retrieved value
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -30281,7 +30281,7 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
         raise TypeError("argument 'attr' must be of type '_hipMemPoolAttr__Base'")
     _hipMemPoolGetAttribute__retval = hipError_t(chip.hipMemPoolGetAttribute(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(value)._ptr))    # fully specified
     return (_hipMemPoolGetAttribute__retval,)
 
 
@@ -30492,7 +30492,7 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shared_handle (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Pointer to the location in which to store the requested handle
+        shared_handle (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to the location in which to store the requested handle
 
         mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Pool to export
 
@@ -30508,7 +30508,7 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
     if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
         raise TypeError("argument 'handle_type' must be of type '_hipMemAllocationHandleType__Base'")
     _hipMemPoolExportToShareableHandle__retval = hipError_t(chip.hipMemPoolExportToShareableHandle(
-        <void *>hip._util.types.DataHandle.from_pyobj(shared_handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(shared_handle)._ptr,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,handle_type.value,flags))    # fully specified
     return (_hipMemPoolExportToShareableHandle__retval,)
 
@@ -30532,7 +30532,7 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shared_handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** OS handle of the pool to open
+        shared_handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** OS handle of the pool to open
 
         handle_type (`~.hipMemAllocationHandleType`): **[in]** The type of handle being imported
 
@@ -30548,7 +30548,7 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
     if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
         raise TypeError("argument 'handle_type' must be of type '_hipMemAllocationHandleType__Base'")
     _hipMemPoolImportFromShareableHandle__retval = hipError_t(chip.hipMemPoolImportFromShareableHandle(&mem_pool._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(shared_handle)._ptr,handle_type.value,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(shared_handle)._ptr,handle_type.value,flags))    # fully specified
     return (_hipMemPoolImportFromShareableHandle__retval,mem_pool)
 
 
@@ -30570,7 +30570,7 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
     Args:
         export_data (`~.hipMemPoolPtrExportData`/`~.object`): **[out]** Returned export data
 
-        dev_ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to memory being exported
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to memory being exported
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -30579,7 +30579,7 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
     """
     _hipMemPoolExportPointer__retval = hipError_t(chip.hipMemPoolExportPointer(
         hipMemPoolPtrExportData.from_pyobj(export_data)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dev_ptr)._ptr))    # fully specified
     return (_hipMemPoolExportPointer__retval,)
 
 
@@ -30616,9 +30616,9 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.DataHandle`/`~.object`: Pointer to imported memory
+        * `~.hip._util.types.Pointer`/`~.object`: Pointer to imported memory
     """
-    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipMemPoolImportPointer__retval = hipError_t(chip.hipMemPoolImportPointer(
         <void **>&dev_ptr._ptr,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
@@ -30644,9 +30644,9 @@ def hipHostAlloc(unsigned long size, unsigned int flags):
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated host pinned memory
+        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated host pinned memory
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipHostAlloc__retval = hipError_t(chip.hipHostAlloc(
         <void **>&ptr._ptr,size,flags))    # fully specified
     return (_hipHostAlloc__retval,ptr)
@@ -30662,7 +30662,7 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
     Args:
         dstPtr: **[out]** Device Pointer mapped to passed host pointer
 
-        hstPtr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Host Pointer allocated through hipHostMalloc
+        hstPtr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Host Pointer allocated through hipHostMalloc
 
         flags (`~.int`): **[in]** Flags to be passed for extension
 
@@ -30671,10 +30671,10 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorOutOfMemory`
     """
-    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.Pointer.from_ptr(NULL)
     _hipHostGetDevicePointer__retval = hipError_t(chip.hipHostGetDevicePointer(
         <void **>&devPtr._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(hstPtr)._ptr,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(hstPtr)._ptr,flags))    # fully specified
     return (_hipHostGetDevicePointer__retval,devPtr)
 
 
@@ -30686,7 +30686,7 @@ def hipHostGetFlags(object hostPtr):
         `~.hipHostMalloc`
 
     Args:
-        hostPtr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Host Pointer allocated through hipHostMalloc
+        hostPtr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Host Pointer allocated through hipHostMalloc
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -30696,7 +30696,7 @@ def hipHostGetFlags(object hostPtr):
     """
     cdef unsigned int flagsPtr
     _hipHostGetFlags__retval = hipError_t(chip.hipHostGetFlags(&flagsPtr,
-        <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(hostPtr)._ptr))    # fully specified
     return (_hipHostGetFlags__retval,flagsPtr)
 
 
@@ -30732,7 +30732,7 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
         `~.hipHostUnregister`, `~.hipHostGetFlags`, `~.hipHostGetDevicePointer`
 
     Args:
-        hostPtr (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Pointer to host memory to be registered.
+        hostPtr (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to host memory to be registered.
 
         sizeBytes (`~.int`): **[in]** size of the host memory
 
@@ -30744,7 +30744,7 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
     """
     _hipHostRegister__retval = hipError_t(chip.hipHostRegister(
-        <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr,sizeBytes,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(hostPtr)._ptr,sizeBytes,flags))    # fully specified
     return (_hipHostRegister__retval,)
 
 
@@ -30756,7 +30756,7 @@ def hipHostUnregister(object hostPtr):
         `~.hipHostRegister`
 
     Args:
-        hostPtr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Host pointer previously registered with `~.hipHostRegister`
+        hostPtr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Host pointer previously registered with `~.hipHostRegister`
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -30764,7 +30764,7 @@ def hipHostUnregister(object hostPtr):
         * `~.hipError_t`: Error code
     """
     _hipHostUnregister__retval = hipError_t(chip.hipHostUnregister(
-        <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(hostPtr)._ptr))    # fully specified
     return (_hipHostUnregister__retval,)
 
 
@@ -30792,10 +30792,10 @@ def hipMallocPitch(unsigned long width, unsigned long height):
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: Error code
-        * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated device memory
+        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated device memory
         * `~.int`: Pitch for allocation (in bytes)
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long pitch
     _hipMallocPitch__retval = hipError_t(chip.hipMallocPitch(
         <void **>&ptr._ptr,&pitch,width,height))    # fully specified
@@ -30829,10 +30829,10 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: Error code
-        * `~.hip._util.types.DataHandle`/`~.object`: Pointer to the allocated device memory
+        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated device memory
         * `~.int`: Pitch for allocation (in bytes)
     """
-    dptr = hip._util.types.DataHandle.from_ptr(NULL)
+    dptr = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long pitch
     _hipMemAllocPitch__retval = hipError_t(chip.hipMemAllocPitch(
         <void **>&dptr._ptr,&pitch,widthInBytes,height,elementSizeBytes))    # fully specified
@@ -30850,7 +30850,7 @@ def hipFree(object ptr):
         `~.hipMalloc3DArray`, `~.hipHostMalloc`
 
     Args:
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to memory to be freed
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to memory to be freed
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -30860,7 +30860,7 @@ def hipFree(object ptr):
             with hipHostMalloc)
     """
     _hipFree__retval = hipError_t(chip.hipFree(
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipFree__retval,)
 
 
@@ -30872,7 +30872,7 @@ def hipFreeHost(object ptr):
         use hipHostFree() instead
 
     Args:
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to memory to be freed
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to memory to be freed
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -30882,7 +30882,7 @@ def hipFreeHost(object ptr):
             hipMalloc)
     """
     _hipFreeHost__retval = hipError_t(chip.hipFreeHost(
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipFreeHost__retval,)
 
 
@@ -30897,7 +30897,7 @@ def hipHostFree(object ptr):
         `~.hipMalloc3DArray`, `~.hipHostMalloc`
 
     Args:
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to memory to be freed
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to memory to be freed
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -30907,7 +30907,7 @@ def hipHostFree(object ptr):
             hipMalloc)
     """
     _hipHostFree__retval = hipError_t(chip.hipHostFree(
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipHostFree__retval,)
 
 
@@ -30937,9 +30937,9 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
 
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
@@ -30953,8 +30953,8 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy__retval = hipError_t(chip.hipMemcpy(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
     return (_hipMemcpy__retval,)
 
 
@@ -30970,8 +30970,8 @@ def hipMemcpyWithStream(object dst, object src, unsigned long sizeBytes, object 
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyWithStream__retval = hipError_t(chip.hipMemcpyWithStream(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyWithStream__retval,)
 
@@ -30989,9 +30989,9 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
 
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
@@ -31002,8 +31002,8 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
             `~.hipErrorInvalidValue`
     """
     _hipMemcpyHtoD__retval = hipError_t(chip.hipMemcpyHtoD(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyHtoD__retval,)
 
 
@@ -31020,9 +31020,9 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
 
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
@@ -31033,8 +31033,8 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
             `~.hipErrorInvalidValue`
     """
     _hipMemcpyDtoH__retval = hipError_t(chip.hipMemcpyDtoH(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyDtoH__retval,)
 
 
@@ -31051,9 +31051,9 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
 
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
@@ -31064,8 +31064,8 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
             `~.hipErrorInvalidValue`
     """
     _hipMemcpyDtoD__retval = hipError_t(chip.hipMemcpyDtoD(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyDtoD__retval,)
 
 
@@ -31082,9 +31082,9 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
 
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
@@ -31095,8 +31095,8 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
             `~.hipErrorInvalidValue`
     """
     _hipMemcpyHtoDAsync__retval = hipError_t(chip.hipMemcpyHtoDAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyHtoDAsync__retval,)
 
@@ -31114,9 +31114,9 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
 
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
@@ -31127,8 +31127,8 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
             `~.hipErrorInvalidValue`
     """
     _hipMemcpyDtoHAsync__retval = hipError_t(chip.hipMemcpyDtoHAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyDtoHAsync__retval,)
 
@@ -31146,9 +31146,9 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
 
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
@@ -31159,8 +31159,8 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
             `~.hipErrorInvalidValue`
     """
     _hipMemcpyDtoDAsync__retval = hipError_t(chip.hipMemcpyDtoDAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyDtoDAsync__retval,)
 
@@ -31181,10 +31181,10 @@ def hipModuleGetGlobal(object hmod, const char * name):
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotFound`, `~.hipErrorInvalidContext`
-        * `~.hip._util.types.DataHandle`/`~.object`: Returns global device pointer
+        * `~.hip._util.types.Pointer`/`~.object`: Returns global device pointer
         * `~.int`: Returns global size in bytes
     """
-    dptr = hip._util.types.DataHandle.from_ptr(NULL)
+    dptr = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long bytes
     _hipModuleGetGlobal__retval = hipError_t(chip.hipModuleGetGlobal(
         <void **>&dptr._ptr,&bytes,
@@ -31197,18 +31197,18 @@ def hipGetSymbolAddress(object symbol):
     r"""Gets device pointer associated with symbol on the device.
 
     Args:
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the symbole of the device
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the symbole of the device
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hip._util.types.DataHandle`/`~.object`: pointer to the device associated the symbole
+        * `~.hip._util.types.Pointer`/`~.object`: pointer to the device associated the symbole
     """
-    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.Pointer.from_ptr(NULL)
     _hipGetSymbolAddress__retval = hipError_t(chip.hipGetSymbolAddress(
         <void **>&devPtr._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr))    # fully specified
     return (_hipGetSymbolAddress__retval,devPtr)
 
 
@@ -31217,7 +31217,7 @@ def hipGetSymbolSize(object symbol):
     r"""Gets the size of the given symbol on the device.
 
     Args:
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the device symbole
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the device symbole
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -31227,7 +31227,7 @@ def hipGetSymbolSize(object symbol):
     """
     cdef unsigned long size
     _hipGetSymbolSize__retval = hipError_t(chip.hipGetSymbolSize(&size,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr))    # fully specified
     return (_hipGetSymbolSize__retval,size)
 
 
@@ -31242,9 +31242,9 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
     https://github.com/ROCm-Developer-Tools/HIP/blob/rocm-5.0.x/docs/markdown/hip_porting_guide.md
 
     Args:
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to the device symbole
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to the device symbole
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the source address
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the source address
 
         sizeBytes (`~.int`): **[in]** size in bytes to copy
 
@@ -31260,8 +31260,8 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToSymbol__retval = hipError_t(chip.hipMemcpyToSymbol(
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
     return (_hipMemcpyToSymbol__retval,)
 
 
@@ -31270,9 +31270,9 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
     r"""Copies data to the given symbol on the device asynchronously.
 
     Args:
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to the device symbole
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to the device symbole
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the source address
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the source address
 
         sizeBytes (`~.int`): **[in]** size in bytes to copy
 
@@ -31290,8 +31290,8 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToSymbolAsync__retval = hipError_t(chip.hipMemcpyToSymbolAsync(
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyToSymbolAsync__retval,)
 
@@ -31303,7 +31303,7 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
     Args:
         dptr: **[out]** Returns pointer to destinition memory address
 
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the symbole address on the device
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the symbole address on the device
 
         sizeBytes (`~.int`): **[in]** size in bytes to copy
 
@@ -31319,8 +31319,8 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromSymbol__retval = hipError_t(chip.hipMemcpyFromSymbol(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
     return (_hipMemcpyFromSymbol__retval,)
 
 
@@ -31331,7 +31331,7 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
     Args:
         dptr: **[out]** Returns pointer to destinition memory address
 
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the symbole address on the device
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the symbole address on the device
 
         sizeBytes (`~.int`): **[in]** size in bytes to copy
 
@@ -31349,8 +31349,8 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromSymbolAsync__retval = hipError_t(chip.hipMemcpyFromSymbolAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyFromSymbolAsync__retval,)
 
@@ -31382,9 +31382,9 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
         `~.hipMemcpyFromSymbolAsync`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
 
         sizeBytes (`~.int`): **[in]** Data size in bytes
 
@@ -31398,8 +31398,8 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyAsync__retval = hipError_t(chip.hipMemcpyAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyAsync__retval,)
 
@@ -31410,7 +31410,7 @@ def hipMemset(object dst, int value, unsigned long sizeBytes):
     byte value value.
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Data being filled
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being filled
 
         constant: **[in]** value to be set
 
@@ -31422,7 +31422,7 @@ def hipMemset(object dst, int value, unsigned long sizeBytes):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
     _hipMemset__retval = hipError_t(chip.hipMemset(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
     return (_hipMemset__retval,)
 
 
@@ -31444,7 +31444,7 @@ def hipMemsetD8(object dest, unsigned char value, unsigned long count):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
     _hipMemsetD8__retval = hipError_t(chip.hipMemsetD8(
-        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD8__retval,)
 
 
@@ -31473,7 +31473,7 @@ def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, obje
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
     _hipMemsetD8Async__retval = hipError_t(chip.hipMemsetD8Async(
-        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
+        <void *>hip._util.types.Pointer.from_pyobj(dest)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD8Async__retval,)
 
@@ -31496,7 +31496,7 @@ def hipMemsetD16(object dest, unsigned short value, unsigned long count):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
     _hipMemsetD16__retval = hipError_t(chip.hipMemsetD16(
-        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD16__retval,)
 
 
@@ -31525,7 +31525,7 @@ def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, ob
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
     _hipMemsetD16Async__retval = hipError_t(chip.hipMemsetD16Async(
-        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
+        <void *>hip._util.types.Pointer.from_pyobj(dest)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD16Async__retval,)
 
@@ -31548,7 +31548,7 @@ def hipMemsetD32(object dest, int value, unsigned long count):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`
     """
     _hipMemsetD32__retval = hipError_t(chip.hipMemsetD32(
-        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD32__retval,)
 
 
@@ -31563,7 +31563,7 @@ def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream
     streams.
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Pointer to device memory
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to device memory
 
         value (`~.int`): **[in]**  Value to set for each byte of specified memory
 
@@ -31577,7 +31577,7 @@ def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
     _hipMemsetAsync__retval = hipError_t(chip.hipMemsetAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,value,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetAsync__retval,)
 
@@ -31593,7 +31593,7 @@ def hipMemsetD32Async(object dst, int value, unsigned long count, object stream)
     streams.
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Pointer to device memory
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to device memory
 
         value (`~.int`): **[in]**  Value to set for each byte of specified memory
 
@@ -31607,7 +31607,7 @@ def hipMemsetD32Async(object dst, int value, unsigned long count, object stream)
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
     _hipMemsetD32Async__retval = hipError_t(chip.hipMemsetD32Async(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,count,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD32Async__retval,)
 
@@ -31617,7 +31617,7 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
     r"""Fills the memory area pointed to by dst with the constant value.
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Pointer to device memory
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to device memory
 
         pitch (`~.int`): **[in]**  data size in bytes
 
@@ -31633,7 +31633,7 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
     _hipMemset2D__retval = hipError_t(chip.hipMemset2D(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
     return (_hipMemset2D__retval,)
 
 
@@ -31642,7 +31642,7 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
     r"""Fills asynchronously the memory area pointed to by dst with the constant value.
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to device memory
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to device memory
 
         pitch (`~.int`): **[in]**  data size in bytes
 
@@ -31660,7 +31660,7 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryFree`
     """
     _hipMemset2DAsync__retval = hipError_t(chip.hipMemset2DAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,pitch,value,width,height,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemset2DAsync__retval,)
 
@@ -31745,7 +31745,7 @@ def hipMemPtrGetInfo(object ptr):
     """
     cdef unsigned long size
     _hipMemPtrGetInfo__retval = hipError_t(chip.hipMemPtrGetInfo(
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,&size))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,&size))    # fully specified
     return (_hipMemPtrGetInfo__retval,size)
 
 
@@ -31956,11 +31956,11 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
 
         dpitch (`~.int`): **[in]** Pitch of destination memory
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
 
         spitch (`~.int`): **[in]** Pitch of source memory
 
@@ -31979,8 +31979,8 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2D__retval = hipError_t(chip.hipMemcpy2D(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dpitch,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
     return (_hipMemcpy2D__retval,)
 
 
@@ -32040,11 +32040,11 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
 
         dpitch (`~.int`): **[in]** Pitch of destination memory
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
 
         spitch (`~.int`): **[in]** Pitch of source memory
 
@@ -32065,8 +32065,8 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DAsync__retval = hipError_t(chip.hipMemcpy2DAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dpitch,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DAsync__retval,)
 
@@ -32086,7 +32086,7 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
 
         hOffset (`~.int`): **[in]** Destination starting Y offset
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
 
         spitch (`~.int`): **[in]** Pitch of source memory
 
@@ -32106,7 +32106,7 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DToArray__retval = hipError_t(chip.hipMemcpy2DToArray(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
     return (_hipMemcpy2DToArray__retval,)
 
 
@@ -32125,7 +32125,7 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
 
         hOffset (`~.int`): **[in]** Destination starting Y offset
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
 
         spitch (`~.int`): **[in]** Pitch of source memory
 
@@ -32147,7 +32147,7 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DToArrayAsync__retval = hipError_t(chip.hipMemcpy2DToArrayAsync(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DToArrayAsync__retval,)
 
@@ -32167,7 +32167,7 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
 
         hOffset (`~.int`): **[in]** Destination starting Y offset
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
 
         count (`~.int`): **[in]** size in bytes to copy
 
@@ -32183,7 +32183,7 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToArray__retval = hipError_t(chip.hipMemcpyToArray(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,count,kind.value))    # fully specified
     return (_hipMemcpyToArray__retval,)
 
 
@@ -32196,7 +32196,7 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
 
         srcArray (`~.hipArray`/`~.object`): **[in]** Source memory address
 
@@ -32217,7 +32217,7 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromArray__retval = hipError_t(chip.hipMemcpyFromArray(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(srcArray)._ptr,wOffset,hOffset,count,kind.value))    # fully specified
     return (_hipMemcpyFromArray__retval,)
 
@@ -32231,7 +32231,7 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
 
         dpitch (`~.int`): **[in]** Pitch of destination memory
 
@@ -32256,7 +32256,7 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DFromArray__retval = hipError_t(chip.hipMemcpy2DFromArray(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
     return (_hipMemcpy2DFromArray__retval,)
 
@@ -32270,7 +32270,7 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
 
         dpitch (`~.int`): **[in]** Pitch of destination memory
 
@@ -32297,7 +32297,7 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DFromArrayAsync__retval = hipError_t(chip.hipMemcpy2DFromArrayAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DFromArrayAsync__retval,)
@@ -32312,7 +32312,7 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
 
         srcArray (`~.hipArray`/`~.object`): **[in]** Source array
 
@@ -32327,7 +32327,7 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
             `~.hipErrorInvalidDevicePointer`, `~.hipErrorInvalidMemcpyDirection`
     """
     _hipMemcpyAtoH__retval = hipError_t(chip.hipMemcpyAtoH(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(srcArray)._ptr,srcOffset,count))    # fully specified
     return (_hipMemcpyAtoH__retval,)
 
@@ -32345,7 +32345,7 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
 
         dstOffset (`~.int`): **[in]** Offset in bytes of destination array
 
-        srcHost (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Source host pointer
+        srcHost (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source host pointer
 
         count (`~.int`): **[in]** Size of memory copy in bytes
 
@@ -32357,7 +32357,7 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
     """
     _hipMemcpyHtoA__retval = hipError_t(chip.hipMemcpyHtoA(
         hipArray.from_pyobj(dstArray)._ptr,dstOffset,
-        <const void *>hip._util.types.DataHandle.from_pyobj(srcHost)._ptr,count))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(srcHost)._ptr,count))    # fully specified
     return (_hipMemcpyHtoA__retval,)
 
 
@@ -32537,9 +32537,9 @@ def hipMemGetAddressRange(object pbase, object dptr):
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        pbase (`~.hip._util.types.DataHandle`/`~.object`): **[out]**  BAse pointer address
+        pbase (`~.hip._util.types.Pointer`/`~.object`): **[out]**  BAse pointer address
 
-        dptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Device Pointer
+        dptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device Pointer
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -32549,8 +32549,8 @@ def hipMemGetAddressRange(object pbase, object dptr):
     """
     cdef unsigned long psize
     _hipMemGetAddressRange__retval = hipError_t(chip.hipMemGetAddressRange(
-        <void **>hip._util.types.DataHandle.from_pyobj(pbase)._ptr,&psize,
-        <void *>hip._util.types.DataHandle.from_pyobj(dptr)._ptr))    # fully specified
+        <void **>hip._util.types.Pointer.from_pyobj(pbase)._ptr,&psize,
+        <void *>hip._util.types.Pointer.from_pyobj(dptr)._ptr))    # fully specified
     return (_hipMemGetAddressRange__retval,psize)
 
 
@@ -32559,11 +32559,11 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
     r"""Copies memory from one device to memory on another device.
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]**  Destination device pointer.
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]**  Destination device pointer.
 
         dstDeviceId (`~.int`): **[in]**  Destination device
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Source device pointer
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Source device pointer
 
         srcDeviceId (`~.int`): **[in]**  Source device
 
@@ -32575,8 +32575,8 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidDevice`
     """
     _hipMemcpyPeer__retval = hipError_t(chip.hipMemcpyPeer(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,srcDeviceId,sizeBytes))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dstDeviceId,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,srcDeviceId,sizeBytes))    # fully specified
     return (_hipMemcpyPeer__retval,)
 
 
@@ -32585,11 +32585,11 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
     r"""Copies memory from one device to memory on another device.
 
     Args:
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[out]**  Destination device pointer.
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]**  Destination device pointer.
 
         dstDevice: **[in]**  Destination device
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Source device pointer
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Source device pointer
 
         srcDevice (`~.int`): **[in]**  Source device
 
@@ -32603,8 +32603,8 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidDevice`
     """
     _hipMemcpyPeerAsync__retval = hipError_t(chip.hipMemcpyPeerAsync(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,srcDevice,sizeBytes,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dstDeviceId,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,srcDevice,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyPeerAsync__retval,)
 
@@ -33170,7 +33170,7 @@ def hipFuncGetAttributes(object attr, object func):
     Args:
         attr (`~.hipFuncAttributes`/`~.object`): **[out]** 
 
-        func (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        func (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -33179,7 +33179,7 @@ def hipFuncGetAttributes(object attr, object func):
     """
     _hipFuncGetAttributes__retval = hipError_t(chip.hipFuncGetAttributes(
         hipFuncAttributes.from_pyobj(attr)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(func)._ptr))    # fully specified
     return (_hipFuncGetAttributes__retval,)
 
 
@@ -33233,7 +33233,7 @@ def hipModuleLoadData(object image):
     location.
 
     Args:
-        image (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        image (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -33243,7 +33243,7 @@ def hipModuleLoadData(object image):
     """
     module = ihipModule_t.from_ptr(NULL)
     _hipModuleLoadData__retval = hipError_t(chip.hipModuleLoadData(&module._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(image)._ptr))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(image)._ptr))    # fully specified
     return (_hipModuleLoadData__retval,module)
 
 
@@ -33253,7 +33253,7 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
     location. Options are not used. hipModuleLoadData is called.
 
     Args:
-        image (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        image (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
         number: **[in]** of options
 
@@ -33269,8 +33269,8 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
     module = ihipModule_t.from_ptr(NULL)
     cdef chip.hipJitOption options
     _hipModuleLoadDataEx__retval = hipError_t(chip.hipModuleLoadDataEx(&module._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(image)._ptr,numOptions,&options,
-        <void **>hip._util.types.DataHandle.from_pyobj(optionValues)._ptr))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(image)._ptr,numOptions,&options,
+        <void **>hip._util.types.Pointer.from_pyobj(optionValues)._ptr))    # fully specified
     return (_hipModuleLoadDataEx__retval,module,hipJitOption(options))
 
 
@@ -33308,7 +33308,7 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
         stream (`~.ihipStream_t`/`~.object`): **[in]** Stream where the kernel should be dispatched.  May be 0, in which case th
             default stream is used with associated synchronization rules.
 
-        kernelParams (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        kernelParams (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
         extra (`~.hip._hip_helpers.HipModuleLaunchKernel_extra`/`~.object`): **[in]** Pointer to kernel arguments.   These are passed directly to the kernel and
             must be in the memory layout and alignment expected by the kernel.
@@ -33321,7 +33321,7 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
     _hipModuleLaunchKernel__retval = hipError_t(chip.hipModuleLaunchKernel(
         ihipModuleSymbol_t.from_pyobj(f)._ptr,gridDimX,gridDimY,gridDimZ,blockDimX,blockDimY,blockDimZ,sharedMemBytes,
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(kernelParams)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(kernelParams)._ptr,
         <void **>hip._hip_helpers.HipModuleLaunchKernel_extra.from_pyobj(extra)._ptr))    # fully specified
     return (_hipModuleLaunchKernel__retval,)
 
@@ -33335,13 +33335,13 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Kernel to launch.
+        f (`~.hip._util.types.Pointer`/`~.object`): **[in]** Kernel to launch.
 
         gridDim (`~.dim3`): **[in]** Grid dimensions specified as multiple of blockDim.
 
         blockDim: **[in]** Block dimensions specified in work-items
 
-        kernelParams (`~.hip._util.types.DataHandle`/`~.object`): **[in]** A list of kernel arguments
+        kernelParams (`~.hip._util.types.Pointer`/`~.object`): **[in]** A list of kernel arguments
 
         sharedMemBytes (`~.int`): **[in]** Amount of dynamic shared memory to allocate for this kernel. The
             HIP-Clang compiler provides support for extern shared declarations.
@@ -33355,10 +33355,10 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
     _hipLaunchCooperativeKernel__retval = hipError_t(chip.hipLaunchCooperativeKernel(
-        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(f)._ptr,
         dim3.from_pyobj(gridDim)._ptr[0],
         dim3.from_pyobj(blockDimX)._ptr[0],
-        <void **>hip._util.types.DataHandle.from_pyobj(kernelParams)._ptr,sharedMemBytes,
+        <void **>hip._util.types.Pointer.from_pyobj(kernelParams)._ptr,sharedMemBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipLaunchCooperativeKernel__retval,)
 
@@ -33532,7 +33532,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsign
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
-        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk))    # fully specified
     return (_hipOccupancyMaxActiveBlocksPerMultiprocessor__retval,numBlocks)
 
 
@@ -33541,7 +33541,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
     r"""Returns occupancy for a device function.
 
     Args:
-        f (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Kernel function for which occupancy is calulated
+        f (`~.hip._util.types.Pointer`/`~.object`): **[in]** Kernel function for which occupancy is calulated
 
         blockSize (`~.int`): **[in]** Block size the kernel is intended to be launched with
 
@@ -33557,7 +33557,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
-        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk,flags))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk,flags))    # fully specified
     return (_hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval,numBlocks)
 
 
@@ -33569,7 +33569,7 @@ def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f (`~.hip._util.types.DataHandle`/`~.object`): **[in]** kernel function for which occupancy is calulated
+        f (`~.hip._util.types.Pointer`/`~.object`): **[in]** kernel function for which occupancy is calulated
 
         dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
 
@@ -33585,7 +33585,7 @@ def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk
     cdef int gridSize
     cdef int blockSize
     _hipOccupancyMaxPotentialBlockSize__retval = hipError_t(chip.hipOccupancyMaxPotentialBlockSize(&gridSize,&blockSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,dynSharedMemPerBlk,blockSizeLimit))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(f)._ptr,dynSharedMemPerBlk,blockSizeLimit))    # fully specified
     return (_hipOccupancyMaxPotentialBlockSize__retval,gridSize,blockSize)
 
 
@@ -33658,7 +33658,7 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
     r"""Set a kernel argument.
 
     Args:
-        arg (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer the argument in host memory.
+        arg (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer the argument in host memory.
 
         size (`~.int`): **[in]** Size of the argument.
 
@@ -33670,7 +33670,7 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipSetupArgument__retval = hipError_t(chip.hipSetupArgument(
-        <const void *>hip._util.types.DataHandle.from_pyobj(arg)._ptr,size,offset))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(arg)._ptr,size,offset))    # fully specified
     return (_hipSetupArgument__retval,)
 
 
@@ -33679,7 +33679,7 @@ def hipLaunchByPtr(object func):
     r"""Launch a kernel.
 
     Args:
-        func (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Kernel to launch.
+        func (`~.hip._util.types.Pointer`/`~.object`): **[in]** Kernel to launch.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -33687,7 +33687,7 @@ def hipLaunchByPtr(object func):
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipLaunchByPtr__retval = hipError_t(chip.hipLaunchByPtr(
-        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(func)._ptr))    # fully specified
     return (_hipLaunchByPtr__retval,)
 
 
@@ -33696,13 +33696,13 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
     r"""C compliant kernel launch API
 
     Args:
-        function_address (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  kernel stub function pointer.
+        function_address (`~.hip._util.types.Pointer`/`~.object`): **[in]**  kernel stub function pointer.
 
         numBlocks (`~.dim3`): **[in]**  number of blocks
 
         dimBlocks (`~.dim3`): **[in]**  dimension of a block
 
-        args (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  kernel arguments
+        args (`~.hip._util.types.Pointer`/`~.object`): **[in]**  kernel arguments
 
         sharedMemBytes (`~.int`): **[in]**  Amount of dynamic shared memory to allocate for this kernel. The
             HIP-Clang compiler provides support for extern shared declarations.
@@ -33716,10 +33716,10 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, hipInvalidDevice
     """
     _hipLaunchKernel__retval = hipError_t(chip.hipLaunchKernel(
-        <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(function_address)._ptr,
         dim3.from_pyobj(numBlocks)._ptr[0],
         dim3.from_pyobj(dimBlocks)._ptr[0],
-        <void **>hip._util.types.DataHandle.from_pyobj(args)._ptr,sharedMemBytes,
+        <void **>hip._util.types.Pointer.from_pyobj(args)._ptr,sharedMemBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipLaunchKernel__retval,)
 
@@ -33737,7 +33737,7 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
 
         fn (`~.hipHostFn_t`/`~.object`): **[in]**  function to call once operations enqueued preceeding are complete.
 
-        userData (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  User-specified data to be passed to the function.
+        userData (`~.hip._util.types.Pointer`/`~.object`): **[in]**  User-specified data to be passed to the function.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -33748,7 +33748,7 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
     _hipLaunchHostFunc__retval = hipError_t(chip.hipLaunchHostFunc(
         ihipStream_t.from_pyobj(stream)._ptr,
         hipHostFn_t.from_pyobj(fn)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(userData)._ptr))    # fully specified
     return (_hipLaunchHostFunc__retval,)
 
 
@@ -33776,13 +33776,13 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
     r"""Launches kernel from the pointer address, with arguments and shared memory on stream.
 
     Args:
-        function_address (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the Kernel to launch.
+        function_address (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the Kernel to launch.
 
         numBlocks (`~.dim3`): **[in]** number of blocks.
 
         dimBlocks (`~.dim3`): **[in]** dimension of a block.
 
-        args (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to kernel arguments.
+        args (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to kernel arguments.
 
         sharedMemBytes (`~.int`): **[in]** Amount of dynamic shared memory to allocate for this kernel.
             HIP-Clang compiler provides support for extern shared declarations.
@@ -33805,10 +33805,10 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
     """
     _hipExtLaunchKernel__retval = hipError_t(chip.hipExtLaunchKernel(
-        <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(function_address)._ptr,
         dim3.from_pyobj(numBlocks)._ptr[0],
         dim3.from_pyobj(dimBlocks)._ptr[0],
-        <void **>hip._util.types.DataHandle.from_pyobj(args)._ptr,sharedMemBytes,
+        <void **>hip._util.types.Pointer.from_pyobj(args)._ptr,sharedMemBytes,
         ihipStream_t.from_pyobj(stream)._ptr,
         ihipEvent_t.from_pyobj(startEvent)._ptr,
         ihipEvent_t.from_pyobj(stopEvent)._ptr,flags))    # fully specified
@@ -34071,7 +34071,7 @@ def hipGetTextureReference(object symbol):
     r"""Gets the texture reference related with the symbol.
 
     Args:
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the symbol related with the texture for the reference
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the symbol related with the texture for the reference
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -34081,7 +34081,7 @@ def hipGetTextureReference(object symbol):
     """
     texref = textureReference.from_ptr(NULL)
     _hipGetTextureReference__retval = hipError_t(chip.hipGetTextureReference(&texref._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr))    # fully specified
     return (_hipGetTextureReference__retval,texref)
 
 
@@ -34174,7 +34174,7 @@ def hipBindTexture(object tex, object devPtr, object desc, unsigned long size):
     cdef unsigned long offset
     _hipBindTexture__retval = hipError_t(chip.hipBindTexture(&offset,
         textureReference.from_pyobj(tex)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(devPtr)._ptr,
         hipChannelFormatDesc.from_pyobj(desc)._ptr,size))    # fully specified
     return (_hipBindTexture__retval,offset)
 
@@ -34191,7 +34191,7 @@ def hipBindTexture2D(object tex, object devPtr, object desc, unsigned long width
     cdef unsigned long offset
     _hipBindTexture2D__retval = hipError_t(chip.hipBindTexture2D(&offset,
         textureReference.from_pyobj(tex)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(devPtr)._ptr,
         hipChannelFormatDesc.from_pyobj(desc)._ptr,width,height,pitch))    # fully specified
     return (_hipBindTexture2D__retval,offset)
 
@@ -34250,7 +34250,7 @@ def hipTexRefGetAddress(object texRef):
 
         * `~.hipError_t`
     """
-    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipTexRefGetAddress__retval = hipError_t(chip.hipTexRefGetAddress(
         <void **>&dev_ptr._ptr,
         textureReference.from_pyobj(texRef)._ptr))    # fully specified
@@ -34406,7 +34406,7 @@ def hipTexRefSetAddress(object texRef, object dptr, unsigned long bytes):
     cdef unsigned long ByteOffset
     _hipTexRefSetAddress__retval = hipError_t(chip.hipTexRefSetAddress(&ByteOffset,
         textureReference.from_pyobj(texRef)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,bytes))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dptr)._ptr,bytes))    # fully specified
     return (_hipTexRefSetAddress__retval,ByteOffset)
 
 
@@ -34422,7 +34422,7 @@ def hipTexRefSetAddress2D(object texRef, object desc, object dptr, unsigned long
     _hipTexRefSetAddress2D__retval = hipError_t(chip.hipTexRefSetAddress2D(
         textureReference.from_pyobj(texRef)._ptr,
         HIP_ARRAY_DESCRIPTOR.from_pyobj(desc)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,Pitch))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dptr)._ptr,Pitch))    # fully specified
     return (_hipTexRefSetAddress2D__retval,)
 
 
@@ -34602,7 +34602,7 @@ def hipKernelNameRefByPtr(object hostFunction, object stream):
         * `~.bytes`
     """
     cdef const char * _hipKernelNameRefByPtr__retval = chip.hipKernelNameRefByPtr(
-        <const void *>hip._util.types.DataHandle.from_pyobj(hostFunction)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(hostFunction)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr)    # fully specified
     return (_hipKernelNameRefByPtr__retval,)
 
@@ -34706,7 +34706,7 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
     Args:
         stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream under capture.
 
-        dependencies_out (`~.hip._util.types.DataHandle`/`~.object`): **[out]**  returns pointer to an array of nodes.
+        dependencies_out (`~.hip._util.types.Pointer`/`~.object`): **[out]**  returns pointer to an array of nodes.
 
     Returns:
         A `~.tuple` of size 5 that contains (in that order):
@@ -34723,7 +34723,7 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
     cdef unsigned long numDependencies_out
     _hipStreamGetCaptureInfo_v2__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2(
         ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
-        <chip.hipGraphNode_t **>hip._util.types.DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
+        <chip.hipGraphNode_t **>hip._util.types.Pointer.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
     return (_hipStreamGetCaptureInfo_v2__retval,hipStreamCaptureStatus(captureStatus_out),id_out,graph_out,numDependencies_out)
 
 
@@ -35569,9 +35569,9 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
 
         numDependencies (`~.int`): **[in]**  the number of the dependencies.
 
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the source.
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the source.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35590,8 +35590,8 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphAddMemcpyNode1D__retval = hipError_t(chip.hipGraphAddMemcpyNode1D(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,count,kind.value))    # fully specified
     return (_hipGraphAddMemcpyNode1D__retval,pGraphNode,pDependencies)
 
 
@@ -35606,9 +35606,9 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
     Args:
         node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
 
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the source.
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the source.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35623,8 +35623,8 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphMemcpyNodeSetParams1D__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams1D(
         hipGraphNode.from_pyobj(node)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,count,kind.value))    # fully specified
     return (_hipGraphMemcpyNodeSetParams1D__retval,)
 
 
@@ -35642,9 +35642,9 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
 
         node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
 
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the source.
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the source.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35660,8 +35660,8 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
     _hipGraphExecMemcpyNodeSetParams1D__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams1D(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,count,kind.value))    # fully specified
     return (_hipGraphExecMemcpyNodeSetParams1D__retval,)
 
 
@@ -35678,9 +35678,9 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
 
         numDependencies (`~.int`): **[in]**  the number of the dependencies.
 
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
 
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35701,8 +35701,8 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphAddMemcpyNodeFromSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeFromSymbol(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphAddMemcpyNodeFromSymbol__retval,pGraphNode,pDependencies)
 
 
@@ -35717,9 +35717,9 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
     Args:
         node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
 
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
 
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35736,8 +35736,8 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphMemcpyNodeSetParamsFromSymbol__retval = hipError_t(chip.hipGraphMemcpyNodeSetParamsFromSymbol(
         hipGraphNode.from_pyobj(node)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphMemcpyNodeSetParamsFromSymbol__retval,)
 
 
@@ -35755,9 +35755,9 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
 
         node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
 
-        dst (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
 
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35775,8 +35775,8 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
     _hipGraphExecMemcpyNodeSetParamsFromSymbol__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParamsFromSymbol(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphExecMemcpyNodeSetParamsFromSymbol__retval,)
 
 
@@ -35793,9 +35793,9 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
 
         numDependencies (`~.int`): **[in]**  the number of the dependencies.
 
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address of the src.
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address of the src.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35816,8 +35816,8 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphAddMemcpyNodeToSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeToSymbol(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphAddMemcpyNodeToSymbol__retval,pGraphNode,pDependencies)
 
 
@@ -35832,9 +35832,9 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
     Args:
         node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
 
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address of the src.
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address of the src.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35851,8 +35851,8 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphMemcpyNodeSetParamsToSymbol__retval = hipError_t(chip.hipGraphMemcpyNodeSetParamsToSymbol(
         hipGraphNode.from_pyobj(node)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphMemcpyNodeSetParamsToSymbol__retval,)
 
 
@@ -35870,9 +35870,9 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
 
         node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
 
-        symbol (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
 
-        src (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to memory address of the src.
+        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address of the src.
 
         count (`~.int`): **[in]**  the size of the memory to copy.
 
@@ -35890,8 +35890,8 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
     _hipGraphExecMemcpyNodeSetParamsToSymbol__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParamsToSymbol(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphExecMemcpyNodeSetParamsToSymbol__retval,)
 
 
@@ -36433,7 +36433,7 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
 
         attr (`~.hipGraphMemAttributeType`): **[in]**  attr to get.
 
-        value (`~.hip._util.types.DataHandle`/`~.object`): **[out]**  value for specific attr.
+        value (`~.hip._util.types.Pointer`/`~.object`): **[out]**  value for specific attr.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36443,7 +36443,7 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
     if not isinstance(attr,_hipGraphMemAttributeType__Base):
         raise TypeError("argument 'attr' must be of type '_hipGraphMemAttributeType__Base'")
     _hipDeviceGetGraphMemAttribute__retval = hipError_t(chip.hipDeviceGetGraphMemAttribute(device,attr.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(value)._ptr))    # fully specified
     return (_hipDeviceGetGraphMemAttribute__retval,)
 
 
@@ -36460,7 +36460,7 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
 
         attr (`~.hipGraphMemAttributeType`): **[in]**  attr to set.
 
-        value (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  value for specific attr.
+        value (`~.hip._util.types.Pointer`/`~.object`): **[in]**  value for specific attr.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36470,7 +36470,7 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
     if not isinstance(attr,_hipGraphMemAttributeType__Base):
         raise TypeError("argument 'attr' must be of type '_hipGraphMemAttributeType__Base'")
     _hipDeviceSetGraphMemAttribute__retval = hipError_t(chip.hipDeviceSetGraphMemAttribute(device,attr.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(value)._ptr))    # fully specified
     return (_hipDeviceSetGraphMemAttribute__retval,)
 
 
@@ -36503,7 +36503,7 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  pointer to pass to destroy function.
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to pass to destroy function.
 
         destroy (`~.hipHostFn_t`/`~.object`): **[in]**  destroy callback to remove resource.
 
@@ -36519,7 +36519,7 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
     """
     object_out = hipUserObject.from_ptr(NULL)
     _hipUserObjectCreate__retval = hipError_t(chip.hipUserObjectCreate(&object_out._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,
         hipHostFn_t.from_pyobj(destroy)._ptr,initialRefcount,flags))    # fully specified
     return (_hipUserObjectCreate__retval,object_out)
 
@@ -36633,7 +36633,7 @@ def hipMemAddressFree(object devPtr, unsigned long size):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        devPtr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  starting address of the range.
+        devPtr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  starting address of the range.
 
         size (`~.int`): **[in]**  size of the range.
 
@@ -36643,7 +36643,7 @@ def hipMemAddressFree(object devPtr, unsigned long size):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
     _hipMemAddressFree__retval = hipError_t(chip.hipMemAddressFree(
-        <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,size))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(devPtr)._ptr,size))    # fully specified
     return (_hipMemAddressFree__retval,)
 
 
@@ -36660,7 +36660,7 @@ def hipMemAddressReserve(unsigned long size, unsigned long alignment, object add
 
         alignment (`~.int`): **[in]**  alignment of the address.
 
-        addr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  requested starting address of the range.
+        addr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  requested starting address of the range.
 
         flags (`~.int`): **[in]**  currently unused, must be zero.
 
@@ -36668,12 +36668,12 @@ def hipMemAddressReserve(unsigned long size, unsigned long alignment, object add
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.hip._util.types.DataHandle`/`~.object`:  starting address of the reserved range.
+        * `~.hip._util.types.Pointer`/`~.object`:  starting address of the reserved range.
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipMemAddressReserve__retval = hipError_t(chip.hipMemAddressReserve(
         <void **>&ptr._ptr,size,alignment,
-        <void *>hip._util.types.DataHandle.from_pyobj(addr)._ptr,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(addr)._ptr,flags))    # fully specified
     return (_hipMemAddressReserve__retval,ptr)
 
 
@@ -36713,7 +36713,7 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shareableHandle (`~.hip._util.types.DataHandle`/`~.object`): **[out]**  value of the returned handle.
+        shareableHandle (`~.hip._util.types.Pointer`/`~.object`): **[out]**  value of the returned handle.
 
         handle (`~.ihipMemGenericAllocationHandle`/`~.object`): **[in]**  handle to share.
 
@@ -36729,7 +36729,7 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
     if not isinstance(handleType,_hipMemAllocationHandleType__Base):
         raise TypeError("argument 'handleType' must be of type '_hipMemAllocationHandleType__Base'")
     _hipMemExportToShareableHandle__retval = hipError_t(chip.hipMemExportToShareableHandle(
-        <void *>hip._util.types.DataHandle.from_pyobj(shareableHandle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(shareableHandle)._ptr,
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,handleType.value,flags))    # fully specified
     return (_hipMemExportToShareableHandle__retval,)
 
@@ -36745,7 +36745,7 @@ def hipMemGetAccess(object location, object ptr):
     Args:
         location (`~.hipMemLocation`/`~.object`): **[in]**  target location.
 
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  address to check the access flags.
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  address to check the access flags.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -36756,7 +36756,7 @@ def hipMemGetAccess(object location, object ptr):
     cdef unsigned long long flags
     _hipMemGetAccess__retval = hipError_t(chip.hipMemGetAccess(&flags,
         hipMemLocation.from_pyobj(location)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipMemGetAccess__retval,flags)
 
 
@@ -36820,7 +36820,7 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        osHandle (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  shareable handle representing the memory allocation.
+        osHandle (`~.hip._util.types.Pointer`/`~.object`): **[in]**  shareable handle representing the memory allocation.
 
         shHandleType (`~.hipMemAllocationHandleType`): **[in]**  handle type.
 
@@ -36834,7 +36834,7 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
     if not isinstance(shHandleType,_hipMemAllocationHandleType__Base):
         raise TypeError("argument 'shHandleType' must be of type '_hipMemAllocationHandleType__Base'")
     _hipMemImportFromShareableHandle__retval = hipError_t(chip.hipMemImportFromShareableHandle(&handle._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(osHandle)._ptr,shHandleType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(osHandle)._ptr,shHandleType.value))    # fully specified
     return (_hipMemImportFromShareableHandle__retval,handle)
 
 
@@ -36847,7 +36847,7 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  address where the memory will be mapped.
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  address where the memory will be mapped.
 
         size (`~.int`): **[in]**  size of the mapping.
 
@@ -36863,7 +36863,7 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
     _hipMemMap__retval = hipError_t(chip.hipMemMap(
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size,offset,
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,size,offset,
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,flags))    # fully specified
     return (_hipMemMap__retval,)
 
@@ -36924,7 +36924,7 @@ def hipMemRetainAllocationHandle(object addr):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        addr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  address to look up.
+        addr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  address to look up.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -36934,7 +36934,7 @@ def hipMemRetainAllocationHandle(object addr):
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemRetainAllocationHandle__retval = hipError_t(chip.hipMemRetainAllocationHandle(&handle._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(addr)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(addr)._ptr))    # fully specified
     return (_hipMemRetainAllocationHandle__retval,handle)
 
 
@@ -36947,7 +36947,7 @@ def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long c
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  starting address of the virtual address range.
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  starting address of the virtual address range.
 
         size (`~.int`): **[in]**  size of the range.
 
@@ -36961,7 +36961,7 @@ def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long c
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
     _hipMemSetAccess__retval = hipError_t(chip.hipMemSetAccess(
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size,
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,size,
         hipMemAccessDesc.from_pyobj(desc)._ptr,count))    # fully specified
     return (_hipMemSetAccess__retval,)
 
@@ -36975,7 +36975,7 @@ def hipMemUnmap(object ptr, unsigned long size):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr (`~.hip._util.types.DataHandle`/`~.object`): **[in]**  starting address of the range to unmap.
+        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  starting address of the range to unmap.
 
         size (`~.int`): **[in]**  size of the virtual address range.
 
@@ -36985,7 +36985,7 @@ def hipMemUnmap(object ptr, unsigned long size):
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
     """
     _hipMemUnmap__retval = hipError_t(chip.hipMemUnmap(
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(ptr)._ptr,size))    # fully specified
     return (_hipMemUnmap__retval,)
 
 
@@ -37073,7 +37073,7 @@ def hipGraphicsResourceGetMappedPointer(object resource):
 
         * `~.hipError_t`
     """
-    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long size
     _hipGraphicsResourceGetMappedPointer__retval = hipError_t(chip.hipGraphicsResourceGetMappedPointer(
         <void **>&devPtr._ptr,&size,
@@ -37122,8 +37122,8 @@ def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy_spt__retval = hipError_t(chip.hipMemcpy_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
     return (_hipMemcpy_spt__retval,)
 
 
@@ -37139,8 +37139,8 @@ def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, un
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToSymbol_spt__retval = hipError_t(chip.hipMemcpyToSymbol_spt(
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
     return (_hipMemcpyToSymbol_spt__retval,)
 
 
@@ -37156,8 +37156,8 @@ def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, 
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromSymbol_spt__retval = hipError_t(chip.hipMemcpyFromSymbol_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
     return (_hipMemcpyFromSymbol_spt__retval,)
 
 
@@ -37173,8 +37173,8 @@ def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long 
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2D_spt__retval = hipError_t(chip.hipMemcpy2D_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dpitch,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
     return (_hipMemcpy2D_spt__retval,)
 
 
@@ -37190,7 +37190,7 @@ def hipMemcpy2DFromArray_spt(object dst, unsigned long dpitch, object src, unsig
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DFromArray_spt__retval = hipError_t(chip.hipMemcpy2DFromArray_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
     return (_hipMemcpy2DFromArray_spt__retval,)
 
@@ -37219,7 +37219,7 @@ def hipMemset_spt(object dst, int value, unsigned long sizeBytes):
         * `~.hipError_t`
     """
     _hipMemset_spt__retval = hipError_t(chip.hipMemset_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
     return (_hipMemset_spt__retval,)
 
 
@@ -37233,7 +37233,7 @@ def hipMemsetAsync_spt(object dst, int value, unsigned long sizeBytes, object st
         * `~.hipError_t`
     """
     _hipMemsetAsync_spt__retval = hipError_t(chip.hipMemsetAsync_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,value,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetAsync_spt__retval,)
 
@@ -37248,7 +37248,7 @@ def hipMemset2D_spt(object dst, unsigned long pitch, int value, unsigned long wi
         * `~.hipError_t`
     """
     _hipMemset2D_spt__retval = hipError_t(chip.hipMemset2D_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
     return (_hipMemset2D_spt__retval,)
 
 
@@ -37262,7 +37262,7 @@ def hipMemset2DAsync_spt(object dst, unsigned long pitch, int value, unsigned lo
         * `~.hipError_t`
     """
     _hipMemset2DAsync_spt__retval = hipError_t(chip.hipMemset2DAsync_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,pitch,value,width,height,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemset2DAsync_spt__retval,)
 
@@ -37310,8 +37310,8 @@ def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object k
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyAsync_spt__retval = hipError_t(chip.hipMemcpyAsync_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyAsync_spt__retval,)
 
@@ -37343,8 +37343,8 @@ def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned 
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DAsync_spt__retval = hipError_t(chip.hipMemcpy2DAsync_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dpitch,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DAsync_spt__retval,)
 
@@ -37361,8 +37361,8 @@ def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBy
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromSymbolAsync_spt__retval = hipError_t(chip.hipMemcpyFromSymbolAsync_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyFromSymbolAsync_spt__retval,)
 
@@ -37379,8 +37379,8 @@ def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeByte
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToSymbolAsync_spt__retval = hipError_t(chip.hipMemcpyToSymbolAsync_spt(
-        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyToSymbolAsync_spt__retval,)
 
@@ -37397,7 +37397,7 @@ def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, uns
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromArray_spt__retval = hipError_t(chip.hipMemcpyFromArray_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffset,count,kind.value))    # fully specified
     return (_hipMemcpyFromArray_spt__retval,)
 
@@ -37415,7 +37415,7 @@ def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOff
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DToArray_spt__retval = hipError_t(chip.hipMemcpy2DToArray_spt(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
     return (_hipMemcpy2DToArray_spt__retval,)
 
 
@@ -37431,7 +37431,7 @@ def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, 
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DFromArrayAsync_spt__retval = hipError_t(chip.hipMemcpy2DFromArrayAsync_spt(
-        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <void *>hip._util.types.Pointer.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffsetSrc,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DFromArrayAsync_spt__retval,)
@@ -37450,7 +37450,7 @@ def hipMemcpy2DToArrayAsync_spt(object dst, unsigned long wOffset, unsigned long
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DToArrayAsync_spt__retval = hipError_t(chip.hipMemcpy2DToArrayAsync_spt(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DToArrayAsync_spt__retval,)
 
@@ -37540,7 +37540,7 @@ def hipStreamAddCallback_spt(object stream, object callback, object userData, un
     _hipStreamAddCallback_spt__retval = hipError_t(chip.hipStreamAddCallback_spt(
         ihipStream_t.from_pyobj(stream)._ptr,
         hipStreamCallback_t.from_pyobj(callback)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr,flags))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(userData)._ptr,flags))    # fully specified
     return (_hipStreamAddCallback_spt__retval,)
 
 
@@ -37569,10 +37569,10 @@ def hipLaunchCooperativeKernel_spt(object f, object gridDim, object blockDim, ob
         * `~.hipError_t`
     """
     _hipLaunchCooperativeKernel_spt__retval = hipError_t(chip.hipLaunchCooperativeKernel_spt(
-        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(f)._ptr,
         dim3.from_pyobj(gridDim)._ptr[0],
         dim3.from_pyobj(blockDim)._ptr[0],
-        <void **>hip._util.types.DataHandle.from_pyobj(kernelParams)._ptr,sharedMemBytes,
+        <void **>hip._util.types.Pointer.from_pyobj(kernelParams)._ptr,sharedMemBytes,
         ihipStream_t.from_pyobj(hStream)._ptr))    # fully specified
     return (_hipLaunchCooperativeKernel_spt__retval,)
 
@@ -37587,10 +37587,10 @@ def hipLaunchKernel_spt(object function_address, object numBlocks, object dimBlo
         * `~.hipError_t`
     """
     _hipLaunchKernel_spt__retval = hipError_t(chip.hipLaunchKernel_spt(
-        <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(function_address)._ptr,
         dim3.from_pyobj(numBlocks)._ptr[0],
         dim3.from_pyobj(dimBlocks)._ptr[0],
-        <void **>hip._util.types.DataHandle.from_pyobj(args)._ptr,sharedMemBytes,
+        <void **>hip._util.types.Pointer.from_pyobj(args)._ptr,sharedMemBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipLaunchKernel_spt__retval,)
 
@@ -37687,7 +37687,7 @@ def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
     cdef unsigned long numDependencies_out
     _hipStreamGetCaptureInfo_v2_spt__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2_spt(
         ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
-        <chip.hipGraphNode_t **>hip._util.types.DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
+        <chip.hipGraphNode_t **>hip._util.types.Pointer.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
     return (_hipStreamGetCaptureInfo_v2_spt__retval,hipStreamCaptureStatus(captureStatus_out),id_out,graph_out,numDependencies_out)
 
 
@@ -37703,7 +37703,7 @@ def hipLaunchHostFunc_spt(object stream, object fn, object userData):
     _hipLaunchHostFunc_spt__retval = hipError_t(chip.hipLaunchHostFunc_spt(
         ihipStream_t.from_pyobj(stream)._ptr,
         hipHostFn_t.from_pyobj(fn)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(userData)._ptr))    # fully specified
     return (_hipLaunchHostFunc_spt__retval,)
 
 

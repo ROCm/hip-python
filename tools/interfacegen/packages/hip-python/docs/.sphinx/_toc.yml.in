@@ -17,6 +17,7 @@ subtrees:
       - file: user_guide/2_cuda_python_interop
       - file: user_guide/3_datatypes
       - file: user_guide/4_report_bugs
+      - file: user_guide/5_license
   - caption: "HIP Python: Python API"
     entries:
       - file: python_api/hip
@@ -28,7 +29,7 @@ subtrees:
       - file: python_api/hipsparse
       - file: python_api/_hip_helpers
       - file: python_api/_util_types
-  - caption: "CUDA Python Interoperability Layer: Python API"
+  - caption: "CUDA Python Interoperability: Python API"
     entries:
       - file: python_api/cuda
       - file: python_api/cudart

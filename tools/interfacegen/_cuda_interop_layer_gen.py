@@ -82,7 +82,7 @@ def generate_cuda_interop_package_files(
         {pkg_name} = hip.{pkg_name} # makes {pkg_name} types and routines accessible without import
                                     # allows checks such as `hasattr(cuda.{cuda_pkg_name},"{pkg_name}")`
 
-        HIP_PYTHON_MOD = {pkg_name}
+        hip_python_mod = {pkg_name}
         globals()["HIP_PYTHON"] = True
         """
     )
@@ -131,7 +131,7 @@ def generate_cuda_interop_package_files(
         f"""\
         HIP_PYTHON ({python_interface_pyobj_role_template.format(name="bool")}):
             `True`.
-        HIP_PYTHON_MOD (module):
+        hip_python_mod (module):
             A reference to the package {python_interface_pyobj_role_template.format(name=f"hip.{pkg_name}")}.
         {pkg_name} (module):
             A reference to the package {python_interface_pyobj_role_template.format(name=f"hip.{pkg_name}")}.
@@ -169,37 +169,33 @@ def generate_cuda_interop_package_files(
             python_interface_impl_part += python_constants
         else:
             python_enum_metaclass_name = f"_{cuda_name}_EnumMeta"
-            python_enum_hallucinate_var_name = (
+            python_enum_hallucinate_env_var = (
                 f"HIP_PYTHON_{cuda_name}_HALLUCINATE"
             )
 
-            attribute = textwrap.dedent(f"""\
-                {python_enum_hallucinate_var_name}:
-                    Make {python_interface_pyobj_role_template.format(name=cuda_name)} hallucinate values for non-existing enum constants. Disabled by default
-                    if default is not modified via environment variable.
+            # attribute = textwrap.dedent(f"""\
+            #     {python_enum_hallucinate_env_var}:
+            #         Make {python_interface_pyobj_role_template.format(name=cuda_name)} hallucinate values for non-existing enum constants. Disabled by default
+            #         if default is not modified via environment variable.
 
-                    Default value can be set/unset via environment variable ``{python_enum_hallucinate_var_name}``.
+            #         Default value can be set/unset via environment variable ``{python_enum_hallucinate_env_var}``.
                     
-                    * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-                    * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-                """)
-            docstring_attributes.append(attribute)
+            #         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+            #         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+            #     """)
+            #docstring_attributes.append(attribute)
 
             python_enum_metaclass = textwrap.dedent(
                 f"""\
-                
-                {python_enum_hallucinate_var_name} = _hip_python_get_bool_environ_var("{python_enum_hallucinate_var_name}","false")
-
                 class {python_enum_metaclass_name}(enum.EnumMeta):
                 
                     def __getattribute__(cls,name):
                         global _get_hip_name
-                        global {python_enum_hallucinate_var_name}
                         try:
                             result = super().__getattribute__(name)
                             return result
                         except AttributeError as ae:
-                            if not {python_enum_hallucinate_var_name}:
+                            if not {cuda_name}.hallucinate:
                                 raise ae
                             else:
                                 used_vals = list(cls._value2member_map_.keys())
@@ -253,7 +249,21 @@ def generate_cuda_interop_package_files(
             )
             python_enum_class = textwrap.dedent(
                 f"""
-                class {cuda_name}({pkg_name}.{enum.python_base_class_name},metaclass={python_enum_metaclass_name}):
+                class {cuda_name}({pkg_name}.{enum.python_base_class_name},metaclass={python_enum_metaclass_name}):                
+                    \"""Interoperability layer enum type.
+
+                    Attributes:
+                        hallucinate ({python_interface_pyobj_role_template.format(name="bool")}):
+                            Make all {python_interface_pyobj_role_template.format(name=cuda_name)} instances hallucinate values for non-existing enum constants. Disabled by default
+                            if default is not modified via environment variable.
+
+                            Default value can be set/unset via environment variable ``{python_enum_hallucinate_env_var}``.
+                            
+                            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+                            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+                    \"""
+
+                    hallucinate = _hip_python_get_bool_environ_var("{python_enum_hallucinate_env_var}","false")
                 """
             )
             python_enum_class += textwrap.indent("\n".join(python_constants), indent)
@@ -312,10 +322,12 @@ def generate_cuda_interop_package_files(
                     c_interface_decl_part.append(
                         f"from {cpkg_name} cimport {hip_name} as {cuda_name}"
                     )
-                    docstring_attributes.append((cuda_name, pkg_name, hip_name))
-                    python_interface_impl_part.append(
+                    docstring_attributes += [
+                        (cuda_name, pkg_name, hip_name),
+                    ]
+                    python_interface_impl_part += [
                         f"{cuda_name} = {pkg_name}.{hip_name}"
-                    )
+                    ]
                 elif isinstance(node, Typedef) and (
                     node.is_pointer_to_basic_type(degree=(0, -1))
                     or node.is_pointer_to_void(degree=(0, -1))
@@ -338,7 +350,7 @@ def generate_cuda_interop_package_files(
                     #
                     if i == 0 and hip_name not in cuda_names:
                         python_interface_decl_part.append(
-                            f"from {pkg_cimport_name} cimport {hip_name} # here"
+                            f"from {pkg_cimport_name} cimport {hip_name}"
                         ) 
                     cdef_subclass = f"cdef class {cuda_name}({pkg_cimport_name}.{hip_name}):\n{indent}pass"
                     python_interface_decl_part.append(cdef_subclass)

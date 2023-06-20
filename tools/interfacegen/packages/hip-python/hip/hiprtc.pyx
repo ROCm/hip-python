@@ -433,7 +433,7 @@ def hiprtcDestroyProgram(object prog):
         `~.hiprtcResult`
 
     Args:
-        prog (`~.hip._util.types.DataHandle`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~.hip._util.types.Pointer`/`~.object`): **[in]** runtime compilation program instance.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -441,7 +441,7 @@ def hiprtcDestroyProgram(object prog):
         * `~.hiprtcResult`: HIPRTC_SUCCESS
     """
     _hiprtcDestroyProgram__retval = hiprtcResult(chiprtc.hiprtcDestroyProgram(
-        <chiprtc.hiprtcProgram*>hip._util.types.DataHandle.from_pyobj(prog)._ptr))    # fully specified
+        <chiprtc.hiprtcProgram*>hip._util.types.Pointer.from_pyobj(prog)._ptr))    # fully specified
     return (_hiprtcDestroyProgram__retval,)
 
 
@@ -486,7 +486,7 @@ def hiprtcGetProgramLog(object prog, object log):
     Args:
         prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
 
-        log (`~.hip._util.types.DataHandle`/`~.object`): **[out]** memory pointer to the generated log.
+        log (`~.hip._util.types.Pointer`/`~.object`): **[out]** memory pointer to the generated log.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -495,7 +495,7 @@ def hiprtcGetProgramLog(object prog, object log):
     """
     _hiprtcGetProgramLog__retval = hiprtcResult(chiprtc.hiprtcGetProgramLog(
         _hiprtcProgram.from_pyobj(prog)._ptr,
-        <char *>hip._util.types.DataHandle.from_pyobj(log)._ptr))    # fully specified
+        <char *>hip._util.types.Pointer.from_pyobj(log)._ptr))    # fully specified
     return (_hiprtcGetProgramLog__retval,)
 
 
@@ -531,7 +531,7 @@ def hiprtcGetCode(object prog, object code):
     Args:
         prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
 
-        code (`~.hip._util.types.DataHandle`/`~.object`): **[out]** char pointer to binary.
+        code (`~.hip._util.types.Pointer`/`~.object`): **[out]** char pointer to binary.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -540,7 +540,7 @@ def hiprtcGetCode(object prog, object code):
     """
     _hiprtcGetCode__retval = hiprtcResult(chiprtc.hiprtcGetCode(
         _hiprtcProgram.from_pyobj(prog)._ptr,
-        <char *>hip._util.types.DataHandle.from_pyobj(code)._ptr))    # fully specified
+        <char *>hip._util.types.Pointer.from_pyobj(code)._ptr))    # fully specified
     return (_hiprtcGetCode__retval,)
 
 
@@ -586,7 +586,7 @@ def hiprtcGetBitcode(object prog, object bitcode):
     """
     _hiprtcGetBitcode__retval = hiprtcResult(chiprtc.hiprtcGetBitcode(
         _hiprtcProgram.from_pyobj(prog)._ptr,
-        <char *>hip._util.types.DataHandle.from_pyobj(bitcode)._ptr))    # fully specified
+        <char *>hip._util.types.Pointer.from_pyobj(bitcode)._ptr))    # fully specified
     return (_hiprtcGetBitcode__retval,)
 
 
@@ -632,8 +632,8 @@ def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_
     """
     hip_link_state_ptr = ihiprtcLinkState.from_ptr(NULL)
     _hiprtcLinkCreate__retval = hiprtcResult(chiprtc.hiprtcLinkCreate(num_options,
-        <chiprtc.hiprtcJIT_option *>hip._util.types.DataHandle.from_pyobj(option_ptr)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(option_vals_pptr)._ptr,&hip_link_state_ptr._ptr))    # fully specified
+        <chiprtc.hiprtcJIT_option *>hip._util.types.Pointer.from_pyobj(option_ptr)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(option_vals_pptr)._ptr,&hip_link_state_ptr._ptr))    # fully specified
     return (_hiprtcLinkCreate__retval,hip_link_state_ptr)
 
 
@@ -662,8 +662,8 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
         raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
     _hiprtcLinkAddFile__retval = hiprtcResult(chiprtc.hiprtcLinkAddFile(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,input_type.value,file_path,num_options,
-        <chiprtc.hiprtcJIT_option *>hip._util.types.DataHandle.from_pyobj(options_ptr)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(option_values)._ptr))    # fully specified
+        <chiprtc.hiprtcJIT_option *>hip._util.types.Pointer.from_pyobj(options_ptr)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(option_values)._ptr))    # fully specified
     return (_hiprtcLinkAddFile__retval,)
 
 
@@ -692,9 +692,9 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, un
         raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
     _hiprtcLinkAddData__retval = hiprtcResult(chiprtc.hiprtcLinkAddData(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,input_type.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(image)._ptr,image_size,name,num_options,
-        <chiprtc.hiprtcJIT_option *>hip._util.types.DataHandle.from_pyobj(options_ptr)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(option_values)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(image)._ptr,image_size,name,num_options,
+        <chiprtc.hiprtcJIT_option *>hip._util.types.Pointer.from_pyobj(options_ptr)._ptr,
+        <void **>hip._util.types.Pointer.from_pyobj(option_values)._ptr))    # fully specified
     return (_hiprtcLinkAddData__retval,)
 
 
@@ -720,7 +720,7 @@ def hiprtcLinkComplete(object hip_link_state):
         * `~.hiprtcResult`: HIPRTC_SUCCESS
         * HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
     """
-    bin_out = hip._util.types.DataHandle.from_ptr(NULL)
+    bin_out = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long size_out
     _hiprtcLinkComplete__retval = hiprtcResult(chiprtc.hiprtcLinkComplete(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,

@@ -1,4 +1,4 @@
-# Using HIP Python
+# Basic Usage and Examples
 
 This chapter explains how to use HIP Python's main interfaces. 
 The usage of the CUDA interoperability layer is discussed in a separate chapter.
@@ -6,7 +6,9 @@ We first aim to give an introduction to the *Python* API of HIP Python
 by means of basic examples before discussing the *Cython* API in the 
 last sections of this chapter.
 
-> **Note:** All examples in this chapter have been tested with ROCm 5.4.3.
+:::{note}
+All examples in this chapter have been tested with ROCm 5.4.3.
+:::
 
 ## Basic Usage (Python)
 
@@ -35,8 +37,8 @@ And you are ready to go!
 
 :::{admonition} What will I learn?
 
-* How to obtain device attributes/properties via {py:obj}`~.hipGetDeviceProperties`.
-* How to obtain device attributes/properties via {py:obj}`~.hipDeviceGetAttribute`.
+* How I can obtain device attributes/properties via {py:obj}`~.hipGetDeviceProperties`.
+* How I can obtain device attributes/properties via {py:obj}`~.hipDeviceGetAttribute`.
 :::
 
 Obtaining device properties such as the architecture or the number of compute units
@@ -45,11 +47,12 @@ is important for many applications.
 ### Via {py:obj}`~.hipGetDeviceProperties`
 
 A number of device properties can be obtained via the 
-{py:obj}`~.hipDeviceProp_t` object. After creation (line 16) it must
+{py:obj}`~.hipDeviceProp_t` object. After creation (line 16) this object must
 be passed to the {py:obj}`~.hipGetDeviceProperties` routine (line 17).
 The second argument (`0`) is the device number.
 
-Running the {ref}`example below <hip_deviceproperties>` will print out the values of all queried device properties before the program eventually prints `"ok"` and quits.
+Running the {ref}`example below <hip_deviceproperties>` will print out the values of all queried device properties 
+before the program eventually prints `"ok"` and quits.
 
 :::{note}
 The `hip_check` routine in the snippet unpacks the result tuple -- HIP Python routines always return a tuple, then checks the therein contained error code (first argument),
@@ -88,12 +91,13 @@ attributes before the program prints `"ok"` and quits.
    :caption: Obtaining Device Properties via hipDeviceGetAttribute
 ```
 
+(sec_hip_streams)=
 ## HIP Streams
 
 :::{admonition} What will I learn?
 
-* How to use HIP Python's {py:obj}`~.hipStream_t` objects and the associated HIP Python routines.
-* That you can pass Python 3 {py:obj}`~array.array` objects to HIP runtime routines such
+* How I can use HIP Python's {py:obj}`~.hipStream_t` objects and the associated HIP Python routines.
+* That I can directly pass Python 3 {py:obj}`~array.array` objects to HIP runtime routines such
   as {py:obj}`hipMemcpy` and {py:obj}`hipMemcpyAsync`.
 :::
 
@@ -134,8 +138,8 @@ If so, it quits with an "ok".
 
 :::{admonition} What will I learn?
 
-* How to compile a HIP C++ kernel at runtime via {py:obj}`~.hiprtcCompileProgram`.
-* How to launch kernels via {py:obj}`~.hipModuleLaunchKernel`.
+* How I can compile a HIP C++ kernel at runtime via {py:obj}`~.hiprtcCompileProgram`.
+* How I can launch kernels via {py:obj}`~.hipModuleLaunchKernel`.
 :::
 
 HIP Python does not provide the necessary infrastructure to express device code
@@ -182,7 +186,7 @@ with an `"ok"`.
 
 :::{admonition} What will I learn?
 
-How to pass arguments to {py:obj}`~.hipModuleLaunchKernel`.
+How I can pass arguments to {py:obj}`~.hipModuleLaunchKernel`.
 :::
 
 One of the difficulties that programmers face when attempting to launch 
@@ -233,8 +237,8 @@ a textual description of the main steps.
 
 :::{admonition} What will I learn?
 
-* How to use HIP Python's {py:obj}`~.hipblas` module.
-* That you can pass {py:obj}`numpy` arrays to HIP runtime routines such
+* How I can use HIP Python's {py:obj}`~.hipblas` module.
+* That I can pass {py:obj}`numpy` arrays to HIP runtime routines such
   as {py:obj}`hipMemcpy` and {py:obj}`hipMemcpyAsync`.
 :::
 
@@ -274,8 +278,8 @@ and thus can be directly passed to those interfaces.
 
 :::{admonition} What will I learn?
 
-* How to change the shape and datatype of HIP Python's {py:obj}`~.DeviceArray` objects.
-* How to obtain subarrays from HIP Python's {py:obj}`~.DeviceArray` objects --- which are again of that type --- via array subscript.
+* How I can change the shape and datatype of HIP Python's {py:obj}`~.DeviceArray` objects.
+* How I can obtain subarrays from HIP Python's {py:obj}`~.DeviceArray` objects --- which are again of that type --- via array subscript.
 :::
 
 [This example](hip_python_device_array) demonstrates how to {py:obj}`~.DeviceArray.configure` the shape and data type
@@ -318,8 +322,8 @@ that it implements.
 ## Monte Carlo with hipRAND
 
 :::{admonition} What will I learn?
-* How to create an {py:obj}`~.hiprand` random number generator via {py:obj}`hiprandCreateGenerator`.
-* How to generate uniformly-distributed random numbers via {py:obj}`~.hiprandGenerateUniformDouble`.
+* How I can create an {py:obj}`~.hiprand` random number generator via {py:obj}`hiprandCreateGenerator`.
+* How I can generate uniformly-distributed random numbers via {py:obj}`~.hiprandGenerateUniformDouble`.
 :::
 
 This [example](hiprand_monte_carlo_pi) uses {py:obj}`~/.hiprand` to estimate {math}`\pi` by means of the Monte-Carlo method.
@@ -341,7 +345,7 @@ This example was derived from a similar example in the [rocRAND repository on Gi
 .. literalinclude:: ../../examples/0_Basic_Usage/hiprand_monte_carlo_pi.py
    :language: python
    :lines: 21-
-   :emphasize-lines: 85-90, 72-73, 23
+   :emphasize-lines: 22, 24, 27
    :linenos:
    :name: hiprand_monte_carlo_pi
    :caption: Monte Carlo with hipRAND
@@ -365,8 +369,8 @@ Within a loop that per iteration multiplies the problem size `n` by `10` (line 3
 ## A simple complex FFT with hipFFT
 
 :::{admonition} What will I learn?
-* How to create an {py:obj}`~.hipfft` 1D plan via {py:obj}`~.hipfftPlan1d`.
-* How to run a complex in-place forward FFT via {py:obj}`~.hipfftExecZ2Z`.
+* How I can create an {py:obj}`~.hipfft` 1D plan via {py:obj}`~.hipfftPlan1d`.
+* How I can run a complex in-place forward FFT via {py:obj}`~.hipfftExecZ2Z`.
 :::
 
 [This example](hipfft) demonstrates the usage of HIP Python's {py:obj}`~.hipfft` library.
@@ -401,11 +405,11 @@ The resulting FFT coefficients are all zero --- aside from the first one, which 
 ## A multi-GPU broadcast with RCCL
 
 :::{admonition} What will I learn?
-* How to create a multi-GPU communicator via {py:obj}`~.ncclCommInitAll`.
-* How to destroy a communicator again via {py:obj}`~.ncclCommDestroy`.
-* How open and close a communication group via  {py:obj}`~.ncclGroupStart` and
+* How I can create a multi-GPU communicator via {py:obj}`~.ncclCommInitAll`.
+* How I can destroy a communicator again via {py:obj}`~.ncclCommDestroy`.
+* How I can open and close a communication group via  {py:obj}`~.ncclGroupStart` and
   {py:obj}`~.ncclGroupEnd`, respectively.
-* How to perform a broadcast via {py:obj}`~.ncclBcast`.
+* How I can perform a broadcast via {py:obj}`~.ncclBcast`.
 :::
 
 [This example](rccl_comminitall_bcast) implements a single-node multi-GPU broadcast of a small array
@@ -450,6 +454,11 @@ supported by HIP Python's datatypes.
 :::
 
 ## Basic Usage (Cython)
+
+:::{admonition} What will I learn?
+* How I can use HIP Python's Cython modules in my Cython code.
+* How to compile my Cython code that uses HIP Python's Cython modules.
+:::
 
 In this section, we show how to use HIP Python's [Cython](https://cython.org/) modules 
 and how to compile projects that use them.

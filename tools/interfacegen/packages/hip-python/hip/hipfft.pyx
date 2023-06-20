@@ -315,15 +315,15 @@ def hipfftPlanMany(int rank, object n, object inembed, int istride, int idist, o
     Args:
         rank (`~.int`): **[in]** Dimension of transform (1, 2, or 3).
 
-        n (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements to transform in the x/y/z directions.
+        n (`~.hip._util.types.Pointer`/`~.object`): **[in]** Number of elements to transform in the x/y/z directions.
 
-        inembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the input data in the x/y/z directions.
+        inembed (`~.hip._util.types.Pointer`/`~.object`): **[in]** Number of elements in the input data in the x/y/z directions.
 
         istride (`~.int`): **[in]** Distance between two successive elements in the input data.
 
         idist (`~.int`): **[in]** Distance between input batches.
 
-        onembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the output data in the x/y/z directions.
+        onembed (`~.hip._util.types.Pointer`/`~.object`): **[in]** Number of elements in the output data in the x/y/z directions.
 
         ostride (`~.int`): **[in]** Distance between two successive elements in the output data.
 
@@ -343,9 +343,9 @@ def hipfftPlanMany(int rank, object n, object inembed, int istride, int idist, o
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")
     _hipfftPlanMany__retval = hipfftResult_t(chipfft.hipfftPlanMany(&plan._ptr,rank,
-        <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(n)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(inembed)._ptr,istride,idist,
+        <int *>hip._util.types.Pointer.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch))    # fully specified
     return (_hipfftPlanMany__retval,plan)
 
 
@@ -513,15 +513,15 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
 
         rank (`~.int`): **[in]** Dimension of transform (1, 2, or 3).
 
-        n (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements to transform in the x/y/z directions.
+        n (`~.hip._util.types.Pointer`/`~.object`): **[in]** Number of elements to transform in the x/y/z directions.
 
-        inembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the input data in the x/y/z directions.
+        inembed (`~.hip._util.types.Pointer`/`~.object`): **[in]** Number of elements in the input data in the x/y/z directions.
 
         istride (`~.int`): **[in]** Distance between two successive elements in the input data.
 
         idist (`~.int`): **[in]** Distance between input batches.
 
-        onembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the output data in the x/y/z directions.
+        onembed (`~.hip._util.types.Pointer`/`~.object`): **[in]** Number of elements in the output data in the x/y/z directions.
 
         ostride (`~.int`): **[in]** Distance between two successive elements in the output data.
 
@@ -542,9 +542,9 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
     cdef unsigned long workSize
     _hipfftMakePlanMany__retval = hipfftResult_t(chipfft.hipfftMakePlanMany(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
-        <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(n)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(inembed)._ptr,istride,idist,
+        <int *>hip._util.types.Pointer.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
     return (_hipfftMakePlanMany__retval,workSize)
 
 
@@ -562,9 +562,9 @@ def hipfftMakePlanMany64(object plan, int rank, object n, object inembed, long l
     cdef unsigned long workSize
     _hipfftMakePlanMany64__retval = hipfftResult_t(chipfft.hipfftMakePlanMany64(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
-        <long long *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
-        <long long *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <long long *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+        <long long *>hip._util.types.Pointer.from_pyobj(n)._ptr,
+        <long long *>hip._util.types.Pointer.from_pyobj(inembed)._ptr,istride,idist,
+        <long long *>hip._util.types.Pointer.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
     return (_hipfftMakePlanMany64__retval,workSize)
 
 
@@ -647,15 +647,15 @@ def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idis
     Args:
         rank (`~.int`): **[in]** Dimension of FFT transform (1, 2, or 3).
 
-        n (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the x/y/z directions.
+        n (`~.hip._util.types.Pointer`/`~.object`): **[in]** Number of elements in the x/y/z directions.
 
-        inembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        inembed (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
         istride (`~.int`): **[in]** 
 
         idist (`~.int`): **[in]** Distance between input batches.
 
-        onembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        onembed (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
         ostride (`~.int`): **[in]** 
 
@@ -675,9 +675,9 @@ def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idis
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftEstimateMany__retval = hipfftResult_t(chipfft.hipfftEstimateMany(rank,
-        <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(n)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(inembed)._ptr,istride,idist,
+        <int *>hip._util.types.Pointer.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
     return (_hipfftEstimateMany__retval,workSize)
 
 
@@ -771,15 +771,15 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
 
         rank (`~.int`): **[in]** Dimension of FFT transform (1, 2, or 3).
 
-        n (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Number of elements in the x/y/z directions.
+        n (`~.hip._util.types.Pointer`/`~.object`): **[in]** Number of elements in the x/y/z directions.
 
-        inembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        inembed (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
         istride (`~.int`): **[in]** 
 
         idist (`~.int`): **[in]** Distance between input batches.
 
-        onembed (`~.hip._util.types.DataHandle`/`~.object`): **[in]** 
+        onembed (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
 
         ostride (`~.int`): **[in]** 
 
@@ -800,9 +800,9 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
     cdef unsigned long workSize
     _hipfftGetSizeMany__retval = hipfftResult_t(chipfft.hipfftGetSizeMany(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
-        <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(n)._ptr,
+        <int *>hip._util.types.Pointer.from_pyobj(inembed)._ptr,istride,idist,
+        <int *>hip._util.types.Pointer.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
     return (_hipfftGetSizeMany__retval,workSize)
 
 
@@ -820,9 +820,9 @@ def hipfftGetSizeMany64(object plan, int rank, object n, object inembed, long lo
     cdef unsigned long workSize
     _hipfftGetSizeMany64__retval = hipfftResult_t(chipfft.hipfftGetSizeMany64(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
-        <long long *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
-        <long long *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <long long *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+        <long long *>hip._util.types.Pointer.from_pyobj(n)._ptr,
+        <long long *>hip._util.types.Pointer.from_pyobj(inembed)._ptr,istride,idist,
+        <long long *>hip._util.types.Pointer.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
     return (_hipfftGetSizeMany64__retval,workSize)
 
 
@@ -870,7 +870,7 @@ def hipfftSetWorkArea(object plan, object workArea):
     Args:
         plan (`~.hipfftHandle_t`/`~.object`): **[in]** Pointer to the FFT plan.
 
-        workArea (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Pointer to the work area (on device).
+        workArea (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to the work area (on device).
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -879,7 +879,7 @@ def hipfftSetWorkArea(object plan, object workArea):
     """
     _hipfftSetWorkArea__retval = hipfftResult_t(chipfft.hipfftSetWorkArea(
         hipfftHandle_t.from_pyobj(plan)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(workArea)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(workArea)._ptr))    # fully specified
     return (_hipfftSetWorkArea__retval,)
 
 
@@ -921,7 +921,7 @@ def hipfftExecR2C(object plan, object idata, object odata):
     Args:
         plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        idata (`~.hip._util.types.DataHandle`/`~.object`): Input data (on device).
+        idata (`~.hip._util.types.Pointer`/`~.object`): Input data (on device).
 
         odata (`~.float2`/`~.object`): Output data (on device).
 
@@ -932,7 +932,7 @@ def hipfftExecR2C(object plan, object idata, object odata):
     """
     _hipfftExecR2C__retval = hipfftResult_t(chipfft.hipfftExecR2C(
         hipfftHandle_t.from_pyobj(plan)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(idata)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(idata)._ptr,
         float2.from_pyobj(odata)._ptr))    # fully specified
     return (_hipfftExecR2C__retval,)
 
@@ -949,7 +949,7 @@ def hipfftExecC2R(object plan, object idata, object odata):
 
         idata (`~.float2`/`~.object`): Input data (on device).
 
-        odata (`~.hip._util.types.DataHandle`/`~.object`): Output data (on device).
+        odata (`~.hip._util.types.Pointer`/`~.object`): Output data (on device).
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -959,7 +959,7 @@ def hipfftExecC2R(object plan, object idata, object odata):
     _hipfftExecC2R__retval = hipfftResult_t(chipfft.hipfftExecC2R(
         hipfftHandle_t.from_pyobj(plan)._ptr,
         float2.from_pyobj(idata)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(odata)._ptr))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(odata)._ptr))    # fully specified
     return (_hipfftExecC2R__retval,)
 
 
@@ -1001,7 +1001,7 @@ def hipfftExecD2Z(object plan, object idata, object odata):
     Args:
         plan (`~.hipfftHandle_t`/`~.object`): The FFT plan.
 
-        idata (`~.hip._util.types.DataHandle`/`~.object`): Input data (on device).
+        idata (`~.hip._util.types.Pointer`/`~.object`): Input data (on device).
 
         odata (`~.double2`/`~.object`): Output data (on device).
 
@@ -1012,7 +1012,7 @@ def hipfftExecD2Z(object plan, object idata, object odata):
     """
     _hipfftExecD2Z__retval = hipfftResult_t(chipfft.hipfftExecD2Z(
         hipfftHandle_t.from_pyobj(plan)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(idata)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(idata)._ptr,
         double2.from_pyobj(odata)._ptr))    # fully specified
     return (_hipfftExecD2Z__retval,)
 
@@ -1029,7 +1029,7 @@ def hipfftExecZ2D(object plan, object idata, object odata):
 
         idata (`~.double2`/`~.object`): Input data (on device).
 
-        odata (`~.hip._util.types.DataHandle`/`~.object`): Output data (on device).
+        odata (`~.hip._util.types.Pointer`/`~.object`): Output data (on device).
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1039,7 +1039,7 @@ def hipfftExecZ2D(object plan, object idata, object odata):
     _hipfftExecZ2D__retval = hipfftResult_t(chipfft.hipfftExecZ2D(
         hipfftHandle_t.from_pyobj(plan)._ptr,
         double2.from_pyobj(idata)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(odata)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(odata)._ptr))    # fully specified
     return (_hipfftExecZ2D__retval,)
 
 
@@ -1085,7 +1085,7 @@ def hipfftGetVersion(object version):
     r"""Get rocFFT/cuFFT version.
 
     Args:
-        version (`~.hip._util.types.DataHandle`/`~.object`): **[out]** cuFFT/rocFFT version (returned value).
+        version (`~.hip._util.types.Pointer`/`~.object`): **[out]** cuFFT/rocFFT version (returned value).
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1093,7 +1093,7 @@ def hipfftGetVersion(object version):
         * `~.hipfftResult_t`
     """
     _hipfftGetVersion__retval = hipfftResult_t(chipfft.hipfftGetVersion(
-        <int *>hip._util.types.DataHandle.from_pyobj(version)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(version)._ptr))    # fully specified
     return (_hipfftGetVersion__retval,)
 
 
@@ -1104,7 +1104,7 @@ def hipfftGetProperty(object type, object value):
     Args:
         type (`~.hipfftLibraryPropertyType_t`): **[in]** Property type.
 
-        value (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Returned value.
+        value (`~.hip._util.types.Pointer`/`~.object`): **[out]** Returned value.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1114,5 +1114,5 @@ def hipfftGetProperty(object type, object value):
     if not isinstance(type,_hipfftLibraryPropertyType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftLibraryPropertyType_t__Base'")
     _hipfftGetProperty__retval = hipfftResult_t(chipfft.hipfftGetProperty(type.value,
-        <int *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(value)._ptr))    # fully specified
     return (_hipfftGetProperty__retval,)
