@@ -4,7 +4,7 @@ __author__ = "AMD_AUTHOR"
 
 cimport hip._util.types
 
-cdef class HipModuleLaunchKernel_extra(hip._util.types.DataHandle):
+cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
     cdef bint _owner
     cdef void* _config[5]
     cdef size_t _args_buffer_size

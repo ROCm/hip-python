@@ -706,7 +706,7 @@ def hipblasCreate():
 
         * `~.hipblasStatus_t`
     """
-    handle = hip._util.types.DataHandle.from_ptr(NULL)
+    handle = hip._util.types.Pointer.from_ptr(NULL)
     _hipblasCreate__retval = hipblasStatus_t(chipblas.hipblasCreate(
         <void **>&handle._ptr))    # fully specified
     return (_hipblasCreate__retval,handle)
@@ -722,7 +722,7 @@ def hipblasDestroy(object handle):
         * `~.hipblasStatus_t`
     """
     _hipblasDestroy__retval = hipblasStatus_t(chipblas.hipblasDestroy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr))    # fully specified
     return (_hipblasDestroy__retval,)
 
 
@@ -736,7 +736,7 @@ def hipblasSetStream(object handle, object streamId):
         * `~.hipblasStatus_t`
     """
     _hipblasSetStream__retval = hipblasStatus_t(chipblas.hipblasSetStream(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         ihipStream_t.from_pyobj(streamId)._ptr))    # fully specified
     return (_hipblasSetStream__retval,)
 
@@ -751,8 +751,8 @@ def hipblasGetStream(object handle, object streamId):
         * `~.hipblasStatus_t`
     """
     _hipblasGetStream__retval = hipblasStatus_t(chipblas.hipblasGetStream(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <chipblas.hipStream_t*>hip._util.types.DataHandle.from_pyobj(streamId)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <chipblas.hipStream_t*>hip._util.types.Pointer.from_pyobj(streamId)._ptr))    # fully specified
     return (_hipblasGetStream__retval,)
 
 
@@ -768,7 +768,7 @@ def hipblasSetPointerMode(object handle, object mode):
     if not isinstance(mode,_hipblasPointerMode_t__Base):
         raise TypeError("argument 'mode' must be of type '_hipblasPointerMode_t__Base'")
     _hipblasSetPointerMode__retval = hipblasStatus_t(chipblas.hipblasSetPointerMode(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mode.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,mode.value))    # fully specified
     return (_hipblasSetPointerMode__retval,)
 
 
@@ -782,8 +782,8 @@ def hipblasGetPointerMode(object handle, object mode):
         * `~.hipblasStatus_t`
     """
     _hipblasGetPointerMode__retval = hipblasStatus_t(chipblas.hipblasGetPointerMode(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <chipblas.hipblasPointerMode_t *>hip._util.types.DataHandle.from_pyobj(mode)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <chipblas.hipblasPointerMode_t *>hip._util.types.Pointer.from_pyobj(mode)._ptr))    # fully specified
     return (_hipblasGetPointerMode__retval,)
 
 
@@ -799,7 +799,7 @@ def hipblasSetInt8Datatype(object handle, object int8Type):
     if not isinstance(int8Type,_hipblasInt8Datatype_t__Base):
         raise TypeError("argument 'int8Type' must be of type '_hipblasInt8Datatype_t__Base'")
     _hipblasSetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasSetInt8Datatype(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,int8Type.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,int8Type.value))    # fully specified
     return (_hipblasSetInt8Datatype__retval,)
 
 
@@ -813,8 +813,8 @@ def hipblasGetInt8Datatype(object handle, object int8Type):
         * `~.hipblasStatus_t`
     """
     _hipblasGetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasGetInt8Datatype(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <chipblas.hipblasInt8Datatype_t *>hip._util.types.DataHandle.from_pyobj(int8Type)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <chipblas.hipblasInt8Datatype_t *>hip._util.types.Pointer.from_pyobj(int8Type)._ptr))    # fully specified
     return (_hipblasGetInt8Datatype__retval,)
 
 
@@ -829,12 +829,12 @@ def hipblasSetVector(int n, int elemSize, object x, int incx, object y, int incy
         elemSize (`~.int`): **[in]** [int]
             Size of both vectors in bytes
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to vector on the host
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to vector on the host
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of the vector
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to vector on the device
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to vector on the device
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of the vector
@@ -845,8 +845,8 @@ def hipblasSetVector(int n, int elemSize, object x, int incx, object y, int incy
         * `~.hipblasStatus_t`
     """
     _hipblasSetVector__retval = hipblasStatus_t(chipblas.hipblasSetVector(n,elemSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSetVector__retval,)
 
 
@@ -861,12 +861,12 @@ def hipblasGetVector(int n, int elemSize, object x, int incx, object y, int incy
         elemSize (`~.int`): **[in]** [int]
             Size of both vectors in bytes
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to vector on the device
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to vector on the device
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of the vector
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to vector on the host
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to vector on the host
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of the vector
@@ -877,8 +877,8 @@ def hipblasGetVector(int n, int elemSize, object x, int incx, object y, int incy
         * `~.hipblasStatus_t`
     """
     _hipblasGetVector__retval = hipblasStatus_t(chipblas.hipblasGetVector(n,elemSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasGetVector__retval,)
 
 
@@ -896,12 +896,12 @@ def hipblasSetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
         elemSize (`~.int`): **[in]** [int]
             number of bytes per element in the matrix
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to matrix on the host
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to matrix on the host
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A, lda >= rows
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to matrix on the GPU
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to matrix on the GPU
 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of B, ldb >= rows
@@ -912,8 +912,8 @@ def hipblasSetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
         * `~.hipblasStatus_t`
     """
     _hipblasSetMatrix__retval = hipblasStatus_t(chipblas.hipblasSetMatrix(rows,cols,elemSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <void *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb))    # fully specified
     return (_hipblasSetMatrix__retval,)
 
 
@@ -931,12 +931,12 @@ def hipblasGetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
         elemSize (`~.int`): **[in]** [int]
             number of bytes per element in the matrix
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to matrix on the GPU
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to matrix on the GPU
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A, lda >= rows
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to matrix on the host
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to matrix on the host
 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of B, ldb >= rows
@@ -947,8 +947,8 @@ def hipblasGetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
         * `~.hipblasStatus_t`
     """
     _hipblasGetMatrix__retval = hipblasStatus_t(chipblas.hipblasGetMatrix(rows,cols,elemSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <void *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+        <const void *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb))    # fully specified
     return (_hipblasGetMatrix__retval,)
 
 
@@ -966,12 +966,12 @@ def hipblasSetVectorAsync(int n, int elemSize, object x, int incx, object y, int
         elemSize (`~.int`): **[in]** [int]
             number of bytes per element in the matrix
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to vector on the host
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to vector on the host
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of the vector
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to vector on the device
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to vector on the device
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of the vector
@@ -984,8 +984,8 @@ def hipblasSetVectorAsync(int n, int elemSize, object x, int incx, object y, int
         * `~.hipblasStatus_t`
     """
     _hipblasSetVectorAsync__retval = hipblasStatus_t(chipblas.hipblasSetVectorAsync(n,elemSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipblasSetVectorAsync__retval,)
 
@@ -1004,12 +1004,12 @@ def hipblasGetVectorAsync(int n, int elemSize, object x, int incx, object y, int
         elemSize (`~.int`): **[in]** [int]
             number of bytes per element in the matrix
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to vector on the device
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to vector on the device
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of the vector
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to vector on the host
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to vector on the host
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of the vector
@@ -1022,8 +1022,8 @@ def hipblasGetVectorAsync(int n, int elemSize, object x, int incx, object y, int
         * `~.hipblasStatus_t`
     """
     _hipblasGetVectorAsync__retval = hipblasStatus_t(chipblas.hipblasGetVectorAsync(n,elemSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipblasGetVectorAsync__retval,)
 
@@ -1045,12 +1045,12 @@ def hipblasSetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
         elemSize (`~.int`): **[in]** [int]
             number of bytes per element in the matrix
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to matrix on the host
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to matrix on the host
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A, lda >= rows
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to matrix on the GPU
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to matrix on the GPU
 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of B, ldb >= rows
@@ -1063,8 +1063,8 @@ def hipblasSetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
         * `~.hipblasStatus_t`
     """
     _hipblasSetMatrixAsync__retval = hipblasStatus_t(chipblas.hipblasSetMatrixAsync(rows,cols,elemSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <void *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const void *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipblasSetMatrixAsync__retval,)
 
@@ -1086,12 +1086,12 @@ def hipblasGetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
         elemSize (`~.int`): **[in]** [int]
             number of bytes per element in the matrix
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to matrix on the GPU
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to matrix on the GPU
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A, lda >= rows
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to matrix on the host
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to matrix on the host
 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of B, ldb >= rows
@@ -1104,8 +1104,8 @@ def hipblasGetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
         * `~.hipblasStatus_t`
     """
     _hipblasGetMatrixAsync__retval = hipblasStatus_t(chipblas.hipblasGetMatrixAsync(rows,cols,elemSize,
-        <const void *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <void *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const void *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipblasGetMatrixAsync__retval,)
 
@@ -1122,7 +1122,7 @@ def hipblasSetAtomicsMode(object handle, object atomics_mode):
     if not isinstance(atomics_mode,_hipblasAtomicsMode_t__Base):
         raise TypeError("argument 'atomics_mode' must be of type '_hipblasAtomicsMode_t__Base'")
     _hipblasSetAtomicsMode__retval = hipblasStatus_t(chipblas.hipblasSetAtomicsMode(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,atomics_mode.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,atomics_mode.value))    # fully specified
     return (_hipblasSetAtomicsMode__retval,)
 
 
@@ -1136,8 +1136,8 @@ def hipblasGetAtomicsMode(object handle, object atomics_mode):
         * `~.hipblasStatus_t`
     """
     _hipblasGetAtomicsMode__retval = hipblasStatus_t(chipblas.hipblasGetAtomicsMode(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <chipblas.hipblasAtomicsMode_t *>hip._util.types.DataHandle.from_pyobj(atomics_mode)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <chipblas.hipblasAtomicsMode_t *>hip._util.types.Pointer.from_pyobj(atomics_mode)._ptr))    # fully specified
     return (_hipblasGetAtomicsMode__retval,)
 
 
@@ -1151,13 +1151,13 @@ def hipblasIsamax(object handle, int n, object x, int incx, object result):
     - Supported precisions in cuBLAS  : s,d,c,z.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -1171,8 +1171,8 @@ def hipblasIsamax(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasIsamax__retval = hipblasStatus_t(chipblas.hipblasIsamax(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamax__retval,)
 
@@ -1187,8 +1187,8 @@ def hipblasIdamax(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasIdamax__retval = hipblasStatus_t(chipblas.hipblasIdamax(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamax__retval,)
 
@@ -1203,7 +1203,7 @@ def hipblasIcamax(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasIcamax__retval = hipblasStatus_t(chipblas.hipblasIcamax(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamax__retval,)
@@ -1219,7 +1219,7 @@ def hipblasIzamax(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasIzamax__retval = hipblasStatus_t(chipblas.hipblasIzamax(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamax__retval,)
@@ -1235,13 +1235,13 @@ def hipblasIsamaxBatched(object handle, int n, object x, int incx, int batchCoun
     - Supported precisions in cuBLAS  : No support.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each vector x_i
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i. incx must be > 0.
@@ -1258,8 +1258,8 @@ def hipblasIsamaxBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasIsamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIsamaxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamaxBatched__retval,)
 
@@ -1274,8 +1274,8 @@ def hipblasIdamaxBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasIdamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIdamaxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamaxBatched__retval,)
 
@@ -1290,8 +1290,8 @@ def hipblasIcamaxBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasIcamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIcamaxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamaxBatched__retval,)
 
@@ -1306,8 +1306,8 @@ def hipblasIzamaxBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasIzamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIzamaxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamaxBatched__retval,)
 
@@ -1322,13 +1322,13 @@ def hipblasIsamaxStridedBatched(object handle, int n, object x, int incx, long s
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each vector x_i
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i. incx must be > 0.
@@ -1348,8 +1348,8 @@ def hipblasIsamaxStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasIsamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIsamaxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamaxStridedBatched__retval,)
 
@@ -1364,8 +1364,8 @@ def hipblasIdamaxStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasIdamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIdamaxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamaxStridedBatched__retval,)
 
@@ -1380,7 +1380,7 @@ def hipblasIcamaxStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasIcamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIcamaxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamaxStridedBatched__retval,)
@@ -1396,7 +1396,7 @@ def hipblasIzamaxStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasIzamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIzamaxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamaxStridedBatched__retval,)
@@ -1412,13 +1412,13 @@ def hipblasIsamin(object handle, int n, object x, int incx, object result):
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -1432,8 +1432,8 @@ def hipblasIsamin(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasIsamin__retval = hipblasStatus_t(chipblas.hipblasIsamin(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamin__retval,)
 
@@ -1448,8 +1448,8 @@ def hipblasIdamin(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasIdamin__retval = hipblasStatus_t(chipblas.hipblasIdamin(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamin__retval,)
 
@@ -1464,7 +1464,7 @@ def hipblasIcamin(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasIcamin__retval = hipblasStatus_t(chipblas.hipblasIcamin(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamin__retval,)
@@ -1480,7 +1480,7 @@ def hipblasIzamin(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasIzamin__retval = hipblasStatus_t(chipblas.hipblasIzamin(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamin__retval,)
@@ -1496,13 +1496,13 @@ def hipblasIsaminBatched(object handle, int n, object x, int incx, int batchCoun
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each vector x_i
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i. incx must be > 0.
@@ -1519,8 +1519,8 @@ def hipblasIsaminBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasIsaminBatched__retval = hipblasStatus_t(chipblas.hipblasIsaminBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsaminBatched__retval,)
 
@@ -1535,8 +1535,8 @@ def hipblasIdaminBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasIdaminBatched__retval = hipblasStatus_t(chipblas.hipblasIdaminBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdaminBatched__retval,)
 
@@ -1551,8 +1551,8 @@ def hipblasIcaminBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasIcaminBatched__retval = hipblasStatus_t(chipblas.hipblasIcaminBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcaminBatched__retval,)
 
@@ -1567,8 +1567,8 @@ def hipblasIzaminBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasIzaminBatched__retval = hipblasStatus_t(chipblas.hipblasIzaminBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzaminBatched__retval,)
 
@@ -1583,13 +1583,13 @@ def hipblasIsaminStridedBatched(object handle, int n, object x, int incx, long s
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each vector x_i
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i. incx must be > 0.
@@ -1609,8 +1609,8 @@ def hipblasIsaminStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasIsaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIsaminStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsaminStridedBatched__retval,)
 
@@ -1625,8 +1625,8 @@ def hipblasIdaminStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasIdaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIdaminStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdaminStridedBatched__retval,)
 
@@ -1641,7 +1641,7 @@ def hipblasIcaminStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasIcaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIcaminStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcaminStridedBatched__retval,)
@@ -1657,7 +1657,7 @@ def hipblasIzaminStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasIzaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIzaminStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
         <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzaminStridedBatched__retval,)
@@ -1674,18 +1674,18 @@ def hipblasSasum(object handle, int n, object x, int incx, object result):
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x and y.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x. incx must be > 0.
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to store the asum product.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to store the asum product.
             return is 0.0 if n <= 0.
 
     Returns:
@@ -1694,9 +1694,9 @@ def hipblasSasum(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasSasum__retval = hipblasStatus_t(chipblas.hipblasSasum(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSasum__retval,)
 
 
@@ -1710,9 +1710,9 @@ def hipblasDasum(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasDasum__retval = hipblasStatus_t(chipblas.hipblasDasum(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDasum__retval,)
 
 
@@ -1726,9 +1726,9 @@ def hipblasScasum(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasScasum__retval = hipblasStatus_t(chipblas.hipblasScasum(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasScasum__retval,)
 
 
@@ -1742,9 +1742,9 @@ def hipblasDzasum(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasDzasum__retval = hipblasStatus_t(chipblas.hipblasDzasum(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDzasum__retval,)
 
 
@@ -1760,13 +1760,13 @@ def hipblasSasumBatched(object handle, int n, object x, int incx, int batchCount
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each vector x_i
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i. incx must be > 0.
@@ -1774,7 +1774,7 @@ def hipblasSasumBatched(object handle, int n, object x, int incx, int batchCount
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch.
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device array or host array of batchCount size for results.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[out]** device array or host array of batchCount size for results.
             return is 0.0 if n, incx<=0.
 
     Returns:
@@ -1783,9 +1783,9 @@ def hipblasSasumBatched(object handle, int n, object x, int incx, int batchCount
         * `~.hipblasStatus_t`
     """
     _hipblasSasumBatched__retval = hipblasStatus_t(chipblas.hipblasSasumBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSasumBatched__retval,)
 
 
@@ -1799,9 +1799,9 @@ def hipblasDasumBatched(object handle, int n, object x, int incx, int batchCount
         * `~.hipblasStatus_t`
     """
     _hipblasDasumBatched__retval = hipblasStatus_t(chipblas.hipblasDasumBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDasumBatched__retval,)
 
 
@@ -1815,9 +1815,9 @@ def hipblasScasumBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasScasumBatched__retval = hipblasStatus_t(chipblas.hipblasScasumBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasScasumBatched__retval,)
 
 
@@ -1831,9 +1831,9 @@ def hipblasDzasumBatched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasDzasumBatched__retval = hipblasStatus_t(chipblas.hipblasDzasumBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDzasumBatched__retval,)
 
 
@@ -1849,13 +1849,13 @@ def hipblasSasumStridedBatched(object handle, int n, object x, int incx, long st
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each vector x_i
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i. incx must be > 0.
@@ -1869,7 +1869,7 @@ def hipblasSasumStridedBatched(object handle, int n, object x, int incx, long st
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
             return is 0.0 if n, incx<=0.
 
     Returns:
@@ -1878,9 +1878,9 @@ def hipblasSasumStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasSasumStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSasumStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSasumStridedBatched__retval,)
 
 
@@ -1894,9 +1894,9 @@ def hipblasDasumStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasDasumStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDasumStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDasumStridedBatched__retval,)
 
 
@@ -1910,9 +1910,9 @@ def hipblasScasumStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasScasumStridedBatched__retval = hipblasStatus_t(chipblas.hipblasScasumStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasScasumStridedBatched__retval,)
 
 
@@ -1926,9 +1926,9 @@ def hipblasDzasumStridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasDzasumStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDzasumStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDzasumStridedBatched__retval,)
 
 
@@ -1944,20 +1944,20 @@ def hipblasHaxpy(object handle, int n, object alpha, object x, int incx, object 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x and y.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to specify the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to specify the scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer storing vector y.
 
         incy (`~.int`): **[inout]** [int]
             specifies the increment for the elements of y.
@@ -1968,10 +1968,10 @@ def hipblasHaxpy(object handle, int n, object alpha, object x, int incx, object 
         * `~.hipblasStatus_t`
     """
     _hipblasHaxpy__retval = hipblasStatus_t(chipblas.hipblasHaxpy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasHaxpy__retval,)
 
 
@@ -1985,10 +1985,10 @@ def hipblasSaxpy(object handle, int n, object alpha, object x, int incx, object 
         * `~.hipblasStatus_t`
     """
     _hipblasSaxpy__retval = hipblasStatus_t(chipblas.hipblasSaxpy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSaxpy__retval,)
 
 
@@ -2002,10 +2002,10 @@ def hipblasDaxpy(object handle, int n, object alpha, object x, int incx, object 
         * `~.hipblasStatus_t`
     """
     _hipblasDaxpy__retval = hipblasStatus_t(chipblas.hipblasDaxpy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDaxpy__retval,)
 
 
@@ -2019,7 +2019,7 @@ def hipblasCaxpy(object handle, int n, object alpha, object x, int incx, object 
         * `~.hipblasStatus_t`
     """
     _hipblasCaxpy__retval = hipblasStatus_t(chipblas.hipblasCaxpy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
@@ -2036,7 +2036,7 @@ def hipblasZaxpy(object handle, int n, object alpha, object x, int incx, object 
         * `~.hipblasStatus_t`
     """
     _hipblasZaxpy__retval = hipblasStatus_t(chipblas.hipblasZaxpy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
@@ -2053,20 +2053,20 @@ def hipblasHaxpyBatched(object handle, int n, object alpha, object x, int incx, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x and y.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** specifies the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** specifies the scalar alpha.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** pointer storing vector x on the GPU.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** pointer storing vector x on the GPU.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[out]** pointer storing vector y on the GPU.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[out]** pointer storing vector y on the GPU.
 
         incy (`~.int`): **[inout]** [int]
             specifies the increment for the elements of y.
@@ -2080,10 +2080,10 @@ def hipblasHaxpyBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasHaxpyBatched__retval = hipblasStatus_t(chipblas.hipblasHaxpyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const unsigned short *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <unsigned short *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const unsigned short *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <unsigned short *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasHaxpyBatched__retval,)
 
 
@@ -2097,10 +2097,10 @@ def hipblasSaxpyBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasSaxpyBatched__retval = hipblasStatus_t(chipblas.hipblasSaxpyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSaxpyBatched__retval,)
 
 
@@ -2114,10 +2114,10 @@ def hipblasDaxpyBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasDaxpyBatched__retval = hipblasStatus_t(chipblas.hipblasDaxpyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDaxpyBatched__retval,)
 
 
@@ -2131,10 +2131,10 @@ def hipblasCaxpyBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasCaxpyBatched__retval = hipblasStatus_t(chipblas.hipblasCaxpyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasCaxpyBatched__retval,)
 
 
@@ -2148,10 +2148,10 @@ def hipblasZaxpyBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasZaxpyBatched__retval = hipblasStatus_t(chipblas.hipblasZaxpyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZaxpyBatched__retval,)
 
 
@@ -2165,14 +2165,14 @@ def hipblasHaxpyStridedBatched(object handle, int n, object alpha, object x, int
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** specifies the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** specifies the scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing vector x on the GPU.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing vector x on the GPU.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -2180,7 +2180,7 @@ def hipblasHaxpyStridedBatched(object handle, int n, object alpha, object x, int
         stridex (`~.int`): **[in]** [hipblasStride]
             specifies the increment between vectors of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer storing vector y on the GPU.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer storing vector y on the GPU.
 
         incy (`~.int`): **[inout]** [int]
             specifies the increment for the elements of y.
@@ -2197,10 +2197,10 @@ def hipblasHaxpyStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasHaxpyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasHaxpyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasHaxpyStridedBatched__retval,)
 
 
@@ -2214,10 +2214,10 @@ def hipblasSaxpyStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasSaxpyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSaxpyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasSaxpyStridedBatched__retval,)
 
 
@@ -2231,10 +2231,10 @@ def hipblasDaxpyStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasDaxpyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDaxpyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasDaxpyStridedBatched__retval,)
 
 
@@ -2248,7 +2248,7 @@ def hipblasCaxpyStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasCaxpyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCaxpyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
@@ -2265,7 +2265,7 @@ def hipblasZaxpyStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasZaxpyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZaxpyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
@@ -2284,18 +2284,18 @@ def hipblasScopy(object handle, int n, object x, int incx, object y, int incy):
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x to be copied to y.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -2306,9 +2306,9 @@ def hipblasScopy(object handle, int n, object x, int incx, object y, int incy):
         * `~.hipblasStatus_t`
     """
     _hipblasScopy__retval = hipblasStatus_t(chipblas.hipblasScopy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasScopy__retval,)
 
 
@@ -2322,9 +2322,9 @@ def hipblasDcopy(object handle, int n, object x, int incx, object y, int incy):
         * `~.hipblasStatus_t`
     """
     _hipblasDcopy__retval = hipblasStatus_t(chipblas.hipblasDcopy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDcopy__retval,)
 
 
@@ -2338,7 +2338,7 @@ def hipblasCcopy(object handle, int n, object x, int incx, object y, int incy):
         * `~.hipblasStatus_t`
     """
     _hipblasCcopy__retval = hipblasStatus_t(chipblas.hipblasCcopy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasCcopy__retval,)
@@ -2354,7 +2354,7 @@ def hipblasZcopy(object handle, int n, object x, int incx, object y, int incy):
         * `~.hipblasStatus_t`
     """
     _hipblasZcopy__retval = hipblasStatus_t(chipblas.hipblasZcopy(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasZcopy__retval,)
@@ -2375,18 +2375,18 @@ def hipblasScopyBatched(object handle, int n, object x, int incx, object y, int 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i to be copied to y_i.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[out]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[out]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i.
@@ -2400,9 +2400,9 @@ def hipblasScopyBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasScopyBatched__retval = hipblasStatus_t(chipblas.hipblasScopyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasScopyBatched__retval,)
 
 
@@ -2416,9 +2416,9 @@ def hipblasDcopyBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasDcopyBatched__retval = hipblasStatus_t(chipblas.hipblasDcopyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDcopyBatched__retval,)
 
 
@@ -2432,9 +2432,9 @@ def hipblasCcopyBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasCcopyBatched__retval = hipblasStatus_t(chipblas.hipblasCcopyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasCcopyBatched__retval,)
 
 
@@ -2448,9 +2448,9 @@ def hipblasZcopyBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasZcopyBatched__retval = hipblasStatus_t(chipblas.hipblasZcopyBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZcopyBatched__retval,)
 
 
@@ -2469,13 +2469,13 @@ def hipblasScopyStridedBatched(object handle, int n, object x, int incx, long st
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i to be copied to y_i.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
 
         incx (`~.int`): **[in]** [int]
             specifies the increments for the elements of vectors x_i.
@@ -2486,7 +2486,7 @@ def hipblasScopyStridedBatched(object handle, int n, object x, int incx, long st
             take care to ensure that stride_x is of appropriate size, for a typical
             case this means stride_x >= n * incx.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer to the first vector (y_1) in the batch.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer to the first vector (y_1) in the batch.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of vectors y_i.
@@ -2506,9 +2506,9 @@ def hipblasScopyStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasScopyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasScopyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasScopyStridedBatched__retval,)
 
 
@@ -2522,9 +2522,9 @@ def hipblasDcopyStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasDcopyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDcopyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasDcopyStridedBatched__retval,)
 
 
@@ -2538,7 +2538,7 @@ def hipblasCcopyStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasCcopyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCcopyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasCcopyStridedBatched__retval,)
@@ -2554,7 +2554,7 @@ def hipblasZcopyStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasZcopyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZcopyStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasZcopyStridedBatched__retval,)
@@ -2576,23 +2576,23 @@ def hipblasHdot(object handle, int n, object x, int incx, object y, int incy, ob
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x and y.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to store the dot product.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to store the dot product.
             return is 0.0 if n <= 0.
 
     Returns:
@@ -2601,10 +2601,10 @@ def hipblasHdot(object handle, int n, object x, int incx, object y, int incy, ob
         * `~.hipblasStatus_t`
     """
     _hipblasHdot__retval = hipblasStatus_t(chipblas.hipblasHdot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasHdot__retval,)
 
 
@@ -2618,7 +2618,7 @@ def hipblasBfdot(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasBfdot__retval = hipblasStatus_t(chipblas.hipblasBfdot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasBfloat16.from_pyobj(x)._ptr,incx,
         hipblasBfloat16.from_pyobj(y)._ptr,incy,
         hipblasBfloat16.from_pyobj(result)._ptr))    # fully specified
@@ -2635,10 +2635,10 @@ def hipblasSdot(object handle, int n, object x, int incx, object y, int incy, ob
         * `~.hipblasStatus_t`
     """
     _hipblasSdot__retval = hipblasStatus_t(chipblas.hipblasSdot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSdot__retval,)
 
 
@@ -2652,10 +2652,10 @@ def hipblasDdot(object handle, int n, object x, int incx, object y, int incy, ob
         * `~.hipblasStatus_t`
     """
     _hipblasDdot__retval = hipblasStatus_t(chipblas.hipblasDdot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDdot__retval,)
 
 
@@ -2669,7 +2669,7 @@ def hipblasCdotc(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasCdotc__retval = hipblasStatus_t(chipblas.hipblasCdotc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
@@ -2686,7 +2686,7 @@ def hipblasCdotu(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasCdotu__retval = hipblasStatus_t(chipblas.hipblasCdotu(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
@@ -2703,7 +2703,7 @@ def hipblasZdotc(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasZdotc__retval = hipblasStatus_t(chipblas.hipblasZdotc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
@@ -2720,7 +2720,7 @@ def hipblasZdotu(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasZdotu__retval = hipblasStatus_t(chipblas.hipblasZdotu(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
@@ -2746,18 +2746,18 @@ def hipblasHdotBatched(object handle, int n, object x, int incx, object y, int i
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i and y_i.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
@@ -2765,7 +2765,7 @@ def hipblasHdotBatched(object handle, int n, object x, int incx, object y, int i
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array or host array of batchCount size to store the dot products of each batch.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array or host array of batchCount size to store the dot products of each batch.
             return 0.0 for each element if n <= 0.
 
     Returns:
@@ -2774,10 +2774,10 @@ def hipblasHdotBatched(object handle, int n, object x, int incx, object y, int i
         * `~.hipblasStatus_t`
     """
     _hipblasHdotBatched__retval = hipblasStatus_t(chipblas.hipblasHdotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const unsigned short *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const unsigned short *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const unsigned short *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const unsigned short *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount,
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasHdotBatched__retval,)
 
 
@@ -2791,9 +2791,9 @@ def hipblasBfdotBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasBfdotBatched__retval = hipblasStatus_t(chipblas.hipblasBfdotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasBfloat16 *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasBfloat16 *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasBfloat16 *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasBfloat16 *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount,
         hipblasBfloat16.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasBfdotBatched__retval,)
 
@@ -2808,10 +2808,10 @@ def hipblasSdotBatched(object handle, int n, object x, int incx, object y, int i
         * `~.hipblasStatus_t`
     """
     _hipblasSdotBatched__retval = hipblasStatus_t(chipblas.hipblasSdotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSdotBatched__retval,)
 
 
@@ -2825,10 +2825,10 @@ def hipblasDdotBatched(object handle, int n, object x, int incx, object y, int i
         * `~.hipblasStatus_t`
     """
     _hipblasDdotBatched__retval = hipblasStatus_t(chipblas.hipblasDdotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDdotBatched__retval,)
 
 
@@ -2842,9 +2842,9 @@ def hipblasCdotcBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasCdotcBatched__retval = hipblasStatus_t(chipblas.hipblasCdotcBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasCdotcBatched__retval,)
 
@@ -2859,9 +2859,9 @@ def hipblasCdotuBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasCdotuBatched__retval = hipblasStatus_t(chipblas.hipblasCdotuBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasCdotuBatched__retval,)
 
@@ -2876,9 +2876,9 @@ def hipblasZdotcBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasZdotcBatched__retval = hipblasStatus_t(chipblas.hipblasZdotcBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasZdotcBatched__retval,)
 
@@ -2893,9 +2893,9 @@ def hipblasZdotuBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasZdotuBatched__retval = hipblasStatus_t(chipblas.hipblasZdotuBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasZdotuBatched__retval,)
 
@@ -2919,13 +2919,13 @@ def hipblasHdotStridedBatched(object handle, int n, object x, int incx, long str
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i and y_i.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -2933,7 +2933,7 @@ def hipblasHdotStridedBatched(object handle, int n, object x, int incx, long str
         stridex (`~.int`): **[in]** [hipblasStride]
             stride from the start of one vector (x_i) and the next one (x_i+1)
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector (y_1) in the batch.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector (y_1) in the batch.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
@@ -2944,7 +2944,7 @@ def hipblasHdotStridedBatched(object handle, int n, object x, int incx, long str
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array or host array of batchCount size to store the dot products of each batch.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array or host array of batchCount size to store the dot products of each batch.
             return 0.0 for each element if n <= 0.
 
     Returns:
@@ -2953,10 +2953,10 @@ def hipblasHdotStridedBatched(object handle, int n, object x, int incx, long str
         * `~.hipblasStatus_t`
     """
     _hipblasHdotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasHdotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount,
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasHdotStridedBatched__retval,)
 
 
@@ -2970,7 +2970,7 @@ def hipblasBfdotStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasBfdotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasBfdotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasBfloat16.from_pyobj(x)._ptr,incx,stridex,
         hipblasBfloat16.from_pyobj(y)._ptr,incy,stridey,batchCount,
         hipblasBfloat16.from_pyobj(result)._ptr))    # fully specified
@@ -2987,10 +2987,10 @@ def hipblasSdotStridedBatched(object handle, int n, object x, int incx, long str
         * `~.hipblasStatus_t`
     """
     _hipblasSdotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSdotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSdotStridedBatched__retval,)
 
 
@@ -3004,10 +3004,10 @@ def hipblasDdotStridedBatched(object handle, int n, object x, int incx, long str
         * `~.hipblasStatus_t`
     """
     _hipblasDdotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDdotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDdotStridedBatched__retval,)
 
 
@@ -3021,7 +3021,7 @@ def hipblasCdotcStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasCdotcStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCdotcStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,batchCount,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
@@ -3038,7 +3038,7 @@ def hipblasCdotuStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasCdotuStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCdotuStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,batchCount,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
@@ -3055,7 +3055,7 @@ def hipblasZdotcStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasZdotcStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZdotcStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,batchCount,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
@@ -3072,7 +3072,7 @@ def hipblasZdotuStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasZdotuStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZdotuStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,batchCount,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
@@ -3092,18 +3092,18 @@ def hipblasSnrm2(object handle, int n, object x, int incx, object result):
     - Supported precisions in cuBLAS  : s,d,sc,dz
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to store the nrm2 product.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to store the nrm2 product.
             return is 0.0 if n, incx<=0.
 
     Returns:
@@ -3112,9 +3112,9 @@ def hipblasSnrm2(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasSnrm2__retval = hipblasStatus_t(chipblas.hipblasSnrm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSnrm2__retval,)
 
 
@@ -3128,9 +3128,9 @@ def hipblasDnrm2(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasDnrm2__retval = hipblasStatus_t(chipblas.hipblasDnrm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDnrm2__retval,)
 
 
@@ -3144,9 +3144,9 @@ def hipblasScnrm2(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasScnrm2__retval = hipblasStatus_t(chipblas.hipblasScnrm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasScnrm2__retval,)
 
 
@@ -3160,9 +3160,9 @@ def hipblasDznrm2(object handle, int n, object x, int incx, object result):
         * `~.hipblasStatus_t`
     """
     _hipblasDznrm2__retval = hipblasStatus_t(chipblas.hipblasDznrm2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDznrm2__retval,)
 
 
@@ -3179,13 +3179,13 @@ def hipblasSnrm2Batched(object handle, int n, object x, int incx, int batchCount
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each x_i.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i. incx must be > 0.
@@ -3193,7 +3193,7 @@ def hipblasSnrm2Batched(object handle, int n, object x, int incx, int batchCount
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer or host pointer to array of batchCount size for nrm2 results.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer or host pointer to array of batchCount size for nrm2 results.
             return is 0.0 for each element if n <= 0, incx<=0.
 
     Returns:
@@ -3202,9 +3202,9 @@ def hipblasSnrm2Batched(object handle, int n, object x, int incx, int batchCount
         * `~.hipblasStatus_t`
     """
     _hipblasSnrm2Batched__retval = hipblasStatus_t(chipblas.hipblasSnrm2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSnrm2Batched__retval,)
 
 
@@ -3218,9 +3218,9 @@ def hipblasDnrm2Batched(object handle, int n, object x, int incx, int batchCount
         * `~.hipblasStatus_t`
     """
     _hipblasDnrm2Batched__retval = hipblasStatus_t(chipblas.hipblasDnrm2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDnrm2Batched__retval,)
 
 
@@ -3234,9 +3234,9 @@ def hipblasScnrm2Batched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasScnrm2Batched__retval = hipblasStatus_t(chipblas.hipblasScnrm2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasScnrm2Batched__retval,)
 
 
@@ -3250,9 +3250,9 @@ def hipblasDznrm2Batched(object handle, int n, object x, int incx, int batchCoun
         * `~.hipblasStatus_t`
     """
     _hipblasDznrm2Batched__retval = hipblasStatus_t(chipblas.hipblasDznrm2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDznrm2Batched__retval,)
 
 
@@ -3269,13 +3269,13 @@ def hipblasSnrm2StridedBatched(object handle, int n, object x, int incx, long st
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each x_i.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i. incx must be > 0.
@@ -3289,7 +3289,7 @@ def hipblasSnrm2StridedBatched(object handle, int n, object x, int incx, long st
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
             return is 0.0 for each element if n <= 0, incx<=0.
 
     Returns:
@@ -3298,9 +3298,9 @@ def hipblasSnrm2StridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasSnrm2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasSnrm2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount,
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSnrm2StridedBatched__retval,)
 
 
@@ -3314,9 +3314,9 @@ def hipblasDnrm2StridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasDnrm2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasDnrm2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount,
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDnrm2StridedBatched__retval,)
 
 
@@ -3330,9 +3330,9 @@ def hipblasScnrm2StridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasScnrm2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasScnrm2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasScnrm2StridedBatched__retval,)
 
 
@@ -3346,9 +3346,9 @@ def hipblasDznrm2StridedBatched(object handle, int n, object x, int incx, long s
         * `~.hipblasStatus_t`
     """
     _hipblasDznrm2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasDznrm2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDznrm2StridedBatched__retval,)
 
 
@@ -3363,25 +3363,25 @@ def hipblasSrot(object handle, int n, object x, int incx, object y, int incy, ob
     - Supported precisions in cuBLAS  : s,d,c,z,cs,zd
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in the x and y vectors.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment between elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment between elements of y.
 
-        c (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer storing scalar cosine component of the rotation matrix.
+        c (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer storing scalar cosine component of the rotation matrix.
 
-        s (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer storing scalar sine component of the rotation matrix.
+        s (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer storing scalar sine component of the rotation matrix.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3389,11 +3389,11 @@ def hipblasSrot(object handle, int n, object x, int incx, object y, int incy, ob
         * `~.hipblasStatus_t`
     """
     _hipblasSrot__retval = hipblasStatus_t(chipblas.hipblasSrot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(s)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasSrot__retval,)
 
 
@@ -3407,11 +3407,11 @@ def hipblasDrot(object handle, int n, object x, int incx, object y, int incy, ob
         * `~.hipblasStatus_t`
     """
     _hipblasDrot__retval = hipblasStatus_t(chipblas.hipblasDrot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(s)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasDrot__retval,)
 
 
@@ -3425,10 +3425,10 @@ def hipblasCrot(object handle, int n, object x, int incx, object y, int incy, ob
         * `~.hipblasStatus_t`
     """
     _hipblasCrot__retval = hipblasStatus_t(chipblas.hipblasCrot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
         hipblasComplex.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasCrot__retval,)
 
@@ -3443,11 +3443,11 @@ def hipblasCsrot(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasCsrot__retval = hipblasStatus_t(chipblas.hipblasCsrot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(s)._ptr))    # fully specified
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasCsrot__retval,)
 
 
@@ -3461,10 +3461,10 @@ def hipblasZrot(object handle, int n, object x, int incx, object y, int incy, ob
         * `~.hipblasStatus_t`
     """
     _hipblasZrot__retval = hipblasStatus_t(chipblas.hipblasZrot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
         hipblasDoubleComplex.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasZrot__retval,)
 
@@ -3479,11 +3479,11 @@ def hipblasZdrot(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasZdrot__retval = hipblasStatus_t(chipblas.hipblasZdrot(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(s)._ptr))    # fully specified
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasZdrot__retval,)
 
 
@@ -3498,25 +3498,25 @@ def hipblasSrotBatched(object handle, int n, object x, int incx, object y, int i
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each x_i and y_i vectors.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of deivce pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of deivce pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment between elements of each x_i.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment between elements of each y_i.
 
-        c (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
+        c (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
 
-        s (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
+        s (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
 
         batchCount (`~.int`): **[in]** [int]
             the number of x and y arrays, i.e. the number of batches.
@@ -3527,11 +3527,11 @@ def hipblasSrotBatched(object handle, int n, object x, int incx, object y, int i
         * `~.hipblasStatus_t`
     """
     _hipblasSrotBatched__retval = hipblasStatus_t(chipblas.hipblasSrotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasSrotBatched__retval,)
 
 
@@ -3545,11 +3545,11 @@ def hipblasDrotBatched(object handle, int n, object x, int incx, object y, int i
         * `~.hipblasStatus_t`
     """
     _hipblasDrotBatched__retval = hipblasStatus_t(chipblas.hipblasDrotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasDrotBatched__retval,)
 
 
@@ -3563,10 +3563,10 @@ def hipblasCrotBatched(object handle, int n, object x, int incx, object y, int i
         * `~.hipblasStatus_t`
     """
     _hipblasCrotBatched__retval = hipblasStatus_t(chipblas.hipblasCrotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
         hipblasComplex.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasCrotBatched__retval,)
 
@@ -3581,11 +3581,11 @@ def hipblasCsrotBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasCsrotBatched__retval = hipblasStatus_t(chipblas.hipblasCsrotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasCsrotBatched__retval,)
 
 
@@ -3599,10 +3599,10 @@ def hipblasZrotBatched(object handle, int n, object x, int incx, object y, int i
         * `~.hipblasStatus_t`
     """
     _hipblasZrotBatched__retval = hipblasStatus_t(chipblas.hipblasZrotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
         hipblasDoubleComplex.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasZrotBatched__retval,)
 
@@ -3617,11 +3617,11 @@ def hipblasZdrotBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasZdrotBatched__retval = hipblasStatus_t(chipblas.hipblasZdrotBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasZdrotBatched__retval,)
 
 
@@ -3636,13 +3636,13 @@ def hipblasSrotStridedBatched(object handle, int n, object x, int incx, long str
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each x_i and y_i vectors.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment between elements of each x_i.
@@ -3650,7 +3650,7 @@ def hipblasSrotStridedBatched(object handle, int n, object x, int incx, long str
         stridex (`~.int`): **[in]** [hipblasStride]
             specifies the increment from the beginning of x_i to the beginning of x_(i+1)
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector y_1.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector y_1.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment between elements of each y_i.
@@ -3658,9 +3658,9 @@ def hipblasSrotStridedBatched(object handle, int n, object x, int incx, long str
         stridey (`~.int`): **[in]** [hipblasStride]
             specifies the increment from the beginning of y_i to the beginning of y_(i+1)
 
-        c (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
+        c (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
 
-        s (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
+        s (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
 
         batchCount (`~.int`): **[in]** [int]
             the number of x and y arrays, i.e. the number of batches.
@@ -3671,11 +3671,11 @@ def hipblasSrotStridedBatched(object handle, int n, object x, int incx, long str
         * `~.hipblasStatus_t`
     """
     _hipblasSrotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSrotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasSrotStridedBatched__retval,)
 
 
@@ -3689,11 +3689,11 @@ def hipblasDrotStridedBatched(object handle, int n, object x, int incx, long str
         * `~.hipblasStatus_t`
     """
     _hipblasDrotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDrotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasDrotStridedBatched__retval,)
 
 
@@ -3707,10 +3707,10 @@ def hipblasCrotStridedBatched(object handle, int n, object x, int incx, long str
         * `~.hipblasStatus_t`
     """
     _hipblasCrotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCrotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
         hipblasComplex.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasCrotStridedBatched__retval,)
 
@@ -3725,11 +3725,11 @@ def hipblasCsrotStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasCsrotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsrotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,
-        <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <const float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasCsrotStridedBatched__retval,)
 
 
@@ -3743,10 +3743,10 @@ def hipblasZrotStridedBatched(object handle, int n, object x, int incx, long str
         * `~.hipblasStatus_t`
     """
     _hipblasZrotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZrotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
         hipblasDoubleComplex.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasZrotStridedBatched__retval,)
 
@@ -3761,11 +3761,11 @@ def hipblasZdrotStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasZdrotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZdrotStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,
-        <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <const double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasZdrotStridedBatched__retval,)
 
 
@@ -3782,16 +3782,16 @@ def hipblasSrotg(object handle, object a, object b, object c, object s):
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
-        a (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to input vector element, overwritten with r.
+        a (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to input vector element, overwritten with r.
 
-        b (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to input vector element, overwritten with z.
+        b (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to input vector element, overwritten with z.
 
-        c (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to cosine element of Givens rotation.
+        c (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to cosine element of Givens rotation.
 
-        s (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer sine element of Givens rotation.
+        s (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer sine element of Givens rotation.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3799,11 +3799,11 @@ def hipblasSrotg(object handle, object a, object b, object c, object s):
         * `~.hipblasStatus_t`
     """
     _hipblasSrotg__retval = hipblasStatus_t(chipblas.hipblasSrotg(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(a)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(b)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(s)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(a)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(b)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasSrotg__retval,)
 
 
@@ -3817,11 +3817,11 @@ def hipblasDrotg(object handle, object a, object b, object c, object s):
         * `~.hipblasStatus_t`
     """
     _hipblasDrotg__retval = hipblasStatus_t(chipblas.hipblasDrotg(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(a)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(b)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(s)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(a)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(b)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasDrotg__retval,)
 
 
@@ -3835,10 +3835,10 @@ def hipblasCrotg(object handle, object a, object b, object c, object s):
         * `~.hipblasStatus_t`
     """
     _hipblasCrotg__retval = hipblasStatus_t(chipblas.hipblasCrotg(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         hipblasComplex.from_pyobj(a)._ptr,
         hipblasComplex.from_pyobj(b)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(c)._ptr,
         hipblasComplex.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasCrotg__retval,)
 
@@ -3853,10 +3853,10 @@ def hipblasZrotg(object handle, object a, object b, object c, object s):
         * `~.hipblasStatus_t`
     """
     _hipblasZrotg__retval = hipblasStatus_t(chipblas.hipblasZrotg(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         hipblasDoubleComplex.from_pyobj(a)._ptr,
         hipblasDoubleComplex.from_pyobj(b)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(c)._ptr,
         hipblasDoubleComplex.from_pyobj(s)._ptr))    # fully specified
     return (_hipblasZrotg__retval,)
 
@@ -3874,16 +3874,16 @@ def hipblasSrotgBatched(object handle, object a, object b, object c, object s, i
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
-        a (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each single input vector element a_i, overwritten with r_i.
+        a (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each single input vector element a_i, overwritten with r_i.
 
-        b (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each single input vector element b_i, overwritten with z_i.
+        b (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each single input vector element b_i, overwritten with z_i.
 
-        c (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each cosine element of Givens rotation for the batch.
+        c (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each cosine element of Givens rotation for the batch.
 
-        s (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each sine element of Givens rotation for the batch.
+        s (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each sine element of Givens rotation for the batch.
 
         batchCount (`~.int`): **[in]** [int]
             number of batches (length of arrays a, b, c, and s).
@@ -3894,11 +3894,11 @@ def hipblasSrotgBatched(object handle, object a, object b, object c, object s, i
         * `~.hipblasStatus_t`
     """
     _hipblasSrotgBatched__retval = hipblasStatus_t(chipblas.hipblasSrotgBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(a)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(b)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(c)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(a)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(b)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(c)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasSrotgBatched__retval,)
 
 
@@ -3912,11 +3912,11 @@ def hipblasDrotgBatched(object handle, object a, object b, object c, object s, i
         * `~.hipblasStatus_t`
     """
     _hipblasDrotgBatched__retval = hipblasStatus_t(chipblas.hipblasDrotgBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(a)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(b)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(c)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(a)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(b)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(c)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasDrotgBatched__retval,)
 
 
@@ -3930,11 +3930,11 @@ def hipblasCrotgBatched(object handle, object a, object b, object c, object s, i
         * `~.hipblasStatus_t`
     """
     _hipblasCrotgBatched__retval = hipblasStatus_t(chipblas.hipblasCrotgBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(a)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(b)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(c)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(a)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(b)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(c)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasCrotgBatched__retval,)
 
 
@@ -3948,11 +3948,11 @@ def hipblasZrotgBatched(object handle, object a, object b, object c, object s, i
         * `~.hipblasStatus_t`
     """
     _hipblasZrotgBatched__retval = hipblasStatus_t(chipblas.hipblasZrotgBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(a)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(b)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(c)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(s)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(a)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(b)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(c)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(s)._ptr,batchCount))    # fully specified
     return (_hipblasZrotgBatched__retval,)
 
 
@@ -3969,25 +3969,25 @@ def hipblasSrotgStridedBatched(object handle, object a, long stridea, object b, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
-        a (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device strided_batched pointer or host strided_batched pointer to first single input vector element a_1, overwritten with r.
+        a (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device strided_batched pointer or host strided_batched pointer to first single input vector element a_1, overwritten with r.
 
         stridea (`~.int`): **[in]** [hipblasStride]
             distance between elements of a in batch (distance between a_i and a_(i + 1))
 
-        b (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device strided_batched pointer or host strided_batched pointer to first single input vector element b_1, overwritten with z.
+        b (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device strided_batched pointer or host strided_batched pointer to first single input vector element b_1, overwritten with z.
 
         strideb (`~.int`): **[in]** [hipblasStride]
             distance between elements of b in batch (distance between b_i and b_(i + 1))
 
-        c (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device strided_batched pointer or host strided_batched pointer to first cosine element of Givens rotations c_1.
+        c (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device strided_batched pointer or host strided_batched pointer to first cosine element of Givens rotations c_1.
 
         stridec (`~.int`): **[in]** [hipblasStride]
             distance between elements of c in batch (distance between c_i and c_(i + 1))
 
-        s (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device strided_batched pointer or host strided_batched pointer to sine element of Givens rotations s_1.
+        s (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device strided_batched pointer or host strided_batched pointer to sine element of Givens rotations s_1.
 
         strides (`~.int`): **[in]** [hipblasStride]
             distance between elements of s in batch (distance between s_i and s_(i + 1))
@@ -4001,11 +4001,11 @@ def hipblasSrotgStridedBatched(object handle, object a, long stridea, object b, 
         * `~.hipblasStatus_t`
     """
     _hipblasSrotgStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSrotgStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(a)._ptr,stridea,
-        <float *>hip._util.types.DataHandle.from_pyobj(b)._ptr,strideb,
-        <float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,stridec,
-        <float *>hip._util.types.DataHandle.from_pyobj(s)._ptr,strides,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(a)._ptr,stridea,
+        <float *>hip._util.types.Pointer.from_pyobj(b)._ptr,strideb,
+        <float *>hip._util.types.Pointer.from_pyobj(c)._ptr,stridec,
+        <float *>hip._util.types.Pointer.from_pyobj(s)._ptr,strides,batchCount))    # fully specified
     return (_hipblasSrotgStridedBatched__retval,)
 
 
@@ -4019,11 +4019,11 @@ def hipblasDrotgStridedBatched(object handle, object a, long stridea, object b, 
         * `~.hipblasStatus_t`
     """
     _hipblasDrotgStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDrotgStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(a)._ptr,stridea,
-        <double *>hip._util.types.DataHandle.from_pyobj(b)._ptr,strideb,
-        <double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,stridec,
-        <double *>hip._util.types.DataHandle.from_pyobj(s)._ptr,strides,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(a)._ptr,stridea,
+        <double *>hip._util.types.Pointer.from_pyobj(b)._ptr,strideb,
+        <double *>hip._util.types.Pointer.from_pyobj(c)._ptr,stridec,
+        <double *>hip._util.types.Pointer.from_pyobj(s)._ptr,strides,batchCount))    # fully specified
     return (_hipblasDrotgStridedBatched__retval,)
 
 
@@ -4037,10 +4037,10 @@ def hipblasCrotgStridedBatched(object handle, object a, long stridea, object b, 
         * `~.hipblasStatus_t`
     """
     _hipblasCrotgStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCrotgStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         hipblasComplex.from_pyobj(a)._ptr,stridea,
         hipblasComplex.from_pyobj(b)._ptr,strideb,
-        <float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,stridec,
+        <float *>hip._util.types.Pointer.from_pyobj(c)._ptr,stridec,
         hipblasComplex.from_pyobj(s)._ptr,strides,batchCount))    # fully specified
     return (_hipblasCrotgStridedBatched__retval,)
 
@@ -4055,10 +4055,10 @@ def hipblasZrotgStridedBatched(object handle, object a, long stridea, object b, 
         * `~.hipblasStatus_t`
     """
     _hipblasZrotgStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZrotgStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         hipblasDoubleComplex.from_pyobj(a)._ptr,stridea,
         hipblasDoubleComplex.from_pyobj(b)._ptr,strideb,
-        <double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,stridec,
+        <double *>hip._util.types.Pointer.from_pyobj(c)._ptr,stridec,
         hipblasDoubleComplex.from_pyobj(s)._ptr,strides,batchCount))    # fully specified
     return (_hipblasZrotgStridedBatched__retval,)
 
@@ -4073,23 +4073,23 @@ def hipblasSrotm(object handle, int n, object x, int incx, object y, int incy, o
     - Supported precisions in cuBLAS  : s,d
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in the x and y vectors.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment between elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment between elements of y.
 
-        param (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device vector or host vector of 5 elements defining the rotation.
+        param (`~.hip._util.types.Pointer`/`~.object`): **[in]** device vector or host vector of 5 elements defining the rotation.
             param[0] = flag
             param[1] = H11
             param[2] = H21
@@ -4108,10 +4108,10 @@ def hipblasSrotm(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasSrotm__retval = hipblasStatus_t(chipblas.hipblasSrotm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <const float *>hip._util.types.DataHandle.from_pyobj(param)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <const float *>hip._util.types.Pointer.from_pyobj(param)._ptr))    # fully specified
     return (_hipblasSrotm__retval,)
 
 
@@ -4125,10 +4125,10 @@ def hipblasDrotm(object handle, int n, object x, int incx, object y, int incy, o
         * `~.hipblasStatus_t`
     """
     _hipblasDrotm__retval = hipblasStatus_t(chipblas.hipblasDrotm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <const double *>hip._util.types.DataHandle.from_pyobj(param)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <const double *>hip._util.types.Pointer.from_pyobj(param)._ptr))    # fully specified
     return (_hipblasDrotm__retval,)
 
 
@@ -4142,23 +4142,23 @@ def hipblasSrotmBatched(object handle, int n, object x, int incx, object y, int 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in the x and y vectors.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment between elements of each x_i.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_1.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_1.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment between elements of each y_i.
 
-        param (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device vectors of 5 elements defining the rotation.
+        param (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device vectors of 5 elements defining the rotation.
             param[0] = flag
             param[1] = H11
             param[2] = H21
@@ -4180,10 +4180,10 @@ def hipblasSrotmBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasSrotmBatched__retval = hipblasStatus_t(chipblas.hipblasSrotmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(param)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(param)._ptr,batchCount))    # fully specified
     return (_hipblasSrotmBatched__retval,)
 
 
@@ -4197,10 +4197,10 @@ def hipblasDrotmBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasDrotmBatched__retval = hipblasStatus_t(chipblas.hipblasDrotmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(param)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(param)._ptr,batchCount))    # fully specified
     return (_hipblasDrotmBatched__retval,)
 
 
@@ -4214,13 +4214,13 @@ def hipblasSrotmStridedBatched(object handle, int n, object x, int incx, long st
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in the x and y vectors.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer pointing to first strided batched vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer pointing to first strided batched vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment between elements of each x_i.
@@ -4228,7 +4228,7 @@ def hipblasSrotmStridedBatched(object handle, int n, object x, int incx, long st
         stridex (`~.int`): **[in]** [hipblasStride]
             specifies the increment between the beginning of x_i and x_(i + 1)
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer pointing to first strided batched vector y_1.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer pointing to first strided batched vector y_1.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment between elements of each y_i.
@@ -4236,7 +4236,7 @@ def hipblasSrotmStridedBatched(object handle, int n, object x, int incx, long st
         stridey (`~.int`): **[in]** [hipblasStride]
             specifies the increment between the beginning of y_i and y_(i + 1)
 
-        param (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to first array of 5 elements defining the rotation (param_1).
+        param (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to first array of 5 elements defining the rotation (param_1).
             param[0] = flag
             param[1] = H11
             param[2] = H21
@@ -4261,10 +4261,10 @@ def hipblasSrotmStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasSrotmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSrotmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <const float *>hip._util.types.DataHandle.from_pyobj(param)._ptr,strideParam,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <const float *>hip._util.types.Pointer.from_pyobj(param)._ptr,strideParam,batchCount))    # fully specified
     return (_hipblasSrotmStridedBatched__retval,)
 
 
@@ -4278,10 +4278,10 @@ def hipblasDrotmStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasDrotmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDrotmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <const double *>hip._util.types.DataHandle.from_pyobj(param)._ptr,strideParam,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <const double *>hip._util.types.Pointer.from_pyobj(param)._ptr,strideParam,batchCount))    # fully specified
     return (_hipblasDrotmStridedBatched__retval,)
 
 
@@ -4298,18 +4298,18 @@ def hipblasSrotmg(object handle, object d1, object d2, object x1, object y1, obj
     - Supported precisions in cuBLAS  : s,d
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
-        d1 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to input scalar that is overwritten.
+        d1 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to input scalar that is overwritten.
 
-        d2 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to input scalar that is overwritten.
+        d2 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to input scalar that is overwritten.
 
-        x1 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to input scalar that is overwritten.
+        x1 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to input scalar that is overwritten.
 
-        y1 (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to input scalar.
+        y1 (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to input scalar.
 
-        param (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device vector or host vector of 5 elements defining the rotation.
+        param (`~.hip._util.types.Pointer`/`~.object`): **[out]** device vector or host vector of 5 elements defining the rotation.
             param[0] = flag
             param[1] = H11
             param[2] = H21
@@ -4328,12 +4328,12 @@ def hipblasSrotmg(object handle, object d1, object d2, object x1, object y1, obj
         * `~.hipblasStatus_t`
     """
     _hipblasSrotmg__retval = hipblasStatus_t(chipblas.hipblasSrotmg(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(d1)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(d2)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x1)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y1)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(param)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(d1)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(d2)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x1)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(y1)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(param)._ptr))    # fully specified
     return (_hipblasSrotmg__retval,)
 
 
@@ -4347,12 +4347,12 @@ def hipblasDrotmg(object handle, object d1, object d2, object x1, object y1, obj
         * `~.hipblasStatus_t`
     """
     _hipblasDrotmg__retval = hipblasStatus_t(chipblas.hipblasDrotmg(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(d1)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(d2)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x1)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y1)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(param)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(d1)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(d2)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x1)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(y1)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(param)._ptr))    # fully specified
     return (_hipblasDrotmg__retval,)
 
 
@@ -4369,18 +4369,18 @@ def hipblasSrotmgBatched(object handle, object d1, object d2, object x1, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
-        d1 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device batched array or host batched array of input scalars that is overwritten.
+        d1 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device batched array or host batched array of input scalars that is overwritten.
 
-        d2 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device batched array or host batched array of input scalars that is overwritten.
+        d2 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device batched array or host batched array of input scalars that is overwritten.
 
-        x1 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device batched array or host batched array of input scalars that is overwritten.
+        x1 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device batched array or host batched array of input scalars that is overwritten.
 
-        y1 (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device batched array or host batched array of input scalars.
+        y1 (`~.hip._util.types.Pointer`/`~.object`): **[in]** device batched array or host batched array of input scalars.
 
-        param (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device batched array or host batched array of vectors of 5 elements defining the rotation.
+        param (`~.hip._util.types.Pointer`/`~.object`): **[out]** device batched array or host batched array of vectors of 5 elements defining the rotation.
             param[0] = flag
             param[1] = H11
             param[2] = H21
@@ -4402,12 +4402,12 @@ def hipblasSrotmgBatched(object handle, object d1, object d2, object x1, object 
         * `~.hipblasStatus_t`
     """
     _hipblasSrotmgBatched__retval = hipblasStatus_t(chipblas.hipblasSrotmgBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(d1)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(d2)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(x1)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(y1)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(param)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(d1)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(d2)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(x1)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(y1)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(param)._ptr,batchCount))    # fully specified
     return (_hipblasSrotmgBatched__retval,)
 
 
@@ -4421,12 +4421,12 @@ def hipblasDrotmgBatched(object handle, object d1, object d2, object x1, object 
         * `~.hipblasStatus_t`
     """
     _hipblasDrotmgBatched__retval = hipblasStatus_t(chipblas.hipblasDrotmgBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(d1)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(d2)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(x1)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(y1)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(param)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(d1)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(d2)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(x1)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(y1)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(param)._ptr,batchCount))    # fully specified
     return (_hipblasDrotmgBatched__retval,)
 
 
@@ -4443,30 +4443,30 @@ def hipblasSrotmgStridedBatched(object handle, object d1, long strided1, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
-        d1 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
+        d1 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
 
         strided1 (`~.int`): **[in]** [hipblasStride]
             specifies the increment between the beginning of d1_i and d1_(i+1)
 
-        d2 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
+        d2 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
 
         strided2 (`~.int`): **[in]** [hipblasStride]
             specifies the increment between the beginning of d2_i and d2_(i+1)
 
-        x1 (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
+        x1 (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
 
         stridex1 (`~.int`): **[in]** [hipblasStride]
             specifies the increment between the beginning of x1_i and x1_(i+1)
 
-        y1 (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device strided_batched array or host strided_batched array of input scalars.
+        y1 (`~.hip._util.types.Pointer`/`~.object`): **[in]** device strided_batched array or host strided_batched array of input scalars.
 
         stridey1 (`~.int`): **[in]** [hipblasStride]
             specifies the increment between the beginning of y1_i and y1_(i+1)
 
-        param (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device stridedBatched array or host stridedBatched array of vectors of 5 elements defining the rotation.
+        param (`~.hip._util.types.Pointer`/`~.object`): **[out]** device stridedBatched array or host stridedBatched array of vectors of 5 elements defining the rotation.
             param[0] = flag
             param[1] = H11
             param[2] = H21
@@ -4491,12 +4491,12 @@ def hipblasSrotmgStridedBatched(object handle, object d1, long strided1, object 
         * `~.hipblasStatus_t`
     """
     _hipblasSrotmgStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSrotmgStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(d1)._ptr,strided1,
-        <float *>hip._util.types.DataHandle.from_pyobj(d2)._ptr,strided2,
-        <float *>hip._util.types.DataHandle.from_pyobj(x1)._ptr,stridex1,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y1)._ptr,stridey1,
-        <float *>hip._util.types.DataHandle.from_pyobj(param)._ptr,strideParam,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(d1)._ptr,strided1,
+        <float *>hip._util.types.Pointer.from_pyobj(d2)._ptr,strided2,
+        <float *>hip._util.types.Pointer.from_pyobj(x1)._ptr,stridex1,
+        <const float *>hip._util.types.Pointer.from_pyobj(y1)._ptr,stridey1,
+        <float *>hip._util.types.Pointer.from_pyobj(param)._ptr,strideParam,batchCount))    # fully specified
     return (_hipblasSrotmgStridedBatched__retval,)
 
 
@@ -4510,12 +4510,12 @@ def hipblasDrotmgStridedBatched(object handle, object d1, long strided1, object 
         * `~.hipblasStatus_t`
     """
     _hipblasDrotmgStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDrotmgStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(d1)._ptr,strided1,
-        <double *>hip._util.types.DataHandle.from_pyobj(d2)._ptr,strided2,
-        <double *>hip._util.types.DataHandle.from_pyobj(x1)._ptr,stridex1,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y1)._ptr,stridey1,
-        <double *>hip._util.types.DataHandle.from_pyobj(param)._ptr,strideParam,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(d1)._ptr,strided1,
+        <double *>hip._util.types.Pointer.from_pyobj(d2)._ptr,strided2,
+        <double *>hip._util.types.Pointer.from_pyobj(x1)._ptr,stridex1,
+        <const double *>hip._util.types.Pointer.from_pyobj(y1)._ptr,stridey1,
+        <double *>hip._util.types.Pointer.from_pyobj(param)._ptr,strideParam,batchCount))    # fully specified
     return (_hipblasDrotmgStridedBatched__retval,)
 
 
@@ -4531,15 +4531,15 @@ def hipblasSscal(object handle, int n, object alpha, object x, int incx):
     - Supported precisions in cuBLAS  : s,d,c,z,cs,zd
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer for the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer for the scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -4550,9 +4550,9 @@ def hipblasSscal(object handle, int n, object alpha, object x, int incx):
         * `~.hipblasStatus_t`
     """
     _hipblasSscal__retval = hipblasStatus_t(chipblas.hipblasSscal(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasSscal__retval,)
 
 
@@ -4566,9 +4566,9 @@ def hipblasDscal(object handle, int n, object alpha, object x, int incx):
         * `~.hipblasStatus_t`
     """
     _hipblasDscal__retval = hipblasStatus_t(chipblas.hipblasDscal(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDscal__retval,)
 
 
@@ -4582,7 +4582,7 @@ def hipblasCscal(object handle, int n, object alpha, object x, int incx):
         * `~.hipblasStatus_t`
     """
     _hipblasCscal__retval = hipblasStatus_t(chipblas.hipblasCscal(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCscal__retval,)
@@ -4598,8 +4598,8 @@ def hipblasCsscal(object handle, int n, object alpha, object x, int incx):
         * `~.hipblasStatus_t`
     """
     _hipblasCsscal__retval = hipblasStatus_t(chipblas.hipblasCsscal(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCsscal__retval,)
 
@@ -4614,7 +4614,7 @@ def hipblasZscal(object handle, int n, object alpha, object x, int incx):
         * `~.hipblasStatus_t`
     """
     _hipblasZscal__retval = hipblasStatus_t(chipblas.hipblasZscal(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZscal__retval,)
@@ -4630,8 +4630,8 @@ def hipblasZdscal(object handle, int n, object alpha, object x, int incx):
         * `~.hipblasStatus_t`
     """
     _hipblasZdscal__retval = hipblasStatus_t(chipblas.hipblasZdscal(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZdscal__retval,)
 
@@ -4650,15 +4650,15 @@ def hipblasSscalBatched(object handle, int n, object alpha, object x, int incx, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** host pointer or device pointer for the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** host pointer or device pointer for the scalar alpha.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -4672,9 +4672,9 @@ def hipblasSscalBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasSscalBatched__retval = hipblasStatus_t(chipblas.hipblasSscalBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasSscalBatched__retval,)
 
 
@@ -4688,9 +4688,9 @@ def hipblasDscalBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasDscalBatched__retval = hipblasStatus_t(chipblas.hipblasDscalBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasDscalBatched__retval,)
 
 
@@ -4704,9 +4704,9 @@ def hipblasCscalBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasCscalBatched__retval = hipblasStatus_t(chipblas.hipblasCscalBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasCscalBatched__retval,)
 
 
@@ -4720,9 +4720,9 @@ def hipblasZscalBatched(object handle, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasZscalBatched__retval = hipblasStatus_t(chipblas.hipblasZscalBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasZscalBatched__retval,)
 
 
@@ -4736,9 +4736,9 @@ def hipblasCsscalBatched(object handle, int n, object alpha, object x, int incx,
         * `~.hipblasStatus_t`
     """
     _hipblasCsscalBatched__retval = hipblasStatus_t(chipblas.hipblasCsscalBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasCsscalBatched__retval,)
 
 
@@ -4752,9 +4752,9 @@ def hipblasZdscalBatched(object handle, int n, object alpha, object x, int incx,
         * `~.hipblasStatus_t`
     """
     _hipblasZdscalBatched__retval = hipblasStatus_t(chipblas.hipblasZdscalBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasZdscalBatched__retval,)
 
 
@@ -4772,15 +4772,15 @@ def hipblasSscalStridedBatched(object handle, int n, object alpha, object x, int
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** host pointer or device pointer for the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** host pointer or device pointer for the scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector (x_1) in the batch.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector (x_1) in the batch.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -4800,9 +4800,9 @@ def hipblasSscalStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasSscalStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSscalStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasSscalStridedBatched__retval,)
 
 
@@ -4816,9 +4816,9 @@ def hipblasDscalStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasDscalStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDscalStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasDscalStridedBatched__retval,)
 
 
@@ -4832,7 +4832,7 @@ def hipblasCscalStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasCscalStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCscalStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasCscalStridedBatched__retval,)
@@ -4848,7 +4848,7 @@ def hipblasZscalStridedBatched(object handle, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasZscalStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZscalStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasZscalStridedBatched__retval,)
@@ -4864,8 +4864,8 @@ def hipblasCsscalStridedBatched(object handle, int n, object alpha, object x, in
         * `~.hipblasStatus_t`
     """
     _hipblasCsscalStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsscalStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasCsscalStridedBatched__retval,)
 
@@ -4880,8 +4880,8 @@ def hipblasZdscalStridedBatched(object handle, int n, object alpha, object x, in
         * `~.hipblasStatus_t`
     """
     _hipblasZdscalStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZdscalStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasZdscalStridedBatched__retval,)
 
@@ -4898,18 +4898,18 @@ def hipblasSswap(object handle, int n, object x, int incx, object y, int incy):
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x and y.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -4920,9 +4920,9 @@ def hipblasSswap(object handle, int n, object x, int incx, object y, int incy):
         * `~.hipblasStatus_t`
     """
     _hipblasSswap__retval = hipblasStatus_t(chipblas.hipblasSswap(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSswap__retval,)
 
 
@@ -4936,9 +4936,9 @@ def hipblasDswap(object handle, int n, object x, int incx, object y, int incy):
         * `~.hipblasStatus_t`
     """
     _hipblasDswap__retval = hipblasStatus_t(chipblas.hipblasDswap(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDswap__retval,)
 
 
@@ -4952,7 +4952,7 @@ def hipblasCswap(object handle, int n, object x, int incx, object y, int incy):
         * `~.hipblasStatus_t`
     """
     _hipblasCswap__retval = hipblasStatus_t(chipblas.hipblasCswap(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasCswap__retval,)
@@ -4968,7 +4968,7 @@ def hipblasZswap(object handle, int n, object x, int incx, object y, int incy):
         * `~.hipblasStatus_t`
     """
     _hipblasZswap__retval = hipblasStatus_t(chipblas.hipblasZswap(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasZswap__retval,)
@@ -4986,18 +4986,18 @@ def hipblasSswapBatched(object handle, int n, object x, int incx, object y, int 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i and y_i.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
@@ -5011,9 +5011,9 @@ def hipblasSswapBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasSswapBatched__retval = hipblasStatus_t(chipblas.hipblasSswapBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float **>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <float **>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float **>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSswapBatched__retval,)
 
 
@@ -5027,9 +5027,9 @@ def hipblasDswapBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasDswapBatched__retval = hipblasStatus_t(chipblas.hipblasDswapBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double **>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <double **>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double **>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDswapBatched__retval,)
 
 
@@ -5043,9 +5043,9 @@ def hipblasCswapBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasCswapBatched__retval = hipblasStatus_t(chipblas.hipblasCswapBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex **>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex **>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasCswapBatched__retval,)
 
 
@@ -5059,9 +5059,9 @@ def hipblasZswapBatched(object handle, int n, object x, int incx, object y, int 
         * `~.hipblasStatus_t`
     """
     _hipblasZswapBatched__retval = hipblasStatus_t(chipblas.hipblasZswapBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZswapBatched__retval,)
 
 
@@ -5077,13 +5077,13 @@ def hipblasSswapStridedBatched(object handle, int n, object x, int incx, long st
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i and y_i.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -5094,7 +5094,7 @@ def hipblasSswapStridedBatched(object handle, int n, object x, int incx, long st
             take care to ensure that stride_x is of appropriate size, for a typical
             case this means stride_x >= n * incx.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector y_1.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector y_1.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -5114,9 +5114,9 @@ def hipblasSswapStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasSswapStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSswapStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasSswapStridedBatched__retval,)
 
 
@@ -5130,9 +5130,9 @@ def hipblasDswapStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasDswapStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDswapStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasDswapStridedBatched__retval,)
 
 
@@ -5146,7 +5146,7 @@ def hipblasCswapStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasCswapStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCswapStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasCswapStridedBatched__retval,)
@@ -5162,7 +5162,7 @@ def hipblasZswapStridedBatched(object handle, int n, object x, int incx, long st
         * `~.hipblasStatus_t`
     """
     _hipblasZswapStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZswapStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasZswapStridedBatched__retval,)
@@ -5185,7 +5185,7 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         trans (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -5203,9 +5203,9 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
         ku (`~.int`): **[in]** [int]
             number of super-diagonals of A
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing banded matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing banded matrix A.
             Leading (kl + ku + 1) by n part of the matrix contains the coefficients
             of the banded matrix. The leading diagonal resides in row (ku + 1) with
             the first super-diagonal above on the RHS of row ku. The first sub-diagonal
@@ -5225,14 +5225,14 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A. Must be >= (kl + ku + 1)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -5245,12 +5245,12 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgbmv__retval = hipblasStatus_t(chipblas.hipblasSgbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSgbmv__retval,)
 
 
@@ -5266,12 +5266,12 @@ def hipblasDgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgbmv__retval = hipblasStatus_t(chipblas.hipblasDgbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDgbmv__retval,)
 
 
@@ -5287,7 +5287,7 @@ def hipblasCgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgbmv__retval = hipblasStatus_t(chipblas.hipblasCgbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -5308,7 +5308,7 @@ def hipblasZgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgbmv__retval = hipblasStatus_t(chipblas.hipblasZgbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -5336,7 +5336,7 @@ def hipblasSgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         trans (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -5354,9 +5354,9 @@ def hipblasSgbmvBatched(object handle, object trans, int m, int n, int kl, int k
         ku (`~.int`): **[in]** [int]
             number of super-diagonals of each A_i
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each banded matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each banded matrix A_i.
             Leading (kl + ku + 1) by n part of the matrix contains the coefficients
             of the banded matrix. The leading diagonal resides in row (ku + 1) with
             the first super-diagonal above on the RHS of row ku. The first sub-diagonal
@@ -5376,14 +5376,14 @@ def hipblasSgbmvBatched(object handle, object trans, int m, int n, int kl, int k
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i. Must be >= (kl + ku + 1)
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
@@ -5399,12 +5399,12 @@ def hipblasSgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgbmvBatched__retval = hipblasStatus_t(chipblas.hipblasSgbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSgbmvBatched__retval,)
 
 
@@ -5420,12 +5420,12 @@ def hipblasDgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgbmvBatched__retval = hipblasStatus_t(chipblas.hipblasDgbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDgbmvBatched__retval,)
 
 
@@ -5441,12 +5441,12 @@ def hipblasCgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgbmvBatched__retval = hipblasStatus_t(chipblas.hipblasCgbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasCgbmvBatched__retval,)
 
 
@@ -5462,12 +5462,12 @@ def hipblasZgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgbmvBatched__retval = hipblasStatus_t(chipblas.hipblasZgbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZgbmvBatched__retval,)
 
 
@@ -5490,7 +5490,7 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         trans (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -5508,9 +5508,9 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
         ku (`~.int`): **[in]** [int]
             number of super-diagonals of A
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to first banded matrix (A_1).
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to first banded matrix (A_1).
             Leading (kl + ku + 1) by n part of the matrix contains the coefficients
             of the banded matrix. The leading diagonal resides in row (ku + 1) with
             the first super-diagonal above on the RHS of row ku. The first sub-diagonal
@@ -5533,7 +5533,7 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to first vector (x_1).
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to first vector (x_1).
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -5541,9 +5541,9 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
         stridex (`~.int`): **[in]** [hipblasStride]
             stride from the start of one vector (x_i) and the next one (x_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to first vector (y_1).
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to first vector (y_1).
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -5562,12 +5562,12 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasSgbmvStridedBatched__retval,)
 
 
@@ -5583,12 +5583,12 @@ def hipblasDgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasDgbmvStridedBatched__retval,)
 
 
@@ -5604,7 +5604,7 @@ def hipblasCgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -5625,7 +5625,7 @@ def hipblasZgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -5651,7 +5651,7 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         trans (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -5663,21 +5663,21 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
         n (`~.int`): **[in]** [int]
             number of columns of matrix A
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -5690,12 +5690,12 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemv__retval = hipblasStatus_t(chipblas.hipblasSgemv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSgemv__retval,)
 
 
@@ -5711,12 +5711,12 @@ def hipblasDgemv(object handle, object trans, int m, int n, object alpha, object
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemv__retval = hipblasStatus_t(chipblas.hipblasDgemv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDgemv__retval,)
 
 
@@ -5732,7 +5732,7 @@ def hipblasCgemv(object handle, object trans, int m, int n, object alpha, object
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemv__retval = hipblasStatus_t(chipblas.hipblasCgemv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -5753,7 +5753,7 @@ def hipblasZgemv(object handle, object trans, int m, int n, object alpha, object
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemv__retval = hipblasStatus_t(chipblas.hipblasZgemv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -5780,7 +5780,7 @@ def hipblasSgemvBatched(object handle, object trans, int m, int n, object alpha,
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         trans (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -5792,21 +5792,21 @@ def hipblasSgemvBatched(object handle, object trans, int m, int n, object alpha,
         n (`~.int`): **[in]** [int]
             number of columns of each matrix A_i
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each matrix A_i.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i.
@@ -5822,12 +5822,12 @@ def hipblasSgemvBatched(object handle, object trans, int m, int n, object alpha,
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemvBatched__retval = hipblasStatus_t(chipblas.hipblasSgemvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSgemvBatched__retval,)
 
 
@@ -5843,12 +5843,12 @@ def hipblasDgemvBatched(object handle, object trans, int m, int n, object alpha,
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemvBatched__retval = hipblasStatus_t(chipblas.hipblasDgemvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDgemvBatched__retval,)
 
 
@@ -5864,12 +5864,12 @@ def hipblasCgemvBatched(object handle, object trans, int m, int n, object alpha,
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemvBatched__retval = hipblasStatus_t(chipblas.hipblasCgemvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasCgemvBatched__retval,)
 
 
@@ -5885,12 +5885,12 @@ def hipblasZgemvBatched(object handle, object trans, int m, int n, object alpha,
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemvBatched__retval = hipblasStatus_t(chipblas.hipblasZgemvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZgemvBatched__retval,)
 
 
@@ -5912,7 +5912,7 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -5924,9 +5924,9 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
         n (`~.int`): **[in]** [int]
             number of columns of matrices A_i
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first matrix (A_1) in the batch.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first matrix (A_1) in the batch.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of matrices A_i.
@@ -5934,7 +5934,7 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of vectors x_i.
@@ -5945,9 +5945,9 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
             take care to ensure that stridex is of appropriate size. When trans equals HIPBLAS_OP_N
             this typically means stridex >= n * incx, otherwise stridex >= m * incx.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector (y_1) in the batch.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector (y_1) in the batch.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of vectors y_i.
@@ -5969,12 +5969,12 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgemvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasSgemvStridedBatched__retval,)
 
 
@@ -5990,12 +5990,12 @@ def hipblasDgemvStridedBatched(object handle, object transA, int m, int n, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgemvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasDgemvStridedBatched__retval,)
 
 
@@ -6011,7 +6011,7 @@ def hipblasCgemvStridedBatched(object handle, object transA, int m, int n, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgemvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -6032,7 +6032,7 @@ def hipblasZgemvStridedBatched(object handle, object transA, int m, int n, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgemvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -6057,7 +6057,7 @@ def hipblasSger(object handle, int m, int n, object alpha, object x, int incx, o
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         m (`~.int`): **[in]** [int]
@@ -6066,19 +6066,19 @@ def hipblasSger(object handle, int m, int n, object alpha, object x, int incx, o
         n (`~.int`): **[in]** [int]
             the number of columns of the matrix A.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing matrix A.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
@@ -6089,11 +6089,11 @@ def hipblasSger(object handle, int m, int n, object alpha, object x, int incx, o
         * `~.hipblasStatus_t`
     """
     _hipblasSger__retval = hipblasStatus_t(chipblas.hipblasSger(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda))    # fully specified
     return (_hipblasSger__retval,)
 
 
@@ -6107,11 +6107,11 @@ def hipblasDger(object handle, int m, int n, object alpha, object x, int incx, o
         * `~.hipblasStatus_t`
     """
     _hipblasDger__retval = hipblasStatus_t(chipblas.hipblasDger(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda))    # fully specified
     return (_hipblasDger__retval,)
 
 
@@ -6125,7 +6125,7 @@ def hipblasCgeru(object handle, int m, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasCgeru__retval = hipblasStatus_t(chipblas.hipblasCgeru(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -6143,7 +6143,7 @@ def hipblasCgerc(object handle, int m, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasCgerc__retval = hipblasStatus_t(chipblas.hipblasCgerc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -6161,7 +6161,7 @@ def hipblasZgeru(object handle, int m, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasZgeru__retval = hipblasStatus_t(chipblas.hipblasZgeru(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -6179,7 +6179,7 @@ def hipblasZgerc(object handle, int m, int n, object alpha, object x, int incx, 
         * `~.hipblasStatus_t`
     """
     _hipblasZgerc__retval = hipblasStatus_t(chipblas.hipblasZgerc(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -6204,7 +6204,7 @@ def hipblasSgerBatched(object handle, int m, int n, object alpha, object x, int 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         m (`~.int`): **[in]** [int]
@@ -6213,19 +6213,19 @@ def hipblasSgerBatched(object handle, int m, int n, object alpha, object x, int 
         n (`~.int`): **[in]** [int]
             the number of columns of eaceh matrix A_i.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each matrix A_i.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
@@ -6239,11 +6239,11 @@ def hipblasSgerBatched(object handle, int m, int n, object alpha, object x, int 
         * `~.hipblasStatus_t`
     """
     _hipblasSgerBatched__retval = hipblasStatus_t(chipblas.hipblasSgerBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasSgerBatched__retval,)
 
 
@@ -6257,11 +6257,11 @@ def hipblasDgerBatched(object handle, int m, int n, object alpha, object x, int 
         * `~.hipblasStatus_t`
     """
     _hipblasDgerBatched__retval = hipblasStatus_t(chipblas.hipblasDgerBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasDgerBatched__retval,)
 
 
@@ -6275,11 +6275,11 @@ def hipblasCgeruBatched(object handle, int m, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasCgeruBatched__retval = hipblasStatus_t(chipblas.hipblasCgeruBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasCgeruBatched__retval,)
 
 
@@ -6293,11 +6293,11 @@ def hipblasCgercBatched(object handle, int m, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasCgercBatched__retval = hipblasStatus_t(chipblas.hipblasCgercBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasCgercBatched__retval,)
 
 
@@ -6311,11 +6311,11 @@ def hipblasZgeruBatched(object handle, int m, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasZgeruBatched__retval = hipblasStatus_t(chipblas.hipblasZgeruBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasZgeruBatched__retval,)
 
 
@@ -6329,11 +6329,11 @@ def hipblasZgercBatched(object handle, int m, int n, object alpha, object x, int
         * `~.hipblasStatus_t`
     """
     _hipblasZgercBatched__retval = hipblasStatus_t(chipblas.hipblasZgercBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasZgercBatched__retval,)
 
 
@@ -6354,7 +6354,7 @@ def hipblasSgerStridedBatched(object handle, int m, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         m (`~.int`): **[in]** [int]
@@ -6363,9 +6363,9 @@ def hipblasSgerStridedBatched(object handle, int m, int n, object alpha, object 
         n (`~.int`): **[in]** [int]
             the number of columns of each matrix A_i.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
 
         incx (`~.int`): **[in]** [int]
             specifies the increments for the elements of each vector x_i.
@@ -6376,7 +6376,7 @@ def hipblasSgerStridedBatched(object handle, int m, int n, object alpha, object 
             take care to ensure that stridex is of appropriate size, for a typical
             case this means stridex >= m * incx.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector (y_1) in the batch.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector (y_1) in the batch.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i.
@@ -6387,7 +6387,7 @@ def hipblasSgerStridedBatched(object handle, int m, int n, object alpha, object 
             take care to ensure that stridey is of appropriate size, for a typical
             case this means stridey >= n * incy.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first matrix (A_1) in the batch.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first matrix (A_1) in the batch.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
@@ -6404,11 +6404,11 @@ def hipblasSgerStridedBatched(object handle, int m, int n, object alpha, object 
         * `~.hipblasStatus_t`
     """
     _hipblasSgerStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgerStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
     return (_hipblasSgerStridedBatched__retval,)
 
 
@@ -6422,11 +6422,11 @@ def hipblasDgerStridedBatched(object handle, int m, int n, object alpha, object 
         * `~.hipblasStatus_t`
     """
     _hipblasDgerStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgerStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
     return (_hipblasDgerStridedBatched__retval,)
 
 
@@ -6440,7 +6440,7 @@ def hipblasCgeruStridedBatched(object handle, int m, int n, object alpha, object
         * `~.hipblasStatus_t`
     """
     _hipblasCgeruStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgeruStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -6458,7 +6458,7 @@ def hipblasCgercStridedBatched(object handle, int m, int n, object alpha, object
         * `~.hipblasStatus_t`
     """
     _hipblasCgercStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgercStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -6476,7 +6476,7 @@ def hipblasZgeruStridedBatched(object handle, int m, int n, object alpha, object
         * `~.hipblasStatus_t`
     """
     _hipblasZgeruStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgeruStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -6494,7 +6494,7 @@ def hipblasZgercStridedBatched(object handle, int m, int n, object alpha, object
         * `~.hipblasStatus_t`
     """
     _hipblasZgercStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgercStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -6533,7 +6533,7 @@ def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object 
     of A will not be referenced and is assumed to be == 0.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -6585,7 +6585,7 @@ def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChbmv__retval = hipblasStatus_t(chipblas.hipblasChbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -6606,7 +6606,7 @@ def hipblasZhbmv(object handle, object uplo, int n, int k, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhbmv__retval = hipblasStatus_t(chipblas.hipblasZhbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -6646,7 +6646,7 @@ def hipblasChbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     of each A_i will not be referenced and is assumed to be == 0.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -6661,7 +6661,7 @@ def hipblasChbmvBatched(object handle, object uplo, int n, int k, object alpha, 
 
         alpha (`~.hipblasComplex`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, n).
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, n).
             if uplo == HIPBLAS_FILL_MODE_UPPER:
               The leading (k + 1) by n part of each A_i must contain the upper
               triangular band part of the Hermitian matrix, with the leading
@@ -6678,14 +6678,14 @@ def hipblasChbmvBatched(object handle, object uplo, int n, int k, object alpha, 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i. must be >= max(1, n)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
         beta (`~.hipblasComplex`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -6701,12 +6701,12 @@ def hipblasChbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChbmvBatched__retval = hipblasStatus_t(chipblas.hipblasChbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasChbmvBatched__retval,)
 
 
@@ -6722,12 +6722,12 @@ def hipblasZhbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhbmvBatched__retval = hipblasStatus_t(chipblas.hipblasZhbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZhbmvBatched__retval,)
 
 
@@ -6762,7 +6762,7 @@ def hipblasChbmvStridedBatched(object handle, object uplo, int n, int k, object 
     of each A_i will not be referenced and is assumed to be == 0.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -6826,7 +6826,7 @@ def hipblasChbmvStridedBatched(object handle, object uplo, int n, int k, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -6847,7 +6847,7 @@ def hipblasZhbmvStridedBatched(object handle, object uplo, int n, int k, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -6871,7 +6871,7 @@ def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -6918,7 +6918,7 @@ def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemv__retval = hipblasStatus_t(chipblas.hipblasChemv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -6939,7 +6939,7 @@ def hipblasZhemv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemv__retval = hipblasStatus_t(chipblas.hipblasZhemv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -6963,7 +6963,7 @@ def hipblasChemvBatched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -6975,7 +6975,7 @@ def hipblasChemvBatched(object handle, object uplo, int n, object alpha, object 
 
         alpha (`~.hipblasComplex`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i of dimension (lda, n).
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i of dimension (lda, n).
             if uplo == HIPBLAS_FILL_MODE_UPPER:
               The upper triangular part of each A_i must contain
               the upper triangular part of a Hermitian matrix. The lower
@@ -6990,14 +6990,14 @@ def hipblasChemvBatched(object handle, object uplo, int n, object alpha, object 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i. must be >= max(1, n)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
         beta (`~.hipblasComplex`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -7013,12 +7013,12 @@ def hipblasChemvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemvBatched__retval = hipblasStatus_t(chipblas.hipblasChemvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasChemvBatched__retval,)
 
 
@@ -7034,12 +7034,12 @@ def hipblasZhemvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemvBatched__retval = hipblasStatus_t(chipblas.hipblasZhemvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZhemvBatched__retval,)
 
 
@@ -7058,7 +7058,7 @@ def hipblasChemvStridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7117,7 +7117,7 @@ def hipblasChemvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChemvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -7138,7 +7138,7 @@ def hipblasZhemvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhemvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -7162,7 +7162,7 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7173,7 +7173,7 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
         n (`~.int`): **[in]** [int]
             the number of rows and columns of matrix A, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
         x (`~.hipblasComplex`/`~.object`): **[in]** device pointer storing vector x.
 
@@ -7202,8 +7202,8 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCher__retval = hipblasStatus_t(chipblas.hipblasCher(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
     return (_hipblasCher__retval,)
@@ -7221,8 +7221,8 @@ def hipblasZher(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZher__retval = hipblasStatus_t(chipblas.hipblasZher(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
     return (_hipblasZher__retval,)
@@ -7243,7 +7243,7 @@ def hipblasCherBatched(object handle, object uplo, int n, object alpha, object x
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7254,14 +7254,14 @@ def hipblasCherBatched(object handle, object uplo, int n, object alpha, object x
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing the specified triangular portion of
               each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular portion
@@ -7286,10 +7286,10 @@ def hipblasCherBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCherBatched__retval = hipblasStatus_t(chipblas.hipblasCherBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasCherBatched__retval,)
 
 
@@ -7305,10 +7305,10 @@ def hipblasZherBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZherBatched__retval = hipblasStatus_t(chipblas.hipblasZherBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasZherBatched__retval,)
 
 
@@ -7327,7 +7327,7 @@ def hipblasCherStridedBatched(object handle, object uplo, int n, object alpha, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7338,7 +7338,7 @@ def hipblasCherStridedBatched(object handle, object uplo, int n, object alpha, o
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
         x (`~.hipblasComplex`/`~.object`): **[in]** device pointer pointing to the first vector (x_1).
 
@@ -7376,8 +7376,8 @@ def hipblasCherStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCherStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCherStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
     return (_hipblasCherStridedBatched__retval,)
@@ -7395,8 +7395,8 @@ def hipblasZherStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZherStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZherStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
     return (_hipblasZherStridedBatched__retval,)
@@ -7417,7 +7417,7 @@ def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int 
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7462,7 +7462,7 @@ def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCher2__retval = hipblasStatus_t(chipblas.hipblasCher2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -7482,7 +7482,7 @@ def hipblasZher2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZher2__retval = hipblasStatus_t(chipblas.hipblasZher2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -7505,7 +7505,7 @@ def hipblasCher2Batched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7518,17 +7518,17 @@ def hipblasCher2Batched(object handle, object uplo, int n, object alpha, object 
 
         alpha (`~.hipblasComplex`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing the specified triangular portion of
               each Hermitian matrix A_i of size (lda, n).
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular
@@ -7553,11 +7553,11 @@ def hipblasCher2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCher2Batched__retval = hipblasStatus_t(chipblas.hipblasCher2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasCher2Batched__retval,)
 
 
@@ -7573,11 +7573,11 @@ def hipblasZher2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZher2Batched__retval = hipblasStatus_t(chipblas.hipblasZher2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasZher2Batched__retval,)
 
 
@@ -7596,7 +7596,7 @@ def hipblasCher2StridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7653,7 +7653,7 @@ def hipblasCher2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCher2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasCher2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -7673,7 +7673,7 @@ def hipblasZher2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZher2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasZher2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -7696,7 +7696,7 @@ def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, obj
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7755,7 +7755,7 @@ def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, obj
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpmv__retval = hipblasStatus_t(chipblas.hipblasChpmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -7776,7 +7776,7 @@ def hipblasZhpmv(object handle, object uplo, int n, object alpha, object AP, obj
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpmv__retval = hipblasStatus_t(chipblas.hipblasZhpmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -7801,7 +7801,7 @@ def hipblasChpmvBatched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7813,7 +7813,7 @@ def hipblasChpmvBatched(object handle, object uplo, int n, object alpha, object 
 
         alpha (`~.hipblasComplex`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer of device pointers storing the packed version of the specified triangular
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer of device pointers storing the packed version of the specified triangular
                 portion of each Hermitian matrix A_i. Each A_i is of at least size ((n * (n + 1)) / 2).
                 if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each Hermitian matrix A_i is supplied.
@@ -7840,14 +7840,14 @@ def hipblasChpmvBatched(object handle, object uplo, int n, object alpha, object 
             Note that the imaginary part of the diagonal elements are not accessed and are assumed
             to be 0.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
         beta (`~.hipblasComplex`/`~.object`): **[in]** device pointer or host pointer to scalar beta.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
@@ -7863,12 +7863,12 @@ def hipblasChpmvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpmvBatched__retval = hipblasStatus_t(chipblas.hipblasChpmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasChpmvBatched__retval,)
 
 
@@ -7884,12 +7884,12 @@ def hipblasZhpmvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpmvBatched__retval = hipblasStatus_t(chipblas.hipblasZhpmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZhpmvBatched__retval,)
 
 
@@ -7909,7 +7909,7 @@ def hipblasChpmvStridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -7980,7 +7980,7 @@ def hipblasChpmvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChpmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -8001,7 +8001,7 @@ def hipblasZhpmvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhpmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -8025,7 +8025,7 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8036,7 +8036,7 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
         n (`~.int`): **[in]** [int]
             the number of rows and columns of matrix A, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
         x (`~.hipblasComplex`/`~.object`): **[in]** device pointer storing vector x.
 
@@ -8078,8 +8078,8 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpr__retval = hipblasStatus_t(chipblas.hipblasChpr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
     return (_hipblasChpr__retval,)
@@ -8097,8 +8097,8 @@ def hipblasZhpr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpr__retval = hipblasStatus_t(chipblas.hipblasZhpr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
     return (_hipblasZhpr__retval,)
@@ -8119,7 +8119,7 @@ def hipblasChprBatched(object handle, object uplo, int n, object alpha, object x
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8130,14 +8130,14 @@ def hipblasChprBatched(object handle, object uplo, int n, object alpha, object x
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
               each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each Hermitian matrix A_i is supplied.
@@ -8175,10 +8175,10 @@ def hipblasChprBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChprBatched__retval = hipblasStatus_t(chipblas.hipblasChprBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasChprBatched__retval,)
 
 
@@ -8194,10 +8194,10 @@ def hipblasZhprBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhprBatched__retval = hipblasStatus_t(chipblas.hipblasZhprBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasZhprBatched__retval,)
 
 
@@ -8216,7 +8216,7 @@ def hipblasChprStridedBatched(object handle, object uplo, int n, object alpha, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8227,7 +8227,7 @@ def hipblasChprStridedBatched(object handle, object uplo, int n, object alpha, o
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
         x (`~.hipblasComplex`/`~.object`): **[in]** device pointer pointing to the first vector (x_1).
 
@@ -8278,8 +8278,8 @@ def hipblasChprStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChprStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
     return (_hipblasChprStridedBatched__retval,)
@@ -8297,8 +8297,8 @@ def hipblasZhprStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhprStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
     return (_hipblasZhprStridedBatched__retval,)
@@ -8319,7 +8319,7 @@ def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int 
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8377,7 +8377,7 @@ def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpr2__retval = hipblasStatus_t(chipblas.hipblasChpr2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -8397,7 +8397,7 @@ def hipblasZhpr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpr2__retval = hipblasStatus_t(chipblas.hipblasZhpr2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -8420,7 +8420,7 @@ def hipblasChpr2Batched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8433,17 +8433,17 @@ def hipblasChpr2Batched(object handle, object uplo, int n, object alpha, object 
 
         alpha (`~.hipblasComplex`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
               each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each Hermitian matrix A_i is supplied.
@@ -8481,11 +8481,11 @@ def hipblasChpr2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpr2Batched__retval = hipblasStatus_t(chipblas.hipblasChpr2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasChpr2Batched__retval,)
 
 
@@ -8501,11 +8501,11 @@ def hipblasZhpr2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpr2Batched__retval = hipblasStatus_t(chipblas.hipblasZhpr2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasZhpr2Batched__retval,)
 
 
@@ -8524,7 +8524,7 @@ def hipblasChpr2StridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8594,7 +8594,7 @@ def hipblasChpr2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasChpr2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -8614,7 +8614,7 @@ def hipblasZhpr2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhpr2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -8637,7 +8637,7 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
     - Supported precisions in cuBLAS  : s,d
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8650,21 +8650,21 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
         k (`~.int`): **[in]** [int]
             specifies the number of sub- and super-diagonals
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** specifies the scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** specifies the scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix A on the GPU
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix A on the GPU
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of matrix A
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing vector x on the GPU
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing vector x on the GPU
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** specifies the scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** specifies the scalar beta
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer storing vector y on the GPU
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer storing vector y on the GPU
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y
@@ -8677,12 +8677,12 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsbmv__retval = hipblasStatus_t(chipblas.hipblasSsbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSsbmv__retval,)
 
 
@@ -8698,12 +8698,12 @@ def hipblasDsbmv(object handle, object uplo, int n, int k, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsbmv__retval = hipblasStatus_t(chipblas.hipblasDsbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDsbmv__retval,)
 
 
@@ -8724,7 +8724,7 @@ def hipblasSsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8738,21 +8738,21 @@ def hipblasSsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
         k (`~.int`): **[in]** [int]
             specifies the number of sub- and super-diagonals
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each matrix A_i
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[out]** device array of device pointers storing each vector y_i
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[out]** device array of device pointers storing each vector y_i
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i
@@ -8768,12 +8768,12 @@ def hipblasSsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsbmvBatched__retval = hipblasStatus_t(chipblas.hipblasSsbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float **>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSsbmvBatched__retval,)
 
 
@@ -8789,12 +8789,12 @@ def hipblasDsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsbmvBatched__retval = hipblasStatus_t(chipblas.hipblasDsbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double **>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDsbmvBatched__retval,)
 
 
@@ -8815,7 +8815,7 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8829,9 +8829,9 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
         k (`~.int`): **[in]** [int]
             specifies the number of sub- and super-diagonals
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each matrix A_i
@@ -8839,7 +8839,7 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first vector x_1 on the GPU
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first vector x_1 on the GPU
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i
@@ -8850,9 +8850,9 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
             take care to ensure that stridex is of appropriate size.
             This typically means stridex >= n * incx. stridex should be non zero.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Device pointer to the first vector y_1 on the GPU
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** Device pointer to the first vector y_1 on the GPU
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i
@@ -8874,12 +8874,12 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasSsbmvStridedBatched__retval,)
 
 
@@ -8895,12 +8895,12 @@ def hipblasDsbmvStridedBatched(object handle, object uplo, int n, int k, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasDsbmvStridedBatched__retval,)
 
 
@@ -8919,7 +8919,7 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
     - Supported precisions in cuBLAS  : s,d
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -8929,18 +8929,18 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
 
         n (`~.int`): **[in]** [int]
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** specifies the scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** specifies the scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix A on the GPU
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix A on the GPU
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing vector x on the GPU
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing vector x on the GPU
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** specifies the scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** specifies the scalar beta
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer storing vector y on the GPU
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer storing vector y on the GPU
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y
@@ -8953,12 +8953,12 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspmv__retval = hipblasStatus_t(chipblas.hipblasSspmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSspmv__retval,)
 
 
@@ -8974,12 +8974,12 @@ def hipblasDspmv(object handle, object uplo, int n, object alpha, object AP, obj
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspmv__retval = hipblasStatus_t(chipblas.hipblasDspmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDspmv__retval,)
 
 
@@ -9000,7 +9000,7 @@ def hipblasSspmvBatched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9011,18 +9011,18 @@ def hipblasSspmvBatched(object handle, object uplo, int n, object alpha, object 
         n (`~.int`): **[in]** [int]
             number of rows and columns of each matrix A_i
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[out]** device array of device pointers storing each vector y_i
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[out]** device array of device pointers storing each vector y_i
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i
@@ -9038,12 +9038,12 @@ def hipblasSspmvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspmvBatched__retval = hipblasStatus_t(chipblas.hipblasSspmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float **>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSspmvBatched__retval,)
 
 
@@ -9059,12 +9059,12 @@ def hipblasDspmvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspmvBatched__retval = hipblasStatus_t(chipblas.hipblasDspmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double **>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDspmvBatched__retval,)
 
 
@@ -9085,7 +9085,7 @@ def hipblasSspmvStridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9096,14 +9096,14 @@ def hipblasSspmvStridedBatched(object handle, object uplo, int n, object alpha, 
         n (`~.int`): **[in]** [int]
             number of rows and columns of each matrix A_i
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU
 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first vector x_1 on the GPU
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first vector x_1 on the GPU
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i
@@ -9114,9 +9114,9 @@ def hipblasSspmvStridedBatched(object handle, object uplo, int n, object alpha, 
             take care to ensure that stridex is of appropriate size.
             This typically means stridex >= n * incx. stridex should be non zero.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Device pointer to the first vector y_1 on the GPU
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** Device pointer to the first vector y_1 on the GPU
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i
@@ -9138,12 +9138,12 @@ def hipblasSspmvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSspmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasSspmvStridedBatched__retval,)
 
 
@@ -9159,12 +9159,12 @@ def hipblasDspmvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDspmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasDspmvStridedBatched__retval,)
 
 
@@ -9183,7 +9183,7 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9194,14 +9194,14 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
         n (`~.int`): **[in]** [int]
             the number of rows and columns of matrix A, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing the packed version of the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing the packed version of the specified triangular portion of
               the symmetric matrix A. Of at least size ((n * (n + 1)) / 2).
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of the symmetric matrix A is supplied.
@@ -9236,10 +9236,10 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspr__retval = hipblasStatus_t(chipblas.hipblasSspr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr))    # fully specified
     return (_hipblasSspr__retval,)
 
 
@@ -9255,10 +9255,10 @@ def hipblasDspr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspr__retval = hipblasStatus_t(chipblas.hipblasDspr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr))    # fully specified
     return (_hipblasDspr__retval,)
 
 
@@ -9274,7 +9274,7 @@ def hipblasCspr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCspr__retval = hipblasStatus_t(chipblas.hipblasCspr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
@@ -9293,7 +9293,7 @@ def hipblasZspr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZspr__retval = hipblasStatus_t(chipblas.hipblasZspr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
@@ -9315,7 +9315,7 @@ def hipblasSsprBatched(object handle, object uplo, int n, object alpha, object x
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9326,14 +9326,14 @@ def hipblasSsprBatched(object handle, object uplo, int n, object alpha, object x
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
               each symmetric matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each symmetric matrix A_i is supplied.
@@ -9371,10 +9371,10 @@ def hipblasSsprBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsprBatched__retval = hipblasStatus_t(chipblas.hipblasSsprBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasSsprBatched__retval,)
 
 
@@ -9390,10 +9390,10 @@ def hipblasDsprBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsprBatched__retval = hipblasStatus_t(chipblas.hipblasDsprBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasDsprBatched__retval,)
 
 
@@ -9409,10 +9409,10 @@ def hipblasCsprBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsprBatched__retval = hipblasStatus_t(chipblas.hipblasCsprBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasCsprBatched__retval,)
 
 
@@ -9428,10 +9428,10 @@ def hipblasZsprBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsprBatched__retval = hipblasStatus_t(chipblas.hipblasZsprBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasZsprBatched__retval,)
 
 
@@ -9450,7 +9450,7 @@ def hipblasSsprStridedBatched(object handle, object uplo, int n, object alpha, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9461,9 +9461,9 @@ def hipblasSsprStridedBatched(object handle, object uplo, int n, object alpha, o
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to the first vector (x_1).
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to the first vector (x_1).
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -9471,7 +9471,7 @@ def hipblasSsprStridedBatched(object handle, object uplo, int n, object alpha, o
         stridex (`~.int`): **[in]** [hipblasStride]
             stride from the start of one vector (x_i) and the next one (x_i+1).
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing the packed version of the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing the packed version of the specified triangular portion of
               each symmetric matrix A_i. Points to the first A_1.
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each symmetric matrix A_i is supplied.
@@ -9512,10 +9512,10 @@ def hipblasSsprStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsprStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
     return (_hipblasSsprStridedBatched__retval,)
 
 
@@ -9531,10 +9531,10 @@ def hipblasDsprStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsprStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
     return (_hipblasDsprStridedBatched__retval,)
 
 
@@ -9550,7 +9550,7 @@ def hipblasCsprStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsprStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
@@ -9569,7 +9569,7 @@ def hipblasZsprStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsprStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
@@ -9591,7 +9591,7 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
     - Supported precisions in cuBLAS  : s,d
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9602,19 +9602,19 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
         n (`~.int`): **[in]** [int]
             the number of rows and columns of matrix A, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing the packed version of the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing the packed version of the specified triangular portion of
               the symmetric matrix A. Of at least size ((n * (n + 1)) / 2).
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of the symmetric matrix A is supplied.
@@ -9649,11 +9649,11 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspr2__retval = hipblasStatus_t(chipblas.hipblasSspr2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr))    # fully specified
     return (_hipblasSspr2__retval,)
 
 
@@ -9669,11 +9669,11 @@ def hipblasDspr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspr2__retval = hipblasStatus_t(chipblas.hipblasDspr2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr))    # fully specified
     return (_hipblasDspr2__retval,)
 
 
@@ -9692,7 +9692,7 @@ def hipblasSspr2Batched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9703,19 +9703,19 @@ def hipblasSspr2Batched(object handle, object uplo, int n, object alpha, object 
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
               each symmetric matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each symmetric matrix A_i is supplied.
@@ -9753,11 +9753,11 @@ def hipblasSspr2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspr2Batched__retval = hipblasStatus_t(chipblas.hipblasSspr2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasSspr2Batched__retval,)
 
 
@@ -9773,11 +9773,11 @@ def hipblasDspr2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspr2Batched__retval = hipblasStatus_t(chipblas.hipblasDspr2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,batchCount))    # fully specified
     return (_hipblasDspr2Batched__retval,)
 
 
@@ -9796,7 +9796,7 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9807,9 +9807,9 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to the first vector (x_1).
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to the first vector (x_1).
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -9817,7 +9817,7 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
         stridex (`~.int`): **[in]** [hipblasStride]
             stride from the start of one vector (x_i) and the next one (x_i+1).
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to the first vector (y_1).
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to the first vector (y_1).
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
@@ -9825,7 +9825,7 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
         stridey (`~.int`): **[in]** [hipblasStride]
             stride from the start of one vector (y_i) and the next one (y_i+1).
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing the packed version of the specified triangular portion of
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing the packed version of the specified triangular portion of
               each symmetric matrix A_i. Points to the first A_1.
               if uplo == HIPBLAS_FILL_MODE_UPPER:
                 The upper triangular portion of each symmetric matrix A_i is supplied.
@@ -9866,11 +9866,11 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasSspr2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
     return (_hipblasSspr2StridedBatched__retval,)
 
 
@@ -9886,11 +9886,11 @@ def hipblasDspr2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasDspr2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,batchCount))    # fully specified
     return (_hipblasDspr2StridedBatched__retval,)
 
 
@@ -9909,7 +9909,7 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -9919,21 +9919,21 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
 
         n (`~.int`): **[in]** [int]
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** specifies the scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** specifies the scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix A on the GPU
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix A on the GPU
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing vector x on the GPU
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing vector x on the GPU
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** specifies the scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** specifies the scalar beta
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer storing vector y on the GPU
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer storing vector y on the GPU
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y
@@ -9946,12 +9946,12 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymv__retval = hipblasStatus_t(chipblas.hipblasSsymv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSsymv__retval,)
 
 
@@ -9967,12 +9967,12 @@ def hipblasDsymv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymv__retval = hipblasStatus_t(chipblas.hipblasDsymv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDsymv__retval,)
 
 
@@ -9988,7 +9988,7 @@ def hipblasCsymv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymv__retval = hipblasStatus_t(chipblas.hipblasCsymv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -10009,7 +10009,7 @@ def hipblasZsymv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymv__retval = hipblasStatus_t(chipblas.hipblasZsymv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -10036,7 +10036,7 @@ def hipblasSsymvBatched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -10047,21 +10047,21 @@ def hipblasSsymvBatched(object handle, object uplo, int n, object alpha, object 
         n (`~.int`): **[in]** [int]
             number of rows and columns of each matrix A_i
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each matrix A_i
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[out]** device array of device pointers storing each vector y_i
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[out]** device array of device pointers storing each vector y_i
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i
@@ -10077,12 +10077,12 @@ def hipblasSsymvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymvBatched__retval = hipblasStatus_t(chipblas.hipblasSsymvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float **>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSsymvBatched__retval,)
 
 
@@ -10098,12 +10098,12 @@ def hipblasDsymvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymvBatched__retval = hipblasStatus_t(chipblas.hipblasDsymvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double **>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDsymvBatched__retval,)
 
 
@@ -10119,12 +10119,12 @@ def hipblasCsymvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymvBatched__retval = hipblasStatus_t(chipblas.hipblasCsymvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex **>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasCsymvBatched__retval,)
 
 
@@ -10140,12 +10140,12 @@ def hipblasZsymvBatched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymvBatched__retval = hipblasStatus_t(chipblas.hipblasZsymvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZsymvBatched__retval,)
 
 
@@ -10167,7 +10167,7 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -10178,9 +10178,9 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
         n (`~.int`): **[in]** [int]
             number of rows and columns of each matrix A_i
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each matrix A_i
@@ -10188,7 +10188,7 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first vector x_1 on the GPU
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first vector x_1 on the GPU
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector x_i
@@ -10199,9 +10199,9 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
             take care to ensure that stridex is of appropriate size.
             This typically means stridex >= n * incx. stridex should be non zero.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar beta
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar beta
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[out]** Device pointer to the first vector y_1 on the GPU
+        y (`~.hip._util.types.Pointer`/`~.object`): **[out]** Device pointer to the first vector y_1 on the GPU
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each vector y_i
@@ -10223,12 +10223,12 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsymvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasSsymvStridedBatched__retval,)
 
 
@@ -10244,12 +10244,12 @@ def hipblasDsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsymvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,batchCount))    # fully specified
     return (_hipblasDsymvStridedBatched__retval,)
 
 
@@ -10265,7 +10265,7 @@ def hipblasCsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsymvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -10286,7 +10286,7 @@ def hipblasZsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsymvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
@@ -10310,7 +10310,7 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -10321,14 +10321,14 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
         n (`~.int`): **[in]** [int]
             the number of rows and columns of matrix A.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing matrix A.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
@@ -10341,10 +10341,10 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyr__retval = hipblasStatus_t(chipblas.hipblasSsyr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda))    # fully specified
     return (_hipblasSsyr__retval,)
 
 
@@ -10360,10 +10360,10 @@ def hipblasDsyr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyr__retval = hipblasStatus_t(chipblas.hipblasDsyr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda))    # fully specified
     return (_hipblasDsyr__retval,)
 
 
@@ -10379,7 +10379,7 @@ def hipblasCsyr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyr__retval = hipblasStatus_t(chipblas.hipblasCsyr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
@@ -10398,7 +10398,7 @@ def hipblasZsyr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyr__retval = hipblasStatus_t(chipblas.hipblasZsyr(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
@@ -10420,7 +10420,7 @@ def hipblasSsyrBatched(object handle, object uplo, int n, object alpha, object x
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -10431,14 +10431,14 @@ def hipblasSsyrBatched(object handle, object uplo, int n, object alpha, object x
         n (`~.int`): **[in]** [int]
             the number of rows and columns of matrix A.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each matrix A_i.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
@@ -10454,10 +10454,10 @@ def hipblasSsyrBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyrBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasSsyrBatched__retval,)
 
 
@@ -10473,10 +10473,10 @@ def hipblasDsyrBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyrBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasDsyrBatched__retval,)
 
 
@@ -10492,10 +10492,10 @@ def hipblasCsyrBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyrBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasCsyrBatched__retval,)
 
 
@@ -10511,10 +10511,10 @@ def hipblasZsyrBatched(object handle, object uplo, int n, object alpha, object x
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyrBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasZsyrBatched__retval,)
 
 
@@ -10533,7 +10533,7 @@ def hipblasSsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -10544,9 +10544,9 @@ def hipblasSsyrStridedBatched(object handle, object uplo, int n, object alpha, o
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -10554,7 +10554,7 @@ def hipblasSsyrStridedBatched(object handle, object uplo, int n, object alpha, o
         stridex (`~.int`): **[in]** [hipblasStride]
             specifies the pointer increment between vectors (x_i) and (x_i+1).
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first matrix A_1.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first matrix A_1.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
@@ -10573,10 +10573,10 @@ def hipblasSsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyrStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
     return (_hipblasSsyrStridedBatched__retval,)
 
 
@@ -10592,10 +10592,10 @@ def hipblasDsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyrStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
     return (_hipblasDsyrStridedBatched__retval,)
 
 
@@ -10611,7 +10611,7 @@ def hipblasCsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyrStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
@@ -10630,7 +10630,7 @@ def hipblasZsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyrStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
@@ -10652,7 +10652,7 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -10663,19 +10663,19 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
         n (`~.int`): **[in]** [int]
             the number of rows and columns of matrix A.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector y.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing matrix A.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
@@ -10688,11 +10688,11 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyr2__retval = hipblasStatus_t(chipblas.hipblasSsyr2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda))    # fully specified
     return (_hipblasSsyr2__retval,)
 
 
@@ -10708,11 +10708,11 @@ def hipblasDsyr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyr2__retval = hipblasStatus_t(chipblas.hipblasDsyr2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda))    # fully specified
     return (_hipblasDsyr2__retval,)
 
 
@@ -10728,7 +10728,7 @@ def hipblasCsyr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyr2__retval = hipblasStatus_t(chipblas.hipblasCsyr2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -10748,7 +10748,7 @@ def hipblasZsyr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyr2__retval = hipblasStatus_t(chipblas.hipblasZsyr2(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -10771,7 +10771,7 @@ def hipblasSsyr2Batched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -10782,19 +10782,19 @@ def hipblasSsyr2Batched(object handle, object uplo, int n, object alpha, object 
         n (`~.int`): **[in]** [int]
             the number of rows and columns of matrix A.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        y (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each matrix A_i.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
@@ -10810,11 +10810,11 @@ def hipblasSsyr2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyr2Batched__retval = hipblasStatus_t(chipblas.hipblasSsyr2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasSsyr2Batched__retval,)
 
 
@@ -10830,11 +10830,11 @@ def hipblasDsyr2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyr2Batched__retval = hipblasStatus_t(chipblas.hipblasDsyr2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(y)._ptr,incy,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,
+        <double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasDsyr2Batched__retval,)
 
 
@@ -10850,11 +10850,11 @@ def hipblasCsyr2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyr2Batched__retval = hipblasStatus_t(chipblas.hipblasCsyr2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasCsyr2Batched__retval,)
 
 
@@ -10870,11 +10870,11 @@ def hipblasZsyr2Batched(object handle, object uplo, int n, object alpha, object 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyr2Batched__retval = hipblasStatus_t(chipblas.hipblasZsyr2Batched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,batchCount))    # fully specified
     return (_hipblasZsyr2Batched__retval,)
 
 
@@ -10893,7 +10893,7 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -10904,9 +10904,9 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
         n (`~.int`): **[in]** [int]
             the number of rows and columns of each matrix A.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector x_1.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -10914,7 +10914,7 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
         stridex (`~.int`): **[in]** [hipblasStride]
             specifies the pointer increment between vectors (x_i) and (x_i+1).
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector y_1.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector y_1.
 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of each y_i.
@@ -10922,7 +10922,7 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
         stridey (`~.int`): **[in]** [hipblasStride]
             specifies the pointer increment between vectors (y_i) and (y_i+1).
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first matrix A_1.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first matrix A_1.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
@@ -10941,11 +10941,11 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyr2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const float *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
     return (_hipblasSsyr2StridedBatched__retval,)
 
 
@@ -10961,11 +10961,11 @@ def hipblasDsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyr2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,stridey,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <const double *>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,stridey,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,batchCount))    # fully specified
     return (_hipblasDsyr2StridedBatched__retval,)
 
 
@@ -10981,7 +10981,7 @@ def hipblasCsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyr2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -11001,7 +11001,7 @@ def hipblasZsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyr2StridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,stridey,
@@ -11025,7 +11025,7 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -11050,7 +11050,7 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
             of the matrix A.
             k must satisfy k > 0 && k < lda.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing banded triangular matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing banded triangular matrix A.
             if uplo == HIPBLAS_FILL_MODE_UPPER:
               The matrix represented is an upper banded triangular matrix
               with the main diagonal and k super-diagonals, everything
@@ -11080,7 +11080,7 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A. lda must satisfy lda > k.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -11097,9 +11097,9 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbmv__retval = hipblasStatus_t(chipblas.hipblasStbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStbmv__retval,)
 
 
@@ -11119,9 +11119,9 @@ def hipblasDtbmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbmv__retval = hipblasStatus_t(chipblas.hipblasDtbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtbmv__retval,)
 
 
@@ -11141,7 +11141,7 @@ def hipblasCtbmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbmv__retval = hipblasStatus_t(chipblas.hipblasCtbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtbmv__retval,)
@@ -11163,7 +11163,7 @@ def hipblasZtbmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbmv__retval = hipblasStatus_t(chipblas.hipblasZtbmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtbmv__retval,)
@@ -11186,7 +11186,7 @@ def hipblasStbmvBatched(object handle, object uplo, object transA, object diag, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -11211,7 +11211,7 @@ def hipblasStbmvBatched(object handle, object uplo, object transA, object diag, 
             of each matrix A_i.
             k must satisfy k > 0 && k < lda.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each banded triangular matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each banded triangular matrix A_i.
             if uplo == HIPBLAS_FILL_MODE_UPPER:
               The matrix represented is an upper banded triangular matrix
               with the main diagonal and k super-diagonals, everything
@@ -11241,7 +11241,7 @@ def hipblasStbmvBatched(object handle, object uplo, object transA, object diag, 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i. lda must satisfy lda > k.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointer storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointer storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -11261,9 +11261,9 @@ def hipblasStbmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbmvBatched__retval = hipblasStatus_t(chipblas.hipblasStbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasStbmvBatched__retval,)
 
 
@@ -11283,9 +11283,9 @@ def hipblasDtbmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbmvBatched__retval = hipblasStatus_t(chipblas.hipblasDtbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasDtbmvBatched__retval,)
 
 
@@ -11305,9 +11305,9 @@ def hipblasCtbmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbmvBatched__retval = hipblasStatus_t(chipblas.hipblasCtbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasCtbmvBatched__retval,)
 
 
@@ -11327,9 +11327,9 @@ def hipblasZtbmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbmvBatched__retval = hipblasStatus_t(chipblas.hipblasZtbmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasZtbmvBatched__retval,)
 
 
@@ -11350,7 +11350,7 @@ def hipblasStbmvStridedBatched(object handle, object uplo, object transA, object
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -11375,7 +11375,7 @@ def hipblasStbmvStridedBatched(object handle, object uplo, object transA, object
             of each matrix A_i.
             k must satisfy k > 0 && k < lda.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array to the first matrix A_i of the batch. Stores each banded triangular matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array to the first matrix A_i of the batch. Stores each banded triangular matrix A_i.
             if uplo == HIPBLAS_FILL_MODE_UPPER:
               The matrix represented is an upper banded triangular matrix
               with the main diagonal and k super-diagonals, everything
@@ -11408,7 +11408,7 @@ def hipblasStbmvStridedBatched(object handle, object uplo, object transA, object
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one A_i matrix to the next A_(i + 1).
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array to the first vector x_i of the batch.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array to the first vector x_i of the batch.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -11431,9 +11431,9 @@ def hipblasStbmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasStbmvStridedBatched__retval,)
 
 
@@ -11453,9 +11453,9 @@ def hipblasDtbmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasDtbmvStridedBatched__retval,)
 
 
@@ -11475,7 +11475,7 @@ def hipblasCtbmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasCtbmvStridedBatched__retval,)
@@ -11497,7 +11497,7 @@ def hipblasZtbmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtbmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasZtbmvStridedBatched__retval,)
@@ -11517,7 +11517,7 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -11544,13 +11544,13 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
               k specifies the number of sub-diagonals of A.
             k >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing the matrix A in banded format.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing the matrix A in banded format.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
             lda >= (k + 1).
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing input vector b. Overwritten by the output vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing input vector b. Overwritten by the output vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -11567,9 +11567,9 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbsv__retval = hipblasStatus_t(chipblas.hipblasStbsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStbsv__retval,)
 
 
@@ -11589,9 +11589,9 @@ def hipblasDtbsv(object handle, object uplo, object transA, object diag, int n, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbsv__retval = hipblasStatus_t(chipblas.hipblasDtbsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtbsv__retval,)
 
 
@@ -11611,7 +11611,7 @@ def hipblasCtbsv(object handle, object uplo, object transA, object diag, int n, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbsv__retval = hipblasStatus_t(chipblas.hipblasCtbsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtbsv__retval,)
@@ -11633,7 +11633,7 @@ def hipblasZtbsv(object handle, object uplo, object transA, object diag, int n, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbsv__retval = hipblasStatus_t(chipblas.hipblasZtbsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtbsv__retval,)
@@ -11656,7 +11656,7 @@ def hipblasStbsvBatched(object handle, object uplo, object transA, object diag, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -11683,13 +11683,13 @@ def hipblasStbsvBatched(object handle, object uplo, object transA, object diag, 
               k specifies the number of sub-diagonals of each A_i.
             k >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device vector of device pointers storing each matrix A_i in banded format.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device vector of device pointers storing each matrix A_i in banded format.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
             lda >= (k + 1).
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device vector of device pointers storing each input vector b_i. Overwritten by each output
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device vector of device pointers storing each input vector b_i. Overwritten by each output
             vector x_i.
 
         incx (`~.int`): **[in]** [int]
@@ -11710,9 +11710,9 @@ def hipblasStbsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbsvBatched__retval = hipblasStatus_t(chipblas.hipblasStbsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasStbsvBatched__retval,)
 
 
@@ -11732,9 +11732,9 @@ def hipblasDtbsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbsvBatched__retval = hipblasStatus_t(chipblas.hipblasDtbsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasDtbsvBatched__retval,)
 
 
@@ -11754,9 +11754,9 @@ def hipblasCtbsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbsvBatched__retval = hipblasStatus_t(chipblas.hipblasCtbsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasCtbsvBatched__retval,)
 
 
@@ -11776,9 +11776,9 @@ def hipblasZtbsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbsvBatched__retval = hipblasStatus_t(chipblas.hipblasZtbsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasZtbsvBatched__retval,)
 
 
@@ -11799,7 +11799,7 @@ def hipblasStbsvStridedBatched(object handle, object uplo, object transA, object
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -11826,7 +11826,7 @@ def hipblasStbsvStridedBatched(object handle, object uplo, object transA, object
               k specifies the number of sub-diagonals of each A_i.
             k >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to the first banded matrix A_1.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to the first banded matrix A_1.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
@@ -11835,7 +11835,7 @@ def hipblasStbsvStridedBatched(object handle, object uplo, object transA, object
         strideA (`~.int`): **[in]** [hipblasStride]
             specifies the distance between the start of one matrix (A_i) and the next (A_i+1).
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer pointing to the first input vector b_1. Overwritten by output vectors x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer pointing to the first input vector b_1. Overwritten by output vectors x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -11858,9 +11858,9 @@ def hipblasStbsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStbsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasStbsvStridedBatched__retval,)
 
 
@@ -11880,9 +11880,9 @@ def hipblasDtbsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtbsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasDtbsvStridedBatched__retval,)
 
 
@@ -11902,7 +11902,7 @@ def hipblasCtbsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtbsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasCtbsvStridedBatched__retval,)
@@ -11924,7 +11924,7 @@ def hipblasZtbsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtbsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasZtbsvStridedBatched__retval,)
@@ -11946,7 +11946,7 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -11962,7 +11962,7 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of A. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A,
               of dimension at leat ( m * ( m + 1 ) / 2 ).
             Before entry with uplo = HIPBLAS_FILL_MODE_UPPER, the array A
             must contain the upper triangular matrix packed sequentially,
@@ -11975,7 +11975,7 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
             Note that when DIAG = HIPBLAS_DIAG_UNIT, the diagonal elements of A are
             not referenced, but are assumed to be unity.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x. incx must not be zero.
@@ -11992,9 +11992,9 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpmv__retval = hipblasStatus_t(chipblas.hipblasStpmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStpmv__retval,)
 
 
@@ -12014,9 +12014,9 @@ def hipblasDtpmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpmv__retval = hipblasStatus_t(chipblas.hipblasDtpmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtpmv__retval,)
 
 
@@ -12036,7 +12036,7 @@ def hipblasCtpmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpmv__retval = hipblasStatus_t(chipblas.hipblasCtpmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtpmv__retval,)
@@ -12058,7 +12058,7 @@ def hipblasZtpmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpmv__retval = hipblasStatus_t(chipblas.hipblasZtpmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtpmv__retval,)
@@ -12080,7 +12080,7 @@ def hipblasStpmvBatched(object handle, object uplo, object transA, object diag, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -12096,10 +12096,10 @@ def hipblasStpmvBatched(object handle, object uplo, object transA, object diag, 
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of matrices A_i. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing pointer of matrices A_i,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing pointer of matrices A_i,
             of dimension ( lda, m )
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device pointer storing vectors x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device pointer storing vectors x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of vectors x_i.
@@ -12119,9 +12119,9 @@ def hipblasStpmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpmvBatched__retval = hipblasStatus_t(chipblas.hipblasStpmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasStpmvBatched__retval,)
 
 
@@ -12141,9 +12141,9 @@ def hipblasDtpmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpmvBatched__retval = hipblasStatus_t(chipblas.hipblasDtpmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasDtpmvBatched__retval,)
 
 
@@ -12163,9 +12163,9 @@ def hipblasCtpmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpmvBatched__retval = hipblasStatus_t(chipblas.hipblasCtpmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasCtpmvBatched__retval,)
 
 
@@ -12185,9 +12185,9 @@ def hipblasZtpmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpmvBatched__retval = hipblasStatus_t(chipblas.hipblasZtpmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasZtpmvBatched__retval,)
 
 
@@ -12208,7 +12208,7 @@ def hipblasStpmvStridedBatched(object handle, object uplo, object transA, object
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -12224,13 +12224,13 @@ def hipblasStpmvStridedBatched(object handle, object uplo, object transA, object
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of matrices A_i. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer of the matrix A_0,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer of the matrix A_0,
             of dimension ( lda, m )
 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one A_i matrix to the next A_{i + 1}
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing the vector x_0.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing the vector x_0.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of one vector x.
@@ -12253,9 +12253,9 @@ def hipblasStpmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStpmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasStpmvStridedBatched__retval,)
 
 
@@ -12275,9 +12275,9 @@ def hipblasDtpmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtpmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasDtpmvStridedBatched__retval,)
 
 
@@ -12297,7 +12297,7 @@ def hipblasCtpmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtpmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasCtpmvStridedBatched__retval,)
@@ -12319,7 +12319,7 @@ def hipblasZtpmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtpmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasZtpmvStridedBatched__retval,)
@@ -12341,7 +12341,7 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -12361,10 +12361,10 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of b. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing the packed version of matrix A,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing the packed version of matrix A,
             of dimension >= (n * (n + 1) / 2)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector b on input, overwritten by x on output.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector b on input, overwritten by x on output.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -12381,9 +12381,9 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpsv__retval = hipblasStatus_t(chipblas.hipblasStpsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStpsv__retval,)
 
 
@@ -12403,9 +12403,9 @@ def hipblasDtpsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpsv__retval = hipblasStatus_t(chipblas.hipblasDtpsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtpsv__retval,)
 
 
@@ -12425,7 +12425,7 @@ def hipblasCtpsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpsv__retval = hipblasStatus_t(chipblas.hipblasCtpsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtpsv__retval,)
@@ -12447,7 +12447,7 @@ def hipblasZtpsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpsv__retval = hipblasStatus_t(chipblas.hipblasZtpsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtpsv__retval,)
@@ -12470,7 +12470,7 @@ def hipblasStpsvBatched(object handle, object uplo, object transA, object diag, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -12490,10 +12490,10 @@ def hipblasStpsvBatched(object handle, object uplo, object transA, object diag, 
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of each b_i. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing the packed versions of each matrix A_i,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing the packed versions of each matrix A_i,
             of dimension >= (n * (n + 1) / 2)
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** device array of device pointers storing each input vector b_i, overwritten by x_i on output.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** device array of device pointers storing each input vector b_i, overwritten by x_i on output.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -12513,9 +12513,9 @@ def hipblasStpsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpsvBatched__retval = hipblasStatus_t(chipblas.hipblasStpsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasStpsvBatched__retval,)
 
 
@@ -12535,9 +12535,9 @@ def hipblasDtpsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpsvBatched__retval = hipblasStatus_t(chipblas.hipblasDtpsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasDtpsvBatched__retval,)
 
 
@@ -12557,9 +12557,9 @@ def hipblasCtpsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpsvBatched__retval = hipblasStatus_t(chipblas.hipblasCtpsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasCtpsvBatched__retval,)
 
 
@@ -12579,9 +12579,9 @@ def hipblasZtpsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpsvBatched__retval = hipblasStatus_t(chipblas.hipblasZtpsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasZtpsvBatched__retval,)
 
 
@@ -12602,7 +12602,7 @@ def hipblasStpsvStridedBatched(object handle, object uplo, object transA, object
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -12622,13 +12622,13 @@ def hipblasStpsvStridedBatched(object handle, object uplo, object transA, object
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of each b_i. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to the first packed matrix A_1,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to the first packed matrix A_1,
             of dimension >= (n * (n + 1) / 2)
 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the beginning of one packed matrix (AP_i) and the next (AP_i+1).
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer pointing to the first input vector b_1. Overwritten by each x_i on output.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer pointing to the first input vector b_1. Overwritten by each x_i on output.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
@@ -12651,9 +12651,9 @@ def hipblasStpsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStpsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasStpsvStridedBatched__retval,)
 
 
@@ -12673,9 +12673,9 @@ def hipblasDtpsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtpsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasDtpsvStridedBatched__retval,)
 
 
@@ -12695,7 +12695,7 @@ def hipblasCtpsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtpsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasCtpsvStridedBatched__retval,)
@@ -12717,7 +12717,7 @@ def hipblasZtpsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtpsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasZtpsvStridedBatched__retval,)
@@ -12739,7 +12739,7 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -12755,14 +12755,14 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of A. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A,
             of dimension ( lda, m )
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
             lda = max( 1, m ).
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -12779,9 +12779,9 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmv__retval = hipblasStatus_t(chipblas.hipblasStrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStrmv__retval,)
 
 
@@ -12801,9 +12801,9 @@ def hipblasDtrmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmv__retval = hipblasStatus_t(chipblas.hipblasDtrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtrmv__retval,)
 
 
@@ -12823,7 +12823,7 @@ def hipblasCtrmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmv__retval = hipblasStatus_t(chipblas.hipblasCtrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtrmv__retval,)
@@ -12845,7 +12845,7 @@ def hipblasZtrmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmv__retval = hipblasStatus_t(chipblas.hipblasZtrmv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtrmv__retval,)
@@ -12867,7 +12867,7 @@ def hipblasStrmvBatched(object handle, object uplo, object transA, object diag, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -12883,14 +12883,14 @@ def hipblasStrmvBatched(object handle, object uplo, object transA, object diag, 
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of matrices A_i. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing pointer of matrices A_i,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing pointer of matrices A_i,
             of dimension ( lda, m )
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A_i.
             lda >= max( 1, m ).
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device pointer storing vectors x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device pointer storing vectors x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of vectors x_i.
@@ -12910,9 +12910,9 @@ def hipblasStrmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmvBatched__retval = hipblasStatus_t(chipblas.hipblasStrmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasStrmvBatched__retval,)
 
 
@@ -12932,9 +12932,9 @@ def hipblasDtrmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmvBatched__retval = hipblasStatus_t(chipblas.hipblasDtrmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasDtrmvBatched__retval,)
 
 
@@ -12954,9 +12954,9 @@ def hipblasCtrmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmvBatched__retval = hipblasStatus_t(chipblas.hipblasCtrmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasCtrmvBatched__retval,)
 
 
@@ -12976,9 +12976,9 @@ def hipblasZtrmvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmvBatched__retval = hipblasStatus_t(chipblas.hipblasZtrmvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasZtrmvBatched__retval,)
 
 
@@ -12999,7 +12999,7 @@ def hipblasStrmvStridedBatched(object handle, object uplo, object transA, object
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -13015,7 +13015,7 @@ def hipblasStrmvStridedBatched(object handle, object uplo, object transA, object
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of matrices A_i. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer of the matrix A_0,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer of the matrix A_0,
             of dimension ( lda, m )
 
         lda (`~.int`): **[in]** [int]
@@ -13025,7 +13025,7 @@ def hipblasStrmvStridedBatched(object handle, object uplo, object transA, object
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one A_i matrix to the next A_{i + 1}
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing the vector x_0.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing the vector x_0.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of one vector x.
@@ -13048,9 +13048,9 @@ def hipblasStrmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasStrmvStridedBatched__retval,)
 
 
@@ -13070,9 +13070,9 @@ def hipblasDtrmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasDtrmvStridedBatched__retval,)
 
 
@@ -13092,7 +13092,7 @@ def hipblasCtrmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasCtrmvStridedBatched__retval,)
@@ -13114,7 +13114,7 @@ def hipblasZtrmvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrmvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasZtrmvStridedBatched__retval,)
@@ -13136,7 +13136,7 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -13152,14 +13152,14 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of b. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A,
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A,
             of dimension ( lda, m )
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
             lda = max( 1, m ).
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -13176,9 +13176,9 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsv__retval = hipblasStatus_t(chipblas.hipblasStrsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStrsv__retval,)
 
 
@@ -13198,9 +13198,9 @@ def hipblasDtrsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsv__retval = hipblasStatus_t(chipblas.hipblasDtrsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtrsv__retval,)
 
 
@@ -13220,7 +13220,7 @@ def hipblasCtrsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsv__retval = hipblasStatus_t(chipblas.hipblasCtrsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtrsv__retval,)
@@ -13242,7 +13242,7 @@ def hipblasZtrsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsv__retval = hipblasStatus_t(chipblas.hipblasZtrsv(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtrsv__retval,)
@@ -13266,7 +13266,7 @@ def hipblasStrsvBatched(object handle, object uplo, object transA, object diag, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -13282,13 +13282,13 @@ def hipblasStrsvBatched(object handle, object uplo, object transA, object diag, 
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of b. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
             lda = max(1, m)
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
@@ -13308,9 +13308,9 @@ def hipblasStrsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsvBatched__retval = hipblasStatus_t(chipblas.hipblasStrsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasStrsvBatched__retval,)
 
 
@@ -13330,9 +13330,9 @@ def hipblasDtrsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsvBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasDtrsvBatched__retval,)
 
 
@@ -13352,9 +13352,9 @@ def hipblasCtrsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsvBatched__retval = hipblasStatus_t(chipblas.hipblasCtrsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasCtrsvBatched__retval,)
 
 
@@ -13374,9 +13374,9 @@ def hipblasZtrsvBatched(object handle, object uplo, object transA, object diag, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsvBatched__retval = hipblasStatus_t(chipblas.hipblasZtrsvBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,batchCount))    # fully specified
     return (_hipblasZtrsvBatched__retval,)
 
 
@@ -13397,7 +13397,7 @@ def hipblasStrsvStridedBatched(object handle, object uplo, object transA, object
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -13413,7 +13413,7 @@ def hipblasStrsvStridedBatched(object handle, object uplo, object transA, object
         m (`~.int`): **[in]** [int]
             m specifies the number of rows of each b_i. m >= 0.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first matrix (A_1) in the batch, of dimension ( lda, m )
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first matrix (A_1) in the batch, of dimension ( lda, m )
 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one A_i matrix to the next A_(i + 1)
@@ -13422,7 +13422,7 @@ def hipblasStrsvStridedBatched(object handle, object uplo, object transA, object
             specifies the leading dimension of each A_i.
             lda = max( 1, m ).
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device pointer to the first vector (x_1) in the batch.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device pointer to the first vector (x_1) in the batch.
 
         stridex (`~.int`): **[in]** [hipblasStride]
             stride from the start of one x_i vector to the next x_(i + 1)
@@ -13445,9 +13445,9 @@ def hipblasStrsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasStrsvStridedBatched__retval,)
 
 
@@ -13467,9 +13467,9 @@ def hipblasDtrsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasDtrsvStridedBatched__retval,)
 
 
@@ -13489,7 +13489,7 @@ def hipblasCtrsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasCtrsvStridedBatched__retval,)
@@ -13511,7 +13511,7 @@ def hipblasZtrsvStridedBatched(object handle, object uplo, object transA, object
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrsvStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount))    # fully specified
     return (_hipblasZtrsvStridedBatched__retval,)
@@ -13540,7 +13540,7 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
     .
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
             specifies the form of op( A )
@@ -13557,21 +13557,21 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
         k (`~.int`): **[in]** [int]
             number of columns of matrix op( A ) and number of rows of matrix op( B )
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix B.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix B.
 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of B.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device pointer storing matrix C on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device pointer storing matrix C on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             specifies the leading dimension of C.
@@ -13586,12 +13586,12 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasHgemm__retval = hipblasStatus_t(chipblas.hipblasHgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasHgemm__retval,)
 
 
@@ -13609,12 +13609,12 @@ def hipblasSgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemm__retval = hipblasStatus_t(chipblas.hipblasSgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasSgemm__retval,)
 
 
@@ -13632,12 +13632,12 @@ def hipblasDgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemm__retval = hipblasStatus_t(chipblas.hipblasDgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasDgemm__retval,)
 
 
@@ -13655,7 +13655,7 @@ def hipblasCgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemm__retval = hipblasStatus_t(chipblas.hipblasCgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -13678,7 +13678,7 @@ def hipblasZgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemm__retval = hipblasStatus_t(chipblas.hipblasZgemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -13706,7 +13706,7 @@ def hipblasHgemmBatched(object handle, object transA, object transB, int m, int 
     - Supported precisions in cuBLAS  : h,s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -13724,21 +13724,21 @@ def hipblasHgemmBatched(object handle, object transA, object transB, int m, int 
         k (`~.int`): **[in]** [int]
             matrix dimention k.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix B_i.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix B_i.
 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of each B_i.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device array of device pointers storing each matrix C_i.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device array of device pointers storing each matrix C_i.
 
         ldc (`~.int`): **[in]** [int]
             specifies the leading dimension of each C_i.
@@ -13756,12 +13756,12 @@ def hipblasHgemmBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasHgemmBatched__retval = hipblasStatus_t(chipblas.hipblasHgemmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const unsigned short *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const unsigned short *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <unsigned short *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const unsigned short *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const unsigned short *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <unsigned short *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasHgemmBatched__retval,)
 
 
@@ -13779,12 +13779,12 @@ def hipblasSgemmBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemmBatched__retval = hipblasStatus_t(chipblas.hipblasSgemmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasSgemmBatched__retval,)
 
 
@@ -13802,12 +13802,12 @@ def hipblasDgemmBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemmBatched__retval = hipblasStatus_t(chipblas.hipblasDgemmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasDgemmBatched__retval,)
 
 
@@ -13825,12 +13825,12 @@ def hipblasCgemmBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemmBatched__retval = hipblasStatus_t(chipblas.hipblasCgemmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCgemmBatched__retval,)
 
 
@@ -13848,12 +13848,12 @@ def hipblasZgemmBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemmBatched__retval = hipblasStatus_t(chipblas.hipblasZgemmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZgemmBatched__retval,)
 
 
@@ -13880,7 +13880,7 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
     - Supported precisions in cuBLAS  : h,s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -13898,9 +13898,9 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
         k (`~.int`): **[in]** [int]
             matrix dimention k.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to the first matrix A_1.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to the first matrix A_1.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
@@ -13908,7 +13908,7 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one A_i matrix to the next A_(i + 1).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to the first matrix B_1.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to the first matrix B_1.
 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of each B_i.
@@ -13916,9 +13916,9 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
         strideB (`~.int`): **[in]** [hipblasStride]
             stride from the start of one B_i matrix to the next B_(i + 1).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device pointer pointing to the first matrix C_1.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device pointer pointing to the first matrix C_1.
 
         ldc (`~.int`): **[in]** [int]
             specifies the leading dimension of each C_i.
@@ -13939,12 +13939,12 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasHgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasHgemmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const unsigned short *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasHgemmStridedBatched__retval,)
 
 
@@ -13962,12 +13962,12 @@ def hipblasSgemmStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgemmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasSgemmStridedBatched__retval,)
 
 
@@ -13985,12 +13985,12 @@ def hipblasDgemmStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgemmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasDgemmStridedBatched__retval,)
 
 
@@ -14008,7 +14008,7 @@ def hipblasCgemmStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgemmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -14031,7 +14031,7 @@ def hipblasZgemmStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgemmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -14058,7 +14058,7 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14075,7 +14075,7 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
@@ -14088,7 +14088,7 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
             if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
         CP (`~.hipblasComplex`/`~.object`): **[in]** pointer storing matrix C on the GPU.
@@ -14107,10 +14107,10 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherk__retval = hipblasStatus_t(chipblas.hipblasCherk(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasCherk__retval,)
 
@@ -14129,10 +14129,10 @@ def hipblasZherk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherk__retval = hipblasStatus_t(chipblas.hipblasZherk(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasZherk__retval,)
 
@@ -14155,7 +14155,7 @@ def hipblasCherkBatched(object handle, object uplo, object transA, int n, int k,
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14172,11 +14172,11 @@ def hipblasCherkBatched(object handle, object uplo, object transA, int n, int k,
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
             when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -14184,10 +14184,10 @@ def hipblasCherkBatched(object handle, object uplo, object transA, int n, int k,
             if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
             The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
         ldc (`~.int`): **[in]** [int]
@@ -14206,11 +14206,11 @@ def hipblasCherkBatched(object handle, object uplo, object transA, int n, int k,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkBatched__retval = hipblasStatus_t(chipblas.hipblasCherkBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCherkBatched__retval,)
 
 
@@ -14228,11 +14228,11 @@ def hipblasZherkBatched(object handle, object uplo, object transA, int n, int k,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkBatched__retval = hipblasStatus_t(chipblas.hipblasZherkBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZherkBatched__retval,)
 
 
@@ -14254,7 +14254,7 @@ def hipblasCherkStridedBatched(object handle, object uplo, object transA, int n,
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14271,7 +14271,7 @@ def hipblasCherkStridedBatched(object handle, object uplo, object transA, int n,
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
@@ -14286,7 +14286,7 @@ def hipblasCherkStridedBatched(object handle, object uplo, object transA, int n,
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
         CP (`~.hipblasComplex`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU.
@@ -14311,10 +14311,10 @@ def hipblasCherkStridedBatched(object handle, object uplo, object transA, int n,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCherkStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasCherkStridedBatched__retval,)
 
@@ -14333,10 +14333,10 @@ def hipblasZherkStridedBatched(object handle, object uplo, object transA, int n,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZherkStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasZherkStridedBatched__retval,)
 
@@ -14360,7 +14360,7 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14399,7 +14399,7 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
             if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
             otherwise ldb >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
         CP (`~.hipblasComplex`/`~.object`): **[in]** pointer storing matrix C on the GPU.
@@ -14418,11 +14418,11 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkx__retval = hipblasStatus_t(chipblas.hipblasCherkx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasCherkx__retval,)
 
@@ -14441,11 +14441,11 @@ def hipblasZherkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkx__retval = hipblasStatus_t(chipblas.hipblasZherkx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasZherkx__retval,)
 
@@ -14469,7 +14469,7 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14490,7 +14490,7 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -14498,7 +14498,7 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
             if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
         ldb (`~.int`): **[in]** [int]
@@ -14506,10 +14506,10 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
             if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
             otherwise ldb >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
             The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
         ldc (`~.int`): **[in]** [int]
@@ -14528,12 +14528,12 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkxBatched__retval = hipblasStatus_t(chipblas.hipblasCherkxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCherkxBatched__retval,)
 
 
@@ -14551,12 +14551,12 @@ def hipblasZherkxBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkxBatched__retval = hipblasStatus_t(chipblas.hipblasZherkxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZherkxBatched__retval,)
 
 
@@ -14579,7 +14579,7 @@ def hipblasCherkxStridedBatched(object handle, object uplo, object transA, int n
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14622,7 +14622,7 @@ def hipblasCherkxStridedBatched(object handle, object uplo, object transA, int n
         strideB (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
         CP (`~.hipblasComplex`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU.
@@ -14647,11 +14647,11 @@ def hipblasCherkxStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCherkxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasCherkxStridedBatched__retval,)
 
@@ -14670,11 +14670,11 @@ def hipblasZherkxStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZherkxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasZherkxStridedBatched__retval,)
 
@@ -14697,7 +14697,7 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14736,7 +14736,7 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
             if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
             otherwise ldb >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
         CP (`~.hipblasComplex`/`~.object`): **[in]** pointer storing matrix C on the GPU.
@@ -14755,11 +14755,11 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCher2k__retval = hipblasStatus_t(chipblas.hipblasCher2k(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasCher2k__retval,)
 
@@ -14778,11 +14778,11 @@ def hipblasZher2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZher2k__retval = hipblasStatus_t(chipblas.hipblasZher2k(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasZher2k__retval,)
 
@@ -14805,7 +14805,7 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14826,7 +14826,7 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -14834,7 +14834,7 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
             if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
         ldb (`~.int`): **[in]** [int]
@@ -14842,10 +14842,10 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
             if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
             otherwise ldb >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
             The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
         ldc (`~.int`): **[in]** [int]
@@ -14864,12 +14864,12 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCher2kBatched__retval = hipblasStatus_t(chipblas.hipblasCher2kBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCher2kBatched__retval,)
 
 
@@ -14887,12 +14887,12 @@ def hipblasZher2kBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZher2kBatched__retval = hipblasStatus_t(chipblas.hipblasZher2kBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZher2kBatched__retval,)
 
 
@@ -14914,7 +14914,7 @@ def hipblasCher2kStridedBatched(object handle, object uplo, object transA, int n
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -14957,7 +14957,7 @@ def hipblasCher2kStridedBatched(object handle, object uplo, object transA, int n
         strideB (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
         CP (`~.hipblasComplex`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU.
@@ -14982,11 +14982,11 @@ def hipblasCher2kStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCher2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCher2kStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasCher2kStridedBatched__retval,)
 
@@ -15005,11 +15005,11 @@ def hipblasZher2kStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZher2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZher2kStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasZher2kStridedBatched__retval,)
 
@@ -15030,7 +15030,7 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -15047,10 +15047,10 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of B and C. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A and B are not referenced.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix A on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix A on the GPU.
             A is m by m if side == HIPBLAS_SIDE_LEFT
             A is n by n if side == HIPBLAS_SIDE_RIGHT
             only the upper/lower triangular part is accessed.
@@ -15060,16 +15060,16 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
             if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             otherwise lda >= max( 1, n ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix B on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix B on the GPU.
             Matrix dimension is m by n
 
         ldb (`~.int`): **[in]** [int]
             ldb specifies the first dimension of B. ldb >= max( 1, m )
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix C on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix C on the GPU.
             Matrix dimension is m by n
 
         ldc (`~.int`): **[in]** [int]
@@ -15085,12 +15085,12 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymm__retval = hipblasStatus_t(chipblas.hipblasSsymm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasSsymm__retval,)
 
 
@@ -15108,12 +15108,12 @@ def hipblasDsymm(object handle, object side, object uplo, int m, int n, object a
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymm__retval = hipblasStatus_t(chipblas.hipblasDsymm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasDsymm__retval,)
 
 
@@ -15131,7 +15131,7 @@ def hipblasCsymm(object handle, object side, object uplo, int m, int n, object a
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymm__retval = hipblasStatus_t(chipblas.hipblasCsymm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -15154,7 +15154,7 @@ def hipblasZsymm(object handle, object side, object uplo, int m, int n, object a
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymm__retval = hipblasStatus_t(chipblas.hipblasZsymm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -15179,7 +15179,7 @@ def hipblasSsymmBatched(object handle, object side, object uplo, int m, int n, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -15196,10 +15196,10 @@ def hipblasSsymmBatched(object handle, object side, object uplo, int m, int n, o
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of B_i and C_i. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A_i and B_i are not referenced.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
             A_i is m by m if side == HIPBLAS_SIDE_LEFT
             A_i is n by n if side == HIPBLAS_SIDE_RIGHT
             only the upper/lower triangular part is accessed.
@@ -15209,16 +15209,16 @@ def hipblasSsymmBatched(object handle, object side, object uplo, int m, int n, o
             if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             otherwise lda >= max( 1, n ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix B_i on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix B_i on the GPU.
             Matrix dimension is m by n
 
         ldb (`~.int`): **[in]** [int]
             ldb specifies the first dimension of B_i. ldb >= max( 1, m )
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C_i need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
             Matrix dimension is m by n
 
         ldc (`~.int`): **[in]** [int]
@@ -15237,12 +15237,12 @@ def hipblasSsymmBatched(object handle, object side, object uplo, int m, int n, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymmBatched__retval = hipblasStatus_t(chipblas.hipblasSsymmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasSsymmBatched__retval,)
 
 
@@ -15260,12 +15260,12 @@ def hipblasDsymmBatched(object handle, object side, object uplo, int m, int n, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymmBatched__retval = hipblasStatus_t(chipblas.hipblasDsymmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasDsymmBatched__retval,)
 
 
@@ -15283,12 +15283,12 @@ def hipblasCsymmBatched(object handle, object side, object uplo, int m, int n, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymmBatched__retval = hipblasStatus_t(chipblas.hipblasCsymmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCsymmBatched__retval,)
 
 
@@ -15306,12 +15306,12 @@ def hipblasZsymmBatched(object handle, object side, object uplo, int m, int n, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymmBatched__retval = hipblasStatus_t(chipblas.hipblasZsymmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZsymmBatched__retval,)
 
 
@@ -15331,7 +15331,7 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -15348,10 +15348,10 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of B_i and C_i. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A_i and B_i are not referenced.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to first matrix A_1
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to first matrix A_1
             A_i is m by m if side == HIPBLAS_SIDE_LEFT
             A_i is n by n if side == HIPBLAS_SIDE_RIGHT
             only the upper/lower triangular part is accessed.
@@ -15364,7 +15364,7 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to first matrix B_1 of dimension (ldb, n) on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to first matrix B_1 of dimension (ldb, n) on the GPU.
 
         ldb (`~.int`): **[in]** [int]
             ldb specifies the first dimension of B_i. ldb >= max( 1, m )
@@ -15372,10 +15372,10 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
         strideB (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to first matrix C_1 of dimension (ldc, n) on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to first matrix C_1 of dimension (ldc, n) on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, m ).
@@ -15396,12 +15396,12 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsymmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasSsymmStridedBatched__retval,)
 
 
@@ -15419,12 +15419,12 @@ def hipblasDsymmStridedBatched(object handle, object side, object uplo, int m, i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsymmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasDsymmStridedBatched__retval,)
 
 
@@ -15442,7 +15442,7 @@ def hipblasCsymmStridedBatched(object handle, object side, object uplo, int m, i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsymmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -15465,7 +15465,7 @@ def hipblasZsymmStridedBatched(object handle, object side, object uplo, int m, i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsymmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -15495,7 +15495,7 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
     and zherk.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -15513,11 +15513,11 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix A on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix A on the GPU.
             Martrix dimension is ( lda, k ) when if transA = HIPBLAS_OP_N, otherwise (lda, n)
             only the upper/lower triangular part is accessed.
 
@@ -15526,10 +15526,10 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
             if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix C on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix C on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -15544,11 +15544,11 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrk__retval = hipblasStatus_t(chipblas.hipblasSsyrk(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasSsyrk__retval,)
 
 
@@ -15566,11 +15566,11 @@ def hipblasDsyrk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrk__retval = hipblasStatus_t(chipblas.hipblasDsyrk(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasDsyrk__retval,)
 
 
@@ -15588,7 +15588,7 @@ def hipblasCsyrk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrk__retval = hipblasStatus_t(chipblas.hipblasCsyrk(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(beta)._ptr,
@@ -15610,7 +15610,7 @@ def hipblasZsyrk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrk__retval = hipblasStatus_t(chipblas.hipblasZsyrk(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
@@ -15639,7 +15639,7 @@ def hipblasSsyrkBatched(object handle, object uplo, object transA, int n, int k,
     and zherk.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -15657,11 +15657,11 @@ def hipblasSsyrkBatched(object handle, object uplo, object transA, int n, int k,
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
             when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -15669,10 +15669,10 @@ def hipblasSsyrkBatched(object handle, object uplo, object transA, int n, int k,
             if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -15690,11 +15690,11 @@ def hipblasSsyrkBatched(object handle, object uplo, object transA, int n, int k,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrkBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasSsyrkBatched__retval,)
 
 
@@ -15712,11 +15712,11 @@ def hipblasDsyrkBatched(object handle, object uplo, object transA, int n, int k,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrkBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasDsyrkBatched__retval,)
 
 
@@ -15734,11 +15734,11 @@ def hipblasCsyrkBatched(object handle, object uplo, object transA, int n, int k,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrkBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCsyrkBatched__retval,)
 
 
@@ -15756,11 +15756,11 @@ def hipblasZsyrkBatched(object handle, object uplo, object transA, int n, int k,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrkBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZsyrkBatched__retval,)
 
 
@@ -15785,7 +15785,7 @@ def hipblasSsyrkStridedBatched(object handle, object uplo, object transA, int n,
     and zherk.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -15803,11 +15803,11 @@ def hipblasSsyrkStridedBatched(object handle, object uplo, object transA, int n,
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
             when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -15818,10 +15818,10 @@ def hipblasSsyrkStridedBatched(object handle, object uplo, object transA, int n,
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU. on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU. on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -15842,11 +15842,11 @@ def hipblasSsyrkStridedBatched(object handle, object uplo, object transA, int n,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrkStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasSsyrkStridedBatched__retval,)
 
 
@@ -15864,11 +15864,11 @@ def hipblasDsyrkStridedBatched(object handle, object uplo, object transA, int n,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrkStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasDsyrkStridedBatched__retval,)
 
 
@@ -15886,7 +15886,7 @@ def hipblasCsyrkStridedBatched(object handle, object uplo, object transA, int n,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrkStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(beta)._ptr,
@@ -15908,7 +15908,7 @@ def hipblasZsyrkStridedBatched(object handle, object uplo, object transA, int n,
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrkStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
@@ -15934,7 +15934,7 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -15951,11 +15951,11 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A) and op(B). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix A on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix A on the GPU.
             Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
             only the upper/lower triangular part is accessed.
 
@@ -15964,7 +15964,7 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
             if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix B on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix B on the GPU.
             Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
             only the upper/lower triangular part is accessed.
 
@@ -15973,10 +15973,10 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
             if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
             otherwise ldb >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix C on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix C on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -15991,12 +15991,12 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyr2k__retval = hipblasStatus_t(chipblas.hipblasSsyr2k(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasSsyr2k__retval,)
 
 
@@ -16014,12 +16014,12 @@ def hipblasDsyr2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyr2k__retval = hipblasStatus_t(chipblas.hipblasDsyr2k(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasDsyr2k__retval,)
 
 
@@ -16037,7 +16037,7 @@ def hipblasCsyr2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyr2k__retval = hipblasStatus_t(chipblas.hipblasCsyr2k(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -16060,7 +16060,7 @@ def hipblasZsyr2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyr2k__retval = hipblasStatus_t(chipblas.hipblasZsyr2k(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -16087,7 +16087,7 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -16104,11 +16104,11 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -16116,7 +16116,7 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
             if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
         ldb (`~.int`): **[in]** [int]
@@ -16124,10 +16124,10 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
             if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
             otherwise ldb >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -16145,12 +16145,12 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyr2kBatched__retval = hipblasStatus_t(chipblas.hipblasSsyr2kBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasSsyr2kBatched__retval,)
 
 
@@ -16168,12 +16168,12 @@ def hipblasDsyr2kBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyr2kBatched__retval = hipblasStatus_t(chipblas.hipblasDsyr2kBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasDsyr2kBatched__retval,)
 
 
@@ -16191,12 +16191,12 @@ def hipblasCsyr2kBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyr2kBatched__retval = hipblasStatus_t(chipblas.hipblasCsyr2kBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCsyr2kBatched__retval,)
 
 
@@ -16214,12 +16214,12 @@ def hipblasZsyr2kBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyr2kBatched__retval = hipblasStatus_t(chipblas.hipblasZsyr2kBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZsyr2kBatched__retval,)
 
 
@@ -16241,7 +16241,7 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -16258,11 +16258,11 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -16273,7 +16273,7 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
         ldb (`~.int`): **[in]** [int]
@@ -16284,10 +16284,10 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
         strideB (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -16308,12 +16308,12 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyr2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyr2kStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasSsyr2kStridedBatched__retval,)
 
 
@@ -16331,12 +16331,12 @@ def hipblasDsyr2kStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyr2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyr2kStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasDsyr2kStridedBatched__retval,)
 
 
@@ -16354,7 +16354,7 @@ def hipblasCsyr2kStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyr2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyr2kStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -16377,7 +16377,7 @@ def hipblasZsyr2kStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyr2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyr2kStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -16405,7 +16405,7 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -16422,11 +16422,11 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A) and op(B). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix A on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix A on the GPU.
             Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
             only the upper/lower triangular part is accessed.
 
@@ -16435,7 +16435,7 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
             if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix B on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix B on the GPU.
             Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
             only the upper/lower triangular part is accessed.
 
@@ -16444,10 +16444,10 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
             if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
             otherwise ldb >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer storing matrix C on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer storing matrix C on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -16462,12 +16462,12 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkx__retval = hipblasStatus_t(chipblas.hipblasSsyrkx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasSsyrkx__retval,)
 
 
@@ -16485,12 +16485,12 @@ def hipblasDsyrkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkx__retval = hipblasStatus_t(chipblas.hipblasDsyrkx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasDsyrkx__retval,)
 
 
@@ -16508,7 +16508,7 @@ def hipblasCsyrkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkx__retval = hipblasStatus_t(chipblas.hipblasCsyrkx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -16531,7 +16531,7 @@ def hipblasZsyrkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkx__retval = hipblasStatus_t(chipblas.hipblasZsyrkx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -16559,7 +16559,7 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -16576,11 +16576,11 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -16588,7 +16588,7 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
             if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
             otherwise lda >= max( 1, k ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
         ldb (`~.int`): **[in]** [int]
@@ -16596,10 +16596,10 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
             if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
             otherwise ldb >= max( 1, k ).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -16617,12 +16617,12 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkxBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrkxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasSsyrkxBatched__retval,)
 
 
@@ -16640,12 +16640,12 @@ def hipblasDsyrkxBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkxBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrkxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasDsyrkxBatched__retval,)
 
 
@@ -16663,12 +16663,12 @@ def hipblasCsyrkxBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkxBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrkxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCsyrkxBatched__retval,)
 
 
@@ -16686,12 +16686,12 @@ def hipblasZsyrkxBatched(object handle, object uplo, object transA, int n, int k
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkxBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrkxBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZsyrkxBatched__retval,)
 
 
@@ -16714,7 +16714,7 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -16731,11 +16731,11 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
         k (`~.int`): **[in]** [int]
             k specifies the number of columns of op(A). k >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and A need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
         lda (`~.int`): **[in]** [int]
@@ -16746,7 +16746,7 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
             when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
         ldb (`~.int`): **[in]** [int]
@@ -16757,10 +16757,10 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
         strideB (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix C_1 on the GPU.
 
         ldc (`~.int`): **[in]** [int]
             ldc specifies the first dimension of C. ldc >= max( 1, n ).
@@ -16781,12 +16781,12 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrkxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasSsyrkxStridedBatched__retval,)
 
 
@@ -16804,12 +16804,12 @@ def hipblasDsyrkxStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrkxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasDsyrkxStridedBatched__retval,)
 
 
@@ -16827,7 +16827,7 @@ def hipblasCsyrkxStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrkxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -16850,7 +16850,7 @@ def hipblasZsyrkxStridedBatched(object handle, object uplo, object transA, int n
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrkxStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -16880,7 +16880,7 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -16895,21 +16895,21 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
         n (`~.int`): **[in]** [int]
             matrix dimension n.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix B.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix B.
 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of B.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device pointer storing matrix C.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device pointer storing matrix C.
 
         ldc (`~.int`): **[in]** [int]
             specifies the leading dimension of C.
@@ -16924,12 +16924,12 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgeam__retval = hipblasStatus_t(chipblas.hipblasSgeam(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasSgeam__retval,)
 
 
@@ -16947,12 +16947,12 @@ def hipblasDgeam(object handle, object transA, object transB, int m, int n, obje
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgeam__retval = hipblasStatus_t(chipblas.hipblasDgeam(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasDgeam__retval,)
 
 
@@ -16970,7 +16970,7 @@ def hipblasCgeam(object handle, object transA, object transB, int m, int n, obje
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgeam__retval = hipblasStatus_t(chipblas.hipblasCgeam(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(beta)._ptr,
@@ -16993,7 +16993,7 @@ def hipblasZgeam(object handle, object transA, object transB, int m, int n, obje
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgeam__retval = hipblasStatus_t(chipblas.hipblasZgeam(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
@@ -17020,7 +17020,7 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -17035,9 +17035,9 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
         n (`~.int`): **[in]** [int]
             matrix dimension n.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
             Each A_i is of dimension ( lda, k ), where k is m
             when  transA == HIPBLAS_OP_N and
             is  n  when  transA == HIPBLAS_OP_T.
@@ -17045,9 +17045,9 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix B_i on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix B_i on the GPU.
             Each B_i is of dimension ( ldb, k ), where k is m
             when  transB == HIPBLAS_OP_N and
             is  n  when  transB == HIPBLAS_OP_T.
@@ -17055,7 +17055,7 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of B.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device array of device pointers storing each matrix C_i on the GPU.
             Each C_i is of dimension ( ldc, n ).
 
         ldc (`~.int`): **[in]** [int]
@@ -17074,12 +17074,12 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgeamBatched__retval = hipblasStatus_t(chipblas.hipblasSgeamBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <float *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasSgeamBatched__retval,)
 
 
@@ -17097,12 +17097,12 @@ def hipblasDgeamBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgeamBatched__retval = hipblasStatus_t(chipblas.hipblasDgeamBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <double *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasDgeamBatched__retval,)
 
 
@@ -17120,12 +17120,12 @@ def hipblasCgeamBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgeamBatched__retval = hipblasStatus_t(chipblas.hipblasCgeamBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCgeamBatched__retval,)
 
 
@@ -17143,12 +17143,12 @@ def hipblasZgeamBatched(object handle, object transA, object transB, int m, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgeamBatched__retval = hipblasStatus_t(chipblas.hipblasZgeamBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZgeamBatched__retval,)
 
 
@@ -17170,7 +17170,7 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -17185,9 +17185,9 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
         n (`~.int`): **[in]** [int]
             matrix dimension n.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first matrix A_0 on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first matrix A_0 on the GPU.
             Each A_i is of dimension ( lda, k ), where k is m
             when  transA == HIPBLAS_OP_N and
             is  n  when  transA == HIPBLAS_OP_T.
@@ -17198,9 +17198,9 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar beta.
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the first matrix B_0 on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the first matrix B_0 on the GPU.
             Each B_i is of dimension ( ldb, k ), where k is m
             when  transB == HIPBLAS_OP_N and
             is  n  when  transB == HIPBLAS_OP_T.
@@ -17211,7 +17211,7 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
         strideB (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** pointer to the first matrix C_0 on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** pointer to the first matrix C_0 on the GPU.
             Each C_i is of dimension ( ldc, n ).
 
         ldc (`~.int`): **[in]** [int]
@@ -17233,12 +17233,12 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgeamStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgeamStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasSgeamStridedBatched__retval,)
 
 
@@ -17256,12 +17256,12 @@ def hipblasDgeamStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgeamStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgeamStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasDgeamStridedBatched__retval,)
 
 
@@ -17279,7 +17279,7 @@ def hipblasCgeamStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgeamStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgeamStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(beta)._ptr,
@@ -17302,7 +17302,7 @@ def hipblasZgeamStridedBatched(object handle, object transA, object transB, int 
     if not isinstance(transB,_hipblasOperation_t__Base):
         raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgeamStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgeamStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
@@ -17327,7 +17327,7 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -17383,7 +17383,7 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemm__retval = hipblasStatus_t(chipblas.hipblasChemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -17406,7 +17406,7 @@ def hipblasZhemm(object handle, object side, object uplo, int n, int k, object a
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemm__retval = hipblasStatus_t(chipblas.hipblasZhemm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -17431,7 +17431,7 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -17451,7 +17451,7 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
         alpha (`~.hipblasComplex`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A_i and B_i are not referenced.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
             A_i is m by m if side == HIPBLAS_SIDE_LEFT
             A_i is n by n if side == HIPBLAS_SIDE_RIGHT
             Only the upper/lower triangular part is accessed.
@@ -17462,7 +17462,7 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
             if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             otherwise lda >= max( 1, n ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix B_i on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix B_i on the GPU.
             Matrix dimension is m by n
 
         ldb (`~.int`): **[in]** [int]
@@ -17471,7 +17471,7 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
         beta (`~.hipblasComplex`/`~.object`): **[in]** beta specifies the scalar beta. When beta is
             zero then C_i need not be set before entry.
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix C_i on the GPU.
             Matrix dimension is m by n
 
         ldc (`~.int`): **[in]** [int]
@@ -17490,12 +17490,12 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemmBatched__retval = hipblasStatus_t(chipblas.hipblasChemmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasChemmBatched__retval,)
 
 
@@ -17513,12 +17513,12 @@ def hipblasZhemmBatched(object handle, object side, object uplo, int n, int k, o
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemmBatched__retval = hipblasStatus_t(chipblas.hipblasZhemmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZhemmBatched__retval,)
 
 
@@ -17538,7 +17538,7 @@ def hipblasChemmStridedBatched(object handle, object side, object uplo, int n, i
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -17606,7 +17606,7 @@ def hipblasChemmStridedBatched(object handle, object side, object uplo, int n, i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChemmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -17629,7 +17629,7 @@ def hipblasZhemmStridedBatched(object handle, object side, object uplo, int n, i
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhemmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,
@@ -17668,7 +17668,7 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
     A  are not referenced either,  but are assumed to be  unity.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -17698,11 +17698,11 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of B. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A is not referenced and B need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to matrix A on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to matrix A on the GPU.
             A has dimension ( lda, k ), where k is m
             when  side == HIPBLAS_SIDE_LEFT  and
             is  n  when  side == HIPBLAS_SIDE_RIGHT.
@@ -17712,7 +17712,7 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
             if side == HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             if side == HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** Device pointer to the first matrix B_0 on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** Device pointer to the first matrix B_0 on the GPU.
              On entry,  the leading  m by n part of the array  B must
             contain the matrix  B,  and  on exit  is overwritten  by the
             transformed matrix.
@@ -17734,10 +17734,10 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmm__retval = hipblasStatus_t(chipblas.hipblasStrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb))    # fully specified
     return (_hipblasStrmm__retval,)
 
 
@@ -17759,10 +17759,10 @@ def hipblasDtrmm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmm__retval = hipblasStatus_t(chipblas.hipblasDtrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb))    # fully specified
     return (_hipblasDtrmm__retval,)
 
 
@@ -17784,7 +17784,7 @@ def hipblasCtrmm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmm__retval = hipblasStatus_t(chipblas.hipblasCtrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -17809,7 +17809,7 @@ def hipblasZtrmm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmm__retval = hipblasStatus_t(chipblas.hipblasZtrmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -17846,7 +17846,7 @@ def hipblasStrmmBatched(object handle, object side, object uplo, object transA, 
     A_i  are not referenced either,  but are assumed to be  unity.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -17876,11 +17876,11 @@ def hipblasStrmmBatched(object handle, object side, object uplo, object transA, 
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of B_i. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A_i is not referenced and B_i need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device array of device pointers storing each matrix A_i on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device array of device pointers storing each matrix A_i on the GPU.
             Each A_i is of dimension ( lda, k ), where k is m
             when  side == HIPBLAS_SIDE_LEFT  and
             is  n  when  side == HIPBLAS_SIDE_RIGHT.
@@ -17890,7 +17890,7 @@ def hipblasStrmmBatched(object handle, object side, object uplo, object transA, 
             if side == HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             if side == HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each matrix B_i on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each matrix B_i on the GPU.
              On entry,  the leading  m by n part of the array  B_i must
             contain the matrix  B_i,  and  on exit  is overwritten  by the
             transformed matrix.
@@ -17915,10 +17915,10 @@ def hipblasStrmmBatched(object handle, object side, object uplo, object transA, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmmBatched__retval = hipblasStatus_t(chipblas.hipblasStrmmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasStrmmBatched__retval,)
 
 
@@ -17940,10 +17940,10 @@ def hipblasDtrmmBatched(object handle, object side, object uplo, object transA, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmmBatched__retval = hipblasStatus_t(chipblas.hipblasDtrmmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasDtrmmBatched__retval,)
 
 
@@ -17965,10 +17965,10 @@ def hipblasCtrmmBatched(object handle, object side, object uplo, object transA, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmmBatched__retval = hipblasStatus_t(chipblas.hipblasCtrmmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasCtrmmBatched__retval,)
 
 
@@ -17990,10 +17990,10 @@ def hipblasZtrmmBatched(object handle, object side, object uplo, object transA, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmmBatched__retval = hipblasStatus_t(chipblas.hipblasZtrmmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasZtrmmBatched__retval,)
 
 
@@ -18027,7 +18027,7 @@ def hipblasStrmmStridedBatched(object handle, object side, object uplo, object t
     A_i  are not referenced either,  but are assumed to be  unity.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -18057,11 +18057,11 @@ def hipblasStrmmStridedBatched(object handle, object side, object uplo, object t
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of B_i. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** alpha specifies the scalar alpha. When alpha is
             zero then A_i is not referenced and B_i need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** Device pointer to the first matrix A_0 on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** Device pointer to the first matrix A_0 on the GPU.
             Each A_i is of dimension ( lda, k ), where k is m
             when  side == HIPBLAS_SIDE_LEFT  and
             is  n  when  side == HIPBLAS_SIDE_RIGHT.
@@ -18074,7 +18074,7 @@ def hipblasStrmmStridedBatched(object handle, object side, object uplo, object t
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** Device pointer to the first matrix B_0 on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[inout]** Device pointer to the first matrix B_0 on the GPU.
              On entry,  the leading  m by n part of the array  B_i must
             contain the matrix  B_i,  and  on exit  is overwritten  by the
             transformed matrix.
@@ -18102,10 +18102,10 @@ def hipblasStrmmStridedBatched(object handle, object side, object uplo, object t
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrmmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
     return (_hipblasStrmmStridedBatched__retval,)
 
 
@@ -18127,10 +18127,10 @@ def hipblasDtrmmStridedBatched(object handle, object side, object uplo, object t
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrmmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
     return (_hipblasDtrmmStridedBatched__retval,)
 
 
@@ -18152,7 +18152,7 @@ def hipblasCtrmmStridedBatched(object handle, object side, object uplo, object t
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrmmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
@@ -18177,7 +18177,7 @@ def hipblasZtrmmStridedBatched(object handle, object side, object uplo, object t
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrmmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
@@ -18214,7 +18214,7 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -18240,11 +18240,11 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of B. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
             &zero then A is not referenced and B need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A.
             of dimension ( lda, k ), where k is m
             when  HIPBLAS_SIDE_LEFT  and
             is  n  when  HIPBLAS_SIDE_RIGHT
@@ -18255,7 +18255,7 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
             if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device pointer storing matrix B.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device pointer storing matrix B.
 
         ldb (`~.int`): **[in]** [int]
             ldb specifies the first dimension of B. ldb >= max( 1, m ).
@@ -18274,10 +18274,10 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsm__retval = hipblasStatus_t(chipblas.hipblasStrsm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb))    # fully specified
     return (_hipblasStrsm__retval,)
 
 
@@ -18299,10 +18299,10 @@ def hipblasDtrsm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsm__retval = hipblasStatus_t(chipblas.hipblasDtrsm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb))    # fully specified
     return (_hipblasDtrsm__retval,)
 
 
@@ -18324,7 +18324,7 @@ def hipblasCtrsm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsm__retval = hipblasStatus_t(chipblas.hipblasCtrsm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -18349,7 +18349,7 @@ def hipblasZtrsm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsm__retval = hipblasStatus_t(chipblas.hipblasZtrsm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -18385,7 +18385,7 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -18411,11 +18411,11 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of each B_i. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
             &zero then A is not referenced and B need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
             Matricies are of dimension ( lda, k ), where k is m
             when  HIPBLAS_SIDE_LEFT  and is  n  when  HIPBLAS_SIDE_RIGHT
             only the upper/lower triangular part is accessed.
@@ -18425,7 +18425,7 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
             if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device array of device pointers storing each matrix B_i on the GPU.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device array of device pointers storing each matrix B_i on the GPU.
 
         ldb (`~.int`): **[in]** [int]
             ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
@@ -18447,10 +18447,10 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsmBatched__retval = hipblasStatus_t(chipblas.hipblasStrsmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float **>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float **>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasStrsmBatched__retval,)
 
 
@@ -18472,10 +18472,10 @@ def hipblasDtrsmBatched(object handle, object side, object uplo, object transA, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsmBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double **>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double **>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasDtrsmBatched__retval,)
 
 
@@ -18497,10 +18497,10 @@ def hipblasCtrsmBatched(object handle, object side, object uplo, object transA, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsmBatched__retval = hipblasStatus_t(chipblas.hipblasCtrsmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex **>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasCtrsmBatched__retval,)
 
 
@@ -18522,10 +18522,10 @@ def hipblasZtrsmBatched(object handle, object side, object uplo, object transA, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsmBatched__retval = hipblasStatus_t(chipblas.hipblasZtrsmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasZtrsmBatched__retval,)
 
 
@@ -18558,7 +18558,7 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -18584,11 +18584,11 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of each B_i. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
             &zero then A is not referenced and B need not be set before
             entry.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to the first matrix A_1.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to the first matrix A_1.
             of dimension ( lda, k ), where k is m
             when  HIPBLAS_SIDE_LEFT  and
             is  n  when  HIPBLAS_SIDE_RIGHT
@@ -18602,7 +18602,7 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one A_i matrix to the next A_(i + 1).
 
-        BP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device pointer pointing to the first matrix B_1.
+        BP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device pointer pointing to the first matrix B_1.
 
         ldb (`~.int`): **[in]** [int]
             ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
@@ -18627,10 +18627,10 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrsmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
     return (_hipblasStrsmStridedBatched__retval,)
 
 
@@ -18652,10 +18652,10 @@ def hipblasDtrsmStridedBatched(object handle, object side, object uplo, object t
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
     return (_hipblasDtrsmStridedBatched__retval,)
 
 
@@ -18677,7 +18677,7 @@ def hipblasCtrsmStridedBatched(object handle, object side, object uplo, object t
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrsmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
@@ -18702,7 +18702,7 @@ def hipblasZtrsmStridedBatched(object handle, object side, object uplo, object t
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrsmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
@@ -18721,7 +18721,7 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -18736,12 +18736,12 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
         n (`~.int`): **[in]** [int]
             size of matrix A and invA
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
 
-        invA (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer storing matrix invA.
+        invA (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer storing matrix invA.
 
         ldinvA (`~.int`): **[in]** [int]
             specifies the leading dimension of invA.
@@ -18756,9 +18756,9 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrtri__retval = hipblasStatus_t(chipblas.hipblasStrtri(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(invA)._ptr,ldinvA))    # fully specified
     return (_hipblasStrtri__retval,)
 
 
@@ -18776,9 +18776,9 @@ def hipblasDtrtri(object handle, object uplo, object diag, int n, object AP, int
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrtri__retval = hipblasStatus_t(chipblas.hipblasDtrtri(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(invA)._ptr,ldinvA))    # fully specified
     return (_hipblasDtrtri__retval,)
 
 
@@ -18796,7 +18796,7 @@ def hipblasCtrtri(object handle, object uplo, object diag, int n, object AP, int
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrtri__retval = hipblasStatus_t(chipblas.hipblasCtrtri(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(invA)._ptr,ldinvA))    # fully specified
     return (_hipblasCtrtri__retval,)
@@ -18816,7 +18816,7 @@ def hipblasZtrtri(object handle, object uplo, object diag, int n, object AP, int
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrtri__retval = hipblasStatus_t(chipblas.hipblasZtrtri(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(invA)._ptr,ldinvA))    # fully specified
     return (_hipblasZtrtri__retval,)
@@ -18834,7 +18834,7 @@ def hipblasStrtriBatched(object handle, object uplo, object diag, int n, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -18846,12 +18846,12 @@ def hipblasStrtriBatched(object handle, object uplo, object diag, int n, object 
 
         n (`~.int`): **[in]** [int]
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
 
-        invA (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device array of device pointers storing the inverse of each matrix A_i.
+        invA (`~.hip._util.types.Pointer`/`~.object`): **[out]** device array of device pointers storing the inverse of each matrix A_i.
             Partial inplace operation is supported, see below.
             If UPLO = 'U', the leading N-by-N upper triangular part of the invA will store
             the inverse of the upper triangular matrix, and the strictly lower
@@ -18876,9 +18876,9 @@ def hipblasStrtriBatched(object handle, object uplo, object diag, int n, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrtriBatched__retval = hipblasStatus_t(chipblas.hipblasStrtriBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <float **>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float **>hip._util.types.Pointer.from_pyobj(invA)._ptr,ldinvA,batchCount))    # fully specified
     return (_hipblasStrtriBatched__retval,)
 
 
@@ -18896,9 +18896,9 @@ def hipblasDtrtriBatched(object handle, object uplo, object diag, int n, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrtriBatched__retval = hipblasStatus_t(chipblas.hipblasDtrtriBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <double **>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double **>hip._util.types.Pointer.from_pyobj(invA)._ptr,ldinvA,batchCount))    # fully specified
     return (_hipblasDtrtriBatched__retval,)
 
 
@@ -18916,9 +18916,9 @@ def hipblasCtrtriBatched(object handle, object uplo, object diag, int n, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrtriBatched__retval = hipblasStatus_t(chipblas.hipblasCtrtriBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex **>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(invA)._ptr,ldinvA,batchCount))    # fully specified
     return (_hipblasCtrtriBatched__retval,)
 
 
@@ -18936,9 +18936,9 @@ def hipblasZtrtriBatched(object handle, object uplo, object diag, int n, object 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrtriBatched__retval = hipblasStatus_t(chipblas.hipblasZtrtriBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(invA)._ptr,ldinvA,batchCount))    # fully specified
     return (_hipblasZtrtriBatched__retval,)
 
 
@@ -18954,7 +18954,7 @@ def hipblasStrtriStridedBatched(object handle, object uplo, object diag, int n, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         uplo (`~.hipblasFillMode_t`): **[in]** [hipblasFillMode_t]
@@ -18966,7 +18966,7 @@ def hipblasStrtriStridedBatched(object handle, object uplo, object diag, int n, 
 
         n (`~.int`): **[in]** [int]
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer pointing to address of first matrix A_1.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer pointing to address of first matrix A_1.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A.
@@ -18974,7 +18974,7 @@ def hipblasStrtriStridedBatched(object handle, object uplo, object diag, int n, 
         strideA (`~.int`): **[in]** [hipblasStride]
             "batch stride a": stride from the start of one A_i matrix to the next A_(i + 1).
 
-        invA (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer storing the inverses of each matrix A_i.
+        invA (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer storing the inverses of each matrix A_i.
             Partial inplace operation is supported, see below.
             If UPLO = 'U', the leading N-by-N upper triangular part of the invA will store
             the inverse of the upper triangular matrix, and the strictly lower
@@ -19002,9 +19002,9 @@ def hipblasStrtriStridedBatched(object handle, object uplo, object diag, int n, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrtriStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrtriStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA,stride_invA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(invA)._ptr,ldinvA,stride_invA,batchCount))    # fully specified
     return (_hipblasStrtriStridedBatched__retval,)
 
 
@@ -19022,9 +19022,9 @@ def hipblasDtrtriStridedBatched(object handle, object uplo, object diag, int n, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrtriStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrtriStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA,stride_invA,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(invA)._ptr,ldinvA,stride_invA,batchCount))    # fully specified
     return (_hipblasDtrtriStridedBatched__retval,)
 
 
@@ -19042,7 +19042,7 @@ def hipblasCtrtriStridedBatched(object handle, object uplo, object diag, int n, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrtriStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrtriStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(invA)._ptr,ldinvA,stride_invA,batchCount))    # fully specified
     return (_hipblasCtrtriStridedBatched__retval,)
@@ -19062,7 +19062,7 @@ def hipblasZtrtriStridedBatched(object handle, object uplo, object diag, int n, 
     if not isinstance(diag,_hipblasDiagType_t__Base):
         raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrtriStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrtriStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(invA)._ptr,ldinvA,stride_invA,batchCount))    # fully specified
     return (_hipblasZtrtriStridedBatched__retval,)
@@ -19085,7 +19085,7 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -19097,17 +19097,17 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
         n (`~.int`): **[in]** [int]
             matrix dimension n.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing matrix A.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing matrix A.
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         incx (`~.int`): **[in]** [int]
             specifies the increment between values of x
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device pointer storing matrix C.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device pointer storing matrix C.
 
         ldc (`~.int`): **[in]** [int]
             specifies the leading dimension of C.
@@ -19120,10 +19120,10 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasSdgmm__retval = hipblasStatus_t(chipblas.hipblasSdgmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasSdgmm__retval,)
 
 
@@ -19139,10 +19139,10 @@ def hipblasDdgmm(object handle, object side, int m, int n, object AP, int lda, o
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasDdgmm__retval = hipblasStatus_t(chipblas.hipblasDdgmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasDdgmm__retval,)
 
 
@@ -19158,7 +19158,7 @@ def hipblasCdgmm(object handle, object side, int m, int n, object AP, int lda, o
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasCdgmm__retval = hipblasStatus_t(chipblas.hipblasCdgmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
@@ -19177,7 +19177,7 @@ def hipblasZdgmm(object handle, object side, int m, int n, object AP, int lda, o
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasZdgmm__retval = hipblasStatus_t(chipblas.hipblasZdgmm(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
@@ -19201,7 +19201,7 @@ def hipblasSdgmmBatched(object handle, object side, int m, int n, object AP, int
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -19213,20 +19213,20 @@ def hipblasSdgmmBatched(object handle, object side, int m, int n, object AP, int
         n (`~.int`): **[in]** [int]
             matrix dimension n.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each matrix A_i on the GPU.
             Each A_i is of dimension ( lda, n )
 
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A_i.
 
-        x (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i on the GPU.
+        x (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i on the GPU.
             Each x_i is of dimension n if side == HIPBLAS_SIDE_RIGHT and dimension
             m if side == HIPBLAS_SIDE_LEFT
 
         incx (`~.int`): **[in]** [int]
             specifies the increment between values of x_i
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device array of device pointers storing each matrix C_i on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device array of device pointers storing each matrix C_i on the GPU.
             Each C_i is of dimension ( ldc, n ).
 
         ldc (`~.int`): **[in]** [int]
@@ -19243,10 +19243,10 @@ def hipblasSdgmmBatched(object handle, object side, int m, int n, object AP, int
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasSdgmmBatched__retval = hipblasStatus_t(chipblas.hipblasSdgmmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
-        <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasSdgmmBatched__retval,)
 
 
@@ -19262,10 +19262,10 @@ def hipblasDdgmmBatched(object handle, object side, int m, int n, object AP, int
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasDdgmmBatched__retval = hipblasStatus_t(chipblas.hipblasDdgmmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
-        <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasDdgmmBatched__retval,)
 
 
@@ -19281,10 +19281,10 @@ def hipblasCdgmmBatched(object handle, object side, int m, int n, object AP, int
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasCdgmmBatched__retval = hipblasStatus_t(chipblas.hipblasCdgmmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasCdgmmBatched__retval,)
 
 
@@ -19300,10 +19300,10 @@ def hipblasZdgmmBatched(object handle, object side, int m, int n, object AP, int
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasZdgmmBatched__retval = hipblasStatus_t(chipblas.hipblasZdgmmBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
     return (_hipblasZdgmmBatched__retval,)
 
 
@@ -19324,7 +19324,7 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -19336,7 +19336,7 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
         n (`~.int`): **[in]** [int]
             matrix dimension n.
 
-        AP (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first matrix A_0 on the GPU.
+        AP (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first matrix A_0 on the GPU.
             Each A_i is of dimension ( lda, n )
 
         lda (`~.int`): **[in]** [int]
@@ -19345,7 +19345,7 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
         strideA (`~.int`): **[in]** [hipblasStride]
             stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to the first vector x_0 on the GPU.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the first vector x_0 on the GPU.
             Each x_i is of dimension n if side == HIPBLAS_SIDE_RIGHT and dimension
             m if side == HIPBLAS_SIDE_LEFT
 
@@ -19355,7 +19355,7 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
         stridex (`~.int`): **[in]** [hipblasStride]
             stride from the start of one vector(x_i) and the next one (x_i+1)
 
-        CP (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** device pointer to the first matrix C_0 on the GPU.
+        CP (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** device pointer to the first matrix C_0 on the GPU.
             Each C_i is of dimension ( ldc, n ).
 
         ldc (`~.int`): **[in]** [int]
@@ -19375,10 +19375,10 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasSdgmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSdgmmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
-        <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasSdgmmStridedBatched__retval,)
 
 
@@ -19394,10 +19394,10 @@ def hipblasDdgmmStridedBatched(object handle, object side, int m, int n, object 
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasDdgmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDdgmmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
-        <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
-        <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,
-        <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,stridex,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
     return (_hipblasDdgmmStridedBatched__retval,)
 
 
@@ -19413,7 +19413,7 @@ def hipblasCdgmmStridedBatched(object handle, object side, int m, int n, object 
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasCdgmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCdgmmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
@@ -19432,7 +19432,7 @@ def hipblasZdgmmStridedBatched(object handle, object side, int m, int n, object 
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasZdgmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZdgmmStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
@@ -19463,13 +19463,13 @@ def hipblasSgetrf(object handle, const int n, object A, const int lda, object ip
        A = LU
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         n (`~.int`): **[in]** int. n >= 0.
 
             The number of columns and rows of the matrix A.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** pointer to type. Array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.Pointer`/`~.object`): **[inout]** pointer to type. Array on the GPU of dimension lda*n.
 
             On entry, the n-by-n matrix A to be factored.
             On exit, the factors L and U from the factorization.
@@ -19499,8 +19499,8 @@ def hipblasSgetrf(object handle, const int n, object A, const int lda, object ip
         * `~.hipblasStatus_t`
     """
     _hipblasSgetrf__retval = hipblasStatus_t(chipblas.hipblasSgetrf(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasSgetrf__retval,)
@@ -19516,8 +19516,8 @@ def hipblasDgetrf(object handle, const int n, object A, const int lda, object ip
         * `~.hipblasStatus_t`
     """
     _hipblasDgetrf__retval = hipblasStatus_t(chipblas.hipblasDgetrf(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasDgetrf__retval,)
@@ -19533,7 +19533,7 @@ def hipblasCgetrf(object handle, const int n, object A, const int lda, object ip
         * `~.hipblasStatus_t`
     """
     _hipblasCgetrf__retval = hipblasStatus_t(chipblas.hipblasCgetrf(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
@@ -19550,7 +19550,7 @@ def hipblasZgetrf(object handle, const int n, object A, const int lda, object ip
         * `~.hipblasStatus_t`
     """
     _hipblasZgetrf__retval = hipblasStatus_t(chipblas.hipblasZgetrf(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
@@ -19581,13 +19581,13 @@ def hipblasSgetrfBatched(object handle, const int n, object A, const int lda, ob
        A_i = L_iU_i
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         n (`~.int`): **[in]** int. n >= 0.
 
             The number of columns and rows of all matrices A_i in the batch.
 
-        A (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
 
             On entry, the n-by-n matrices A_i to be factored.
             On exit, the factors L_i and U_i from the factorizations.
@@ -19623,8 +19623,8 @@ def hipblasSgetrfBatched(object handle, const int n, object A, const int lda, ob
         * `~.hipblasStatus_t`
     """
     _hipblasSgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrfBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetrfBatched__retval,)
@@ -19640,8 +19640,8 @@ def hipblasDgetrfBatched(object handle, const int n, object A, const int lda, ob
         * `~.hipblasStatus_t`
     """
     _hipblasDgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrfBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetrfBatched__retval,)
@@ -19657,8 +19657,8 @@ def hipblasCgetrfBatched(object handle, const int n, object A, const int lda, ob
         * `~.hipblasStatus_t`
     """
     _hipblasCgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrfBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgetrfBatched__retval,)
@@ -19674,8 +19674,8 @@ def hipblasZgetrfBatched(object handle, const int n, object A, const int lda, ob
         * `~.hipblasStatus_t`
     """
     _hipblasZgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrfBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgetrfBatched__retval,)
@@ -19705,13 +19705,13 @@ def hipblasSgetrfStridedBatched(object handle, const int n, object A, const int 
        A_i = L_iU_i
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         n (`~.int`): **[in]** int. n >= 0.
 
             The number of columns and rows of all matrices A_i in the batch.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
+        A (`~.hip._util.types.Pointer`/`~.object`): **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
 
             On entry, the n-by-n matrices A_i to be factored.
             On exit, the factors L_i and U_i from the factorization.
@@ -19757,8 +19757,8 @@ def hipblasSgetrfStridedBatched(object handle, const int n, object A, const int 
         * `~.hipblasStatus_t`
     """
     _hipblasSgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrfStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetrfStridedBatched__retval,)
@@ -19774,8 +19774,8 @@ def hipblasDgetrfStridedBatched(object handle, const int n, object A, const int 
         * `~.hipblasStatus_t`
     """
     _hipblasDgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrfStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetrfStridedBatched__retval,)
@@ -19791,7 +19791,7 @@ def hipblasCgetrfStridedBatched(object handle, const int n, object A, const int 
         * `~.hipblasStatus_t`
     """
     _hipblasCgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrfStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
@@ -19808,7 +19808,7 @@ def hipblasZgetrfStridedBatched(object handle, const int n, object A, const int 
         * `~.hipblasStatus_t`
     """
     _hipblasZgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrfStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
@@ -19832,7 +19832,7 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
        \end{array}
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         trans (`~.hipblasOperation_t`): **[in]** hipblasOperation_t.
 
@@ -19847,7 +19847,7 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
             The number of right hand sides, i.e., the number of columns
             of the matrix B.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to type. Array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to type. Array on the GPU of dimension lda*n.
 
             The factors L and U of the factorization A = P*L*U returned by ``hipblasSgetrf`` .
 
@@ -19859,7 +19859,7 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
 
             The pivot indices returned by ``hipblasSgetrf`` .
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** pointer to type. Array on the GPU of dimension ldb*nrhs.
+        B (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** pointer to type. Array on the GPU of dimension ldb*nrhs.
 
             On entry, the right hand side matrix B.
             On exit, the solution matrix X.
@@ -19881,10 +19881,10 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgetrs__retval = hipblasStatus_t(chipblas.hipblasSgetrs(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasSgetrs__retval,)
 
@@ -19901,10 +19901,10 @@ def hipblasDgetrs(object handle, object trans, const int n, const int nrhs, obje
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgetrs__retval = hipblasStatus_t(chipblas.hipblasDgetrs(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasDgetrs__retval,)
 
@@ -19921,7 +19921,7 @@ def hipblasCgetrs(object handle, object trans, const int n, const int nrhs, obje
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgetrs__retval = hipblasStatus_t(chipblas.hipblasCgetrs(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         hipblasComplex.from_pyobj(B)._ptr,ldb,
@@ -19941,7 +19941,7 @@ def hipblasZgetrs(object handle, object trans, const int n, const int nrhs, obje
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgetrs__retval = hipblasStatus_t(chipblas.hipblasZgetrs(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
@@ -19967,7 +19967,7 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
        \end{array}
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         trans (`~.hipblasOperation_t`): **[in]** hipblasOperation_t.
 
@@ -19982,7 +19982,7 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
             The number of right hand sides, i.e., the number of columns
             of all the matrices B_i.
 
-        A (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** Array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** Array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
 
             The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfBatched`` .
 
@@ -19994,7 +19994,7 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
 
             Contains the vectors ipiv_i of pivot indices returned by ``hipblasSgetrfBatched`` .
 
-        B (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in,out]** Array of pointers to type. Each pointer points to an array on the GPU of dimension ldb*nrhs.
+        B (`~.hip._util.types.ListOfPointer`/`~.object`): **[in,out]** Array of pointers to type. Each pointer points to an array on the GPU of dimension ldb*nrhs.
 
             On entry, the right hand side matrices B_i.
             On exit, the solution matrix X_i of each system in the batch.
@@ -20020,10 +20020,10 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrsBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,ldb,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetrsBatched__retval,)
 
@@ -20040,10 +20040,10 @@ def hipblasDgetrsBatched(object handle, object trans, const int n, const int nrh
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrsBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,ldb,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetrsBatched__retval,)
 
@@ -20060,10 +20060,10 @@ def hipblasCgetrsBatched(object handle, object trans, const int n, const int nrh
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrsBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgetrsBatched__retval,)
 
@@ -20080,10 +20080,10 @@ def hipblasZgetrsBatched(object handle, object trans, const int n, const int nrh
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrsBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgetrsBatched__retval,)
 
@@ -20106,7 +20106,7 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
        \end{array}
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         trans (`~.hipblasOperation_t`): **[in]** hipblasOperation_t.
 
@@ -20121,7 +20121,7 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
             The number of right hand sides, i.e., the number of columns
             of all the matrices B_i.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[in]** pointer to type. Array on the GPU (the size depends on the value of strideA).
+        A (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to type. Array on the GPU (the size depends on the value of strideA).
 
             The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfStridedBatched`` .
 
@@ -20143,7 +20143,7 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
             Stride from the start of one vector ipiv_i to the next one ipiv_(i+1).
             There is no restriction for the value of strideP. Normal use case is strideP >= n.
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** pointer to type. Array on the GPU (size depends on the value of strideB).
+        B (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** pointer to type. Array on the GPU (size depends on the value of strideB).
 
             On entry, the right hand side matrices B_i.
             On exit, the solution matrix X_i of each system in the batch.
@@ -20174,10 +20174,10 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrsStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
-        <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,
+        <float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,strideB,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetrsStridedBatched__retval,)
 
@@ -20194,10 +20194,10 @@ def hipblasDgetrsStridedBatched(object handle, object trans, const int n, const 
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrsStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
-        <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,
+        <double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,strideB,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetrsStridedBatched__retval,)
 
@@ -20214,7 +20214,7 @@ def hipblasCgetrsStridedBatched(object handle, object trans, const int n, const 
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrsStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         hipblasComplex.from_pyobj(B)._ptr,ldb,strideB,
@@ -20234,7 +20234,7 @@ def hipblasZgetrsStridedBatched(object handle, object trans, const int n, const 
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrsStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
         <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,strideB,
@@ -20255,13 +20255,13 @@ def hipblasSgetriBatched(object handle, const int n, object A, const int lda, ob
        A_i C_i = I
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         n (`~.int`): **[in]** int. n >= 0.
 
             The number of rows and columns of all matrices A_i in the batch.
 
-        A (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
 
             The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfBatched`` .
 
@@ -20274,7 +20274,7 @@ def hipblasSgetriBatched(object handle, const int n, object A, const int lda, ob
             The pivot indices returned by ``hipblasSgetrfBatched`` .
             ipiv can be passed in as a nullptr, this will assume that getrfBatched was called without partial pivoting.
 
-        C (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[out]** array of pointers to type. Each pointer points to an array on the GPU of dimension ldc*n.
+        C (`~.hip._util.types.ListOfPointer`/`~.object`): **[out]** array of pointers to type. Each pointer points to an array on the GPU of dimension ldc*n.
 
             If info[i] = 0, the inverse of matrices A_i. Otherwise, undefined.
 
@@ -20297,10 +20297,10 @@ def hipblasSgetriBatched(object handle, const int n, object A, const int lda, ob
         * `~.hipblasStatus_t`
     """
     _hipblasSgetriBatched__retval = hipblasStatus_t(chipblas.hipblasSgetriBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(C)._ptr,ldc,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(C)._ptr,ldc,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetriBatched__retval,)
 
@@ -20315,10 +20315,10 @@ def hipblasDgetriBatched(object handle, const int n, object A, const int lda, ob
         * `~.hipblasStatus_t`
     """
     _hipblasDgetriBatched__retval = hipblasStatus_t(chipblas.hipblasDgetriBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(C)._ptr,ldc,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(C)._ptr,ldc,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetriBatched__retval,)
 
@@ -20333,10 +20333,10 @@ def hipblasCgetriBatched(object handle, const int n, object A, const int lda, ob
         * `~.hipblasStatus_t`
     """
     _hipblasCgetriBatched__retval = hipblasStatus_t(chipblas.hipblasCgetriBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgetriBatched__retval,)
 
@@ -20351,10 +20351,10 @@ def hipblasZgetriBatched(object handle, const int n, object A, const int lda, ob
         * `~.hipblasStatus_t`
     """
     _hipblasZgetriBatched__retval = hipblasStatus_t(chipblas.hipblasZgetriBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(C)._ptr,ldc,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgetriBatched__retval,)
 
@@ -20382,7 +20382,7 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
        || B - A  X || \quad \text{(or} \: || B - A' X ||\text{)}
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         trans (`~.hipblasOperation_t`): **[in]** hipblasOperation_t.
 
@@ -20401,7 +20401,7 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
             The number of columns of matrices B and X;
             i.e., the columns on the right hand side.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** pointer to type. Array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.Pointer`/`~.object`): **[inout]** pointer to type. Array on the GPU of dimension lda*n.
 
             On entry, the matrix A.
             On exit, the QR (or LQ) factorization of A as returned by "GEQRF" (or "GELQF").
@@ -20410,7 +20410,7 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
 
             Specifies the leading dimension of matrix A.
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** pointer to type. Array on the GPU of dimension ldb*nrhs.
+        B (`~.hip._util.types.Pointer`/`~.object`): **[inout]** pointer to type. Array on the GPU of dimension ldb*nrhs.
 
             On entry, the matrix B.
             On exit, when info = 0, B is overwritten by the solution vectors (and the residuals in
@@ -20439,9 +20439,9 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgels__retval = hipblasStatus_t(chipblas.hipblasSgels(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr))    # fully specified
     return (_hipblasSgels__retval,)
@@ -20459,9 +20459,9 @@ def hipblasDgels(object handle, object trans, const int m, const int n, const in
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgels__retval = hipblasStatus_t(chipblas.hipblasDgels(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr))    # fully specified
     return (_hipblasDgels__retval,)
@@ -20479,7 +20479,7 @@ def hipblasCgels(object handle, object trans, const int m, const int n, const in
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgels__retval = hipblasStatus_t(chipblas.hipblasCgels(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         hipblasComplex.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
@@ -20499,7 +20499,7 @@ def hipblasZgels(object handle, object trans, const int m, const int n, const in
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgels__retval = hipblasStatus_t(chipblas.hipblasZgels(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
@@ -20530,7 +20530,7 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
        || B_j - A_j  X_j || \quad \text{(or} \: || B_j - A_j' X_j ||\text{)}
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         trans (`~.hipblasOperation_t`): **[in]** hipblasOperation_t.
 
@@ -20549,7 +20549,7 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
             The number of columns of all matrices B_j and X_j in the batch;
             i.e., the columns on the right hand side.
 
-        A (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** array of pointer to type. Each pointer points to an array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** array of pointer to type. Each pointer points to an array on the GPU of dimension lda*n.
 
             On entry, the matrices A_j.
             On exit, the QR (or LQ) factorizations of A_j as returned by "GEQRF_BATCHED"
@@ -20559,7 +20559,7 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
 
             Specifies the leading dimension of matrices A_j.
 
-        B (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** array of pointer to type. Each pointer points to an array on the GPU of dimension ldb*nrhs.
+        B (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** array of pointer to type. Each pointer points to an array on the GPU of dimension ldb*nrhs.
 
             On entry, the matrices B_j.
             On exit, when info[j] = 0, B_j is overwritten by the solution vectors (and the residuals in
@@ -20592,9 +20592,9 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgelsBatched__retval = hipblasStatus_t(chipblas.hipblasSgelsBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
     return (_hipblasSgelsBatched__retval,)
@@ -20612,9 +20612,9 @@ def hipblasDgelsBatched(object handle, object trans, const int m, const int n, c
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgelsBatched__retval = hipblasStatus_t(chipblas.hipblasDgelsBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
     return (_hipblasDgelsBatched__retval,)
@@ -20632,9 +20632,9 @@ def hipblasCgelsBatched(object handle, object trans, const int m, const int n, c
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgelsBatched__retval = hipblasStatus_t(chipblas.hipblasCgelsBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
     return (_hipblasCgelsBatched__retval,)
@@ -20652,9 +20652,9 @@ def hipblasZgelsBatched(object handle, object trans, const int m, const int n, c
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgelsBatched__retval = hipblasStatus_t(chipblas.hipblasZgelsBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
     return (_hipblasZgelsBatched__retval,)
@@ -20684,7 +20684,7 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
        || B_j - A_j  X_j || \quad \text{(or} \: || B_j - A_j' X_j ||\text{)}
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         trans (`~.hipblasOperation_t`): **[in]** hipblasOperation_t.
 
@@ -20703,7 +20703,7 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
             The number of columns of all matrices B_j and X_j in the batch;
             i.e., the columns on the right hand side.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
+        A (`~.hip._util.types.Pointer`/`~.object`): **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
 
             On entry, the matrices A_j.
             On exit, the QR (or LQ) factorizations of A_j as returned by "GEQRF_STRIDED_BATCHED"
@@ -20718,7 +20718,7 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
             Stride from the start of one matrix A_j to the next one A_(j+1).
             There is no restriction for the value of strideA. Normal use case is strideA >= lda*n
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideB).
+        B (`~.hip._util.types.Pointer`/`~.object`): **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideB).
 
             On entry, the matrices B_j.
             On exit, when info[j] = 0, each B_j is overwritten by the solution vectors (and the residuals in
@@ -20756,9 +20756,9 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgelsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgelsStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,strideB,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
     return (_hipblasSgelsStridedBatched__retval,)
@@ -20776,9 +20776,9 @@ def hipblasDgelsStridedBatched(object handle, object trans, const int m, const i
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgelsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgelsStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,strideB,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
     return (_hipblasDgelsStridedBatched__retval,)
@@ -20796,7 +20796,7 @@ def hipblasCgelsStridedBatched(object handle, object trans, const int m, const i
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgelsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgelsStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(B)._ptr,ldb,strideB,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
@@ -20816,7 +20816,7 @@ def hipblasZgelsStridedBatched(object handle, object trans, const int m, const i
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgelsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgelsStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,strideB,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
@@ -20853,7 +20853,7 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
        H_i = I - \text{ipiv}[i] \cdot v_i v_i'
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         m (`~.int`): **[in]** int. m >= 0.
 
@@ -20863,7 +20863,7 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
 
             The number of columns of the matrix A.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** pointer to type. Array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.Pointer`/`~.object`): **[inout]** pointer to type. Array on the GPU of dimension lda*n.
 
             On entry, the m-by-n matrix to be factored.
             On exit, the elements on and above the diagonal contain the
@@ -20874,7 +20874,7 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
 
             Specifies the leading dimension of A.
 
-        ipiv (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to type. Array on the GPU of dimension min(m,n).
+        ipiv (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to type. Array on the GPU of dimension min(m,n).
 
             The Householder scalars.
 
@@ -20889,9 +20889,9 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
         * `~.hipblasStatus_t`
     """
     _hipblasSgeqrf__retval = hipblasStatus_t(chipblas.hipblasSgeqrf(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <float *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <float *>hip._util.types.Pointer.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasSgeqrf__retval,)
 
@@ -20906,9 +20906,9 @@ def hipblasDgeqrf(object handle, const int m, const int n, object A, const int l
         * `~.hipblasStatus_t`
     """
     _hipblasDgeqrf__retval = hipblasStatus_t(chipblas.hipblasDgeqrf(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <double *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <double *>hip._util.types.Pointer.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasDgeqrf__retval,)
 
@@ -20923,7 +20923,7 @@ def hipblasCgeqrf(object handle, const int m, const int n, object A, const int l
         * `~.hipblasStatus_t`
     """
     _hipblasCgeqrf__retval = hipblasStatus_t(chipblas.hipblasCgeqrf(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         hipblasComplex.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
@@ -20940,7 +20940,7 @@ def hipblasZgeqrf(object handle, const int m, const int n, object A, const int l
         * `~.hipblasStatus_t`
     """
     _hipblasZgeqrf__retval = hipblasStatus_t(chipblas.hipblasZgeqrf(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
@@ -20977,7 +20977,7 @@ def hipblasSgeqrfBatched(object handle, const int m, const int n, object A, cons
        H_{i_j} = I - \text{ipiv}_i[j] \cdot v_{i_j} v_{i_j}'
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         m (`~.int`): **[in]** int. m >= 0.
 
@@ -20987,7 +20987,7 @@ def hipblasSgeqrfBatched(object handle, const int m, const int n, object A, cons
 
             The number of columns of all the matrices A_i in the batch.
 
-        A (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[inout]** Array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
+        A (`~.hip._util.types.ListOfPointer`/`~.object`): **[inout]** Array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
 
             On entry, the m-by-n matrices A_i to be factored.
             On exit, the elements on and above the diagonal contain the
@@ -20998,7 +20998,7 @@ def hipblasSgeqrfBatched(object handle, const int m, const int n, object A, cons
 
             Specifies the leading dimension of matrices A_i.
 
-        ipiv (`~.hip._util.types.DataHandle`/`~.object`): **[out]** array of pointers to type. Each pointer points to an array on the GPU
+        ipiv (`~.hip._util.types.Pointer`/`~.object`): **[out]** array of pointers to type. Each pointer points to an array on the GPU
             of dimension min(m, n).
 
             Contains the vectors ipiv_i of corresponding Householder scalars.
@@ -21018,9 +21018,9 @@ def hipblasSgeqrfBatched(object handle, const int m, const int n, object A, cons
         * `~.hipblasStatus_t`
     """
     _hipblasSgeqrfBatched__retval = hipblasStatus_t(chipblas.hipblasSgeqrfBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <float *const*>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
+        <float *const*>hip._util.types.Pointer.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgeqrfBatched__retval,)
 
@@ -21035,9 +21035,9 @@ def hipblasDgeqrfBatched(object handle, const int m, const int n, object A, cons
         * `~.hipblasStatus_t`
     """
     _hipblasDgeqrfBatched__retval = hipblasStatus_t(chipblas.hipblasDgeqrfBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <double *const*>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,lda,
+        <double *const*>hip._util.types.Pointer.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgeqrfBatched__retval,)
 
@@ -21052,9 +21052,9 @@ def hipblasCgeqrfBatched(object handle, const int m, const int n, object A, cons
         * `~.hipblasStatus_t`
     """
     _hipblasCgeqrfBatched__retval = hipblasStatus_t(chipblas.hipblasCgeqrfBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgeqrfBatched__retval,)
 
@@ -21069,9 +21069,9 @@ def hipblasZgeqrfBatched(object handle, const int m, const int n, object A, cons
         * `~.hipblasStatus_t`
     """
     _hipblasZgeqrfBatched__retval = hipblasStatus_t(chipblas.hipblasZgeqrfBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgeqrfBatched__retval,)
 
@@ -21106,7 +21106,7 @@ def hipblasSgeqrfStridedBatched(object handle, const int m, const int n, object 
        H_{i_j} = I - \text{ipiv}_j[j] \cdot v_{i_j} v_{i_j}'
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** hipblasHandle_t.
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** hipblasHandle_t.
 
         m (`~.int`): **[in]** int. m >= 0.
 
@@ -21116,7 +21116,7 @@ def hipblasSgeqrfStridedBatched(object handle, const int m, const int n, object 
 
             The number of columns of all the matrices A_i in the batch.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
+        A (`~.hip._util.types.Pointer`/`~.object`): **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
 
             On entry, the m-by-n matrices A_i to be factored.
             On exit, the elements on and above the diagonal contain the
@@ -21132,7 +21132,7 @@ def hipblasSgeqrfStridedBatched(object handle, const int m, const int n, object 
             Stride from the start of one matrix A_i to the next one A_(i+1).
             There is no restriction for the value of strideA. Normal use case is strideA >= lda*n.
 
-        ipiv (`~.hip._util.types.DataHandle`/`~.object`): **[out]** pointer to type. Array on the GPU (the size depends on the value of strideP).
+        ipiv (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to type. Array on the GPU (the size depends on the value of strideP).
 
             Contains the vectors ipiv_i of corresponding Householder scalars.
 
@@ -21157,9 +21157,9 @@ def hipblasSgeqrfStridedBatched(object handle, const int m, const int n, object 
         * `~.hipblasStatus_t`
     """
     _hipblasSgeqrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgeqrfStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <float *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <float *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
+        <float *>hip._util.types.Pointer.from_pyobj(ipiv)._ptr,strideP,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgeqrfStridedBatched__retval,)
 
@@ -21174,9 +21174,9 @@ def hipblasDgeqrfStridedBatched(object handle, const int m, const int n, object 
         * `~.hipblasStatus_t`
     """
     _hipblasDgeqrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgeqrfStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
-        <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <double *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
+        <double *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
+        <double *>hip._util.types.Pointer.from_pyobj(ipiv)._ptr,strideP,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgeqrfStridedBatched__retval,)
 
@@ -21191,7 +21191,7 @@ def hipblasCgeqrfStridedBatched(object handle, const int m, const int n, object 
         * `~.hipblasStatus_t`
     """
     _hipblasCgeqrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgeqrfStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(ipiv)._ptr,strideP,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
@@ -21208,7 +21208,7 @@ def hipblasZgeqrfStridedBatched(object handle, const int m, const int n, object 
         * `~.hipblasStatus_t`
     """
     _hipblasZgeqrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgeqrfStridedBatched(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(ipiv)._ptr,strideP,
         <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
@@ -21239,7 +21239,7 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
     format for a given device as documented in rocBLAS.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -21257,10 +21257,10 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
         k (`~.int`): **[in]** [int]
             matrix dimension k.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [const void *]
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** [const void *]
             device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        A (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer storing matrix A.
 
         aType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21269,7 +21269,7 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of A.
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        B (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer storing matrix B.
 
         bType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21278,10 +21278,10 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of B.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [const void *]
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** [const void *]
             device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
 
-        C (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        C (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer storing matrix C.
 
         cType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21316,12 +21316,12 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
     if not isinstance(algo,_hipblasGemmAlgo_t__Base):
         raise TypeError("argument 'algo' must be of type '_hipblasGemmAlgo_t__Base'")
     _hipblasGemmEx__retval = hipblasStatus_t(chipblas.hipblasGemmEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(A)._ptr,aType.value,lda,
-        <const void *>hip._util.types.DataHandle.from_pyobj(B)._ptr,bType.value,ldb,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(C)._ptr,cType.value,ldc,computeType.value,algo.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(A)._ptr,aType.value,lda,
+        <const void *>hip._util.types.Pointer.from_pyobj(B)._ptr,bType.value,ldb,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(C)._ptr,cType.value,ldc,computeType.value,algo.value))    # fully specified
     return (_hipblasGemmEx__retval,)
 
 
@@ -21349,7 +21349,7 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
     format for a given device as documented in rocBLAS.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -21367,10 +21367,10 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
         k (`~.int`): **[in]** [int]
             matrix dimension k.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [const void *]
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** [const void *]
             device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
 
-        A (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** [void *]
+        A (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** [void *]
             device pointer storing array of pointers to each matrix A_i.
 
         aType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21379,7 +21379,7 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
         lda (`~.int`): **[in]** [int]
             specifies the leading dimension of each A_i.
 
-        B (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** [void *]
+        B (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** [void *]
             device pointer storing array of pointers to each matrix B_i.
 
         bType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21388,10 +21388,10 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
         ldb (`~.int`): **[in]** [int]
             specifies the leading dimension of each B_i.
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [const void *]
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** [const void *]
             device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
 
-        C (`~.hip._util.types.ListOfDataHandle`/`~.object`): **[in]** [void *]
+        C (`~.hip._util.types.ListOfPointer`/`~.object`): **[in]** [void *]
             device array of device pointers to each matrix C_i.
 
         cType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21429,12 +21429,12 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
     if not isinstance(algo,_hipblasGemmAlgo_t__Base):
         raise TypeError("argument 'algo' must be of type '_hipblasGemmAlgo_t__Base'")
     _hipblasGemmBatchedEx__retval = hipblasStatus_t(chipblas.hipblasGemmBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const void **>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,aType.value,lda,
-        <const void **>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,bType.value,ldb,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void **>hip._util.types.ListOfDataHandle.from_pyobj(C)._ptr,cType.value,ldc,batchCount,computeType.value,algo.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const void **>hip._util.types.ListOfPointer.from_pyobj(A)._ptr,aType.value,lda,
+        <const void **>hip._util.types.ListOfPointer.from_pyobj(B)._ptr,bType.value,ldb,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void **>hip._util.types.ListOfPointer.from_pyobj(C)._ptr,cType.value,ldc,batchCount,computeType.value,algo.value))    # fully specified
     return (_hipblasGemmBatchedEx__retval,)
 
 
@@ -21467,7 +21467,7 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
     format for a given device as documented in rocBLAS.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         transA (`~.hipblasOperation_t`): **[in]** [hipblasOperation_t]
@@ -21485,10 +21485,10 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
         k (`~.int`): **[in]** [int]
             matrix dimension k.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [const void *]
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** [const void *]
             device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        A (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer pointing to first matrix A_1.
 
         aType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21500,7 +21500,7 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
         strideA (`~.int`): **[in]** [hipblasStride]
             specifies stride from start of one A_i matrix to the next A_(i + 1).
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        B (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer pointing to first matrix B_1.
 
         bType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21512,10 +21512,10 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
         strideB (`~.int`): **[in]** [hipblasStride]
             specifies stride from start of one B_i matrix to the next B_(i + 1).
 
-        beta (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [const void *]
+        beta (`~.hip._util.types.Pointer`/`~.object`): **[in]** [const void *]
             device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
 
-        C (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        C (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer pointing to first matrix C_1.
 
         cType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -21556,12 +21556,12 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
     if not isinstance(algo,_hipblasGemmAlgo_t__Base):
         raise TypeError("argument 'algo' must be of type '_hipblasGemmAlgo_t__Base'")
     _hipblasGemmStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasGemmStridedBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(A)._ptr,aType.value,lda,strideA,
-        <const void *>hip._util.types.DataHandle.from_pyobj(B)._ptr,bType.value,ldb,strideB,
-        <const void *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(C)._ptr,cType.value,ldc,strideC,batchCount,computeType.value,algo.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(A)._ptr,aType.value,lda,strideA,
+        <const void *>hip._util.types.Pointer.from_pyobj(B)._ptr,bType.value,ldb,strideB,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(C)._ptr,cType.value,ldc,strideC,batchCount,computeType.value,algo.value))    # fully specified
     return (_hipblasGemmStridedBatchedEx__retval,)
 
 
@@ -21608,7 +21608,7 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
       - batchCount = 1
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -21634,12 +21634,12 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of B. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer or host pointer specifying the scalar alpha. When alpha is
             &zero then A is not referenced, and B need not be set before
             entry.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        A (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer storing matrix A.
             of dimension ( lda, k ), where k is m
             when HIPBLAS_SIDE_LEFT and
@@ -21651,7 +21651,7 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
             if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** [void *]
+        B (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** [void *]
             device pointer storing matrix B.
             B is of dimension ( ldb, n ).
             Before entry, the leading m by n part of the array B must
@@ -21661,7 +21661,7 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
         ldb (`~.int`): **[in]** [int]
             ldb specifies the first dimension of B. ldb >= max( 1, m ).
 
-        invA (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        invA (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer storing the inverse diagonal blocks of A.
             invA is of dimension ( ld_invA, k ), where k is m
             when HIPBLAS_SIDE_LEFT and
@@ -21690,11 +21690,11 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
     if not isinstance(computeType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasTrsmEx__retval = hipblasStatus_t(chipblas.hipblasTrsmEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <void *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <const void *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,invAsize,computeType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,
+        <const void *>hip._util.types.Pointer.from_pyobj(invA)._ptr,invAsize,computeType.value))    # fully specified
     return (_hipblasTrsmEx__retval,)
 
 
@@ -21742,7 +21742,7 @@ def hipblasTrsmBatchedEx(object handle, object side, object uplo, object transA,
       - batchCount = 1
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -21768,12 +21768,12 @@ def hipblasTrsmBatchedEx(object handle, object side, object uplo, object transA,
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of each B_i. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer or host pointer alpha specifying the scalar alpha. When alpha is
             &zero then A is not referenced, and B need not be set before
             entry.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        A (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device array of device pointers storing each matrix A_i.
             each A_i is of dimension ( lda, k ), where k is m
             when HIPBLAS_SIDE_LEFT and
@@ -21785,7 +21785,7 @@ def hipblasTrsmBatchedEx(object handle, object side, object uplo, object transA,
             if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
             if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** [void *]
+        B (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** [void *]
             device array of device pointers storing each matrix B_i.
             each B_i is of dimension ( ldb, n ).
             Before entry, the leading m by n part of the array B_i must
@@ -21798,7 +21798,7 @@ def hipblasTrsmBatchedEx(object handle, object side, object uplo, object transA,
         batchCount (`~.int`): **[in]** [int]
             specifies how many batches.
 
-        invA (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        invA (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device array of device pointers storing the inverse diagonal blocks of each A_i.
             each invA_i is of dimension ( ld_invA, k ), where k is m
             when HIPBLAS_SIDE_LEFT and
@@ -21827,11 +21827,11 @@ def hipblasTrsmBatchedEx(object handle, object side, object uplo, object transA,
     if not isinstance(computeType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasTrsmBatchedEx__retval = hipblasStatus_t(chipblas.hipblasTrsmBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <void *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,batchCount,
-        <const void *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,invAsize,computeType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,
+        <void *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,batchCount,
+        <const void *>hip._util.types.Pointer.from_pyobj(invA)._ptr,invAsize,computeType.value))    # fully specified
     return (_hipblasTrsmBatchedEx__retval,)
 
 
@@ -21879,7 +21879,7 @@ def hipblasTrsmStridedBatchedEx(object handle, object side, object uplo, object 
       - batchCount = 1
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         side (`~.hipblasSideMode_t`): **[in]** [hipblasSideMode_t]
@@ -21905,12 +21905,12 @@ def hipblasTrsmStridedBatchedEx(object handle, object side, object uplo, object 
         n (`~.int`): **[in]** [int]
             n specifies the number of columns of each B_i. n >= 0.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer or host pointer specifying the scalar alpha. When alpha is
             &zero then A is not referenced, and B need not be set before
             entry.
 
-        A (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        A (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer storing matrix A.
             of dimension ( lda, k ), where k is m
             when HIPBLAS_SIDE_LEFT and
@@ -21925,7 +21925,7 @@ def hipblasTrsmStridedBatchedEx(object handle, object side, object uplo, object 
         strideA (`~.int`): **[in]** [hipblasStride]
             The stride between each A matrix.
 
-        B (`~.hip._util.types.DataHandle`/`~.object`): **[in,out]** [void *]
+        B (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** [void *]
             device pointer pointing to first matrix B_i.
             each B_i is of dimension ( ldb, n ).
             Before entry, the leading m by n part of each array B_i must
@@ -21941,7 +21941,7 @@ def hipblasTrsmStridedBatchedEx(object handle, object side, object uplo, object 
         batchCount (`~.int`): **[in]** [int]
             specifies how many batches.
 
-        invA (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [void *]
+        invA (`~.hip._util.types.Pointer`/`~.object`): **[in]** [void *]
             device pointer storing the inverse diagonal blocks of each A_i.
             invA points to the first invA_1.
             each invA_i is of dimension ( ld_invA, k ), where k is m
@@ -21974,11 +21974,11 @@ def hipblasTrsmStridedBatchedEx(object handle, object side, object uplo, object 
     if not isinstance(computeType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasTrsmStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasTrsmStridedBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <void *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,batchCount,
-        <const void *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,invAsize,strideInvA,computeType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(A)._ptr,lda,strideA,
+        <void *>hip._util.types.Pointer.from_pyobj(B)._ptr,ldb,strideB,batchCount,
+        <const void *>hip._util.types.Pointer.from_pyobj(invA)._ptr,invAsize,strideInvA,computeType.value))    # fully specified
     return (_hipblasTrsmStridedBatchedEx__retval,)
 
 
@@ -21993,18 +21993,18 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x and y.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to specify the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to specify the scalar alpha.
 
         alphaType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of vector x.
@@ -22012,7 +22012,7 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector y.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of vector y.
@@ -22037,10 +22037,10 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasAxpyEx__retval = hipblasStatus_t(chipblas.hipblasAxpyEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,alphaType.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,executionType.value))    # fully specified
     return (_hipblasAxpyEx__retval,)
 
 
@@ -22056,18 +22056,18 @@ def hipblasAxpyBatchedEx(object handle, int n, object alpha, object alphaType, o
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i and y_i.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to specify the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to specify the scalar alpha.
 
         alphaType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22075,7 +22075,7 @@ def hipblasAxpyBatchedEx(object handle, int n, object alpha, object alphaType, o
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector y_i.
@@ -22103,10 +22103,10 @@ def hipblasAxpyBatchedEx(object handle, int n, object alpha, object alphaType, o
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasAxpyBatchedEx__retval = hipblasStatus_t(chipblas.hipblasAxpyBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,batchCount,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,alphaType.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,batchCount,executionType.value))    # fully specified
     return (_hipblasAxpyBatchedEx__retval,)
 
 
@@ -22122,18 +22122,18 @@ def hipblasAxpyStridedBatchedEx(object handle, int n, object alpha, object alpha
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i and y_i.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to specify the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to specify the scalar alpha.
 
         alphaType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector x_1.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22147,7 +22147,7 @@ def hipblasAxpyStridedBatchedEx(object handle, int n, object alpha, object alpha
             take care to ensure that stridex is of appropriate size, for a typical
             case this means stridex >= n * incx.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector y_1.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector y_1.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector y_i.
@@ -22181,10 +22181,10 @@ def hipblasAxpyStridedBatchedEx(object handle, int n, object alpha, object alpha
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasAxpyStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasAxpyStridedBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,stridey,batchCount,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,alphaType.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,stridex,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,stridey,batchCount,executionType.value))    # fully specified
     return (_hipblasAxpyStridedBatchedEx__retval,)
 
 
@@ -22203,13 +22203,13 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
         - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x and y.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of vector x.
@@ -22217,7 +22217,7 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector y.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of vector y.
@@ -22225,7 +22225,7 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
         incy (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to store the dot product.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to store the dot product.
             return is 0.0 if n <= 0.
 
         resultType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -22248,10 +22248,10 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotEx__retval = hipblasStatus_t(chipblas.hipblasDotEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <const void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <const void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasDotEx__retval,)
 
 
@@ -22273,10 +22273,10 @@ def hipblasDotcEx(object handle, int n, object x, object xType, int incx, object
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotcEx__retval = hipblasStatus_t(chipblas.hipblasDotcEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <const void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <const void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasDotcEx__retval,)
 
 
@@ -22298,13 +22298,13 @@ def hipblasDotBatchedEx(object handle, int n, object x, object xType, int incx, 
         - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i and y_i.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22312,7 +22312,7 @@ def hipblasDotBatchedEx(object handle, int n, object x, object xType, int incx, 
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of each x_i.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector y_i.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector y_i.
@@ -22323,7 +22323,7 @@ def hipblasDotBatchedEx(object handle, int n, object x, object xType, int incx, 
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array or host array of batchCount size to store the dot products of each batch.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array or host array of batchCount size to store the dot products of each batch.
             return 0.0 for each element if n <= 0.
 
         resultType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -22346,10 +22346,10 @@ def hipblasDotBatchedEx(object handle, int n, object x, object xType, int incx, 
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotBatchedEx__retval = hipblasStatus_t(chipblas.hipblasDotBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <const void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <const void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasDotBatchedEx__retval,)
 
 
@@ -22371,10 +22371,10 @@ def hipblasDotcBatchedEx(object handle, int n, object x, object xType, int incx,
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotcBatchedEx__retval = hipblasStatus_t(chipblas.hipblasDotcBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <const void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <const void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasDotcBatchedEx__retval,)
 
 
@@ -22396,13 +22396,13 @@ def hipblasDotStridedBatchedEx(object handle, int n, object x, object xType, int
         - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in each x_i and y_i.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector (x_1) in the batch.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22413,7 +22413,7 @@ def hipblasDotStridedBatchedEx(object handle, int n, object x, object xType, int
         stridex (`~.int`): **[in]** [hipblasStride]
             stride from the start of one vector (x_i) and the next one (x_i+1)
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector (y_1) in the batch.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector (y_1) in the batch.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector y_i.
@@ -22427,7 +22427,7 @@ def hipblasDotStridedBatchedEx(object handle, int n, object x, object xType, int
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array or host array of batchCount size to store the dot products of each batch.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array or host array of batchCount size to store the dot products of each batch.
             return 0.0 for each element if n <= 0.
 
         resultType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -22450,10 +22450,10 @@ def hipblasDotStridedBatchedEx(object handle, int n, object x, object xType, int
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasDotStridedBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,
-        <const void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,stridey,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,stridex,
+        <const void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,stridey,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasDotStridedBatchedEx__retval,)
 
 
@@ -22475,10 +22475,10 @@ def hipblasDotcStridedBatchedEx(object handle, int n, object x, object xType, in
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotcStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasDotcStridedBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,
-        <const void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,stridey,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,stridex,
+        <const void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,stridey,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasDotcStridedBatchedEx__retval,)
 
 
@@ -22494,13 +22494,13 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer storing vector x.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of the vector x.
@@ -22508,7 +22508,7 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
         incx (`~.int`): **[in]** [int]
             specifies the increment for the elements of y.
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer or host pointer to store the nrm2 product.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer or host pointer to store the nrm2 product.
             return is 0.0 if n, incx<=0.
 
         resultType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -22529,9 +22529,9 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasNrm2Ex__retval = hipblasStatus_t(chipblas.hipblasNrm2Ex(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasNrm2Ex__retval,)
 
 
@@ -22547,13 +22547,13 @@ def hipblasNrm2BatchedEx(object handle, int n, object x, object xType, int incx,
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each x_i.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device array of device pointers storing each vector x_i.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22564,7 +22564,7 @@ def hipblasNrm2BatchedEx(object handle, int n, object x, object xType, int incx,
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer or host pointer to array of batchCount size for nrm2 results.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer or host pointer to array of batchCount size for nrm2 results.
             return is 0.0 for each element if n <= 0, incx<=0.
 
         resultType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -22585,9 +22585,9 @@ def hipblasNrm2BatchedEx(object handle, int n, object x, object xType, int incx,
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasNrm2BatchedEx__retval = hipblasStatus_t(chipblas.hipblasNrm2BatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasNrm2BatchedEx__retval,)
 
 
@@ -22603,13 +22603,13 @@ def hipblasNrm2StridedBatchedEx(object handle, int n, object x, object xType, in
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each x_i.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer to the first vector x_1.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22626,7 +22626,7 @@ def hipblasNrm2StridedBatchedEx(object handle, int n, object x, object xType, in
         batchCount (`~.int`): **[in]** [int]
             number of instances in the batch
 
-        result (`~.hip._util.types.DataHandle`/`~.object`): **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
+        result (`~.hip._util.types.Pointer`/`~.object`): **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
             return is 0.0 for each element if n <= 0, incx<=0.
 
         resultType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
@@ -22647,9 +22647,9 @@ def hipblasNrm2StridedBatchedEx(object handle, int n, object x, object xType, in
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasNrm2StridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasNrm2StridedBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,batchCount,
-        <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,stridex,batchCount,
+        <void *>hip._util.types.Pointer.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasNrm2StridedBatchedEx__retval,)
 
 
@@ -22671,13 +22671,13 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in the x and y vectors.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector x.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of vector x.
@@ -22685,7 +22685,7 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
         incx (`~.int`): **[in]** [int]
             specifies the increment between elements of x.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector y.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector y.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of vector y.
@@ -22693,9 +22693,9 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
         incy (`~.int`): **[in]** [int]
             specifies the increment between elements of y.
 
-        c (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer storing scalar cosine component of the rotation matrix.
+        c (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer storing scalar cosine component of the rotation matrix.
 
-        s (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer storing scalar sine component of the rotation matrix.
+        s (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer storing scalar sine component of the rotation matrix.
 
         csType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of c and s.
@@ -22717,11 +22717,11 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasRotEx__retval = hipblasStatus_t(chipblas.hipblasRotEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,
-        <const void *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(s)._ptr,csType.value,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,
+        <const void *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(s)._ptr,csType.value,executionType.value))    # fully specified
     return (_hipblasRotEx__retval,)
 
 
@@ -22743,13 +22743,13 @@ def hipblasRotBatchedEx(object handle, int n, object x, object xType, int incx, 
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each x_i and y_i vectors.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of deivce pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of deivce pointers storing each vector x_i.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22757,7 +22757,7 @@ def hipblasRotBatchedEx(object handle, int n, object x, object xType, int incx, 
         incx (`~.int`): **[in]** [int]
             specifies the increment between elements of each x_i.
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each vector y_i.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector y_i.
@@ -22765,9 +22765,9 @@ def hipblasRotBatchedEx(object handle, int n, object x, object xType, int incx, 
         incy (`~.int`): **[in]** [int]
             specifies the increment between elements of each y_i.
 
-        c (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
+        c (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
 
-        s (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
+        s (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
 
         csType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of c and s.
@@ -22792,11 +22792,11 @@ def hipblasRotBatchedEx(object handle, int n, object x, object xType, int incx, 
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasRotBatchedEx__retval = hipblasStatus_t(chipblas.hipblasRotBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,
-        <const void *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(s)._ptr,csType.value,batchCount,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,
+        <const void *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(s)._ptr,csType.value,batchCount,executionType.value))    # fully specified
     return (_hipblasRotBatchedEx__retval,)
 
 
@@ -22818,13 +22818,13 @@ def hipblasRotStridedBatchedEx(object handle, int n, object x, object xType, int
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             number of elements in each x_i and y_i vectors.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector x_1.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22835,7 +22835,7 @@ def hipblasRotStridedBatchedEx(object handle, int n, object x, object xType, int
         stridex (`~.int`): **[in]** [hipblasStride]
             specifies the increment from the beginning of x_i to the beginning of x_(i+1)
 
-        y (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector y_1.
+        y (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector y_1.
 
         yType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector y_i.
@@ -22846,9 +22846,9 @@ def hipblasRotStridedBatchedEx(object handle, int n, object x, object xType, int
         stridey (`~.int`): **[in]** [hipblasStride]
             specifies the increment from the beginning of y_i to the beginning of y_(i+1)
 
-        c (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
+        c (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
 
-        s (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
+        s (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
 
         csType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of c and s.
@@ -22873,11 +22873,11 @@ def hipblasRotStridedBatchedEx(object handle, int n, object x, object xType, int
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasRotStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasRotStridedBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,
-        <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,stridey,
-        <const void *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
-        <const void *>hip._util.types.DataHandle.from_pyobj(s)._ptr,csType.value,batchCount,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,stridex,
+        <void *>hip._util.types.Pointer.from_pyobj(y)._ptr,yType.value,incy,stridey,
+        <const void *>hip._util.types.Pointer.from_pyobj(c)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(s)._ptr,csType.value,batchCount,executionType.value))    # fully specified
     return (_hipblasRotStridedBatchedEx__retval,)
 
 
@@ -22892,18 +22892,18 @@ def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer for the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer for the scalar alpha.
 
         alphaType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer storing vector x.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer storing vector x.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of vector x.
@@ -22926,9 +22926,9 @@ def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasScalEx__retval = hipblasStatus_t(chipblas.hipblasScalEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,alphaType.value,
+        <void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,executionType.value))    # fully specified
     return (_hipblasScalEx__retval,)
 
 
@@ -22943,18 +22943,18 @@ def hipblasScalBatchedEx(object handle, int n, object alpha, object alphaType, o
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer for the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer for the scalar alpha.
 
         alphaType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device array of device pointers storing each vector x_i.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device array of device pointers storing each vector x_i.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -22980,9 +22980,9 @@ def hipblasScalBatchedEx(object handle, int n, object alpha, object alphaType, o
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasScalBatchedEx__retval = hipblasStatus_t(chipblas.hipblasScalBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,batchCount,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,alphaType.value,
+        <void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,batchCount,executionType.value))    # fully specified
     return (_hipblasScalBatchedEx__retval,)
 
 
@@ -22998,18 +22998,18 @@ def hipblasScalStridedBatchedEx(object handle, int n, object alpha, object alpha
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle (`~.hip._util.types.DataHandle`/`~.object`): **[in]** [hipblasHandle_t]
+        handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** [hipblasHandle_t]
             handle to the hipblas library context queue.
 
         n (`~.int`): **[in]** [int]
             the number of elements in x.
 
-        alpha (`~.hip._util.types.DataHandle`/`~.object`): **[in]** device pointer or host pointer for the scalar alpha.
+        alpha (`~.hip._util.types.Pointer`/`~.object`): **[in]** device pointer or host pointer for the scalar alpha.
 
         alphaType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of alpha.
 
-        x (`~.hip._util.types.DataHandle`/`~.object`): **[inout]** device pointer to the first vector x_1.
+        x (`~.hip._util.types.Pointer`/`~.object`): **[inout]** device pointer to the first vector x_1.
 
         xType (`~.hipblasDatatype_t`): **[in]** [hipblasDatatype_t]
             specifies the datatype of each vector x_i.
@@ -23041,9 +23041,9 @@ def hipblasScalStridedBatchedEx(object handle, int n, object alpha, object alpha
     if not isinstance(executionType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasScalStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasScalStridedBatchedEx(
-        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
-        <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,batchCount,executionType.value))    # fully specified
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,alphaType.value,
+        <void *>hip._util.types.Pointer.from_pyobj(x)._ptr,xType.value,incx,stridex,batchCount,executionType.value))    # fully specified
     return (_hipblasScalStridedBatchedEx__retval,)
 
 

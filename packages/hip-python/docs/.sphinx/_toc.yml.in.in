@@ -17,12 +17,13 @@ subtrees:
       - file: user_guide/2_cuda_python_interop
       - file: user_guide/3_datatypes
       - file: user_guide/4_report_bugs
+      - file: user_guide/5_license
   - caption: "HIP Python: Python API"
     entries:
 {PYTHON_API_FILE_NAMES}
       - file: python_api/_hip_helpers
       - file: python_api/_util_types
-  - caption: "CUDA Python Interoperability Layer: Python API"
+  - caption: "CUDA Python Interoperability: Python API"
     entries:
 {PYTHON_API_FILE_NAMES_CUDA}
   - caption: Developer Guide

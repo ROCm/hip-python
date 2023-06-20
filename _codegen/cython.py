@@ -137,8 +137,8 @@ def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
         elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
             return "hip._util.types.ListOfUnsignedLong"
     if parm_or_field.actual_rank == 2:
-        return "hip._util.types.ListOfDataHandle"
-    return "hip._util.types.DataHandle"
+        return "hip._util.types.ListOfPointer"
+    return "hip._util.types.Pointer"
 
 
 default_c_interface_decl_preamble = """\

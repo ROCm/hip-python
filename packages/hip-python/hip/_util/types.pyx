@@ -11,7 +11,7 @@ cimport libc.stdint
 import ctypes
 import math
 
-cdef class DataHandle:
+cdef class Pointer:
     # C members declared in declaration part ``types.pxd``
 
     def __cinit__(self):
@@ -19,15 +19,15 @@ cdef class DataHandle:
         self._py_buffer_acquired = False
 
     @staticmethod
-    cdef DataHandle from_ptr(void* ptr):
-        cdef DataHandle wrapper = DataHandle.__new__(DataHandle)
+    cdef Pointer from_ptr(void* ptr):
+        cdef Pointer wrapper = Pointer.__new__(Pointer)
         wrapper._ptr = ptr
         return wrapper
 
     cdef void init_from_pyobj(self, object pyobj):
         """
         Note:
-            If ``pyobj`` is an instance of DataHandle, only the pointer is copied.
+            If ``pyobj`` is an instance of Pointer, only the pointer is copied.
             Releasing an acquired Py_buffer handles is still an obligation of the original object.
         """
         cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
@@ -35,8 +35,8 @@ cdef class DataHandle:
         self._py_buffer_acquired = False
         if pyobj is None:
             self._ptr = NULL
-        elif isinstance(pyobj,DataHandle):
-            self._ptr = (<DataHandle>pyobj)._ptr
+        elif isinstance(pyobj,Pointer):
+            self._ptr = (<Pointer>pyobj)._ptr
         elif isinstance(pyobj,int):
             self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
@@ -60,26 +60,26 @@ cdef class DataHandle:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
 
     @staticmethod
-    cdef DataHandle from_pyobj(object pyobj):
-        """Derives a DataHandle from the given object.
+    cdef Pointer from_pyobj(object pyobj):
+        """Derives a Pointer from the given object.
 
-        In case ``pyobj`` is itself an ``DataHandle`` instance, this method
-        returns it directly. No new DataHandle is created.
+        In case ``pyobj`` is itself an ``Pointer`` instance, this method
+        returns it directly. No new Pointer is created.
 
         Args:
             pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``DataHandle``, ``int``, or ``ctypes.c_void_p``
+                            or of type ``Pointer``, ``int``, or ``ctypes.c_void_p``
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of DataHandle.
+            if ``pyobj`` is an instance of Pointer.
         """
-        cdef DataHandle wrapper = DataHandle.__new__(DataHandle)
+        cdef Pointer wrapper = Pointer.__new__(Pointer)
         
-        if isinstance(pyobj,DataHandle):
+        if isinstance(pyobj,Pointer):
             return pyobj
         else:
-            wrapper = DataHandle.__new__(DataHandle)
+            wrapper = Pointer.__new__(Pointer)
             wrapper.init_from_pyobj(pyobj)
             return wrapper
 
@@ -94,29 +94,29 @@ cdef class DataHandle:
     def __int__(self):
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
-        return f"<DataHandle object, _ptr={int(self)}>"
+        return f"<Pointer object, _ptr={int(self)}>"
     def as_c_void_p(self):
         """"Data pointer as ``ctypes.c_void_p``.
         """
         return ctypes.c_void_p(int(self))
 
     def __getitem__(self,offset):
-        """Returns a new DataHandle whose pointer is this instance's pointer offsetted by ``offset``.
+        """Returns a new Pointer whose pointer is this instance's pointer offsetted by ``offset``.
 
         Args:
             offset (int): Offset (in bytes) to add to this instance's pointer.
         """
-        cdef DataHandle result
+        cdef Pointer result
         if isinstance(offset,int):
             if offset < 0:
                 raise ValueError("offset='{offset}' must be non-negative")
-            return DataHandle.from_ptr(<void*>(<unsigned long>self._ptr + cpython.long.PyLong_AsUnsignedLong(offset)))
+            return Pointer.from_ptr(<void*>(<unsigned long>self._ptr + cpython.long.PyLong_AsUnsignedLong(offset)))
         raise NotImplementedError("'__getitem__': not implemented for other 'offset' types than 'int'")
     
     def __init__(self,object pyobj):
-        DataHandle.init_from_pyobj(self,pyobj)
+        Pointer.init_from_pyobj(self,pyobj)
 
-cdef class DeviceArray(DataHandle):
+cdef class DeviceArray(Pointer):
     # C members declared in declaration part ``types.pxd``
     
     def __repr__(self):
@@ -419,7 +419,7 @@ cdef class DeviceArray(DataHandle):
                     return ValueError("'stream': expected positive integer")
                 self.__dict__["__cuda_array_interface__"]["stream"] = stream
             else:
-                self.__dict__["__cuda_array_interface__"]["stream"] = int(DataHandle.from_pyobj(stream))
+                self.__dict__["__cuda_array_interface__"]["stream"] = int(Pointer.from_pyobj(stream))
         if "read_only" in kwargs:
             read_only = kwargs["read_only"]
             if not isinstance(read_only,bool):
@@ -465,8 +465,8 @@ cdef class DeviceArray(DataHandle):
             self.configure(cuda_array_interface)
             if isinstance(pyobj,DeviceArray):
                 self._itemsize = pyobj._itemsize
-        elif isinstance(pyobj,DataHandle):
-            self._set_ptr((<DataHandle>pyobj)._ptr)
+        elif isinstance(pyobj,Pointer):
+            self._set_ptr((<Pointer>pyobj)._ptr)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             raise NotImplementedError("Py_buffer is no ideal format for data that is not accessible from the host")
         else:
@@ -626,7 +626,7 @@ cdef class DeviceArray(DataHandle):
     def __init__(self,object pyobj):
         DeviceArray.init_from_pyobj(self,pyobj)
 
-cdef class ListOfBytes(DataHandle):
+cdef class ListOfBytes(Pointer):
     # C members declared in declaration part ``types.pxd``
     def __repr__(self):
         return f"<ListOfBytes object, _ptr={int(self)}>"
@@ -664,7 +664,7 @@ cdef class ListOfBytes(DataHandle):
                 (<const char**>self._ptr)[i] = entry_as_cstr
         else:
             self._owner = False
-            DataHandle.init_from_pyobj(self,pyobj)
+            Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
     cdef ListOfBytes from_pyobj(object pyobj):
@@ -701,67 +701,67 @@ cdef class ListOfBytes(DataHandle):
     def __init__(self,object pyobj):
         ListOfBytes.init_from_pyobj(self,pyobj)
 
-cdef class ListOfDataHandle(DataHandle):
+cdef class ListOfPointer(Pointer):
     # C members declared in declaration part ``types.pxd``
     
     def __repr__(self):
-        return f"<ListOfDataHandle object, _ptr={int(self)}>"
+        return f"<ListOfPointer object, _ptr={int(self)}>"
 
     def __cinit__(self):
         self._owner = False
 
     @staticmethod
-    cdef ListOfDataHandle from_ptr(void* ptr):
-        cdef ListOfDataHandle wrapper = ListOfDataHandle.__new__(ListOfDataHandle)
+    cdef ListOfPointer from_ptr(void* ptr):
+        cdef ListOfPointer wrapper = ListOfPointer.__new__(ListOfPointer)
         wrapper._ptr = ptr
         return wrapper
 
     cdef void init_from_pyobj(self, object pyobj):
         """
         Note:
-            If ``pyobj`` is an instance of `ListOfDataHandle`, only the pointer is copied.
+            If ``pyobj`` is an instance of `ListOfPointer`, only the pointer is copied.
             Releasing an acquired Py_buffer and temporary memory are still obligations 
             of the original object.
         """
         self._py_buffer_acquired = False
         self._owner = False
-        if isinstance(pyobj,ListOfDataHandle):
-            self._ptr = (<ListOfDataHandle>pyobj)._ptr
+        if isinstance(pyobj,ListOfPointer):
+            self._ptr = (<ListOfPointer>pyobj)._ptr
         
         elif isinstance(pyobj,(tuple,list)):
             self._owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void *))
             for i,entry in enumerate(pyobj):
-                (<void**>self._ptr)[i] = cpython.long.PyLong_AsVoidPtr(int(DataHandle.from_pyobj(entry)))
+                (<void**>self._ptr)[i] = cpython.long.PyLong_AsVoidPtr(int(Pointer.from_pyobj(entry)))
         else:
             self._owner = False
-            DataHandle.init_from_pyobj(self,pyobj)
+            Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    cdef ListOfDataHandle from_pyobj(object pyobj):
-        """Derives a ListOfDataHandle from the given object.
+    cdef ListOfPointer from_pyobj(object pyobj):
+        """Derives a ListOfPointer from the given object.
 
-        In case ``pyobj`` is itself an `ListOfDataHandle` instance, this method
-        returns it directly. No new `ListOfDataHandle` is created.
+        In case ``pyobj`` is itself an `ListOfPointer` instance, this method
+        returns it directly. No new `ListOfPointer` is created.
 
         Args:
 
         * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-            or of type `ListOfDataHandle`, `int`, or `ctypes.c_void_p`
+            or of type `ListOfPointer`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if `pyobj` is an instance of ListOfDataHandle.
+            if `pyobj` is an instance of ListOfPointer.
         Note:
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
         """
-        cdef ListOfDataHandle wrapper = ListOfDataHandle.__new__(ListOfDataHandle)
+        cdef ListOfPointer wrapper = ListOfPointer.__new__(ListOfPointer)
         
-        if isinstance(pyobj,ListOfDataHandle):
+        if isinstance(pyobj,ListOfPointer):
             return pyobj
         else:
-            wrapper = ListOfDataHandle.__new__(ListOfDataHandle)
+            wrapper = ListOfPointer.__new__(ListOfPointer)
             wrapper.init_from_pyobj(pyobj)
             return wrapper
 
@@ -770,9 +770,9 @@ cdef class ListOfDataHandle(DataHandle):
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
-        ListOfDataHandle.init_from_pyobj(self,pyobj)
+        ListOfPointer.init_from_pyobj(self,pyobj)
 
-cdef class ListOfInt(DataHandle):
+cdef class ListOfInt(Pointer):
     # C members declared in declaration part ``types.pxd``
 
     def __repr__(self):
@@ -823,7 +823,7 @@ cdef class ListOfInt(DataHandle):
                     raise ValueError(f"element '{i}' of input cannot be converted to C int type")
         else:
             self._owner = False
-            DataHandle.init_from_pyobj(self,pyobj)
+            Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
     cdef ListOfInt from_pyobj(object pyobj):
@@ -860,7 +860,7 @@ cdef class ListOfInt(DataHandle):
     def __init__(self,object pyobj):
         ListOfInt.init_from_pyobj(self,pyobj)
 
-cdef class ListOfUnsigned(DataHandle):
+cdef class ListOfUnsigned(Pointer):
     # C members declared in declaration part ``types.pxd``
     
     def __repr__(self):
@@ -911,7 +911,7 @@ cdef class ListOfUnsigned(DataHandle):
                     raise ValueError(f"element '{i}' of input cannot be converted to C unsigned int type")
         else:
             self._owner = False
-            DataHandle.init_from_pyobj(self,pyobj)
+            Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
     cdef ListOfUnsigned from_pyobj(object pyobj):
@@ -948,7 +948,7 @@ cdef class ListOfUnsigned(DataHandle):
     def __init__(self,object pyobj):
         ListOfUnsigned.init_from_pyobj(self,pyobj)
 
-cdef class ListOfUnsignedLong(DataHandle):
+cdef class ListOfUnsignedLong(Pointer):
     # C members declared in declaration part ``types.pxd``
     
     def __repr__(self):
@@ -999,7 +999,7 @@ cdef class ListOfUnsignedLong(DataHandle):
                     raise ValueError(f"element '{i}' of input cannot be converted to C unsigned long type")
         else:
             self._owner = False
-            DataHandle.init_from_pyobj(self,pyobj)
+            Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
     cdef ListOfUnsignedLong from_pyobj(object pyobj):
