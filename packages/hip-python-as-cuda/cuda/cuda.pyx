@@ -190,6 +190,134 @@ Attributes:
         alias of `.hipUUID`
     cudaUUID_t:
         alias of `.hipUUID`
+    HIP_PYTHON_CUmemorytype_HALLUCINATE:
+        Make `.CUmemorytype` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemorytype_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemorytype_enum_HALLUCINATE:
+        Make `.CUmemorytype_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemorytype_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemoryType_HALLUCINATE:
+        Make `.cudaMemoryType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemoryType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresult_HALLUCINATE:
+        Make `.CUresult` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresult_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaError_HALLUCINATE:
+        Make `.cudaError` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaError_enum_HALLUCINATE:
+        Make `.cudaError_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaError_t_HALLUCINATE:
+        Make `.cudaError_t` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_t_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUdevice_attribute_HALLUCINATE:
+        Make `.CUdevice_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE:
+        Make `.CUdevice_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaDeviceAttr_HALLUCINATE:
+        Make `.cudaDeviceAttr` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaDeviceAttr_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUcomputemode_HALLUCINATE:
+        Make `.CUcomputemode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUcomputemode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUcomputemode_enum_HALLUCINATE:
+        Make `.CUcomputemode_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUcomputemode_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaComputeMode_HALLUCINATE:
+        Make `.cudaComputeMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaComputeMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE:
+        Make `.cudaChannelFormatKind` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUarray_format_HALLUCINATE:
+        Make `.CUarray_format` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUarray_format_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUarray_format_enum_HALLUCINATE:
+        Make `.CUarray_format_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUarray_format_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUarray:
         alias of `.hipArray_t`
     cudaArray_t:
@@ -202,10 +330,90 @@ Attributes:
         alias of `.hipMipmappedArray_t`
     cudaMipmappedArray_const_t:
         alias of `.hipMipmappedArray_const_t`
+    HIP_PYTHON_cudaResourceType_HALLUCINATE:
+        Make `.cudaResourceType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaResourceType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresourcetype_enum_HALLUCINATE:
+        Make `.CUresourcetype_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourcetype_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresourcetype_HALLUCINATE:
+        Make `.CUresourcetype` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourcetype_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE:
+        Make `.CUaddress_mode_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUaddress_mode_HALLUCINATE:
+        Make `.CUaddress_mode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUaddress_mode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE:
+        Make `.CUfilter_mode_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfilter_mode_HALLUCINATE:
+        Make `.CUfilter_mode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfilter_mode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUDA_TEXTURE_DESC:
         alias of `.HIP_TEXTURE_DESC`
     CUDA_TEXTURE_DESC_v1:
         alias of `.HIP_TEXTURE_DESC`
+    HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE:
+        Make `.cudaResourceViewFormat` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE:
+        Make `.CUresourceViewFormat_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresourceViewFormat_HALLUCINATE:
+        Make `.CUresourceViewFormat` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourceViewFormat_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUDA_RESOURCE_DESC:
         alias of `.HIP_RESOURCE_DESC`
     CUDA_RESOURCE_DESC_v1:
@@ -214,6 +422,46 @@ Attributes:
         alias of `.HIP_RESOURCE_VIEW_DESC`
     CUDA_RESOURCE_VIEW_DESC_v1:
         alias of `.HIP_RESOURCE_VIEW_DESC`
+    HIP_PYTHON_cudaMemcpyKind_HALLUCINATE:
+        Make `.cudaMemcpyKind` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemcpyKind_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfunction_attribute_HALLUCINATE:
+        Make `.CUfunction_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunction_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE:
+        Make `.CUfunction_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUpointer_attribute_HALLUCINATE:
+        Make `.CUpointer_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUpointer_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE:
+        Make `.CUpointer_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     cudaCreateChannelDesc:
         alias of `.hipCreateChannelDesc`
     CUtexObject:
@@ -222,14 +470,70 @@ Attributes:
         alias of `.hipTextureObject_t`
     cudaTextureObject_t:
         alias of `.hipTextureObject_t`
+    HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE:
+        Make `.cudaTextureAddressMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE:
+        Make `.cudaTextureFilterMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaTextureReadMode_HALLUCINATE:
+        Make `.cudaTextureReadMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureReadMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUsurfObject:
         alias of `.hipSurfaceObject_t`
     CUsurfObject_v1:
         alias of `.hipSurfaceObject_t`
     cudaSurfaceObject_t:
         alias of `.hipSurfaceObject_t`
+    HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE:
+        Make `.cudaSurfaceBoundaryMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUcontext:
         alias of `.hipCtx_t`
+    HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE:
+        Make `.CUdevice_P2PAttribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE:
+        Make `.CUdevice_P2PAttribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE:
+        Make `.cudaDeviceP2PAttr` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUstream:
         alias of `.hipStream_t`
     cudaStream_t:
@@ -260,8 +564,296 @@ Attributes:
         alias of `.hipEvent_t`
     cudaEvent_t:
         alias of `.hipEvent_t`
+    HIP_PYTHON_CUlimit_HALLUCINATE:
+        Make `.CUlimit` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUlimit_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUlimit_enum_HALLUCINATE:
+        Make `.CUlimit_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUlimit_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaLimit_HALLUCINATE:
+        Make `.cudaLimit` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaLimit_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmem_advise_HALLUCINATE:
+        Make `.CUmem_advise` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_advise_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmem_advise_enum_HALLUCINATE:
+        Make `.CUmem_advise_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_advise_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE:
+        Make `.cudaMemoryAdvise` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmem_range_attribute_HALLUCINATE:
+        Make `.CUmem_range_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_range_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE:
+        Make `.CUmem_range_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE:
+        Make `.cudaMemRangeAttribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemPool_attribute_HALLUCINATE:
+        Make `.CUmemPool_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemPool_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE:
+        Make `.CUmemPool_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE:
+        Make `.cudaMemPoolAttr` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemLocationType_HALLUCINATE:
+        Make `.CUmemLocationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemLocationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE:
+        Make `.CUmemLocationType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemLocationType_HALLUCINATE:
+        Make `.cudaMemLocationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemLocationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAccess_flags_HALLUCINATE:
+        Make `.CUmemAccess_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAccess_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE:
+        Make `.CUmemAccess_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE:
+        Make `.cudaMemAccessFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationType_HALLUCINATE:
+        Make `.CUmemAllocationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE:
+        Make `.CUmemAllocationType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemAllocationType_HALLUCINATE:
+        Make `.cudaMemAllocationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAllocationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE:
+        Make `.CUmemAllocationHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE:
+        Make `.CUmemAllocationHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE:
+        Make `.cudaMemAllocationHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUjit_option_HALLUCINATE:
+        Make `.CUjit_option` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUjit_option_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUjit_option_enum_HALLUCINATE:
+        Make `.CUjit_option_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUjit_option_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaFuncAttribute_HALLUCINATE:
+        Make `.cudaFuncAttribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaFuncAttribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfunc_cache_HALLUCINATE:
+        Make `.CUfunc_cache` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunc_cache_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE:
+        Make `.CUfunc_cache_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaFuncCache_HALLUCINATE:
+        Make `.cudaFuncCache` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaFuncCache_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUsharedconfig_HALLUCINATE:
+        Make `.CUsharedconfig` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUsharedconfig_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE:
+        Make `.CUsharedconfig_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE:
+        Make `.cudaSharedMemConfig` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     cudaLaunchParams:
         alias of `.hipLaunchParams`
+    HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE:
+        Make `.CUexternalMemoryHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE:
+        Make `.CUexternalMemoryHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE:
+        Make `.cudaExternalMemoryHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUDA_EXTERNAL_MEMORY_HANDLE_DESC:
         alias of `.hipExternalMemoryHandleDesc`
     CUDA_EXTERNAL_MEMORY_HANDLE_DESC_v1:
@@ -274,6 +866,30 @@ Attributes:
         alias of `.hipExternalMemoryBufferDesc`
     cudaExternalMemoryBufferDesc:
         alias of `.hipExternalMemoryBufferDesc`
+    HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE:
+        Make `.CUexternalSemaphoreHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE:
+        Make `.CUexternalSemaphoreHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE:
+        Make `.cudaExternalSemaphoreHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC:
         alias of `.hipExternalSemaphoreHandleDesc`
     CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1:
@@ -296,6 +912,54 @@ Attributes:
         alias of `.hipExternalSemaphoreWaitParams`
     cudaExternalSemaphoreWaitParams_v1:
         alias of `.hipExternalSemaphoreWaitParams`
+    HIP_PYTHON_CUGLDeviceList_HALLUCINATE:
+        Make `.CUGLDeviceList` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUGLDeviceList_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE:
+        Make `.CUGLDeviceList_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGLDeviceList_HALLUCINATE:
+        Make `.cudaGLDeviceList` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGLDeviceList_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE:
+        Make `.CUgraphicsRegisterFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE:
+        Make `.CUgraphicsRegisterFlags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE:
+        Make `.cudaGraphicsRegisterFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUgraphicsResource_st:
         alias of `.hipGraphicsResource`
     cudaGraphicsResource:
@@ -320,10 +984,338 @@ Attributes:
         alias of `.hipUserObject_t`
     cudaUserObject_t:
         alias of `.hipUserObject_t`
+    HIP_PYTHON_CUgraphNodeType_HALLUCINATE:
+        Make `.CUgraphNodeType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphNodeType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE:
+        Make `.CUgraphNodeType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphNodeType_HALLUCINATE:
+        Make `.cudaGraphNodeType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphNodeType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE:
+        Make `.CUkernelNodeAttrID` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE:
+        Make `.CUkernelNodeAttrID_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE:
+        Make `.cudaKernelNodeAttrID` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUaccessProperty_HALLUCINATE:
+        Make `.CUaccessProperty` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUaccessProperty_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE:
+        Make `.CUaccessProperty_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaAccessProperty_HALLUCINATE:
+        Make `.cudaAccessProperty` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaAccessProperty_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE:
+        Make `.CUgraphExecUpdateResult` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE:
+        Make `.CUgraphExecUpdateResult_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE:
+        Make `.cudaGraphExecUpdateResult` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE:
+        Make `.CUstreamCaptureMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE:
+        Make `.CUstreamCaptureMode_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE:
+        Make `.cudaStreamCaptureMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE:
+        Make `.CUstreamCaptureStatus` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE:
+        Make `.CUstreamCaptureStatus_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE:
+        Make `.cudaStreamCaptureStatus` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE:
+        Make `.CUstreamUpdateCaptureDependencies_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE:
+        Make `.CUstreamUpdateCaptureDependencies_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE:
+        Make `.cudaStreamUpdateCaptureDependenciesFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE:
+        Make `.CUgraphMem_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE:
+        Make `.CUgraphMem_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE:
+        Make `.cudaGraphMemAttributeType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUuserObject_flags_HALLUCINATE:
+        Make `.CUuserObject_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObject_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE:
+        Make `.CUuserObject_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE:
+        Make `.cudaUserObjectFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE:
+        Make `.CUuserObjectRetain_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE:
+        Make `.CUuserObjectRetain_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE:
+        Make `.cudaUserObjectRetainFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE:
+        Make `.CUgraphInstantiate_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE:
+        Make `.CUgraphInstantiate_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE:
+        Make `.cudaGraphInstantiateFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUmemGenericAllocationHandle:
         alias of `.hipMemGenericAllocationHandle_t`
     CUmemGenericAllocationHandle_v1:
         alias of `.hipMemGenericAllocationHandle_t`
+    HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE:
+        Make `.CUmemAllocationGranularity_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE:
+        Make `.CUmemAllocationGranularity_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemHandleType_HALLUCINATE:
+        Make `.CUmemHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE:
+        Make `.CUmemHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemOperationType_HALLUCINATE:
+        Make `.CUmemOperationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemOperationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE:
+        Make `.CUmemOperationType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE:
+        Make `.CUarraySparseSubresourceType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE:
+        Make `.CUarraySparseSubresourceType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     cuInit:
         alias of `.hipInit`
     cuDriverGetVersion:
@@ -1540,15 +2532,18 @@ CUuuid = hip.hipUUID
 cudaUUID_t = hip.hipUUID
 cdef class cudaDeviceProp(hip.hip.hipDeviceProp_t):
     pass
+HIP_PYTHON_CUmemorytype_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_HALLUCINATE","false")
+
 class _CUmemorytype_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemorytype_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemorytype.hallucinate:
+            if not HIP_PYTHON_CUmemorytype_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -1601,20 +2596,6 @@ class _CUmemorytype_EnumMeta(enum.EnumMeta):
 
 
 class CUmemorytype(hip._hipMemoryType__Base,metaclass=_CUmemorytype_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemorytype` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemorytype_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_HALLUCINATE","false")
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -1627,15 +2608,18 @@ class CUmemorytype(hip._hipMemoryType__Base,metaclass=_CUmemorytype_EnumMeta):
     CU_MEMORYTYPE_UNIFIED = hip.chip.hipMemoryTypeUnified
     hipMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
     cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
+HIP_PYTHON_CUmemorytype_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_enum_HALLUCINATE","false")
+
 class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemorytype_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemorytype_enum.hallucinate:
+            if not HIP_PYTHON_CUmemorytype_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -1688,20 +2672,6 @@ class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemorytype_enum(hip._hipMemoryType__Base,metaclass=_CUmemorytype_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemorytype_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemorytype_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_enum_HALLUCINATE","false")
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -1714,15 +2684,18 @@ class CUmemorytype_enum(hip._hipMemoryType__Base,metaclass=_CUmemorytype_enum_En
     CU_MEMORYTYPE_UNIFIED = hip.chip.hipMemoryTypeUnified
     hipMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
     cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
+HIP_PYTHON_cudaMemoryType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryType_HALLUCINATE","false")
+
 class _cudaMemoryType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemoryType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemoryType.hallucinate:
+            if not HIP_PYTHON_cudaMemoryType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -1775,20 +2748,6 @@ class _cudaMemoryType_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemoryType(hip._hipMemoryType__Base,metaclass=_cudaMemoryType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemoryType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemoryType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryType_HALLUCINATE","false")
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -1803,15 +2762,18 @@ class cudaMemoryType(hip._hipMemoryType__Base,metaclass=_cudaMemoryType_EnumMeta
     cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
 cdef class cudaPointerAttributes(hip.hip.hipPointerAttribute_t):
     pass
+HIP_PYTHON_CUresult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresult_HALLUCINATE","false")
+
 class _CUresult_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUresult_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUresult.hallucinate:
+            if not HIP_PYTHON_CUresult_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -1864,20 +2826,6 @@ class _CUresult_EnumMeta(enum.EnumMeta):
 
 
 class CUresult(hip._hipError_t__Base,metaclass=_CUresult_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUresult` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUresult_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresult_HALLUCINATE","false")
     hipSuccess = hip.chip.hipSuccess
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
@@ -2088,15 +3036,18 @@ class CUresult(hip._hipError_t__Base,metaclass=_CUresult_EnumMeta):
     hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
+HIP_PYTHON_cudaError_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_HALLUCINATE","false")
+
 class _cudaError_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaError_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaError.hallucinate:
+            if not HIP_PYTHON_cudaError_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -2149,20 +3100,6 @@ class _cudaError_EnumMeta(enum.EnumMeta):
 
 
 class cudaError(hip._hipError_t__Base,metaclass=_cudaError_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaError` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_HALLUCINATE","false")
     hipSuccess = hip.chip.hipSuccess
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
@@ -2373,15 +3310,18 @@ class cudaError(hip._hipError_t__Base,metaclass=_cudaError_EnumMeta):
     hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
+HIP_PYTHON_cudaError_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_enum_HALLUCINATE","false")
+
 class _cudaError_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaError_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaError_enum.hallucinate:
+            if not HIP_PYTHON_cudaError_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -2434,20 +3374,6 @@ class _cudaError_enum_EnumMeta(enum.EnumMeta):
 
 
 class cudaError_enum(hip._hipError_t__Base,metaclass=_cudaError_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaError_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_enum_HALLUCINATE","false")
     hipSuccess = hip.chip.hipSuccess
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
@@ -2658,15 +3584,18 @@ class cudaError_enum(hip._hipError_t__Base,metaclass=_cudaError_enum_EnumMeta):
     hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
+HIP_PYTHON_cudaError_t_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_t_HALLUCINATE","false")
+
 class _cudaError_t_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaError_t_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaError_t.hallucinate:
+            if not HIP_PYTHON_cudaError_t_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -2719,20 +3648,6 @@ class _cudaError_t_EnumMeta(enum.EnumMeta):
 
 
 class cudaError_t(hip._hipError_t__Base,metaclass=_cudaError_t_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaError_t` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_t_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_t_HALLUCINATE","false")
     hipSuccess = hip.chip.hipSuccess
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
@@ -2943,15 +3858,18 @@ class cudaError_t(hip._hipError_t__Base,metaclass=_cudaError_t_EnumMeta):
     hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
+HIP_PYTHON_CUdevice_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_HALLUCINATE","false")
+
 class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUdevice_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUdevice_attribute.hallucinate:
+            if not HIP_PYTHON_CUdevice_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3004,20 +3922,6 @@ class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
 
 
 class CUdevice_attribute(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_attribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUdevice_attribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_attribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_HALLUCINATE","false")
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
@@ -3317,15 +4221,18 @@ class CUdevice_attribute(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_att
     hipDeviceAttributeWallClockRate = hip.chip.hipDeviceAttributeWallClockRate
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
+HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE","false")
+
 class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUdevice_attribute_enum.hallucinate:
+            if not HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3378,20 +4285,6 @@ class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUdevice_attribute_enum(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_attribute_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUdevice_attribute_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE","false")
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
@@ -3691,15 +4584,18 @@ class CUdevice_attribute_enum(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevic
     hipDeviceAttributeWallClockRate = hip.chip.hipDeviceAttributeWallClockRate
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
+HIP_PYTHON_cudaDeviceAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceAttr_HALLUCINATE","false")
+
 class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaDeviceAttr_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaDeviceAttr.hallucinate:
+            if not HIP_PYTHON_cudaDeviceAttr_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3752,20 +4648,6 @@ class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
 
 
 class cudaDeviceAttr(hip._hipDeviceAttribute_t__Base,metaclass=_cudaDeviceAttr_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaDeviceAttr` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaDeviceAttr_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceAttr_HALLUCINATE","false")
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
@@ -4065,15 +4947,18 @@ class cudaDeviceAttr(hip._hipDeviceAttribute_t__Base,metaclass=_cudaDeviceAttr_E
     hipDeviceAttributeWallClockRate = hip.chip.hipDeviceAttributeWallClockRate
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
+HIP_PYTHON_CUcomputemode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_HALLUCINATE","false")
+
 class _CUcomputemode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUcomputemode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUcomputemode.hallucinate:
+            if not HIP_PYTHON_CUcomputemode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4126,20 +5011,6 @@ class _CUcomputemode_EnumMeta(enum.EnumMeta):
 
 
 class CUcomputemode(hip._hipComputeMode__Base,metaclass=_CUcomputemode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUcomputemode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUcomputemode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_HALLUCINATE","false")
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -4152,15 +5023,18 @@ class CUcomputemode(hip._hipComputeMode__Base,metaclass=_CUcomputemode_EnumMeta)
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     CU_COMPUTEMODE_EXCLUSIVE_PROCESS = hip.chip.hipComputeModeExclusiveProcess
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
+HIP_PYTHON_CUcomputemode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_enum_HALLUCINATE","false")
+
 class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUcomputemode_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUcomputemode_enum.hallucinate:
+            if not HIP_PYTHON_CUcomputemode_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4213,20 +5087,6 @@ class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUcomputemode_enum(hip._hipComputeMode__Base,metaclass=_CUcomputemode_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUcomputemode_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUcomputemode_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_enum_HALLUCINATE","false")
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -4239,15 +5099,18 @@ class CUcomputemode_enum(hip._hipComputeMode__Base,metaclass=_CUcomputemode_enum
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     CU_COMPUTEMODE_EXCLUSIVE_PROCESS = hip.chip.hipComputeModeExclusiveProcess
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
+HIP_PYTHON_cudaComputeMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaComputeMode_HALLUCINATE","false")
+
 class _cudaComputeMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaComputeMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaComputeMode.hallucinate:
+            if not HIP_PYTHON_cudaComputeMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4300,20 +5163,6 @@ class _cudaComputeMode_EnumMeta(enum.EnumMeta):
 
 
 class cudaComputeMode(hip._hipComputeMode__Base,metaclass=_cudaComputeMode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaComputeMode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaComputeMode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaComputeMode_HALLUCINATE","false")
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -4326,15 +5175,18 @@ class cudaComputeMode(hip._hipComputeMode__Base,metaclass=_cudaComputeMode_EnumM
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     CU_COMPUTEMODE_EXCLUSIVE_PROCESS = hip.chip.hipComputeModeExclusiveProcess
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
+HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE","false")
+
 class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaChannelFormatKind.hallucinate:
+            if not HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4387,20 +5239,6 @@ class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
 
 
 class cudaChannelFormatKind(hip._hipChannelFormatKind__Base,metaclass=_cudaChannelFormatKind_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaChannelFormatKind` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE","false")
     hipChannelFormatKindSigned = hip.chip.hipChannelFormatKindSigned
     cudaChannelFormatKindSigned = hip.chip.hipChannelFormatKindSigned
     hipChannelFormatKindUnsigned = hip.chip.hipChannelFormatKindUnsigned
@@ -4411,15 +5249,18 @@ class cudaChannelFormatKind(hip._hipChannelFormatKind__Base,metaclass=_cudaChann
     cudaChannelFormatKindNone = hip.chip.hipChannelFormatKindNone
 cdef class cudaChannelFormatDesc(hip.hip.hipChannelFormatDesc):
     pass
+HIP_PYTHON_CUarray_format_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_HALLUCINATE","false")
+
 class _CUarray_format_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUarray_format_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUarray_format.hallucinate:
+            if not HIP_PYTHON_CUarray_format_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4472,20 +5313,6 @@ class _CUarray_format_EnumMeta(enum.EnumMeta):
 
 
 class CUarray_format(hip._hipArray_Format__Base,metaclass=_CUarray_format_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUarray_format` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUarray_format_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_HALLUCINATE","false")
     HIP_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     CU_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT16 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT16
@@ -4502,15 +5329,18 @@ class CUarray_format(hip._hipArray_Format__Base,metaclass=_CUarray_format_EnumMe
     CU_AD_FORMAT_HALF = hip.chip.HIP_AD_FORMAT_HALF
     HIP_AD_FORMAT_FLOAT = hip.chip.HIP_AD_FORMAT_FLOAT
     CU_AD_FORMAT_FLOAT = hip.chip.HIP_AD_FORMAT_FLOAT
+HIP_PYTHON_CUarray_format_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_enum_HALLUCINATE","false")
+
 class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUarray_format_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUarray_format_enum.hallucinate:
+            if not HIP_PYTHON_CUarray_format_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4563,20 +5393,6 @@ class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUarray_format_enum(hip._hipArray_Format__Base,metaclass=_CUarray_format_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUarray_format_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUarray_format_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_enum_HALLUCINATE","false")
     HIP_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     CU_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT16 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT16
@@ -4633,15 +5449,18 @@ cdef class cudaMipmappedArray(hip.hip.hipMipmappedArray):
 CUmipmappedArray = hip.hipMipmappedArray_t
 cudaMipmappedArray_t = hip.hipMipmappedArray_t
 cudaMipmappedArray_const_t = hip.hipMipmappedArray_const_t
+HIP_PYTHON_cudaResourceType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceType_HALLUCINATE","false")
+
 class _cudaResourceType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaResourceType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaResourceType.hallucinate:
+            if not HIP_PYTHON_cudaResourceType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4694,20 +5513,6 @@ class _cudaResourceType_EnumMeta(enum.EnumMeta):
 
 
 class cudaResourceType(hip._hipResourceType__Base,metaclass=_cudaResourceType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaResourceType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaResourceType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceType_HALLUCINATE","false")
     hipResourceTypeArray = hip.chip.hipResourceTypeArray
     cudaResourceTypeArray = hip.chip.hipResourceTypeArray
     hipResourceTypeMipmappedArray = hip.chip.hipResourceTypeMipmappedArray
@@ -4716,15 +5521,18 @@ class cudaResourceType(hip._hipResourceType__Base,metaclass=_cudaResourceType_En
     cudaResourceTypeLinear = hip.chip.hipResourceTypeLinear
     hipResourceTypePitch2D = hip.chip.hipResourceTypePitch2D
     cudaResourceTypePitch2D = hip.chip.hipResourceTypePitch2D
+HIP_PYTHON_CUresourcetype_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_enum_HALLUCINATE","false")
+
 class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUresourcetype_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUresourcetype_enum.hallucinate:
+            if not HIP_PYTHON_CUresourcetype_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4777,20 +5585,6 @@ class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUresourcetype_enum(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUresourcetype_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourcetype_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_enum_HALLUCINATE","false")
     HIP_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     CU_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = hip.chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
@@ -4799,15 +5593,18 @@ class CUresourcetype_enum(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcet
     CU_RESOURCE_TYPE_LINEAR = hip.chip.HIP_RESOURCE_TYPE_LINEAR
     HIP_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
     CU_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
+HIP_PYTHON_CUresourcetype_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_HALLUCINATE","false")
+
 class _CUresourcetype_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUresourcetype_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUresourcetype.hallucinate:
+            if not HIP_PYTHON_CUresourcetype_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4860,20 +5657,6 @@ class _CUresourcetype_EnumMeta(enum.EnumMeta):
 
 
 class CUresourcetype(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUresourcetype` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourcetype_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_HALLUCINATE","false")
     HIP_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     CU_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = hip.chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
@@ -4882,15 +5665,18 @@ class CUresourcetype(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_E
     CU_RESOURCE_TYPE_LINEAR = hip.chip.HIP_RESOURCE_TYPE_LINEAR
     HIP_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
     CU_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
+HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE","false")
+
 class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUaddress_mode_enum.hallucinate:
+            if not HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4943,20 +5729,6 @@ class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUaddress_mode_enum(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUaddress_mode_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE","false")
     HIP_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     CU_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = hip.chip.HIP_TR_ADDRESS_MODE_CLAMP
@@ -4965,15 +5737,18 @@ class CUaddress_mode_enum(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_m
     CU_TR_ADDRESS_MODE_MIRROR = hip.chip.HIP_TR_ADDRESS_MODE_MIRROR
     HIP_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
     CU_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
+HIP_PYTHON_CUaddress_mode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_HALLUCINATE","false")
+
 class _CUaddress_mode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUaddress_mode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUaddress_mode.hallucinate:
+            if not HIP_PYTHON_CUaddress_mode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5026,20 +5801,6 @@ class _CUaddress_mode_EnumMeta(enum.EnumMeta):
 
 
 class CUaddress_mode(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUaddress_mode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUaddress_mode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_HALLUCINATE","false")
     HIP_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     CU_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = hip.chip.HIP_TR_ADDRESS_MODE_CLAMP
@@ -5048,15 +5809,18 @@ class CUaddress_mode(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_E
     CU_TR_ADDRESS_MODE_MIRROR = hip.chip.HIP_TR_ADDRESS_MODE_MIRROR
     HIP_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
     CU_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
+HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE","false")
+
 class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUfilter_mode_enum.hallucinate:
+            if not HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5109,33 +5873,22 @@ class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUfilter_mode_enum(hip._HIPfilter_mode_enum__Base,metaclass=_CUfilter_mode_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUfilter_mode_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE","false")
     HIP_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     CU_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
     CU_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
+HIP_PYTHON_CUfilter_mode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_HALLUCINATE","false")
+
 class _CUfilter_mode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUfilter_mode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUfilter_mode.hallucinate:
+            if not HIP_PYTHON_CUfilter_mode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5188,20 +5941,6 @@ class _CUfilter_mode_EnumMeta(enum.EnumMeta):
 
 
 class CUfilter_mode(hip._HIPfilter_mode_enum__Base,metaclass=_CUfilter_mode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUfilter_mode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUfilter_mode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_HALLUCINATE","false")
     HIP_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     CU_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
@@ -5210,15 +5949,18 @@ cdef class CUDA_TEXTURE_DESC_st(hip.hip.HIP_TEXTURE_DESC_st):
     pass
 CUDA_TEXTURE_DESC = hip.HIP_TEXTURE_DESC
 CUDA_TEXTURE_DESC_v1 = hip.HIP_TEXTURE_DESC
+HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE","false")
+
 class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaResourceViewFormat.hallucinate:
+            if not HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5271,20 +6013,6 @@ class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
 
 
 class cudaResourceViewFormat(hip._hipResourceViewFormat__Base,metaclass=_cudaResourceViewFormat_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaResourceViewFormat` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE","false")
     hipResViewFormatNone = hip.chip.hipResViewFormatNone
     cudaResViewFormatNone = hip.chip.hipResViewFormatNone
     hipResViewFormatUnsignedChar1 = hip.chip.hipResViewFormatUnsignedChar1
@@ -5355,15 +6083,18 @@ class cudaResourceViewFormat(hip._hipResourceViewFormat__Base,metaclass=_cudaRes
     cudaResViewFormatSignedBlockCompressed6H = hip.chip.hipResViewFormatSignedBlockCompressed6H
     hipResViewFormatUnsignedBlockCompressed7 = hip.chip.hipResViewFormatUnsignedBlockCompressed7
     cudaResViewFormatUnsignedBlockCompressed7 = hip.chip.hipResViewFormatUnsignedBlockCompressed7
+HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE","false")
+
 class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUresourceViewFormat_enum.hallucinate:
+            if not HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5416,20 +6147,6 @@ class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUresourceViewFormat_enum(hip._HIPresourceViewFormat_enum__Base,metaclass=_CUresourceViewFormat_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUresourceViewFormat_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE","false")
     HIP_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     CU_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_UINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X8
@@ -5500,15 +6217,18 @@ class CUresourceViewFormat_enum(hip._HIPresourceViewFormat_enum__Base,metaclass=
     CU_RES_VIEW_FORMAT_SIGNED_BC6H = hip.chip.HIP_RES_VIEW_FORMAT_SIGNED_BC6H
     HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
     CU_RES_VIEW_FORMAT_UNSIGNED_BC7 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
+HIP_PYTHON_CUresourceViewFormat_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_HALLUCINATE","false")
+
 class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUresourceViewFormat_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUresourceViewFormat.hallucinate:
+            if not HIP_PYTHON_CUresourceViewFormat_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5561,20 +6281,6 @@ class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
 
 
 class CUresourceViewFormat(hip._HIPresourceViewFormat_enum__Base,metaclass=_CUresourceViewFormat_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUresourceViewFormat` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourceViewFormat_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_HALLUCINATE","false")
     HIP_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     CU_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_UINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X8
@@ -5657,15 +6363,18 @@ cdef class CUDA_RESOURCE_VIEW_DESC_st(hip.hip.HIP_RESOURCE_VIEW_DESC_st):
     pass
 CUDA_RESOURCE_VIEW_DESC = hip.HIP_RESOURCE_VIEW_DESC
 CUDA_RESOURCE_VIEW_DESC_v1 = hip.HIP_RESOURCE_VIEW_DESC
+HIP_PYTHON_cudaMemcpyKind_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemcpyKind_HALLUCINATE","false")
+
 class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemcpyKind_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemcpyKind.hallucinate:
+            if not HIP_PYTHON_cudaMemcpyKind_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5718,20 +6427,6 @@ class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemcpyKind(hip._hipMemcpyKind__Base,metaclass=_cudaMemcpyKind_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemcpyKind` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemcpyKind_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemcpyKind_HALLUCINATE","false")
     hipMemcpyHostToHost = hip.chip.hipMemcpyHostToHost
     cudaMemcpyHostToHost = hip.chip.hipMemcpyHostToHost
     hipMemcpyHostToDevice = hip.chip.hipMemcpyHostToDevice
@@ -5760,15 +6455,18 @@ cdef class CUDA_MEMCPY3D_v1_st(hip.hip.HIP_MEMCPY3D):
     pass
 cdef class CUDA_MEMCPY3D_v2(hip.hip.HIP_MEMCPY3D):
     pass
+HIP_PYTHON_CUfunction_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_HALLUCINATE","false")
+
 class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUfunction_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUfunction_attribute.hallucinate:
+            if not HIP_PYTHON_CUfunction_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5821,20 +6519,6 @@ class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
 
 
 class CUfunction_attribute(hip._hipFunction_attribute__Base,metaclass=_CUfunction_attribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUfunction_attribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunction_attribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_HALLUCINATE","false")
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
@@ -5857,15 +6541,18 @@ class CUfunction_attribute(hip._hipFunction_attribute__Base,metaclass=_CUfunctio
     CU_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT = hip.chip.HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
     HIP_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
     CU_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
+HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE","false")
+
 class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUfunction_attribute_enum.hallucinate:
+            if not HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5918,20 +6605,6 @@ class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUfunction_attribute_enum(hip._hipFunction_attribute__Base,metaclass=_CUfunction_attribute_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUfunction_attribute_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE","false")
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
@@ -5954,15 +6627,18 @@ class CUfunction_attribute_enum(hip._hipFunction_attribute__Base,metaclass=_CUfu
     CU_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT = hip.chip.HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
     HIP_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
     CU_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
+HIP_PYTHON_CUpointer_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_HALLUCINATE","false")
+
 class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUpointer_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUpointer_attribute.hallucinate:
+            if not HIP_PYTHON_CUpointer_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6015,20 +6691,6 @@ class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
 
 
 class CUpointer_attribute(hip._hipPointer_attribute__Base,metaclass=_CUpointer_attribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUpointer_attribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUpointer_attribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_HALLUCINATE","false")
     HIP_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     CU_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_MEMORY_TYPE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
@@ -6063,15 +6725,18 @@ class CUpointer_attribute(hip._hipPointer_attribute__Base,metaclass=_CUpointer_a
     CU_POINTER_ATTRIBUTE_ACCESS_FLAGS = hip.chip.HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
     HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
     CU_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
+HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE","false")
+
 class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUpointer_attribute_enum.hallucinate:
+            if not HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6124,20 +6789,6 @@ class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUpointer_attribute_enum(hip._hipPointer_attribute__Base,metaclass=_CUpointer_attribute_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUpointer_attribute_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE","false")
     HIP_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     CU_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_MEMORY_TYPE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
@@ -6176,15 +6827,18 @@ cudaCreateChannelDesc = hip.hipCreateChannelDesc
 CUtexObject = hip.hipTextureObject_t
 CUtexObject_v1 = hip.hipTextureObject_t
 cudaTextureObject_t = hip.hipTextureObject_t
+HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE","false")
+
 class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaTextureAddressMode.hallucinate:
+            if not HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6237,20 +6891,6 @@ class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
 
 
 class cudaTextureAddressMode(hip._hipTextureAddressMode__Base,metaclass=_cudaTextureAddressMode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaTextureAddressMode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE","false")
     hipAddressModeWrap = hip.chip.hipAddressModeWrap
     cudaAddressModeWrap = hip.chip.hipAddressModeWrap
     hipAddressModeClamp = hip.chip.hipAddressModeClamp
@@ -6259,15 +6899,18 @@ class cudaTextureAddressMode(hip._hipTextureAddressMode__Base,metaclass=_cudaTex
     cudaAddressModeMirror = hip.chip.hipAddressModeMirror
     hipAddressModeBorder = hip.chip.hipAddressModeBorder
     cudaAddressModeBorder = hip.chip.hipAddressModeBorder
+HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE","false")
+
 class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaTextureFilterMode.hallucinate:
+            if not HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6320,33 +6963,22 @@ class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
 
 
 class cudaTextureFilterMode(hip._hipTextureFilterMode__Base,metaclass=_cudaTextureFilterMode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaTextureFilterMode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE","false")
     hipFilterModePoint = hip.chip.hipFilterModePoint
     cudaFilterModePoint = hip.chip.hipFilterModePoint
     hipFilterModeLinear = hip.chip.hipFilterModeLinear
     cudaFilterModeLinear = hip.chip.hipFilterModeLinear
+HIP_PYTHON_cudaTextureReadMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureReadMode_HALLUCINATE","false")
+
 class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaTextureReadMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaTextureReadMode.hallucinate:
+            if not HIP_PYTHON_cudaTextureReadMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6399,20 +7031,6 @@ class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
 
 
 class cudaTextureReadMode(hip._hipTextureReadMode__Base,metaclass=_cudaTextureReadMode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaTextureReadMode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureReadMode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureReadMode_HALLUCINATE","false")
     hipReadModeElementType = hip.chip.hipReadModeElementType
     cudaReadModeElementType = hip.chip.hipReadModeElementType
     hipReadModeNormalizedFloat = hip.chip.hipReadModeNormalizedFloat
@@ -6428,15 +7046,18 @@ CUsurfObject_v1 = hip.hipSurfaceObject_t
 cudaSurfaceObject_t = hip.hipSurfaceObject_t
 cdef class surfaceReference(hip.hip.surfaceReference):
     pass
+HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE","false")
+
 class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaSurfaceBoundaryMode.hallucinate:
+            if not HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6489,20 +7110,6 @@ class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
 
 
 class cudaSurfaceBoundaryMode(hip._hipSurfaceBoundaryMode__Base,metaclass=_cudaSurfaceBoundaryMode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaSurfaceBoundaryMode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE","false")
     hipBoundaryModeZero = hip.chip.hipBoundaryModeZero
     cudaBoundaryModeZero = hip.chip.hipBoundaryModeZero
     hipBoundaryModeTrap = hip.chip.hipBoundaryModeTrap
@@ -6512,15 +7119,18 @@ class cudaSurfaceBoundaryMode(hip._hipSurfaceBoundaryMode__Base,metaclass=_cudaS
 cdef class CUctx_st(hip.hip.ihipCtx_t):
     pass
 CUcontext = hip.hipCtx_t
+HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE","false")
+
 class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUdevice_P2PAttribute.hallucinate:
+            if not HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6573,20 +7183,6 @@ class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
 
 
 class CUdevice_P2PAttribute(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PAttribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUdevice_P2PAttribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE","false")
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -6601,15 +7197,18 @@ class CUdevice_P2PAttribute(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PA
     CU_DEVICE_P2P_ATTRIBUTE_ARRAY_ACCESS_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     CU_DEVICE_P2P_ATTRIBUTE_CUDA_ARRAY_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     cudaDevP2PAttrCudaArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
+HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE","false")
+
 class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUdevice_P2PAttribute_enum.hallucinate:
+            if not HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6662,20 +7261,6 @@ class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUdevice_P2PAttribute_enum(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PAttribute_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUdevice_P2PAttribute_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE","false")
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -6690,15 +7275,18 @@ class CUdevice_P2PAttribute_enum(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice
     CU_DEVICE_P2P_ATTRIBUTE_ARRAY_ACCESS_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     CU_DEVICE_P2P_ATTRIBUTE_CUDA_ARRAY_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     cudaDevP2PAttrCudaArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
+HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE","false")
+
 class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaDeviceP2PAttr.hallucinate:
+            if not HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6751,20 +7339,6 @@ class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
 
 
 class cudaDeviceP2PAttr(hip._hipDeviceP2PAttr__Base,metaclass=_cudaDeviceP2PAttr_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaDeviceP2PAttr` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE","false")
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -6814,15 +7388,18 @@ cdef class CUevent_st(hip.hip.ihipEvent_t):
     pass
 CUevent = hip.hipEvent_t
 cudaEvent_t = hip.hipEvent_t
+HIP_PYTHON_CUlimit_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_HALLUCINATE","false")
+
 class _CUlimit_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUlimit_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUlimit.hallucinate:
+            if not HIP_PYTHON_CUlimit_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6875,20 +7452,6 @@ class _CUlimit_EnumMeta(enum.EnumMeta):
 
 
 class CUlimit(hip._hipLimit_t__Base,metaclass=_CUlimit_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUlimit` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUlimit_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_HALLUCINATE","false")
     hipLimitStackSize = hip.chip.hipLimitStackSize
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
@@ -6899,15 +7462,18 @@ class CUlimit(hip._hipLimit_t__Base,metaclass=_CUlimit_EnumMeta):
     CU_LIMIT_MALLOC_HEAP_SIZE = hip.chip.hipLimitMallocHeapSize
     cudaLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
+HIP_PYTHON_CUlimit_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_enum_HALLUCINATE","false")
+
 class _CUlimit_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUlimit_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUlimit_enum.hallucinate:
+            if not HIP_PYTHON_CUlimit_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6960,20 +7526,6 @@ class _CUlimit_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUlimit_enum(hip._hipLimit_t__Base,metaclass=_CUlimit_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUlimit_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUlimit_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_enum_HALLUCINATE","false")
     hipLimitStackSize = hip.chip.hipLimitStackSize
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
@@ -6984,15 +7536,18 @@ class CUlimit_enum(hip._hipLimit_t__Base,metaclass=_CUlimit_enum_EnumMeta):
     CU_LIMIT_MALLOC_HEAP_SIZE = hip.chip.hipLimitMallocHeapSize
     cudaLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
+HIP_PYTHON_cudaLimit_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaLimit_HALLUCINATE","false")
+
 class _cudaLimit_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaLimit_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaLimit.hallucinate:
+            if not HIP_PYTHON_cudaLimit_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7045,20 +7600,6 @@ class _cudaLimit_EnumMeta(enum.EnumMeta):
 
 
 class cudaLimit(hip._hipLimit_t__Base,metaclass=_cudaLimit_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaLimit` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaLimit_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaLimit_HALLUCINATE","false")
     hipLimitStackSize = hip.chip.hipLimitStackSize
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
@@ -7069,15 +7610,18 @@ class cudaLimit(hip._hipLimit_t__Base,metaclass=_cudaLimit_EnumMeta):
     CU_LIMIT_MALLOC_HEAP_SIZE = hip.chip.hipLimitMallocHeapSize
     cudaLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
+HIP_PYTHON_CUmem_advise_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_HALLUCINATE","false")
+
 class _CUmem_advise_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmem_advise_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmem_advise.hallucinate:
+            if not HIP_PYTHON_CUmem_advise_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7130,20 +7674,6 @@ class _CUmem_advise_EnumMeta(enum.EnumMeta):
 
 
 class CUmem_advise(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmem_advise` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_advise_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_HALLUCINATE","false")
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -7164,15 +7694,18 @@ class CUmem_advise(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_EnumMeta):
     cudaMemAdviseUnsetAccessedBy = hip.chip.hipMemAdviseUnsetAccessedBy
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
+HIP_PYTHON_CUmem_advise_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_enum_HALLUCINATE","false")
+
 class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmem_advise_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmem_advise_enum.hallucinate:
+            if not HIP_PYTHON_CUmem_advise_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7225,20 +7758,6 @@ class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmem_advise_enum(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmem_advise_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_advise_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_enum_HALLUCINATE","false")
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -7259,15 +7778,18 @@ class CUmem_advise_enum(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_enum_
     cudaMemAdviseUnsetAccessedBy = hip.chip.hipMemAdviseUnsetAccessedBy
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
+HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE","false")
+
 class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemoryAdvise.hallucinate:
+            if not HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7320,20 +7842,6 @@ class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemoryAdvise(hip._hipMemoryAdvise__Base,metaclass=_cudaMemoryAdvise_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemoryAdvise` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE","false")
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -7354,15 +7862,18 @@ class cudaMemoryAdvise(hip._hipMemoryAdvise__Base,metaclass=_cudaMemoryAdvise_En
     cudaMemAdviseUnsetAccessedBy = hip.chip.hipMemAdviseUnsetAccessedBy
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
+HIP_PYTHON_CUmem_range_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_HALLUCINATE","false")
+
 class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmem_range_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmem_range_attribute.hallucinate:
+            if not HIP_PYTHON_CUmem_range_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7415,20 +7926,6 @@ class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
 
 
 class CUmem_range_attribute(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_range_attribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmem_range_attribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_range_attribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_HALLUCINATE","false")
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -7442,15 +7939,18 @@ class CUmem_range_attribute(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_ran
     CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     cudaMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
+HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE","false")
+
 class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmem_range_attribute_enum.hallucinate:
+            if not HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7503,20 +8003,6 @@ class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmem_range_attribute_enum(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_range_attribute_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmem_range_attribute_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE","false")
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -7530,15 +8016,18 @@ class CUmem_range_attribute_enum(hip._hipMemRangeAttribute__Base,metaclass=_CUme
     CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     cudaMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
+HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE","false")
+
 class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemRangeAttribute.hallucinate:
+            if not HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7591,20 +8080,6 @@ class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemRangeAttribute(hip._hipMemRangeAttribute__Base,metaclass=_cudaMemRangeAttribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemRangeAttribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE","false")
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -7618,15 +8093,18 @@ class cudaMemRangeAttribute(hip._hipMemRangeAttribute__Base,metaclass=_cudaMemRa
     CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     cudaMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
+HIP_PYTHON_CUmemPool_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_HALLUCINATE","false")
+
 class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemPool_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemPool_attribute.hallucinate:
+            if not HIP_PYTHON_CUmemPool_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7679,20 +8157,6 @@ class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
 
 
 class CUmemPool_attribute(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemPool_attribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemPool_attribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_HALLUCINATE","false")
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -7717,15 +8181,18 @@ class CUmemPool_attribute(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribu
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     CU_MEMPOOL_ATTR_USED_MEM_HIGH = hip.chip.hipMemPoolAttrUsedMemHigh
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
+HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE","false")
+
 class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemPool_attribute_enum.hallucinate:
+            if not HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7778,20 +8245,6 @@ class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemPool_attribute_enum(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribute_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemPool_attribute_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE","false")
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -7816,15 +8269,18 @@ class CUmemPool_attribute_enum(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_at
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     CU_MEMPOOL_ATTR_USED_MEM_HIGH = hip.chip.hipMemPoolAttrUsedMemHigh
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
+HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE","false")
+
 class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemPoolAttr.hallucinate:
+            if not HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7877,20 +8333,6 @@ class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemPoolAttr(hip._hipMemPoolAttr__Base,metaclass=_cudaMemPoolAttr_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemPoolAttr` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE","false")
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -7915,15 +8357,18 @@ class cudaMemPoolAttr(hip._hipMemPoolAttr__Base,metaclass=_cudaMemPoolAttr_EnumM
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     CU_MEMPOOL_ATTR_USED_MEM_HIGH = hip.chip.hipMemPoolAttrUsedMemHigh
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
+HIP_PYTHON_CUmemLocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_HALLUCINATE","false")
+
 class _CUmemLocationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemLocationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemLocationType.hallucinate:
+            if not HIP_PYTHON_CUmemLocationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7976,35 +8421,24 @@ class _CUmemLocationType_EnumMeta(enum.EnumMeta):
 
 
 class CUmemLocationType(hip._hipMemLocationType__Base,metaclass=_CUmemLocationType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemLocationType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemLocationType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_HALLUCINATE","false")
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
     CU_MEM_LOCATION_TYPE_DEVICE = hip.chip.hipMemLocationTypeDevice
     cudaMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
+HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE","false")
+
 class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemLocationType_enum.hallucinate:
+            if not HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8057,35 +8491,24 @@ class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemLocationType_enum(hip._hipMemLocationType__Base,metaclass=_CUmemLocationType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemLocationType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE","false")
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
     CU_MEM_LOCATION_TYPE_DEVICE = hip.chip.hipMemLocationTypeDevice
     cudaMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
+HIP_PYTHON_cudaMemLocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemLocationType_HALLUCINATE","false")
+
 class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemLocationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemLocationType.hallucinate:
+            if not HIP_PYTHON_cudaMemLocationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8138,20 +8561,6 @@ class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemLocationType(hip._hipMemLocationType__Base,metaclass=_cudaMemLocationType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemLocationType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemLocationType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemLocationType_HALLUCINATE","false")
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
@@ -8166,15 +8575,18 @@ cdef class CUmemLocation_v1(hip.hip.hipMemLocation):
     pass
 cdef class cudaMemLocation(hip.hip.hipMemLocation):
     pass
+HIP_PYTHON_CUmemAccess_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_HALLUCINATE","false")
+
 class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemAccess_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemAccess_flags.hallucinate:
+            if not HIP_PYTHON_CUmemAccess_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8227,20 +8639,6 @@ class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
 
 
 class CUmemAccess_flags(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemAccess_flags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAccess_flags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_HALLUCINATE","false")
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -8250,15 +8648,18 @@ class CUmemAccess_flags(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flag
     hipMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
     CU_MEM_ACCESS_FLAGS_PROT_READWRITE = hip.chip.hipMemAccessFlagsProtReadWrite
     cudaMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
+HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE","false")
+
 class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemAccess_flags_enum.hallucinate:
+            if not HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8311,20 +8712,6 @@ class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemAccess_flags_enum(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flags_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemAccess_flags_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE","false")
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -8334,15 +8721,18 @@ class CUmemAccess_flags_enum(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess
     hipMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
     CU_MEM_ACCESS_FLAGS_PROT_READWRITE = hip.chip.hipMemAccessFlagsProtReadWrite
     cudaMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
+HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE","false")
+
 class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemAccessFlags.hallucinate:
+            if not HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8395,20 +8785,6 @@ class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemAccessFlags(hip._hipMemAccessFlags__Base,metaclass=_cudaMemAccessFlags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemAccessFlags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE","false")
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -8426,15 +8802,18 @@ cdef class CUmemAccessDesc_v1(hip.hip.hipMemAccessDesc):
     pass
 cdef class cudaMemAccessDesc(hip.hip.hipMemAccessDesc):
     pass
+HIP_PYTHON_CUmemAllocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_HALLUCINATE","false")
+
 class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemAllocationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemAllocationType.hallucinate:
+            if not HIP_PYTHON_CUmemAllocationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8487,20 +8866,6 @@ class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
 
 
 class CUmemAllocationType(hip._hipMemAllocationType__Base,metaclass=_CUmemAllocationType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemAllocationType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_HALLUCINATE","false")
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -8510,15 +8875,18 @@ class CUmemAllocationType(hip._hipMemAllocationType__Base,metaclass=_CUmemAlloca
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     CU_MEM_ALLOCATION_TYPE_MAX = hip.chip.hipMemAllocationTypeMax
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
+HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE","false")
+
 class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemAllocationType_enum.hallucinate:
+            if not HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8571,20 +8939,6 @@ class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemAllocationType_enum(hip._hipMemAllocationType__Base,metaclass=_CUmemAllocationType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemAllocationType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE","false")
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -8594,15 +8948,18 @@ class CUmemAllocationType_enum(hip._hipMemAllocationType__Base,metaclass=_CUmemA
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     CU_MEM_ALLOCATION_TYPE_MAX = hip.chip.hipMemAllocationTypeMax
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
+HIP_PYTHON_cudaMemAllocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationType_HALLUCINATE","false")
+
 class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemAllocationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemAllocationType.hallucinate:
+            if not HIP_PYTHON_cudaMemAllocationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8655,20 +9012,6 @@ class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemAllocationType(hip._hipMemAllocationType__Base,metaclass=_cudaMemAllocationType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemAllocationType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAllocationType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationType_HALLUCINATE","false")
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -8678,15 +9021,18 @@ class cudaMemAllocationType(hip._hipMemAllocationType__Base,metaclass=_cudaMemAl
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     CU_MEM_ALLOCATION_TYPE_MAX = hip.chip.hipMemAllocationTypeMax
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
+HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE","false")
+
 class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemAllocationHandleType.hallucinate:
+            if not HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8739,20 +9085,6 @@ class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
 
 class CUmemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=_CUmemAllocationHandleType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemAllocationHandleType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE","false")
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -8765,15 +9097,18 @@ class CUmemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=
     hipMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
     CU_MEM_HANDLE_TYPE_WIN32_KMT = hip.chip.hipMemHandleTypeWin32Kmt
     cudaMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
+HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE","false")
+
 class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemAllocationHandleType_enum.hallucinate:
+            if not HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8826,20 +9161,6 @@ class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemAllocationHandleType_enum(hip._hipMemAllocationHandleType__Base,metaclass=_CUmemAllocationHandleType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemAllocationHandleType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE","false")
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -8852,15 +9173,18 @@ class CUmemAllocationHandleType_enum(hip._hipMemAllocationHandleType__Base,metac
     hipMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
     CU_MEM_HANDLE_TYPE_WIN32_KMT = hip.chip.hipMemHandleTypeWin32Kmt
     cudaMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
+HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE","false")
+
 class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaMemAllocationHandleType.hallucinate:
+            if not HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8913,20 +9237,6 @@ class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
 
 class cudaMemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=_cudaMemAllocationHandleType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaMemAllocationHandleType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE","false")
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -8955,15 +9265,18 @@ cdef class CUmemPoolPtrExportData_v1(hip.hip.hipMemPoolPtrExportData):
     pass
 cdef class cudaMemPoolPtrExportData(hip.hip.hipMemPoolPtrExportData):
     pass
+HIP_PYTHON_CUjit_option_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_HALLUCINATE","false")
+
 class _CUjit_option_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUjit_option_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUjit_option.hallucinate:
+            if not HIP_PYTHON_CUjit_option_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9016,20 +9329,6 @@ class _CUjit_option_EnumMeta(enum.EnumMeta):
 
 
 class CUjit_option(hip._hipJitOption__Base,metaclass=_CUjit_option_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUjit_option` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUjit_option_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_HALLUCINATE","false")
     hipJitOptionMaxRegisters = hip.chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = hip.chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = hip.chip.hipJitOptionWallTime
@@ -9048,15 +9347,18 @@ class CUjit_option(hip._hipJitOption__Base,metaclass=_CUjit_option_EnumMeta):
     hipJitOptionSm3xOpt = hip.chip.hipJitOptionSm3xOpt
     hipJitOptionFastCompile = hip.chip.hipJitOptionFastCompile
     hipJitOptionNumOptions = hip.chip.hipJitOptionNumOptions
+HIP_PYTHON_CUjit_option_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_enum_HALLUCINATE","false")
+
 class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUjit_option_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUjit_option_enum.hallucinate:
+            if not HIP_PYTHON_CUjit_option_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9109,20 +9411,6 @@ class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUjit_option_enum(hip._hipJitOption__Base,metaclass=_CUjit_option_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUjit_option_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUjit_option_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_enum_HALLUCINATE","false")
     hipJitOptionMaxRegisters = hip.chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = hip.chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = hip.chip.hipJitOptionWallTime
@@ -9141,15 +9429,18 @@ class CUjit_option_enum(hip._hipJitOption__Base,metaclass=_CUjit_option_enum_Enu
     hipJitOptionSm3xOpt = hip.chip.hipJitOptionSm3xOpt
     hipJitOptionFastCompile = hip.chip.hipJitOptionFastCompile
     hipJitOptionNumOptions = hip.chip.hipJitOptionNumOptions
+HIP_PYTHON_cudaFuncAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncAttribute_HALLUCINATE","false")
+
 class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaFuncAttribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaFuncAttribute.hallucinate:
+            if not HIP_PYTHON_cudaFuncAttribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9202,35 +9493,24 @@ class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
 
 
 class cudaFuncAttribute(hip._hipFuncAttribute__Base,metaclass=_cudaFuncAttribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaFuncAttribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaFuncAttribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncAttribute_HALLUCINATE","false")
     hipFuncAttributeMaxDynamicSharedMemorySize = hip.chip.hipFuncAttributeMaxDynamicSharedMemorySize
     cudaFuncAttributeMaxDynamicSharedMemorySize = hip.chip.hipFuncAttributeMaxDynamicSharedMemorySize
     hipFuncAttributePreferredSharedMemoryCarveout = hip.chip.hipFuncAttributePreferredSharedMemoryCarveout
     cudaFuncAttributePreferredSharedMemoryCarveout = hip.chip.hipFuncAttributePreferredSharedMemoryCarveout
     hipFuncAttributeMax = hip.chip.hipFuncAttributeMax
     cudaFuncAttributeMax = hip.chip.hipFuncAttributeMax
+HIP_PYTHON_CUfunc_cache_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_HALLUCINATE","false")
+
 class _CUfunc_cache_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUfunc_cache_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUfunc_cache.hallucinate:
+            if not HIP_PYTHON_CUfunc_cache_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9283,20 +9563,6 @@ class _CUfunc_cache_EnumMeta(enum.EnumMeta):
 
 
 class CUfunc_cache(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUfunc_cache` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunc_cache_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_HALLUCINATE","false")
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -9309,15 +9575,18 @@ class CUfunc_cache(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_EnumMeta):
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     CU_FUNC_CACHE_PREFER_EQUAL = hip.chip.hipFuncCachePreferEqual
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
+HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE","false")
+
 class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUfunc_cache_enum.hallucinate:
+            if not HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9370,20 +9639,6 @@ class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUfunc_cache_enum(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUfunc_cache_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE","false")
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -9396,15 +9651,18 @@ class CUfunc_cache_enum(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_enum_E
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     CU_FUNC_CACHE_PREFER_EQUAL = hip.chip.hipFuncCachePreferEqual
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
+HIP_PYTHON_cudaFuncCache_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncCache_HALLUCINATE","false")
+
 class _cudaFuncCache_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaFuncCache_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaFuncCache.hallucinate:
+            if not HIP_PYTHON_cudaFuncCache_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9457,20 +9715,6 @@ class _cudaFuncCache_EnumMeta(enum.EnumMeta):
 
 
 class cudaFuncCache(hip._hipFuncCache_t__Base,metaclass=_cudaFuncCache_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaFuncCache` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaFuncCache_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncCache_HALLUCINATE","false")
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -9483,15 +9727,18 @@ class cudaFuncCache(hip._hipFuncCache_t__Base,metaclass=_cudaFuncCache_EnumMeta)
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     CU_FUNC_CACHE_PREFER_EQUAL = hip.chip.hipFuncCachePreferEqual
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
+HIP_PYTHON_CUsharedconfig_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_HALLUCINATE","false")
+
 class _CUsharedconfig_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUsharedconfig_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUsharedconfig.hallucinate:
+            if not HIP_PYTHON_CUsharedconfig_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9544,20 +9791,6 @@ class _CUsharedconfig_EnumMeta(enum.EnumMeta):
 
 
 class CUsharedconfig(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUsharedconfig` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUsharedconfig_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_HALLUCINATE","false")
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -9567,15 +9800,18 @@ class CUsharedconfig(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_Enu
     hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
     CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
+HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE","false")
+
 class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUsharedconfig_enum.hallucinate:
+            if not HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9628,20 +9864,6 @@ class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUsharedconfig_enum(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUsharedconfig_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE","false")
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -9651,15 +9873,18 @@ class CUsharedconfig_enum(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfi
     hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
     CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
+HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE","false")
+
 class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaSharedMemConfig.hallucinate:
+            if not HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9712,20 +9937,6 @@ class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
 
 
 class cudaSharedMemConfig(hip._hipSharedMemConfig__Base,metaclass=_cudaSharedMemConfig_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaSharedMemConfig` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE","false")
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -9736,15 +9947,18 @@ class cudaSharedMemConfig(hip._hipSharedMemConfig__Base,metaclass=_cudaSharedMem
     CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
 cudaLaunchParams = hip.hipLaunchParams
+HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE","false")
+
 class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUexternalMemoryHandleType_enum.hallucinate:
+            if not HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9797,20 +10011,6 @@ class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUexternalMemoryHandleType_enum(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_CUexternalMemoryHandleType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUexternalMemoryHandleType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE","false")
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -9832,15 +10032,18 @@ class CUexternalMemoryHandleType_enum(hip._hipExternalMemoryHandleType_enum__Bas
     hipExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE_KMT = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     cudaExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
+HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE","false")
+
 class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUexternalMemoryHandleType.hallucinate:
+            if not HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9893,20 +10096,6 @@ class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
 
 class CUexternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_CUexternalMemoryHandleType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUexternalMemoryHandleType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE","false")
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -9928,15 +10117,18 @@ class CUexternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,met
     hipExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE_KMT = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     cudaExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
+HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE","false")
+
 class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaExternalMemoryHandleType.hallucinate:
+            if not HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9989,20 +10181,6 @@ class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
 
 class cudaExternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_cudaExternalMemoryHandleType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaExternalMemoryHandleType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE","false")
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -10034,15 +10212,18 @@ cdef class CUDA_EXTERNAL_MEMORY_BUFFER_DESC_st(hip.hip.hipExternalMemoryBufferDe
 CUDA_EXTERNAL_MEMORY_BUFFER_DESC = hip.hipExternalMemoryBufferDesc
 CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1 = hip.hipExternalMemoryBufferDesc
 cudaExternalMemoryBufferDesc = hip.hipExternalMemoryBufferDesc
+HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE","false")
+
 class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUexternalSemaphoreHandleType_enum.hallucinate:
+            if not HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10095,20 +10276,6 @@ class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUexternalSemaphoreHandleType_enum(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_CUexternalSemaphoreHandleType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUexternalSemaphoreHandleType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE","false")
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -10121,15 +10288,18 @@ class CUexternalSemaphoreHandleType_enum(hip._hipExternalSemaphoreHandleType_enu
     hipExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     cudaExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
+HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE","false")
+
 class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUexternalSemaphoreHandleType.hallucinate:
+            if not HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10182,20 +10352,6 @@ class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
 
 class CUexternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_CUexternalSemaphoreHandleType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUexternalSemaphoreHandleType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE","false")
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -10208,15 +10364,18 @@ class CUexternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Ba
     hipExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     cudaExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
+HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE","false")
+
 class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaExternalSemaphoreHandleType.hallucinate:
+            if not HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10269,20 +10428,6 @@ class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
 
 class cudaExternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_cudaExternalSemaphoreHandleType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaExternalSemaphoreHandleType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE","false")
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -10312,15 +10457,18 @@ CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS = hip.hipExternalSemaphoreWaitParams
 CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1 = hip.hipExternalSemaphoreWaitParams
 cudaExternalSemaphoreWaitParams = hip.hipExternalSemaphoreWaitParams
 cudaExternalSemaphoreWaitParams_v1 = hip.hipExternalSemaphoreWaitParams
+HIP_PYTHON_CUGLDeviceList_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_HALLUCINATE","false")
+
 class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUGLDeviceList_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUGLDeviceList.hallucinate:
+            if not HIP_PYTHON_CUGLDeviceList_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10373,20 +10521,6 @@ class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
 
 
 class CUGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUGLDeviceList` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUGLDeviceList_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_HALLUCINATE","false")
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -10396,15 +10530,18 @@ class CUGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_EnumMe
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     CU_GL_DEVICE_LIST_NEXT_FRAME = hip.chip.hipGLDeviceListNextFrame
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
+HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE","false")
+
 class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUGLDeviceList_enum.hallucinate:
+            if not HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10457,20 +10594,6 @@ class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUGLDeviceList_enum(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUGLDeviceList_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE","false")
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -10480,15 +10603,18 @@ class CUGLDeviceList_enum(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_e
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     CU_GL_DEVICE_LIST_NEXT_FRAME = hip.chip.hipGLDeviceListNextFrame
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
+HIP_PYTHON_cudaGLDeviceList_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGLDeviceList_HALLUCINATE","false")
+
 class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaGLDeviceList_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaGLDeviceList.hallucinate:
+            if not HIP_PYTHON_cudaGLDeviceList_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10541,20 +10667,6 @@ class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
 
 
 class cudaGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_cudaGLDeviceList_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaGLDeviceList` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGLDeviceList_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGLDeviceList_HALLUCINATE","false")
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -10564,15 +10676,18 @@ class cudaGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_cudaGLDeviceList_En
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     CU_GL_DEVICE_LIST_NEXT_FRAME = hip.chip.hipGLDeviceListNextFrame
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
+HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE","false")
+
 class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphicsRegisterFlags.hallucinate:
+            if not HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10625,20 +10740,6 @@ class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUgraphicsRegisterFlags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphicsRegisterFlags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE","false")
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -10654,15 +10755,18 @@ class CUgraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUg
     hipGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
     CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER = hip.chip.hipGraphicsRegisterFlagsTextureGather
     cudaGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
+HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE","false")
+
 class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphicsRegisterFlags_enum.hallucinate:
+            if not HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10715,20 +10819,6 @@ class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphicsRegisterFlags_enum(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUgraphicsRegisterFlags_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphicsRegisterFlags_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE","false")
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -10744,15 +10834,18 @@ class CUgraphicsRegisterFlags_enum(hip._hipGraphicsRegisterFlags__Base,metaclass
     hipGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
     CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER = hip.chip.hipGraphicsRegisterFlagsTextureGather
     cudaGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
+HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE","false")
+
 class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaGraphicsRegisterFlags.hallucinate:
+            if not HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10805,20 +10898,6 @@ class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
 
 class cudaGraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_cudaGraphicsRegisterFlags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaGraphicsRegisterFlags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE","false")
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -10854,15 +10933,18 @@ cdef class CUuserObject_st(hip.hip.hipUserObject):
     pass
 CUuserObject = hip.hipUserObject_t
 cudaUserObject_t = hip.hipUserObject_t
+HIP_PYTHON_CUgraphNodeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_HALLUCINATE","false")
+
 class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphNodeType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphNodeType.hallucinate:
+            if not HIP_PYTHON_CUgraphNodeType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10915,20 +10997,6 @@ class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphNodeType(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphNodeType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphNodeType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_HALLUCINATE","false")
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -10964,15 +11032,18 @@ class CUgraphNodeType(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_Enu
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
     CU_GRAPH_NODE_TYPE_COUNT = hip.chip.hipGraphNodeTypeCount
     cudaGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
+HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE","false")
+
 class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphNodeType_enum.hallucinate:
+            if not HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11025,20 +11096,6 @@ class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphNodeType_enum(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphNodeType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE","false")
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -11074,15 +11131,18 @@ class CUgraphNodeType_enum(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeTyp
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
     CU_GRAPH_NODE_TYPE_COUNT = hip.chip.hipGraphNodeTypeCount
     cudaGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
+HIP_PYTHON_cudaGraphNodeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphNodeType_HALLUCINATE","false")
+
 class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaGraphNodeType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaGraphNodeType.hallucinate:
+            if not HIP_PYTHON_cudaGraphNodeType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11135,20 +11195,6 @@ class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
 
 
 class cudaGraphNodeType(hip._hipGraphNodeType__Base,metaclass=_cudaGraphNodeType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaGraphNodeType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphNodeType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphNodeType_HALLUCINATE","false")
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -11212,15 +11258,18 @@ cdef class CUDA_MEMSET_NODE_PARAMS_v1(hip.hip.hipMemsetParams):
     pass
 cdef class cudaMemsetParams(hip.hip.hipMemsetParams):
     pass
+HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE","false")
+
 class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUkernelNodeAttrID.hallucinate:
+            if not HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11273,35 +11322,24 @@ class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
 
 class CUkernelNodeAttrID(hip._hipKernelNodeAttrID__Base,metaclass=_CUkernelNodeAttrID_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUkernelNodeAttrID` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE","false")
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     CU_KERNEL_NODE_ATTRIBUTE_COOPERATIVE = hip.chip.hipKernelNodeAttributeCooperative
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
+HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE","false")
+
 class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUkernelNodeAttrID_enum.hallucinate:
+            if not HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11354,35 +11392,24 @@ class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUkernelNodeAttrID_enum(hip._hipKernelNodeAttrID__Base,metaclass=_CUkernelNodeAttrID_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUkernelNodeAttrID_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE","false")
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     CU_KERNEL_NODE_ATTRIBUTE_COOPERATIVE = hip.chip.hipKernelNodeAttributeCooperative
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
+HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE","false")
+
 class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaKernelNodeAttrID.hallucinate:
+            if not HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11435,35 +11462,24 @@ class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
 
 class cudaKernelNodeAttrID(hip._hipKernelNodeAttrID__Base,metaclass=_cudaKernelNodeAttrID_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaKernelNodeAttrID` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE","false")
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     CU_KERNEL_NODE_ATTRIBUTE_COOPERATIVE = hip.chip.hipKernelNodeAttributeCooperative
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
+HIP_PYTHON_CUaccessProperty_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_HALLUCINATE","false")
+
 class _CUaccessProperty_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUaccessProperty_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUaccessProperty.hallucinate:
+            if not HIP_PYTHON_CUaccessProperty_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11516,20 +11532,6 @@ class _CUaccessProperty_EnumMeta(enum.EnumMeta):
 
 
 class CUaccessProperty(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUaccessProperty` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUaccessProperty_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_HALLUCINATE","false")
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -11539,15 +11541,18 @@ class CUaccessProperty(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_
     hipAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
     CU_ACCESS_PROPERTY_PERSISTING = hip.chip.hipAccessPropertyPersisting
     cudaAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
+HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE","false")
+
 class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUaccessProperty_enum.hallucinate:
+            if not HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11600,20 +11605,6 @@ class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUaccessProperty_enum(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUaccessProperty_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE","false")
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -11623,15 +11614,18 @@ class CUaccessProperty_enum(hip._hipAccessProperty__Base,metaclass=_CUaccessProp
     hipAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
     CU_ACCESS_PROPERTY_PERSISTING = hip.chip.hipAccessPropertyPersisting
     cudaAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
+HIP_PYTHON_cudaAccessProperty_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaAccessProperty_HALLUCINATE","false")
+
 class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaAccessProperty_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaAccessProperty.hallucinate:
+            if not HIP_PYTHON_cudaAccessProperty_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11684,20 +11678,6 @@ class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
 
 
 class cudaAccessProperty(hip._hipAccessProperty__Base,metaclass=_cudaAccessProperty_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaAccessProperty` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaAccessProperty_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaAccessProperty_HALLUCINATE","false")
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -11721,15 +11701,18 @@ cdef class CUkernelNodeAttrValue_v1(hip.hip.hipKernelNodeAttrValue):
     pass
 cdef class cudaKernelNodeAttrValue(hip.hip.hipKernelNodeAttrValue):
     pass
+HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE","false")
+
 class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphExecUpdateResult.hallucinate:
+            if not HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11782,20 +11765,6 @@ class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_CUgraphExecUpdateResult_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphExecUpdateResult` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE","false")
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -11820,15 +11789,18 @@ class CUgraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_CUg
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
+HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE","false")
+
 class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphExecUpdateResult_enum.hallucinate:
+            if not HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11881,20 +11853,6 @@ class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphExecUpdateResult_enum(hip._hipGraphExecUpdateResult__Base,metaclass=_CUgraphExecUpdateResult_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphExecUpdateResult_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE","false")
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -11919,15 +11877,18 @@ class CUgraphExecUpdateResult_enum(hip._hipGraphExecUpdateResult__Base,metaclass
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
+HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE","false")
+
 class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaGraphExecUpdateResult.hallucinate:
+            if not HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11980,20 +11941,6 @@ class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
 
 class cudaGraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_cudaGraphExecUpdateResult_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaGraphExecUpdateResult` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE","false")
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -12018,15 +11965,18 @@ class cudaGraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_c
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
+HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE","false")
+
 class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUstreamCaptureMode.hallucinate:
+            if not HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12079,20 +12029,6 @@ class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
 
 
 class CUstreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCaptureMode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUstreamCaptureMode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE","false")
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -12102,15 +12038,18 @@ class CUstreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCap
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     CU_STREAM_CAPTURE_MODE_RELAXED = hip.chip.hipStreamCaptureModeRelaxed
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
+HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE","false")
+
 class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUstreamCaptureMode_enum.hallucinate:
+            if not HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12163,20 +12102,6 @@ class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUstreamCaptureMode_enum(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCaptureMode_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUstreamCaptureMode_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE","false")
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -12186,15 +12111,18 @@ class CUstreamCaptureMode_enum(hip._hipStreamCaptureMode__Base,metaclass=_CUstre
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     CU_STREAM_CAPTURE_MODE_RELAXED = hip.chip.hipStreamCaptureModeRelaxed
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
+HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE","false")
+
 class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaStreamCaptureMode.hallucinate:
+            if not HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12247,20 +12175,6 @@ class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
 
 
 class cudaStreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_cudaStreamCaptureMode_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaStreamCaptureMode` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE","false")
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -12270,15 +12184,18 @@ class cudaStreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_cudaStrea
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     CU_STREAM_CAPTURE_MODE_RELAXED = hip.chip.hipStreamCaptureModeRelaxed
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
+HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE","false")
+
 class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUstreamCaptureStatus.hallucinate:
+            if not HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12331,20 +12248,6 @@ class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
 
 
 class CUstreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_CUstreamCaptureStatus_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUstreamCaptureStatus` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE","false")
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -12354,15 +12257,18 @@ class CUstreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_CUstrea
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     CU_STREAM_CAPTURE_STATUS_INVALIDATED = hip.chip.hipStreamCaptureStatusInvalidated
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
+HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE","false")
+
 class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUstreamCaptureStatus_enum.hallucinate:
+            if not HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12415,20 +12321,6 @@ class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUstreamCaptureStatus_enum(hip._hipStreamCaptureStatus__Base,metaclass=_CUstreamCaptureStatus_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUstreamCaptureStatus_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE","false")
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -12438,15 +12330,18 @@ class CUstreamCaptureStatus_enum(hip._hipStreamCaptureStatus__Base,metaclass=_CU
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     CU_STREAM_CAPTURE_STATUS_INVALIDATED = hip.chip.hipStreamCaptureStatusInvalidated
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
+HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE","false")
+
 class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaStreamCaptureStatus.hallucinate:
+            if not HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12499,20 +12394,6 @@ class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
 
 
 class cudaStreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_cudaStreamCaptureStatus_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaStreamCaptureStatus` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE","false")
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -12522,15 +12403,18 @@ class cudaStreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_cudaS
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     CU_STREAM_CAPTURE_STATUS_INVALIDATED = hip.chip.hipStreamCaptureStatusInvalidated
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
+HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE","false")
+
 class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUstreamUpdateCaptureDependencies_flags.hallucinate:
+            if not HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12583,35 +12467,24 @@ class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
 
 
 class CUstreamUpdateCaptureDependencies_flags(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_CUstreamUpdateCaptureDependencies_flags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUstreamUpdateCaptureDependencies_flags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE","false")
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     CU_STREAM_SET_CAPTURE_DEPENDENCIES = hip.chip.hipStreamSetCaptureDependencies
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
+HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE","false")
+
 class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUstreamUpdateCaptureDependencies_flags_enum.hallucinate:
+            if not HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12664,35 +12537,24 @@ class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUstreamUpdateCaptureDependencies_flags_enum(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUstreamUpdateCaptureDependencies_flags_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE","false")
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     CU_STREAM_SET_CAPTURE_DEPENDENCIES = hip.chip.hipStreamSetCaptureDependencies
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
+HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE","false")
+
 class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaStreamUpdateCaptureDependenciesFlags.hallucinate:
+            if not HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12745,35 +12607,24 @@ class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
 
 
 class cudaStreamUpdateCaptureDependenciesFlags(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_cudaStreamUpdateCaptureDependenciesFlags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaStreamUpdateCaptureDependenciesFlags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE","false")
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     CU_STREAM_SET_CAPTURE_DEPENDENCIES = hip.chip.hipStreamSetCaptureDependencies
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
+HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE","false")
+
 class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphMem_attribute.hallucinate:
+            if not HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12826,20 +12677,6 @@ class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphMem_attribute(hip._hipGraphMemAttributeType__Base,metaclass=_CUgraphMem_attribute_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphMem_attribute` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE","false")
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -12852,15 +12689,18 @@ class CUgraphMem_attribute(hip._hipGraphMemAttributeType__Base,metaclass=_CUgrap
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH = hip.chip.hipGraphMemAttrReservedMemHigh
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
+HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE","false")
+
 class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphMem_attribute_enum.hallucinate:
+            if not HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12913,20 +12753,6 @@ class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphMem_attribute_enum(hip._hipGraphMemAttributeType__Base,metaclass=_CUgraphMem_attribute_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphMem_attribute_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE","false")
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -12939,15 +12765,18 @@ class CUgraphMem_attribute_enum(hip._hipGraphMemAttributeType__Base,metaclass=_C
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH = hip.chip.hipGraphMemAttrReservedMemHigh
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
+HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE","false")
+
 class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaGraphMemAttributeType.hallucinate:
+            if not HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13000,20 +12829,6 @@ class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
 
 
 class cudaGraphMemAttributeType(hip._hipGraphMemAttributeType__Base,metaclass=_cudaGraphMemAttributeType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaGraphMemAttributeType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE","false")
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -13026,15 +12841,18 @@ class cudaGraphMemAttributeType(hip._hipGraphMemAttributeType__Base,metaclass=_c
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH = hip.chip.hipGraphMemAttrReservedMemHigh
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
+HIP_PYTHON_CUuserObject_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_HALLUCINATE","false")
+
 class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUuserObject_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUuserObject_flags.hallucinate:
+            if not HIP_PYTHON_CUuserObject_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13087,32 +12905,21 @@ class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
 
 
 class CUuserObject_flags(hip._hipUserObjectFlags__Base,metaclass=_CUuserObject_flags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUuserObject_flags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObject_flags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_HALLUCINATE","false")
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
+HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE","false")
+
 class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUuserObject_flags_enum.hallucinate:
+            if not HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13165,32 +12972,21 @@ class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUuserObject_flags_enum(hip._hipUserObjectFlags__Base,metaclass=_CUuserObject_flags_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUuserObject_flags_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE","false")
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
+HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE","false")
+
 class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaUserObjectFlags.hallucinate:
+            if not HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13243,32 +13039,21 @@ class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
 
 
 class cudaUserObjectFlags(hip._hipUserObjectFlags__Base,metaclass=_cudaUserObjectFlags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaUserObjectFlags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE","false")
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
+HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE","false")
+
 class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUuserObjectRetain_flags.hallucinate:
+            if not HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13321,32 +13106,21 @@ class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
 
 
 class CUuserObjectRetain_flags(hip._hipUserObjectRetainFlags__Base,metaclass=_CUuserObjectRetain_flags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUuserObjectRetain_flags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE","false")
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
+HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE","false")
+
 class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUuserObjectRetain_flags_enum.hallucinate:
+            if not HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13399,32 +13173,21 @@ class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUuserObjectRetain_flags_enum(hip._hipUserObjectRetainFlags__Base,metaclass=_CUuserObjectRetain_flags_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUuserObjectRetain_flags_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE","false")
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
+HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE","false")
+
 class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaUserObjectRetainFlags.hallucinate:
+            if not HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13477,32 +13240,21 @@ class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
 
 
 class cudaUserObjectRetainFlags(hip._hipUserObjectRetainFlags__Base,metaclass=_cudaUserObjectRetainFlags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaUserObjectRetainFlags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE","false")
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
+HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE","false")
+
 class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphInstantiate_flags.hallucinate:
+            if not HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13555,32 +13307,21 @@ class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphInstantiate_flags(hip._hipGraphInstantiateFlags__Base,metaclass=_CUgraphInstantiate_flags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphInstantiate_flags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE","false")
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
+HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE","false")
+
 class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUgraphInstantiate_flags_enum.hallucinate:
+            if not HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13633,32 +13374,21 @@ class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUgraphInstantiate_flags_enum(hip._hipGraphInstantiateFlags__Base,metaclass=_CUgraphInstantiate_flags_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUgraphInstantiate_flags_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE","false")
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
+HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE","false")
+
 class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not cudaGraphInstantiateFlags.hallucinate:
+            if not HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13711,20 +13441,6 @@ class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
 
 
 class cudaGraphInstantiateFlags(hip._hipGraphInstantiateFlags__Base,metaclass=_cudaGraphInstantiateFlags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.cudaGraphInstantiateFlags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE","false")
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
@@ -13736,15 +13452,18 @@ cdef class CUmemAllocationProp_v1(hip.hip.hipMemAllocationProp):
     pass
 CUmemGenericAllocationHandle = hip.hipMemGenericAllocationHandle_t
 CUmemGenericAllocationHandle_v1 = hip.hipMemGenericAllocationHandle_t
+HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE","false")
+
 class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemAllocationGranularity_flags.hallucinate:
+            if not HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13797,33 +13516,22 @@ class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
 
 
 class CUmemAllocationGranularity_flags(hip._hipMemAllocationGranularity_flags__Base,metaclass=_CUmemAllocationGranularity_flags_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemAllocationGranularity_flags` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE","false")
     hipMemAllocationGranularityMinimum = hip.chip.hipMemAllocationGranularityMinimum
     CU_MEM_ALLOC_GRANULARITY_MINIMUM = hip.chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = hip.chip.hipMemAllocationGranularityRecommended
     CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
+HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE","false")
+
 class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemAllocationGranularity_flags_enum.hallucinate:
+            if not HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13876,33 +13584,22 @@ class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemAllocationGranularity_flags_enum(hip._hipMemAllocationGranularity_flags__Base,metaclass=_CUmemAllocationGranularity_flags_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemAllocationGranularity_flags_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE","false")
     hipMemAllocationGranularityMinimum = hip.chip.hipMemAllocationGranularityMinimum
     CU_MEM_ALLOC_GRANULARITY_MINIMUM = hip.chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = hip.chip.hipMemAllocationGranularityRecommended
     CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
+HIP_PYTHON_CUmemHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_HALLUCINATE","false")
+
 class _CUmemHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemHandleType.hallucinate:
+            if not HIP_PYTHON_CUmemHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -13955,31 +13652,20 @@ class _CUmemHandleType_EnumMeta(enum.EnumMeta):
 
 
 class CUmemHandleType(hip._hipMemHandleType__Base,metaclass=_CUmemHandleType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemHandleType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemHandleType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_HALLUCINATE","false")
     hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
     CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
+HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE","false")
+
 class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemHandleType_enum.hallucinate:
+            if not HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -14032,31 +13718,20 @@ class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemHandleType_enum(hip._hipMemHandleType__Base,metaclass=_CUmemHandleType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemHandleType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE","false")
     hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
     CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
+HIP_PYTHON_CUmemOperationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_HALLUCINATE","false")
+
 class _CUmemOperationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemOperationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemOperationType.hallucinate:
+            if not HIP_PYTHON_CUmemOperationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -14109,33 +13784,22 @@ class _CUmemOperationType_EnumMeta(enum.EnumMeta):
 
 
 class CUmemOperationType(hip._hipMemOperationType__Base,metaclass=_CUmemOperationType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemOperationType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemOperationType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_HALLUCINATE","false")
     hipMemOperationTypeMap = hip.chip.hipMemOperationTypeMap
     CU_MEM_OPERATION_TYPE_MAP = hip.chip.hipMemOperationTypeMap
     hipMemOperationTypeUnmap = hip.chip.hipMemOperationTypeUnmap
     CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
+HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE","false")
+
 class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUmemOperationType_enum.hallucinate:
+            if not HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -14188,33 +13852,22 @@ class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUmemOperationType_enum(hip._hipMemOperationType__Base,metaclass=_CUmemOperationType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUmemOperationType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE","false")
     hipMemOperationTypeMap = hip.chip.hipMemOperationTypeMap
     CU_MEM_OPERATION_TYPE_MAP = hip.chip.hipMemOperationTypeMap
     hipMemOperationTypeUnmap = hip.chip.hipMemOperationTypeUnmap
     CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
+HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE","false")
+
 class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUarraySparseSubresourceType.hallucinate:
+            if not HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -14267,33 +13920,22 @@ class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
 
 
 class CUarraySparseSubresourceType(hip._hipArraySparseSubresourceType__Base,metaclass=_CUarraySparseSubresourceType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUarraySparseSubresourceType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE","false")
     hipArraySparseSubresourceTypeSparseLevel = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = hip.chip.hipArraySparseSubresourceTypeMiptail
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_MIPTAIL = hip.chip.hipArraySparseSubresourceTypeMiptail
+HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE","false")
+
 class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUarraySparseSubresourceType_enum.hallucinate:
+            if not HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -14346,20 +13988,6 @@ class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUarraySparseSubresourceType_enum(hip._hipArraySparseSubresourceType__Base,metaclass=_CUarraySparseSubresourceType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUarraySparseSubresourceType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE","false")
     hipArraySparseSubresourceTypeSparseLevel = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = hip.chip.hipArraySparseSubresourceTypeMiptail

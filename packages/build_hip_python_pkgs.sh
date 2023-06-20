@@ -60,8 +60,8 @@ export HIP_PLATFORM=${HIP_PLATFORM:-"amd"}
 
 alias PYTHON="python3"
 if [ -z ${NO_ENV+x} ]; then
-  [ ! -d "venv" ] && python3 -m venv venv
-  alias PYTHON="venv/bin/python3"
+  [ ! -d "venv" ] && python3 -m venv _venv
+  alias PYTHON="_venv/bin/python3"
 fi
 shopt -s expand_aliases
 

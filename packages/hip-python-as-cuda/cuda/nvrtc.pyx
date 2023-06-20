@@ -8,6 +8,30 @@ Attributes:
         A reference to the package `.hip.hiprtc`.
     hiprtc (module):
         A reference to the package `.hip.hiprtc`.
+    HIP_PYTHON_nvrtcResult_HALLUCINATE:
+        Make `.nvrtcResult` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_nvrtcResult_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUjitInputType_HALLUCINATE:
+        Make `.CUjitInputType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUjitInputType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUjitInputType_enum_HALLUCINATE:
+        Make `.CUjitInputType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUjitInputType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUlinkState:
         alias of `.hiprtcLinkState`
     nvrtcGetErrorString:
@@ -81,15 +105,18 @@ def _hip_python_get_bool_environ_var(env_var, default):
         allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals)+list(no_vals))])
         raise RuntimeError(f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}")
 
+HIP_PYTHON_nvrtcResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_nvrtcResult_HALLUCINATE","false")
+
 class _nvrtcResult_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_nvrtcResult_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not nvrtcResult.hallucinate:
+            if not HIP_PYTHON_nvrtcResult_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -142,20 +169,6 @@ class _nvrtcResult_EnumMeta(enum.EnumMeta):
 
 
 class nvrtcResult(hiprtc._hiprtcResult__Base,metaclass=_nvrtcResult_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.nvrtcResult` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_nvrtcResult_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_nvrtcResult_HALLUCINATE","false")
     HIPRTC_SUCCESS = hip.chiprtc.HIPRTC_SUCCESS
     NVRTC_SUCCESS = hip.chiprtc.HIPRTC_SUCCESS
     HIPRTC_ERROR_OUT_OF_MEMORY = hip.chiprtc.HIPRTC_ERROR_OUT_OF_MEMORY
@@ -181,15 +194,18 @@ class nvrtcResult(hiprtc._hiprtcResult__Base,metaclass=_nvrtcResult_EnumMeta):
     HIPRTC_ERROR_INTERNAL_ERROR = hip.chiprtc.HIPRTC_ERROR_INTERNAL_ERROR
     NVRTC_ERROR_INTERNAL_ERROR = hip.chiprtc.HIPRTC_ERROR_INTERNAL_ERROR
     HIPRTC_ERROR_LINKING = hip.chiprtc.HIPRTC_ERROR_LINKING
+HIP_PYTHON_CUjitInputType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjitInputType_HALLUCINATE","false")
+
 class _CUjitInputType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUjitInputType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUjitInputType.hallucinate:
+            if not HIP_PYTHON_CUjitInputType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -242,20 +258,6 @@ class _CUjitInputType_EnumMeta(enum.EnumMeta):
 
 
 class CUjitInputType(hiprtc._hiprtcJITInputType__Base,metaclass=_CUjitInputType_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUjitInputType` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUjitInputType_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjitInputType_HALLUCINATE","false")
     HIPRTC_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     CU_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_PTX = hip.chiprtc.HIPRTC_JIT_INPUT_PTX
@@ -274,15 +276,18 @@ class CUjitInputType(hiprtc._hiprtcJITInputType__Base,metaclass=_CUjitInputType_
     HIPRTC_JIT_INPUT_LLVM_BUNDLED_BITCODE = hip.chiprtc.HIPRTC_JIT_INPUT_LLVM_BUNDLED_BITCODE
     HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE = hip.chiprtc.HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE
     HIPRTC_JIT_NUM_INPUT_TYPES = hip.chiprtc.HIPRTC_JIT_NUM_INPUT_TYPES
+HIP_PYTHON_CUjitInputType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjitInputType_enum_HALLUCINATE","false")
+
 class _CUjitInputType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
+        global HIP_PYTHON_CUjitInputType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not CUjitInputType_enum.hallucinate:
+            if not HIP_PYTHON_CUjitInputType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -335,20 +340,6 @@ class _CUjitInputType_enum_EnumMeta(enum.EnumMeta):
 
 
 class CUjitInputType_enum(hiprtc._hiprtcJITInputType__Base,metaclass=_CUjitInputType_enum_EnumMeta):                
-    """Interoperability layer enum type.
-
-    Attributes:
-        hallucinate (`.bool`):
-            Make all `.CUjitInputType_enum` instances hallucinate values for non-existing enum constants. Disabled by default
-            if default is not modified via environment variable.
-
-            Default value can be set/unset via environment variable ``HIP_PYTHON_CUjitInputType_enum_HALLUCINATE``.
-
-            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-    """
-
-    hallucinate = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjitInputType_enum_HALLUCINATE","false")
     HIPRTC_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     CU_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_PTX = hip.chiprtc.HIPRTC_JIT_INPUT_PTX
