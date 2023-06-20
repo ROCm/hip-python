@@ -169,33 +169,36 @@ def generate_cuda_interop_package_files(
             python_interface_impl_part += python_constants
         else:
             python_enum_metaclass_name = f"_{cuda_name}_EnumMeta"
-            python_enum_hallucinate_env_var = (
+            python_enum_hallucinate_var_name = (
                 f"HIP_PYTHON_{cuda_name}_HALLUCINATE"
             )
 
-            # attribute = textwrap.dedent(f"""\
-            #     {python_enum_hallucinate_env_var}:
-            #         Make {python_interface_pyobj_role_template.format(name=cuda_name)} hallucinate values for non-existing enum constants. Disabled by default
-            #         if default is not modified via environment variable.
+            attribute = textwrap.dedent(f"""\
+                 {python_enum_hallucinate_var_name}:
+                     Make {python_interface_pyobj_role_template.format(name=cuda_name)} hallucinate values for non-existing enum constants. Disabled by default
+                     if default is not modified via environment variable.
 
-            #         Default value can be set/unset via environment variable ``{python_enum_hallucinate_env_var}``.
-                    
-            #         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-            #         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-            #     """)
-            #docstring_attributes.append(attribute)
+                     Default value can be set/unset via environment variable ``{python_enum_hallucinate_var_name}``.
+                   
+                     * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+                     * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+                 """)
+            docstring_attributes.append(attribute)
 
             python_enum_metaclass = textwrap.dedent(
                 f"""\
+                {python_enum_hallucinate_var_name} = _hip_python_get_bool_environ_var("{python_enum_hallucinate_var_name}","false")
+
                 class {python_enum_metaclass_name}(enum.EnumMeta):
                 
                     def __getattribute__(cls,name):
                         global _get_hip_name
+                        global {python_enum_hallucinate_var_name}
                         try:
                             result = super().__getattribute__(name)
                             return result
                         except AttributeError as ae:
-                            if not {cuda_name}.hallucinate:
+                            if not {python_enum_hallucinate_var_name}:
                                 raise ae
                             else:
                                 used_vals = list(cls._value2member_map_.keys())
@@ -250,20 +253,6 @@ def generate_cuda_interop_package_files(
             python_enum_class = textwrap.dedent(
                 f"""
                 class {cuda_name}({pkg_name}.{enum.python_base_class_name},metaclass={python_enum_metaclass_name}):                
-                    \"""Interoperability layer enum type.
-
-                    Attributes:
-                        hallucinate ({python_interface_pyobj_role_template.format(name="bool")}):
-                            Make all {python_interface_pyobj_role_template.format(name=cuda_name)} instances hallucinate values for non-existing enum constants. Disabled by default
-                            if default is not modified via environment variable.
-
-                            Default value can be set/unset via environment variable ``{python_enum_hallucinate_env_var}``.
-                            
-                            * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
-                            * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-                    \"""
-
-                    hallucinate = _hip_python_get_bool_environ_var("{python_enum_hallucinate_env_var}","false")
                 """
             )
             python_enum_class += textwrap.indent("\n".join(python_constants), indent)
