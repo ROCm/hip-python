@@ -100,7 +100,7 @@ values for undefined enum constants (that do not conflict with the values of the
 We use [the example below](cuda_error_hallucinate_enums) to demonstrate how you can deal with scenarios where a CUDA Python program,
 which we want to run on AMD GPUs, performs an error check that involves enum constants that are not relevant for HIP programs and/or AMD GPUs.
 As HIP Python's routines will never return these enum constants, it is safe to generate values for them on the fly.
-Such behavior can be enabled selectively for CUDA Python interop layer enums --- either via the
+Such behavior can be enabled selectively for CUDA Python interoperability layer enums --- either via the
 respective environment variable `HIP_PYTHON_{myenumtype}_HALLUCINATE` and/or at runtime
 via the module variable with the same name in {py:obj}`cuda`, {py:obj}`cudart`, or {py:obj}`nvtrc`.
 
@@ -114,7 +114,7 @@ via the module variable with the same name in {py:obj}`cuda`, {py:obj}`cudart`, 
 * `cudaError_t.cudaErrorTimeout`
 * `cudaError_t.cudaErrorApiFailureBase`
 
-However, the example will run succesfully if you set the environment variable `HIP_PYTHON_cudaError_t_HALLUCINATE` to `1`, `yes`, `y`, or `true` (case does not matter). Alternatively, you could set the module variable {py:obj}`cuda.cudart.HIP_PYTHON_cudaError_t_HALLUCINATE` to {py:obj}`True`; 
+However, the example will run successfully if you set the environment variable `HIP_PYTHON_cudaError_t_HALLUCINATE` to `1`, `yes`, `y`, or `true` (case does not matter). Alternatively, you could set the module variable {py:obj}`cuda.cudart.HIP_PYTHON_cudaError_t_HALLUCINATE` to {py:obj}`True`; 
 see <project:#sec_hip_python_specific_code_modifications> on different ways to detect HIP Python in
 order to introduce such a modification to your code.
 
@@ -188,7 +188,7 @@ This will replace the qualified `C++`-like enum constant expression
 
 In the example, the `DEF` statement and the `IF` and `ELSE` statements are Cython 
 [compile time definitions](https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions)
-and [conditional statemetns](https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions),
+and [conditional statements](https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions),
 respectively.
 
 ```{eval-rst}
@@ -216,7 +216,7 @@ of the {py:obj}`~.cythonize` call in line
 ```
 
 For your convenience, you can use the [Makefile below](cuda_cython_makefile)
-to build a Cython module inplace (via `make build`) and run the code (by importing the module via `make run`).
+to build a Cython module in-place (via `make build`) and run the code (by importing the module via `make run`).
 
 ```{eval-rst}
 .. literalinclude:: ../../examples/1_CUDA_Interop/Makefile
