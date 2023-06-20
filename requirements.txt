@@ -1,2 +1,6 @@
 # Python dependencies required for development
+cython
+pyparsing
 libclang >= 14.0.1, != 15.0.3, != 15.0.6, <= 15.0.6.1
+# optional:
+#levenshtein

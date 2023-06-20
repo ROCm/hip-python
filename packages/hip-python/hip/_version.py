@@ -2,8 +2,8 @@
 
 __author__ = "AMD_AUTHOR"
 
-VERSION = __version__ = "5.4.22804.41.dev118"
-FULL_VERSION = __full_version__ = "5.4.22804-474e8620.41.dev118+gabaeac4+d20230620"
+VERSION = __version__ = "5.4.22804.41.dev119"
+FULL_VERSION = __full_version__ = "5.4.22804-474e8620.41.dev119+gfbb2407+d20230620"
 HIP_PYTHON_CODEGEN_BRANCH = "feature/docs"
-HIP_PYTHON_CODEGEN_VERSION = "41.dev118+gabaeac4+d20230620"
-HIP_PYTHON_CODEGEN_REV = "abaeac4"
+HIP_PYTHON_CODEGEN_VERSION = "41.dev119+gfbb2407+d20230620"
+HIP_PYTHON_CODEGEN_REV = "fbb2407"
