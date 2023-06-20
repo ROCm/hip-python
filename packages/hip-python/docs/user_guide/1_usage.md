@@ -477,7 +477,7 @@ Cython modules are often split into a `*.pxd` and a `*.pyx` file, which are a Cy
 declaration and implementation part respectively.
 While the former files are to some degree comparable to header files in C/C++,
 the latter can be compared to sources files.
-The declaration part may only contain `cdef` fields, variables, and functions
+The declaration part may only contain `cdef` fields, variables, and function prototypes
 while the implementation part may contain the implementation of those entities
 as well as Python fields, variables, and functions.
 
@@ -574,7 +574,6 @@ It is further important to specify the HIP Platform as the header files from whi
       global HIP_PLATFORM
       rocm_inc = os.path.join(ROCM_PATH,"include")
       rocm_lib_dir = os.path.join(ROCM_PATH,"lib")
-      rocm_libs = ["amdhip64"] # only required if you are using a direct C interface
       platform = HIP_PLATFORM.upper()
       cflags = ["-D", f"__HIP_PLATFORM_{platform}__"]
    

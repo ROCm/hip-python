@@ -102,7 +102,7 @@ which we want to run on AMD GPUs, performs an error check that involves enum con
 As HIP Python's routines will never return these enum constants, it is safe to generate values for them on the fly.
 Such behavior can be enabled selectively for CUDA Python interop layer enums --- either via the
 respective environment variable `HIP_PYTHON_{myenumtype}_HALLUCINATE` and/or at runtime
-via `{myenumtype}.hallucinate = True`.
+via the module variable with the same name in {py:obj}`cuda`, {py:obj}`cudart`, or {py:obj}`nvtrc`.
 
 [The example below](cuda_error_hallucinate_enums) fails because there are no HIP analogues to the following constants:
 
@@ -114,7 +114,7 @@ via `{myenumtype}.hallucinate = True`.
 * `cudaError_t.cudaErrorTimeout`
 * `cudaError_t.cudaErrorApiFailureBase`
 
-However, the example will run succesfully if you set the environment variable `HIP_PYTHON_cudaError_t_HALLUCINATE` to `1`, `yes`, `y`, or `true` (case does not matter). Alternatively, you could set the class variable {py:obj}`cuda.cudart.cudaError_t.hallucinate` to {py:obj}`True`; 
+However, the example will run succesfully if you set the environment variable `HIP_PYTHON_cudaError_t_HALLUCINATE` to `1`, `yes`, `y`, or `true` (case does not matter). Alternatively, you could set the module variable {py:obj}`cuda.cudart.HIP_PYTHON_cudaError_t_HALLUCINATE` to {py:obj}`True`; 
 see <project:#sec_hip_python_specific_code_modifications> on different ways to detect HIP Python in
 order to introduce such a modification to your code.
 
@@ -174,26 +174,52 @@ as shown below:
 
 ## Cython Example
 
+:::{admonition} What will I learn?
+* That I can port CUDA Python Cython code to HIP Python code with minor modifications.
+* How I can introduce different compilation paths for HIP Python's CUDA interoperability layer and CUDA Python.
+:::
+
+[The example below](ccuda_stream_pyx) shows a CUDA Python example that can be compiled for and run on AMD GPUs.
+To do so, it is necessary to define the compiler flag `HIP_Python` from within the `setup.py` script.
+(We will discuss how to do so in short.)
+This will replace the qualified `C++`-like enum constant expression
+`ccudart.cudaError_t.cudaSuccess` by the `C`-like expression
+`ccudart.cudaSuccess`.
+
+In the example, the `DEF` statement and the `IF` and `ELSE` statements are Cython 
+[compile time definitions](https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions)
+and [conditional statemetns](https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions),
+respectively.
+
 ```{eval-rst}
 .. literalinclude:: ../../examples/1_CUDA_Interop/ccuda_stream.pyx
    :language: python
-   :lines: 23-
+   :lines: 5-
+   :emphasize-lines: 11-14
    :linenos:
-   :name: ccuda_stream.pyx
+   :name: ccuda_stream_pyx
    :caption: CUDA Python Cython Program
 ```
+
+The example can be compiled for AMD GPUs via the following [setup.py script](cuda_cython_setup_py),
+which specifies `compile_time_env=dict(HIP_PYTHON=True)` as keyword parameter
+of the {py:obj}`~.cythonize` call in line 
 
 ```{eval-rst}
 .. literalinclude:: ../../examples/1_CUDA_Interop/setup.py
    :language: python
-   :lines: 23-
-   :linenos:
+   :lines: 5-
+   :linenos: 
+   :emphasize-lines: 15
    :name: cuda_cython_setup_py
    :caption: Setup Script
 ```
 
+For your convenience, you can use the [Makefile below](cuda_cython_makefile)
+to build a Cython module inplace (via `make build`) and run the code (by importing the module via `make run`).
+
 ```{eval-rst}
-.. literalinclude:: ../../examples/1_CUDA_Interop/Make
+.. literalinclude:: ../../examples/1_CUDA_Interop/Makefile
    :language: python
    :lines: 23-
    :linenos:
@@ -237,7 +263,7 @@ from the CUDA interoperability layer's Python modules as shown in [the example b
 ```
 
 Moreover, the interoperability layer's Python enum types also contain all the enum constants of their HIP analogue
-as shown
+as shown in the [snippet below](snippet_cuda_enum).
 
 ```{eval-rst} 
 
@@ -245,6 +271,7 @@ as shown
    :linenos:
    :caption: Python enum class in cuda.pyx
    :emphasize-lines: 3,5,7,9,11,13,15,17
+   :name: snippet_cuda_enum
    
    # [...]
    class CUmemorytype(hip._hipMemoryType__Base,metaclass=_CUmemorytype_EnumMeta):
@@ -263,21 +290,31 @@ as shown
    # [...]
 ```
 
-
-
+In the Cython `c`-prefixed declaration files (`cuda.ccuda.pxd`, `cuda.ccudart.pxd`, and `cuda.cnvrtc.pxd`),
+you will further find that the [HIP functions and union/struct types are directly included](ccuda_hip_names) too:
 
 ```{eval-rst} 
 
 .. code-block:: cython
    :linenos:
-   :emphasize-lines: 2
+   :emphasize-lines: 2, 5
    :caption: Excerpt from ccuda.pxd
+   :name: ccuda_hip_names
 
+   # [...]
+   from hip.chip cimport hipDeviceProp_t
+   from hip.chip cimport hipDeviceProp_t as cudaDeviceProp
    # [...]
    from hip.chip cimport hipMemcpy
    from hip.chip cimport hipMemcpy as cudaMemcpy
    # [...]
 ```
+
+In the Cython declaration files without `c`-prefix (`cuda.cuda.pxd`, `cuda.cudart.pxd`, and `cuda.nvrtc.pxd`),
+you will discover that the original HIP types (only those derived from unions and structs) are `c`-imported too
+and that the CUDA interoperability layer types are made subclasses of the respective HIP type;
+see [the example below](cuda_hip_names). This allows to pass them to the CUDA interoperability layer's
+Python functions, i.e., the aliased HIP Python functions.
 
 ```{eval-rst} 
 
@@ -285,6 +322,7 @@ as shown
    :linenos:
    :caption: Excerpt from cuda.pxd
    :emphasize-lines: 2
+   :name: cuda_hip_names
    
    # [...]
    from hip.hip cimport hipKernelNodeParams # here
