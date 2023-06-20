@@ -12,10 +12,10 @@ cdef void* x_d
 cdef int x
 
 def cuda_check(ccudart.cudaError_t err):
-    IF HIP_PYTHON: # HIP interfaces are a C API
-        success_status = ccudart.cudaSuccess
-    ELSE:
-        success_status = ccudart.cudaError.cudaSuccess
+    #IF HIP_PYTHON: # HIP interfaces are a C API
+    #    success_status = ccudart.cudaSuccess
+    #ELSE:
+    success_status = ccudart.cudaError_t.cudaSuccess
     if err != success_status:
         raise RuntimeError(f"reason: {err}")
 

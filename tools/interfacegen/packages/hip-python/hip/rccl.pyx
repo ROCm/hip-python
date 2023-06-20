@@ -379,9 +379,9 @@ def ncclGetUniqueId(object uniqueId):
     called once and the Id should be distributed to all ranks in the
     communicator before calling ncclCommInitRank.
 
-    Args:
-        uniqueId (`~.ncclUniqueId`/`~.object`): **[in]** ncclUniqueId*
-            pointer to uniqueId
+    @param[in]
+    uniqueId     ncclUniqueId*
+                 pointer to uniqueId
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -417,12 +417,14 @@ def ncclCommInitRank(int nranks, object commId, int rank):
     ncclCommInitRank implicitly syncronizes with other ranks, so it must be
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
+    @param[in]
+    comm        ncclComm_t*
+                communicator struct pointer
+
     Returns:
-        A `~.tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
-        * `~.ncclComm`: ncclComm_t*
-                communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRank__retval = ncclResult_t(crccl.ncclCommInitRank(&comm._ptr,nranks,
@@ -458,12 +460,14 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     ncclCommInitRankMulti implicitly syncronizes with other ranks, so it must be
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
+    @param[in]
+    comm        ncclComm_t*
+                communicator struct pointer
+
     Returns:
-        A `~.tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
         * `~.ncclResult_t`
-        * `~.ncclComm`: ncclComm_t*
-                communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRankMulti__retval = ncclResult_t(crccl.ncclCommInitRankMulti(&comm._ptr,nranks,

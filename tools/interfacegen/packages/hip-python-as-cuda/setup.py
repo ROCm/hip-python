@@ -120,7 +120,8 @@ def gather_ext_modules():
             "cudart",
             lib="amdhip64",
         ),
-        Module("nvrtc"),
+        Module("nvrtc",
+               lib="hiprtc"),
     ]
     for mod in HIP_MODULES:
         CYTHON_EXT_MODULES += mod.ext_modules

@@ -28,7 +28,7 @@ def create_extension(name, sources):
         include_dirs=[rocm_inc],
         library_dirs=[rocm_lib_dir],
         libraries=rocm_libs,
-        language="c",
+        language="c++",
         extra_compile_args=cflags,
     )
 
