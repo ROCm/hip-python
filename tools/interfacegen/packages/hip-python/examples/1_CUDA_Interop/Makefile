@@ -1,5 +1,6 @@
 # AMD_COPYRIGHT
 
+# [literalinclude-begin]
 .PHONY: build run
 
 build:

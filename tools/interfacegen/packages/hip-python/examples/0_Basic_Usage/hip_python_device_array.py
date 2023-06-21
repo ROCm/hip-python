@@ -11,6 +11,7 @@ Further showns how to retrieve single elements / contiguous subarrays
 with respect to specified type and shape information.
 """
 
+# [literalinclude-begin]
 verbose = False
 
 import ctypes

@@ -2,6 +2,7 @@
 
 __author__ = "AMD_AUTHOR"
 
+# [literalinclude-begin]
 cimport cuda.ccudart as ccudart
 
 cdef ccudart.cudaError_t err
@@ -12,7 +13,7 @@ cdef void* x_d
 cdef int x
 
 def cuda_check(ccudart.cudaError_t err):
-    IF HIP_PYTHON: # HIP interfaces are a C API
+    IF HIP_PYTHON: # HIP Python CUDA interop layer Cython interfaces are used like C API
         success_status = ccudart.cudaSuccess
     ELSE:
         success_status = ccudart.cudaError_t.cudaSuccess

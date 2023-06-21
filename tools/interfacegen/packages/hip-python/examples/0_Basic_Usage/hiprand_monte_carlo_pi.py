@@ -18,6 +18,7 @@ Note:
     See this repository for a "more pythonic" object-oriented interface to hiprand/rocrand (ctypes-based, Python-only).
 """
 
+# [literalinclude-begin]
 from hip import hip, hiprand
 import numpy as np
 import math

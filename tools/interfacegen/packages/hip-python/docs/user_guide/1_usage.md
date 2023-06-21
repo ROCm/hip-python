@@ -25,9 +25,9 @@ modules that you need as shown below:
    :linenos:
    :caption: Importing HIP Python Modules
 
-    from hip import hip
-    from hip import hiprtc
-    # ...
+   from hip import hip
+   from hip import hiprtc
+   # ...
 ```
 
 And you are ready to go!
@@ -62,7 +62,7 @@ and finally returns the rest of the tuple -- either as single value or tuple san
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_deviceproperties.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :emphasize-lines: 12-13
    :linenos:
    :name: hip_deviceproperties
@@ -84,7 +84,7 @@ attributes before the program prints `"ok"` and quits.
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_deviceattributes.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :emphasize-lines: 125-126
    :linenos:
    :name: hip_deviceattributes
@@ -113,7 +113,7 @@ interfaces is {py:obj}`~.hipMemcpyAsync` (lines 27 and 28).
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_stream.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :linenos:
    :name: hip_stream
    :caption: HIP Streams
@@ -151,7 +151,7 @@ The {ref}`example below <hiprtc_launch_kernel_no_args>` demonstrates how to do s
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hiprtc_launch_kernel_no_args.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :linenos:
    :emphasize-lines: 20, 25, 34, 42-44, 47-55
    :name: hiprtc_launch_kernel_no_args
@@ -220,7 +220,7 @@ like a {py:obj}`tuple` or {py:obj}`list`.
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :emphasize-lines: 85-90, 72-73, 23
    :linenos:
    :name: hiprtc_launch_kernel_args
@@ -251,7 +251,7 @@ and thus can be directly passed to those interfaces.
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hipblas_with_numpy.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :emphasize-lines: 23-24, 35-36, 39-41, 44
    :linenos:
    :name: hipblas_with_numpy
@@ -290,9 +290,9 @@ with respect to the specified type and shape information.
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_python_device_array.py
    :language: python
-   :lines: 16-
+   :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 18, 19, 23-25, 31
+   :emphasize-lines: 20-21, 25-27, 33
    :name: hip_python_device_array
    :caption: Configuring and Slicing HIP Python's DeviceArray
 ```
@@ -322,11 +322,11 @@ that it implements.
 ## Monte Carlo with hipRAND
 
 :::{admonition} What will I learn?
-* How I can create an {py:obj}`~.hiprand` random number generator via {py:obj}`hiprandCreateGenerator`.
+* How I can create an {py:obj}`~.hiprand` random number generator via {py:obj}`~.hiprandCreateGenerator`.
 * How I can generate uniformly-distributed random numbers via {py:obj}`~.hiprandGenerateUniformDouble`.
 :::
 
-This [example](hiprand_monte_carlo_pi) uses {py:obj}`~/.hiprand` to estimate {math}`\pi` by means of the Monte-Carlo method.
+This [example](hiprand_monte_carlo_pi) uses {py:obj}`~.hiprand` to estimate {math}`\pi` by means of the Monte-Carlo method.
 
 :::{admonition} Background
 
@@ -344,7 +344,7 @@ This example was derived from a similar example in the [rocRAND repository on Gi
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hiprand_monte_carlo_pi.py
    :language: python
-   :lines: 21-
+   :start-after: [literalinclude-begin]
    :emphasize-lines: 22, 24, 27
    :linenos:
    :name: hiprand_monte_carlo_pi
@@ -382,7 +382,7 @@ The resulting FFT coefficients are all zero --- aside from the first one, which 
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hipfft.py
    :language: python
-   :lines: 14-
+   :start-after: [literalinclude-begin]
    :linenos:
    :emphasize-lines: 25,28
    :name: hipfft
@@ -396,7 +396,7 @@ The resulting FFT coefficients are all zero --- aside from the first one, which 
 1. We create a plan in line 25, where we specify the number of samples `N` and the the type
    of the FFT as *double-complex-to-double-complex*, {py:obj}`~.hipfftType.HIPFFT_Z2Z`.
 1. Afterwards, we execute the FFT in-place (`idata=dx` and `odata=dx`) and specify that 
-   we run an forward FFT, {py:obj}`hipfft.HIPFFT_FORWARD` (line 28).
+   we run an forward FFT, {py:obj}`~.HIPFFT_FORWARD` (line 28).
 1. The host then waits for completion of all activity on the device before copying data back to the
    host and freeing the device array (lines 29-33).
 1. Finally, we check if the result is as expected and print `"ok"` if that's the case (lines 35-42).
@@ -418,7 +418,7 @@ from one GPU's device buffer to that of the other ones.
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/rccl_comminitall_bcast.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :linenos:
    :emphasize-lines: 17-19, 36-37, 34,39, 55
    :name: rccl_comminitall_bcast
@@ -440,12 +440,12 @@ except device `0`. The latter's array is filled with ones.
    Then follows the {py:obj}`~.ncclDataType_t`, the root (device `0`), then the communicator (`int(comms[dev])`)
    and finally the stream ({py:obj}`None`).
    Casting `comms[dev]` is required as the result is otherwise interpreted as single-element `Py_buffer`
-   by HIP Python's {py:obj}:`~.ncclBcast` instead of as an address.
+   by HIP Python's {py:obj}`~.ncclBcast` instead of as an address.
 1. In line 39, we close the communication group again.
 1. We download all data to the host per device and check if the elements are set to `1` (lines 42-50).
    Otherwise, a runtime error is emitted.
 1. Finally, we clean up by deallocating all device memory and destroying the per-device communicators
-   via {py:obj}:`~.ncclCommDestroy` in line 55. Note that here again the `comm` must be converted to `int` before passing it to the HIP Python routine.
+   via {py:obj}`~.ncclCommDestroy` in line 55. Note that here again the `comm` must be converted to `int` before passing it to the HIP Python routine.
 :::
 
 :::{note}
@@ -521,9 +521,9 @@ You can import the Python objects that you need as shown below:
    :linenos:
    :caption: Importing HIP Python Modules into Cython `*.pyx` file
 
-    from hip import hip # enum types, enum aliases, fields
-    from hip import hiprtc
-    # ...
+   from hip import hip # enum types, enum aliases, fields
+   from hip import hiprtc
+   # ...
 ```
 
 In the same file, you can **also or alternatively** `cimport` the `cdef` entities
@@ -536,12 +536,12 @@ as shown below:
 
    from hip cimport chip   # direct access to C interfaces and lazy function loaders
    from hip cimport chiprtc 
-   ...
+   # ...
 
-    from hip cimport hip # access to `cdef class` and `ctypedef` types 
-                         # that have been created per C struct/union/typedef
-    from hip cimport hiprtc
-    # ...
+   from hip cimport hip # access to `cdef class` and `ctypedef` types 
+                        # that have been created per C struct/union/typedef
+   from hip cimport hiprtc
+   # ...
 ```
 
 ### Compiling a Cython module

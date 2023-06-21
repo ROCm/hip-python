@@ -2,6 +2,7 @@
 
 __author__ = "AMD_AUTHOR"
 
+# [literalinclude-begin]
 import ctypes
 import array
 import random

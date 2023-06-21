@@ -11,6 +11,7 @@ The resulting FFT coefficients are all zero,
 except the first one, which has the value N-Nj.
 """
 
+# [literalinclude-begin]
 import numpy as np
 from hip import hip, hipfft
 
