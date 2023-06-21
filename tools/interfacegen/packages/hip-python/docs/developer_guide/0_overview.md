@@ -27,3 +27,46 @@ If you want to further tailor the code generation
 output according to your needs, then take a look into chapter [Code Generation](1_code_generation.md)
 too. If you think your modifications should be made available to other users too and are about
 to create a pull request, please first take a look at chapter [Commit Guidelines](4_commit_guide.md).
+
+## HIP Python Repository Structure
+
+```{eval-rst}
+.. code-block::
+   :caption: HIP Python Repository Structure
+   :name: repository_structure
+
+    hip-python
+    ├── _codegen
+    │   ├── __init__.py
+    │   ├── control.py
+    │   ├── cparser.py
+    │   ├── cython.py
+    │   ├── doxyparser.py
+    │   ├── test
+    │   ├── tree.py
+    ├── _controls.py
+    ├── _cuda_interop_layer_gen.py
+    ├── _gitversion.py
+    ├── _parse_hipify_perl.py
+    ├── codegen_hip_python.py
+    ├── generate_hip_python_pkgs.sh
+    ├── requirements.txt
+    └───packages
+      ├── build_hip_python_pkgs.sh
+      ├── hip-python
+      │   ├── dist
+      │   ├── docs
+      │   ├── examples
+      │   ├── hip
+      │   ├── pyproject.toml
+      │   ├── requirements.txt
+      │   ├── setup.cfg
+      │   └── setup.py
+      └───hip-python-as-cuda
+            ├── cuda
+            ├── dist
+            ├── pyproject.toml
+            ├── requirements.txt
+            ├── setup.cfg
+            └── setup.py
+```

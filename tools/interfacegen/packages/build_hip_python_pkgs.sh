@@ -4,6 +4,23 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
    return 1
 fi
 
+HELP_MSG="
+Usage: ./$(basename $0) [OPTIONS]
+
+Options:
+  --rocm-path        Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+  --no-hip           Do not build package 'hip-python'.
+  --no-cuda          Do not build package 'hip-python-as-cuda'.
+  --no-docs          Do not build the docs of package 'hip-python'.
+  --no-clean-docs    Do not generate docs from scratch, i.e. don't run sphinx with -a and -E switch.
+  -j,--num-jobs      Number of build jobs to use (currently only applied for building docs). Defaults to 1.
+  --pre-clean        Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
+  --post-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
+  -n, --no-venv      Do not create and use a virtual Python environment.
+  -h, --help         Show this help message.
+"
+
+NUM_JOBS=1
 while [[ $# -gt 0 ]]; do
   case $1 in
     -b|--pre-clean)
@@ -18,6 +35,14 @@ while [[ $# -gt 0 ]]; do
       NO_VENV=1
       shift
       ;;
+    -h|--help)
+      echo "${HELP_MSG}"
+      exit 0
+      ;;
+    --rocm-path)
+      ROCM_PATH=$2
+      shift; shift
+      ;;
     --no-hip)
       NO_HIP=1
       shift
@@ -29,6 +54,14 @@ while [[ $# -gt 0 ]]; do
     --no-docs)
       NO_DOCS=1
       shift
+      ;;
+    --no-clean-docs)
+      NO_CLEAN_DOCS=1
+      shift
+      ;;
+    -j|--num-jobs)
+      NUM_JOBS=$2
+      shift; shift
       ;;
     -*|--*)
       echo "Unknown option $1"
@@ -97,7 +130,13 @@ if [ -z ${NO_DOCS+x} ]; then
                                                     hip-python-as-cuda/dist/hip*whl
   PYTHON -m pip install -r hip-python/docs/requirements.txt
   DOCS_DIR="hip-python/docs"
-  PYTHON -m sphinx -T -E -b html -d _build/doctrees -D language=en ${DOCS_DIR} ${DOCS_DIR}/_build/html
+
+  if [ -z ${NO_CLEAN_DOCS+x} ]; then
+    PYTHON -m sphinx -j ${NUM_JOBS} -T -E -b html -d _build/doctrees -D language=en ${DOCS_DIR} ${DOCS_DIR}/_build/html
+  else
+    echo "reuse saved sphinx environment" 
+    PYTHON -m sphinx -j ${NUM_JOBS} -T -b html -d _build/doctrees -D language=en ${DOCS_DIR} ${DOCS_DIR}/_build/html
+  fi
 fi
 
 export ROCM_PATH="${SAVED_ROCM_PATH}"
