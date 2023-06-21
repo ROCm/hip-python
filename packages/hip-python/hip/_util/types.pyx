@@ -114,6 +114,31 @@ cdef class Pointer:
         raise NotImplementedError("'__getitem__': not implemented for other 'offset' types than 'int'")
     
     def __init__(self,object pyobj):
+        """Datatype for handling Python arguments that need to be converted to a pointer type.
+
+        Datatype for handling Python arguments that need to be converted to a pointer type
+        when passed to the underlying C function.
+
+        The type stores a C ``void *`` pointer to the original Python object's data
+        plus an additional `Py_buffer` object if the pointr has ben acquired from a
+        Python object that implements the `Python buffer protocol <https://docs.python.org/3/c-api/buffer.html>`_.
+
+        The type can be initialized from the following Python objects:
+            `None`:
+                This will set the pointer attribute to ``NULL`.
+            `None`:
+                This will set the pointer attribute to ``NULL`.    
+            `~.Pointer`
+
+        Attributes:
+            _ptr (``void *``, protected):
+                Stores a pointer to the data of the original Python object.
+            _py_buffer (bool, protected):
+                Stores a pointer to the data of the original Python object.
+            _py_buffer_acquired (bool, protected):
+                Stores a pointer to the data of the original Python object.
+        """
+
         Pointer.init_from_pyobj(self,pyobj)
 
 cdef class DeviceArray(Pointer):
@@ -345,20 +370,24 @@ cdef class DeviceArray(Pointer):
         """(Re-)configure this device array.
 
         Args:
-            \*\*kwargs: Keyword arguments.
+            **kwargs: Keyword arguments.
             
-        Keyword Args:
-
-        * shape (`tuple`): A tuple that describes the extent per dimension. 
-            The length of the tuple is the number of dimensions.
-        * typestr (`str`): A numpy typestr, see the notes for more details.
-        * stream (`int` or `None`): The stream to synchronize before consuming
-            this array. See first note for more details.
-        * itemsize (`int`): Size in bytes of each item. Defaults to 1. See the notes.
-        * read_only (`bool`): `DeviceArray` is read_only. Second entry of the 
-            CUDA array interface 'data' tuple. Defaults to False.
-        * _force(`bool`): Ignore changes in the total number of bytes when 
-            overriding shape, typestr, and/or itemsize.
+        Kwargs:
+            shape (`tuple`): 
+                A tuple that describes the extent per dimension. 
+                The length of the tuple is the number of dimensions.
+            typestr (`str`): 
+                A numpy typestr, see the notes for more details.
+                stream (`int` or `None`): The stream to synchronize before consuming
+                this array. See first note for more details.
+            itemsize (`int`):
+                Size in bytes of each item. Defaults to 1. See the notes.
+            read_only (`bool`):
+                `DeviceArray` is read_only. Second entry of the 
+                CUDA array interface 'data' tuple. Defaults to False.
+            _force(`bool`): 
+                Ignore changes in the total number of bytes when 
+                overriding shape, typestr, and/or itemsize.
 
         Note:
             More details on the keyword arguments can be found here:
@@ -480,9 +509,9 @@ cdef class DeviceArray(Pointer):
         returns it directly. No new DeviceArray is created.
 
         Args:
-        
-        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-            or of type `DeviceArray`, `int`, or `ctypes.c_void_p`
+            pyobj (`object`): 
+                Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                or of type `DeviceArray`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original pyobj
@@ -543,8 +572,8 @@ cdef class DeviceArray(Pointer):
         """Returns a contiguous subarray according to the subscript expression.
 
         Args:
-        
-        * subscript (`int`/`slice`/`tuple`): Either an integer, a slice, or a tuple of slices and integers.
+            subscript (`int`/`slice`/`tuple`):
+                Either an integer, a slice, or a tuple of slices and integers.
 
         Note:
             If the subscript is a single integer, only the first axis ("axis 0") of the 

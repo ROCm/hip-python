@@ -27,8 +27,8 @@ subtrees:
       - file: python_api/hiprand
       - file: python_api/hipfft
       - file: python_api/hipsparse
-      - file: python_api/_hip_helpers
-      - file: python_api/_util_types
+      - file: python_api_manual/_hip_helpers
+      - file: python_api_manual/_util_types
   - caption: "CUDA Python Interoperability: Python API"
     entries:
       - file: python_api/cuda
