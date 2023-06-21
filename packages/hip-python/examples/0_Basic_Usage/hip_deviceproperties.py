@@ -2,6 +2,7 @@
 
 __author__ = "AMD_AUTHOR"
 
+# [literalinclude-begin]
 from hip import hip
 
 def hip_check(call_result):

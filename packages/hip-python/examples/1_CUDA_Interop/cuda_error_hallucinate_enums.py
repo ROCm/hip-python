@@ -19,6 +19,7 @@ This script:
 * Will pass if you specify environment variable HIP_PYTHON_ENUM_HALLUCINATE_MEMBERS=1 before running
 """
 
+# [literalinclude-begin]
 from cuda.cudart import cudaError_t
 
 error_kinds = ( # some of those do not exist in HIP

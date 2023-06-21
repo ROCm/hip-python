@@ -51,9 +51,9 @@ modules that you need as shown below:
    :linenos:
    :caption: Importing HIP Python CUDA Interop Modules
 
-    from cuda import cuda
-    from cuda import cudart
-    from cuda import nvrtc
+   from cuda import cuda
+   from cuda import cudart
+   from cuda import nvrtc
 ```
 
 :::{note}
@@ -79,14 +79,14 @@ of HIP objects.
 ```{eval-rst}
 .. literalinclude:: ../../examples/1_CUDA_Interop/cuda_stream.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :linenos:
    :name: cuda_stream
    :caption: CUDA Python Example
 ```
 
 :::{admonition} What is happening?
-See <project:#sec_hip_streams> for an explanation of the program's steps.
+See <project:#sec_hip_streams> for an explanation of a similar HIP program's steps.
 :::
 
 ## Enum Constant Hallucination
@@ -121,7 +121,8 @@ order to introduce such a modification to your code.
 ```{eval-rst}
 .. literalinclude:: ../../examples/1_CUDA_Interop/cuda_error_hallucinate_enums.py
    :language: python
-   :lines: 22-
+   :start-after: [literalinclude-begin]
+   :emphasize-lines: 8,12,14-16,18,20
    :linenos:
    :name: cuda_error_hallucinate_enums
    :caption: CUDA Python Enum Constant Hallucination
@@ -147,9 +148,9 @@ You can import the Python objects that you need into your `*.pyx` file as shown 
    :linenos:
    :caption: Importing HIP Python Modules into Cython `*.pyx` file
 
-    from cuda import cuda # enum types, enum aliases, fields
-    from cuda import nvrtc
-    # ...
+   from cuda import cuda # enum types, enum aliases, fields
+   from cuda import nvrtc
+   # ...
 ```
 
 In the same file, you can **also or alternatively** `cimport` the `cdef` entities
@@ -165,17 +166,17 @@ as shown below:
    from cuda cimport cnvrtc
    ...
 
-    from cuda cimport cuda # access to `cdef class` and `ctypedef` types 
-                           # that have been created per C struct/union/typedef
-    from cuda cimport cudart
-    from cuda cimport nvrtc
+   from cuda cimport cuda # access to `cdef class` and `ctypedef` types 
+                          # that have been created per C struct/union/typedef
+   from cuda cimport cudart
+   from cuda cimport nvrtc
     # ...
 ```
 
 ## Cython Example
 
 :::{admonition} What will I learn?
-* That I can port CUDA Python Cython code to HIP Python code with minor modifications.
+* That I can port CUDA Python Cython code to AMD GPUs with minor modifications.
 * How I can introduce different compilation paths for HIP Python's CUDA interoperability layer and CUDA Python.
 :::
 
@@ -194,12 +195,16 @@ respectively.
 ```{eval-rst}
 .. literalinclude:: ../../examples/1_CUDA_Interop/ccuda_stream.pyx
    :language: python
-   :lines: 5-
-   :emphasize-lines: 11-14
+   :start-after: [literalinclude-begin]
    :linenos:
+   :emphasize-lines: 11-14
    :name: ccuda_stream_pyx
    :caption: CUDA Python Cython Program
 ```
+
+:::{admonition} What is happening?
+See <project:#sec_hip_streams> for an explanation of a similar HIP Python program's steps.
+:::
 
 The example can be compiled for AMD GPUs via the following [setup.py script](cuda_cython_setup_py),
 which specifies `compile_time_env=dict(HIP_PYTHON=True)` as keyword parameter
@@ -208,7 +213,7 @@ of the {py:obj}`~.cythonize` call in line
 ```{eval-rst}
 .. literalinclude:: ../../examples/1_CUDA_Interop/setup.py
    :language: python
-   :lines: 5-
+   :start-after: [literalinclude-begin]
    :linenos: 
    :emphasize-lines: 15
    :name: cuda_cython_setup_py
@@ -221,7 +226,7 @@ to build a Cython module in-place (via `make build`) and run the code (by import
 ```{eval-rst}
 .. literalinclude:: ../../examples/1_CUDA_Interop/Makefile
    :language: python
-   :lines: 23-
+   :start-after: [literalinclude-begin]
    :linenos:
    :name: cuda_cython_makefile
    :caption: Makefile
@@ -270,7 +275,7 @@ as shown in the [snippet below](snippet_cuda_enum).
 .. code-block:: cython
    :linenos:
    :caption: Python enum class in cuda.pyx
-   :emphasize-lines: 3,5,7,9,11,13,15,17
+   :emphasize-lines: 3,5,7,9,11,13
    :name: snippet_cuda_enum
    
    # [...]
@@ -290,8 +295,8 @@ as shown in the [snippet below](snippet_cuda_enum).
    # [...]
 ```
 
-In the Cython `c`-prefixed declaration files (`cuda.ccuda.pxd`, `cuda.ccudart.pxd`, and `cuda.cnvrtc.pxd`),
-you will further find that the [HIP functions and union/struct types are directly included](ccuda_hip_names) too:
+In the `c`-prefixed Cython declaration files (`cuda.ccuda.pxd`, `cuda.ccudart.pxd`, and `cuda.cnvrtc.pxd`),
+you will further find that the [HIP functions and union/struct types are directly included too](ccuda_hip_names):
 
 ```{eval-rst} 
 
@@ -321,7 +326,7 @@ Python functions, i.e., the aliased HIP Python functions.
 .. code-block:: cython
    :linenos:
    :caption: Excerpt from cuda.pxd
-   :emphasize-lines: 2
+   :emphasize-lines: 2,3,5,7,9
    :name: cuda_hip_names
    
    # [...]
@@ -336,8 +341,3 @@ Python functions, i.e., the aliased HIP Python functions.
       pass
    # [...]
 ```
-
-
-
-
-

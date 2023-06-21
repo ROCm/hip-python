@@ -2,6 +2,7 @@
 
 __author__ = "AMD_AUTHOR"
 
+# [literalinclude-begin]
 import os
 
 from setuptools import Extension, setup

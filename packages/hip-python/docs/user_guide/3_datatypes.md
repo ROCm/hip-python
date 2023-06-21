@@ -4,11 +4,11 @@
 This chapter discusses some of the more important datatypes used 
 by HIP Python's interfaces.
 
-## {ref}`~.types.Pointer`
+## {py:obj}`~.types.Pointer`
 
 * Many possible inputs
 * Main class of the other types
 
-## {ref}`~.types.DeviceArray`
+## {py:obj}`~.types.DeviceArray`
 
 * 
