@@ -1,4 +1,24 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 """
 Attributes:
@@ -28,6 +48,47 @@ hipblasVersionMinor = chipblas.hipblasVersionMinor
 hipblasVersionPatch = chipblas.hipblasVersionPatch
 
 cdef class hipblasBfloat16:
+    """Python wrapper type.
+    
+    Python wrapper for C type chipblas.hipblasBfloat16.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+        This will set the ``self._ptr`` attribute to ``NULL`.
+    * `~.Pointer` and its subclasses:
+        Copies ``pyobj._ptr`` to ``self._ptr``.
+    `~.Py_buffer` object ownership is not transferred!
+    * `int`:
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+    * `ctypes.c_void_p`:
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+    * `object` that implements the Python buffer protocol:
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
     # members declared in pxd file
 
     def __cinit__(self):
@@ -129,6 +190,9 @@ cdef class hipblasBfloat16:
         return wrapper
    
     def __init__(self,*args,**kwargs):
+        """
+        """
+
         hipblasBfloat16.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -189,6 +253,47 @@ cdef class hipblasBfloat16:
 
 
 cdef class hipblasComplex:
+    """Python wrapper type.
+    
+    Python wrapper for C type chipblas.hipblasComplex.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+        This will set the ``self._ptr`` attribute to ``NULL`.
+    * `~.Pointer` and its subclasses:
+        Copies ``pyobj._ptr`` to ``self._ptr``.
+    `~.Py_buffer` object ownership is not transferred!
+    * `int`:
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+    * `ctypes.c_void_p`:
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+    * `object` that implements the Python buffer protocol:
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
     # members declared in pxd file
 
     def __cinit__(self):
@@ -290,6 +395,9 @@ cdef class hipblasComplex:
         return wrapper
    
     def __init__(self,*args,**kwargs):
+        """
+        """
+
         hipblasComplex.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -365,6 +473,47 @@ cdef class hipblasComplex:
 
 
 cdef class hipblasDoubleComplex:
+    """Python wrapper type.
+    
+    Python wrapper for C type chipblas.hipblasDoubleComplex.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+        This will set the ``self._ptr`` attribute to ``NULL`.
+    * `~.Pointer` and its subclasses:
+        Copies ``pyobj._ptr`` to ``self._ptr``.
+    `~.Py_buffer` object ownership is not transferred!
+    * `int`:
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+    * `ctypes.c_void_p`:
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+    * `object` that implements the Python buffer protocol:
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
     # members declared in pxd file
 
     def __cinit__(self):
@@ -466,6 +615,9 @@ cdef class hipblasDoubleComplex:
         return wrapper
    
     def __init__(self,*args,**kwargs):
+        """
+        """
+
         hipblasDoubleComplex.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()

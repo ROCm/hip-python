@@ -1,4 +1,25 @@
 #!/usr/bin/env bash
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
    echo "ERROR: script must not be sourced";
    return 1
@@ -12,7 +33,8 @@ Options:
   --no-hip           Do not build package 'hip-python'.
   --no-cuda          Do not build package 'hip-python-as-cuda'.
   --no-docs          Do not build the docs of package 'hip-python'.
-  --no-clean-docs    Do not generate docs from scratch, i.e. don't run sphinx with -a and -E switch.
+  --no-api-docs      Temporarily move the 'hip-python/docs/python_api' subfolder so that sphinx does not see it.
+  --no-clean-docs    Do not generate docs from scratch, i.e. don't run sphinx with -E switch.
   -j,--num-jobs      Number of build jobs to use (currently only applied for building docs). Defaults to 1.
   --pre-clean        Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
   --post-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
@@ -57,6 +79,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-clean-docs)
       NO_CLEAN_DOCS=1
+      shift
+      ;;
+    --no-api-docs)
+      NO_API_DOCS=1
       shift
       ;;
     -j|--num-jobs)
@@ -130,12 +156,20 @@ if [ -z ${NO_DOCS+x} ]; then
                                                     hip-python-as-cuda/dist/hip*whl
   PYTHON -m pip install -r hip-python/docs/requirements.txt
   DOCS_DIR="hip-python/docs"
+  
+  if [ ! -z ${NO_API_DOCS+x} ]; then
+     mv "$DOCS_DIR/python_api" "./_python_api"
+  fi
 
   if [ -z ${NO_CLEAN_DOCS+x} ]; then
     PYTHON -m sphinx -j ${NUM_JOBS} -T -E -b html -d _build/doctrees -D language=en ${DOCS_DIR} ${DOCS_DIR}/_build/html
   else
     echo "reuse saved sphinx environment" 
     PYTHON -m sphinx -j ${NUM_JOBS} -T -b html -d _build/doctrees -D language=en ${DOCS_DIR} ${DOCS_DIR}/_build/html
+  fi
+  
+  if [ ! -z ${NO_API_DOCS+x} ]; then
+     mv "./_python_api" "$DOCS_DIR/python_api"
   fi
 fi
 

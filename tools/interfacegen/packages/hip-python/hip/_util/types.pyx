@@ -1,6 +1,26 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-__author__ = "AMD_AUTHOR"
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 cimport cpython.long
 cimport cpython.int
@@ -12,6 +32,51 @@ import ctypes
 import math
 
 cdef class Pointer:
+    """Datatype for handling Python arguments that need to be converted to a pointer type.
+
+    Datatype for handling Python arguments that need to be converted to a pointer type
+    when passed to an underlying C function.
+
+    This type stores a C ``void *`` pointer to the original Python object's data
+    plus an additional `Py_buffer` object if the pointer has ben acquired from a
+    Python object that implements the `Python buffer protocol <https://docs.python.org/3/c-api/buffer.html>`_.
+
+    This type can be constructed from input objects that are implementors of the 
+    `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol.
+
+    In summary, the type can be initialized from the following Python objects:
+
+    * `None`:
+        This will set the ``self._ptr`` attribute to ``NULL``.
+    * `~.Pointer`:
+        Copies ``pyobj._ptr`` to ``self._ptr``.
+        `~.Py_buffer` object ownership is not transferred!
+    * `int`:
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+    * `ctypes.c_void_p`:
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+    * `object` that implements the CUDA Array Interface protocol:
+        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+    * `object` that implements the Python buffer protocol:
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
+
+    """
+        """
     # C members declared in declaration part ``types.pxd``
 
     def __cinit__(self):
@@ -67,12 +132,13 @@ cdef class Pointer:
         returns it directly. No new Pointer is created.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``Pointer``, ``int``, or ``ctypes.c_void_p``
+            pyobj (`object`): 
+                Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                or of type `~.Pointer`, `int`, or `ctypes.c_void_p`.
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of Pointer.
+            if ``pyobj`` is an instance of `~.Pointer`.
         """
         cdef Pointer wrapper = Pointer.__new__(Pointer)
         
@@ -92,6 +158,8 @@ cdef class Pointer:
         """
         return self._ptr == NULL
     def __int__(self):
+        """Integer representation of the data pointer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<Pointer object, _ptr={int(self)}>"
@@ -104,7 +172,7 @@ cdef class Pointer:
         """Returns a new Pointer whose pointer is this instance's pointer offsetted by ``offset``.
 
         Args:
-            offset (int): Offset (in bytes) to add to this instance's pointer.
+            offset (`int`): Offset (in bytes) to add to this instance's pointer.
         """
         cdef Pointer result
         if isinstance(offset,int):
@@ -114,36 +182,73 @@ cdef class Pointer:
         raise NotImplementedError("'__getitem__': not implemented for other 'offset' types than 'int'")
     
     def __init__(self,object pyobj):
-        """Datatype for handling Python arguments that need to be converted to a pointer type.
+        """Constructor.
 
-        Datatype for handling Python arguments that need to be converted to a pointer type
-        when passed to the underlying C function.
+        Args:
+            pyobj (`object`): 
+                See the class description `~.Pointer` for information
+                about accepted types for ``pyobj``.
 
-        The type stores a C ``void *`` pointer to the original Python object's data
-        plus an additional `Py_buffer` object if the pointr has ben acquired from a
-        Python object that implements the `Python buffer protocol <https://docs.python.org/3/c-api/buffer.html>`_.
-
-        The type can be initialized from the following Python objects:
-            `None`:
-                This will set the pointer attribute to ``NULL`.
-            `None`:
-                This will set the pointer attribute to ``NULL`.    
-            `~.Pointer`
-
-        Attributes:
-            _ptr (``void *``, protected):
-                Stores a pointer to the data of the original Python object.
-            _py_buffer (bool, protected):
-                Stores a pointer to the data of the original Python object.
-            _py_buffer_acquired (bool, protected):
-                Stores a pointer to the data of the original Python object.
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
         """
 
         Pointer.init_from_pyobj(self,pyobj)
 
 cdef class DeviceArray(Pointer):
-    # C members declared in declaration part ``types.pxd``
+    """Datatype for handling device buffers.
+
+    Datatype for handling device buffers returned by `~.hipMalloc` and related device 
+    memory allocation routines.
+
+    This type implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol.
+
+    It can be initialized from the following Python objects:
+
+    * `None`:
+        This will set the ``self._ptr`` attribute to ``NULL``.
+        No shape and type information is available in this case!
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+        In this case, init code from `~.Pointer` is used.
+        `~.Py_buffer` object ownership is not transferred
+        See `~.Pointer.__init__` for more information.
+        No shape and type information is available in this case!
+    * `int`:
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+        No shape and type information is available in this case!
+    * `ctypes.c_void_p`:
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        No shape and type information is available in this case!
+    * `object` with ``__cuda_array_interface__`` member:
+        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+        Copies shape and type information.
     
+    Note:
+        Type checks are performed in the above order.
+    
+    Note:
+        Shape and type information and other metadata can be modified or overwritten after creation via the `~.configure`
+        member function. be aware that you might need to pass the ``_force=True`` keyword argument --- 
+        in particular if your instance was created from a type that does not implement the 
+        `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol.
+    See:
+        `~.configure`
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer (`~.Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (`bool`, protected):
+            Stores a pointer to the data of the original Python object.
+        _itemsize (``size_t``, protected):
+            Stores the itemsize.
+        __dict__ (`dict`, protected):
+            Dict with member ``__cuda_array_interface__``.
+    """
+    # C members declared in declaration part ``types.pxd``
+
     def __repr__(self):
         return f"<DeviceArray object, _ptr={int(self)}, typestr={self.typestr}, itemsize={self.itemsize}, shape={str(self.shape)}, is_read_only={self.is_read_only}, stream={self.stream_as_int}>"
 
@@ -497,7 +602,7 @@ cdef class DeviceArray(Pointer):
         elif isinstance(pyobj,Pointer):
             self._set_ptr((<Pointer>pyobj)._ptr)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
-            raise NotImplementedError("Py_buffer is no ideal format for data that is not accessible from the host")
+            raise NotImplementedError("Py_buffer is no ideal format for data that is not accessible from the host.")
         else:
             raise NotImplementedError(f"no conversion implemented for instance of '{type(pyobj)}'")
 
@@ -511,7 +616,8 @@ cdef class DeviceArray(Pointer):
         Args:
             pyobj (`object`): 
                 Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-                or of type `DeviceArray`, `int`, or `ctypes.c_void_p`
+                an `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_
+                protocol, or an instance of `Pointer`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original pyobj
@@ -540,26 +646,26 @@ cdef class DeviceArray(Pointer):
         cdef bint extract_full_dim = False
 
         if subscript.step not in (None,1):
-            raise ValueError(f"subscript.step='{subscript.step}' must be 'None' or '1'.")  
+            raise ValueError(f"subscript's step='{subscript.step}' must be 'None' or '1'.")  
         if subscript.stop != None:
             if subscript.stop <= 0:
-                raise ValueError(f"subscript.stop='{subscript.stop}' must be greater than zero.")
+                raise ValueError(f"subscript's stop='{subscript.stop}' must be greater than zero.")
             if subscript.stop > shape_dim:
-                raise ValueError(f"subscript.stop='{subscript.stop}' must not be greater than axis' exclusive upper bound ({shape_dim}).")
+                raise ValueError(f"subscript's stop='{subscript.stop}' must not be greater than axis' exclusive upper bound ({shape_dim}).")
             stop = subscript.stop
         else:
             stop = shape_dim
         if subscript.start != None:
             if subscript.start < 0:
-                raise ValueError(f"subscript.start='{subscript.start}' must be non-negative.")
+                raise ValueError(f"subscript's start='{subscript.start}' must be non-negative.")
             if subscript.start >= shape_dim:
-                raise ValueError(f"subscript.start='{subscript.start}' must be smaller than axis' exclusive upper bound ({shape_dim}).")
+                raise ValueError(f"subscript's start='{subscript.start}' must be smaller than axis' exclusive upper bound ({shape_dim}).")
             start = subscript.start
         else:
             start = 0
 
         if start >= stop:
-            raise ValueError(f"subscript.stop='{subscript.stop}' must be greater than subscript.start='{subscript.start}'")
+            raise ValueError(f"subscript's stop='{subscript.stop}' must be greater than subscript's start='{subscript.start}'")
 
         extract_full_dim = (
             start == 0
@@ -571,43 +677,50 @@ cdef class DeviceArray(Pointer):
     def __getitem__(self,subscript):
         """Returns a contiguous subarray according to the subscript expression.
 
+        Returns a contiguous subarray according to the subscript expression.
+
         Args:
             subscript (`int`/`slice`/`tuple`):
                 Either an integer, a slice, or a tuple of slices and integers.
 
         Note:
-            If the subscript is a single integer, only the first axis ("axis 0") of the 
-            array is accessed. A `KeyError` is raised if the extent
-            of axis 0 is surpassed. This behavior is identical to that of numpy.
+            If the subscript is a single integer, e.g. `[i]`, the subarray `[i,:,:,...,:]` is returned. 
+            A `KeyError` is raised if the extent of axis 0 is surpassed. This behavior is identical to that of numpy.
         
-        Raise:
-            TypeError: If the subscript types are not 'int', 'slice' or a 'tuple' thereof.
-            ValueError: If the subscripts do not yield an contiguous subarray. A single array element
-                        is regarded as contiguous array of size 1.
+        Raises:
+            `TypeError`: If the subscript types are not 'int', 'slice' or a 'tuple' thereof.
+            `ValueError`: If the subscripts do not yield an contiguous subarray. A single array element is regarded as contiguous array of size 1.
         """
         cdef size_t stride = 1
         cdef size_t offset = 0
         cdef bint next_slice_yields_contiguous = True
         cdef tuple shape = self.__dict__["__cuda_array_interface__"]["shape"]
-        cdef size_t shape_dims = len(shape)
+        cdef size_t len_shape = len(shape)
         cdef list result_shape = list() # elements will be appended
-        cdef tuple subscript_tuple
+        cdef list expanded_subscript = list()
+        cdef size_t len_subscript
         
         if isinstance(subscript,tuple):
-            subscript_tuple = subscript
+            expanded_subscript += subscript[:]
+            len_subscript = len(subscript)
         elif isinstance(subscript,(slice,int)):
-            subscript_tuple = (subscript,)
+            expanded_subscript = [subscript]
+            len_subscript = 1
         else:
             raise TypeError(f"subscript type='{type(subscript)}' is none of: 'slice', 'int', 'tuple'")
-        #
-        for _i,spec in enumerate(reversed(subscript_tuple)): # row major
-            i = shape_dims-_i-1
+        # check len and pad ':' slices if the subscript tuple's size is smaller than the array's shape dimensions.
+        if len_shape < len_subscript:
+            raise IndexError(f"too many indices specified, maximum number of indices that can be specified is {len_shape}")
+        if len_shape > len_subscript:
+            expanded_subscript += [slice(None)]*(len_shape-len_subscript)
+        for _i,spec in enumerate(reversed(expanded_subscript)): # row major
+            i = len_shape-_i-1
             if isinstance(spec,int):
                 (start,stop) = self._handle_int(spec,shape[i])
                 next_slice_yields_contiguous = False
             elif isinstance(spec,slice):
                 if not next_slice_yields_contiguous:
-                    raise ValueError(f"subscript='{subscript_tuple}' yields no contiguous subarray")
+                    raise ValueError(f"subscript='{expanded_subscript}' yields no contiguous subarray")
                 (start,stop,extract_full_dim) = self._handle_slice(spec,shape[i])
                 next_slice_yields_contiguous = extract_full_dim
                 # extract_full_dim => start == 0
@@ -635,28 +748,87 @@ cdef class DeviceArray(Pointer):
 
     @property
     def typestr(self):
+        """The type string (see `CUDA Array Interface specification <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html#python-interface-specification>`_).
+        """
         return self.__dict__["__cuda_array_interface__"]["typestr"]
     @property
     def shape(self):
+        """A tuple of int (or long) representing the size of each dimension.
+        """
         return self.__dict__["__cuda_array_interface__"]["shape"]
     @property
     def size(self):
+        """Product of the `~.shape` entries.
+        """
         return math.prod(self.__dict__["__cuda_array_interface__"]["shape"])
     @property
     def itemsize(self):
+        """Number of bytes required to store a single element of the array.
+        """
         return self._itemsize
     @property
     def is_read_only(self):
+        """If the data is read only, i.e. must not be modified.
+        """
         return self.__dict__["__cuda_array_interface__"]["data"][1]
     @property
     def stream_as_int(self):
+        """Returns the stream address as integer value.
+        """
         return self.__dict__["__cuda_array_interface__"]["stream"]
     
     def __init__(self,object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`): 
+                See the class description `~.DeviceArray` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+
+        Note:
+            Shape and type information and other metadata can be modified or overwritten after creation via the `~.configure`
+            member function. be aware that you might need to pass the ``_force=True`` keyword argument --- 
+            in particular if your instance was created from a type that does not implement the 
+            `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol.
+        See:
+            `~.configure`
+        """
         DeviceArray.init_from_pyobj(self,pyobj)
 
 cdef class ListOfBytes(Pointer):
+    """Datatype for handling Python `list` or `tuple` objects with entries of type `bytes`.
+
+    Datatype for handling Python `list` and `tuple` objects with entries of type `bytes`
+    that need to be converted to a pointer type when passed to the underlying C function.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of `bytes:
+        A `list` or `tuple` of `bytes` objects.
+        In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses of all entries.
+        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        See `~.Pointer.__init__` for more information.
+        
+    Note:
+        Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`.
+    """
     # C members declared in declaration part ``types.pxd``
+
     def __repr__(self):
         return f"<ListOfBytes object, _ptr={int(self)}>"
 
@@ -703,9 +875,8 @@ cdef class ListOfBytes(Pointer):
         returns it directly. No new ListOfBytes is created.
 
         Args:
-
-        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-            or of type `ListOfBytes`, `int`, or `ctypes.c_void_p`
+            pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                or of type `ListOfBytes`, `int`, or `ctypes.c_void_p`.
 
         Note:
             This routine does not perform a copy but returns the original pyobj
@@ -728,9 +899,48 @@ cdef class ListOfBytes(Pointer):
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`): 
+                See the class description `~.ListOfBytes` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
         ListOfBytes.init_from_pyobj(self,pyobj)
 
 cdef class ListOfPointer(Pointer):
+    """Datatype for handling Python `list` or `tuple` objects with entries that can be converted to type `~.Pointer`.
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be converted to type `~.Pointer`.
+    Such entries might be of type `None`, `int`, `ctypes.c_void_p`, Python buffer interface implementors, CUDA Array Interface
+    implementors, `~.Pointer`, subclasses of Pointer.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of `bytes`:
+        A `list` or `tuple` of types that can be converted to `~.Pointer`.
+        In this case, this type allocates an array of ``void *`` pointers wherein it stores the addresses obtained from all entries.
+        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        See `~.Pointer.__init__` for more information.
+    
+    Note:
+        Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`.
+    """
     # C members declared in declaration part ``types.pxd``
     
     def __repr__(self):
@@ -774,9 +984,9 @@ cdef class ListOfPointer(Pointer):
         returns it directly. No new `ListOfPointer` is created.
 
         Args:
-
-        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-            or of type `ListOfPointer`, `int`, or `ctypes.c_void_p`
+            pyobj (`object`): 
+                Must be either a `list` or `tuple` of objects that can be converted
+                to `~.Pointer`, or any other `object` that is accepted as input by `~.Pointer.__init__`.
 
         Note:
             This routine does not perform a copy but returns the original pyobj
@@ -799,9 +1009,51 @@ cdef class ListOfPointer(Pointer):
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`): 
+                See the class description `~.ListOfPointer` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
         ListOfPointer.init_from_pyobj(self,pyobj)
 
 cdef class ListOfInt(Pointer):
+    """Datatype for handling Python `list` or `tuple` objects with entries that can be converted to C type ``int``.
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be converted to C type ``int``.
+    Such entries might be of Python type `None`, `int`, or of any `ctypes` integer type.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``int``:
+        A `list` or `tuple` of types that can be converted to C type ``int``.
+        In this case, this type allocates an array of C ``int`` values wherein it stores the addresses obtained from all entries.
+        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        See `~.Pointer` for more information.
+    
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`.
+    """
     # C members declared in declaration part ``types.pxd``
 
     def __repr__(self):
@@ -862,9 +1114,9 @@ cdef class ListOfInt(Pointer):
         returns it directly. No new ListOfInt is created.
 
         Args:
-        
-        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-            or of type `ListOfInt`, `int`, or `ctypes.c_void_p`
+            pyobj (`object`): 
+                Must be either a `list` or `tuple` of objects that can be converted
+                to C type ``int``, or any other `object` that is accepted as input by `~.Pointer.__init__`.
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -887,9 +1139,51 @@ cdef class ListOfInt(Pointer):
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`): 
+                See the class description `~.ListOfInt` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
         ListOfInt.init_from_pyobj(self,pyobj)
 
 cdef class ListOfUnsigned(Pointer):
+    """Datatype for handling Python `list` or `tuple` objects with entries that can be converted to C type ``unsigned``.
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be converted to C type ``unsigned``.
+    Such entries might be of Python type `None`, `int`, or of any `ctypes` integer type.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``unsigned``:
+        A `list` or `tuple` of types that can be converted to C type ``unsigned``.
+        In this case, this type allocates an array of C ``unsigned`` values wherein it stores the addresses obtained from all entries.
+        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        See `~.Pointer` for more information.
+    
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`.
+    """
     # C members declared in declaration part ``types.pxd``
     
     def __repr__(self):
@@ -950,9 +1244,9 @@ cdef class ListOfUnsigned(Pointer):
         returns it directly. No new ListOfUnsigned is created.
 
         Args:
-
-        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-            or of type `ListOfUnsigned`, ``unsigned int``, or `ctypes.c_void_p`
+            pyobj (`object`): 
+                Must be either a `list` or `tuple` of objects that can be converted
+                to C type ``unsigned``, or any other `object` that is accepted as input by `~.Pointer.__init__`.
 
         Note:
             This routine does not perform a copy but returns the original pyobj
@@ -975,9 +1269,51 @@ cdef class ListOfUnsigned(Pointer):
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`): 
+                See the class description `~.ListOfUnsigned` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
         ListOfUnsigned.init_from_pyobj(self,pyobj)
 
 cdef class ListOfUnsignedLong(Pointer):
+    """Datatype for handling Python `list` or `tuple` objects with entries that can be converted to C type ``unsigned long``.
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be converted to C type ``unsigned long``.
+    Such entries might be of Python type `None`, `int`, or of any `ctypes` integer type.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``unsigned long``:
+        A `list` or `tuple` of types that can be converted to C type ``unsigned long``.
+        In this case, this type allocates an array of C ``unsigned long`` values wherein it stores the addresses obtained from all entries.
+        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        See `~.Pointer` for more information.
+    
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`.
+    """
     # C members declared in declaration part ``types.pxd``
     
     def __repr__(self):
@@ -1038,9 +1374,9 @@ cdef class ListOfUnsignedLong(Pointer):
         returns it directly. No new ListOfUnsignedLong is created.
 
         Args:
-        
-        * pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-            or of type `ListOfUnsignedLong`, `unsigned long`, or `ctypes.c_void_p`
+            pyobj (`object`): 
+                Must be either a `list` or `tuple` of objects that can be converted
+                to C type ``unsigned long``, or any other `object` that is accepted as input by `~.Pointer.__init__`.
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -1063,4 +1399,14 @@ cdef class ListOfUnsignedLong(Pointer):
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`): 
+                See the class description `~.ListOfUnsigned` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
         ListOfUnsignedLong.init_from_pyobj(self,pyobj)

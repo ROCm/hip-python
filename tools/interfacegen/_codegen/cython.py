@@ -1,6 +1,26 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-__author__ = "AMD_AUTHOR"
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import re
 import sys
@@ -142,17 +162,77 @@ def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
 
 
 default_c_interface_decl_preamble = """\
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 from libc.stdint cimport *
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
 default_c_interface_impl_preamble = """\
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 """
 
 default_python_interface_decl_preamble = """\
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 from libc cimport stdlib
 from libc cimport string
 from libc.stdint cimport *
@@ -163,7 +243,27 @@ ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
 default_python_interface_impl_preamble = """\
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 \"""
 [ATTRIBUTES]
@@ -213,6 +313,47 @@ wrapper_class_impl_base_template = """
 {{default properties_name = None}}
 {{default all_properties_rendered = False}}
 cdef class {{name}}:
+    \"""Python wrapper type.
+    
+    Python wrapper for C type {{cname}}.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+        This will set the ``self._ptr`` attribute to ``NULL`.
+    * `~.Pointer` and its subclasses:
+        Copies ``pyobj._ptr`` to ``self._ptr``.
+    `~.Py_buffer` object ownership is not transferred!
+    * `int`:
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+    * `ctypes.c_void_p`:
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+    * `object` that implements the Python buffer protocol:
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    \"""
     # members declared in pxd file
 
     def __cinit__(self):
@@ -330,10 +471,23 @@ cdef class {{name}}:
     {{py: all_properties_and_is_no_union = all_properties_rendered and not is_union}}
     {{if all_properties_and_is_no_union}}
     def __init__(self,*args,**kwargs):
+        \"""
+        \"""
+
     {{else}}
     # {{all_properties_rendered}}
     # {{is_union}}
     def __init__(self,**kwargs):
+        \"""Constructor.
+
+        Constructor for type {{name}}
+
+        Args:
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        \"""
     {{endif}}
         {{name}}.__allocate(&self._ptr)
         self.ptr_owner = True

@@ -1,3 +1,25 @@
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import os
 import textwrap
 import warnings
@@ -41,21 +63,24 @@ def generate_cuda_interop_package_files(
     pkg_cimport_name = f"hip.{pkg_name}" 
     backend = generator.backend
 
+    with open("LICENSE","r") as licensefile:
+        LICENSE_TEXT = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
+
     c_interface_decl_part = [
+        LICENSE_TEXT,
         textwrap.dedent(
             f"""\
-            # AMD_COPYRIGHT
             
             cimport {cpkg_name}
             """
         ),
     ]
     python_interface_decl_part = [
+        LICENSE_TEXT,
         textwrap.dedent(
             f"""\
-            # AMD_COPYRIGHT
 
-            __author__ = "AMD_AUTHOR"
+            __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
             cimport {cpkg_name}
             cimport {pkg_cimport_name}
@@ -64,27 +89,29 @@ def generate_cuda_interop_package_files(
         f"cimport {pkg_dir}.c{cuda_pkg_name}",  # for checking compiler errors
     ]
 
-    python_interface_impl_part_preamble = textwrap.dedent(
-        f"""\
-        # AMD_COPYRIGHT
+    python_interface_impl_part_preamble = (
+        LICENSE_TEXT
+        + textwrap.dedent(
+            f"""\
 
-        \"""
-        Attributes:
-        [ATTRIBUTES]
-        \"""
+            \"""
+            Attributes:
+            [ATTRIBUTES]
+            \"""
 
-        __author__ = "AMD_AUTHOR"
+            __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-        import os
-        import enum
+            import os
+            import enum
 
-        import hip.{pkg_name}
-        {pkg_name} = hip.{pkg_name} # makes {pkg_name} types and routines accessible without import
-                                    # allows checks such as `hasattr(cuda.{cuda_pkg_name},"{pkg_name}")`
+            import hip.{pkg_name}
+            {pkg_name} = hip.{pkg_name} # makes {pkg_name} types and routines accessible without import
+                                        # allows checks such as `hasattr(cuda.{cuda_pkg_name},"{pkg_name}")`
 
-        hip_python_mod = {pkg_name}
-        globals()["HIP_PYTHON"] = True
-        """
+            hip_python_mod = {pkg_name}
+            globals()["HIP_PYTHON"] = True
+            """
+        )
     )
     python_interface_impl_part = [
         textwrap.dedent(

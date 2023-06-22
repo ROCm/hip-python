@@ -11,6 +11,34 @@ import ctypes
 #                   must be in the memory layout and alignment expected by the kernel.
 
 cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
+    """Datatype for handling Python `list` or `tuple` objects with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
+
+    Datatype for handling Python `list` or `tuple` objects with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
+
+    The type can be initialized from the following Python objects:
+    
+    * `list` or `tuple` object:
+      `list` or `tuple` object with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
+      In this case, this type allocates an appropriately sized buffer wherein it stores the 
+      values of all `ctypes` datatype entries of `pyobj` plus all the addresses from the
+      entries that can be converted to type `~.Pointer`. The buffer is padded with additional bytes to account 
+      for the alignment requirements of each entry; for more details, see `~.hipModuleLaunchKernel`.
+      Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+      In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+      See `~.Pointer.__init__` for more information.
+    
+    Note:
+        Type checks are performed in the above order.
+
+    Args:
+        pyobj (`object`): 
+            Must be either a `list` or `tuple` of objects that can be converted
+            to `~.Pointer`, or any other `object` that is accepted as input by `~.Pointer.__init__`.
+
+    See:
+        `~.hipModuleLaunchKernel`
+    """
     # members declared in declaration part (.pxd)
 
     def __cinit__(self):
@@ -99,18 +127,19 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
     cdef HipModuleLaunchKernel_extra from_pyobj(object pyobj):
         """Derives a HipModuleLaunchKernel_extra from the given object.
 
-        In case ``pyobj`` is itself an ``HipModuleLaunchKernel_extra`` instance, this method
-        returns it directly. No new HipModuleLaunchKernel_extra is created.
+        In case ``pyobj`` is itself an `~.HipModuleLaunchKernel_extra` instance, this method
+        returns it directly. No new `~.HipModuleLaunchKernel_extra` is created.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``_util.types.Pointer``, ``HipModuleLaunchKernel_extra``, ``int``, or ``ctypes.c_void_p``
+            pyobj (`object`):
+                Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                or of type ``_util.types.Pointer``, ``HipModuleLaunchKernel_extra``, ``int``, or ``ctypes.c_void_p``
 
-                            Furthermore, ``pyobj`` can be a list or tuple in the following shape, where
-                            each entry can be either be
+                Furthermore, ``pyobj`` can be a list or tuple in the following shape, where
+                each entry can be either be
 
-                            * (1) pointer-like, i.e. can be directly translated to ``_util.types.Pointer``,
-                            * (2) A ctypes C datatype, which is always passed by value.
+                * (1) pointer-like, i.e. can be directly translated to ``_util.types.Pointer``,
+                * (2) A ctypes C datatype, which is always passed by value.
 
         Note:
             This routine does not perform a copy but returns the original pyobj
@@ -133,4 +162,32 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
             libc.stdlib.free(<void*>self._config[1])
 
     def __init__(self,object pyobj):
+        """Datatype for handling Python `list` or `tuple` objects with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
+
+        Datatype for handling Python `list` or `tuple` objects with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
+
+        The type can be initialized from the following Python objects:
+
+        * `list` or `tuple` object:
+          `list` or `tuple` object with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
+          In this case, this type allocates an appropriately sized buffer wherein it stores the 
+          values of all `ctypes` datatype entries of `pyobj` plus all the addresses from the
+          entries that can be converted to type `~.Pointer`. The buffer is padded with additional bytes to account 
+          for the alignment requirements of each entry; for more details, see `~.hipModuleLaunchKernel`.
+          Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+        * `object` that is accepted as input by `~.Pointer.__init__`:
+          In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+          See `~.Pointer.__init__` for more information.
+        
+        Note:
+            Type checks are performed in the above order.
+
+        Args:
+            pyobj (`object`): 
+                Must be either a `list` or `tuple` of objects that can be converted
+                to `~.Pointer`, or any other `object` that is accepted as input by `~.Pointer.__init__`.
+
+        See:
+            `~.hipModuleLaunchKernel`
+        """
         HipModuleLaunchKernel_extra.init_from_pyobj(self,pyobj)

@@ -1,3 +1,26 @@
+<!---
+MIT License
+
+Copyright (c) 2023 Advanced Micro Devices, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
 # HIP Python
 
 Low-level Cython and Python bindings for HIP.
@@ -15,14 +38,6 @@ Based on HIP version 5.4.22804-474e8620.
 - {doc}`/user_guide/3_datatypes`
 - {doc}`/user_guide/4_report_bugs`
 - {doc}`/user_guide/5_license`
-:::
-
-:::{grid-item-card} Developer Guide
-- {doc}`developer_guide/0_overview`
-- {doc}`developer_guide/1_code_generation`
-- {doc}`developer_guide/2_packaging`
-- {doc}`developer_guide/3_building_docs`
-- {doc}`developer_guide/4_commit_guide`
 :::
 
 :::{grid-item-card} HIP Python: Python API

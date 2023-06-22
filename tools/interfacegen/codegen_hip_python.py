@@ -1,4 +1,24 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 """This is the project's setup script.
 
@@ -8,7 +28,7 @@ modules. The generated Cython declaration files can be used
 by Cython users of this project.
 """
 
-__author__ = "AMD_AUTHOR"
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import os
 import warnings
@@ -515,16 +535,19 @@ if __name__ == "__main__":
     FULL_VERSION = (
         f"{HIP_VERSION_NAME}.{_gitversion.version(append_hash=True,append_date=True)}"
     )
+    
+    with open("LICENSE","r") as licensefile:
+        LICENSE_TEXT = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
     cuda_output_dir = os.path.join("packages", "hip-python-as-cuda", "cuda")
     for output_dir in (hip_output_dir, cuda_output_dir):
         # hip|cuda/_version.py
         with open(os.path.join(output_dir, "_version.py"), "w") as f:
             f.write(
-                textwrap.dedent(
-                    f"""\
-                # AMD_COPYRIGHT
-
-                __author__ = "AMD_AUTHOR"
+                LICENSE_TEXT
+                + textwrap.dedent(
+                f"""\
+                
+                __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
                 VERSION = __version__ = "{VERSION}"
                 FULL_VERSION = __full_version__ = "{FULL_VERSION}"
@@ -539,18 +562,20 @@ if __name__ == "__main__":
         HIP_PYTHON_LIB_NAMES = AVAILABLE_GENERATORS.keys()
 
         with open(os.path.join(output_dir, "__init__.py"), "w") as f:
-            init_content = textwrap.dedent(
-                f"""\
-                # AMD_COPYRIGHT
+            init_content = (
+                LICENSE_TEXT
+                + textwrap.dedent(
+                    f"""\
+                    
+                    __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-                __author__ = "AMD_AUTHOR"
+                    from ._version import *
+                    HIP_VERSION = {HIP_VERSION}
+                    HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
+                    HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
 
-                from ._version import *
-                HIP_VERSION = {HIP_VERSION}
-                HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
-                HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
-
-                """
+                    """
+                )   
             )
             if output_dir == hip_output_dir:
                 init_content += "\nfrom . import _util"
@@ -566,10 +591,10 @@ if __name__ == "__main__":
     )
     with open(requirements_file, "w") as outfile:
         outfile.write(
-            textwrap.dedent(
+            LICENSE_TEXT
+            + textwrap.dedent(
                 f"""\
-                # AMD_COPYRIGHT
-                
+            
                 # This file has been generated, do not modify.
                 
                 # Python dependencies required for development
