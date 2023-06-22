@@ -90,11 +90,11 @@ while [[ $# -gt 0 ]]; do
       shift; shift
       ;;
     -*|--*)
-      echo "Unknown option $1"
+      echo "ERROR: unknown option '$1'"
       exit 1
       ;;
     *)
-      echo "Unknown option $1"
+      echo "ERROR: unknown option '$1'"
       exit 1
       ;;
   esac

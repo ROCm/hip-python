@@ -1,26 +1,25 @@
-<!---
-MIT License
-
-Copyright (c) 2023 Advanced Micro Devices, Inc.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
--->
+<!-- MIT License
+  -- 
+  -- Copyright (c) 2023 Advanced Micro Devices, Inc.
+  -- 
+  -- Permission is hereby granted, free of charge, to any person obtaining a copy
+  -- of this software and associated documentation files (the "Software"), to deal
+  -- in the Software without restriction, including without limitation the rights
+  -- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  -- copies of the Software, and to permit persons to whom the Software is
+  -- furnished to do so, subject to the following conditions:
+  -- 
+  -- The above copyright notice and this permission notice shall be included in all
+  -- copies or substantial portions of the Software.
+  -- 
+  -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  -- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  -- SOFTWARE.
+  -->
 # Feedback and Reporting Issues
 
 We are looking forward to get your positive or negative feedback --- especially the negative feedback.
@@ -60,7 +59,7 @@ Please follow the template below to request any enhancement for HIP Python:
 * Any alternatives:
 3. Any additional information:
 
-Authors must set labels (and assign a miliestone) according to their own understanding.
+Authors must set labels (and assign a milestone) according to their own understanding.
 
 Other contributors can change these values if they disagree. That being said, 
 adding a small comment explaining the motivation is highly recommended. 
@@ -102,16 +101,16 @@ Each reviewer is responsible for verifying that the changes are
 clearly written in keeping with the coding styles of the library, 
 are documented in a way that future developers will be able to 
 understand the intent of the added functionality, and will 
-maintain or improve the overall quality of the codebase.
+maintain or improve the overall quality of the code base.
 
 Reviewer's task checklist:
 
 * [ ] Has the PR passed necessary CI?
 * [ ] Does the PR consist of a well-organized sequence of small commits, each of which is designed to make one specific feature or fix (and ideally should be able to pass CI testing)?
 * [ ] Does the PR only include a reviewable amount of changes? Or it is a  consolidation of already reviewed small batches? e.g. break it into smaller testable and reviewable tasks instead of a huge chunk at once.
-* [ ] Is PR sufficiently documented and it is easy to read and understand,  is it feasible for test and future maintainence? Do related docs already exist in the
+* [ ] Is PR sufficiently documented and it is easy to read and understand,  is it feasible for test and future maintenance? Do related docs already exist in the
 [HIP Python documentation](https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html) if API or functionality has changed?
-* [ ] For bugfixes and new features, new regression test created and included in CI, or some other holistic test pipeline?
+* [ ] For bug fixes and new features, new regression test created and included in CI, or some other holistic test pipeline?
 * [ ] Is every PR associated with a ticket or issue number for tracking purposes?
 
 ## Passing CI
