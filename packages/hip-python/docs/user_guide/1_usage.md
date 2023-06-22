@@ -1,3 +1,26 @@
+<!---
+MIT License
+
+Copyright (c) 2023 Advanced Micro Devices, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
 # Basic Usage and Examples
 
 This chapter explains how to use HIP Python's main interfaces. 
@@ -7,7 +30,7 @@ by means of basic examples before discussing the *Cython* API in the
 last sections of this chapter.
 
 :::{note}
-All examples in this chapter have been tested with ROCm 5.4.3.
+All examples in this chapter have been tested with ROCm&reg; 5.4.3.
 :::
 
 ## Basic Usage (Python)
@@ -274,6 +297,7 @@ and thus can be directly passed to those interfaces.
 1. Finally, we deallocate the device arrays in lines 55-56.
 :::
 
+(sec_example_hip_python_device_arrays)=
 ## HIP Python Device Arrays
 
 :::{admonition} What will I learn?
@@ -361,7 +385,7 @@ Within a loop that per iteration multiplies the problem size `n` by `10` (line 3
 1. We create a device array `xy_d` that stores the same number of bytes as `xy`.
 1. We fill `xy_d` with random data via {py:obj}`~.hiprandGenerateUniformDouble` (line 24).
 1. We then copy to `xy` from `xy_d` and free `x_d` (lines 25-26) and destroy the generator (line 27).
-1. We use `numpy` array operations to count the number of random-generated :math:`x-y`-coordinates within the unit circle
+1. We use `numpy` array operations to count the number of random-generated {math}`x-y`-coordinates within the unit circle
    (lines 29-30).
 1. Finally, we compute the ratio estimate for the given `n` and return it (lines 31-32).
 :::
@@ -509,7 +533,7 @@ that shared object.
 
 :::{note}
 The lazy-loading of functions at runtime can, under some circumstances, allow to use a HIP Python version that 
-covers a superset or only a subset of the functions available within the respective library of a ROCm installation.
+covers a superset or only a subset of the functions available within the respective library of a ROCm&reg; installation.
 :::
 
 ### Using the Cython API

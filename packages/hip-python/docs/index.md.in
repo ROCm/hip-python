@@ -17,14 +17,6 @@ Based on HIP version {HIP_VERSION_NAME}.
 - {doc}`/user_guide/5_license`
 :::
 
-:::{grid-item-card} Developer Guide
-- {doc}`developer_guide/0_overview`
-- {doc}`developer_guide/1_code_generation`
-- {doc}`developer_guide/2_packaging`
-- {doc}`developer_guide/3_building_docs`
-- {doc}`developer_guide/4_commit_guide`
-:::
-
 :::{grid-item-card} HIP Python: Python API
 {PYTHON_API_DOC_NAMES}
 - {doc}`python_api_manual/_hip_helpers`
