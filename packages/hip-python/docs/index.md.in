@@ -1,29 +1,74 @@
 # HIP Python
 
-Low-level Cython and Python bindings for HIP.
-Based on HIP version {HIP_VERSION_NAME}.
+**Welcome to the documentation pages for HIP Python!**
 
-## Overview
+HIP Python provides low-level Cython and Python bindings for the HIP runtime, HIPRTC,
+multiple math libraries and the communication library RCCL,
+and further a CUDA Python Interoperability layer that aims to simplify
+the porting of CUDA Python Python and Cython programs.
+
+:::{note}
+This documentation has been generated based on HIP version {HIP_VERSION_NAME}.
+:::
+
+## Spotlight
 
 ::::{grid} 1 1 2 2
 :gutter: 1
 
-:::{grid-item-card} User Guide
+:::{grid-item-card} How to Install HIP Python
+In this chapter, you learn how to identify
+the correct HIP Python packages to install for your ROCm&reg; installation, 
+where to retrieve the packages and what options
+you have to install them.
+
 - {doc}`/user_guide/0_install`
-- {doc}`/user_guide/1_usage`
-- {doc}`/user_guide/2_cuda_python_interop`
-- {doc}`/user_guide/3_datatypes`
-- {doc}`/user_guide/4_report_bugs`
-- {doc}`/user_guide/5_license`
 :::
 
-:::{grid-item-card} HIP Python: Python API
+:::{grid-item-card} How to Use HIP Python
+
+In this exhaustive chapter, you learn how to use
+HIP Python's interfaces in your Python or Cython program.
+A large number of examples is presented that cover 
+HIP and HIPRTC as well as multiple math libraries (HIPBLAS, HIPRAND, HIPFFT) 
+and the communication library RCCL.
+You learn how to launch your own kernels and how the different
+libraries interact.
+
+- {doc}`/user_guide/1_usage`
+:::
+
+:::{grid-item-card} How to Port CUDA Python Applications
+This chapter explains how you can use HIP Python's CUDA Python interoperability layer
+to port or even directly run CUDA Python applications
+on AMD GPUs. The chapter covers Python and Cython programs.
+
+- {doc}`/user_guide/2_cuda_python_interop`
+:::
+
+:::{grid-item-card} HIP Python's Interoperable Datatypes
+In this chapter, you learn about the datatypes that
+HIP Python uses to ease interoperability with other
+packages such as numpy and NUMBA.
+
+- {doc}`/user_guide/3_datatypes`
+:::
+
+:::{grid-item-card} HIP Python's Python API
+
+The full list of HIP Python Python variables, classes
+and functions.
+
 {PYTHON_API_DOC_NAMES}
 - {doc}`python_api_manual/_hip_helpers`
 - {doc}`python_api_manual/_util_types`
 :::
 
-:::{grid-item-card} CUDA Python Interoperability: Python API
+:::{grid-item-card} The CUDA Python Interoperability Layer's Python API
+
+The full list of the CUDA Python interoperability layer's Python variables, classes
+and functions.
+
 {PYTHON_API_DOC_NAMES_CUDA}
 :::
 

@@ -127,9 +127,40 @@ to retrieve a subarray.
 
 ## Simple Lists
 
-The types:
+The types
 
-{py:obj}`~.types.ListOfBytes`,
-{py:obj}`~.types.ListOfPointer`,
-{py:obj}`~.types.ListOfInt`,
+* {py:obj}`~.types.ListOfBytes`,
+* {py:obj}`~.types.ListOfPointer`,
+* {py:obj}`~.types.ListOfInt`,
+* {py:obj}`~.types.ListOfUnsigned`,
+* {py:obj}`~.types.ListOfUnsignedLong`,
 
+are used to convert simple Python `list` or `tuple` objects
+whose elements are `bytes`, can be used to construct a `~.Pointer`,
+or can be converted to `int`, `unsigned`, `unsigned long`, respectively.
+
+## Usage in HIP Python
+
+The type `ListOfBytes` is for example used in the signature of
+
+* {py:obj}`hiprtcCompileProgram` for argument `options`,
+* {py:obj}`hiprtcCreateProgram`for argument `headers`, and
+* {py:obj}`hiprtcCreateProgram` for argument `includeNames`.
+
+## Pass Subclass Instances Instead of Generic `~.Pointer` Arguments
+
+Note that you can instantiate all of the datatypes presented in the chapter in Python code.
+
+Note further that all datatypes presented in this chapter are subtypes of type
+{py:ob}`~.Pointer` and thus can be passed as argument to functions that expect the latter type.
+
+Therefore, if you think another datatype would be a better type for a function
+argument, you can exploit this inheritance relationship and instantiate the subclass
+yourself via a suitable Python object as input before you pass the instance
+to the function that expects the argument of type {py:ob}`~.Pointer`
+
+Example:
+
+```python
+my_func(...,this_should_be_a_pointer=hip._util.types.ListOfInt([1,2,3]),...)
+```
