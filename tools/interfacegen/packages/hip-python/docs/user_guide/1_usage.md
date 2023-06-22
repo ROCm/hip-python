@@ -120,7 +120,7 @@ attributes before the program prints `"ok"` and quits.
 
 * How I can use HIP Python's {py:obj}`~.hipStream_t` objects and the associated HIP Python routines.
 * That I can directly pass Python 3 {py:obj}`~array.array` objects to HIP runtime routines such
-  as {py:obj}`hipMemcpy` and {py:obj}`hipMemcpyAsync`.
+  as {py:obj}`~.hipMemcpy` and {py:obj}`~.hipMemcpyAsync`.
 :::
 
 An important concept in HIP are streams. They allow
@@ -166,8 +166,8 @@ If so, it quits with an "ok".
 
 HIP Python does not provide the necessary infrastructure to express device code
 in native Python. However, you can compile and launch kernels from within Python code 
-via the just-in-time (JIT) compilation interface provided by HIP Python module {py:obj}`hip.hiprtc` together with
-the kernel launch routines provided by HIP Python module {py:obj}`hip.hip`.
+via the just-in-time (JIT) compilation interface provided by HIP Python module {py:obj}`~.hip.hiprtc` together with
+the kernel launch routines provided by HIP Python module {py:obj}`~.hip.hip`.
 The {ref}`example below <hiprtc_launch_kernel_no_args>` demonstrates how to do so.
 
 ```{eval-rst}
@@ -200,7 +200,7 @@ and stream to use (`None` means the null stream).
 The latter two arguments, `kernelParams` and `extra`, can be used for passing kernel arguments.
 We will take a look how to pass kernel arguments via `extra` in the next section.
 1. After the kernel launch, the host waits on completion via {py:obj}`~.hipDeviceSynchronize`
-and then unloads the code module again via  {py:obj}`hipModuleUnload` before quitting
+and then unloads the code module again via  {py:obj}`~.hipModuleUnload` before quitting
 with an `"ok"`.
 :::
 
