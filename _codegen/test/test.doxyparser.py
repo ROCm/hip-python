@@ -194,7 +194,7 @@ comments = r"""\
 #for tokens,start,end in pyp.cppStyleComment.scanString(comments):
 #    print(tokens)
 
-print(doxyparser.remove_doxygen_cpp_comments(comments))
+print(doxyparser.remove_doxygen_comment_chars(comments))
 
 
 print(grammar.section.parseString(

@@ -257,7 +257,7 @@ wrapper_class_impl_base_template = """
 {{default properties_name = None}}
 {{default all_properties_rendered = False}}
 cdef class {{name}}:
-    \"""Python wrapper type.
+    \"""Python wrapper for C type {{cname}}.
     
     Python wrapper for C type {{cname}}.
 
@@ -394,7 +394,6 @@ cdef class {{name}}:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef {{name}} new():
@@ -415,24 +414,24 @@ cdef class {{name}}:
     {{py: all_properties_and_is_no_union = all_properties_rendered and not is_union}}
     {{if all_properties_and_is_no_union}}
     def __init__(self,*args,**kwargs):
-        \"""
-        \"""
-
     {{else}}
-    # {{all_properties_rendered}}
-    # {{is_union}}
     def __init__(self,**kwargs):
-        \"""Constructor.
+    {{endif}}
+        \"""Constructor type {{name}}.
 
-        Constructor for type {{name}}
+        Constructor for type {{name}}.
 
         Args:
+            {{if all_properties_and_is_no_union}}
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            {{endif}}
             **kwargs: 
                 Can be used to initialize member variables at construction,
                 Just pass an argument expression of the form <member>=<value>
                 per member that you want to initialize.
         \"""
-    {{endif}}
         {{name}}.__allocate(&self._ptr)
         self.ptr_owner = True
         {{for k,v in defaults.items()}}
@@ -484,6 +483,7 @@ def set_{{attr}}(self, i, {{typename}} value):
     self._ptr[i].{{attr}} = value
 @property
 def {{attr}}(self):
+    \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
 @{{attr}}.setter
 def {{attr}}(self, {{typename}} value):
@@ -503,7 +503,7 @@ def set_{{attr}}(self, i, object value):
     self._ptr[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
 @property
 def {{attr}}(self):
-    \"""
+    \"""{{brief_comment}}
     Note:
         Setting this {{attr}} can be dangerous if the underlying pointer is from a python object that
         is later on garbage collected.
@@ -524,6 +524,7 @@ def get_{{attr}}(self, i):
 #    self._ptr[i].{{attr}} = value
 @property
 def {{attr}}(self):
+    \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
 # TODO add setters
 #@{{attr}}.setter
@@ -542,6 +543,7 @@ def set_{{attr}}(self, i, value):
     self._ptr[i].{{attr}} = value.value
 @property
 def {{attr}}(self):
+    \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
 @{{attr}}.setter
 def {{attr}}(self, value):
@@ -553,16 +555,40 @@ def get_{{attr}}(self, i):
     return {{typename}}.from_ptr(&self._ptr[i].{{attr}})
 @property
 def {{attr}}(self):
+    \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
 {{endif}}
 """
 
+# doxygen parser
+DOXYGEN_CONV = doxyparser.DoxygenGrammar()
+DOXYGEN_CONV.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
+DOXYGEN_CONV.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
+DOXYGEN_CONV.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
+DOXYGEN_CONV.frnd.setParseAction(doxyparser.format.PythonDocstrings.frnd)
+def reference_(tokens):
+    global python_interface_pyobj_role_template
+    reference: str = tokens[0].replace("#",".")
+    reference = reference.replace("::",".")
+    return python_interface_pyobj_role_template.format(name=reference.lstrip('.'))
+DOXYGEN_CONV.see_reference.setParseAction(reference_)
+DOXYGEN_CONV.in_text_reference.setParseAction(reference_)
+def other_parse_action(tokens):
+    cmd = tokens[0][1:]
+    if cmd == "ref":
+        return f"``{tokens[1]}`` "
+    return [] # suppress all others
+DOXYGEN_CONV.other.setParseAction(other_parse_action)
+
 # Mixins
 class CythonMixin:
 
-    def __init__(self):  # Will not be called, attribs specified for type hinting
+    def __init__(self):
+        global DOXYGEN_CONV 
         self.renamer = DEFAULT_RENAMER
         self.sep = "_"        
+        # doxygen parser
+        self.doxygen_conv = DOXYGEN_CONV
 
     @property
     def cython_name(self):
@@ -583,6 +609,36 @@ class CythonMixin:
             return orig_name
         else:
             return f'{renamed} "{orig_name}"'
+
+        
+    def _raw_comment_cleaned(self):
+        from . import tree
+
+        assert isinstance(self, tree.Node)
+        if self.raw_comment != None:
+            cleaned_raw_comment = self.raw_comment_cleaner(self.raw_comment)
+            return doxyparser.remove_doxygen_comment_chars(cleaned_raw_comment)
+        else:
+            return ""
+        
+    def _remove_doxygen_comment_chars(self,text: str):
+        return doxyparser.remove_doxygen_comment_chars(text)
+
+    def _as_python_comment(self,text: str, comment_chars="#"):
+        if text is not None and len(text):
+            return "".join([f"{comment_chars} " + l for l in text.splitlines(keepends=True)])
+        else:
+            return ""
+
+    def _raw_comment_as_python_comment(self,comment_chars="#"):
+        from . import tree
+
+        assert isinstance(self, tree.Node)
+        if self.raw_comment != None:
+            comment = self._raw_comment_cleaned()
+            return "".join([f"{comment_chars} " + l for l in comment.splitlines(keepends=True)])
+        else:
+            return ""
 
     def render_c_interface(self):
         """Render a Cython interface for external C code."""
@@ -733,10 +789,10 @@ class FieldMixin(CythonMixin, Typed):
 
     def render_python_property(self, cprefix: str):
         from . import tree
-
         assert isinstance(self, tree.Field)
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
+
         return template.substitute(
             handler=self.ptr_complicated_type_handler(self),
             typename=self.global_typename(
@@ -747,6 +803,7 @@ class FieldMixin(CythonMixin, Typed):
                 self.is_basic_type
                 or self.is_pointer_to_char()  # TODO user should be consulted if char pointer is a string
             ),
+            brief_comment = self.doxygen_conv.transform_text_block(self.brief_comment if self.brief_comment != None else "(undocumented)"),
             is_basic_type_constantarray=self.is_basic_type_constarray,
             is_record=self.is_record,
             is_enum=self.is_enum,
@@ -941,18 +998,31 @@ class EnumMixin(CythonMixin):
         )
 
     def _render_python_enums(self, cprefix: str):
+        """Yields the enum constants' names."""
         from . import tree
 
-        # assert isinstance(self,tree.Enum)
-        """Yields the enum constants' names."""
+        #assert isinstance(self,tree.Enum)
         for child_cursor in self.cursor.get_children():
             name = self.renamer(child_cursor.spelling)
-            yield f"{name} = {cprefix}{name}"
+            yield (
+                f"{name} = {cprefix}{name}"
+            )
 
     @property
     def python_base_class_name(self):
         global python_interface_int_enum_base_class_name_template
         return python_interface_int_enum_base_class_name_template.format(name=self.cython_global_name)
+
+    def _render_python_enum_constant_docstrings(self):
+        for child_cursor in self.cursor.get_children():
+            name = self.renamer(child_cursor.spelling)
+            docu = child_cursor.brief_comment if child_cursor.brief_comment is not None else  "(undocumented)"
+            nl = "\n"
+            yield textwrap.dedent(
+                f"""\
+                {name}:
+                    {docu.replace(nl," ").rstrip()}"""
+            )
 
     def render_python_interface_impl(self, cprefix: str):
         """Renders an enum.IntEnum class.
@@ -971,27 +1041,26 @@ class EnumMixin(CythonMixin):
         if self.is_anonymous:
             for child_cursor in self.cursor.get_children():
                 name = self.renamer(child_cursor.spelling)
-                self.docstring_attributes.append(
-                        textwrap.dedent(
-                                f"""\
-                                {name}:
-                                    Enum constant.
-                                """
-                        )
-                    )
+                self.docstring_attributes += list(self._render_python_enum_constant_docstrings())
             return "\n".join(self._render_python_enums(cprefix))
-        else:
+        else: # named enum
             name = self.cython_global_name
             base_class_name = self.python_base_class_name
             
             result = textwrap.dedent(f"""\
-               class {base_class_name}({python_interface_int_enum_base_class}):
-                   \"""Empty enum base class that allows subclassing.
-                   \"""
-                   pass
-               class {name}({base_class_name}):
-               """
+                class {base_class_name}({python_interface_int_enum_base_class}):
+                    \"""Empty enum base class that allows subclassing.
+                    \"""
+                    pass
+                class {name}({base_class_name}):
+                    \"""{self.brief_comment if self.brief_comment is not None else name}
+
+                    Attributes:
+                """
             )
+            result += textwrap.indent("\n".join(self._render_python_enum_constant_docstrings()),indent*2)
+            result += f'\n{indent}"""\n'
+            # body
             result += textwrap.indent(
                 "\n".join(self._render_python_enums(cprefix)), indent
             )
@@ -1128,26 +1197,6 @@ class ParmMixin(CythonMixin, Typed):
         return f"{typename} {name}"
 
 class FunctionMixin(CythonMixin, Typed):
-    
-    def _raw_comment_cleaned(self):
-        from . import tree
-
-        assert isinstance(self, tree.Function)
-        if self.raw_comment != None:
-            cleaned_raw_comment = self.raw_comment_cleaner(self.raw_comment)
-            return doxyparser.remove_doxygen_cpp_comments(cleaned_raw_comment)
-        else:
-            return ""
-
-    def _raw_comment_as_python_comment(self):
-        from . import tree
-
-        assert isinstance(self, tree.Function)
-        if self.raw_comment != None:
-            comment = self._raw_comment_cleaned()
-            return "".join(["# " + l for l in comment.splitlines(keepends=True)])
-        else:
-            return ""
 
     @property
     def has_python_body_prolog(self):
@@ -1294,30 +1343,7 @@ cdef void* {funptr_name} = NULL
         from . import tree
 
         assert isinstance(self, tree.Function)
-
-        # doxygen parser
-        translater = doxyparser.DoxygenGrammar()
-        translater.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
-        translater.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
-        translater.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
-        translater.frnd.setParseAction(doxyparser.format.PythonDocstrings.frnd)
-        
-        def reference_(tokens):
-            global python_interface_pyobj_role_template
-            reference: str = tokens[0].replace("#",".")
-            reference = reference.replace("::",".")
-            return python_interface_pyobj_role_template.format(name=reference.lstrip('.'))
-        translater.see_reference.setParseAction(reference_)
-        translater.in_text_reference.setParseAction(reference_)
-
-        def other_parse_action(tokens):
-            cmd = tokens[0][1:]
-            if cmd == "ref":
-                return f"``{tokens[1]}`` "
-            return [] # suppress all others
-        translater.other.setParseAction(other_parse_action)
-
-        tree = translater.parse_structure(self._raw_comment_cleaned())
+        tree = self.doxygen_conv.parse_structure(self._raw_comment_cleaned())
         sections = list(tree.children)
         # brief
         doxygen_brief = next((sec for sec in sections if sec.kind in ("brief","short")),None)
@@ -1387,7 +1413,7 @@ cdef void* {funptr_name} = NULL
                     outer_indent = single_level_indent
                 body = self._render_doxygen_section_body(section,single_level_indent,outer_indent)
                 if section.kind in ("see","sa"):
-                    docstring_body += translater.see_reference.transformString(body)
+                    docstring_body += self.doxygen_conv.see_reference.transformString(body)
                 else:
                     docstring_body += body
         # Args

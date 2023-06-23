@@ -61,6 +61,42 @@ class _hipfftResult_t__Base(enum.IntEnum):
     """
     pass
 class hipfftResult_t(_hipfftResult_t__Base):
+    """Result/status/error codes
+
+    Attributes:
+        HIPFFT_SUCCESS:
+            hipFFT operation was successful
+        HIPFFT_INVALID_PLAN:
+            hipFFT was passed an invalid plan handle
+        HIPFFT_ALLOC_FAILED:
+            hipFFT failed to allocate GPU or CPU memory
+        HIPFFT_INVALID_TYPE:
+            No longer used
+        HIPFFT_INVALID_VALUE:
+            User specified an invalid pointer or parameter
+        HIPFFT_INTERNAL_ERROR:
+            Driver or internal hipFFT library error
+        HIPFFT_EXEC_FAILED:
+            Failed to execute an FFT on the GPU
+        HIPFFT_SETUP_FAILED:
+            hipFFT failed to initialize
+        HIPFFT_INVALID_SIZE:
+            User specified an invalid transform size
+        HIPFFT_UNALIGNED_DATA:
+            No longer used
+        HIPFFT_INCOMPLETE_PARAMETER_LIST:
+            Missing parameters in call
+        HIPFFT_INVALID_DEVICE:
+            Execution of a plan was on different GPU than plan creation
+        HIPFFT_PARSE_ERROR:
+            Internal plan database error
+        HIPFFT_NO_WORKSPACE:
+            No workspace has been provided prior to plan execution
+        HIPFFT_NOT_IMPLEMENTED:
+            Function does not implement functionality for parameters given.
+        HIPFFT_NOT_SUPPORTED:
+            Operation is not supported for parameters given.
+    """
     HIPFFT_SUCCESS = chipfft.HIPFFT_SUCCESS
     HIPFFT_INVALID_PLAN = chipfft.HIPFFT_INVALID_PLAN
     HIPFFT_ALLOC_FAILED = chipfft.HIPFFT_ALLOC_FAILED
@@ -90,6 +126,22 @@ class _hipfftType_t__Base(enum.IntEnum):
     """
     pass
 class hipfftType_t(_hipfftType_t__Base):
+    """Transform type
+
+    Attributes:
+        HIPFFT_R2C:
+            Real to complex (interleaved)
+        HIPFFT_C2R:
+            Complex (interleaved) to real
+        HIPFFT_C2C:
+            Complex to complex (interleaved)
+        HIPFFT_D2Z:
+            Double to double-complex (interleaved)
+        HIPFFT_Z2D:
+            Double-complex (interleaved) to double
+        HIPFFT_Z2Z:
+            Double-complex to double-complex (interleaved)
+    """
     HIPFFT_R2C = chipfft.HIPFFT_R2C
     HIPFFT_C2R = chipfft.HIPFFT_C2R
     HIPFFT_C2C = chipfft.HIPFFT_C2C
@@ -109,6 +161,16 @@ class _hipfftLibraryPropertyType_t__Base(enum.IntEnum):
     """
     pass
 class hipfftLibraryPropertyType_t(_hipfftLibraryPropertyType_t__Base):
+    """hipfftLibraryPropertyType_t
+
+    Attributes:
+        HIPFFT_MAJOR_VERSION:
+            (undocumented)
+        HIPFFT_MINOR_VERSION:
+            (undocumented)
+        HIPFFT_PATCH_LEVEL:
+            (undocumented)
+    """
     HIPFFT_MAJOR_VERSION = chipfft.HIPFFT_MAJOR_VERSION
     HIPFFT_MINOR_VERSION = chipfft.HIPFFT_MINOR_VERSION
     HIPFFT_PATCH_LEVEL = chipfft.HIPFFT_PATCH_LEVEL
@@ -121,7 +183,7 @@ class hipfftLibraryPropertyType_t(_hipfftLibraryPropertyType_t__Base):
 hipfftLibraryPropertyType = hipfftLibraryPropertyType_t
 
 cdef class hipfftHandle_t:
-    """Python wrapper type.
+    """Python wrapper for C type chipfft.hipfftHandle_t.
     
     Python wrapper for C type chipfft.hipfftHandle_t.
 

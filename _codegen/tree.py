@@ -114,6 +114,16 @@ class Node:
         else:
             return None
 
+    @property
+    def raw_comment(self):
+        """Returns full (doxygen) comment for this node."""
+        return self.cursor.raw_comment
+
+    @property
+    def brief_comment(self):
+        """Returns brief (doxygen) comment for this node."""
+        return self.cursor.brief_comment
+
     def get_root(self):
         curr = self
         while curr.parent != None:
@@ -239,6 +249,8 @@ class Root(Node):
 class MacroDefinition(Node, *__MacroDefinitionMixins):
     def __init__(self, cursor: clang.cindex.Cursor, parent: Node):
         Node.__init__(self, cursor, parent)
+        for mixin in globals()["__MacroDefinitionMixins"]:
+            mixin.__init__(self)
 
 
 class Typed:
@@ -762,6 +774,8 @@ class Field(Node, Typed, *__FieldMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+        for mixin in globals()["__FieldMixins"]:
+            mixin.__init__(self)
 
 
 class Type(Node):
@@ -817,11 +831,19 @@ class Record(Type):
 
 
 class Struct(Record, *__StructMixins):
-    pass
+    
+    def __init__(self,*args,**kwargs):
+        Record.__init__(self,*args,**kwargs)
+        for mixin in globals()["__StructMixins"]:
+            mixin.__init__(self)
 
 
 class Union(Record, *__UnionMixins):
-    pass
+    
+    def __init__(self,*args,**kwargs):
+        Record.__init__(self,*args,**kwargs)
+        for mixin in globals()["__UnionMixins"]:
+            mixin.__init__(self)
 
 
 class Enum(Type, *__EnumMixins):
@@ -833,6 +855,8 @@ class Enum(Type, *__EnumMixins):
     ):
         Type.__init__(self, cursor, parent)
         self._from_typedef_with_anon_child: bool = from_typedef_with_anon_child
+        for mixin in globals()["__EnumMixins"]:
+            mixin.__init__(self)
 
     @property
     def is_incomplete(self):
@@ -927,6 +951,8 @@ class Typedef(Type, Typed, *__TypedefMixins):
     ):
         Type.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+        for mixin in globals()["__TypedefMixins"]:
+            mixin.__init__(self)
 
 
 class FunctionPointer(Type):  # TODO handle result type
@@ -981,6 +1007,8 @@ class TypedefedFunctionPointer(FunctionPointer, *__TypedefedFunctionPointerMixin
     def __init__(self, cursor: clang.cindex.Cursor, parent: Node):  # TYPEDEF_DECL
         result_type = cursor.underlying_typedef_type.get_pointee().get_result()
         FunctionPointer.__init__(self, cursor, parent, result_type)
+        for mixin in globals()["__TypedefedFunctionPointerMixins"]:
+            mixin.__init__(self)
 
 
 class AnonymousFunctionPointer(
@@ -998,6 +1026,8 @@ class AnonymousFunctionPointer(
     ):
         result_type = cursor.type.get_pointee().get_result()
         FunctionPointer.__init__(self, cursor, parent, result_type)
+        for mixin in globals()["__AnonymousFunctionPointerMixins"]:
+            mixin.__init__(self)
 
     @property
     def anon_funptr_index(self):
@@ -1017,6 +1047,8 @@ class Parm(Node, Typed, *__ParmMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+        for mixin in globals()["__ParmMixins"]:
+            mixin.__init__(self)
 
     @property
     def parm_index(self):
@@ -1034,6 +1066,8 @@ class Function(Node, Typed, *__FunctionMixin):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.result_type, typeref)
+        for mixin in globals()["__FunctionMixin"]:
+            mixin.__init__(self)
 
     @property
     def parms(self):
@@ -1050,16 +1084,6 @@ class Function(Node, Typed, *__FunctionMixin):
         for parm in self.parms:
             assert isinstance(parm, Parm)
             yield parm.global_typename(sep, renamer, prefer_canonical)
-
-    @property
-    def raw_comment(self):
-        """Returns full (doxygen) comment for this node."""
-        return self.cursor.raw_comment
-
-    @property
-    def brief_comment(self):
-        """Returns brief (doxygen) comment for this node."""
-        return self.cursor.brief_comment
 
 def from_libclang_translation_unit(
     translation_unit: clang.cindex.TranslationUnit, warn_mode=control.Warnings.WARN

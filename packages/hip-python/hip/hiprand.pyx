@@ -68,7 +68,7 @@ HIPRAND_DEFAULT_MAX_BLOCK_SIZE = chiprand.HIPRAND_DEFAULT_MAX_BLOCK_SIZE
 HIPRAND_DEFAULT_MIN_WARPS_PER_EU = chiprand.HIPRAND_DEFAULT_MIN_WARPS_PER_EU
 
 cdef class uint4:
-    """Python wrapper type.
+    """Python wrapper for C type chiprand.uint4.
     
     Python wrapper for C type chiprand.uint4.
 
@@ -191,7 +191,6 @@ cdef class uint4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uint4 new():
@@ -210,9 +209,19 @@ cdef class uint4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uint4.
 
+        Constructor for type uint4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uint4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -250,6 +259,7 @@ cdef class uint4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned int value):
@@ -265,6 +275,7 @@ cdef class uint4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned int value):
@@ -280,6 +291,7 @@ cdef class uint4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned int value):
@@ -295,6 +307,7 @@ cdef class uint4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, unsigned int value):
@@ -318,7 +331,7 @@ cdef class uint4:
 
 
 cdef class rocrand_discrete_distribution_st:
-    """Python wrapper type.
+    """Python wrapper for C type chiprand.rocrand_discrete_distribution_st.
     
     Python wrapper for C type chiprand.rocrand_discrete_distribution_st.
 
@@ -441,7 +454,6 @@ cdef class rocrand_discrete_distribution_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef rocrand_discrete_distribution_st new():
@@ -460,9 +472,19 @@ cdef class rocrand_discrete_distribution_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type rocrand_discrete_distribution_st.
 
+        Constructor for type rocrand_discrete_distribution_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         rocrand_discrete_distribution_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -500,6 +522,7 @@ cdef class rocrand_discrete_distribution_st:
         self._ptr[i].size = value
     @property
     def size(self):
+        """(undocumented)"""
         return self.get_size(0)
     @size.setter
     def size(self, unsigned int value):
@@ -515,6 +538,7 @@ cdef class rocrand_discrete_distribution_st:
         self._ptr[i].offset = value
     @property
     def offset(self):
+        """(undocumented)"""
         return self.get_offset(0)
     @offset.setter
     def offset(self, unsigned int value):
@@ -534,7 +558,7 @@ cdef class rocrand_discrete_distribution_st:
         self._ptr[i].alias = <unsigned int *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.ListOfUnsigned.from_pyobj(value)))
     @property
     def alias(self):
-        """
+        """(undocumented)
         Note:
             Setting this alias can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -558,7 +582,7 @@ cdef class rocrand_discrete_distribution_st:
         self._ptr[i].probability = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def probability(self):
-        """
+        """(undocumented)
         Note:
             Setting this probability can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -582,7 +606,7 @@ cdef class rocrand_discrete_distribution_st:
         self._ptr[i].cdf = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def cdf(self):
-        """
+        """(undocumented)
         Note:
             Setting this cdf can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -612,7 +636,7 @@ cdef class rocrand_discrete_distribution_st:
 rocrand_discrete_distribution = rocrand_discrete_distribution_st
 
 cdef class rocrand_generator_base_type:
-    """Python wrapper type.
+    """Python wrapper for C type chiprand.rocrand_generator_base_type.
     
     Python wrapper for C type chiprand.rocrand_generator_base_type.
 
@@ -755,6 +779,30 @@ class _rocrand_status__Base(enum.IntEnum):
     """
     pass
 class rocrand_status(_rocrand_status__Base):
+    """rocRAND function call status type
+
+    Attributes:
+        ROCRAND_STATUS_SUCCESS:
+            No errors
+        ROCRAND_STATUS_VERSION_MISMATCH:
+            Header file and linked library version do not match
+        ROCRAND_STATUS_NOT_CREATED:
+            Generator was not created using rocrand_create_generator
+        ROCRAND_STATUS_ALLOCATION_FAILED:
+            Memory allocation failed during execution
+        ROCRAND_STATUS_TYPE_ERROR:
+            Generator type is wrong
+        ROCRAND_STATUS_OUT_OF_RANGE:
+            Argument out of range
+        ROCRAND_STATUS_LENGTH_NOT_MULTIPLE:
+            Requested size is not a multiple of quasirandom generator's dimension, or requested size is not even (see rocrand_generate_normal()), or pointer is misaligned (see rocrand_generate_normal())
+        ROCRAND_STATUS_DOUBLE_PRECISION_REQUIRED:
+            GPU does not have double precision
+        ROCRAND_STATUS_LAUNCH_FAILURE:
+            Kernel launch failure
+        ROCRAND_STATUS_INTERNAL_ERROR:
+            Internal library error
+    """
     ROCRAND_STATUS_SUCCESS = chiprand.ROCRAND_STATUS_SUCCESS
     ROCRAND_STATUS_VERSION_MISMATCH = chiprand.ROCRAND_STATUS_VERSION_MISMATCH
     ROCRAND_STATUS_NOT_CREATED = chiprand.ROCRAND_STATUS_NOT_CREATED
@@ -776,6 +824,34 @@ class _rocrand_rng_type__Base(enum.IntEnum):
     """
     pass
 class rocrand_rng_type(_rocrand_rng_type__Base):
+    """rocRAND generator type
+
+    Attributes:
+        ROCRAND_RNG_PSEUDO_DEFAULT:
+            Default pseudorandom generator
+        ROCRAND_RNG_PSEUDO_XORWOW:
+            XORWOW pseudorandom generator
+        ROCRAND_RNG_PSEUDO_MRG32K3A:
+            MRG32k3a pseudorandom generator
+        ROCRAND_RNG_PSEUDO_MTGP32:
+            Mersenne Twister MTGP32 pseudorandom generator
+        ROCRAND_RNG_PSEUDO_PHILOX4_32_10:
+            PHILOX-4x32-10 pseudorandom generator
+        ROCRAND_RNG_PSEUDO_MRG31K3P:
+            MRG31k3p pseudorandom generator
+        ROCRAND_RNG_PSEUDO_LFSR113:
+            LFSR113 pseudorandom generator
+        ROCRAND_RNG_QUASI_DEFAULT:
+            Default quasirandom generator
+        ROCRAND_RNG_QUASI_SOBOL32:
+            Sobol32 quasirandom generator
+        ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL32:
+            Scrambled Sobol32 quasirandom generator
+        ROCRAND_RNG_QUASI_SOBOL64:
+            Sobol64 quasirandom generator
+        ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL64:
+            Scrambled Sobol64 quasirandom generator
+    """
     ROCRAND_RNG_PSEUDO_DEFAULT = chiprand.ROCRAND_RNG_PSEUDO_DEFAULT
     ROCRAND_RNG_PSEUDO_XORWOW = chiprand.ROCRAND_RNG_PSEUDO_XORWOW
     ROCRAND_RNG_PSEUDO_MRG32K3A = chiprand.ROCRAND_RNG_PSEUDO_MRG32K3A
@@ -807,6 +883,38 @@ class _hiprandStatus__Base(enum.IntEnum):
     """
     pass
 class hiprandStatus(_hiprandStatus__Base):
+    """hipRAND function call status type
+
+    Attributes:
+        HIPRAND_STATUS_SUCCESS:
+            Success
+        HIPRAND_STATUS_VERSION_MISMATCH:
+            Header file and linked library version do not match
+        HIPRAND_STATUS_NOT_INITIALIZED:
+            Generator not created
+        HIPRAND_STATUS_ALLOCATION_FAILED:
+            Memory allocation failed
+        HIPRAND_STATUS_TYPE_ERROR:
+            Generator type is wrong
+        HIPRAND_STATUS_OUT_OF_RANGE:
+            Argument out of range
+        HIPRAND_STATUS_LENGTH_NOT_MULTIPLE:
+            Requested size is not a multiple of quasirandom generator's dimension, or requested size is not even (see hiprandGenerateNormal()), or pointer is misaligned (see hiprandGenerateNormal())
+        HIPRAND_STATUS_DOUBLE_PRECISION_REQUIRED:
+            GPU does not have double precision
+        HIPRAND_STATUS_LAUNCH_FAILURE:
+            Kernel launch failure
+        HIPRAND_STATUS_PREEXISTING_FAILURE:
+            Preexisting failure on library entry
+        HIPRAND_STATUS_INITIALIZATION_FAILED:
+            Initialization of HIP failed
+        HIPRAND_STATUS_ARCH_MISMATCH:
+            Architecture mismatch, GPU does not support requested feature
+        HIPRAND_STATUS_INTERNAL_ERROR:
+            Internal library error
+        HIPRAND_STATUS_NOT_IMPLEMENTED:
+            Feature not implemented yet
+    """
     HIPRAND_STATUS_SUCCESS = chiprand.HIPRAND_STATUS_SUCCESS
     HIPRAND_STATUS_VERSION_MISMATCH = chiprand.HIPRAND_STATUS_VERSION_MISMATCH
     HIPRAND_STATUS_NOT_INITIALIZED = chiprand.HIPRAND_STATUS_NOT_INITIALIZED
@@ -834,6 +942,34 @@ class _hiprandRngType__Base(enum.IntEnum):
     """
     pass
 class hiprandRngType(_hiprandRngType__Base):
+    """hipRAND generator type
+
+    Attributes:
+        HIPRAND_RNG_TEST:
+
+        HIPRAND_RNG_PSEUDO_DEFAULT:
+            Default pseudorandom generator
+        HIPRAND_RNG_PSEUDO_XORWOW:
+            XORWOW pseudorandom generator
+        HIPRAND_RNG_PSEUDO_MRG32K3A:
+            MRG32k3a pseudorandom generator
+        HIPRAND_RNG_PSEUDO_MTGP32:
+            Mersenne Twister MTGP32 pseudorandom generator
+        HIPRAND_RNG_PSEUDO_MT19937:
+            Mersenne Twister 19937
+        HIPRAND_RNG_PSEUDO_PHILOX4_32_10:
+            PHILOX_4x32 (10 rounds) pseudorandom generator
+        HIPRAND_RNG_QUASI_DEFAULT:
+            Default quasirandom generator
+        HIPRAND_RNG_QUASI_SOBOL32:
+            Sobol32 quasirandom generator
+        HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32:
+            Scrambled Sobol32 quasirandom generator
+        HIPRAND_RNG_QUASI_SOBOL64:
+            Sobol64 quasirandom generator
+        HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64:
+            Scrambled Sobol64 quasirandom generator
+    """
     HIPRAND_RNG_TEST = chiprand.HIPRAND_RNG_TEST
     HIPRAND_RNG_PSEUDO_DEFAULT = chiprand.HIPRAND_RNG_PSEUDO_DEFAULT
     HIPRAND_RNG_PSEUDO_XORWOW = chiprand.HIPRAND_RNG_PSEUDO_XORWOW

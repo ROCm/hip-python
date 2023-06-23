@@ -249,17 +249,37 @@ Attributes:
         Macro constant.
 
     HIP_SUCCESS:
-        Enum constant.
-
+        (undocumented)
     HIP_ERROR_INVALID_VALUE:
-        Enum constant.
-
+        (undocumented)
     HIP_ERROR_NOT_INITIALIZED:
-        Enum constant.
-
+        (undocumented)
     HIP_ERROR_LAUNCH_OUT_OF_RESOURCES:
-        Enum constant.
-
+        (undocumented)
+    HIP_SUCCESS:
+        (undocumented)
+    HIP_ERROR_INVALID_VALUE:
+        (undocumented)
+    HIP_ERROR_NOT_INITIALIZED:
+        (undocumented)
+    HIP_ERROR_LAUNCH_OUT_OF_RESOURCES:
+        (undocumented)
+    HIP_SUCCESS:
+        (undocumented)
+    HIP_ERROR_INVALID_VALUE:
+        (undocumented)
+    HIP_ERROR_NOT_INITIALIZED:
+        (undocumented)
+    HIP_ERROR_LAUNCH_OUT_OF_RESOURCES:
+        (undocumented)
+    HIP_SUCCESS:
+        (undocumented)
+    HIP_ERROR_INVALID_VALUE:
+        (undocumented)
+    HIP_ERROR_NOT_INITIALIZED:
+        (undocumented)
+    HIP_ERROR_LAUNCH_OUT_OF_RESOURCES:
+        (undocumented)
     hipUUID:
         alias of `~.hipUUID_t`
 
@@ -539,7 +559,7 @@ HIP_ERROR_NOT_INITIALIZED = chip.HIP_ERROR_NOT_INITIALIZED
 HIP_ERROR_LAUNCH_OUT_OF_RESOURCES = chip.HIP_ERROR_LAUNCH_OUT_OF_RESOURCES
 
 cdef class hipDeviceArch_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipDeviceArch_t.
     
     Python wrapper for C type chip.hipDeviceArch_t.
 
@@ -662,7 +682,6 @@ cdef class hipDeviceArch_t:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipDeviceArch_t new():
@@ -681,9 +700,19 @@ cdef class hipDeviceArch_t:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipDeviceArch_t.
 
+        Constructor for type hipDeviceArch_t.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipDeviceArch_t.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -721,6 +750,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasGlobalInt32Atomics = value
     @property
     def hasGlobalInt32Atomics(self):
+        """32-bit integer atomics for global memory."""
         return self.get_hasGlobalInt32Atomics(0)
     @hasGlobalInt32Atomics.setter
     def hasGlobalInt32Atomics(self, unsigned int value):
@@ -736,6 +766,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasGlobalFloatAtomicExch = value
     @property
     def hasGlobalFloatAtomicExch(self):
+        """32-bit float atomic exch for global memory."""
         return self.get_hasGlobalFloatAtomicExch(0)
     @hasGlobalFloatAtomicExch.setter
     def hasGlobalFloatAtomicExch(self, unsigned int value):
@@ -751,6 +782,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasSharedInt32Atomics = value
     @property
     def hasSharedInt32Atomics(self):
+        """32-bit integer atomics for shared memory."""
         return self.get_hasSharedInt32Atomics(0)
     @hasSharedInt32Atomics.setter
     def hasSharedInt32Atomics(self, unsigned int value):
@@ -766,6 +798,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasSharedFloatAtomicExch = value
     @property
     def hasSharedFloatAtomicExch(self):
+        """32-bit float atomic exch for shared memory."""
         return self.get_hasSharedFloatAtomicExch(0)
     @hasSharedFloatAtomicExch.setter
     def hasSharedFloatAtomicExch(self, unsigned int value):
@@ -781,6 +814,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasFloatAtomicAdd = value
     @property
     def hasFloatAtomicAdd(self):
+        """32-bit float atomic add in global and shared memory."""
         return self.get_hasFloatAtomicAdd(0)
     @hasFloatAtomicAdd.setter
     def hasFloatAtomicAdd(self, unsigned int value):
@@ -796,6 +830,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasGlobalInt64Atomics = value
     @property
     def hasGlobalInt64Atomics(self):
+        """64-bit integer atomics for global memory."""
         return self.get_hasGlobalInt64Atomics(0)
     @hasGlobalInt64Atomics.setter
     def hasGlobalInt64Atomics(self, unsigned int value):
@@ -811,6 +846,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasSharedInt64Atomics = value
     @property
     def hasSharedInt64Atomics(self):
+        """64-bit integer atomics for shared memory."""
         return self.get_hasSharedInt64Atomics(0)
     @hasSharedInt64Atomics.setter
     def hasSharedInt64Atomics(self, unsigned int value):
@@ -826,6 +862,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasDoubles = value
     @property
     def hasDoubles(self):
+        """Double-precision floating point."""
         return self.get_hasDoubles(0)
     @hasDoubles.setter
     def hasDoubles(self, unsigned int value):
@@ -841,6 +878,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasWarpVote = value
     @property
     def hasWarpVote(self):
+        """Warp vote instructions (__any, __all)."""
         return self.get_hasWarpVote(0)
     @hasWarpVote.setter
     def hasWarpVote(self, unsigned int value):
@@ -856,6 +894,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasWarpBallot = value
     @property
     def hasWarpBallot(self):
+        """Warp ballot instructions (__ballot)."""
         return self.get_hasWarpBallot(0)
     @hasWarpBallot.setter
     def hasWarpBallot(self, unsigned int value):
@@ -871,6 +910,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasWarpShuffle = value
     @property
     def hasWarpShuffle(self):
+        """Warp shuffle operations. (__shfl_*)."""
         return self.get_hasWarpShuffle(0)
     @hasWarpShuffle.setter
     def hasWarpShuffle(self, unsigned int value):
@@ -886,6 +926,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasFunnelShift = value
     @property
     def hasFunnelShift(self):
+        """Funnel two words into one with shift&mask caps."""
         return self.get_hasFunnelShift(0)
     @hasFunnelShift.setter
     def hasFunnelShift(self, unsigned int value):
@@ -901,6 +942,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasThreadFenceSystem = value
     @property
     def hasThreadFenceSystem(self):
+        """__threadfence_system."""
         return self.get_hasThreadFenceSystem(0)
     @hasThreadFenceSystem.setter
     def hasThreadFenceSystem(self, unsigned int value):
@@ -916,6 +958,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasSyncThreadsExt = value
     @property
     def hasSyncThreadsExt(self):
+        """__syncthreads_count, syncthreads_and, syncthreads_or."""
         return self.get_hasSyncThreadsExt(0)
     @hasSyncThreadsExt.setter
     def hasSyncThreadsExt(self, unsigned int value):
@@ -931,6 +974,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasSurfaceFuncs = value
     @property
     def hasSurfaceFuncs(self):
+        """Surface functions."""
         return self.get_hasSurfaceFuncs(0)
     @hasSurfaceFuncs.setter
     def hasSurfaceFuncs(self, unsigned int value):
@@ -946,6 +990,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].has3dGrid = value
     @property
     def has3dGrid(self):
+        """Grid and group dims are 3D (rather than 2D)."""
         return self.get_has3dGrid(0)
     @has3dGrid.setter
     def has3dGrid(self, unsigned int value):
@@ -961,6 +1006,7 @@ cdef class hipDeviceArch_t:
         self._ptr[i].hasDynamicParallelism = value
     @property
     def hasDynamicParallelism(self):
+        """Dynamic parallelism."""
         return self.get_hasDynamicParallelism(0)
     @hasDynamicParallelism.setter
     def hasDynamicParallelism(self, unsigned int value):
@@ -984,7 +1030,7 @@ cdef class hipDeviceArch_t:
 
 
 cdef class hipUUID_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipUUID_t.
     
     Python wrapper for C type chip.hipUUID_t.
 
@@ -1107,7 +1153,6 @@ cdef class hipUUID_t:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipUUID_t new():
@@ -1126,9 +1171,19 @@ cdef class hipUUID_t:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipUUID_t.
 
+        Constructor for type hipUUID_t.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipUUID_t.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -1167,6 +1222,7 @@ cdef class hipUUID_t:
     #    self._ptr[i].bytes = value
     @property
     def bytes(self):
+        """(undocumented)"""
         return self.get_bytes(0)
     # TODO add setters
     #@bytes.setter
@@ -1193,7 +1249,7 @@ cdef class hipUUID_t:
 hipUUID = hipUUID_t
 
 cdef class hipDeviceProp_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipDeviceProp_t.
     
     Python wrapper for C type chip.hipDeviceProp_t.
 
@@ -1316,7 +1372,6 @@ cdef class hipDeviceProp_t:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipDeviceProp_t new():
@@ -1335,9 +1390,19 @@ cdef class hipDeviceProp_t:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipDeviceProp_t.
 
+        Constructor for type hipDeviceProp_t.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipDeviceProp_t.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -1376,6 +1441,7 @@ cdef class hipDeviceProp_t:
     #    self._ptr[i].name = value
     @property
     def name(self):
+        """Device name."""
         return self.get_name(0)
     # TODO add setters
     #@name.setter
@@ -1392,6 +1458,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].totalGlobalMem = value
     @property
     def totalGlobalMem(self):
+        """Size of global memory region (in bytes)."""
         return self.get_totalGlobalMem(0)
     @totalGlobalMem.setter
     def totalGlobalMem(self, unsigned long value):
@@ -1407,6 +1474,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].sharedMemPerBlock = value
     @property
     def sharedMemPerBlock(self):
+        """Size of shared memory region (in bytes)."""
         return self.get_sharedMemPerBlock(0)
     @sharedMemPerBlock.setter
     def sharedMemPerBlock(self, unsigned long value):
@@ -1422,6 +1490,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].regsPerBlock = value
     @property
     def regsPerBlock(self):
+        """Registers per block."""
         return self.get_regsPerBlock(0)
     @regsPerBlock.setter
     def regsPerBlock(self, int value):
@@ -1437,6 +1506,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].warpSize = value
     @property
     def warpSize(self):
+        """Warp size."""
         return self.get_warpSize(0)
     @warpSize.setter
     def warpSize(self, int value):
@@ -1452,6 +1522,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].maxThreadsPerBlock = value
     @property
     def maxThreadsPerBlock(self):
+        """Max work items per work group or workgroup max size."""
         return self.get_maxThreadsPerBlock(0)
     @maxThreadsPerBlock.setter
     def maxThreadsPerBlock(self, int value):
@@ -1468,6 +1539,7 @@ cdef class hipDeviceProp_t:
     #    self._ptr[i].maxThreadsDim = value
     @property
     def maxThreadsDim(self):
+        """Max number of threads in each dimension (XYZ) of a block."""
         return self.get_maxThreadsDim(0)
     # TODO add setters
     #@maxThreadsDim.setter
@@ -1485,6 +1557,7 @@ cdef class hipDeviceProp_t:
     #    self._ptr[i].maxGridSize = value
     @property
     def maxGridSize(self):
+        """Max grid dimensions (XYZ)."""
         return self.get_maxGridSize(0)
     # TODO add setters
     #@maxGridSize.setter
@@ -1501,6 +1574,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].clockRate = value
     @property
     def clockRate(self):
+        """Max clock frequency of the multiProcessors in khz."""
         return self.get_clockRate(0)
     @clockRate.setter
     def clockRate(self, int value):
@@ -1516,6 +1590,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].memoryClockRate = value
     @property
     def memoryClockRate(self):
+        """Max global memory clock frequency in khz."""
         return self.get_memoryClockRate(0)
     @memoryClockRate.setter
     def memoryClockRate(self, int value):
@@ -1531,6 +1606,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].memoryBusWidth = value
     @property
     def memoryBusWidth(self):
+        """Global memory bus width in bits."""
         return self.get_memoryBusWidth(0)
     @memoryBusWidth.setter
     def memoryBusWidth(self, int value):
@@ -1546,6 +1622,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].totalConstMem = value
     @property
     def totalConstMem(self):
+        """Size of shared memory region (in bytes)."""
         return self.get_totalConstMem(0)
     @totalConstMem.setter
     def totalConstMem(self, unsigned long value):
@@ -1561,6 +1638,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].major = value
     @property
     def major(self):
+        """Major compute capability. On HCC, this is an approximation and features may differ from CUDA CC. See the arch feature flags for portable ways to query feature caps."""
         return self.get_major(0)
     @major.setter
     def major(self, int value):
@@ -1576,6 +1654,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].minor = value
     @property
     def minor(self):
+        """Minor compute capability. On HCC, this is an approximation and features may differ from CUDA CC. See the arch feature flags for portable ways to query feature caps."""
         return self.get_minor(0)
     @minor.setter
     def minor(self, int value):
@@ -1591,6 +1670,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].multiProcessorCount = value
     @property
     def multiProcessorCount(self):
+        """Number of multi-processors (compute units)."""
         return self.get_multiProcessorCount(0)
     @multiProcessorCount.setter
     def multiProcessorCount(self, int value):
@@ -1606,6 +1686,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].l2CacheSize = value
     @property
     def l2CacheSize(self):
+        """L2 cache size."""
         return self.get_l2CacheSize(0)
     @l2CacheSize.setter
     def l2CacheSize(self, int value):
@@ -1621,6 +1702,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].maxThreadsPerMultiProcessor = value
     @property
     def maxThreadsPerMultiProcessor(self):
+        """Maximum resident threads per multi-processor."""
         return self.get_maxThreadsPerMultiProcessor(0)
     @maxThreadsPerMultiProcessor.setter
     def maxThreadsPerMultiProcessor(self, int value):
@@ -1636,6 +1718,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].computeMode = value
     @property
     def computeMode(self):
+        """Compute mode."""
         return self.get_computeMode(0)
     @computeMode.setter
     def computeMode(self, int value):
@@ -1651,6 +1734,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].clockInstructionRate = value
     @property
     def clockInstructionRate(self):
+        """Frequency in khz of the timer used by the device-side "clock*" instructions. New for HIP."""
         return self.get_clockInstructionRate(0)
     @clockInstructionRate.setter
     def clockInstructionRate(self, int value):
@@ -1662,6 +1746,7 @@ cdef class hipDeviceProp_t:
         return hipDeviceArch_t.from_ptr(&self._ptr[i].arch)
     @property
     def arch(self):
+        """Architectural feature flags. New for HIP."""
         return self.get_arch(0)
 
     def get_concurrentKernels(self, i):
@@ -1674,6 +1759,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].concurrentKernels = value
     @property
     def concurrentKernels(self):
+        """Device can possibly execute multiple kernels concurrently."""
         return self.get_concurrentKernels(0)
     @concurrentKernels.setter
     def concurrentKernels(self, int value):
@@ -1689,6 +1775,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].pciDomainID = value
     @property
     def pciDomainID(self):
+        """PCI Domain ID"""
         return self.get_pciDomainID(0)
     @pciDomainID.setter
     def pciDomainID(self, int value):
@@ -1704,6 +1791,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].pciBusID = value
     @property
     def pciBusID(self):
+        """PCI Bus ID."""
         return self.get_pciBusID(0)
     @pciBusID.setter
     def pciBusID(self, int value):
@@ -1719,6 +1807,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].pciDeviceID = value
     @property
     def pciDeviceID(self):
+        """PCI Device ID."""
         return self.get_pciDeviceID(0)
     @pciDeviceID.setter
     def pciDeviceID(self, int value):
@@ -1734,6 +1823,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].maxSharedMemoryPerMultiProcessor = value
     @property
     def maxSharedMemoryPerMultiProcessor(self):
+        """Maximum Shared Memory Per Multiprocessor."""
         return self.get_maxSharedMemoryPerMultiProcessor(0)
     @maxSharedMemoryPerMultiProcessor.setter
     def maxSharedMemoryPerMultiProcessor(self, unsigned long value):
@@ -1749,6 +1839,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].isMultiGpuBoard = value
     @property
     def isMultiGpuBoard(self):
+        """1 if device is on a multi-GPU board, 0 if not."""
         return self.get_isMultiGpuBoard(0)
     @isMultiGpuBoard.setter
     def isMultiGpuBoard(self, int value):
@@ -1764,6 +1855,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].canMapHostMemory = value
     @property
     def canMapHostMemory(self):
+        """Check whether HIP can map host memory"""
         return self.get_canMapHostMemory(0)
     @canMapHostMemory.setter
     def canMapHostMemory(self, int value):
@@ -1779,6 +1871,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].gcnArch = value
     @property
     def gcnArch(self):
+        """DEPRECATED: use gcnArchName instead"""
         return self.get_gcnArch(0)
     @gcnArch.setter
     def gcnArch(self, int value):
@@ -1795,6 +1888,7 @@ cdef class hipDeviceProp_t:
     #    self._ptr[i].gcnArchName = value
     @property
     def gcnArchName(self):
+        """AMD GCN Arch Name."""
         return self.get_gcnArchName(0)
     # TODO add setters
     #@gcnArchName.setter
@@ -1811,6 +1905,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].integrated = value
     @property
     def integrated(self):
+        """APU vs dGPU"""
         return self.get_integrated(0)
     @integrated.setter
     def integrated(self, int value):
@@ -1826,6 +1921,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].cooperativeLaunch = value
     @property
     def cooperativeLaunch(self):
+        """HIP device supports cooperative launch"""
         return self.get_cooperativeLaunch(0)
     @cooperativeLaunch.setter
     def cooperativeLaunch(self, int value):
@@ -1841,6 +1937,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].cooperativeMultiDeviceLaunch = value
     @property
     def cooperativeMultiDeviceLaunch(self):
+        """HIP device supports cooperative launch on multiple devices"""
         return self.get_cooperativeMultiDeviceLaunch(0)
     @cooperativeMultiDeviceLaunch.setter
     def cooperativeMultiDeviceLaunch(self, int value):
@@ -1856,6 +1953,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].maxTexture1DLinear = value
     @property
     def maxTexture1DLinear(self):
+        """Maximum size for 1D textures bound to linear memory"""
         return self.get_maxTexture1DLinear(0)
     @maxTexture1DLinear.setter
     def maxTexture1DLinear(self, int value):
@@ -1871,6 +1969,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].maxTexture1D = value
     @property
     def maxTexture1D(self):
+        """Maximum number of elements in 1D images"""
         return self.get_maxTexture1D(0)
     @maxTexture1D.setter
     def maxTexture1D(self, int value):
@@ -1887,6 +1986,7 @@ cdef class hipDeviceProp_t:
     #    self._ptr[i].maxTexture2D = value
     @property
     def maxTexture2D(self):
+        """Maximum dimensions (width, height) of 2D images, in image elements"""
         return self.get_maxTexture2D(0)
     # TODO add setters
     #@maxTexture2D.setter
@@ -1904,6 +2004,7 @@ cdef class hipDeviceProp_t:
     #    self._ptr[i].maxTexture3D = value
     @property
     def maxTexture3D(self):
+        """Maximum dimensions (width, height, depth) of 3D images, in image elements"""
         return self.get_maxTexture3D(0)
     # TODO add setters
     #@maxTexture3D.setter
@@ -1924,7 +2025,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].hdpMemFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.ListOfUnsigned.from_pyobj(value)))
     @property
     def hdpMemFlushCntl(self):
-        """
+        """Addres of HDP_MEM_COHERENCY_FLUSH_CNTL register
         Note:
             Setting this hdpMemFlushCntl can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -1948,7 +2049,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].hdpRegFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.ListOfUnsigned.from_pyobj(value)))
     @property
     def hdpRegFlushCntl(self):
-        """
+        """Addres of HDP_REG_COHERENCY_FLUSH_CNTL register
         Note:
             Setting this hdpRegFlushCntl can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -1968,6 +2069,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].memPitch = value
     @property
     def memPitch(self):
+        """Maximum pitch in bytes allowed by memory copies"""
         return self.get_memPitch(0)
     @memPitch.setter
     def memPitch(self, unsigned long value):
@@ -1983,6 +2085,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].textureAlignment = value
     @property
     def textureAlignment(self):
+        """Alignment requirement for textures"""
         return self.get_textureAlignment(0)
     @textureAlignment.setter
     def textureAlignment(self, unsigned long value):
@@ -1998,6 +2101,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].texturePitchAlignment = value
     @property
     def texturePitchAlignment(self):
+        """Pitch alignment requirement for texture references bound to pitched memory"""
         return self.get_texturePitchAlignment(0)
     @texturePitchAlignment.setter
     def texturePitchAlignment(self, unsigned long value):
@@ -2013,6 +2117,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].kernelExecTimeoutEnabled = value
     @property
     def kernelExecTimeoutEnabled(self):
+        """Run time limit for kernels executed on the device"""
         return self.get_kernelExecTimeoutEnabled(0)
     @kernelExecTimeoutEnabled.setter
     def kernelExecTimeoutEnabled(self, int value):
@@ -2028,6 +2133,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].ECCEnabled = value
     @property
     def ECCEnabled(self):
+        """Device has ECC support enabled"""
         return self.get_ECCEnabled(0)
     @ECCEnabled.setter
     def ECCEnabled(self, int value):
@@ -2043,6 +2149,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].tccDriver = value
     @property
     def tccDriver(self):
+        """1:If device is Tesla device using TCC driver, else 0"""
         return self.get_tccDriver(0)
     @tccDriver.setter
     def tccDriver(self, int value):
@@ -2058,6 +2165,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].cooperativeMultiDeviceUnmatchedFunc = value
     @property
     def cooperativeMultiDeviceUnmatchedFunc(self):
+        """HIP device supports cooperative launch on multiple"""
         return self.get_cooperativeMultiDeviceUnmatchedFunc(0)
     @cooperativeMultiDeviceUnmatchedFunc.setter
     def cooperativeMultiDeviceUnmatchedFunc(self, int value):
@@ -2073,6 +2181,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].cooperativeMultiDeviceUnmatchedGridDim = value
     @property
     def cooperativeMultiDeviceUnmatchedGridDim(self):
+        """HIP device supports cooperative launch on multiple"""
         return self.get_cooperativeMultiDeviceUnmatchedGridDim(0)
     @cooperativeMultiDeviceUnmatchedGridDim.setter
     def cooperativeMultiDeviceUnmatchedGridDim(self, int value):
@@ -2088,6 +2197,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].cooperativeMultiDeviceUnmatchedBlockDim = value
     @property
     def cooperativeMultiDeviceUnmatchedBlockDim(self):
+        """HIP device supports cooperative launch on multiple"""
         return self.get_cooperativeMultiDeviceUnmatchedBlockDim(0)
     @cooperativeMultiDeviceUnmatchedBlockDim.setter
     def cooperativeMultiDeviceUnmatchedBlockDim(self, int value):
@@ -2103,6 +2213,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].cooperativeMultiDeviceUnmatchedSharedMem = value
     @property
     def cooperativeMultiDeviceUnmatchedSharedMem(self):
+        """HIP device supports cooperative launch on multiple"""
         return self.get_cooperativeMultiDeviceUnmatchedSharedMem(0)
     @cooperativeMultiDeviceUnmatchedSharedMem.setter
     def cooperativeMultiDeviceUnmatchedSharedMem(self, int value):
@@ -2118,6 +2229,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].isLargeBar = value
     @property
     def isLargeBar(self):
+        """1: if it is a large PCI bar device, else 0"""
         return self.get_isLargeBar(0)
     @isLargeBar.setter
     def isLargeBar(self, int value):
@@ -2133,6 +2245,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].asicRevision = value
     @property
     def asicRevision(self):
+        """Revision of the GPU in this device"""
         return self.get_asicRevision(0)
     @asicRevision.setter
     def asicRevision(self, int value):
@@ -2148,6 +2261,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].managedMemory = value
     @property
     def managedMemory(self):
+        """Device supports allocating managed memory on this system"""
         return self.get_managedMemory(0)
     @managedMemory.setter
     def managedMemory(self, int value):
@@ -2163,6 +2277,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].directManagedMemAccessFromHost = value
     @property
     def directManagedMemAccessFromHost(self):
+        """Host can directly access managed memory on the device without migration"""
         return self.get_directManagedMemAccessFromHost(0)
     @directManagedMemAccessFromHost.setter
     def directManagedMemAccessFromHost(self, int value):
@@ -2178,6 +2293,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].concurrentManagedAccess = value
     @property
     def concurrentManagedAccess(self):
+        """Device can coherently access managed memory concurrently with the CPU"""
         return self.get_concurrentManagedAccess(0)
     @concurrentManagedAccess.setter
     def concurrentManagedAccess(self, int value):
@@ -2193,6 +2309,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].pageableMemoryAccess = value
     @property
     def pageableMemoryAccess(self):
+        """Device supports coherently accessing pageable memory without calling hipHostRegister on it"""
         return self.get_pageableMemoryAccess(0)
     @pageableMemoryAccess.setter
     def pageableMemoryAccess(self, int value):
@@ -2208,6 +2325,7 @@ cdef class hipDeviceProp_t:
         self._ptr[i].pageableMemoryAccessUsesHostPageTables = value
     @property
     def pageableMemoryAccessUsesHostPageTables(self):
+        """Device accesses pageable memory via the host's page tables"""
         return self.get_pageableMemoryAccessUsesHostPageTables(0)
     @pageableMemoryAccessUsesHostPageTables.setter
     def pageableMemoryAccessUsesHostPageTables(self, int value):
@@ -2235,6 +2353,20 @@ class _hipMemoryType__Base(enum.IntEnum):
     """
     pass
 class hipMemoryType(_hipMemoryType__Base):
+    """Memory type (for pointer attributes)
+
+    Attributes:
+        hipMemoryTypeHost:
+            Memory is physically located on host
+        hipMemoryTypeDevice:
+            Memory is physically located on device. (see deviceId for specific device)
+        hipMemoryTypeArray:
+            Array memory, physically located on device. (see deviceId for specific device)
+        hipMemoryTypeUnified:
+            Not used currently
+        hipMemoryTypeManaged:
+            Managed memory, automaticallly managed by the unified memory system
+    """
     hipMemoryTypeHost = chip.hipMemoryTypeHost
     hipMemoryTypeDevice = chip.hipMemoryTypeDevice
     hipMemoryTypeArray = chip.hipMemoryTypeArray
@@ -2247,7 +2379,7 @@ class hipMemoryType(_hipMemoryType__Base):
 
 
 cdef class hipPointerAttribute_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipPointerAttribute_t.
     
     Python wrapper for C type chip.hipPointerAttribute_t.
 
@@ -2370,7 +2502,6 @@ cdef class hipPointerAttribute_t:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipPointerAttribute_t new():
@@ -2389,9 +2520,19 @@ cdef class hipPointerAttribute_t:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipPointerAttribute_t.
 
+        Constructor for type hipPointerAttribute_t.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipPointerAttribute_t.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -2431,6 +2572,7 @@ cdef class hipPointerAttribute_t:
         self._ptr[i].memoryType = value.value
     @property
     def memoryType(self):
+        """(undocumented)"""
         return self.get_memoryType(0)
     @memoryType.setter
     def memoryType(self, value):
@@ -2446,6 +2588,7 @@ cdef class hipPointerAttribute_t:
         self._ptr[i].device = value
     @property
     def device(self):
+        """(undocumented)"""
         return self.get_device(0)
     @device.setter
     def device(self, int value):
@@ -2465,7 +2608,7 @@ cdef class hipPointerAttribute_t:
         self._ptr[i].devicePointer = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devicePointer(self):
-        """
+        """(undocumented)
         Note:
             Setting this devicePointer can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -2489,7 +2632,7 @@ cdef class hipPointerAttribute_t:
         self._ptr[i].hostPointer = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def hostPointer(self):
-        """
+        """(undocumented)
         Note:
             Setting this hostPointer can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -2509,6 +2652,7 @@ cdef class hipPointerAttribute_t:
         self._ptr[i].isManaged = value
     @property
     def isManaged(self):
+        """(undocumented)"""
         return self.get_isManaged(0)
     @isManaged.setter
     def isManaged(self, int value):
@@ -2524,6 +2668,7 @@ cdef class hipPointerAttribute_t:
         self._ptr[i].allocationFlags = value
     @property
     def allocationFlags(self):
+        """(undocumented)"""
         return self.get_allocationFlags(0)
     @allocationFlags.setter
     def allocationFlags(self, unsigned int value):
@@ -2551,6 +2696,166 @@ class _hipError_t__Base(enum.IntEnum):
     """
     pass
 class hipError_t(_hipError_t__Base):
+    """hipError_t
+
+    Attributes:
+        hipSuccess:
+            Successful completion.
+        hipErrorInvalidValue:
+            One or more of the parameters passed to the API call is NULL or not in an acceptable range.
+        hipErrorOutOfMemory:
+            (undocumented)
+        hipErrorMemoryAllocation:
+            Memory allocation error.
+        hipErrorNotInitialized:
+            (undocumented)
+        hipErrorInitializationError:
+            (undocumented)
+        hipErrorDeinitialized:
+            (undocumented)
+        hipErrorProfilerDisabled:
+            (undocumented)
+        hipErrorProfilerNotInitialized:
+            (undocumented)
+        hipErrorProfilerAlreadyStarted:
+            (undocumented)
+        hipErrorProfilerAlreadyStopped:
+            (undocumented)
+        hipErrorInvalidConfiguration:
+            (undocumented)
+        hipErrorInvalidPitchValue:
+            (undocumented)
+        hipErrorInvalidSymbol:
+            (undocumented)
+        hipErrorInvalidDevicePointer:
+            Invalid Device Pointer
+        hipErrorInvalidMemcpyDirection:
+            Invalid memory copy direction
+        hipErrorInsufficientDriver:
+            (undocumented)
+        hipErrorMissingConfiguration:
+            (undocumented)
+        hipErrorPriorLaunchFailure:
+            (undocumented)
+        hipErrorInvalidDeviceFunction:
+            (undocumented)
+        hipErrorNoDevice:
+            Call to hipGetDeviceCount returned 0 devices
+        hipErrorInvalidDevice:
+            DeviceID must be in range 0...#compute-devices.
+        hipErrorInvalidImage:
+            (undocumented)
+        hipErrorInvalidContext:
+            Produced when input context is invalid.
+        hipErrorContextAlreadyCurrent:
+            (undocumented)
+        hipErrorMapFailed:
+            (undocumented)
+        hipErrorMapBufferObjectFailed:
+            Produced when the IPC memory attach failed from ROCr.
+        hipErrorUnmapFailed:
+            (undocumented)
+        hipErrorArrayIsMapped:
+            (undocumented)
+        hipErrorAlreadyMapped:
+            (undocumented)
+        hipErrorNoBinaryForGpu:
+            (undocumented)
+        hipErrorAlreadyAcquired:
+            (undocumented)
+        hipErrorNotMapped:
+            (undocumented)
+        hipErrorNotMappedAsArray:
+            (undocumented)
+        hipErrorNotMappedAsPointer:
+            (undocumented)
+        hipErrorECCNotCorrectable:
+            (undocumented)
+        hipErrorUnsupportedLimit:
+            (undocumented)
+        hipErrorContextAlreadyInUse:
+            (undocumented)
+        hipErrorPeerAccessUnsupported:
+            (undocumented)
+        hipErrorInvalidKernelFile:
+            In CUDA DRV, it is CUDA_ERROR_INVALID_PTX
+        hipErrorInvalidGraphicsContext:
+            (undocumented)
+        hipErrorInvalidSource:
+            (undocumented)
+        hipErrorFileNotFound:
+            (undocumented)
+        hipErrorSharedObjectSymbolNotFound:
+            (undocumented)
+        hipErrorSharedObjectInitFailed:
+            (undocumented)
+        hipErrorOperatingSystem:
+            (undocumented)
+        hipErrorInvalidHandle:
+            (undocumented)
+        hipErrorInvalidResourceHandle:
+            Resource handle (hipEvent_t or hipStream_t) invalid.
+        hipErrorIllegalState:
+            Resource required is not in a valid state to perform operation.
+        hipErrorNotFound:
+            (undocumented)
+        hipErrorNotReady:
+            Indicates that asynchronous operations enqueued earlier are not ready. This is not actually an error, but is used to distinguish from hipSuccess (which indicates completion). APIs that return this error include hipEventQuery and hipStreamQuery.
+        hipErrorIllegalAddress:
+            (undocumented)
+        hipErrorLaunchOutOfResources:
+            Out of resources error.
+        hipErrorLaunchTimeOut:
+            (undocumented)
+        hipErrorPeerAccessAlreadyEnabled:
+            (undocumented)
+        hipErrorPeerAccessNotEnabled:
+            (undocumented)
+        hipErrorSetOnActiveProcess:
+            (undocumented)
+        hipErrorContextIsDestroyed:
+            (undocumented)
+        hipErrorAssert:
+            Produced when the kernel calls assert.
+        hipErrorHostMemoryAlreadyRegistered:
+            (undocumented)
+        hipErrorHostMemoryNotRegistered:
+            (undocumented)
+        hipErrorLaunchFailure:
+            (undocumented)
+        hipErrorCooperativeLaunchTooLarge:
+            (undocumented)
+        hipErrorNotSupported:
+            Produced when the hip API is not supported/implemented
+        hipErrorStreamCaptureUnsupported:
+            The operation is not permitted when the stream is capturing.
+        hipErrorStreamCaptureInvalidated:
+            The current capture sequence on the stream has been invalidated due to a previous error.
+        hipErrorStreamCaptureMerge:
+            The operation would have resulted in a merge of two independent capture sequences.
+        hipErrorStreamCaptureUnmatched:
+            The capture was not initiated in this stream.
+        hipErrorStreamCaptureUnjoined:
+            The capture sequence contains a fork that was not joined to the primary stream.
+        hipErrorStreamCaptureIsolation:
+            A dependency would have been created which crosses the capture sequence boundary. Only implicit in-stream ordering dependencies are allowed to cross the boundary
+        hipErrorStreamCaptureImplicit:
+            The operation would have resulted in a disallowed implicit dependency on a current capture sequence from hipStreamLegacy.
+        hipErrorCapturedEvent:
+            The operation is not permitted on an event which was last recorded in a capturing stream.
+        hipErrorStreamCaptureWrongThread:
+            A stream capture sequence not initiated with the hipStreamCaptureModeRelaxed argument to hipStreamBeginCapture was passed to hipStreamEndCapture in a different thread.
+        hipErrorGraphExecUpdateFailure:
+            This error indicates that the graph update not performed because it included changes which violated constraintsspecific to instantiated graph update.
+        hipErrorUnknown:
+            (undocumented)
+        hipErrorRuntimeMemory:
+            HSA runtime memory call returned error. Typically not seen in production systems.
+        hipErrorRuntimeOther:
+            HSA runtime call other than memory returned error. Typically not seen in production systems.
+        hipErrorTbd:
+            Marker that more error codes are needed.
+    """
     hipSuccess = chip.hipSuccess
     hipErrorInvalidValue = chip.hipErrorInvalidValue
     hipErrorOutOfMemory = chip.hipErrorOutOfMemory
@@ -2640,6 +2945,236 @@ class _hipDeviceAttribute_t__Base(enum.IntEnum):
     """
     pass
 class hipDeviceAttribute_t(_hipDeviceAttribute_t__Base):
+    """hipDeviceAttribute_t
+
+    Attributes:
+        hipDeviceAttributeCudaCompatibleBegin:
+            (undocumented)
+        hipDeviceAttributeEccEnabled:
+            Whether ECC support is enabled.
+        hipDeviceAttributeAccessPolicyMaxWindowSize:
+            Cuda only. The maximum size of the window policy in bytes.
+        hipDeviceAttributeAsyncEngineCount:
+            Cuda only. Asynchronous engines number.
+        hipDeviceAttributeCanMapHostMemory:
+            Whether host memory can be mapped into device address space
+        hipDeviceAttributeCanUseHostPointerForRegisteredMem:
+            Cuda only. Device can access host registered memory at the same virtual address as the CPU
+        hipDeviceAttributeClockRate:
+            Peak clock frequency in kilohertz.
+        hipDeviceAttributeComputeMode:
+            Compute mode that device is currently in.
+        hipDeviceAttributeComputePreemptionSupported:
+            Cuda only. Device supports Compute Preemption.
+        hipDeviceAttributeConcurrentKernels:
+            Device can possibly execute multiple kernels concurrently.
+        hipDeviceAttributeConcurrentManagedAccess:
+            Device can coherently access managed memory concurrently with the CPU
+        hipDeviceAttributeCooperativeLaunch:
+            Support cooperative launch
+        hipDeviceAttributeCooperativeMultiDeviceLaunch:
+            Support cooperative launch on multiple devices
+        hipDeviceAttributeDeviceOverlap:
+            Cuda only. Device can concurrently copy memory and execute a kernel. Deprecated. Use instead asyncEngineCount.
+        hipDeviceAttributeDirectManagedMemAccessFromHost:
+            Host can directly access managed memory on the device without migration
+        hipDeviceAttributeGlobalL1CacheSupported:
+            Cuda only. Device supports caching globals in L1
+        hipDeviceAttributeHostNativeAtomicSupported:
+            Cuda only. Link between the device and the host supports native atomic operations
+        hipDeviceAttributeIntegrated:
+            Device is integrated GPU
+        hipDeviceAttributeIsMultiGpuBoard:
+            Multiple GPU devices.
+        hipDeviceAttributeKernelExecTimeout:
+            Run time limit for kernels executed on the device
+        hipDeviceAttributeL2CacheSize:
+            Size of L2 cache in bytes. 0 if the device doesn't have L2 cache.
+        hipDeviceAttributeLocalL1CacheSupported:
+            caching locals in L1 is supported
+        hipDeviceAttributeLuid:
+            Cuda only. 8-byte locally unique identifier in 8 bytes. Undefined on TCC and non-Windows platforms
+        hipDeviceAttributeLuidDeviceNodeMask:
+            Cuda only. Luid device node mask. Undefined on TCC and non-Windows platforms
+        hipDeviceAttributeComputeCapabilityMajor:
+            Major compute capability version number.
+        hipDeviceAttributeManagedMemory:
+            Device supports allocating managed memory on this system
+        hipDeviceAttributeMaxBlocksPerMultiProcessor:
+            Cuda only. Max block size per multiprocessor
+        hipDeviceAttributeMaxBlockDimX:
+            Max block size in width.
+        hipDeviceAttributeMaxBlockDimY:
+            Max block size in height.
+        hipDeviceAttributeMaxBlockDimZ:
+            Max block size in depth.
+        hipDeviceAttributeMaxGridDimX:
+            Max grid size in width.
+        hipDeviceAttributeMaxGridDimY:
+            Max grid size in height.
+        hipDeviceAttributeMaxGridDimZ:
+            Max grid size in depth.
+        hipDeviceAttributeMaxSurface1D:
+            Maximum size of 1D surface.
+        hipDeviceAttributeMaxSurface1DLayered:
+            Cuda only. Maximum dimensions of 1D layered surface.
+        hipDeviceAttributeMaxSurface2D:
+            Maximum dimension (width, height) of 2D surface.
+        hipDeviceAttributeMaxSurface2DLayered:
+            Cuda only. Maximum dimensions of 2D layered surface.
+        hipDeviceAttributeMaxSurface3D:
+            Maximum dimension (width, height, depth) of 3D surface.
+        hipDeviceAttributeMaxSurfaceCubemap:
+            Cuda only. Maximum dimensions of Cubemap surface.
+        hipDeviceAttributeMaxSurfaceCubemapLayered:
+            Cuda only. Maximum dimension of Cubemap layered surface.
+        hipDeviceAttributeMaxTexture1DWidth:
+            Maximum size of 1D texture.
+        hipDeviceAttributeMaxTexture1DLayered:
+            Cuda only. Maximum dimensions of 1D layered texture.
+        hipDeviceAttributeMaxTexture1DLinear:
+            Maximum number of elements allocatable in a 1D linear texture. Use cudaDeviceGetTexture1DLinearMaxWidth() instead on Cuda.
+        hipDeviceAttributeMaxTexture1DMipmap:
+            Cuda only. Maximum size of 1D mipmapped texture.
+        hipDeviceAttributeMaxTexture2DWidth:
+            Maximum dimension width of 2D texture.
+        hipDeviceAttributeMaxTexture2DHeight:
+            Maximum dimension hight of 2D texture.
+        hipDeviceAttributeMaxTexture2DGather:
+            Cuda only. Maximum dimensions of 2D texture if gather operations performed.
+        hipDeviceAttributeMaxTexture2DLayered:
+            Cuda only. Maximum dimensions of 2D layered texture.
+        hipDeviceAttributeMaxTexture2DLinear:
+            Cuda only. Maximum dimensions (width, height, pitch) of 2D textures bound to pitched memory.
+        hipDeviceAttributeMaxTexture2DMipmap:
+            Cuda only. Maximum dimensions of 2D mipmapped texture.
+        hipDeviceAttributeMaxTexture3DWidth:
+            Maximum dimension width of 3D texture.
+        hipDeviceAttributeMaxTexture3DHeight:
+            Maximum dimension height of 3D texture.
+        hipDeviceAttributeMaxTexture3DDepth:
+            Maximum dimension depth of 3D texture.
+        hipDeviceAttributeMaxTexture3DAlt:
+            Cuda only. Maximum dimensions of alternate 3D texture.
+        hipDeviceAttributeMaxTextureCubemap:
+            Cuda only. Maximum dimensions of Cubemap texture
+        hipDeviceAttributeMaxTextureCubemapLayered:
+            Cuda only. Maximum dimensions of Cubemap layered texture.
+        hipDeviceAttributeMaxThreadsDim:
+            Maximum dimension of a block
+        hipDeviceAttributeMaxThreadsPerBlock:
+            Maximum number of threads per block.
+        hipDeviceAttributeMaxThreadsPerMultiProcessor:
+            Maximum resident threads per multiprocessor.
+        hipDeviceAttributeMaxPitch:
+            Maximum pitch in bytes allowed by memory copies
+        hipDeviceAttributeMemoryBusWidth:
+            Global memory bus width in bits.
+        hipDeviceAttributeMemoryClockRate:
+            Peak memory clock frequency in kilohertz.
+        hipDeviceAttributeComputeCapabilityMinor:
+            Minor compute capability version number.
+        hipDeviceAttributeMultiGpuBoardGroupID:
+            Cuda only. Unique ID of device group on the same multi-GPU board
+        hipDeviceAttributeMultiprocessorCount:
+            Number of multiprocessors on the device.
+        hipDeviceAttributeName:
+            Device name.
+        hipDeviceAttributePageableMemoryAccess:
+            Device supports coherently accessing pageable memory without calling hipHostRegister on it
+        hipDeviceAttributePageableMemoryAccessUsesHostPageTables:
+            Device accesses pageable memory via the host's page tables
+        hipDeviceAttributePciBusId:
+            PCI Bus ID.
+        hipDeviceAttributePciDeviceId:
+            PCI Device ID.
+        hipDeviceAttributePciDomainID:
+            PCI Domain ID.
+        hipDeviceAttributePersistingL2CacheMaxSize:
+            Cuda11 only. Maximum l2 persisting lines capacity in bytes
+        hipDeviceAttributeMaxRegistersPerBlock:
+            32-bit registers available to a thread block. This number is shared by all thread blocks simultaneously resident on a multiprocessor.
+        hipDeviceAttributeMaxRegistersPerMultiprocessor:
+            32-bit registers available per block.
+        hipDeviceAttributeReservedSharedMemPerBlock:
+            Cuda11 only. Shared memory reserved by CUDA driver per block.
+        hipDeviceAttributeMaxSharedMemoryPerBlock:
+            Maximum shared memory available per block in bytes.
+        hipDeviceAttributeSharedMemPerBlockOptin:
+            Cuda only. Maximum shared memory per block usable by special opt in.
+        hipDeviceAttributeSharedMemPerMultiprocessor:
+            Cuda only. Shared memory available per multiprocessor.
+        hipDeviceAttributeSingleToDoublePrecisionPerfRatio:
+            Cuda only. Performance ratio of single precision to double precision.
+        hipDeviceAttributeStreamPrioritiesSupported:
+            Cuda only. Whether to support stream priorities.
+        hipDeviceAttributeSurfaceAlignment:
+            Cuda only. Alignment requirement for surfaces
+        hipDeviceAttributeTccDriver:
+            Cuda only. Whether device is a Tesla device using TCC driver
+        hipDeviceAttributeTextureAlignment:
+            Alignment requirement for textures
+        hipDeviceAttributeTexturePitchAlignment:
+            Pitch alignment requirement for 2D texture references bound to pitched memory;
+        hipDeviceAttributeTotalConstantMemory:
+            Constant memory size in bytes.
+        hipDeviceAttributeTotalGlobalMem:
+            Global memory available on devicice.
+        hipDeviceAttributeUnifiedAddressing:
+            Cuda only. An unified address space shared with the host.
+        hipDeviceAttributeUuid:
+            Cuda only. Unique ID in 16 byte.
+        hipDeviceAttributeWarpSize:
+            Warp size in threads.
+        hipDeviceAttributeMemoryPoolsSupported:
+            Device supports HIP Stream Ordered Memory Allocator
+        hipDeviceAttributeVirtualMemoryManagementSupported:
+            Device supports HIP virtual memory management
+        hipDeviceAttributeCudaCompatibleEnd:
+            (undocumented)
+        hipDeviceAttributeAmdSpecificBegin:
+            (undocumented)
+        hipDeviceAttributeClockInstructionRate:
+            Frequency in khz of the timer used by the device-side "clock*"
+        hipDeviceAttributeArch:
+            Device architecture
+        hipDeviceAttributeMaxSharedMemoryPerMultiprocessor:
+            Maximum Shared Memory PerMultiprocessor.
+        hipDeviceAttributeGcnArch:
+            Device gcn architecture
+        hipDeviceAttributeGcnArchName:
+            Device gcnArch name in 256 bytes
+        hipDeviceAttributeHdpMemFlushCntl:
+            Address of the HDP_MEM_COHERENCY_FLUSH_CNTL register
+        hipDeviceAttributeHdpRegFlushCntl:
+            Address of the HDP_REG_COHERENCY_FLUSH_CNTL register
+        hipDeviceAttributeCooperativeMultiDeviceUnmatchedFunc:
+            Supports cooperative launch on multiple devices with unmatched functions
+        hipDeviceAttributeCooperativeMultiDeviceUnmatchedGridDim:
+            Supports cooperative launch on multiple devices with unmatched grid dimensions
+        hipDeviceAttributeCooperativeMultiDeviceUnmatchedBlockDim:
+            Supports cooperative launch on multiple devices with unmatched block dimensions
+        hipDeviceAttributeCooperativeMultiDeviceUnmatchedSharedMem:
+            Supports cooperative launch on multiple devices with unmatched shared memories
+        hipDeviceAttributeIsLargeBar:
+            Whether it is LargeBar
+        hipDeviceAttributeAsicRevision:
+            Revision of the GPU in this device
+        hipDeviceAttributeCanUseStreamWaitValue:
+            '1' if Device supports hipStreamWaitValue32() and hipStreamWaitValue64(), '0' otherwise.
+        hipDeviceAttributeImageSupport:
+            '1' if Device supports image, '0' otherwise.
+        hipDeviceAttributePhysicalMultiProcessorCount:
+            All available physical compute units for the device
+        hipDeviceAttributeFineGrainSupport:
+            '1' if Device supports fine grain, '0' otherwise
+        hipDeviceAttributeWallClockRate:
+            Constant frequency of wall clock in kilohertz.
+        hipDeviceAttributeAmdSpecificEnd:
+            (undocumented)
+        hipDeviceAttributeVendorSpecificBegin:
+            (undocumented)
+    """
     hipDeviceAttributeCudaCompatibleBegin = chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = chip.hipDeviceAttributeEccEnabled
     hipDeviceAttributeAccessPolicyMaxWindowSize = chip.hipDeviceAttributeAccessPolicyMaxWindowSize
@@ -2764,6 +3299,18 @@ class _hipComputeMode__Base(enum.IntEnum):
     """
     pass
 class hipComputeMode(_hipComputeMode__Base):
+    """hipComputeMode
+
+    Attributes:
+        hipComputeModeDefault:
+            (undocumented)
+        hipComputeModeExclusive:
+            (undocumented)
+        hipComputeModeProhibited:
+            (undocumented)
+        hipComputeModeExclusiveProcess:
+            (undocumented)
+    """
     hipComputeModeDefault = chip.hipComputeModeDefault
     hipComputeModeExclusive = chip.hipComputeModeExclusive
     hipComputeModeProhibited = chip.hipComputeModeProhibited
@@ -2779,6 +3326,18 @@ class _hipChannelFormatKind__Base(enum.IntEnum):
     """
     pass
 class hipChannelFormatKind(_hipChannelFormatKind__Base):
+    """hipChannelFormatKind
+
+    Attributes:
+        hipChannelFormatKindSigned:
+            (undocumented)
+        hipChannelFormatKindUnsigned:
+            (undocumented)
+        hipChannelFormatKindFloat:
+            (undocumented)
+        hipChannelFormatKindNone:
+            (undocumented)
+    """
     hipChannelFormatKindSigned = chip.hipChannelFormatKindSigned
     hipChannelFormatKindUnsigned = chip.hipChannelFormatKindUnsigned
     hipChannelFormatKindFloat = chip.hipChannelFormatKindFloat
@@ -2790,7 +3349,7 @@ class hipChannelFormatKind(_hipChannelFormatKind__Base):
 
 
 cdef class hipChannelFormatDesc:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipChannelFormatDesc.
     
     Python wrapper for C type chip.hipChannelFormatDesc.
 
@@ -2913,7 +3472,6 @@ cdef class hipChannelFormatDesc:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipChannelFormatDesc new():
@@ -2932,9 +3490,19 @@ cdef class hipChannelFormatDesc:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipChannelFormatDesc.
 
+        Constructor for type hipChannelFormatDesc.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipChannelFormatDesc.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -2972,6 +3540,7 @@ cdef class hipChannelFormatDesc:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, int value):
@@ -2987,6 +3556,7 @@ cdef class hipChannelFormatDesc:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, int value):
@@ -3002,6 +3572,7 @@ cdef class hipChannelFormatDesc:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, int value):
@@ -3017,6 +3588,7 @@ cdef class hipChannelFormatDesc:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, int value):
@@ -3034,6 +3606,7 @@ cdef class hipChannelFormatDesc:
         self._ptr[i].f = value.value
     @property
     def f(self):
+        """(undocumented)"""
         return self.get_f(0)
     @f.setter
     def f(self, value):
@@ -3061,6 +3634,26 @@ class _hipArray_Format__Base(enum.IntEnum):
     """
     pass
 class hipArray_Format(_hipArray_Format__Base):
+    """hipArray_Format
+
+    Attributes:
+        HIP_AD_FORMAT_UNSIGNED_INT8:
+            (undocumented)
+        HIP_AD_FORMAT_UNSIGNED_INT16:
+            (undocumented)
+        HIP_AD_FORMAT_UNSIGNED_INT32:
+            (undocumented)
+        HIP_AD_FORMAT_SIGNED_INT8:
+            (undocumented)
+        HIP_AD_FORMAT_SIGNED_INT16:
+            (undocumented)
+        HIP_AD_FORMAT_SIGNED_INT32:
+            (undocumented)
+        HIP_AD_FORMAT_HALF:
+            (undocumented)
+        HIP_AD_FORMAT_FLOAT:
+            (undocumented)
+    """
     HIP_AD_FORMAT_UNSIGNED_INT8 = chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT16 = chip.HIP_AD_FORMAT_UNSIGNED_INT16
     HIP_AD_FORMAT_UNSIGNED_INT32 = chip.HIP_AD_FORMAT_UNSIGNED_INT32
@@ -3076,7 +3669,7 @@ class hipArray_Format(_hipArray_Format__Base):
 
 
 cdef class HIP_ARRAY_DESCRIPTOR:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_ARRAY_DESCRIPTOR.
     
     Python wrapper for C type chip.HIP_ARRAY_DESCRIPTOR.
 
@@ -3199,7 +3792,6 @@ cdef class HIP_ARRAY_DESCRIPTOR:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_ARRAY_DESCRIPTOR new():
@@ -3218,9 +3810,19 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type HIP_ARRAY_DESCRIPTOR.
 
+        Constructor for type HIP_ARRAY_DESCRIPTOR.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         HIP_ARRAY_DESCRIPTOR.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -3258,6 +3860,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         self._ptr[i].Width = value
     @property
     def Width(self):
+        """(undocumented)"""
         return self.get_Width(0)
     @Width.setter
     def Width(self, unsigned long value):
@@ -3273,6 +3876,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         self._ptr[i].Height = value
     @property
     def Height(self):
+        """(undocumented)"""
         return self.get_Height(0)
     @Height.setter
     def Height(self, unsigned long value):
@@ -3290,6 +3894,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         self._ptr[i].Format = value.value
     @property
     def Format(self):
+        """(undocumented)"""
         return self.get_Format(0)
     @Format.setter
     def Format(self, value):
@@ -3305,6 +3910,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         self._ptr[i].NumChannels = value
     @property
     def NumChannels(self):
+        """(undocumented)"""
         return self.get_NumChannels(0)
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
@@ -3328,7 +3934,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
 
 
 cdef class HIP_ARRAY3D_DESCRIPTOR:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_ARRAY3D_DESCRIPTOR.
     
     Python wrapper for C type chip.HIP_ARRAY3D_DESCRIPTOR.
 
@@ -3451,7 +4057,6 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_ARRAY3D_DESCRIPTOR new():
@@ -3470,9 +4075,19 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type HIP_ARRAY3D_DESCRIPTOR.
 
+        Constructor for type HIP_ARRAY3D_DESCRIPTOR.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         HIP_ARRAY3D_DESCRIPTOR.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -3510,6 +4125,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         self._ptr[i].Width = value
     @property
     def Width(self):
+        """(undocumented)"""
         return self.get_Width(0)
     @Width.setter
     def Width(self, unsigned long value):
@@ -3525,6 +4141,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         self._ptr[i].Height = value
     @property
     def Height(self):
+        """(undocumented)"""
         return self.get_Height(0)
     @Height.setter
     def Height(self, unsigned long value):
@@ -3540,6 +4157,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         self._ptr[i].Depth = value
     @property
     def Depth(self):
+        """(undocumented)"""
         return self.get_Depth(0)
     @Depth.setter
     def Depth(self, unsigned long value):
@@ -3557,6 +4175,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         self._ptr[i].Format = value.value
     @property
     def Format(self):
+        """(undocumented)"""
         return self.get_Format(0)
     @Format.setter
     def Format(self, value):
@@ -3572,6 +4191,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         self._ptr[i].NumChannels = value
     @property
     def NumChannels(self):
+        """(undocumented)"""
         return self.get_NumChannels(0)
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
@@ -3587,6 +4207,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         self._ptr[i].Flags = value
     @property
     def Flags(self):
+        """(undocumented)"""
         return self.get_Flags(0)
     @Flags.setter
     def Flags(self, unsigned int value):
@@ -3610,7 +4231,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
 
 
 cdef class hipArray:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipArray.
     
     Python wrapper for C type chip.hipArray.
 
@@ -3733,7 +4354,6 @@ cdef class hipArray:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipArray new():
@@ -3752,9 +4372,19 @@ cdef class hipArray:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipArray.
 
+        Constructor for type hipArray.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipArray.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -3796,7 +4426,7 @@ cdef class hipArray:
         self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def data(self):
-        """
+        """(undocumented)
         Note:
             Setting this data can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -3812,6 +4442,7 @@ cdef class hipArray:
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].desc)
     @property
     def desc(self):
+        """(undocumented)"""
         return self.get_desc(0)
 
     def get_type(self, i):
@@ -3824,6 +4455,7 @@ cdef class hipArray:
         self._ptr[i].type = value
     @property
     def type(self):
+        """(undocumented)"""
         return self.get_type(0)
     @type.setter
     def type(self, unsigned int value):
@@ -3839,6 +4471,7 @@ cdef class hipArray:
         self._ptr[i].width = value
     @property
     def width(self):
+        """(undocumented)"""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned int value):
@@ -3854,6 +4487,7 @@ cdef class hipArray:
         self._ptr[i].height = value
     @property
     def height(self):
+        """(undocumented)"""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned int value):
@@ -3869,6 +4503,7 @@ cdef class hipArray:
         self._ptr[i].depth = value
     @property
     def depth(self):
+        """(undocumented)"""
         return self.get_depth(0)
     @depth.setter
     def depth(self, unsigned int value):
@@ -3886,6 +4521,7 @@ cdef class hipArray:
         self._ptr[i].Format = value.value
     @property
     def Format(self):
+        """(undocumented)"""
         return self.get_Format(0)
     @Format.setter
     def Format(self, value):
@@ -3901,6 +4537,7 @@ cdef class hipArray:
         self._ptr[i].NumChannels = value
     @property
     def NumChannels(self):
+        """(undocumented)"""
         return self.get_NumChannels(0)
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
@@ -3916,6 +4553,7 @@ cdef class hipArray:
         self._ptr[i].isDrv = value
     @property
     def isDrv(self):
+        """(undocumented)"""
         return self.get_isDrv(0)
     @isDrv.setter
     def isDrv(self, _Bool value):
@@ -3931,6 +4569,7 @@ cdef class hipArray:
         self._ptr[i].textureType = value
     @property
     def textureType(self):
+        """(undocumented)"""
         return self.get_textureType(0)
     @textureType.setter
     def textureType(self, unsigned int value):
@@ -3954,7 +4593,7 @@ cdef class hipArray:
 
 
 cdef class hip_Memcpy2D:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hip_Memcpy2D.
     
     Python wrapper for C type chip.hip_Memcpy2D.
 
@@ -4077,7 +4716,6 @@ cdef class hip_Memcpy2D:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hip_Memcpy2D new():
@@ -4095,12 +4733,10 @@ cdef class hip_Memcpy2D:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hip_Memcpy2D))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hip_Memcpy2D.
 
-        Constructor for type hip_Memcpy2D
+        Constructor for type hip_Memcpy2D.
 
         Args:
             **kwargs: 
@@ -4140,6 +4776,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].srcXInBytes = value
     @property
     def srcXInBytes(self):
+        """(undocumented)"""
         return self.get_srcXInBytes(0)
     @srcXInBytes.setter
     def srcXInBytes(self, unsigned long value):
@@ -4155,6 +4792,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].srcY = value
     @property
     def srcY(self):
+        """(undocumented)"""
         return self.get_srcY(0)
     @srcY.setter
     def srcY(self, unsigned long value):
@@ -4172,6 +4810,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].srcMemoryType = value.value
     @property
     def srcMemoryType(self):
+        """(undocumented)"""
         return self.get_srcMemoryType(0)
     @srcMemoryType.setter
     def srcMemoryType(self, value):
@@ -4191,7 +4830,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def srcHost(self):
-        """
+        """(undocumented)
         Note:
             Setting this srcHost can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -4215,7 +4854,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def srcDevice(self):
-        """
+        """(undocumented)
         Note:
             Setting this srcDevice can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -4235,6 +4874,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].srcPitch = value
     @property
     def srcPitch(self):
+        """(undocumented)"""
         return self.get_srcPitch(0)
     @srcPitch.setter
     def srcPitch(self, unsigned long value):
@@ -4250,6 +4890,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].dstXInBytes = value
     @property
     def dstXInBytes(self):
+        """(undocumented)"""
         return self.get_dstXInBytes(0)
     @dstXInBytes.setter
     def dstXInBytes(self, unsigned long value):
@@ -4265,6 +4906,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].dstY = value
     @property
     def dstY(self):
+        """(undocumented)"""
         return self.get_dstY(0)
     @dstY.setter
     def dstY(self, unsigned long value):
@@ -4282,6 +4924,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].dstMemoryType = value.value
     @property
     def dstMemoryType(self):
+        """(undocumented)"""
         return self.get_dstMemoryType(0)
     @dstMemoryType.setter
     def dstMemoryType(self, value):
@@ -4301,7 +4944,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dstHost(self):
-        """
+        """(undocumented)
         Note:
             Setting this dstHost can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -4325,7 +4968,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dstDevice(self):
-        """
+        """(undocumented)
         Note:
             Setting this dstDevice can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -4345,6 +4988,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].dstPitch = value
     @property
     def dstPitch(self):
+        """(undocumented)"""
         return self.get_dstPitch(0)
     @dstPitch.setter
     def dstPitch(self, unsigned long value):
@@ -4360,6 +5004,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].WidthInBytes = value
     @property
     def WidthInBytes(self):
+        """(undocumented)"""
         return self.get_WidthInBytes(0)
     @WidthInBytes.setter
     def WidthInBytes(self, unsigned long value):
@@ -4375,6 +5020,7 @@ cdef class hip_Memcpy2D:
         self._ptr[i].Height = value
     @property
     def Height(self):
+        """(undocumented)"""
         return self.get_Height(0)
     @Height.setter
     def Height(self, unsigned long value):
@@ -4404,7 +5050,7 @@ hiparray = hipArray_t
 hipArray_const_t = hipArray
 
 cdef class hipMipmappedArray:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMipmappedArray.
     
     Python wrapper for C type chip.hipMipmappedArray.
 
@@ -4527,7 +5173,6 @@ cdef class hipMipmappedArray:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMipmappedArray new():
@@ -4546,9 +5191,19 @@ cdef class hipMipmappedArray:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipMipmappedArray.
 
+        Constructor for type hipMipmappedArray.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipMipmappedArray.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -4590,7 +5245,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def data(self):
-        """
+        """(undocumented)
         Note:
             Setting this data can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -4606,6 +5261,7 @@ cdef class hipMipmappedArray:
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].desc)
     @property
     def desc(self):
+        """(undocumented)"""
         return self.get_desc(0)
 
     def get_type(self, i):
@@ -4618,6 +5274,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].type = value
     @property
     def type(self):
+        """(undocumented)"""
         return self.get_type(0)
     @type.setter
     def type(self, unsigned int value):
@@ -4633,6 +5290,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].width = value
     @property
     def width(self):
+        """(undocumented)"""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned int value):
@@ -4648,6 +5306,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].height = value
     @property
     def height(self):
+        """(undocumented)"""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned int value):
@@ -4663,6 +5322,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].depth = value
     @property
     def depth(self):
+        """(undocumented)"""
         return self.get_depth(0)
     @depth.setter
     def depth(self, unsigned int value):
@@ -4678,6 +5338,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].min_mipmap_level = value
     @property
     def min_mipmap_level(self):
+        """(undocumented)"""
         return self.get_min_mipmap_level(0)
     @min_mipmap_level.setter
     def min_mipmap_level(self, unsigned int value):
@@ -4693,6 +5354,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].max_mipmap_level = value
     @property
     def max_mipmap_level(self):
+        """(undocumented)"""
         return self.get_max_mipmap_level(0)
     @max_mipmap_level.setter
     def max_mipmap_level(self, unsigned int value):
@@ -4708,6 +5370,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """(undocumented)"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -4725,6 +5388,7 @@ cdef class hipMipmappedArray:
         self._ptr[i].format = value.value
     @property
     def format(self):
+        """(undocumented)"""
         return self.get_format(0)
     @format.setter
     def format(self, value):
@@ -4756,6 +5420,18 @@ class _hipResourceType__Base(enum.IntEnum):
     """
     pass
 class hipResourceType(_hipResourceType__Base):
+    """hip resource types
+
+    Attributes:
+        hipResourceTypeArray:
+            (undocumented)
+        hipResourceTypeMipmappedArray:
+            (undocumented)
+        hipResourceTypeLinear:
+            (undocumented)
+        hipResourceTypePitch2D:
+            (undocumented)
+    """
     hipResourceTypeArray = chip.hipResourceTypeArray
     hipResourceTypeMipmappedArray = chip.hipResourceTypeMipmappedArray
     hipResourceTypeLinear = chip.hipResourceTypeLinear
@@ -4771,6 +5447,18 @@ class _HIPresourcetype_enum__Base(enum.IntEnum):
     """
     pass
 class HIPresourcetype_enum(_HIPresourcetype_enum__Base):
+    """HIPresourcetype_enum
+
+    Attributes:
+        HIP_RESOURCE_TYPE_ARRAY:
+            Array resoure
+        HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY:
+            Mipmapped array resource
+        HIP_RESOURCE_TYPE_LINEAR:
+            Linear resource
+        HIP_RESOURCE_TYPE_PITCH2D:
+            Pitch 2D resource
+    """
     HIP_RESOURCE_TYPE_ARRAY = chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
     HIP_RESOURCE_TYPE_LINEAR = chip.HIP_RESOURCE_TYPE_LINEAR
@@ -4790,6 +5478,18 @@ class _HIPaddress_mode_enum__Base(enum.IntEnum):
     """
     pass
 class HIPaddress_mode_enum(_HIPaddress_mode_enum__Base):
+    """hip address modes
+
+    Attributes:
+        HIP_TR_ADDRESS_MODE_WRAP:
+            (undocumented)
+        HIP_TR_ADDRESS_MODE_CLAMP:
+            (undocumented)
+        HIP_TR_ADDRESS_MODE_MIRROR:
+            (undocumented)
+        HIP_TR_ADDRESS_MODE_BORDER:
+            (undocumented)
+    """
     HIP_TR_ADDRESS_MODE_WRAP = chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = chip.HIP_TR_ADDRESS_MODE_CLAMP
     HIP_TR_ADDRESS_MODE_MIRROR = chip.HIP_TR_ADDRESS_MODE_MIRROR
@@ -4807,6 +5507,14 @@ class _HIPfilter_mode_enum__Base(enum.IntEnum):
     """
     pass
 class HIPfilter_mode_enum(_HIPfilter_mode_enum__Base):
+    """hip filter modes
+
+    Attributes:
+        HIP_TR_FILTER_MODE_POINT:
+            (undocumented)
+        HIP_TR_FILTER_MODE_LINEAR:
+            (undocumented)
+    """
     HIP_TR_FILTER_MODE_POINT = chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = chip.HIP_TR_FILTER_MODE_LINEAR
     @staticmethod
@@ -4818,7 +5526,7 @@ class HIPfilter_mode_enum(_HIPfilter_mode_enum__Base):
 HIPfilter_mode = HIPfilter_mode_enum
 
 cdef class HIP_TEXTURE_DESC_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_TEXTURE_DESC_st.
     
     Python wrapper for C type chip.HIP_TEXTURE_DESC_st.
 
@@ -4941,7 +5649,6 @@ cdef class HIP_TEXTURE_DESC_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_TEXTURE_DESC_st new():
@@ -4959,12 +5666,10 @@ cdef class HIP_TEXTURE_DESC_st:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.HIP_TEXTURE_DESC_st))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type HIP_TEXTURE_DESC_st.
 
-        Constructor for type HIP_TEXTURE_DESC_st
+        Constructor for type HIP_TEXTURE_DESC_st.
 
         Args:
             **kwargs: 
@@ -5006,6 +5711,7 @@ cdef class HIP_TEXTURE_DESC_st:
         self._ptr[i].filterMode = value.value
     @property
     def filterMode(self):
+        """Filter mode"""
         return self.get_filterMode(0)
     @filterMode.setter
     def filterMode(self, value):
@@ -5021,6 +5727,7 @@ cdef class HIP_TEXTURE_DESC_st:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """Flags"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -5036,6 +5743,7 @@ cdef class HIP_TEXTURE_DESC_st:
         self._ptr[i].maxAnisotropy = value
     @property
     def maxAnisotropy(self):
+        """Maximum anisotropy ratio"""
         return self.get_maxAnisotropy(0)
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
@@ -5053,6 +5761,7 @@ cdef class HIP_TEXTURE_DESC_st:
         self._ptr[i].mipmapFilterMode = value.value
     @property
     def mipmapFilterMode(self):
+        """Mipmap filter mode"""
         return self.get_mipmapFilterMode(0)
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
@@ -5068,6 +5777,7 @@ cdef class HIP_TEXTURE_DESC_st:
         self._ptr[i].mipmapLevelBias = value
     @property
     def mipmapLevelBias(self):
+        """Mipmap level bias"""
         return self.get_mipmapLevelBias(0)
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
@@ -5083,6 +5793,7 @@ cdef class HIP_TEXTURE_DESC_st:
         self._ptr[i].minMipmapLevelClamp = value
     @property
     def minMipmapLevelClamp(self):
+        """Mipmap minimum level clamp"""
         return self.get_minMipmapLevelClamp(0)
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
@@ -5098,6 +5809,7 @@ cdef class HIP_TEXTURE_DESC_st:
         self._ptr[i].maxMipmapLevelClamp = value
     @property
     def maxMipmapLevelClamp(self):
+        """Mipmap maximum level clamp"""
         return self.get_maxMipmapLevelClamp(0)
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
@@ -5114,6 +5826,7 @@ cdef class HIP_TEXTURE_DESC_st:
     #    self._ptr[i].borderColor = value
     @property
     def borderColor(self):
+        """Border Color"""
         return self.get_borderColor(0)
     # TODO add setters
     #@borderColor.setter
@@ -5131,6 +5844,7 @@ cdef class HIP_TEXTURE_DESC_st:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -5161,6 +5875,80 @@ class _hipResourceViewFormat__Base(enum.IntEnum):
     """
     pass
 class hipResourceViewFormat(_hipResourceViewFormat__Base):
+    """hip texture resource view formats
+
+    Attributes:
+        hipResViewFormatNone:
+            (undocumented)
+        hipResViewFormatUnsignedChar1:
+            (undocumented)
+        hipResViewFormatUnsignedChar2:
+            (undocumented)
+        hipResViewFormatUnsignedChar4:
+            (undocumented)
+        hipResViewFormatSignedChar1:
+            (undocumented)
+        hipResViewFormatSignedChar2:
+            (undocumented)
+        hipResViewFormatSignedChar4:
+            (undocumented)
+        hipResViewFormatUnsignedShort1:
+            (undocumented)
+        hipResViewFormatUnsignedShort2:
+            (undocumented)
+        hipResViewFormatUnsignedShort4:
+            (undocumented)
+        hipResViewFormatSignedShort1:
+            (undocumented)
+        hipResViewFormatSignedShort2:
+            (undocumented)
+        hipResViewFormatSignedShort4:
+            (undocumented)
+        hipResViewFormatUnsignedInt1:
+            (undocumented)
+        hipResViewFormatUnsignedInt2:
+            (undocumented)
+        hipResViewFormatUnsignedInt4:
+            (undocumented)
+        hipResViewFormatSignedInt1:
+            (undocumented)
+        hipResViewFormatSignedInt2:
+            (undocumented)
+        hipResViewFormatSignedInt4:
+            (undocumented)
+        hipResViewFormatHalf1:
+            (undocumented)
+        hipResViewFormatHalf2:
+            (undocumented)
+        hipResViewFormatHalf4:
+            (undocumented)
+        hipResViewFormatFloat1:
+            (undocumented)
+        hipResViewFormatFloat2:
+            (undocumented)
+        hipResViewFormatFloat4:
+            (undocumented)
+        hipResViewFormatUnsignedBlockCompressed1:
+            (undocumented)
+        hipResViewFormatUnsignedBlockCompressed2:
+            (undocumented)
+        hipResViewFormatUnsignedBlockCompressed3:
+            (undocumented)
+        hipResViewFormatUnsignedBlockCompressed4:
+            (undocumented)
+        hipResViewFormatSignedBlockCompressed4:
+            (undocumented)
+        hipResViewFormatUnsignedBlockCompressed5:
+            (undocumented)
+        hipResViewFormatSignedBlockCompressed5:
+            (undocumented)
+        hipResViewFormatUnsignedBlockCompressed6H:
+            (undocumented)
+        hipResViewFormatSignedBlockCompressed6H:
+            (undocumented)
+        hipResViewFormatUnsignedBlockCompressed7:
+            (undocumented)
+    """
     hipResViewFormatNone = chip.hipResViewFormatNone
     hipResViewFormatUnsignedChar1 = chip.hipResViewFormatUnsignedChar1
     hipResViewFormatUnsignedChar2 = chip.hipResViewFormatUnsignedChar2
@@ -5207,6 +5995,80 @@ class _HIPresourceViewFormat_enum__Base(enum.IntEnum):
     """
     pass
 class HIPresourceViewFormat_enum(_HIPresourceViewFormat_enum__Base):
+    """HIPresourceViewFormat_enum
+
+    Attributes:
+        HIP_RES_VIEW_FORMAT_NONE:
+            No resource view format (use underlying resource format)
+        HIP_RES_VIEW_FORMAT_UINT_1X8:
+            1 channel unsigned 8-bit integers
+        HIP_RES_VIEW_FORMAT_UINT_2X8:
+            2 channel unsigned 8-bit integers
+        HIP_RES_VIEW_FORMAT_UINT_4X8:
+            4 channel unsigned 8-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_1X8:
+            1 channel signed 8-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_2X8:
+            2 channel signed 8-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_4X8:
+            4 channel signed 8-bit integers
+        HIP_RES_VIEW_FORMAT_UINT_1X16:
+            1 channel unsigned 16-bit integers
+        HIP_RES_VIEW_FORMAT_UINT_2X16:
+            2 channel unsigned 16-bit integers
+        HIP_RES_VIEW_FORMAT_UINT_4X16:
+            4 channel unsigned 16-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_1X16:
+            1 channel signed 16-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_2X16:
+            2 channel signed 16-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_4X16:
+            4 channel signed 16-bit integers
+        HIP_RES_VIEW_FORMAT_UINT_1X32:
+            1 channel unsigned 32-bit integers
+        HIP_RES_VIEW_FORMAT_UINT_2X32:
+            2 channel unsigned 32-bit integers
+        HIP_RES_VIEW_FORMAT_UINT_4X32:
+            4 channel unsigned 32-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_1X32:
+            1 channel signed 32-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_2X32:
+            2 channel signed 32-bit integers
+        HIP_RES_VIEW_FORMAT_SINT_4X32:
+            4 channel signed 32-bit integers
+        HIP_RES_VIEW_FORMAT_FLOAT_1X16:
+            1 channel 16-bit floating point
+        HIP_RES_VIEW_FORMAT_FLOAT_2X16:
+            2 channel 16-bit floating point
+        HIP_RES_VIEW_FORMAT_FLOAT_4X16:
+            4 channel 16-bit floating point
+        HIP_RES_VIEW_FORMAT_FLOAT_1X32:
+            1 channel 32-bit floating point
+        HIP_RES_VIEW_FORMAT_FLOAT_2X32:
+            2 channel 32-bit floating point
+        HIP_RES_VIEW_FORMAT_FLOAT_4X32:
+            4 channel 32-bit floating point
+        HIP_RES_VIEW_FORMAT_UNSIGNED_BC1:
+            Block compressed 1
+        HIP_RES_VIEW_FORMAT_UNSIGNED_BC2:
+            Block compressed 2
+        HIP_RES_VIEW_FORMAT_UNSIGNED_BC3:
+            Block compressed 3
+        HIP_RES_VIEW_FORMAT_UNSIGNED_BC4:
+            Block compressed 4 unsigned
+        HIP_RES_VIEW_FORMAT_SIGNED_BC4:
+            Block compressed 4 signed
+        HIP_RES_VIEW_FORMAT_UNSIGNED_BC5:
+            Block compressed 5 unsigned
+        HIP_RES_VIEW_FORMAT_SIGNED_BC5:
+            Block compressed 5 signed
+        HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H:
+            Block compressed 6 unsigned half-float
+        HIP_RES_VIEW_FORMAT_SIGNED_BC6H:
+            Block compressed 6 signed half-float
+        HIP_RES_VIEW_FORMAT_UNSIGNED_BC7:
+            Block compressed 7
+    """
     HIP_RES_VIEW_FORMAT_NONE = chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_UINT_1X8 = chip.HIP_RES_VIEW_FORMAT_UINT_1X8
     HIP_RES_VIEW_FORMAT_UINT_2X8 = chip.HIP_RES_VIEW_FORMAT_UINT_2X8
@@ -5251,7 +6113,7 @@ class HIPresourceViewFormat_enum(_HIPresourceViewFormat_enum__Base):
 HIPresourceViewFormat = HIPresourceViewFormat_enum
 
 cdef class hipResourceDesc_union_0_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipResourceDesc_union_0_struct_0.
     
     Python wrapper for C type chip.hipResourceDesc_union_0_struct_0.
 
@@ -5374,7 +6236,6 @@ cdef class hipResourceDesc_union_0_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipResourceDesc_union_0_struct_0 new():
@@ -5392,12 +6253,10 @@ cdef class hipResourceDesc_union_0_struct_0:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipResourceDesc_union_0_struct_0))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipResourceDesc_union_0_struct_0.
 
-        Constructor for type hipResourceDesc_union_0_struct_0
+        Constructor for type hipResourceDesc_union_0_struct_0.
 
         Args:
             **kwargs: 
@@ -5445,7 +6304,7 @@ cdef class hipResourceDesc_union_0_struct_0:
 
 
 cdef class hipResourceDesc_union_0_struct_1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipResourceDesc_union_0_struct_1.
     
     Python wrapper for C type chip.hipResourceDesc_union_0_struct_1.
 
@@ -5568,7 +6427,6 @@ cdef class hipResourceDesc_union_0_struct_1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipResourceDesc_union_0_struct_1 new():
@@ -5586,12 +6444,10 @@ cdef class hipResourceDesc_union_0_struct_1:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipResourceDesc_union_0_struct_1))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipResourceDesc_union_0_struct_1.
 
-        Constructor for type hipResourceDesc_union_0_struct_1
+        Constructor for type hipResourceDesc_union_0_struct_1.
 
         Args:
             **kwargs: 
@@ -5639,7 +6495,7 @@ cdef class hipResourceDesc_union_0_struct_1:
 
 
 cdef class hipResourceDesc_union_0_struct_2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipResourceDesc_union_0_struct_2.
     
     Python wrapper for C type chip.hipResourceDesc_union_0_struct_2.
 
@@ -5762,7 +6618,6 @@ cdef class hipResourceDesc_union_0_struct_2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipResourceDesc_union_0_struct_2 new():
@@ -5781,9 +6636,19 @@ cdef class hipResourceDesc_union_0_struct_2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipResourceDesc_union_0_struct_2.
 
+        Constructor for type hipResourceDesc_union_0_struct_2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipResourceDesc_union_0_struct_2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -5825,7 +6690,7 @@ cdef class hipResourceDesc_union_0_struct_2:
         self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devPtr(self):
-        """
+        """(undocumented)
         Note:
             Setting this devPtr can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -5841,6 +6706,7 @@ cdef class hipResourceDesc_union_0_struct_2:
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].desc)
     @property
     def desc(self):
+        """(undocumented)"""
         return self.get_desc(0)
 
     def get_sizeInBytes(self, i):
@@ -5853,6 +6719,7 @@ cdef class hipResourceDesc_union_0_struct_2:
         self._ptr[i].sizeInBytes = value
     @property
     def sizeInBytes(self):
+        """(undocumented)"""
         return self.get_sizeInBytes(0)
     @sizeInBytes.setter
     def sizeInBytes(self, unsigned long value):
@@ -5876,7 +6743,7 @@ cdef class hipResourceDesc_union_0_struct_2:
 
 
 cdef class hipResourceDesc_union_0_struct_3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipResourceDesc_union_0_struct_3.
     
     Python wrapper for C type chip.hipResourceDesc_union_0_struct_3.
 
@@ -5999,7 +6866,6 @@ cdef class hipResourceDesc_union_0_struct_3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipResourceDesc_union_0_struct_3 new():
@@ -6018,9 +6884,19 @@ cdef class hipResourceDesc_union_0_struct_3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipResourceDesc_union_0_struct_3.
 
+        Constructor for type hipResourceDesc_union_0_struct_3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipResourceDesc_union_0_struct_3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -6062,7 +6938,7 @@ cdef class hipResourceDesc_union_0_struct_3:
         self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devPtr(self):
-        """
+        """(undocumented)
         Note:
             Setting this devPtr can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -6078,6 +6954,7 @@ cdef class hipResourceDesc_union_0_struct_3:
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].desc)
     @property
     def desc(self):
+        """(undocumented)"""
         return self.get_desc(0)
 
     def get_width(self, i):
@@ -6090,6 +6967,7 @@ cdef class hipResourceDesc_union_0_struct_3:
         self._ptr[i].width = value
     @property
     def width(self):
+        """(undocumented)"""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned long value):
@@ -6105,6 +6983,7 @@ cdef class hipResourceDesc_union_0_struct_3:
         self._ptr[i].height = value
     @property
     def height(self):
+        """(undocumented)"""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned long value):
@@ -6120,6 +6999,7 @@ cdef class hipResourceDesc_union_0_struct_3:
         self._ptr[i].pitchInBytes = value
     @property
     def pitchInBytes(self):
+        """(undocumented)"""
         return self.get_pitchInBytes(0)
     @pitchInBytes.setter
     def pitchInBytes(self, unsigned long value):
@@ -6143,7 +7023,7 @@ cdef class hipResourceDesc_union_0_struct_3:
 
 
 cdef class hipResourceDesc_union_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipResourceDesc_union_0.
     
     Python wrapper for C type chip.hipResourceDesc_union_0.
 
@@ -6266,7 +7146,6 @@ cdef class hipResourceDesc_union_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipResourceDesc_union_0 new():
@@ -6284,12 +7163,10 @@ cdef class hipResourceDesc_union_0:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipResourceDesc_union_0))
         return wrapper
    
-    # True
-    # True
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipResourceDesc_union_0.
 
-        Constructor for type hipResourceDesc_union_0
+        Constructor for type hipResourceDesc_union_0.
 
         Args:
             **kwargs: 
@@ -6327,6 +7204,7 @@ cdef class hipResourceDesc_union_0:
         return hipResourceDesc_union_0_struct_0.from_ptr(&self._ptr[i].array)
     @property
     def array(self):
+        """(undocumented)"""
         return self.get_array(0)
 
     def get_mipmap(self, i):
@@ -6335,6 +7213,7 @@ cdef class hipResourceDesc_union_0:
         return hipResourceDesc_union_0_struct_1.from_ptr(&self._ptr[i].mipmap)
     @property
     def mipmap(self):
+        """(undocumented)"""
         return self.get_mipmap(0)
 
     def get_linear(self, i):
@@ -6343,6 +7222,7 @@ cdef class hipResourceDesc_union_0:
         return hipResourceDesc_union_0_struct_2.from_ptr(&self._ptr[i].linear)
     @property
     def linear(self):
+        """(undocumented)"""
         return self.get_linear(0)
 
     def get_pitch2D(self, i):
@@ -6351,6 +7231,7 @@ cdef class hipResourceDesc_union_0:
         return hipResourceDesc_union_0_struct_3.from_ptr(&self._ptr[i].pitch2D)
     @property
     def pitch2D(self):
+        """(undocumented)"""
         return self.get_pitch2D(0)
 
     @staticmethod
@@ -6359,7 +7240,7 @@ cdef class hipResourceDesc_union_0:
 
 
 cdef class hipResourceDesc:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipResourceDesc.
     
     Python wrapper for C type chip.hipResourceDesc.
 
@@ -6482,7 +7363,6 @@ cdef class hipResourceDesc:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipResourceDesc new():
@@ -6501,9 +7381,19 @@ cdef class hipResourceDesc:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipResourceDesc.
 
+        Constructor for type hipResourceDesc.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipResourceDesc.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -6543,6 +7433,7 @@ cdef class hipResourceDesc:
         self._ptr[i].resType = value.value
     @property
     def resType(self):
+        """(undocumented)"""
         return self.get_resType(0)
     @resType.setter
     def resType(self, value):
@@ -6554,6 +7445,7 @@ cdef class hipResourceDesc:
         return hipResourceDesc_union_0.from_ptr(&self._ptr[i].res)
     @property
     def res(self):
+        """(undocumented)"""
         return self.get_res(0)
 
     @staticmethod
@@ -6574,7 +7466,7 @@ cdef class hipResourceDesc:
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_0.
     
     Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_0.
 
@@ -6697,7 +7589,6 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_0 new():
@@ -6715,12 +7606,10 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_0))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type HIP_RESOURCE_DESC_st_union_0_struct_0.
 
-        Constructor for type HIP_RESOURCE_DESC_st_union_0_struct_0
+        Constructor for type HIP_RESOURCE_DESC_st_union_0_struct_0.
 
         Args:
             **kwargs: 
@@ -6768,7 +7657,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_1.
     
     Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_1.
 
@@ -6891,7 +7780,6 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_1 new():
@@ -6909,12 +7797,10 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_1))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type HIP_RESOURCE_DESC_st_union_0_struct_1.
 
-        Constructor for type HIP_RESOURCE_DESC_st_union_0_struct_1
+        Constructor for type HIP_RESOURCE_DESC_st_union_0_struct_1.
 
         Args:
             **kwargs: 
@@ -6962,7 +7848,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_2.
     
     Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_2.
 
@@ -7085,7 +7971,6 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_2 new():
@@ -7104,9 +7989,19 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type HIP_RESOURCE_DESC_st_union_0_struct_2.
 
+        Constructor for type HIP_RESOURCE_DESC_st_union_0_struct_2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -7148,7 +8043,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devPtr(self):
-        """
+        """Device pointer
         Note:
             Setting this devPtr can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -7170,6 +8065,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         self._ptr[i].format = value.value
     @property
     def format(self):
+        """Array format"""
         return self.get_format(0)
     @format.setter
     def format(self, value):
@@ -7185,6 +8081,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         self._ptr[i].numChannels = value
     @property
     def numChannels(self):
+        """Channels per array element"""
         return self.get_numChannels(0)
     @numChannels.setter
     def numChannels(self, unsigned int value):
@@ -7200,6 +8097,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         self._ptr[i].sizeInBytes = value
     @property
     def sizeInBytes(self):
+        """Size in bytes"""
         return self.get_sizeInBytes(0)
     @sizeInBytes.setter
     def sizeInBytes(self, unsigned long value):
@@ -7223,7 +8121,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_3.
     
     Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_3.
 
@@ -7346,7 +8244,6 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_3 new():
@@ -7365,9 +8262,19 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type HIP_RESOURCE_DESC_st_union_0_struct_3.
 
+        Constructor for type HIP_RESOURCE_DESC_st_union_0_struct_3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -7409,7 +8316,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def devPtr(self):
-        """
+        """Device pointer
         Note:
             Setting this devPtr can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -7431,6 +8338,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         self._ptr[i].format = value.value
     @property
     def format(self):
+        """Array format"""
         return self.get_format(0)
     @format.setter
     def format(self, value):
@@ -7446,6 +8354,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         self._ptr[i].numChannels = value
     @property
     def numChannels(self):
+        """Channels per array element"""
         return self.get_numChannels(0)
     @numChannels.setter
     def numChannels(self, unsigned int value):
@@ -7461,6 +8370,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         self._ptr[i].width = value
     @property
     def width(self):
+        """Width of the array in elements"""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned long value):
@@ -7476,6 +8386,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         self._ptr[i].height = value
     @property
     def height(self):
+        """Height of the array in elements"""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned long value):
@@ -7491,6 +8402,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         self._ptr[i].pitchInBytes = value
     @property
     def pitchInBytes(self):
+        """Pitch between two rows in bytes"""
         return self.get_pitchInBytes(0)
     @pitchInBytes.setter
     def pitchInBytes(self, unsigned long value):
@@ -7514,7 +8426,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_4.
     
     Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0_struct_4.
 
@@ -7637,7 +8549,6 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_4 new():
@@ -7656,9 +8567,19 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type HIP_RESOURCE_DESC_st_union_0_struct_4.
 
+        Constructor for type HIP_RESOURCE_DESC_st_union_0_struct_4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -7697,6 +8618,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -7721,7 +8643,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0.
     
     Python wrapper for C type chip.HIP_RESOURCE_DESC_st_union_0.
 
@@ -7844,7 +8766,6 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0 new():
@@ -7862,12 +8783,10 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.HIP_RESOURCE_DESC_st_union_0))
         return wrapper
    
-    # True
-    # True
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type HIP_RESOURCE_DESC_st_union_0.
 
-        Constructor for type HIP_RESOURCE_DESC_st_union_0
+        Constructor for type HIP_RESOURCE_DESC_st_union_0.
 
         Args:
             **kwargs: 
@@ -7905,6 +8824,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         return HIP_RESOURCE_DESC_st_union_0_struct_0.from_ptr(&self._ptr[i].array)
     @property
     def array(self):
+        """(undocumented)"""
         return self.get_array(0)
 
     def get_mipmap(self, i):
@@ -7913,6 +8833,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         return HIP_RESOURCE_DESC_st_union_0_struct_1.from_ptr(&self._ptr[i].mipmap)
     @property
     def mipmap(self):
+        """(undocumented)"""
         return self.get_mipmap(0)
 
     def get_linear(self, i):
@@ -7921,6 +8842,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         return HIP_RESOURCE_DESC_st_union_0_struct_2.from_ptr(&self._ptr[i].linear)
     @property
     def linear(self):
+        """(undocumented)"""
         return self.get_linear(0)
 
     def get_pitch2D(self, i):
@@ -7929,6 +8851,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         return HIP_RESOURCE_DESC_st_union_0_struct_3.from_ptr(&self._ptr[i].pitch2D)
     @property
     def pitch2D(self):
+        """(undocumented)"""
         return self.get_pitch2D(0)
 
     def get_reserved(self, i):
@@ -7937,6 +8860,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         return HIP_RESOURCE_DESC_st_union_0_struct_4.from_ptr(&self._ptr[i].reserved)
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
 
     @staticmethod
@@ -7945,7 +8869,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
 
 
 cdef class HIP_RESOURCE_DESC_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_RESOURCE_DESC_st.
     
     Python wrapper for C type chip.HIP_RESOURCE_DESC_st.
 
@@ -8068,7 +8992,6 @@ cdef class HIP_RESOURCE_DESC_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_RESOURCE_DESC_st new():
@@ -8087,9 +9010,19 @@ cdef class HIP_RESOURCE_DESC_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type HIP_RESOURCE_DESC_st.
 
+        Constructor for type HIP_RESOURCE_DESC_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         HIP_RESOURCE_DESC_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -8129,6 +9062,7 @@ cdef class HIP_RESOURCE_DESC_st:
         self._ptr[i].resType = value.value
     @property
     def resType(self):
+        """Resource type"""
         return self.get_resType(0)
     @resType.setter
     def resType(self, value):
@@ -8140,6 +9074,7 @@ cdef class HIP_RESOURCE_DESC_st:
         return HIP_RESOURCE_DESC_st_union_0.from_ptr(&self._ptr[i].res)
     @property
     def res(self):
+        """(undocumented)"""
         return self.get_res(0)
 
     def get_flags(self, i):
@@ -8152,6 +9087,7 @@ cdef class HIP_RESOURCE_DESC_st:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """Flags (must be zero)"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -8177,7 +9113,7 @@ cdef class HIP_RESOURCE_DESC_st:
 HIP_RESOURCE_DESC = HIP_RESOURCE_DESC_st
 
 cdef class hipResourceViewDesc:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipResourceViewDesc.
     
     Python wrapper for C type chip.hipResourceViewDesc.
 
@@ -8300,7 +9236,6 @@ cdef class hipResourceViewDesc:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipResourceViewDesc new():
@@ -8319,9 +9254,19 @@ cdef class hipResourceViewDesc:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipResourceViewDesc.
 
+        Constructor for type hipResourceViewDesc.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipResourceViewDesc.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -8361,6 +9306,7 @@ cdef class hipResourceViewDesc:
         self._ptr[i].format = value.value
     @property
     def format(self):
+        """(undocumented)"""
         return self.get_format(0)
     @format.setter
     def format(self, value):
@@ -8376,6 +9322,7 @@ cdef class hipResourceViewDesc:
         self._ptr[i].width = value
     @property
     def width(self):
+        """(undocumented)"""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned long value):
@@ -8391,6 +9338,7 @@ cdef class hipResourceViewDesc:
         self._ptr[i].height = value
     @property
     def height(self):
+        """(undocumented)"""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned long value):
@@ -8406,6 +9354,7 @@ cdef class hipResourceViewDesc:
         self._ptr[i].depth = value
     @property
     def depth(self):
+        """(undocumented)"""
         return self.get_depth(0)
     @depth.setter
     def depth(self, unsigned long value):
@@ -8421,6 +9370,7 @@ cdef class hipResourceViewDesc:
         self._ptr[i].firstMipmapLevel = value
     @property
     def firstMipmapLevel(self):
+        """(undocumented)"""
         return self.get_firstMipmapLevel(0)
     @firstMipmapLevel.setter
     def firstMipmapLevel(self, unsigned int value):
@@ -8436,6 +9386,7 @@ cdef class hipResourceViewDesc:
         self._ptr[i].lastMipmapLevel = value
     @property
     def lastMipmapLevel(self):
+        """(undocumented)"""
         return self.get_lastMipmapLevel(0)
     @lastMipmapLevel.setter
     def lastMipmapLevel(self, unsigned int value):
@@ -8451,6 +9402,7 @@ cdef class hipResourceViewDesc:
         self._ptr[i].firstLayer = value
     @property
     def firstLayer(self):
+        """(undocumented)"""
         return self.get_firstLayer(0)
     @firstLayer.setter
     def firstLayer(self, unsigned int value):
@@ -8466,6 +9418,7 @@ cdef class hipResourceViewDesc:
         self._ptr[i].lastLayer = value
     @property
     def lastLayer(self):
+        """(undocumented)"""
         return self.get_lastLayer(0)
     @lastLayer.setter
     def lastLayer(self, unsigned int value):
@@ -8489,7 +9442,7 @@ cdef class hipResourceViewDesc:
 
 
 cdef class HIP_RESOURCE_VIEW_DESC_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_RESOURCE_VIEW_DESC_st.
     
     Python wrapper for C type chip.HIP_RESOURCE_VIEW_DESC_st.
 
@@ -8612,7 +9565,6 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_RESOURCE_VIEW_DESC_st new():
@@ -8631,9 +9583,19 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type HIP_RESOURCE_VIEW_DESC_st.
 
+        Constructor for type HIP_RESOURCE_VIEW_DESC_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         HIP_RESOURCE_VIEW_DESC_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -8673,6 +9635,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         self._ptr[i].format = value.value
     @property
     def format(self):
+        """Resource view format"""
         return self.get_format(0)
     @format.setter
     def format(self, value):
@@ -8688,6 +9651,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         self._ptr[i].width = value
     @property
     def width(self):
+        """Width of the resource view"""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned long value):
@@ -8703,6 +9667,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         self._ptr[i].height = value
     @property
     def height(self):
+        """Height of the resource view"""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned long value):
@@ -8718,6 +9683,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         self._ptr[i].depth = value
     @property
     def depth(self):
+        """Depth of the resource view"""
         return self.get_depth(0)
     @depth.setter
     def depth(self, unsigned long value):
@@ -8733,6 +9699,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         self._ptr[i].firstMipmapLevel = value
     @property
     def firstMipmapLevel(self):
+        """First defined mipmap level"""
         return self.get_firstMipmapLevel(0)
     @firstMipmapLevel.setter
     def firstMipmapLevel(self, unsigned int value):
@@ -8748,6 +9715,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         self._ptr[i].lastMipmapLevel = value
     @property
     def lastMipmapLevel(self):
+        """Last defined mipmap level"""
         return self.get_lastMipmapLevel(0)
     @lastMipmapLevel.setter
     def lastMipmapLevel(self, unsigned int value):
@@ -8763,6 +9731,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         self._ptr[i].firstLayer = value
     @property
     def firstLayer(self):
+        """First layer index"""
         return self.get_firstLayer(0)
     @firstLayer.setter
     def firstLayer(self, unsigned int value):
@@ -8778,6 +9747,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         self._ptr[i].lastLayer = value
     @property
     def lastLayer(self):
+        """Last layer index"""
         return self.get_lastLayer(0)
     @lastLayer.setter
     def lastLayer(self, unsigned int value):
@@ -8794,6 +9764,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -8824,6 +9795,20 @@ class _hipMemcpyKind__Base(enum.IntEnum):
     """
     pass
 class hipMemcpyKind(_hipMemcpyKind__Base):
+    """hipMemcpyKind
+
+    Attributes:
+        hipMemcpyHostToHost:
+            Host-to-Host Copy
+        hipMemcpyHostToDevice:
+            Host-to-Device Copy
+        hipMemcpyDeviceToHost:
+            Device-to-Host Copy
+        hipMemcpyDeviceToDevice:
+            Device-to-Device Copy
+        hipMemcpyDefault:
+            (undocumented)
+    """
     hipMemcpyHostToHost = chip.hipMemcpyHostToHost
     hipMemcpyHostToDevice = chip.hipMemcpyHostToDevice
     hipMemcpyDeviceToHost = chip.hipMemcpyDeviceToHost
@@ -8836,7 +9821,7 @@ class hipMemcpyKind(_hipMemcpyKind__Base):
 
 
 cdef class hipPitchedPtr:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipPitchedPtr.
     
     Python wrapper for C type chip.hipPitchedPtr.
 
@@ -8959,7 +9944,6 @@ cdef class hipPitchedPtr:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipPitchedPtr new():
@@ -8978,9 +9962,19 @@ cdef class hipPitchedPtr:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipPitchedPtr.
 
+        Constructor for type hipPitchedPtr.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipPitchedPtr.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -9022,7 +10016,7 @@ cdef class hipPitchedPtr:
         self._ptr[i].ptr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def ptr(self):
-        """
+        """(undocumented)
         Note:
             Setting this ptr can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -9042,6 +10036,7 @@ cdef class hipPitchedPtr:
         self._ptr[i].pitch = value
     @property
     def pitch(self):
+        """(undocumented)"""
         return self.get_pitch(0)
     @pitch.setter
     def pitch(self, unsigned long value):
@@ -9057,6 +10052,7 @@ cdef class hipPitchedPtr:
         self._ptr[i].xsize = value
     @property
     def xsize(self):
+        """(undocumented)"""
         return self.get_xsize(0)
     @xsize.setter
     def xsize(self, unsigned long value):
@@ -9072,6 +10068,7 @@ cdef class hipPitchedPtr:
         self._ptr[i].ysize = value
     @property
     def ysize(self):
+        """(undocumented)"""
         return self.get_ysize(0)
     @ysize.setter
     def ysize(self, unsigned long value):
@@ -9095,7 +10092,7 @@ cdef class hipPitchedPtr:
 
 
 cdef class hipExtent:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExtent.
     
     Python wrapper for C type chip.hipExtent.
 
@@ -9218,7 +10215,6 @@ cdef class hipExtent:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExtent new():
@@ -9237,9 +10233,19 @@ cdef class hipExtent:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExtent.
 
+        Constructor for type hipExtent.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExtent.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -9277,6 +10283,7 @@ cdef class hipExtent:
         self._ptr[i].width = value
     @property
     def width(self):
+        """(undocumented)"""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned long value):
@@ -9292,6 +10299,7 @@ cdef class hipExtent:
         self._ptr[i].height = value
     @property
     def height(self):
+        """(undocumented)"""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned long value):
@@ -9307,6 +10315,7 @@ cdef class hipExtent:
         self._ptr[i].depth = value
     @property
     def depth(self):
+        """(undocumented)"""
         return self.get_depth(0)
     @depth.setter
     def depth(self, unsigned long value):
@@ -9330,7 +10339,7 @@ cdef class hipExtent:
 
 
 cdef class hipPos:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipPos.
     
     Python wrapper for C type chip.hipPos.
 
@@ -9453,7 +10462,6 @@ cdef class hipPos:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipPos new():
@@ -9472,9 +10480,19 @@ cdef class hipPos:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipPos.
 
+        Constructor for type hipPos.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipPos.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -9512,6 +10530,7 @@ cdef class hipPos:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long value):
@@ -9527,6 +10546,7 @@ cdef class hipPos:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned long value):
@@ -9542,6 +10562,7 @@ cdef class hipPos:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned long value):
@@ -9565,7 +10586,7 @@ cdef class hipPos:
 
 
 cdef class hipMemcpy3DParms:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMemcpy3DParms.
     
     Python wrapper for C type chip.hipMemcpy3DParms.
 
@@ -9688,7 +10709,6 @@ cdef class hipMemcpy3DParms:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMemcpy3DParms new():
@@ -9706,12 +10726,10 @@ cdef class hipMemcpy3DParms:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipMemcpy3DParms))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipMemcpy3DParms.
 
-        Constructor for type hipMemcpy3DParms
+        Constructor for type hipMemcpy3DParms.
 
         Args:
             **kwargs: 
@@ -9747,6 +10765,7 @@ cdef class hipMemcpy3DParms:
         return hipPos.from_ptr(&self._ptr[i].srcPos)
     @property
     def srcPos(self):
+        """(undocumented)"""
         return self.get_srcPos(0)
 
     def get_srcPtr(self, i):
@@ -9755,6 +10774,7 @@ cdef class hipMemcpy3DParms:
         return hipPitchedPtr.from_ptr(&self._ptr[i].srcPtr)
     @property
     def srcPtr(self):
+        """(undocumented)"""
         return self.get_srcPtr(0)
 
     def get_dstPos(self, i):
@@ -9763,6 +10783,7 @@ cdef class hipMemcpy3DParms:
         return hipPos.from_ptr(&self._ptr[i].dstPos)
     @property
     def dstPos(self):
+        """(undocumented)"""
         return self.get_dstPos(0)
 
     def get_dstPtr(self, i):
@@ -9771,6 +10792,7 @@ cdef class hipMemcpy3DParms:
         return hipPitchedPtr.from_ptr(&self._ptr[i].dstPtr)
     @property
     def dstPtr(self):
+        """(undocumented)"""
         return self.get_dstPtr(0)
 
     def get_extent(self, i):
@@ -9779,6 +10801,7 @@ cdef class hipMemcpy3DParms:
         return hipExtent.from_ptr(&self._ptr[i].extent)
     @property
     def extent(self):
+        """(undocumented)"""
         return self.get_extent(0)
 
     def get_kind(self, i):
@@ -9793,6 +10816,7 @@ cdef class hipMemcpy3DParms:
         self._ptr[i].kind = value.value
     @property
     def kind(self):
+        """(undocumented)"""
         return self.get_kind(0)
     @kind.setter
     def kind(self, value):
@@ -9816,7 +10840,7 @@ cdef class hipMemcpy3DParms:
 
 
 cdef class HIP_MEMCPY3D:
-    """Python wrapper type.
+    """Python wrapper for C type chip.HIP_MEMCPY3D.
     
     Python wrapper for C type chip.HIP_MEMCPY3D.
 
@@ -9939,7 +10963,6 @@ cdef class HIP_MEMCPY3D:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef HIP_MEMCPY3D new():
@@ -9957,12 +10980,10 @@ cdef class HIP_MEMCPY3D:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.HIP_MEMCPY3D))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type HIP_MEMCPY3D.
 
-        Constructor for type HIP_MEMCPY3D
+        Constructor for type HIP_MEMCPY3D.
 
         Args:
             **kwargs: 
@@ -10002,6 +11023,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcXInBytes = value
     @property
     def srcXInBytes(self):
+        """(undocumented)"""
         return self.get_srcXInBytes(0)
     @srcXInBytes.setter
     def srcXInBytes(self, unsigned int value):
@@ -10017,6 +11039,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcY = value
     @property
     def srcY(self):
+        """(undocumented)"""
         return self.get_srcY(0)
     @srcY.setter
     def srcY(self, unsigned int value):
@@ -10032,6 +11055,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcZ = value
     @property
     def srcZ(self):
+        """(undocumented)"""
         return self.get_srcZ(0)
     @srcZ.setter
     def srcZ(self, unsigned int value):
@@ -10047,6 +11071,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcLOD = value
     @property
     def srcLOD(self):
+        """(undocumented)"""
         return self.get_srcLOD(0)
     @srcLOD.setter
     def srcLOD(self, unsigned int value):
@@ -10064,6 +11089,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcMemoryType = value.value
     @property
     def srcMemoryType(self):
+        """(undocumented)"""
         return self.get_srcMemoryType(0)
     @srcMemoryType.setter
     def srcMemoryType(self, value):
@@ -10083,7 +11109,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def srcHost(self):
-        """
+        """(undocumented)
         Note:
             Setting this srcHost can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -10107,7 +11133,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def srcDevice(self):
-        """
+        """(undocumented)
         Note:
             Setting this srcDevice can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -10127,6 +11153,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcPitch = value
     @property
     def srcPitch(self):
+        """(undocumented)"""
         return self.get_srcPitch(0)
     @srcPitch.setter
     def srcPitch(self, unsigned int value):
@@ -10142,6 +11169,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].srcHeight = value
     @property
     def srcHeight(self):
+        """(undocumented)"""
         return self.get_srcHeight(0)
     @srcHeight.setter
     def srcHeight(self, unsigned int value):
@@ -10157,6 +11185,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstXInBytes = value
     @property
     def dstXInBytes(self):
+        """(undocumented)"""
         return self.get_dstXInBytes(0)
     @dstXInBytes.setter
     def dstXInBytes(self, unsigned int value):
@@ -10172,6 +11201,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstY = value
     @property
     def dstY(self):
+        """(undocumented)"""
         return self.get_dstY(0)
     @dstY.setter
     def dstY(self, unsigned int value):
@@ -10187,6 +11217,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstZ = value
     @property
     def dstZ(self):
+        """(undocumented)"""
         return self.get_dstZ(0)
     @dstZ.setter
     def dstZ(self, unsigned int value):
@@ -10202,6 +11233,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstLOD = value
     @property
     def dstLOD(self):
+        """(undocumented)"""
         return self.get_dstLOD(0)
     @dstLOD.setter
     def dstLOD(self, unsigned int value):
@@ -10219,6 +11251,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstMemoryType = value.value
     @property
     def dstMemoryType(self):
+        """(undocumented)"""
         return self.get_dstMemoryType(0)
     @dstMemoryType.setter
     def dstMemoryType(self, value):
@@ -10238,7 +11271,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dstHost(self):
-        """
+        """(undocumented)
         Note:
             Setting this dstHost can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -10262,7 +11295,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dstDevice(self):
-        """
+        """(undocumented)
         Note:
             Setting this dstDevice can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -10282,6 +11315,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstPitch = value
     @property
     def dstPitch(self):
+        """(undocumented)"""
         return self.get_dstPitch(0)
     @dstPitch.setter
     def dstPitch(self, unsigned int value):
@@ -10297,6 +11331,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].dstHeight = value
     @property
     def dstHeight(self):
+        """(undocumented)"""
         return self.get_dstHeight(0)
     @dstHeight.setter
     def dstHeight(self, unsigned int value):
@@ -10312,6 +11347,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].WidthInBytes = value
     @property
     def WidthInBytes(self):
+        """(undocumented)"""
         return self.get_WidthInBytes(0)
     @WidthInBytes.setter
     def WidthInBytes(self, unsigned int value):
@@ -10327,6 +11363,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].Height = value
     @property
     def Height(self):
+        """(undocumented)"""
         return self.get_Height(0)
     @Height.setter
     def Height(self, unsigned int value):
@@ -10342,6 +11379,7 @@ cdef class HIP_MEMCPY3D:
         self._ptr[i].Depth = value
     @property
     def Depth(self):
+        """(undocumented)"""
         return self.get_Depth(0)
     @Depth.setter
     def Depth(self, unsigned int value):
@@ -10369,6 +11407,32 @@ class _hipFunction_attribute__Base(enum.IntEnum):
     """
     pass
 class hipFunction_attribute(_hipFunction_attribute__Base):
+    """hipFunction_attribute
+
+    Attributes:
+        HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_NUM_REGS:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_PTX_VERSION:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_BINARY_VERSION:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_CACHE_MODE_CA:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT:
+            (undocumented)
+        HIP_FUNC_ATTRIBUTE_MAX:
+            (undocumented)
+    """
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
     HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES = chip.HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
@@ -10391,6 +11455,44 @@ class _hipPointer_attribute__Base(enum.IntEnum):
     """
     pass
 class hipPointer_attribute(_hipPointer_attribute__Base):
+    """hipPointer_attribute
+
+    Attributes:
+        HIP_POINTER_ATTRIBUTE_CONTEXT:
+            The context on which a pointer was allocated
+        HIP_POINTER_ATTRIBUTE_MEMORY_TYPE:
+            memory type describing location of a pointer
+        HIP_POINTER_ATTRIBUTE_DEVICE_POINTER:
+            address at which the pointer is allocated on device
+        HIP_POINTER_ATTRIBUTE_HOST_POINTER:
+            address at which the pointer is allocated on host
+        HIP_POINTER_ATTRIBUTE_P2P_TOKENS:
+            A pair of tokens for use with linux kernel interface
+        HIP_POINTER_ATTRIBUTE_SYNC_MEMOPS:
+            Synchronize every synchronous memory operation initiated on this region
+        HIP_POINTER_ATTRIBUTE_BUFFER_ID:
+            Unique ID for an allocated memory region
+        HIP_POINTER_ATTRIBUTE_IS_MANAGED:
+            Indicates if the pointer points to managed memory
+        HIP_POINTER_ATTRIBUTE_DEVICE_ORDINAL:
+            device ordinal of a device on which a pointer was allocated or registered
+        HIP_POINTER_ATTRIBUTE_IS_LEGACY_HIP_IPC_CAPABLE:
+            if this pointer maps to an allocation that is suitable for hipIpcGetMemHandle
+        HIP_POINTER_ATTRIBUTE_RANGE_START_ADDR:
+            Starting address for this requested pointer
+        HIP_POINTER_ATTRIBUTE_RANGE_SIZE:
+            Size of the address range for this requested pointer
+        HIP_POINTER_ATTRIBUTE_MAPPED:
+            tells if this pointer is in a valid address range that is mapped to a backing allocation
+        HIP_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES:
+            Bitmask of allowed hipmemAllocationHandleType for this allocation
+        HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE:
+            returns if the memory referenced by this pointer can be used with the GPUDirect RDMA API
+        HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS:
+            Returns the access flags the device associated with for the corresponding memory referenced by the ptr
+        HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE:
+            Returns the mempool handle for the allocation if it was allocated from a mempool
+    """
     HIP_POINTER_ATTRIBUTE_CONTEXT = chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_MEMORY_TYPE = chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
     HIP_POINTER_ATTRIBUTE_DEVICE_POINTER = chip.HIP_POINTER_ATTRIBUTE_DEVICE_POINTER
@@ -10415,7 +11517,7 @@ class hipPointer_attribute(_hipPointer_attribute__Base):
 
 
 cdef class uchar1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.uchar1.
     
     Python wrapper for C type chip.uchar1.
 
@@ -10538,7 +11640,6 @@ cdef class uchar1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uchar1 new():
@@ -10557,9 +11658,19 @@ cdef class uchar1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uchar1.
 
+        Constructor for type uchar1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uchar1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -10597,6 +11708,7 @@ cdef class uchar1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned char value):
@@ -10620,7 +11732,7 @@ cdef class uchar1:
 
 
 cdef class uchar2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.uchar2.
     
     Python wrapper for C type chip.uchar2.
 
@@ -10743,7 +11855,6 @@ cdef class uchar2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uchar2 new():
@@ -10762,9 +11873,19 @@ cdef class uchar2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uchar2.
 
+        Constructor for type uchar2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uchar2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -10802,6 +11923,7 @@ cdef class uchar2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned char value):
@@ -10817,6 +11939,7 @@ cdef class uchar2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned char value):
@@ -10840,7 +11963,7 @@ cdef class uchar2:
 
 
 cdef class uchar3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.uchar3.
     
     Python wrapper for C type chip.uchar3.
 
@@ -10963,7 +12086,6 @@ cdef class uchar3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uchar3 new():
@@ -10982,9 +12104,19 @@ cdef class uchar3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uchar3.
 
+        Constructor for type uchar3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uchar3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -11022,6 +12154,7 @@ cdef class uchar3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned char value):
@@ -11037,6 +12170,7 @@ cdef class uchar3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned char value):
@@ -11052,6 +12186,7 @@ cdef class uchar3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned char value):
@@ -11075,7 +12210,7 @@ cdef class uchar3:
 
 
 cdef class uchar4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.uchar4.
     
     Python wrapper for C type chip.uchar4.
 
@@ -11198,7 +12333,6 @@ cdef class uchar4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uchar4 new():
@@ -11217,9 +12351,19 @@ cdef class uchar4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uchar4.
 
+        Constructor for type uchar4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uchar4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -11257,6 +12401,7 @@ cdef class uchar4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned char value):
@@ -11272,6 +12417,7 @@ cdef class uchar4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned char value):
@@ -11287,6 +12433,7 @@ cdef class uchar4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned char value):
@@ -11302,6 +12449,7 @@ cdef class uchar4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, unsigned char value):
@@ -11325,7 +12473,7 @@ cdef class uchar4:
 
 
 cdef class char1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.char1.
     
     Python wrapper for C type chip.char1.
 
@@ -11448,7 +12596,6 @@ cdef class char1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef char1 new():
@@ -11467,9 +12614,19 @@ cdef class char1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type char1.
 
+        Constructor for type char1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         char1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -11507,6 +12664,7 @@ cdef class char1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, char value):
@@ -11530,7 +12688,7 @@ cdef class char1:
 
 
 cdef class char2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.char2.
     
     Python wrapper for C type chip.char2.
 
@@ -11653,7 +12811,6 @@ cdef class char2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef char2 new():
@@ -11672,9 +12829,19 @@ cdef class char2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type char2.
 
+        Constructor for type char2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         char2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -11712,6 +12879,7 @@ cdef class char2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, char value):
@@ -11727,6 +12895,7 @@ cdef class char2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, char value):
@@ -11750,7 +12919,7 @@ cdef class char2:
 
 
 cdef class char3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.char3.
     
     Python wrapper for C type chip.char3.
 
@@ -11873,7 +13042,6 @@ cdef class char3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef char3 new():
@@ -11892,9 +13060,19 @@ cdef class char3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type char3.
 
+        Constructor for type char3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         char3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -11932,6 +13110,7 @@ cdef class char3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, char value):
@@ -11947,6 +13126,7 @@ cdef class char3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, char value):
@@ -11962,6 +13142,7 @@ cdef class char3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, char value):
@@ -11985,7 +13166,7 @@ cdef class char3:
 
 
 cdef class char4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.char4.
     
     Python wrapper for C type chip.char4.
 
@@ -12108,7 +13289,6 @@ cdef class char4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef char4 new():
@@ -12127,9 +13307,19 @@ cdef class char4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type char4.
 
+        Constructor for type char4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         char4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -12167,6 +13357,7 @@ cdef class char4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, char value):
@@ -12182,6 +13373,7 @@ cdef class char4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, char value):
@@ -12197,6 +13389,7 @@ cdef class char4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, char value):
@@ -12212,6 +13405,7 @@ cdef class char4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, char value):
@@ -12235,7 +13429,7 @@ cdef class char4:
 
 
 cdef class ushort1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ushort1.
     
     Python wrapper for C type chip.ushort1.
 
@@ -12358,7 +13552,6 @@ cdef class ushort1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ushort1 new():
@@ -12377,9 +13570,19 @@ cdef class ushort1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ushort1.
 
+        Constructor for type ushort1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ushort1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -12417,6 +13620,7 @@ cdef class ushort1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned short value):
@@ -12440,7 +13644,7 @@ cdef class ushort1:
 
 
 cdef class ushort2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ushort2.
     
     Python wrapper for C type chip.ushort2.
 
@@ -12563,7 +13767,6 @@ cdef class ushort2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ushort2 new():
@@ -12582,9 +13785,19 @@ cdef class ushort2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ushort2.
 
+        Constructor for type ushort2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ushort2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -12622,6 +13835,7 @@ cdef class ushort2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned short value):
@@ -12637,6 +13851,7 @@ cdef class ushort2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned short value):
@@ -12660,7 +13875,7 @@ cdef class ushort2:
 
 
 cdef class ushort3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ushort3.
     
     Python wrapper for C type chip.ushort3.
 
@@ -12783,7 +13998,6 @@ cdef class ushort3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ushort3 new():
@@ -12802,9 +14016,19 @@ cdef class ushort3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ushort3.
 
+        Constructor for type ushort3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ushort3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -12842,6 +14066,7 @@ cdef class ushort3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned short value):
@@ -12857,6 +14082,7 @@ cdef class ushort3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned short value):
@@ -12872,6 +14098,7 @@ cdef class ushort3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned short value):
@@ -12895,7 +14122,7 @@ cdef class ushort3:
 
 
 cdef class ushort4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ushort4.
     
     Python wrapper for C type chip.ushort4.
 
@@ -13018,7 +14245,6 @@ cdef class ushort4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ushort4 new():
@@ -13037,9 +14263,19 @@ cdef class ushort4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ushort4.
 
+        Constructor for type ushort4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ushort4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -13077,6 +14313,7 @@ cdef class ushort4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned short value):
@@ -13092,6 +14329,7 @@ cdef class ushort4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned short value):
@@ -13107,6 +14345,7 @@ cdef class ushort4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned short value):
@@ -13122,6 +14361,7 @@ cdef class ushort4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, unsigned short value):
@@ -13145,7 +14385,7 @@ cdef class ushort4:
 
 
 cdef class short1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.short1.
     
     Python wrapper for C type chip.short1.
 
@@ -13268,7 +14508,6 @@ cdef class short1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef short1 new():
@@ -13287,9 +14526,19 @@ cdef class short1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type short1.
 
+        Constructor for type short1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         short1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -13327,6 +14576,7 @@ cdef class short1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, short value):
@@ -13350,7 +14600,7 @@ cdef class short1:
 
 
 cdef class short2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.short2.
     
     Python wrapper for C type chip.short2.
 
@@ -13473,7 +14723,6 @@ cdef class short2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef short2 new():
@@ -13492,9 +14741,19 @@ cdef class short2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type short2.
 
+        Constructor for type short2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         short2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -13532,6 +14791,7 @@ cdef class short2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, short value):
@@ -13547,6 +14807,7 @@ cdef class short2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, short value):
@@ -13570,7 +14831,7 @@ cdef class short2:
 
 
 cdef class short3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.short3.
     
     Python wrapper for C type chip.short3.
 
@@ -13693,7 +14954,6 @@ cdef class short3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef short3 new():
@@ -13712,9 +14972,19 @@ cdef class short3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type short3.
 
+        Constructor for type short3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         short3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -13752,6 +15022,7 @@ cdef class short3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, short value):
@@ -13767,6 +15038,7 @@ cdef class short3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, short value):
@@ -13782,6 +15054,7 @@ cdef class short3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, short value):
@@ -13805,7 +15078,7 @@ cdef class short3:
 
 
 cdef class short4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.short4.
     
     Python wrapper for C type chip.short4.
 
@@ -13928,7 +15201,6 @@ cdef class short4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef short4 new():
@@ -13947,9 +15219,19 @@ cdef class short4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type short4.
 
+        Constructor for type short4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         short4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -13987,6 +15269,7 @@ cdef class short4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, short value):
@@ -14002,6 +15285,7 @@ cdef class short4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, short value):
@@ -14017,6 +15301,7 @@ cdef class short4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, short value):
@@ -14032,6 +15317,7 @@ cdef class short4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, short value):
@@ -14055,7 +15341,7 @@ cdef class short4:
 
 
 cdef class uint1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.uint1.
     
     Python wrapper for C type chip.uint1.
 
@@ -14178,7 +15464,6 @@ cdef class uint1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uint1 new():
@@ -14197,9 +15482,19 @@ cdef class uint1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uint1.
 
+        Constructor for type uint1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uint1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -14237,6 +15532,7 @@ cdef class uint1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned int value):
@@ -14260,7 +15556,7 @@ cdef class uint1:
 
 
 cdef class uint2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.uint2.
     
     Python wrapper for C type chip.uint2.
 
@@ -14383,7 +15679,6 @@ cdef class uint2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uint2 new():
@@ -14402,9 +15697,19 @@ cdef class uint2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uint2.
 
+        Constructor for type uint2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uint2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -14442,6 +15747,7 @@ cdef class uint2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned int value):
@@ -14457,6 +15763,7 @@ cdef class uint2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned int value):
@@ -14480,7 +15787,7 @@ cdef class uint2:
 
 
 cdef class uint3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.uint3.
     
     Python wrapper for C type chip.uint3.
 
@@ -14603,7 +15910,6 @@ cdef class uint3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uint3 new():
@@ -14622,9 +15928,19 @@ cdef class uint3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uint3.
 
+        Constructor for type uint3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uint3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -14662,6 +15978,7 @@ cdef class uint3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned int value):
@@ -14677,6 +15994,7 @@ cdef class uint3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned int value):
@@ -14692,6 +16010,7 @@ cdef class uint3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned int value):
@@ -14715,7 +16034,7 @@ cdef class uint3:
 
 
 cdef class uint4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.uint4.
     
     Python wrapper for C type chip.uint4.
 
@@ -14838,7 +16157,6 @@ cdef class uint4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uint4 new():
@@ -14857,9 +16175,19 @@ cdef class uint4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type uint4.
 
+        Constructor for type uint4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uint4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -14897,6 +16225,7 @@ cdef class uint4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned int value):
@@ -14912,6 +16241,7 @@ cdef class uint4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned int value):
@@ -14927,6 +16257,7 @@ cdef class uint4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned int value):
@@ -14942,6 +16273,7 @@ cdef class uint4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, unsigned int value):
@@ -14965,7 +16297,7 @@ cdef class uint4:
 
 
 cdef class int1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.int1.
     
     Python wrapper for C type chip.int1.
 
@@ -15088,7 +16420,6 @@ cdef class int1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef int1 new():
@@ -15107,9 +16438,19 @@ cdef class int1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type int1.
 
+        Constructor for type int1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         int1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -15147,6 +16488,7 @@ cdef class int1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, int value):
@@ -15170,7 +16512,7 @@ cdef class int1:
 
 
 cdef class int2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.int2.
     
     Python wrapper for C type chip.int2.
 
@@ -15293,7 +16635,6 @@ cdef class int2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef int2 new():
@@ -15312,9 +16653,19 @@ cdef class int2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type int2.
 
+        Constructor for type int2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         int2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -15352,6 +16703,7 @@ cdef class int2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, int value):
@@ -15367,6 +16719,7 @@ cdef class int2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, int value):
@@ -15390,7 +16743,7 @@ cdef class int2:
 
 
 cdef class int3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.int3.
     
     Python wrapper for C type chip.int3.
 
@@ -15513,7 +16866,6 @@ cdef class int3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef int3 new():
@@ -15532,9 +16884,19 @@ cdef class int3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type int3.
 
+        Constructor for type int3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         int3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -15572,6 +16934,7 @@ cdef class int3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, int value):
@@ -15587,6 +16950,7 @@ cdef class int3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, int value):
@@ -15602,6 +16966,7 @@ cdef class int3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, int value):
@@ -15625,7 +16990,7 @@ cdef class int3:
 
 
 cdef class int4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.int4.
     
     Python wrapper for C type chip.int4.
 
@@ -15748,7 +17113,6 @@ cdef class int4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef int4 new():
@@ -15767,9 +17131,19 @@ cdef class int4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type int4.
 
+        Constructor for type int4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         int4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -15807,6 +17181,7 @@ cdef class int4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, int value):
@@ -15822,6 +17197,7 @@ cdef class int4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, int value):
@@ -15837,6 +17213,7 @@ cdef class int4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, int value):
@@ -15852,6 +17229,7 @@ cdef class int4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, int value):
@@ -15875,7 +17253,7 @@ cdef class int4:
 
 
 cdef class ulong1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ulong1.
     
     Python wrapper for C type chip.ulong1.
 
@@ -15998,7 +17376,6 @@ cdef class ulong1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ulong1 new():
@@ -16017,9 +17394,19 @@ cdef class ulong1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ulong1.
 
+        Constructor for type ulong1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ulong1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -16057,6 +17444,7 @@ cdef class ulong1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long value):
@@ -16080,7 +17468,7 @@ cdef class ulong1:
 
 
 cdef class ulong2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ulong2.
     
     Python wrapper for C type chip.ulong2.
 
@@ -16203,7 +17591,6 @@ cdef class ulong2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ulong2 new():
@@ -16222,9 +17609,19 @@ cdef class ulong2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ulong2.
 
+        Constructor for type ulong2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ulong2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -16262,6 +17659,7 @@ cdef class ulong2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long value):
@@ -16277,6 +17675,7 @@ cdef class ulong2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned long value):
@@ -16300,7 +17699,7 @@ cdef class ulong2:
 
 
 cdef class ulong3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ulong3.
     
     Python wrapper for C type chip.ulong3.
 
@@ -16423,7 +17822,6 @@ cdef class ulong3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ulong3 new():
@@ -16442,9 +17840,19 @@ cdef class ulong3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ulong3.
 
+        Constructor for type ulong3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ulong3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -16482,6 +17890,7 @@ cdef class ulong3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long value):
@@ -16497,6 +17906,7 @@ cdef class ulong3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned long value):
@@ -16512,6 +17922,7 @@ cdef class ulong3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned long value):
@@ -16535,7 +17946,7 @@ cdef class ulong3:
 
 
 cdef class ulong4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ulong4.
     
     Python wrapper for C type chip.ulong4.
 
@@ -16658,7 +18069,6 @@ cdef class ulong4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ulong4 new():
@@ -16677,9 +18087,19 @@ cdef class ulong4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ulong4.
 
+        Constructor for type ulong4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ulong4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -16717,6 +18137,7 @@ cdef class ulong4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long value):
@@ -16732,6 +18153,7 @@ cdef class ulong4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned long value):
@@ -16747,6 +18169,7 @@ cdef class ulong4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned long value):
@@ -16762,6 +18185,7 @@ cdef class ulong4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, unsigned long value):
@@ -16785,7 +18209,7 @@ cdef class ulong4:
 
 
 cdef class long1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.long1.
     
     Python wrapper for C type chip.long1.
 
@@ -16908,7 +18332,6 @@ cdef class long1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef long1 new():
@@ -16927,9 +18350,19 @@ cdef class long1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type long1.
 
+        Constructor for type long1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         long1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -16967,6 +18400,7 @@ cdef class long1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, long value):
@@ -16990,7 +18424,7 @@ cdef class long1:
 
 
 cdef class long2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.long2.
     
     Python wrapper for C type chip.long2.
 
@@ -17113,7 +18547,6 @@ cdef class long2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef long2 new():
@@ -17132,9 +18565,19 @@ cdef class long2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type long2.
 
+        Constructor for type long2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         long2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -17172,6 +18615,7 @@ cdef class long2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, long value):
@@ -17187,6 +18631,7 @@ cdef class long2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, long value):
@@ -17210,7 +18655,7 @@ cdef class long2:
 
 
 cdef class long3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.long3.
     
     Python wrapper for C type chip.long3.
 
@@ -17333,7 +18778,6 @@ cdef class long3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef long3 new():
@@ -17352,9 +18796,19 @@ cdef class long3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type long3.
 
+        Constructor for type long3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         long3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -17392,6 +18846,7 @@ cdef class long3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, long value):
@@ -17407,6 +18862,7 @@ cdef class long3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, long value):
@@ -17422,6 +18878,7 @@ cdef class long3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, long value):
@@ -17445,7 +18902,7 @@ cdef class long3:
 
 
 cdef class long4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.long4.
     
     Python wrapper for C type chip.long4.
 
@@ -17568,7 +19025,6 @@ cdef class long4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef long4 new():
@@ -17587,9 +19043,19 @@ cdef class long4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type long4.
 
+        Constructor for type long4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         long4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -17627,6 +19093,7 @@ cdef class long4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, long value):
@@ -17642,6 +19109,7 @@ cdef class long4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, long value):
@@ -17657,6 +19125,7 @@ cdef class long4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, long value):
@@ -17672,6 +19141,7 @@ cdef class long4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, long value):
@@ -17695,7 +19165,7 @@ cdef class long4:
 
 
 cdef class ulonglong1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ulonglong1.
     
     Python wrapper for C type chip.ulonglong1.
 
@@ -17818,7 +19288,6 @@ cdef class ulonglong1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ulonglong1 new():
@@ -17837,9 +19306,19 @@ cdef class ulonglong1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ulonglong1.
 
+        Constructor for type ulonglong1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ulonglong1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -17877,6 +19356,7 @@ cdef class ulonglong1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long long value):
@@ -17900,7 +19380,7 @@ cdef class ulonglong1:
 
 
 cdef class ulonglong2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ulonglong2.
     
     Python wrapper for C type chip.ulonglong2.
 
@@ -18023,7 +19503,6 @@ cdef class ulonglong2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ulonglong2 new():
@@ -18042,9 +19521,19 @@ cdef class ulonglong2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ulonglong2.
 
+        Constructor for type ulonglong2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ulonglong2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -18082,6 +19571,7 @@ cdef class ulonglong2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long long value):
@@ -18097,6 +19587,7 @@ cdef class ulonglong2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned long long value):
@@ -18120,7 +19611,7 @@ cdef class ulonglong2:
 
 
 cdef class ulonglong3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ulonglong3.
     
     Python wrapper for C type chip.ulonglong3.
 
@@ -18243,7 +19734,6 @@ cdef class ulonglong3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ulonglong3 new():
@@ -18262,9 +19752,19 @@ cdef class ulonglong3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ulonglong3.
 
+        Constructor for type ulonglong3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ulonglong3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -18302,6 +19802,7 @@ cdef class ulonglong3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long long value):
@@ -18317,6 +19818,7 @@ cdef class ulonglong3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned long long value):
@@ -18332,6 +19834,7 @@ cdef class ulonglong3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned long long value):
@@ -18355,7 +19858,7 @@ cdef class ulonglong3:
 
 
 cdef class ulonglong4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ulonglong4.
     
     Python wrapper for C type chip.ulonglong4.
 
@@ -18478,7 +19981,6 @@ cdef class ulonglong4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ulonglong4 new():
@@ -18497,9 +19999,19 @@ cdef class ulonglong4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ulonglong4.
 
+        Constructor for type ulonglong4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ulonglong4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -18537,6 +20049,7 @@ cdef class ulonglong4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned long long value):
@@ -18552,6 +20065,7 @@ cdef class ulonglong4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned long long value):
@@ -18567,6 +20081,7 @@ cdef class ulonglong4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned long long value):
@@ -18582,6 +20097,7 @@ cdef class ulonglong4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, unsigned long long value):
@@ -18605,7 +20121,7 @@ cdef class ulonglong4:
 
 
 cdef class longlong1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.longlong1.
     
     Python wrapper for C type chip.longlong1.
 
@@ -18728,7 +20244,6 @@ cdef class longlong1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef longlong1 new():
@@ -18747,9 +20262,19 @@ cdef class longlong1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type longlong1.
 
+        Constructor for type longlong1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         longlong1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -18787,6 +20312,7 @@ cdef class longlong1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, long long value):
@@ -18810,7 +20336,7 @@ cdef class longlong1:
 
 
 cdef class longlong2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.longlong2.
     
     Python wrapper for C type chip.longlong2.
 
@@ -18933,7 +20459,6 @@ cdef class longlong2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef longlong2 new():
@@ -18952,9 +20477,19 @@ cdef class longlong2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type longlong2.
 
+        Constructor for type longlong2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         longlong2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -18992,6 +20527,7 @@ cdef class longlong2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, long long value):
@@ -19007,6 +20543,7 @@ cdef class longlong2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, long long value):
@@ -19030,7 +20567,7 @@ cdef class longlong2:
 
 
 cdef class longlong3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.longlong3.
     
     Python wrapper for C type chip.longlong3.
 
@@ -19153,7 +20690,6 @@ cdef class longlong3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef longlong3 new():
@@ -19172,9 +20708,19 @@ cdef class longlong3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type longlong3.
 
+        Constructor for type longlong3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         longlong3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -19212,6 +20758,7 @@ cdef class longlong3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, long long value):
@@ -19227,6 +20774,7 @@ cdef class longlong3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, long long value):
@@ -19242,6 +20790,7 @@ cdef class longlong3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, long long value):
@@ -19265,7 +20814,7 @@ cdef class longlong3:
 
 
 cdef class longlong4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.longlong4.
     
     Python wrapper for C type chip.longlong4.
 
@@ -19388,7 +20937,6 @@ cdef class longlong4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef longlong4 new():
@@ -19407,9 +20955,19 @@ cdef class longlong4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type longlong4.
 
+        Constructor for type longlong4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         longlong4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -19447,6 +21005,7 @@ cdef class longlong4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, long long value):
@@ -19462,6 +21021,7 @@ cdef class longlong4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, long long value):
@@ -19477,6 +21037,7 @@ cdef class longlong4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, long long value):
@@ -19492,6 +21053,7 @@ cdef class longlong4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, long long value):
@@ -19515,7 +21077,7 @@ cdef class longlong4:
 
 
 cdef class float1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.float1.
     
     Python wrapper for C type chip.float1.
 
@@ -19638,7 +21200,6 @@ cdef class float1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef float1 new():
@@ -19657,9 +21218,19 @@ cdef class float1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type float1.
 
+        Constructor for type float1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         float1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -19697,6 +21268,7 @@ cdef class float1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, float value):
@@ -19720,7 +21292,7 @@ cdef class float1:
 
 
 cdef class float2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.float2.
     
     Python wrapper for C type chip.float2.
 
@@ -19843,7 +21415,6 @@ cdef class float2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef float2 new():
@@ -19862,9 +21433,19 @@ cdef class float2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type float2.
 
+        Constructor for type float2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         float2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -19902,6 +21483,7 @@ cdef class float2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, float value):
@@ -19917,6 +21499,7 @@ cdef class float2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, float value):
@@ -19940,7 +21523,7 @@ cdef class float2:
 
 
 cdef class float3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.float3.
     
     Python wrapper for C type chip.float3.
 
@@ -20063,7 +21646,6 @@ cdef class float3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef float3 new():
@@ -20082,9 +21664,19 @@ cdef class float3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type float3.
 
+        Constructor for type float3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         float3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -20122,6 +21714,7 @@ cdef class float3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, float value):
@@ -20137,6 +21730,7 @@ cdef class float3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, float value):
@@ -20152,6 +21746,7 @@ cdef class float3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, float value):
@@ -20175,7 +21770,7 @@ cdef class float3:
 
 
 cdef class float4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.float4.
     
     Python wrapper for C type chip.float4.
 
@@ -20298,7 +21893,6 @@ cdef class float4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef float4 new():
@@ -20317,9 +21911,19 @@ cdef class float4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type float4.
 
+        Constructor for type float4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         float4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -20357,6 +21961,7 @@ cdef class float4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, float value):
@@ -20372,6 +21977,7 @@ cdef class float4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, float value):
@@ -20387,6 +21993,7 @@ cdef class float4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, float value):
@@ -20402,6 +22009,7 @@ cdef class float4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, float value):
@@ -20425,7 +22033,7 @@ cdef class float4:
 
 
 cdef class double1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.double1.
     
     Python wrapper for C type chip.double1.
 
@@ -20548,7 +22156,6 @@ cdef class double1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef double1 new():
@@ -20567,9 +22174,19 @@ cdef class double1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type double1.
 
+        Constructor for type double1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         double1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -20607,6 +22224,7 @@ cdef class double1:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, double value):
@@ -20630,7 +22248,7 @@ cdef class double1:
 
 
 cdef class double2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.double2.
     
     Python wrapper for C type chip.double2.
 
@@ -20753,7 +22371,6 @@ cdef class double2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef double2 new():
@@ -20772,9 +22389,19 @@ cdef class double2:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type double2.
 
+        Constructor for type double2.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         double2.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -20812,6 +22439,7 @@ cdef class double2:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, double value):
@@ -20827,6 +22455,7 @@ cdef class double2:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, double value):
@@ -20850,7 +22479,7 @@ cdef class double2:
 
 
 cdef class double3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.double3.
     
     Python wrapper for C type chip.double3.
 
@@ -20973,7 +22602,6 @@ cdef class double3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef double3 new():
@@ -20992,9 +22620,19 @@ cdef class double3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type double3.
 
+        Constructor for type double3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         double3.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -21032,6 +22670,7 @@ cdef class double3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, double value):
@@ -21047,6 +22686,7 @@ cdef class double3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, double value):
@@ -21062,6 +22702,7 @@ cdef class double3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, double value):
@@ -21085,7 +22726,7 @@ cdef class double3:
 
 
 cdef class double4:
-    """Python wrapper type.
+    """Python wrapper for C type chip.double4.
     
     Python wrapper for C type chip.double4.
 
@@ -21208,7 +22849,6 @@ cdef class double4:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef double4 new():
@@ -21227,9 +22867,19 @@ cdef class double4:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type double4.
 
+        Constructor for type double4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         double4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -21267,6 +22917,7 @@ cdef class double4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, double value):
@@ -21282,6 +22933,7 @@ cdef class double4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, double value):
@@ -21297,6 +22949,7 @@ cdef class double4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, double value):
@@ -21312,6 +22965,7 @@ cdef class double4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, double value):
@@ -21366,7 +23020,7 @@ def hipCreateChannelDesc(int x, int y, int z, int w, object f):
 
 
 cdef class __hip_texture:
-    """Python wrapper type.
+    """Python wrapper for C type chip.__hip_texture.
     
     Python wrapper for C type chip.__hip_texture.
 
@@ -21509,6 +23163,18 @@ class _hipTextureAddressMode__Base(enum.IntEnum):
     """
     pass
 class hipTextureAddressMode(_hipTextureAddressMode__Base):
+    """hip texture address modes
+
+    Attributes:
+        hipAddressModeWrap:
+            (undocumented)
+        hipAddressModeClamp:
+            (undocumented)
+        hipAddressModeMirror:
+            (undocumented)
+        hipAddressModeBorder:
+            (undocumented)
+    """
     hipAddressModeWrap = chip.hipAddressModeWrap
     hipAddressModeClamp = chip.hipAddressModeClamp
     hipAddressModeMirror = chip.hipAddressModeMirror
@@ -21524,6 +23190,14 @@ class _hipTextureFilterMode__Base(enum.IntEnum):
     """
     pass
 class hipTextureFilterMode(_hipTextureFilterMode__Base):
+    """hip texture filter modes
+
+    Attributes:
+        hipFilterModePoint:
+            (undocumented)
+        hipFilterModeLinear:
+            (undocumented)
+    """
     hipFilterModePoint = chip.hipFilterModePoint
     hipFilterModeLinear = chip.hipFilterModeLinear
     @staticmethod
@@ -21537,6 +23211,14 @@ class _hipTextureReadMode__Base(enum.IntEnum):
     """
     pass
 class hipTextureReadMode(_hipTextureReadMode__Base):
+    """hip texture read modes
+
+    Attributes:
+        hipReadModeElementType:
+            (undocumented)
+        hipReadModeNormalizedFloat:
+            (undocumented)
+    """
     hipReadModeElementType = chip.hipReadModeElementType
     hipReadModeNormalizedFloat = chip.hipReadModeNormalizedFloat
     @staticmethod
@@ -21546,7 +23228,7 @@ class hipTextureReadMode(_hipTextureReadMode__Base):
 
 
 cdef class textureReference:
-    """Python wrapper type.
+    """Python wrapper for C type chip.textureReference.
     
     Python wrapper for C type chip.textureReference.
 
@@ -21669,7 +23351,6 @@ cdef class textureReference:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef textureReference new():
@@ -21687,12 +23368,10 @@ cdef class textureReference:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.textureReference))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type textureReference.
 
-        Constructor for type textureReference
+        Constructor for type textureReference.
 
         Args:
             **kwargs: 
@@ -21732,6 +23411,7 @@ cdef class textureReference:
         self._ptr[i].normalized = value
     @property
     def normalized(self):
+        """(undocumented)"""
         return self.get_normalized(0)
     @normalized.setter
     def normalized(self, int value):
@@ -21749,6 +23429,7 @@ cdef class textureReference:
         self._ptr[i].readMode = value.value
     @property
     def readMode(self):
+        """(undocumented)"""
         return self.get_readMode(0)
     @readMode.setter
     def readMode(self, value):
@@ -21766,6 +23447,7 @@ cdef class textureReference:
         self._ptr[i].filterMode = value.value
     @property
     def filterMode(self):
+        """(undocumented)"""
         return self.get_filterMode(0)
     @filterMode.setter
     def filterMode(self, value):
@@ -21777,6 +23459,7 @@ cdef class textureReference:
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].channelDesc)
     @property
     def channelDesc(self):
+        """(undocumented)"""
         return self.get_channelDesc(0)
 
     def get_sRGB(self, i):
@@ -21789,6 +23472,7 @@ cdef class textureReference:
         self._ptr[i].sRGB = value
     @property
     def sRGB(self):
+        """(undocumented)"""
         return self.get_sRGB(0)
     @sRGB.setter
     def sRGB(self, int value):
@@ -21804,6 +23488,7 @@ cdef class textureReference:
         self._ptr[i].maxAnisotropy = value
     @property
     def maxAnisotropy(self):
+        """(undocumented)"""
         return self.get_maxAnisotropy(0)
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
@@ -21821,6 +23506,7 @@ cdef class textureReference:
         self._ptr[i].mipmapFilterMode = value.value
     @property
     def mipmapFilterMode(self):
+        """(undocumented)"""
         return self.get_mipmapFilterMode(0)
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
@@ -21836,6 +23522,7 @@ cdef class textureReference:
         self._ptr[i].mipmapLevelBias = value
     @property
     def mipmapLevelBias(self):
+        """(undocumented)"""
         return self.get_mipmapLevelBias(0)
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
@@ -21851,6 +23538,7 @@ cdef class textureReference:
         self._ptr[i].minMipmapLevelClamp = value
     @property
     def minMipmapLevelClamp(self):
+        """(undocumented)"""
         return self.get_minMipmapLevelClamp(0)
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
@@ -21866,6 +23554,7 @@ cdef class textureReference:
         self._ptr[i].maxMipmapLevelClamp = value
     @property
     def maxMipmapLevelClamp(self):
+        """(undocumented)"""
         return self.get_maxMipmapLevelClamp(0)
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
@@ -21881,6 +23570,7 @@ cdef class textureReference:
         self._ptr[i].numChannels = value
     @property
     def numChannels(self):
+        """(undocumented)"""
         return self.get_numChannels(0)
     @numChannels.setter
     def numChannels(self, int value):
@@ -21898,6 +23588,7 @@ cdef class textureReference:
         self._ptr[i].format = value.value
     @property
     def format(self):
+        """(undocumented)"""
         return self.get_format(0)
     @format.setter
     def format(self, value):
@@ -21921,7 +23612,7 @@ cdef class textureReference:
 
 
 cdef class hipTextureDesc:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipTextureDesc.
     
     Python wrapper for C type chip.hipTextureDesc.
 
@@ -22044,7 +23735,6 @@ cdef class hipTextureDesc:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipTextureDesc new():
@@ -22062,12 +23752,10 @@ cdef class hipTextureDesc:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipTextureDesc))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipTextureDesc.
 
-        Constructor for type hipTextureDesc
+        Constructor for type hipTextureDesc.
 
         Args:
             **kwargs: 
@@ -22109,6 +23797,7 @@ cdef class hipTextureDesc:
         self._ptr[i].filterMode = value.value
     @property
     def filterMode(self):
+        """(undocumented)"""
         return self.get_filterMode(0)
     @filterMode.setter
     def filterMode(self, value):
@@ -22126,6 +23815,7 @@ cdef class hipTextureDesc:
         self._ptr[i].readMode = value.value
     @property
     def readMode(self):
+        """(undocumented)"""
         return self.get_readMode(0)
     @readMode.setter
     def readMode(self, value):
@@ -22141,6 +23831,7 @@ cdef class hipTextureDesc:
         self._ptr[i].sRGB = value
     @property
     def sRGB(self):
+        """(undocumented)"""
         return self.get_sRGB(0)
     @sRGB.setter
     def sRGB(self, int value):
@@ -22157,6 +23848,7 @@ cdef class hipTextureDesc:
     #    self._ptr[i].borderColor = value
     @property
     def borderColor(self):
+        """(undocumented)"""
         return self.get_borderColor(0)
     # TODO add setters
     #@borderColor.setter
@@ -22173,6 +23865,7 @@ cdef class hipTextureDesc:
         self._ptr[i].normalizedCoords = value
     @property
     def normalizedCoords(self):
+        """(undocumented)"""
         return self.get_normalizedCoords(0)
     @normalizedCoords.setter
     def normalizedCoords(self, int value):
@@ -22188,6 +23881,7 @@ cdef class hipTextureDesc:
         self._ptr[i].maxAnisotropy = value
     @property
     def maxAnisotropy(self):
+        """(undocumented)"""
         return self.get_maxAnisotropy(0)
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
@@ -22205,6 +23899,7 @@ cdef class hipTextureDesc:
         self._ptr[i].mipmapFilterMode = value.value
     @property
     def mipmapFilterMode(self):
+        """(undocumented)"""
         return self.get_mipmapFilterMode(0)
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
@@ -22220,6 +23915,7 @@ cdef class hipTextureDesc:
         self._ptr[i].mipmapLevelBias = value
     @property
     def mipmapLevelBias(self):
+        """(undocumented)"""
         return self.get_mipmapLevelBias(0)
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
@@ -22235,6 +23931,7 @@ cdef class hipTextureDesc:
         self._ptr[i].minMipmapLevelClamp = value
     @property
     def minMipmapLevelClamp(self):
+        """(undocumented)"""
         return self.get_minMipmapLevelClamp(0)
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
@@ -22250,6 +23947,7 @@ cdef class hipTextureDesc:
         self._ptr[i].maxMipmapLevelClamp = value
     @property
     def maxMipmapLevelClamp(self):
+        """(undocumented)"""
         return self.get_maxMipmapLevelClamp(0)
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
@@ -22273,7 +23971,7 @@ cdef class hipTextureDesc:
 
 
 cdef class __hip_surface:
-    """Python wrapper type.
+    """Python wrapper for C type chip.__hip_surface.
     
     Python wrapper for C type chip.__hip_surface.
 
@@ -22412,7 +24110,7 @@ cdef class __hip_surface:
 hipSurfaceObject_t = __hip_surface
 
 cdef class surfaceReference:
-    """Python wrapper type.
+    """Python wrapper for C type chip.surfaceReference.
     
     Python wrapper for C type chip.surfaceReference.
 
@@ -22535,7 +24233,6 @@ cdef class surfaceReference:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef surfaceReference new():
@@ -22553,12 +24250,10 @@ cdef class surfaceReference:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.surfaceReference))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type surfaceReference.
 
-        Constructor for type surfaceReference
+        Constructor for type surfaceReference.
 
         Args:
             **kwargs: 
@@ -22610,6 +24305,16 @@ class _hipSurfaceBoundaryMode__Base(enum.IntEnum):
     """
     pass
 class hipSurfaceBoundaryMode(_hipSurfaceBoundaryMode__Base):
+    """hip surface boundary modes
+
+    Attributes:
+        hipBoundaryModeZero:
+            (undocumented)
+        hipBoundaryModeTrap:
+            (undocumented)
+        hipBoundaryModeClamp:
+            (undocumented)
+    """
     hipBoundaryModeZero = chip.hipBoundaryModeZero
     hipBoundaryModeTrap = chip.hipBoundaryModeTrap
     hipBoundaryModeClamp = chip.hipBoundaryModeClamp
@@ -22620,7 +24325,7 @@ class hipSurfaceBoundaryMode(_hipSurfaceBoundaryMode__Base):
 
 
 cdef class ihipCtx_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ihipCtx_t.
     
     Python wrapper for C type chip.ihipCtx_t.
 
@@ -22763,6 +24468,18 @@ class _hipDeviceP2PAttr__Base(enum.IntEnum):
     """
     pass
 class hipDeviceP2PAttr(_hipDeviceP2PAttr__Base):
+    """hipDeviceP2PAttr
+
+    Attributes:
+        hipDevP2PAttrPerformanceRank:
+            (undocumented)
+        hipDevP2PAttrAccessSupported:
+            (undocumented)
+        hipDevP2PAttrNativeAtomicSupported:
+            (undocumented)
+        hipDevP2PAttrHipArrayAccessSupported:
+            (undocumented)
+    """
     hipDevP2PAttrPerformanceRank = chip.hipDevP2PAttrPerformanceRank
     hipDevP2PAttrAccessSupported = chip.hipDevP2PAttrAccessSupported
     hipDevP2PAttrNativeAtomicSupported = chip.hipDevP2PAttrNativeAtomicSupported
@@ -22774,7 +24491,7 @@ class hipDeviceP2PAttr(_hipDeviceP2PAttr__Base):
 
 
 cdef class ihipStream_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ihipStream_t.
     
     Python wrapper for C type chip.ihipStream_t.
 
@@ -22913,7 +24630,7 @@ cdef class ihipStream_t:
 hipStream_t = ihipStream_t
 
 cdef class hipIpcMemHandle_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipIpcMemHandle_st.
     
     Python wrapper for C type chip.hipIpcMemHandle_st.
 
@@ -23036,7 +24753,6 @@ cdef class hipIpcMemHandle_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipIpcMemHandle_st new():
@@ -23055,9 +24771,19 @@ cdef class hipIpcMemHandle_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipIpcMemHandle_st.
 
+        Constructor for type hipIpcMemHandle_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipIpcMemHandle_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -23096,6 +24822,7 @@ cdef class hipIpcMemHandle_st:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -23122,7 +24849,7 @@ cdef class hipIpcMemHandle_st:
 hipIpcMemHandle_t = hipIpcMemHandle_st
 
 cdef class hipIpcEventHandle_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipIpcEventHandle_st.
     
     Python wrapper for C type chip.hipIpcEventHandle_st.
 
@@ -23245,7 +24972,6 @@ cdef class hipIpcEventHandle_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipIpcEventHandle_st new():
@@ -23264,9 +24990,19 @@ cdef class hipIpcEventHandle_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipIpcEventHandle_st.
 
+        Constructor for type hipIpcEventHandle_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipIpcEventHandle_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -23305,6 +25041,7 @@ cdef class hipIpcEventHandle_st:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -23331,7 +25068,7 @@ cdef class hipIpcEventHandle_st:
 hipIpcEventHandle_t = hipIpcEventHandle_st
 
 cdef class ihipModule_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ihipModule_t.
     
     Python wrapper for C type chip.ihipModule_t.
 
@@ -23470,7 +25207,7 @@ cdef class ihipModule_t:
 hipModule_t = ihipModule_t
 
 cdef class ihipModuleSymbol_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ihipModuleSymbol_t.
     
     Python wrapper for C type chip.ihipModuleSymbol_t.
 
@@ -23609,7 +25346,7 @@ cdef class ihipModuleSymbol_t:
 hipFunction_t = ihipModuleSymbol_t
 
 cdef class ihipMemPoolHandle_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ihipMemPoolHandle_t.
     
     Python wrapper for C type chip.ihipMemPoolHandle_t.
 
@@ -23748,7 +25485,7 @@ cdef class ihipMemPoolHandle_t:
 hipMemPool_t = ihipMemPoolHandle_t
 
 cdef class hipFuncAttributes:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipFuncAttributes.
     
     Python wrapper for C type chip.hipFuncAttributes.
 
@@ -23871,7 +25608,6 @@ cdef class hipFuncAttributes:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipFuncAttributes new():
@@ -23890,9 +25626,19 @@ cdef class hipFuncAttributes:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipFuncAttributes.
 
+        Constructor for type hipFuncAttributes.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipFuncAttributes.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -23930,6 +25676,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].binaryVersion = value
     @property
     def binaryVersion(self):
+        """(undocumented)"""
         return self.get_binaryVersion(0)
     @binaryVersion.setter
     def binaryVersion(self, int value):
@@ -23945,6 +25692,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].cacheModeCA = value
     @property
     def cacheModeCA(self):
+        """(undocumented)"""
         return self.get_cacheModeCA(0)
     @cacheModeCA.setter
     def cacheModeCA(self, int value):
@@ -23960,6 +25708,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].constSizeBytes = value
     @property
     def constSizeBytes(self):
+        """(undocumented)"""
         return self.get_constSizeBytes(0)
     @constSizeBytes.setter
     def constSizeBytes(self, unsigned long value):
@@ -23975,6 +25724,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].localSizeBytes = value
     @property
     def localSizeBytes(self):
+        """(undocumented)"""
         return self.get_localSizeBytes(0)
     @localSizeBytes.setter
     def localSizeBytes(self, unsigned long value):
@@ -23990,6 +25740,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].maxDynamicSharedSizeBytes = value
     @property
     def maxDynamicSharedSizeBytes(self):
+        """(undocumented)"""
         return self.get_maxDynamicSharedSizeBytes(0)
     @maxDynamicSharedSizeBytes.setter
     def maxDynamicSharedSizeBytes(self, int value):
@@ -24005,6 +25756,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].maxThreadsPerBlock = value
     @property
     def maxThreadsPerBlock(self):
+        """(undocumented)"""
         return self.get_maxThreadsPerBlock(0)
     @maxThreadsPerBlock.setter
     def maxThreadsPerBlock(self, int value):
@@ -24020,6 +25772,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].numRegs = value
     @property
     def numRegs(self):
+        """(undocumented)"""
         return self.get_numRegs(0)
     @numRegs.setter
     def numRegs(self, int value):
@@ -24035,6 +25788,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].preferredShmemCarveout = value
     @property
     def preferredShmemCarveout(self):
+        """(undocumented)"""
         return self.get_preferredShmemCarveout(0)
     @preferredShmemCarveout.setter
     def preferredShmemCarveout(self, int value):
@@ -24050,6 +25804,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].ptxVersion = value
     @property
     def ptxVersion(self):
+        """(undocumented)"""
         return self.get_ptxVersion(0)
     @ptxVersion.setter
     def ptxVersion(self, int value):
@@ -24065,6 +25820,7 @@ cdef class hipFuncAttributes:
         self._ptr[i].sharedSizeBytes = value
     @property
     def sharedSizeBytes(self):
+        """(undocumented)"""
         return self.get_sharedSizeBytes(0)
     @sharedSizeBytes.setter
     def sharedSizeBytes(self, unsigned long value):
@@ -24088,7 +25844,7 @@ cdef class hipFuncAttributes:
 
 
 cdef class ihipEvent_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ihipEvent_t.
     
     Python wrapper for C type chip.ihipEvent_t.
 
@@ -24231,6 +25987,18 @@ class _hipLimit_t__Base(enum.IntEnum):
     """
     pass
 class hipLimit_t(_hipLimit_t__Base):
+    """hipLimit_t
+
+    Attributes:
+        hipLimitStackSize:
+            (undocumented)
+        hipLimitPrintfFifoSize:
+            (undocumented)
+        hipLimitMallocHeapSize:
+            (undocumented)
+        hipLimitRange:
+            (undocumented)
+    """
     hipLimitStackSize = chip.hipLimitStackSize
     hipLimitPrintfFifoSize = chip.hipLimitPrintfFifoSize
     hipLimitMallocHeapSize = chip.hipLimitMallocHeapSize
@@ -24246,6 +26014,26 @@ class _hipMemoryAdvise__Base(enum.IntEnum):
     """
     pass
 class hipMemoryAdvise(_hipMemoryAdvise__Base):
+    """hipMemoryAdvise
+
+    Attributes:
+        hipMemAdviseSetReadMostly:
+            Data will mostly be read and only occassionally be written to
+        hipMemAdviseUnsetReadMostly:
+            Undo the effect of hipMemAdviseSetReadMostly
+        hipMemAdviseSetPreferredLocation:
+            Set the preferred location for the data as the specified device
+        hipMemAdviseUnsetPreferredLocation:
+            Clear the preferred location for the data
+        hipMemAdviseSetAccessedBy:
+            Data will be accessed by the specified device, so prevent page faults as much as possible
+        hipMemAdviseUnsetAccessedBy:
+            Let HIP to decide on the page faulting policy for the specified device
+        hipMemAdviseSetCoarseGrain:
+            The default memory model is fine-grain. That allows coherent operations between host and device, while executing kernels. The coarse-grain can be used for data that only needs to be coherent at dispatch boundaries for better performance
+        hipMemAdviseUnsetCoarseGrain:
+            Restores cache coherency policy back to fine-grain
+    """
     hipMemAdviseSetReadMostly = chip.hipMemAdviseSetReadMostly
     hipMemAdviseUnsetReadMostly = chip.hipMemAdviseUnsetReadMostly
     hipMemAdviseSetPreferredLocation = chip.hipMemAdviseSetPreferredLocation
@@ -24265,6 +26053,16 @@ class _hipMemRangeCoherencyMode__Base(enum.IntEnum):
     """
     pass
 class hipMemRangeCoherencyMode(_hipMemRangeCoherencyMode__Base):
+    """hipMemRangeCoherencyMode
+
+    Attributes:
+        hipMemRangeCoherencyModeFineGrain:
+            Updates to memory with this attribute can be done coherently from all devices
+        hipMemRangeCoherencyModeCoarseGrain:
+            Writes to memory with this attribute can be performed by a single device at a time
+        hipMemRangeCoherencyModeIndeterminate:
+            Memory region queried contains subregions with both hipMemRangeCoherencyModeFineGrain and hipMemRangeCoherencyModeCoarseGrain attributes
+    """
     hipMemRangeCoherencyModeFineGrain = chip.hipMemRangeCoherencyModeFineGrain
     hipMemRangeCoherencyModeCoarseGrain = chip.hipMemRangeCoherencyModeCoarseGrain
     hipMemRangeCoherencyModeIndeterminate = chip.hipMemRangeCoherencyModeIndeterminate
@@ -24279,6 +26077,20 @@ class _hipMemRangeAttribute__Base(enum.IntEnum):
     """
     pass
 class hipMemRangeAttribute(_hipMemRangeAttribute__Base):
+    """hipMemRangeAttribute
+
+    Attributes:
+        hipMemRangeAttributeReadMostly:
+            Whether the range will mostly be read and only occassionally be written to
+        hipMemRangeAttributePreferredLocation:
+            The preferred location of the range
+        hipMemRangeAttributeAccessedBy:
+            Memory range has hipMemAdviseSetAccessedBy set for the specified device
+        hipMemRangeAttributeLastPrefetchLocation:
+            The last location to where the range was prefetched
+        hipMemRangeAttributeCoherencyMode:
+            Returns coherency mode hipMemRangeCoherencyMode for the range
+    """
     hipMemRangeAttributeReadMostly = chip.hipMemRangeAttributeReadMostly
     hipMemRangeAttributePreferredLocation = chip.hipMemRangeAttributePreferredLocation
     hipMemRangeAttributeAccessedBy = chip.hipMemRangeAttributeAccessedBy
@@ -24295,6 +26107,26 @@ class _hipMemPoolAttr__Base(enum.IntEnum):
     """
     pass
 class hipMemPoolAttr(_hipMemPoolAttr__Base):
+    """HIP memory pool attributes
+
+    Attributes:
+        hipMemPoolReuseFollowEventDependencies:
+            (value type = int) Allow hipMemAllocAsync to use memory asynchronously freed in another streams as long as a stream ordering dependency of the allocating stream on the free action exists. hip events and null stream interactions can create the required stream ordered dependencies. (default enabled)
+        hipMemPoolReuseAllowOpportunistic:
+            (value type = int) Allow reuse of already completed frees when there is no dependency between the free and allocation. (default enabled)
+        hipMemPoolReuseAllowInternalDependencies:
+            (value type = int) Allow hipMemAllocAsync to insert new stream dependencies in order to establish the stream ordering required to reuse a piece of memory released by cuFreeAsync (default enabled).
+        hipMemPoolAttrReleaseThreshold:
+            (value type = uint64_t) Amount of reserved memory in bytes to hold onto before trying to release memory back to the OS. When more than the release threshold bytes of memory are held by the memory pool, the allocator will try to release memory back to the OS on the next call to stream, event or context synchronize. (default 0)
+        hipMemPoolAttrReservedMemCurrent:
+            (value type = uint64_t) Amount of backing memory currently allocated for the mempool.
+        hipMemPoolAttrReservedMemHigh:
+            (value type = uint64_t) High watermark of backing memory allocated for the mempool since the last time it was reset. High watermark can only be reset to zero.
+        hipMemPoolAttrUsedMemCurrent:
+            (value type = uint64_t) Amount of memory from the pool that is currently in use by the application.
+        hipMemPoolAttrUsedMemHigh:
+            (value type = uint64_t) High watermark of the amount of memory from the pool that was in use by the application since the last time it was reset. High watermark can only be reset to zero.
+    """
     hipMemPoolReuseFollowEventDependencies = chip.hipMemPoolReuseFollowEventDependencies
     hipMemPoolReuseAllowOpportunistic = chip.hipMemPoolReuseAllowOpportunistic
     hipMemPoolReuseAllowInternalDependencies = chip.hipMemPoolReuseAllowInternalDependencies
@@ -24314,6 +26146,14 @@ class _hipMemLocationType__Base(enum.IntEnum):
     """
     pass
 class hipMemLocationType(_hipMemLocationType__Base):
+    """Specifies the type of location
+
+    Attributes:
+        hipMemLocationTypeInvalid:
+            (undocumented)
+        hipMemLocationTypeDevice:
+            Device location, thus it's HIP device ID
+    """
     hipMemLocationTypeInvalid = chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = chip.hipMemLocationTypeDevice
     @staticmethod
@@ -24323,7 +26163,7 @@ class hipMemLocationType(_hipMemLocationType__Base):
 
 
 cdef class hipMemLocation:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMemLocation.
     
     Python wrapper for C type chip.hipMemLocation.
 
@@ -24446,7 +26286,6 @@ cdef class hipMemLocation:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMemLocation new():
@@ -24465,9 +26304,19 @@ cdef class hipMemLocation:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipMemLocation.
 
+        Constructor for type hipMemLocation.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipMemLocation.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -24507,6 +26356,7 @@ cdef class hipMemLocation:
         self._ptr[i].type = value.value
     @property
     def type(self):
+        """Specifies the location type, which describes the meaning of id"""
         return self.get_type(0)
     @type.setter
     def type(self, value):
@@ -24522,6 +26372,7 @@ cdef class hipMemLocation:
         self._ptr[i].id = value
     @property
     def id(self):
+        """Identifier for the provided location type hipMemLocationType"""
         return self.get_id(0)
     @id.setter
     def id(self, int value):
@@ -24549,6 +26400,16 @@ class _hipMemAccessFlags__Base(enum.IntEnum):
     """
     pass
 class hipMemAccessFlags(_hipMemAccessFlags__Base):
+    """Specifies the memory protection flags for mapping
+
+    Attributes:
+        hipMemAccessFlagsProtNone:
+            Default, make the address range not accessible
+        hipMemAccessFlagsProtRead:
+            Set the address range read accessible
+        hipMemAccessFlagsProtReadWrite:
+            Set the address range read-write accessible
+    """
     hipMemAccessFlagsProtNone = chip.hipMemAccessFlagsProtNone
     hipMemAccessFlagsProtRead = chip.hipMemAccessFlagsProtRead
     hipMemAccessFlagsProtReadWrite = chip.hipMemAccessFlagsProtReadWrite
@@ -24559,7 +26420,7 @@ class hipMemAccessFlags(_hipMemAccessFlags__Base):
 
 
 cdef class hipMemAccessDesc:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMemAccessDesc.
     
     Python wrapper for C type chip.hipMemAccessDesc.
 
@@ -24682,7 +26543,6 @@ cdef class hipMemAccessDesc:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMemAccessDesc new():
@@ -24701,9 +26561,19 @@ cdef class hipMemAccessDesc:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipMemAccessDesc.
 
+        Constructor for type hipMemAccessDesc.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipMemAccessDesc.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -24737,6 +26607,7 @@ cdef class hipMemAccessDesc:
         return hipMemLocation.from_ptr(&self._ptr[i].location)
     @property
     def location(self):
+        """Location on which the accessibility has to change"""
         return self.get_location(0)
 
     def get_flags(self, i):
@@ -24751,6 +26622,7 @@ cdef class hipMemAccessDesc:
         self._ptr[i].flags = value.value
     @property
     def flags(self):
+        """Accessibility flags to set"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, value):
@@ -24778,6 +26650,16 @@ class _hipMemAllocationType__Base(enum.IntEnum):
     """
     pass
 class hipMemAllocationType(_hipMemAllocationType__Base):
+    """Defines the allocation types
+
+    Attributes:
+        hipMemAllocationTypeInvalid:
+            (undocumented)
+        hipMemAllocationTypePinned:
+            This allocation type is 'pinned', i.e. cannot migrate from its current location while the application is actively using it
+        hipMemAllocationTypeMax:
+            This allocation type is 'pinned', i.e. cannot migrate from its current location while the application is actively using it
+    """
     hipMemAllocationTypeInvalid = chip.hipMemAllocationTypeInvalid
     hipMemAllocationTypePinned = chip.hipMemAllocationTypePinned
     hipMemAllocationTypeMax = chip.hipMemAllocationTypeMax
@@ -24792,6 +26674,18 @@ class _hipMemAllocationHandleType__Base(enum.IntEnum):
     """
     pass
 class hipMemAllocationHandleType(_hipMemAllocationHandleType__Base):
+    """Flags for specifying handle types for memory pool allocations
+
+    Attributes:
+        hipMemHandleTypeNone:
+            Does not allow any export mechanism
+        hipMemHandleTypePosixFileDescriptor:
+            Allows a file descriptor for exporting. Permitted only on POSIX systems
+        hipMemHandleTypeWin32:
+            Allows a Win32 NT handle for exporting. (HANDLE)
+        hipMemHandleTypeWin32Kmt:
+            Allows a Win32 KMT handle for exporting. (D3DKMT_HANDLE)
+    """
     hipMemHandleTypeNone = chip.hipMemHandleTypeNone
     hipMemHandleTypePosixFileDescriptor = chip.hipMemHandleTypePosixFileDescriptor
     hipMemHandleTypeWin32 = chip.hipMemHandleTypeWin32
@@ -24803,7 +26697,7 @@ class hipMemAllocationHandleType(_hipMemAllocationHandleType__Base):
 
 
 cdef class hipMemPoolProps:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMemPoolProps.
     
     Python wrapper for C type chip.hipMemPoolProps.
 
@@ -24926,7 +26820,6 @@ cdef class hipMemPoolProps:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMemPoolProps new():
@@ -24945,9 +26838,19 @@ cdef class hipMemPoolProps:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipMemPoolProps.
 
+        Constructor for type hipMemPoolProps.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipMemPoolProps.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -24987,6 +26890,7 @@ cdef class hipMemPoolProps:
         self._ptr[i].allocType = value.value
     @property
     def allocType(self):
+        """Allocation type. Currently must be specified as hipMemAllocationTypePinned"""
         return self.get_allocType(0)
     @allocType.setter
     def allocType(self, value):
@@ -25004,6 +26908,7 @@ cdef class hipMemPoolProps:
         self._ptr[i].handleTypes = value.value
     @property
     def handleTypes(self):
+        """Handle types that will be supported by allocations from the pool"""
         return self.get_handleTypes(0)
     @handleTypes.setter
     def handleTypes(self, value):
@@ -25015,6 +26920,7 @@ cdef class hipMemPoolProps:
         return hipMemLocation.from_ptr(&self._ptr[i].location)
     @property
     def location(self):
+        """Location where allocations should reside"""
         return self.get_location(0)
 
     def get_win32SecurityAttributes(self, i):
@@ -25031,7 +26937,7 @@ cdef class hipMemPoolProps:
         self._ptr[i].win32SecurityAttributes = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def win32SecurityAttributes(self):
-        """
+        """Windows-specific LPSECURITYATTRIBUTES required when hipMemHandleTypeWin32 is specified
         Note:
             Setting this win32SecurityAttributes can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -25052,6 +26958,7 @@ cdef class hipMemPoolProps:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """Reserved for future use, must be 0"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -25076,7 +26983,7 @@ cdef class hipMemPoolProps:
 
 
 cdef class hipMemPoolPtrExportData:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMemPoolPtrExportData.
     
     Python wrapper for C type chip.hipMemPoolPtrExportData.
 
@@ -25199,7 +27106,6 @@ cdef class hipMemPoolPtrExportData:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMemPoolPtrExportData new():
@@ -25218,9 +27124,19 @@ cdef class hipMemPoolPtrExportData:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipMemPoolPtrExportData.
 
+        Constructor for type hipMemPoolPtrExportData.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipMemPoolPtrExportData.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -25259,6 +27175,7 @@ cdef class hipMemPoolPtrExportData:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -25287,6 +27204,46 @@ class _hipJitOption__Base(enum.IntEnum):
     """
     pass
 class hipJitOption(_hipJitOption__Base):
+    """hipJitOption
+
+    Attributes:
+        hipJitOptionMaxRegisters:
+            (undocumented)
+        hipJitOptionThreadsPerBlock:
+            (undocumented)
+        hipJitOptionWallTime:
+            (undocumented)
+        hipJitOptionInfoLogBuffer:
+            (undocumented)
+        hipJitOptionInfoLogBufferSizeBytes:
+            (undocumented)
+        hipJitOptionErrorLogBuffer:
+            (undocumented)
+        hipJitOptionErrorLogBufferSizeBytes:
+            (undocumented)
+        hipJitOptionOptimizationLevel:
+            (undocumented)
+        hipJitOptionTargetFromContext:
+            (undocumented)
+        hipJitOptionTarget:
+            (undocumented)
+        hipJitOptionFallbackStrategy:
+            (undocumented)
+        hipJitOptionGenerateDebugInfo:
+            (undocumented)
+        hipJitOptionLogVerbose:
+            (undocumented)
+        hipJitOptionGenerateLineInfo:
+            (undocumented)
+        hipJitOptionCacheMode:
+            (undocumented)
+        hipJitOptionSm3xOpt:
+            (undocumented)
+        hipJitOptionFastCompile:
+            (undocumented)
+        hipJitOptionNumOptions:
+            (undocumented)
+    """
     hipJitOptionMaxRegisters = chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = chip.hipJitOptionWallTime
@@ -25316,6 +27273,16 @@ class _hipFuncAttribute__Base(enum.IntEnum):
     """
     pass
 class hipFuncAttribute(_hipFuncAttribute__Base):
+    """
+
+    Attributes:
+        hipFuncAttributeMaxDynamicSharedMemorySize:
+            (undocumented)
+        hipFuncAttributePreferredSharedMemoryCarveout:
+            (undocumented)
+        hipFuncAttributeMax:
+            (undocumented)
+    """
     hipFuncAttributeMaxDynamicSharedMemorySize = chip.hipFuncAttributeMaxDynamicSharedMemorySize
     hipFuncAttributePreferredSharedMemoryCarveout = chip.hipFuncAttributePreferredSharedMemoryCarveout
     hipFuncAttributeMax = chip.hipFuncAttributeMax
@@ -25330,6 +27297,18 @@ class _hipFuncCache_t__Base(enum.IntEnum):
     """
     pass
 class hipFuncCache_t(_hipFuncCache_t__Base):
+    """
+
+    Attributes:
+        hipFuncCachePreferNone:
+            no preference for shared memory or L1 (default)
+        hipFuncCachePreferShared:
+            prefer larger shared memory and smaller L1 cache
+        hipFuncCachePreferL1:
+            prefer larger L1 cache and smaller shared memory
+        hipFuncCachePreferEqual:
+            prefer equal size L1 cache and shared memory
+    """
     hipFuncCachePreferNone = chip.hipFuncCachePreferNone
     hipFuncCachePreferShared = chip.hipFuncCachePreferShared
     hipFuncCachePreferL1 = chip.hipFuncCachePreferL1
@@ -25345,6 +27324,16 @@ class _hipSharedMemConfig__Base(enum.IntEnum):
     """
     pass
 class hipSharedMemConfig(_hipSharedMemConfig__Base):
+    """
+
+    Attributes:
+        hipSharedMemBankSizeDefault:
+            The compiler selects a device-specific value for the banking.
+        hipSharedMemBankSizeFourByte:
+            Shared mem is banked at 4-bytes intervals and performs best when adjacent threads access data 4 bytes apart.
+        hipSharedMemBankSizeEightByte:
+            Shared mem is banked at 8-byte intervals and performs best when adjacent threads access data 4 bytes apart.
+    """
     hipSharedMemBankSizeDefault = chip.hipSharedMemBankSizeDefault
     hipSharedMemBankSizeFourByte = chip.hipSharedMemBankSizeFourByte
     hipSharedMemBankSizeEightByte = chip.hipSharedMemBankSizeEightByte
@@ -25355,7 +27344,7 @@ class hipSharedMemConfig(_hipSharedMemConfig__Base):
 
 
 cdef class dim3:
-    """Python wrapper type.
+    """Python wrapper for C type chip.dim3.
     
     Python wrapper for C type chip.dim3.
 
@@ -25478,7 +27467,6 @@ cdef class dim3:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef dim3 new():
@@ -25497,9 +27485,19 @@ cdef class dim3:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type dim3.
 
+        Constructor for type dim3.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         dim3.__allocate(&self._ptr)
         self.ptr_owner = True
         self.x = 1
@@ -25540,6 +27538,7 @@ cdef class dim3:
         self._ptr[i].x = value
     @property
     def x(self):
+        """x"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned int value):
@@ -25555,6 +27554,7 @@ cdef class dim3:
         self._ptr[i].y = value
     @property
     def y(self):
+        """y"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned int value):
@@ -25570,6 +27570,7 @@ cdef class dim3:
         self._ptr[i].z = value
     @property
     def z(self):
+        """z"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned int value):
@@ -25593,7 +27594,7 @@ cdef class dim3:
 
 
 cdef class hipLaunchParams_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipLaunchParams_t.
     
     Python wrapper for C type chip.hipLaunchParams_t.
 
@@ -25716,7 +27717,6 @@ cdef class hipLaunchParams_t:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipLaunchParams_t new():
@@ -25734,12 +27734,10 @@ cdef class hipLaunchParams_t:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipLaunchParams_t))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipLaunchParams_t.
 
-        Constructor for type hipLaunchParams_t
+        Constructor for type hipLaunchParams_t.
 
         Args:
             **kwargs: 
@@ -25783,7 +27781,7 @@ cdef class hipLaunchParams_t:
         self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def func(self):
-        """
+        """Device function symbol
         Note:
             Setting this func can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -25799,6 +27797,7 @@ cdef class hipLaunchParams_t:
         return dim3.from_ptr(&self._ptr[i].gridDim)
     @property
     def gridDim(self):
+        """Grid dimentions"""
         return self.get_gridDim(0)
 
     def get_blockDim(self, i):
@@ -25807,6 +27806,7 @@ cdef class hipLaunchParams_t:
         return dim3.from_ptr(&self._ptr[i].blockDim)
     @property
     def blockDim(self):
+        """Block dimentions"""
         return self.get_blockDim(0)
 
     def get_args(self, i):
@@ -25823,7 +27823,7 @@ cdef class hipLaunchParams_t:
         self._ptr[i].args = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def args(self):
-        """
+        """Arguments
         Note:
             Setting this args can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -25843,6 +27843,7 @@ cdef class hipLaunchParams_t:
         self._ptr[i].sharedMem = value
     @property
     def sharedMem(self):
+        """Shared memory"""
         return self.get_sharedMem(0)
     @sharedMem.setter
     def sharedMem(self, unsigned long value):
@@ -25872,6 +27873,24 @@ class _hipExternalMemoryHandleType_enum__Base(enum.IntEnum):
     """
     pass
 class hipExternalMemoryHandleType_enum(_hipExternalMemoryHandleType_enum__Base):
+    """hipExternalMemoryHandleType_enum
+
+    Attributes:
+        hipExternalMemoryHandleTypeOpaqueFd:
+            (undocumented)
+        hipExternalMemoryHandleTypeOpaqueWin32:
+            (undocumented)
+        hipExternalMemoryHandleTypeOpaqueWin32Kmt:
+            (undocumented)
+        hipExternalMemoryHandleTypeD3D12Heap:
+            (undocumented)
+        hipExternalMemoryHandleTypeD3D12Resource:
+            (undocumented)
+        hipExternalMemoryHandleTypeD3D11Resource:
+            (undocumented)
+        hipExternalMemoryHandleTypeD3D11ResourceKmt:
+            (undocumented)
+    """
     hipExternalMemoryHandleTypeOpaqueFd = chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueWin32 = chip.hipExternalMemoryHandleTypeOpaqueWin32
     hipExternalMemoryHandleTypeOpaqueWin32Kmt = chip.hipExternalMemoryHandleTypeOpaqueWin32Kmt
@@ -25888,7 +27907,7 @@ class hipExternalMemoryHandleType_enum(_hipExternalMemoryHandleType_enum__Base):
 hipExternalMemoryHandleType = hipExternalMemoryHandleType_enum
 
 cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalMemoryHandleDesc_st_union_0_struct_0.
     
     Python wrapper for C type chip.hipExternalMemoryHandleDesc_st_union_0_struct_0.
 
@@ -26011,7 +28030,6 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 new():
@@ -26030,9 +28048,19 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalMemoryHandleDesc_st_union_0_struct_0.
 
+        Constructor for type hipExternalMemoryHandleDesc_st_union_0_struct_0.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -26074,7 +28102,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
         self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def handle(self):
-        """
+        """(undocumented)
         Note:
             Setting this handle can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -26098,7 +28126,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
         self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def name(self):
-        """
+        """(undocumented)
         Note:
             Setting this name can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -26126,7 +28154,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
 
 
 cdef class hipExternalMemoryHandleDesc_st_union_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalMemoryHandleDesc_st_union_0.
     
     Python wrapper for C type chip.hipExternalMemoryHandleDesc_st_union_0.
 
@@ -26249,7 +28277,6 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalMemoryHandleDesc_st_union_0 new():
@@ -26267,12 +28294,10 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipExternalMemoryHandleDesc_st_union_0))
         return wrapper
    
-    # True
-    # True
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipExternalMemoryHandleDesc_st_union_0.
 
-        Constructor for type hipExternalMemoryHandleDesc_st_union_0
+        Constructor for type hipExternalMemoryHandleDesc_st_union_0.
 
         Args:
             **kwargs: 
@@ -26314,6 +28339,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
         self._ptr[i].fd = value
     @property
     def fd(self):
+        """(undocumented)"""
         return self.get_fd(0)
     @fd.setter
     def fd(self, int value):
@@ -26325,6 +28351,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
         return hipExternalMemoryHandleDesc_st_union_0_struct_0.from_ptr(&self._ptr[i].win32)
     @property
     def win32(self):
+        """(undocumented)"""
         return self.get_win32(0)
 
     @staticmethod
@@ -26333,7 +28360,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
 
 
 cdef class hipExternalMemoryHandleDesc_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalMemoryHandleDesc_st.
     
     Python wrapper for C type chip.hipExternalMemoryHandleDesc_st.
 
@@ -26456,7 +28483,6 @@ cdef class hipExternalMemoryHandleDesc_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalMemoryHandleDesc_st new():
@@ -26475,9 +28501,19 @@ cdef class hipExternalMemoryHandleDesc_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalMemoryHandleDesc_st.
 
+        Constructor for type hipExternalMemoryHandleDesc_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalMemoryHandleDesc_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -26517,6 +28553,7 @@ cdef class hipExternalMemoryHandleDesc_st:
         self._ptr[i].type = value.value
     @property
     def type(self):
+        """(undocumented)"""
         return self.get_type(0)
     @type.setter
     def type(self, value):
@@ -26528,6 +28565,7 @@ cdef class hipExternalMemoryHandleDesc_st:
         return hipExternalMemoryHandleDesc_st_union_0.from_ptr(&self._ptr[i].handle)
     @property
     def handle(self):
+        """(undocumented)"""
         return self.get_handle(0)
 
     def get_size(self, i):
@@ -26540,6 +28578,7 @@ cdef class hipExternalMemoryHandleDesc_st:
         self._ptr[i].size = value
     @property
     def size(self):
+        """(undocumented)"""
         return self.get_size(0)
     @size.setter
     def size(self, unsigned long long value):
@@ -26555,6 +28594,7 @@ cdef class hipExternalMemoryHandleDesc_st:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """(undocumented)"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -26580,7 +28620,7 @@ cdef class hipExternalMemoryHandleDesc_st:
 hipExternalMemoryHandleDesc = hipExternalMemoryHandleDesc_st
 
 cdef class hipExternalMemoryBufferDesc_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalMemoryBufferDesc_st.
     
     Python wrapper for C type chip.hipExternalMemoryBufferDesc_st.
 
@@ -26703,7 +28743,6 @@ cdef class hipExternalMemoryBufferDesc_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalMemoryBufferDesc_st new():
@@ -26722,9 +28761,19 @@ cdef class hipExternalMemoryBufferDesc_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalMemoryBufferDesc_st.
 
+        Constructor for type hipExternalMemoryBufferDesc_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalMemoryBufferDesc_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -26762,6 +28811,7 @@ cdef class hipExternalMemoryBufferDesc_st:
         self._ptr[i].offset = value
     @property
     def offset(self):
+        """(undocumented)"""
         return self.get_offset(0)
     @offset.setter
     def offset(self, unsigned long long value):
@@ -26777,6 +28827,7 @@ cdef class hipExternalMemoryBufferDesc_st:
         self._ptr[i].size = value
     @property
     def size(self):
+        """(undocumented)"""
         return self.get_size(0)
     @size.setter
     def size(self, unsigned long long value):
@@ -26792,6 +28843,7 @@ cdef class hipExternalMemoryBufferDesc_st:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """(undocumented)"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -26821,6 +28873,18 @@ class _hipExternalSemaphoreHandleType_enum__Base(enum.IntEnum):
     """
     pass
 class hipExternalSemaphoreHandleType_enum(_hipExternalSemaphoreHandleType_enum__Base):
+    """hipExternalSemaphoreHandleType_enum
+
+    Attributes:
+        hipExternalSemaphoreHandleTypeOpaqueFd:
+            (undocumented)
+        hipExternalSemaphoreHandleTypeOpaqueWin32:
+            (undocumented)
+        hipExternalSemaphoreHandleTypeOpaqueWin32Kmt:
+            (undocumented)
+        hipExternalSemaphoreHandleTypeD3D12Fence:
+            (undocumented)
+    """
     hipExternalSemaphoreHandleTypeOpaqueFd = chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueWin32 = chip.hipExternalSemaphoreHandleTypeOpaqueWin32
     hipExternalSemaphoreHandleTypeOpaqueWin32Kmt = chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
@@ -26834,7 +28898,7 @@ class hipExternalSemaphoreHandleType_enum(_hipExternalSemaphoreHandleType_enum__
 hipExternalSemaphoreHandleType = hipExternalSemaphoreHandleType_enum
 
 cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0.
     
     Python wrapper for C type chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0.
 
@@ -26957,7 +29021,6 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 new():
@@ -26976,9 +29039,19 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreHandleDesc_st_union_0_struct_0.
 
+        Constructor for type hipExternalSemaphoreHandleDesc_st_union_0_struct_0.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -27020,7 +29093,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
         self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def handle(self):
-        """
+        """(undocumented)
         Note:
             Setting this handle can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -27044,7 +29117,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
         self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def name(self):
-        """
+        """(undocumented)
         Note:
             Setting this name can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -27072,7 +29145,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
 
 
 cdef class hipExternalSemaphoreHandleDesc_st_union_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreHandleDesc_st_union_0.
     
     Python wrapper for C type chip.hipExternalSemaphoreHandleDesc_st_union_0.
 
@@ -27195,7 +29268,6 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st_union_0 new():
@@ -27213,12 +29285,10 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0))
         return wrapper
    
-    # True
-    # True
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipExternalSemaphoreHandleDesc_st_union_0.
 
-        Constructor for type hipExternalSemaphoreHandleDesc_st_union_0
+        Constructor for type hipExternalSemaphoreHandleDesc_st_union_0.
 
         Args:
             **kwargs: 
@@ -27260,6 +29330,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
         self._ptr[i].fd = value
     @property
     def fd(self):
+        """(undocumented)"""
         return self.get_fd(0)
     @fd.setter
     def fd(self, int value):
@@ -27271,6 +29342,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
         return hipExternalSemaphoreHandleDesc_st_union_0_struct_0.from_ptr(&self._ptr[i].win32)
     @property
     def win32(self):
+        """(undocumented)"""
         return self.get_win32(0)
 
     @staticmethod
@@ -27279,7 +29351,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
 
 
 cdef class hipExternalSemaphoreHandleDesc_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreHandleDesc_st.
     
     Python wrapper for C type chip.hipExternalSemaphoreHandleDesc_st.
 
@@ -27402,7 +29474,6 @@ cdef class hipExternalSemaphoreHandleDesc_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st new():
@@ -27421,9 +29492,19 @@ cdef class hipExternalSemaphoreHandleDesc_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreHandleDesc_st.
 
+        Constructor for type hipExternalSemaphoreHandleDesc_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreHandleDesc_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -27463,6 +29544,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
         self._ptr[i].type = value.value
     @property
     def type(self):
+        """(undocumented)"""
         return self.get_type(0)
     @type.setter
     def type(self, value):
@@ -27474,6 +29556,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
         return hipExternalSemaphoreHandleDesc_st_union_0.from_ptr(&self._ptr[i].handle)
     @property
     def handle(self):
+        """(undocumented)"""
         return self.get_handle(0)
 
     def get_flags(self, i):
@@ -27486,6 +29569,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """(undocumented)"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -27511,7 +29595,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
 hipExternalSemaphoreHandleDesc = hipExternalSemaphoreHandleDesc_st
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0.
     
     Python wrapper for C type chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0.
 
@@ -27634,7 +29718,6 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 new():
@@ -27653,9 +29736,19 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreSignalParams_st_struct_0_struct_0.
 
+        Constructor for type hipExternalSemaphoreSignalParams_st_struct_0_struct_0.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -27693,6 +29786,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
         self._ptr[i].value = value
     @property
     def value(self):
+        """(undocumented)"""
         return self.get_value(0)
     @value.setter
     def value(self, unsigned long long value):
@@ -27716,7 +29810,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1.
     
     Python wrapper for C type chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1.
 
@@ -27839,7 +29933,6 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 new():
@@ -27858,9 +29951,19 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreSignalParams_st_struct_0_struct_1.
 
+        Constructor for type hipExternalSemaphoreSignalParams_st_struct_0_struct_1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -27898,6 +30001,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
         self._ptr[i].key = value
     @property
     def key(self):
+        """(undocumented)"""
         return self.get_key(0)
     @key.setter
     def key(self, unsigned long long value):
@@ -27921,7 +30025,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreSignalParams_st_struct_0.
     
     Python wrapper for C type chip.hipExternalSemaphoreSignalParams_st_struct_0.
 
@@ -28044,7 +30148,6 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0 new():
@@ -28063,9 +30166,19 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreSignalParams_st_struct_0.
 
+        Constructor for type hipExternalSemaphoreSignalParams_st_struct_0.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -28099,6 +30212,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_0.from_ptr(&self._ptr[i].fence)
     @property
     def fence(self):
+        """(undocumented)"""
         return self.get_fence(0)
 
     def get_keyedMutex(self, i):
@@ -28107,6 +30221,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_1.from_ptr(&self._ptr[i].keyedMutex)
     @property
     def keyedMutex(self):
+        """(undocumented)"""
         return self.get_keyedMutex(0)
 
     def get_reserved(self, i):
@@ -28120,6 +30235,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -28144,7 +30260,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
 
 
 cdef class hipExternalSemaphoreSignalParams_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreSignalParams_st.
     
     Python wrapper for C type chip.hipExternalSemaphoreSignalParams_st.
 
@@ -28267,7 +30383,6 @@ cdef class hipExternalSemaphoreSignalParams_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreSignalParams_st new():
@@ -28286,9 +30401,19 @@ cdef class hipExternalSemaphoreSignalParams_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreSignalParams_st.
 
+        Constructor for type hipExternalSemaphoreSignalParams_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreSignalParams_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -28322,6 +30447,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
         return hipExternalSemaphoreSignalParams_st_struct_0.from_ptr(&self._ptr[i].params)
     @property
     def params(self):
+        """(undocumented)"""
         return self.get_params(0)
 
     def get_flags(self, i):
@@ -28334,6 +30460,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """(undocumented)"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -28350,6 +30477,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -28376,7 +30504,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
 hipExternalSemaphoreSignalParams = hipExternalSemaphoreSignalParams_st
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0.
     
     Python wrapper for C type chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0.
 
@@ -28499,7 +30627,6 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 new():
@@ -28518,9 +30645,19 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreWaitParams_st_struct_0_struct_0.
 
+        Constructor for type hipExternalSemaphoreWaitParams_st_struct_0_struct_0.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -28558,6 +30695,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
         self._ptr[i].value = value
     @property
     def value(self):
+        """(undocumented)"""
         return self.get_value(0)
     @value.setter
     def value(self, unsigned long long value):
@@ -28581,7 +30719,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
 
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1.
     
     Python wrapper for C type chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1.
 
@@ -28704,7 +30842,6 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 new():
@@ -28723,9 +30860,19 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreWaitParams_st_struct_0_struct_1.
 
+        Constructor for type hipExternalSemaphoreWaitParams_st_struct_0_struct_1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -28763,6 +30910,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
         self._ptr[i].key = value
     @property
     def key(self):
+        """(undocumented)"""
         return self.get_key(0)
     @key.setter
     def key(self, unsigned long long value):
@@ -28778,6 +30926,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
         self._ptr[i].timeoutMs = value
     @property
     def timeoutMs(self):
+        """(undocumented)"""
         return self.get_timeoutMs(0)
     @timeoutMs.setter
     def timeoutMs(self, unsigned int value):
@@ -28801,7 +30950,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
 
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreWaitParams_st_struct_0.
     
     Python wrapper for C type chip.hipExternalSemaphoreWaitParams_st_struct_0.
 
@@ -28924,7 +31073,6 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0 new():
@@ -28943,9 +31091,19 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreWaitParams_st_struct_0.
 
+        Constructor for type hipExternalSemaphoreWaitParams_st_struct_0.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -28979,6 +31137,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_0.from_ptr(&self._ptr[i].fence)
     @property
     def fence(self):
+        """(undocumented)"""
         return self.get_fence(0)
 
     def get_keyedMutex(self, i):
@@ -28987,6 +31146,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_1.from_ptr(&self._ptr[i].keyedMutex)
     @property
     def keyedMutex(self):
+        """(undocumented)"""
         return self.get_keyedMutex(0)
 
     def get_reserved(self, i):
@@ -29000,6 +31160,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -29024,7 +31185,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
 
 
 cdef class hipExternalSemaphoreWaitParams_st:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipExternalSemaphoreWaitParams_st.
     
     Python wrapper for C type chip.hipExternalSemaphoreWaitParams_st.
 
@@ -29147,7 +31308,6 @@ cdef class hipExternalSemaphoreWaitParams_st:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipExternalSemaphoreWaitParams_st new():
@@ -29166,9 +31326,19 @@ cdef class hipExternalSemaphoreWaitParams_st:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipExternalSemaphoreWaitParams_st.
 
+        Constructor for type hipExternalSemaphoreWaitParams_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipExternalSemaphoreWaitParams_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -29202,6 +31372,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
         return hipExternalSemaphoreWaitParams_st_struct_0.from_ptr(&self._ptr[i].params)
     @property
     def params(self):
+        """(undocumented)"""
         return self.get_params(0)
 
     def get_flags(self, i):
@@ -29214,6 +31385,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """(undocumented)"""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -29230,6 +31402,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """(undocumented)"""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -29260,6 +31433,16 @@ class _hipGLDeviceList__Base(enum.IntEnum):
     """
     pass
 class hipGLDeviceList(_hipGLDeviceList__Base):
+    """hipGLDeviceList
+
+    Attributes:
+        hipGLDeviceListAll:
+            All hip devices used by current OpenGL context.
+        hipGLDeviceListCurrentFrame:
+            Hip devices used by current OpenGL context in current frame
+        hipGLDeviceListNextFrame:
+            Hip devices used by current OpenGL context in next frame.
+    """
     hipGLDeviceListAll = chip.hipGLDeviceListAll
     hipGLDeviceListCurrentFrame = chip.hipGLDeviceListCurrentFrame
     hipGLDeviceListNextFrame = chip.hipGLDeviceListNextFrame
@@ -29274,6 +31457,20 @@ class _hipGraphicsRegisterFlags__Base(enum.IntEnum):
     """
     pass
 class hipGraphicsRegisterFlags(_hipGraphicsRegisterFlags__Base):
+    """hipGraphicsRegisterFlags
+
+    Attributes:
+        hipGraphicsRegisterFlagsNone:
+            (undocumented)
+        hipGraphicsRegisterFlagsReadOnly:
+            HIP will not write to this registered resource
+        hipGraphicsRegisterFlagsWriteDiscard:
+            (undocumented)
+        hipGraphicsRegisterFlagsSurfaceLoadStore:
+            HIP will bind this resource to a surface
+        hipGraphicsRegisterFlagsTextureGather:
+            (undocumented)
+    """
     hipGraphicsRegisterFlagsNone = chip.hipGraphicsRegisterFlagsNone
     hipGraphicsRegisterFlagsReadOnly = chip.hipGraphicsRegisterFlagsReadOnly
     hipGraphicsRegisterFlagsWriteDiscard = chip.hipGraphicsRegisterFlagsWriteDiscard
@@ -29286,7 +31483,7 @@ class hipGraphicsRegisterFlags(_hipGraphicsRegisterFlags__Base):
 
 
 cdef class _hipGraphicsResource:
-    """Python wrapper type.
+    """Python wrapper for C type chip._hipGraphicsResource.
     
     Python wrapper for C type chip._hipGraphicsResource.
 
@@ -29427,7 +31624,7 @@ hipGraphicsResource = _hipGraphicsResource
 hipGraphicsResource_t = _hipGraphicsResource
 
 cdef class ihipGraph:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ihipGraph.
     
     Python wrapper for C type chip.ihipGraph.
 
@@ -29566,7 +31763,7 @@ cdef class ihipGraph:
 hipGraph_t = ihipGraph
 
 cdef class hipGraphNode:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipGraphNode.
     
     Python wrapper for C type chip.hipGraphNode.
 
@@ -29705,7 +31902,7 @@ cdef class hipGraphNode:
 hipGraphNode_t = hipGraphNode
 
 cdef class hipGraphExec:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipGraphExec.
     
     Python wrapper for C type chip.hipGraphExec.
 
@@ -29844,7 +32041,7 @@ cdef class hipGraphExec:
 hipGraphExec_t = hipGraphExec
 
 cdef class hipUserObject:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipUserObject.
     
     Python wrapper for C type chip.hipUserObject.
 
@@ -29987,6 +32184,36 @@ class _hipGraphNodeType__Base(enum.IntEnum):
     """
     pass
 class hipGraphNodeType(_hipGraphNodeType__Base):
+    """hipGraphNodeType
+
+    Attributes:
+        hipGraphNodeTypeKernel:
+            GPU kernel node
+        hipGraphNodeTypeMemcpy:
+            Memcpy node
+        hipGraphNodeTypeMemset:
+            Memset node
+        hipGraphNodeTypeHost:
+            Host (executable) node
+        hipGraphNodeTypeGraph:
+            Node which executes an embedded graph
+        hipGraphNodeTypeEmpty:
+            Empty (no-op) node
+        hipGraphNodeTypeWaitEvent:
+            External event wait node
+        hipGraphNodeTypeEventRecord:
+            External event record node
+        hipGraphNodeTypeExtSemaphoreSignal:
+            External Semaphore signal node
+        hipGraphNodeTypeExtSemaphoreWait:
+            External Semaphore wait node
+        hipGraphNodeTypeMemcpyFromSymbol:
+            MemcpyFromSymbol node
+        hipGraphNodeTypeMemcpyToSymbol:
+            MemcpyToSymbol node
+        hipGraphNodeTypeCount:
+            (undocumented)
+    """
     hipGraphNodeTypeKernel = chip.hipGraphNodeTypeKernel
     hipGraphNodeTypeMemcpy = chip.hipGraphNodeTypeMemcpy
     hipGraphNodeTypeMemset = chip.hipGraphNodeTypeMemset
@@ -30007,7 +32234,7 @@ class hipGraphNodeType(_hipGraphNodeType__Base):
 
 
 cdef class hipHostFn_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipHostFn_t.
     
     Python wrapper for C type chip.hipHostFn_t.
 
@@ -30116,7 +32343,7 @@ cdef class hipHostFn_t:
 
 
 cdef class hipHostNodeParams:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipHostNodeParams.
     
     Python wrapper for C type chip.hipHostNodeParams.
 
@@ -30239,7 +32466,6 @@ cdef class hipHostNodeParams:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipHostNodeParams new():
@@ -30257,12 +32483,10 @@ cdef class hipHostNodeParams:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipHostNodeParams))
         return wrapper
    
-    # False
-    # False
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipHostNodeParams.
 
-        Constructor for type hipHostNodeParams
+        Constructor for type hipHostNodeParams.
 
         Args:
             **kwargs: 
@@ -30306,7 +32530,7 @@ cdef class hipHostNodeParams:
         self._ptr[i].userData = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def userData(self):
-        """
+        """(undocumented)
         Note:
             Setting this userData can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -30334,7 +32558,7 @@ cdef class hipHostNodeParams:
 
 
 cdef class hipKernelNodeParams:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipKernelNodeParams.
     
     Python wrapper for C type chip.hipKernelNodeParams.
 
@@ -30457,7 +32681,6 @@ cdef class hipKernelNodeParams:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipKernelNodeParams new():
@@ -30476,9 +32699,19 @@ cdef class hipKernelNodeParams:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipKernelNodeParams.
 
+        Constructor for type hipKernelNodeParams.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipKernelNodeParams.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -30512,6 +32745,7 @@ cdef class hipKernelNodeParams:
         return dim3.from_ptr(&self._ptr[i].blockDim)
     @property
     def blockDim(self):
+        """(undocumented)"""
         return self.get_blockDim(0)
 
     def get_extra(self, i):
@@ -30528,7 +32762,7 @@ cdef class hipKernelNodeParams:
         self._ptr[i].extra = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def extra(self):
-        """
+        """(undocumented)
         Note:
             Setting this extra can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -30552,7 +32786,7 @@ cdef class hipKernelNodeParams:
         self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def func(self):
-        """
+        """(undocumented)
         Note:
             Setting this func can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -30568,6 +32802,7 @@ cdef class hipKernelNodeParams:
         return dim3.from_ptr(&self._ptr[i].gridDim)
     @property
     def gridDim(self):
+        """(undocumented)"""
         return self.get_gridDim(0)
 
     def get_kernelParams(self, i):
@@ -30584,7 +32819,7 @@ cdef class hipKernelNodeParams:
         self._ptr[i].kernelParams = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def kernelParams(self):
-        """
+        """(undocumented)
         Note:
             Setting this kernelParams can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -30604,6 +32839,7 @@ cdef class hipKernelNodeParams:
         self._ptr[i].sharedMemBytes = value
     @property
     def sharedMemBytes(self):
+        """(undocumented)"""
         return self.get_sharedMemBytes(0)
     @sharedMemBytes.setter
     def sharedMemBytes(self, unsigned int value):
@@ -30627,7 +32863,7 @@ cdef class hipKernelNodeParams:
 
 
 cdef class hipMemsetParams:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMemsetParams.
     
     Python wrapper for C type chip.hipMemsetParams.
 
@@ -30750,7 +32986,6 @@ cdef class hipMemsetParams:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMemsetParams new():
@@ -30769,9 +33004,19 @@ cdef class hipMemsetParams:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipMemsetParams.
 
+        Constructor for type hipMemsetParams.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipMemsetParams.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -30813,7 +33058,7 @@ cdef class hipMemsetParams:
         self._ptr[i].dst = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def dst(self):
-        """
+        """(undocumented)
         Note:
             Setting this dst can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -30833,6 +33078,7 @@ cdef class hipMemsetParams:
         self._ptr[i].elementSize = value
     @property
     def elementSize(self):
+        """(undocumented)"""
         return self.get_elementSize(0)
     @elementSize.setter
     def elementSize(self, unsigned int value):
@@ -30848,6 +33094,7 @@ cdef class hipMemsetParams:
         self._ptr[i].height = value
     @property
     def height(self):
+        """(undocumented)"""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned long value):
@@ -30863,6 +33110,7 @@ cdef class hipMemsetParams:
         self._ptr[i].pitch = value
     @property
     def pitch(self):
+        """(undocumented)"""
         return self.get_pitch(0)
     @pitch.setter
     def pitch(self, unsigned long value):
@@ -30878,6 +33126,7 @@ cdef class hipMemsetParams:
         self._ptr[i].value = value
     @property
     def value(self):
+        """(undocumented)"""
         return self.get_value(0)
     @value.setter
     def value(self, unsigned int value):
@@ -30893,6 +33142,7 @@ cdef class hipMemsetParams:
         self._ptr[i].width = value
     @property
     def width(self):
+        """(undocumented)"""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned long value):
@@ -30920,6 +33170,14 @@ class _hipKernelNodeAttrID__Base(enum.IntEnum):
     """
     pass
 class hipKernelNodeAttrID(_hipKernelNodeAttrID__Base):
+    """hipKernelNodeAttrID
+
+    Attributes:
+        hipKernelNodeAttributeAccessPolicyWindow:
+            (undocumented)
+        hipKernelNodeAttributeCooperative:
+            (undocumented)
+    """
     hipKernelNodeAttributeAccessPolicyWindow = chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = chip.hipKernelNodeAttributeCooperative
     @staticmethod
@@ -30933,6 +33191,16 @@ class _hipAccessProperty__Base(enum.IntEnum):
     """
     pass
 class hipAccessProperty(_hipAccessProperty__Base):
+    """hipAccessProperty
+
+    Attributes:
+        hipAccessPropertyNormal:
+            (undocumented)
+        hipAccessPropertyStreaming:
+            (undocumented)
+        hipAccessPropertyPersisting:
+            (undocumented)
+    """
     hipAccessPropertyNormal = chip.hipAccessPropertyNormal
     hipAccessPropertyStreaming = chip.hipAccessPropertyStreaming
     hipAccessPropertyPersisting = chip.hipAccessPropertyPersisting
@@ -30943,7 +33211,7 @@ class hipAccessProperty(_hipAccessProperty__Base):
 
 
 cdef class hipAccessPolicyWindow:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipAccessPolicyWindow.
     
     Python wrapper for C type chip.hipAccessPolicyWindow.
 
@@ -31066,7 +33334,6 @@ cdef class hipAccessPolicyWindow:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipAccessPolicyWindow new():
@@ -31085,9 +33352,19 @@ cdef class hipAccessPolicyWindow:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipAccessPolicyWindow.
 
+        Constructor for type hipAccessPolicyWindow.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipAccessPolicyWindow.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -31129,7 +33406,7 @@ cdef class hipAccessPolicyWindow:
         self._ptr[i].base_ptr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def base_ptr(self):
-        """
+        """(undocumented)
         Note:
             Setting this base_ptr can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -31151,6 +33428,7 @@ cdef class hipAccessPolicyWindow:
         self._ptr[i].hitProp = value.value
     @property
     def hitProp(self):
+        """(undocumented)"""
         return self.get_hitProp(0)
     @hitProp.setter
     def hitProp(self, value):
@@ -31166,6 +33444,7 @@ cdef class hipAccessPolicyWindow:
         self._ptr[i].hitRatio = value
     @property
     def hitRatio(self):
+        """(undocumented)"""
         return self.get_hitRatio(0)
     @hitRatio.setter
     def hitRatio(self, float value):
@@ -31183,6 +33462,7 @@ cdef class hipAccessPolicyWindow:
         self._ptr[i].missProp = value.value
     @property
     def missProp(self):
+        """(undocumented)"""
         return self.get_missProp(0)
     @missProp.setter
     def missProp(self, value):
@@ -31198,6 +33478,7 @@ cdef class hipAccessPolicyWindow:
         self._ptr[i].num_bytes = value
     @property
     def num_bytes(self):
+        """(undocumented)"""
         return self.get_num_bytes(0)
     @num_bytes.setter
     def num_bytes(self, unsigned long value):
@@ -31221,7 +33502,7 @@ cdef class hipAccessPolicyWindow:
 
 
 cdef class hipKernelNodeAttrValue:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipKernelNodeAttrValue.
     
     Python wrapper for C type chip.hipKernelNodeAttrValue.
 
@@ -31344,7 +33625,6 @@ cdef class hipKernelNodeAttrValue:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipKernelNodeAttrValue new():
@@ -31362,12 +33642,10 @@ cdef class hipKernelNodeAttrValue:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipKernelNodeAttrValue))
         return wrapper
    
-    # True
-    # True
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipKernelNodeAttrValue.
 
-        Constructor for type hipKernelNodeAttrValue
+        Constructor for type hipKernelNodeAttrValue.
 
         Args:
             **kwargs: 
@@ -31405,6 +33683,7 @@ cdef class hipKernelNodeAttrValue:
         return hipAccessPolicyWindow.from_ptr(&self._ptr[i].accessPolicyWindow)
     @property
     def accessPolicyWindow(self):
+        """(undocumented)"""
         return self.get_accessPolicyWindow(0)
 
     def get_cooperative(self, i):
@@ -31417,6 +33696,7 @@ cdef class hipKernelNodeAttrValue:
         self._ptr[i].cooperative = value
     @property
     def cooperative(self):
+        """(undocumented)"""
         return self.get_cooperative(0)
     @cooperative.setter
     def cooperative(self, int value):
@@ -31432,6 +33712,26 @@ class _hipGraphExecUpdateResult__Base(enum.IntEnum):
     """
     pass
 class hipGraphExecUpdateResult(_hipGraphExecUpdateResult__Base):
+    """hipGraphExecUpdateResult
+
+    Attributes:
+        hipGraphExecUpdateSuccess:
+            The update succeeded
+        hipGraphExecUpdateError:
+            The update failed for an unexpected reason which is described in the return value of the function
+        hipGraphExecUpdateErrorTopologyChanged:
+            The update failed because the topology changed
+        hipGraphExecUpdateErrorNodeTypeChanged:
+            The update failed because a node type changed
+        hipGraphExecUpdateErrorFunctionChanged:
+            (undocumented)
+        hipGraphExecUpdateErrorParametersChanged:
+            (undocumented)
+        hipGraphExecUpdateErrorNotSupported:
+            (undocumented)
+        hipGraphExecUpdateErrorUnsupportedFunctionChange:
+            (undocumented)
+    """
     hipGraphExecUpdateSuccess = chip.hipGraphExecUpdateSuccess
     hipGraphExecUpdateError = chip.hipGraphExecUpdateError
     hipGraphExecUpdateErrorTopologyChanged = chip.hipGraphExecUpdateErrorTopologyChanged
@@ -31451,6 +33751,16 @@ class _hipStreamCaptureMode__Base(enum.IntEnum):
     """
     pass
 class hipStreamCaptureMode(_hipStreamCaptureMode__Base):
+    """hipStreamCaptureMode
+
+    Attributes:
+        hipStreamCaptureModeGlobal:
+            (undocumented)
+        hipStreamCaptureModeThreadLocal:
+            (undocumented)
+        hipStreamCaptureModeRelaxed:
+            (undocumented)
+    """
     hipStreamCaptureModeGlobal = chip.hipStreamCaptureModeGlobal
     hipStreamCaptureModeThreadLocal = chip.hipStreamCaptureModeThreadLocal
     hipStreamCaptureModeRelaxed = chip.hipStreamCaptureModeRelaxed
@@ -31465,6 +33775,16 @@ class _hipStreamCaptureStatus__Base(enum.IntEnum):
     """
     pass
 class hipStreamCaptureStatus(_hipStreamCaptureStatus__Base):
+    """hipStreamCaptureStatus
+
+    Attributes:
+        hipStreamCaptureStatusNone:
+            Stream is not capturing
+        hipStreamCaptureStatusActive:
+            Stream is actively capturing
+        hipStreamCaptureStatusInvalidated:
+            Stream is part of a capture sequence that has been invalidated, but not terminated
+    """
     hipStreamCaptureStatusNone = chip.hipStreamCaptureStatusNone
     hipStreamCaptureStatusActive = chip.hipStreamCaptureStatusActive
     hipStreamCaptureStatusInvalidated = chip.hipStreamCaptureStatusInvalidated
@@ -31479,6 +33799,14 @@ class _hipStreamUpdateCaptureDependenciesFlags__Base(enum.IntEnum):
     """
     pass
 class hipStreamUpdateCaptureDependenciesFlags(_hipStreamUpdateCaptureDependenciesFlags__Base):
+    """hipStreamUpdateCaptureDependenciesFlags
+
+    Attributes:
+        hipStreamAddCaptureDependencies:
+            Add new nodes to the dependency set
+        hipStreamSetCaptureDependencies:
+            Replace the dependency set with the new nodes
+    """
     hipStreamAddCaptureDependencies = chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = chip.hipStreamSetCaptureDependencies
     @staticmethod
@@ -31492,6 +33820,18 @@ class _hipGraphMemAttributeType__Base(enum.IntEnum):
     """
     pass
 class hipGraphMemAttributeType(_hipGraphMemAttributeType__Base):
+    """hipGraphMemAttributeType
+
+    Attributes:
+        hipGraphMemAttrUsedMemCurrent:
+            Amount of memory, in bytes, currently associated with graphs
+        hipGraphMemAttrUsedMemHigh:
+            High watermark of memory, in bytes, associated with graphs since the last time.
+        hipGraphMemAttrReservedMemCurrent:
+            Amount of memory, in bytes, currently allocated for graphs.
+        hipGraphMemAttrReservedMemHigh:
+            High watermark of memory, in bytes, currently allocated for graphs
+    """
     hipGraphMemAttrUsedMemCurrent = chip.hipGraphMemAttrUsedMemCurrent
     hipGraphMemAttrUsedMemHigh = chip.hipGraphMemAttrUsedMemHigh
     hipGraphMemAttrReservedMemCurrent = chip.hipGraphMemAttrReservedMemCurrent
@@ -31507,6 +33847,12 @@ class _hipUserObjectFlags__Base(enum.IntEnum):
     """
     pass
 class hipUserObjectFlags(_hipUserObjectFlags__Base):
+    """hipUserObjectFlags
+
+    Attributes:
+        hipUserObjectNoDestructorSync:
+            Destructor execution is not synchronized.
+    """
     hipUserObjectNoDestructorSync = chip.hipUserObjectNoDestructorSync
     @staticmethod
     def ctypes_type():
@@ -31519,6 +33865,12 @@ class _hipUserObjectRetainFlags__Base(enum.IntEnum):
     """
     pass
 class hipUserObjectRetainFlags(_hipUserObjectRetainFlags__Base):
+    """hipUserObjectRetainFlags
+
+    Attributes:
+        hipGraphUserObjectMove:
+            Add new reference or retain.
+    """
     hipGraphUserObjectMove = chip.hipGraphUserObjectMove
     @staticmethod
     def ctypes_type():
@@ -31531,6 +33883,12 @@ class _hipGraphInstantiateFlags__Base(enum.IntEnum):
     """
     pass
 class hipGraphInstantiateFlags(_hipGraphInstantiateFlags__Base):
+    """hipGraphInstantiateFlags
+
+    Attributes:
+        hipGraphInstantiateFlagAutoFreeOnLaunch:
+            (undocumented)
+    """
     hipGraphInstantiateFlagAutoFreeOnLaunch = chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     @staticmethod
     def ctypes_type():
@@ -31539,7 +33897,7 @@ class hipGraphInstantiateFlags(_hipGraphInstantiateFlags__Base):
 
 
 cdef class hipMemAllocationProp_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMemAllocationProp_struct_0.
     
     Python wrapper for C type chip.hipMemAllocationProp_struct_0.
 
@@ -31662,7 +34020,6 @@ cdef class hipMemAllocationProp_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMemAllocationProp_struct_0 new():
@@ -31681,9 +34038,19 @@ cdef class hipMemAllocationProp_struct_0:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipMemAllocationProp_struct_0.
 
+        Constructor for type hipMemAllocationProp_struct_0.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipMemAllocationProp_struct_0.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -31721,6 +34088,7 @@ cdef class hipMemAllocationProp_struct_0:
         self._ptr[i].compressionType = value
     @property
     def compressionType(self):
+        """Compression type"""
         return self.get_compressionType(0)
     @compressionType.setter
     def compressionType(self, unsigned char value):
@@ -31736,6 +34104,7 @@ cdef class hipMemAllocationProp_struct_0:
         self._ptr[i].gpuDirectRDMACapable = value
     @property
     def gpuDirectRDMACapable(self):
+        """RDMA capable"""
         return self.get_gpuDirectRDMACapable(0)
     @gpuDirectRDMACapable.setter
     def gpuDirectRDMACapable(self, unsigned char value):
@@ -31751,6 +34120,7 @@ cdef class hipMemAllocationProp_struct_0:
         self._ptr[i].usage = value
     @property
     def usage(self):
+        """Usage"""
         return self.get_usage(0)
     @usage.setter
     def usage(self, unsigned short value):
@@ -31774,7 +34144,7 @@ cdef class hipMemAllocationProp_struct_0:
 
 
 cdef class hipMemAllocationProp:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipMemAllocationProp.
     
     Python wrapper for C type chip.hipMemAllocationProp.
 
@@ -31897,7 +34267,6 @@ cdef class hipMemAllocationProp:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipMemAllocationProp new():
@@ -31916,9 +34285,19 @@ cdef class hipMemAllocationProp:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipMemAllocationProp.
 
+        Constructor for type hipMemAllocationProp.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipMemAllocationProp.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -31958,6 +34337,7 @@ cdef class hipMemAllocationProp:
         self._ptr[i].type = value.value
     @property
     def type(self):
+        """Memory allocation type"""
         return self.get_type(0)
     @type.setter
     def type(self, value):
@@ -31975,6 +34355,7 @@ cdef class hipMemAllocationProp:
         self._ptr[i].requestedHandleType = value.value
     @property
     def requestedHandleType(self):
+        """Requested handle type"""
         return self.get_requestedHandleType(0)
     @requestedHandleType.setter
     def requestedHandleType(self, value):
@@ -31986,6 +34367,7 @@ cdef class hipMemAllocationProp:
         return hipMemLocation.from_ptr(&self._ptr[i].location)
     @property
     def location(self):
+        """Memory location"""
         return self.get_location(0)
 
     def get_win32HandleMetaData(self, i):
@@ -32002,7 +34384,7 @@ cdef class hipMemAllocationProp:
         self._ptr[i].win32HandleMetaData = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def win32HandleMetaData(self):
-        """
+        """Metadata for Win32 handles
         Note:
             Setting this win32HandleMetaData can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -32018,6 +34400,7 @@ cdef class hipMemAllocationProp:
         return hipMemAllocationProp_struct_0.from_ptr(&self._ptr[i].allocFlags)
     @property
     def allocFlags(self):
+        """(undocumented)"""
         return self.get_allocFlags(0)
 
     @staticmethod
@@ -32038,7 +34421,7 @@ cdef class hipMemAllocationProp:
 
 
 cdef class ihipMemGenericAllocationHandle:
-    """Python wrapper type.
+    """Python wrapper for C type chip.ihipMemGenericAllocationHandle.
     
     Python wrapper for C type chip.ihipMemGenericAllocationHandle.
 
@@ -32181,6 +34564,14 @@ class _hipMemAllocationGranularity_flags__Base(enum.IntEnum):
     """
     pass
 class hipMemAllocationGranularity_flags(_hipMemAllocationGranularity_flags__Base):
+    """Flags for granularity
+
+    Attributes:
+        hipMemAllocationGranularityMinimum:
+            Minimum granularity
+        hipMemAllocationGranularityRecommended:
+            Recommended granularity for performance
+    """
     hipMemAllocationGranularityMinimum = chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = chip.hipMemAllocationGranularityRecommended
     @staticmethod
@@ -32194,6 +34585,12 @@ class _hipMemHandleType__Base(enum.IntEnum):
     """
     pass
 class hipMemHandleType(_hipMemHandleType__Base):
+    """Memory handle type
+
+    Attributes:
+        hipMemHandleTypeGeneric:
+            Generic handle type
+    """
     hipMemHandleTypeGeneric = chip.hipMemHandleTypeGeneric
     @staticmethod
     def ctypes_type():
@@ -32206,6 +34603,14 @@ class _hipMemOperationType__Base(enum.IntEnum):
     """
     pass
 class hipMemOperationType(_hipMemOperationType__Base):
+    """Memory operation types
+
+    Attributes:
+        hipMemOperationTypeMap:
+            Map operation
+        hipMemOperationTypeUnmap:
+            Unmap operation
+    """
     hipMemOperationTypeMap = chip.hipMemOperationTypeMap
     hipMemOperationTypeUnmap = chip.hipMemOperationTypeUnmap
     @staticmethod
@@ -32219,6 +34624,14 @@ class _hipArraySparseSubresourceType__Base(enum.IntEnum):
     """
     pass
 class hipArraySparseSubresourceType(_hipArraySparseSubresourceType__Base):
+    """Subresource types for sparse arrays
+
+    Attributes:
+        hipArraySparseSubresourceTypeSparseLevel:
+            Sparse level
+        hipArraySparseSubresourceTypeMiptail:
+            Miptail
+    """
     hipArraySparseSubresourceTypeSparseLevel = chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = chip.hipArraySparseSubresourceTypeMiptail
     @staticmethod
@@ -32228,7 +34641,7 @@ class hipArraySparseSubresourceType(_hipArraySparseSubresourceType__Base):
 
 
 cdef class hipArrayMapInfo_union_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipArrayMapInfo_union_0.
     
     Python wrapper for C type chip.hipArrayMapInfo_union_0.
 
@@ -32351,7 +34764,6 @@ cdef class hipArrayMapInfo_union_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipArrayMapInfo_union_0 new():
@@ -32369,12 +34781,10 @@ cdef class hipArrayMapInfo_union_0:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipArrayMapInfo_union_0))
         return wrapper
    
-    # False
-    # True
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipArrayMapInfo_union_0.
 
-        Constructor for type hipArrayMapInfo_union_0
+        Constructor for type hipArrayMapInfo_union_0.
 
         Args:
             **kwargs: 
@@ -32412,6 +34822,7 @@ cdef class hipArrayMapInfo_union_0:
         return hipMipmappedArray.from_ptr(&self._ptr[i].mipmap)
     @property
     def mipmap(self):
+        """(undocumented)"""
         return self.get_mipmap(0)
 
     @staticmethod
@@ -32420,7 +34831,7 @@ cdef class hipArrayMapInfo_union_0:
 
 
 cdef class hipArrayMapInfo_union_1_struct_0:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipArrayMapInfo_union_1_struct_0.
     
     Python wrapper for C type chip.hipArrayMapInfo_union_1_struct_0.
 
@@ -32543,7 +34954,6 @@ cdef class hipArrayMapInfo_union_1_struct_0:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipArrayMapInfo_union_1_struct_0 new():
@@ -32562,9 +34972,19 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipArrayMapInfo_union_1_struct_0.
 
+        Constructor for type hipArrayMapInfo_union_1_struct_0.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipArrayMapInfo_union_1_struct_0.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -32602,6 +35022,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self._ptr[i].level = value
     @property
     def level(self):
+        """For mipmapped arrays must be a valid mipmap level. For arrays must be zero"""
         return self.get_level(0)
     @level.setter
     def level(self, unsigned int value):
@@ -32617,6 +35038,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self._ptr[i].layer = value
     @property
     def layer(self):
+        """For layered arrays must be a valid layer index. Otherwise, must be zero"""
         return self.get_layer(0)
     @layer.setter
     def layer(self, unsigned int value):
@@ -32632,6 +35054,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self._ptr[i].offsetX = value
     @property
     def offsetX(self):
+        """X offset in elements"""
         return self.get_offsetX(0)
     @offsetX.setter
     def offsetX(self, unsigned int value):
@@ -32647,6 +35070,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self._ptr[i].offsetY = value
     @property
     def offsetY(self):
+        """Y offset in elements"""
         return self.get_offsetY(0)
     @offsetY.setter
     def offsetY(self, unsigned int value):
@@ -32662,6 +35086,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self._ptr[i].offsetZ = value
     @property
     def offsetZ(self):
+        """Z offset in elements"""
         return self.get_offsetZ(0)
     @offsetZ.setter
     def offsetZ(self, unsigned int value):
@@ -32677,6 +35102,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self._ptr[i].extentWidth = value
     @property
     def extentWidth(self):
+        """Width in elements"""
         return self.get_extentWidth(0)
     @extentWidth.setter
     def extentWidth(self, unsigned int value):
@@ -32692,6 +35118,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self._ptr[i].extentHeight = value
     @property
     def extentHeight(self):
+        """Height in elements"""
         return self.get_extentHeight(0)
     @extentHeight.setter
     def extentHeight(self, unsigned int value):
@@ -32707,6 +35134,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self._ptr[i].extentDepth = value
     @property
     def extentDepth(self):
+        """Depth in elements"""
         return self.get_extentDepth(0)
     @extentDepth.setter
     def extentDepth(self, unsigned int value):
@@ -32730,7 +35158,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
 
 
 cdef class hipArrayMapInfo_union_1_struct_1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipArrayMapInfo_union_1_struct_1.
     
     Python wrapper for C type chip.hipArrayMapInfo_union_1_struct_1.
 
@@ -32853,7 +35281,6 @@ cdef class hipArrayMapInfo_union_1_struct_1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipArrayMapInfo_union_1_struct_1 new():
@@ -32872,9 +35299,19 @@ cdef class hipArrayMapInfo_union_1_struct_1:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipArrayMapInfo_union_1_struct_1.
 
+        Constructor for type hipArrayMapInfo_union_1_struct_1.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipArrayMapInfo_union_1_struct_1.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -32912,6 +35349,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
         self._ptr[i].layer = value
     @property
     def layer(self):
+        """For layered arrays must be a valid layer index. Otherwise, must be zero"""
         return self.get_layer(0)
     @layer.setter
     def layer(self, unsigned int value):
@@ -32927,6 +35365,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
         self._ptr[i].offset = value
     @property
     def offset(self):
+        """Offset within mip tail"""
         return self.get_offset(0)
     @offset.setter
     def offset(self, unsigned long long value):
@@ -32942,6 +35381,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
         self._ptr[i].size = value
     @property
     def size(self):
+        """Extent in bytes"""
         return self.get_size(0)
     @size.setter
     def size(self, unsigned long long value):
@@ -32965,7 +35405,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
 
 
 cdef class hipArrayMapInfo_union_1:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipArrayMapInfo_union_1.
     
     Python wrapper for C type chip.hipArrayMapInfo_union_1.
 
@@ -33088,7 +35528,6 @@ cdef class hipArrayMapInfo_union_1:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipArrayMapInfo_union_1 new():
@@ -33106,12 +35545,10 @@ cdef class hipArrayMapInfo_union_1:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipArrayMapInfo_union_1))
         return wrapper
    
-    # True
-    # True
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipArrayMapInfo_union_1.
 
-        Constructor for type hipArrayMapInfo_union_1
+        Constructor for type hipArrayMapInfo_union_1.
 
         Args:
             **kwargs: 
@@ -33149,6 +35586,7 @@ cdef class hipArrayMapInfo_union_1:
         return hipArrayMapInfo_union_1_struct_0.from_ptr(&self._ptr[i].sparseLevel)
     @property
     def sparseLevel(self):
+        """(undocumented)"""
         return self.get_sparseLevel(0)
 
     def get_miptail(self, i):
@@ -33157,6 +35595,7 @@ cdef class hipArrayMapInfo_union_1:
         return hipArrayMapInfo_union_1_struct_1.from_ptr(&self._ptr[i].miptail)
     @property
     def miptail(self):
+        """(undocumented)"""
         return self.get_miptail(0)
 
     @staticmethod
@@ -33165,7 +35604,7 @@ cdef class hipArrayMapInfo_union_1:
 
 
 cdef class hipArrayMapInfo_union_2:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipArrayMapInfo_union_2.
     
     Python wrapper for C type chip.hipArrayMapInfo_union_2.
 
@@ -33288,7 +35727,6 @@ cdef class hipArrayMapInfo_union_2:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipArrayMapInfo_union_2 new():
@@ -33306,12 +35744,10 @@ cdef class hipArrayMapInfo_union_2:
         string.memcpy(wrapper._ptr, &other, sizeof(chip.hipArrayMapInfo_union_2))
         return wrapper
    
-    # False
-    # True
     def __init__(self,**kwargs):
-        """Constructor.
+        """Constructor type hipArrayMapInfo_union_2.
 
-        Constructor for type hipArrayMapInfo_union_2
+        Constructor for type hipArrayMapInfo_union_2.
 
         Args:
             **kwargs: 
@@ -33349,7 +35785,7 @@ cdef class hipArrayMapInfo_union_2:
 
 
 cdef class hipArrayMapInfo:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipArrayMapInfo.
     
     Python wrapper for C type chip.hipArrayMapInfo.
 
@@ -33472,7 +35908,6 @@ cdef class hipArrayMapInfo:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipArrayMapInfo new():
@@ -33491,9 +35926,19 @@ cdef class hipArrayMapInfo:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipArrayMapInfo.
 
+        Constructor for type hipArrayMapInfo.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipArrayMapInfo.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -33533,6 +35978,7 @@ cdef class hipArrayMapInfo:
         self._ptr[i].resourceType = value.value
     @property
     def resourceType(self):
+        """Resource type"""
         return self.get_resourceType(0)
     @resourceType.setter
     def resourceType(self, value):
@@ -33544,6 +35990,7 @@ cdef class hipArrayMapInfo:
         return hipArrayMapInfo_union_0.from_ptr(&self._ptr[i].resource)
     @property
     def resource(self):
+        """(undocumented)"""
         return self.get_resource(0)
 
     def get_subresourceType(self, i):
@@ -33558,6 +36005,7 @@ cdef class hipArrayMapInfo:
         self._ptr[i].subresourceType = value.value
     @property
     def subresourceType(self):
+        """Sparse subresource type"""
         return self.get_subresourceType(0)
     @subresourceType.setter
     def subresourceType(self, value):
@@ -33569,6 +36017,7 @@ cdef class hipArrayMapInfo:
         return hipArrayMapInfo_union_1.from_ptr(&self._ptr[i].subresource)
     @property
     def subresource(self):
+        """(undocumented)"""
         return self.get_subresource(0)
 
     def get_memOperationType(self, i):
@@ -33583,6 +36032,7 @@ cdef class hipArrayMapInfo:
         self._ptr[i].memOperationType = value.value
     @property
     def memOperationType(self):
+        """Memory operation type"""
         return self.get_memOperationType(0)
     @memOperationType.setter
     def memOperationType(self, value):
@@ -33600,6 +36050,7 @@ cdef class hipArrayMapInfo:
         self._ptr[i].memHandleType = value.value
     @property
     def memHandleType(self):
+        """Memory handle type"""
         return self.get_memHandleType(0)
     @memHandleType.setter
     def memHandleType(self, value):
@@ -33611,6 +36062,7 @@ cdef class hipArrayMapInfo:
         return hipArrayMapInfo_union_2.from_ptr(&self._ptr[i].memHandle)
     @property
     def memHandle(self):
+        """(undocumented)"""
         return self.get_memHandle(0)
 
     def get_offset(self, i):
@@ -33623,6 +36075,7 @@ cdef class hipArrayMapInfo:
         self._ptr[i].offset = value
     @property
     def offset(self):
+        """Offset within the memory"""
         return self.get_offset(0)
     @offset.setter
     def offset(self, unsigned long long value):
@@ -33638,6 +36091,7 @@ cdef class hipArrayMapInfo:
         self._ptr[i].deviceBitMask = value
     @property
     def deviceBitMask(self):
+        """Device ordinal bit mask"""
         return self.get_deviceBitMask(0)
     @deviceBitMask.setter
     def deviceBitMask(self, unsigned int value):
@@ -33653,6 +36107,7 @@ cdef class hipArrayMapInfo:
         self._ptr[i].flags = value
     @property
     def flags(self):
+        """flags for future use, must be zero now."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
@@ -33669,6 +36124,7 @@ cdef class hipArrayMapInfo:
     #    self._ptr[i].reserved = value
     @property
     def reserved(self):
+        """Reserved for future use, must be zero now."""
         return self.get_reserved(0)
     # TODO add setters
     #@reserved.setter
@@ -35163,7 +37619,7 @@ def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
 
 
 cdef class hipStreamCallback_t:
-    """Python wrapper type.
+    """Python wrapper for C type chip.hipStreamCallback_t.
     
     Python wrapper for C type chip.hipStreamCallback_t.
 
@@ -45488,6 +47944,22 @@ class _hipDataType__Base(enum.IntEnum):
     """
     pass
 class hipDataType(_hipDataType__Base):
+    """hipDataType
+
+    Attributes:
+        HIP_R_16F:
+            (undocumented)
+        HIP_R_32F:
+            (undocumented)
+        HIP_R_64F:
+            (undocumented)
+        HIP_C_16F:
+            (undocumented)
+        HIP_C_32F:
+            (undocumented)
+        HIP_C_64F:
+            (undocumented)
+    """
     HIP_R_16F = chip.HIP_R_16F
     HIP_R_32F = chip.HIP_R_32F
     HIP_R_64F = chip.HIP_R_64F
@@ -45505,6 +47977,16 @@ class _hipLibraryPropertyType__Base(enum.IntEnum):
     """
     pass
 class hipLibraryPropertyType(_hipLibraryPropertyType__Base):
+    """hipLibraryPropertyType
+
+    Attributes:
+        HIP_LIBRARY_MAJOR_VERSION:
+            (undocumented)
+        HIP_LIBRARY_MINOR_VERSION:
+            (undocumented)
+        HIP_LIBRARY_PATCH_LEVEL:
+            (undocumented)
+    """
     HIP_LIBRARY_MAJOR_VERSION = chip.HIP_LIBRARY_MAJOR_VERSION
     HIP_LIBRARY_MINOR_VERSION = chip.HIP_LIBRARY_MINOR_VERSION
     HIP_LIBRARY_PATCH_LEVEL = chip.HIP_LIBRARY_PATCH_LEVEL

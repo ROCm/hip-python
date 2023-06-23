@@ -32,7 +32,7 @@ import warnings
 
 pyp.ParserElement.setDefaultWhitespaceChars(' \t')
 
-def remove_doxygen_cpp_comments(text: str, dedent=True):
+def remove_doxygen_comment_chars(text: str, dedent=True):
     """Strip away doxygen C++ comment delimiters.
 
     Note:
@@ -48,6 +48,8 @@ def remove_doxygen_cpp_comments(text: str, dedent=True):
         result += text[last_end:start]
         comment = text[start:end]
         if comment.lstrip().startswith("//"):
+            comment = comment.replace("//!<","",1) # TODO improve with regex
+            comment = comment.replace("///<","",1)
             comment = comment.replace("///","",1)
             comment = comment.replace("//!","",1)
             result += comment
@@ -173,12 +175,9 @@ class Node:
               Defaults to False.
         """
         if self.end != None:
-            result = self.input_string[self.begin:self.end]
-            if transform_formatting:
-                result = self.parser.formatting.transformString(result)
-            if transform_other:
-                result = self.parser.other.transformString(result)
-            return result
+            assert isinstance(self.parser, DoxygenGrammar)
+            text = self.input_string[self.begin:self.end]
+            return self.parser.transform_text_block(text,transform_formatting,transform_other)
         else:
             raise RuntimeError("'end' must not be `None`")
     
@@ -1091,3 +1090,27 @@ class DoxygenGrammar:
             section = root.add_details_section(previous_end,len(original))
             scan_for_verbatim_or_math_(section.body)
         return root
+    
+            
+    def transform_text_block(self,text: str,transform_formatting: bool=True,transform_other: bool=True) -> str:
+        """Transforms a simple text block, i.e. text that is assumed to not contain any doxygen sections and no verbatim *blocks*.
+        
+        Transforms a simple text block by applying the `self.formatting` and `self.other`
+        parse actions to the input text.
+        The input text is assumed to not contain any doxygen sections and no verbatim blocks.
+        Note that the input text can contain inline math and inline code expressions.
+
+        Args:
+            text (str): The text to transform.
+            transform_formatting (bool, optional): If `self.formatting` should be applied. Defaults to `True`.
+            transform_other (bool, optional): If `self.other` should be applied. Defaults to `True`.
+
+        Returns:
+            str: The transformed text after applying the parse actions of both parsers.
+        """
+        result = text
+        if transform_formatting:
+            result = self.formatting.transformString(result)
+        if transform_other:
+            result = self.other.transformString(result)
+        return result
