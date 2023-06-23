@@ -39,6 +39,36 @@ class _hiprtcResult__Base(enum.IntEnum):
     """
     pass
 class hiprtcResult(_hiprtcResult__Base):
+    """hiprtcResult
+
+    Attributes:
+        HIPRTC_SUCCESS:
+            (undocumented)
+        HIPRTC_ERROR_OUT_OF_MEMORY:
+            (undocumented)
+        HIPRTC_ERROR_PROGRAM_CREATION_FAILURE:
+            (undocumented)
+        HIPRTC_ERROR_INVALID_INPUT:
+            (undocumented)
+        HIPRTC_ERROR_INVALID_PROGRAM:
+            (undocumented)
+        HIPRTC_ERROR_INVALID_OPTION:
+            (undocumented)
+        HIPRTC_ERROR_COMPILATION:
+            (undocumented)
+        HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE:
+            (undocumented)
+        HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION:
+            (undocumented)
+        HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION:
+            (undocumented)
+        HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID:
+            (undocumented)
+        HIPRTC_ERROR_INTERNAL_ERROR:
+            (undocumented)
+        HIPRTC_ERROR_LINKING:
+            (undocumented)
+    """
     HIPRTC_SUCCESS = chiprtc.HIPRTC_SUCCESS
     HIPRTC_ERROR_OUT_OF_MEMORY = chiprtc.HIPRTC_ERROR_OUT_OF_MEMORY
     HIPRTC_ERROR_PROGRAM_CREATION_FAILURE = chiprtc.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
@@ -63,6 +93,62 @@ class _hiprtcJIT_option__Base(enum.IntEnum):
     """
     pass
 class hiprtcJIT_option(_hiprtcJIT_option__Base):
+    """hiprtcJIT_option
+
+    Attributes:
+        HIPRTC_JIT_MAX_REGISTERS:
+            (undocumented)
+        HIPRTC_JIT_THREADS_PER_BLOCK:
+            (undocumented)
+        HIPRTC_JIT_WALL_TIME:
+            (undocumented)
+        HIPRTC_JIT_INFO_LOG_BUFFER:
+            (undocumented)
+        HIPRTC_JIT_INFO_LOG_BUFFER_SIZE_BYTES:
+            (undocumented)
+        HIPRTC_JIT_ERROR_LOG_BUFFER:
+            (undocumented)
+        HIPRTC_JIT_ERROR_LOG_BUFFER_SIZE_BYTES:
+            (undocumented)
+        HIPRTC_JIT_OPTIMIZATION_LEVEL:
+            (undocumented)
+        HIPRTC_JIT_TARGET_FROM_HIPCONTEXT:
+            (undocumented)
+        HIPRTC_JIT_TARGET:
+            (undocumented)
+        HIPRTC_JIT_FALLBACK_STRATEGY:
+            (undocumented)
+        HIPRTC_JIT_GENERATE_DEBUG_INFO:
+            (undocumented)
+        HIPRTC_JIT_LOG_VERBOSE:
+            (undocumented)
+        HIPRTC_JIT_GENERATE_LINE_INFO:
+            (undocumented)
+        HIPRTC_JIT_CACHE_MODE:
+            (undocumented)
+        HIPRTC_JIT_NEW_SM3X_OPT:
+            (undocumented)
+        HIPRTC_JIT_FAST_COMPILE:
+            (undocumented)
+        HIPRTC_JIT_GLOBAL_SYMBOL_NAMES:
+            (undocumented)
+        HIPRTC_JIT_GLOBAL_SYMBOL_ADDRESS:
+            (undocumented)
+        HIPRTC_JIT_GLOBAL_SYMBOL_COUNT:
+            (undocumented)
+        HIPRTC_JIT_LTO:
+            (undocumented)
+        HIPRTC_JIT_FTZ:
+            (undocumented)
+        HIPRTC_JIT_PREC_DIV:
+            (undocumented)
+        HIPRTC_JIT_PREC_SQRT:
+            (undocumented)
+        HIPRTC_JIT_FMA:
+            (undocumented)
+        HIPRTC_JIT_NUM_OPTIONS:
+            (undocumented)
+    """
     HIPRTC_JIT_MAX_REGISTERS = chiprtc.HIPRTC_JIT_MAX_REGISTERS
     HIPRTC_JIT_THREADS_PER_BLOCK = chiprtc.HIPRTC_JIT_THREADS_PER_BLOCK
     HIPRTC_JIT_WALL_TIME = chiprtc.HIPRTC_JIT_WALL_TIME
@@ -100,6 +186,32 @@ class _hiprtcJITInputType__Base(enum.IntEnum):
     """
     pass
 class hiprtcJITInputType(_hiprtcJITInputType__Base):
+    """hiprtcJITInputType
+
+    Attributes:
+        HIPRTC_JIT_INPUT_CUBIN:
+            (undocumented)
+        HIPRTC_JIT_INPUT_PTX:
+            (undocumented)
+        HIPRTC_JIT_INPUT_FATBINARY:
+            (undocumented)
+        HIPRTC_JIT_INPUT_OBJECT:
+            (undocumented)
+        HIPRTC_JIT_INPUT_LIBRARY:
+            (undocumented)
+        HIPRTC_JIT_INPUT_NVVM:
+            (undocumented)
+        HIPRTC_JIT_NUM_LEGACY_INPUT_TYPES:
+            (undocumented)
+        HIPRTC_JIT_INPUT_LLVM_BITCODE:
+            (undocumented)
+        HIPRTC_JIT_INPUT_LLVM_BUNDLED_BITCODE:
+            (undocumented)
+        HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE:
+            (undocumented)
+        HIPRTC_JIT_NUM_INPUT_TYPES:
+            (undocumented)
+    """
     HIPRTC_JIT_INPUT_CUBIN = chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_PTX = chiprtc.HIPRTC_JIT_INPUT_PTX
     HIPRTC_JIT_INPUT_FATBINARY = chiprtc.HIPRTC_JIT_INPUT_FATBINARY
@@ -118,7 +230,7 @@ class hiprtcJITInputType(_hiprtcJITInputType__Base):
 
 
 cdef class ihiprtcLinkState:
-    """Python wrapper type.
+    """Python wrapper for C type chiprtc.ihiprtcLinkState.
     
     Python wrapper for C type chiprtc.ihiprtcLinkState.
 
@@ -302,7 +414,7 @@ def hiprtcVersion():
 
 
 cdef class _hiprtcProgram:
-    """Python wrapper type.
+    """Python wrapper for C type chiprtc._hiprtcProgram.
     
     Python wrapper for C type chiprtc._hiprtcProgram.
 

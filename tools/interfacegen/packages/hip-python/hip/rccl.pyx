@@ -82,7 +82,7 @@ RCCL_MULTIRANKPERGPU = crccl.RCCL_MULTIRANKPERGPU
 NCCL_UNIQUE_ID_BYTES = crccl.NCCL_UNIQUE_ID_BYTES
 
 cdef class ncclComm:
-    """Python wrapper type.
+    """Python wrapper for C type crccl.ncclComm.
     
     Python wrapper for C type crccl.ncclComm.
 
@@ -221,7 +221,7 @@ cdef class ncclComm:
 ncclComm_t = ncclComm
 
 cdef class ncclUniqueId:
-    """Python wrapper type.
+    """Python wrapper for C type crccl.ncclUniqueId.
     
     Python wrapper for C type crccl.ncclUniqueId.
 
@@ -344,7 +344,6 @@ cdef class ncclUniqueId:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ncclUniqueId new():
@@ -363,9 +362,19 @@ cdef class ncclUniqueId:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type ncclUniqueId.
 
+        Constructor for type ncclUniqueId.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ncclUniqueId.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -404,6 +413,7 @@ cdef class ncclUniqueId:
     #    self._ptr[i].internal = value
     @property
     def internal(self):
+        """(undocumented)"""
         return self.get_internal(0)
     # TODO add setters
     #@internal.setter
@@ -432,6 +442,26 @@ class _ncclResult_t__Base(enum.IntEnum):
     """
     pass
 class ncclResult_t(_ncclResult_t__Base):
+    """Error type
+
+    Attributes:
+        ncclSuccess:
+            (undocumented)
+        ncclUnhandledCudaError:
+            (undocumented)
+        ncclSystemError:
+            (undocumented)
+        ncclInternalError:
+            (undocumented)
+        ncclInvalidArgument:
+            (undocumented)
+        ncclInvalidUsage:
+            (undocumented)
+        ncclRemoteError:
+            (undocumented)
+        ncclNumResults:
+            (undocumented)
+    """
     ncclSuccess = crccl.ncclSuccess
     ncclUnhandledCudaError = crccl.ncclUnhandledCudaError
     ncclSystemError = crccl.ncclSystemError
@@ -1015,6 +1045,12 @@ class _ncclRedOp_dummy_t__Base(enum.IntEnum):
     """
     pass
 class ncclRedOp_dummy_t(_ncclRedOp_dummy_t__Base):
+    """Reduction operation selector
+
+    Attributes:
+        ncclNumOps_dummy:
+            (undocumented)
+    """
     ncclNumOps_dummy = crccl.ncclNumOps_dummy
     @staticmethod
     def ctypes_type():
@@ -1027,6 +1063,24 @@ class _ncclRedOp_t__Base(enum.IntEnum):
     """
     pass
 class ncclRedOp_t(_ncclRedOp_t__Base):
+    """ncclRedOp_t
+
+    Attributes:
+        ncclSum:
+            (undocumented)
+        ncclProd:
+            (undocumented)
+        ncclMax:
+            (undocumented)
+        ncclMin:
+            (undocumented)
+        ncclAvg:
+            (undocumented)
+        ncclNumOps:
+            (undocumented)
+        ncclMaxRedOp:
+            (undocumented)
+    """
     ncclSum = crccl.ncclSum
     ncclProd = crccl.ncclProd
     ncclMax = crccl.ncclMax
@@ -1045,6 +1099,42 @@ class _ncclDataType_t__Base(enum.IntEnum):
     """
     pass
 class ncclDataType_t(_ncclDataType_t__Base):
+    """Data types
+
+    Attributes:
+        ncclInt8:
+            (undocumented)
+        ncclChar:
+            (undocumented)
+        ncclUint8:
+            (undocumented)
+        ncclInt32:
+            (undocumented)
+        ncclInt:
+            (undocumented)
+        ncclUint32:
+            (undocumented)
+        ncclInt64:
+            (undocumented)
+        ncclUint64:
+            (undocumented)
+        ncclFloat16:
+            (undocumented)
+        ncclHalf:
+            (undocumented)
+        ncclFloat32:
+            (undocumented)
+        ncclFloat:
+            (undocumented)
+        ncclFloat64:
+            (undocumented)
+        ncclDouble:
+            (undocumented)
+        ncclBfloat16:
+            (undocumented)
+        ncclNumTypes:
+            (undocumented)
+    """
     ncclInt8 = crccl.ncclInt8
     ncclChar = crccl.ncclChar
     ncclUint8 = crccl.ncclUint8
@@ -1072,6 +1162,14 @@ class _ncclScalarResidence_t__Base(enum.IntEnum):
     """
     pass
 class ncclScalarResidence_t(_ncclScalarResidence_t__Base):
+    """ncclScalarResidence_t
+
+    Attributes:
+        ncclScalarDevice:
+            (undocumented)
+        ncclScalarHostImmediate:
+            (undocumented)
+    """
     ncclScalarDevice = crccl.ncclScalarDevice
     ncclScalarHostImmediate = crccl.ncclScalarHostImmediate
     @staticmethod

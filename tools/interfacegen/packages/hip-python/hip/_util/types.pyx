@@ -819,7 +819,7 @@ cdef class ListOfBytes(Pointer):
 
     * `list` / `tuple` of `bytes:
         A `list` or `tuple` of `bytes` objects.
-        In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses of all entries.
+        In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
     * `object` that is accepted as input by `~.Pointer.__init__`:
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
@@ -933,7 +933,7 @@ cdef class ListOfPointer(Pointer):
 
     * `list` / `tuple` of `bytes`:
         A `list` or `tuple` of types that can be converted to `~.Pointer`.
-        In this case, this type allocates an array of ``void *`` pointers wherein it stores the addresses obtained from all entries.
+        In this case, this type allocates an array of ``void *`` pointers wherein it stores the addresses obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
     * `object` that is accepted as input by `~.Pointer.__init__`:
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
@@ -1042,7 +1042,7 @@ cdef class ListOfInt(Pointer):
 
     * `list` / `tuple` of types that can be converted to C type ``int``:
         A `list` or `tuple` of types that can be converted to C type ``int``.
-        In this case, this type allocates an array of C ``int`` values wherein it stores the addresses obtained from all entries.
+        In this case, this type allocates an array of C ``int`` values wherein it stores the values obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
     * `object` that is accepted as input by `~.Pointer.__init__`:
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
@@ -1172,7 +1172,7 @@ cdef class ListOfUnsigned(Pointer):
 
     * `list` / `tuple` of types that can be converted to C type ``unsigned``:
         A `list` or `tuple` of types that can be converted to C type ``unsigned``.
-        In this case, this type allocates an array of C ``unsigned`` values wherein it stores the addresses obtained from all entries.
+        In this case, this type allocates an array of C ``unsigned`` values wherein it stores the values obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
     * `object` that is accepted as input by `~.Pointer.__init__`:
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
@@ -1302,7 +1302,7 @@ cdef class ListOfUnsignedLong(Pointer):
 
     * `list` / `tuple` of types that can be converted to C type ``unsigned long``:
         A `list` or `tuple` of types that can be converted to C type ``unsigned long``.
-        In this case, this type allocates an array of C ``unsigned long`` values wherein it stores the addresses obtained from all entries.
+        In this case, this type allocates an array of C ``unsigned long`` values wherein it stores the values obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
     * `object` that is accepted as input by `~.Pointer.__init__`:
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.

@@ -71,7 +71,7 @@ import cython
 import ctypes
 import enum
 cdef class bsrsv2Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.bsrsv2Info.
     
     Python wrapper for C type chipsparse.bsrsv2Info.
 
@@ -210,7 +210,7 @@ cdef class bsrsv2Info:
 bsrsv2Info_t = bsrsv2Info
 
 cdef class bsrsm2Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.bsrsm2Info.
     
     Python wrapper for C type chipsparse.bsrsm2Info.
 
@@ -349,7 +349,7 @@ cdef class bsrsm2Info:
 bsrsm2Info_t = bsrsm2Info
 
 cdef class bsrilu02Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.bsrilu02Info.
     
     Python wrapper for C type chipsparse.bsrilu02Info.
 
@@ -488,7 +488,7 @@ cdef class bsrilu02Info:
 bsrilu02Info_t = bsrilu02Info
 
 cdef class bsric02Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.bsric02Info.
     
     Python wrapper for C type chipsparse.bsric02Info.
 
@@ -627,7 +627,7 @@ cdef class bsric02Info:
 bsric02Info_t = bsric02Info
 
 cdef class csrsv2Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.csrsv2Info.
     
     Python wrapper for C type chipsparse.csrsv2Info.
 
@@ -766,7 +766,7 @@ cdef class csrsv2Info:
 csrsv2Info_t = csrsv2Info
 
 cdef class csrsm2Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.csrsm2Info.
     
     Python wrapper for C type chipsparse.csrsm2Info.
 
@@ -905,7 +905,7 @@ cdef class csrsm2Info:
 csrsm2Info_t = csrsm2Info
 
 cdef class csrilu02Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.csrilu02Info.
     
     Python wrapper for C type chipsparse.csrilu02Info.
 
@@ -1044,7 +1044,7 @@ cdef class csrilu02Info:
 csrilu02Info_t = csrilu02Info
 
 cdef class csric02Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.csric02Info.
     
     Python wrapper for C type chipsparse.csric02Info.
 
@@ -1183,7 +1183,7 @@ cdef class csric02Info:
 csric02Info_t = csric02Info
 
 cdef class csrgemm2Info:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.csrgemm2Info.
     
     Python wrapper for C type chipsparse.csrgemm2Info.
 
@@ -1322,7 +1322,7 @@ cdef class csrgemm2Info:
 csrgemm2Info_t = csrgemm2Info
 
 cdef class pruneInfo:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.pruneInfo.
     
     Python wrapper for C type chipsparse.pruneInfo.
 
@@ -1461,7 +1461,7 @@ cdef class pruneInfo:
 pruneInfo_t = pruneInfo
 
 cdef class csru2csrInfo:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.csru2csrInfo.
     
     Python wrapper for C type chipsparse.csru2csrInfo.
 
@@ -1604,6 +1604,34 @@ class _hipsparseStatus_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseStatus_t(_hipsparseStatus_t__Base):
+    """hipsparseStatus_t
+
+    Attributes:
+        HIPSPARSE_STATUS_SUCCESS:
+            (undocumented)
+        HIPSPARSE_STATUS_NOT_INITIALIZED:
+            (undocumented)
+        HIPSPARSE_STATUS_ALLOC_FAILED:
+            (undocumented)
+        HIPSPARSE_STATUS_INVALID_VALUE:
+            (undocumented)
+        HIPSPARSE_STATUS_ARCH_MISMATCH:
+            (undocumented)
+        HIPSPARSE_STATUS_MAPPING_ERROR:
+            (undocumented)
+        HIPSPARSE_STATUS_EXECUTION_FAILED:
+            (undocumented)
+        HIPSPARSE_STATUS_INTERNAL_ERROR:
+            (undocumented)
+        HIPSPARSE_STATUS_MATRIX_TYPE_NOT_SUPPORTED:
+            (undocumented)
+        HIPSPARSE_STATUS_ZERO_PIVOT:
+            (undocumented)
+        HIPSPARSE_STATUS_NOT_SUPPORTED:
+            (undocumented)
+        HIPSPARSE_STATUS_INSUFFICIENT_RESOURCES:
+            (undocumented)
+    """
     HIPSPARSE_STATUS_SUCCESS = chipsparse.HIPSPARSE_STATUS_SUCCESS
     HIPSPARSE_STATUS_NOT_INITIALIZED = chipsparse.HIPSPARSE_STATUS_NOT_INITIALIZED
     HIPSPARSE_STATUS_ALLOC_FAILED = chipsparse.HIPSPARSE_STATUS_ALLOC_FAILED
@@ -1627,6 +1655,14 @@ class _hipsparsePointerMode_t__Base(enum.IntEnum):
     """
     pass
 class hipsparsePointerMode_t(_hipsparsePointerMode_t__Base):
+    """Indicates if the pointer is device pointer or host pointer.
+
+    Attributes:
+        HIPSPARSE_POINTER_MODE_HOST:
+            (undocumented)
+        HIPSPARSE_POINTER_MODE_DEVICE:
+            (undocumented)
+    """
     HIPSPARSE_POINTER_MODE_HOST = chipsparse.HIPSPARSE_POINTER_MODE_HOST
     HIPSPARSE_POINTER_MODE_DEVICE = chipsparse.HIPSPARSE_POINTER_MODE_DEVICE
     @staticmethod
@@ -1640,6 +1676,14 @@ class _hipsparseAction_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseAction_t(_hipsparseAction_t__Base):
+    """Specify where the operation is performed on.
+
+    Attributes:
+        HIPSPARSE_ACTION_SYMBOLIC:
+            (undocumented)
+        HIPSPARSE_ACTION_NUMERIC:
+            (undocumented)
+    """
     HIPSPARSE_ACTION_SYMBOLIC = chipsparse.HIPSPARSE_ACTION_SYMBOLIC
     HIPSPARSE_ACTION_NUMERIC = chipsparse.HIPSPARSE_ACTION_NUMERIC
     @staticmethod
@@ -1653,6 +1697,18 @@ class _hipsparseMatrixType_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseMatrixType_t(_hipsparseMatrixType_t__Base):
+    """Specify the matrix type.
+
+    Attributes:
+        HIPSPARSE_MATRIX_TYPE_GENERAL:
+            (undocumented)
+        HIPSPARSE_MATRIX_TYPE_SYMMETRIC:
+            (undocumented)
+        HIPSPARSE_MATRIX_TYPE_HERMITIAN:
+            (undocumented)
+        HIPSPARSE_MATRIX_TYPE_TRIANGULAR:
+            (undocumented)
+    """
     HIPSPARSE_MATRIX_TYPE_GENERAL = chipsparse.HIPSPARSE_MATRIX_TYPE_GENERAL
     HIPSPARSE_MATRIX_TYPE_SYMMETRIC = chipsparse.HIPSPARSE_MATRIX_TYPE_SYMMETRIC
     HIPSPARSE_MATRIX_TYPE_HERMITIAN = chipsparse.HIPSPARSE_MATRIX_TYPE_HERMITIAN
@@ -1668,6 +1724,14 @@ class _hipsparseFillMode_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseFillMode_t(_hipsparseFillMode_t__Base):
+    """Specify the matrix fill mode.
+
+    Attributes:
+        HIPSPARSE_FILL_MODE_LOWER:
+            (undocumented)
+        HIPSPARSE_FILL_MODE_UPPER:
+            (undocumented)
+    """
     HIPSPARSE_FILL_MODE_LOWER = chipsparse.HIPSPARSE_FILL_MODE_LOWER
     HIPSPARSE_FILL_MODE_UPPER = chipsparse.HIPSPARSE_FILL_MODE_UPPER
     @staticmethod
@@ -1681,6 +1745,14 @@ class _hipsparseDiagType_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseDiagType_t(_hipsparseDiagType_t__Base):
+    """Indicates if the diagonal entries are unity.
+
+    Attributes:
+        HIPSPARSE_DIAG_TYPE_NON_UNIT:
+            (undocumented)
+        HIPSPARSE_DIAG_TYPE_UNIT:
+            (undocumented)
+    """
     HIPSPARSE_DIAG_TYPE_NON_UNIT = chipsparse.HIPSPARSE_DIAG_TYPE_NON_UNIT
     HIPSPARSE_DIAG_TYPE_UNIT = chipsparse.HIPSPARSE_DIAG_TYPE_UNIT
     @staticmethod
@@ -1694,6 +1766,14 @@ class _hipsparseIndexBase_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseIndexBase_t(_hipsparseIndexBase_t__Base):
+    """Specify the matrix index base.
+
+    Attributes:
+        HIPSPARSE_INDEX_BASE_ZERO:
+            (undocumented)
+        HIPSPARSE_INDEX_BASE_ONE:
+            (undocumented)
+    """
     HIPSPARSE_INDEX_BASE_ZERO = chipsparse.HIPSPARSE_INDEX_BASE_ZERO
     HIPSPARSE_INDEX_BASE_ONE = chipsparse.HIPSPARSE_INDEX_BASE_ONE
     @staticmethod
@@ -1707,6 +1787,16 @@ class _hipsparseOperation_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseOperation_t(_hipsparseOperation_t__Base):
+    """Specify whether the matrix is to be transposed or not.
+
+    Attributes:
+        HIPSPARSE_OPERATION_NON_TRANSPOSE:
+            (undocumented)
+        HIPSPARSE_OPERATION_TRANSPOSE:
+            (undocumented)
+        HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE:
+            (undocumented)
+    """
     HIPSPARSE_OPERATION_NON_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_NON_TRANSPOSE
     HIPSPARSE_OPERATION_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_TRANSPOSE
     HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE
@@ -1721,6 +1811,16 @@ class _hipsparseHybPartition_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseHybPartition_t(_hipsparseHybPartition_t__Base):
+    """HYB matrix partitioning type.
+
+    Attributes:
+        HIPSPARSE_HYB_PARTITION_AUTO:
+            (undocumented)
+        HIPSPARSE_HYB_PARTITION_USER:
+            (undocumented)
+        HIPSPARSE_HYB_PARTITION_MAX:
+            (undocumented)
+    """
     HIPSPARSE_HYB_PARTITION_AUTO = chipsparse.HIPSPARSE_HYB_PARTITION_AUTO
     HIPSPARSE_HYB_PARTITION_USER = chipsparse.HIPSPARSE_HYB_PARTITION_USER
     HIPSPARSE_HYB_PARTITION_MAX = chipsparse.HIPSPARSE_HYB_PARTITION_MAX
@@ -1735,6 +1835,14 @@ class _hipsparseSolvePolicy_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSolvePolicy_t(_hipsparseSolvePolicy_t__Base):
+    """Specify policy in triangular solvers and factorizations.
+
+    Attributes:
+        HIPSPARSE_SOLVE_POLICY_NO_LEVEL:
+            (undocumented)
+        HIPSPARSE_SOLVE_POLICY_USE_LEVEL:
+            (undocumented)
+    """
     HIPSPARSE_SOLVE_POLICY_NO_LEVEL = chipsparse.HIPSPARSE_SOLVE_POLICY_NO_LEVEL
     HIPSPARSE_SOLVE_POLICY_USE_LEVEL = chipsparse.HIPSPARSE_SOLVE_POLICY_USE_LEVEL
     @staticmethod
@@ -1748,6 +1856,14 @@ class _hipsparseSideMode_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSideMode_t(_hipsparseSideMode_t__Base):
+    """hipsparseSideMode_t
+
+    Attributes:
+        HIPSPARSE_SIDE_LEFT:
+            (undocumented)
+        HIPSPARSE_SIDE_RIGHT:
+            (undocumented)
+    """
     HIPSPARSE_SIDE_LEFT = chipsparse.HIPSPARSE_SIDE_LEFT
     HIPSPARSE_SIDE_RIGHT = chipsparse.HIPSPARSE_SIDE_RIGHT
     @staticmethod
@@ -1761,6 +1877,14 @@ class _hipsparseDirection_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseDirection_t(_hipsparseDirection_t__Base):
+    """Specify the matrix direction.
+
+    Attributes:
+        HIPSPARSE_DIRECTION_ROW:
+            (undocumented)
+        HIPSPARSE_DIRECTION_COLUMN:
+            (undocumented)
+    """
     HIPSPARSE_DIRECTION_ROW = chipsparse.HIPSPARSE_DIRECTION_ROW
     HIPSPARSE_DIRECTION_COLUMN = chipsparse.HIPSPARSE_DIRECTION_COLUMN
     @staticmethod
@@ -22027,6 +22151,14 @@ class _hipsparseCsr2CscAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseCsr2CscAlg_t(_hipsparseCsr2CscAlg_t__Base):
+    """hipsparseCsr2CscAlg_t
+
+    Attributes:
+        HIPSPARSE_CSR2CSC_ALG1:
+            (undocumented)
+        HIPSPARSE_CSR2CSC_ALG2:
+            (undocumented)
+    """
     HIPSPARSE_CSR2CSC_ALG1 = chipsparse.HIPSPARSE_CSR2CSC_ALG1
     HIPSPARSE_CSR2CSC_ALG2 = chipsparse.HIPSPARSE_CSR2CSC_ALG2
     @staticmethod
@@ -27830,7 +27962,7 @@ def hipsparseZcsrcolor(object handle, int m, int nnz, object descrA, object csrV
 
 
 cdef class hipsparseSpGEMMDescr:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.hipsparseSpGEMMDescr.
     
     Python wrapper for C type chipsparse.hipsparseSpGEMMDescr.
 
@@ -27969,7 +28101,7 @@ cdef class hipsparseSpGEMMDescr:
 hipsparseSpGEMMDescr_t = hipsparseSpGEMMDescr
 
 cdef class hipsparseSpSVDescr:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.hipsparseSpSVDescr.
     
     Python wrapper for C type chipsparse.hipsparseSpSVDescr.
 
@@ -28108,7 +28240,7 @@ cdef class hipsparseSpSVDescr:
 hipsparseSpSVDescr_t = hipsparseSpSVDescr
 
 cdef class hipsparseSpSMDescr:
-    """Python wrapper type.
+    """Python wrapper for C type chipsparse.hipsparseSpSMDescr.
     
     Python wrapper for C type chipsparse.hipsparseSpSMDescr.
 
@@ -28251,6 +28383,20 @@ class _hipsparseFormat_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseFormat_t(_hipsparseFormat_t__Base):
+    """hipsparseFormat_t
+
+    Attributes:
+        HIPSPARSE_FORMAT_CSR:
+            (undocumented)
+        HIPSPARSE_FORMAT_CSC:
+            (undocumented)
+        HIPSPARSE_FORMAT_COO:
+            (undocumented)
+        HIPSPARSE_FORMAT_COO_AOS:
+            (undocumented)
+        HIPSPARSE_FORMAT_BLOCKED_ELL:
+            (undocumented)
+    """
     HIPSPARSE_FORMAT_CSR = chipsparse.HIPSPARSE_FORMAT_CSR
     HIPSPARSE_FORMAT_CSC = chipsparse.HIPSPARSE_FORMAT_CSC
     HIPSPARSE_FORMAT_COO = chipsparse.HIPSPARSE_FORMAT_COO
@@ -28267,6 +28413,16 @@ class _hipsparseOrder_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseOrder_t(_hipsparseOrder_t__Base):
+    """hipsparseOrder_t
+
+    Attributes:
+        HIPSPARSE_ORDER_ROW:
+            (undocumented)
+        HIPSPARSE_ORDER_COLUMN:
+            (undocumented)
+        HIPSPARSE_ORDER_COL:
+            (undocumented)
+    """
     HIPSPARSE_ORDER_ROW = chipsparse.HIPSPARSE_ORDER_ROW
     HIPSPARSE_ORDER_COLUMN = chipsparse.HIPSPARSE_ORDER_COLUMN
     HIPSPARSE_ORDER_COL = chipsparse.HIPSPARSE_ORDER_COL
@@ -28281,6 +28437,16 @@ class _hipsparseIndexType_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseIndexType_t(_hipsparseIndexType_t__Base):
+    """hipsparseIndexType_t
+
+    Attributes:
+        HIPSPARSE_INDEX_16U:
+            (undocumented)
+        HIPSPARSE_INDEX_32I:
+            (undocumented)
+        HIPSPARSE_INDEX_64I:
+            (undocumented)
+    """
     HIPSPARSE_INDEX_16U = chipsparse.HIPSPARSE_INDEX_16U
     HIPSPARSE_INDEX_32I = chipsparse.HIPSPARSE_INDEX_32I
     HIPSPARSE_INDEX_64I = chipsparse.HIPSPARSE_INDEX_64I
@@ -28295,6 +28461,28 @@ class _hipsparseSpMVAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSpMVAlg_t(_hipsparseSpMVAlg_t__Base):
+    """hipsparseSpMVAlg_t
+
+    Attributes:
+        HIPSPARSE_MV_ALG_DEFAULT:
+            (undocumented)
+        HIPSPARSE_COOMV_ALG:
+            (undocumented)
+        HIPSPARSE_CSRMV_ALG1:
+            (undocumented)
+        HIPSPARSE_CSRMV_ALG2:
+            (undocumented)
+        HIPSPARSE_SPMV_ALG_DEFAULT:
+            (undocumented)
+        HIPSPARSE_SPMV_COO_ALG1:
+            (undocumented)
+        HIPSPARSE_SPMV_COO_ALG2:
+            (undocumented)
+        HIPSPARSE_SPMV_CSR_ALG1:
+            (undocumented)
+        HIPSPARSE_SPMV_CSR_ALG2:
+            (undocumented)
+    """
     HIPSPARSE_MV_ALG_DEFAULT = chipsparse.HIPSPARSE_MV_ALG_DEFAULT
     HIPSPARSE_COOMV_ALG = chipsparse.HIPSPARSE_COOMV_ALG
     HIPSPARSE_CSRMV_ALG1 = chipsparse.HIPSPARSE_CSRMV_ALG1
@@ -28315,6 +28503,38 @@ class _hipsparseSpMMAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSpMMAlg_t(_hipsparseSpMMAlg_t__Base):
+    """hipsparseSpMMAlg_t
+
+    Attributes:
+        HIPSPARSE_MM_ALG_DEFAULT:
+            (undocumented)
+        HIPSPARSE_COOMM_ALG1:
+            (undocumented)
+        HIPSPARSE_COOMM_ALG2:
+            (undocumented)
+        HIPSPARSE_COOMM_ALG3:
+            (undocumented)
+        HIPSPARSE_CSRMM_ALG1:
+            (undocumented)
+        HIPSPARSE_SPMM_ALG_DEFAULT:
+            (undocumented)
+        HIPSPARSE_SPMM_COO_ALG1:
+            (undocumented)
+        HIPSPARSE_SPMM_COO_ALG2:
+            (undocumented)
+        HIPSPARSE_SPMM_COO_ALG3:
+            (undocumented)
+        HIPSPARSE_SPMM_COO_ALG4:
+            (undocumented)
+        HIPSPARSE_SPMM_CSR_ALG1:
+            (undocumented)
+        HIPSPARSE_SPMM_CSR_ALG2:
+            (undocumented)
+        HIPSPARSE_SPMM_BLOCKED_ELL_ALG1:
+            (undocumented)
+        HIPSPARSE_SPMM_CSR_ALG3:
+            (undocumented)
+    """
     HIPSPARSE_MM_ALG_DEFAULT = chipsparse.HIPSPARSE_MM_ALG_DEFAULT
     HIPSPARSE_COOMM_ALG1 = chipsparse.HIPSPARSE_COOMM_ALG1
     HIPSPARSE_COOMM_ALG2 = chipsparse.HIPSPARSE_COOMM_ALG2
@@ -28340,6 +28560,12 @@ class _hipsparseSparseToDenseAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSparseToDenseAlg_t(_hipsparseSparseToDenseAlg_t__Base):
+    """hipsparseSparseToDenseAlg_t
+
+    Attributes:
+        HIPSPARSE_SPARSETODENSE_ALG_DEFAULT:
+            (undocumented)
+    """
     HIPSPARSE_SPARSETODENSE_ALG_DEFAULT = chipsparse.HIPSPARSE_SPARSETODENSE_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -28352,6 +28578,12 @@ class _hipsparseDenseToSparseAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseDenseToSparseAlg_t(_hipsparseDenseToSparseAlg_t__Base):
+    """hipsparseDenseToSparseAlg_t
+
+    Attributes:
+        HIPSPARSE_DENSETOSPARSE_ALG_DEFAULT:
+            (undocumented)
+    """
     HIPSPARSE_DENSETOSPARSE_ALG_DEFAULT = chipsparse.HIPSPARSE_DENSETOSPARSE_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -28364,6 +28596,12 @@ class _hipsparseSDDMMAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSDDMMAlg_t(_hipsparseSDDMMAlg_t__Base):
+    """hipsparseSDDMMAlg_t
+
+    Attributes:
+        HIPSPARSE_SDDMM_ALG_DEFAULT:
+            (undocumented)
+    """
     HIPSPARSE_SDDMM_ALG_DEFAULT = chipsparse.HIPSPARSE_SDDMM_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -28376,6 +28614,12 @@ class _hipsparseSpSVAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSpSVAlg_t(_hipsparseSpSVAlg_t__Base):
+    """hipsparseSpSVAlg_t
+
+    Attributes:
+        HIPSPARSE_SPSV_ALG_DEFAULT:
+            (undocumented)
+    """
     HIPSPARSE_SPSV_ALG_DEFAULT = chipsparse.HIPSPARSE_SPSV_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -28388,6 +28632,12 @@ class _hipsparseSpSMAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSpSMAlg_t(_hipsparseSpSMAlg_t__Base):
+    """hipsparseSpSMAlg_t
+
+    Attributes:
+        HIPSPARSE_SPSM_ALG_DEFAULT:
+            (undocumented)
+    """
     HIPSPARSE_SPSM_ALG_DEFAULT = chipsparse.HIPSPARSE_SPSM_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -28400,6 +28650,14 @@ class _hipsparseSpMatAttribute_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSpMatAttribute_t(_hipsparseSpMatAttribute_t__Base):
+    """hipsparseSpMatAttribute_t
+
+    Attributes:
+        HIPSPARSE_SPMAT_FILL_MODE:
+            (undocumented)
+        HIPSPARSE_SPMAT_DIAG_TYPE:
+            (undocumented)
+    """
     HIPSPARSE_SPMAT_FILL_MODE = chipsparse.HIPSPARSE_SPMAT_FILL_MODE
     HIPSPARSE_SPMAT_DIAG_TYPE = chipsparse.HIPSPARSE_SPMAT_DIAG_TYPE
     @staticmethod
@@ -28413,6 +28671,16 @@ class _hipsparseSpGEMMAlg_t__Base(enum.IntEnum):
     """
     pass
 class hipsparseSpGEMMAlg_t(_hipsparseSpGEMMAlg_t__Base):
+    """hipsparseSpGEMMAlg_t
+
+    Attributes:
+        HIPSPARSE_SPGEMM_DEFAULT:
+            (undocumented)
+        HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC:
+            (undocumented)
+        HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC:
+            (undocumented)
+    """
     HIPSPARSE_SPGEMM_DEFAULT = chipsparse.HIPSPARSE_SPGEMM_DEFAULT
     HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC = chipsparse.HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC
     HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC = chipsparse.HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC

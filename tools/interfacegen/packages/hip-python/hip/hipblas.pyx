@@ -49,7 +49,7 @@ hipblasVersionMinor = chipblas.hipblasVersionMinor
 hipblasVersionPatch = chipblas.hipblasVersionPatch
 
 cdef class hipblasBfloat16:
-    """Python wrapper type.
+    """Python wrapper for C type chipblas.hipblasBfloat16.
     
     Python wrapper for C type chipblas.hipblasBfloat16.
 
@@ -172,7 +172,6 @@ cdef class hipblasBfloat16:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipblasBfloat16 new():
@@ -191,9 +190,19 @@ cdef class hipblasBfloat16:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipblasBfloat16.
 
+        Constructor for type hipblasBfloat16.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipblasBfloat16.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -231,6 +240,7 @@ cdef class hipblasBfloat16:
         self._ptr[i].data = value
     @property
     def data(self):
+        """(undocumented)"""
         return self.get_data(0)
     @data.setter
     def data(self, unsigned short value):
@@ -254,7 +264,7 @@ cdef class hipblasBfloat16:
 
 
 cdef class hipblasComplex:
-    """Python wrapper type.
+    """Python wrapper for C type chipblas.hipblasComplex.
     
     Python wrapper for C type chipblas.hipblasComplex.
 
@@ -377,7 +387,6 @@ cdef class hipblasComplex:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipblasComplex new():
@@ -396,9 +405,19 @@ cdef class hipblasComplex:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipblasComplex.
 
+        Constructor for type hipblasComplex.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipblasComplex.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -436,6 +455,7 @@ cdef class hipblasComplex:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, float value):
@@ -451,6 +471,7 @@ cdef class hipblasComplex:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, float value):
@@ -474,7 +495,7 @@ cdef class hipblasComplex:
 
 
 cdef class hipblasDoubleComplex:
-    """Python wrapper type.
+    """Python wrapper for C type chipblas.hipblasDoubleComplex.
     
     Python wrapper for C type chipblas.hipblasDoubleComplex.
 
@@ -597,7 +618,6 @@ cdef class hipblasDoubleComplex:
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef hipblasDoubleComplex new():
@@ -616,9 +636,19 @@ cdef class hipblasDoubleComplex:
         return wrapper
    
     def __init__(self,*args,**kwargs):
-        """
-        """
+        """Constructor type hipblasDoubleComplex.
 
+        Constructor for type hipblasDoubleComplex.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         hipblasDoubleComplex.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -656,6 +686,7 @@ cdef class hipblasDoubleComplex:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, double value):
@@ -671,6 +702,7 @@ cdef class hipblasDoubleComplex:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, double value):
@@ -698,6 +730,34 @@ class _hipblasStatus_t__Base(enum.IntEnum):
     """
     pass
 class hipblasStatus_t(_hipblasStatus_t__Base):
+    """hipblas status codes definition
+
+    Attributes:
+        HIPBLAS_STATUS_SUCCESS:
+            Function succeeds
+        HIPBLAS_STATUS_NOT_INITIALIZED:
+            HIPBLAS library not initialized
+        HIPBLAS_STATUS_ALLOC_FAILED:
+            resource allocation failed
+        HIPBLAS_STATUS_INVALID_VALUE:
+            unsupported numerical value was passed to function
+        HIPBLAS_STATUS_MAPPING_ERROR:
+            access to GPU memory space failed
+        HIPBLAS_STATUS_EXECUTION_FAILED:
+            GPU program failed to execute
+        HIPBLAS_STATUS_INTERNAL_ERROR:
+            an internal HIPBLAS operation failed
+        HIPBLAS_STATUS_NOT_SUPPORTED:
+            function not implemented
+        HIPBLAS_STATUS_ARCH_MISMATCH:
+            architecture mismatch
+        HIPBLAS_STATUS_HANDLE_IS_NULLPTR:
+            hipBLAS handle is null pointer
+        HIPBLAS_STATUS_INVALID_ENUM:
+            unsupported enum value was passed to function
+        HIPBLAS_STATUS_UNKNOWN:
+            back-end returned an unsupported status code
+    """
     HIPBLAS_STATUS_SUCCESS = chipblas.HIPBLAS_STATUS_SUCCESS
     HIPBLAS_STATUS_NOT_INITIALIZED = chipblas.HIPBLAS_STATUS_NOT_INITIALIZED
     HIPBLAS_STATUS_ALLOC_FAILED = chipblas.HIPBLAS_STATUS_ALLOC_FAILED
@@ -721,6 +781,16 @@ class _hipblasOperation_t__Base(enum.IntEnum):
     """
     pass
 class hipblasOperation_t(_hipblasOperation_t__Base):
+    """Used to specify whether the matrix is to be transposed or not.
+
+    Attributes:
+        HIPBLAS_OP_N:
+            Operate with the matrix.
+        HIPBLAS_OP_T:
+            Operate with the transpose of the matrix.
+        HIPBLAS_OP_C:
+            Operate with the conjugate transpose of the matrix.
+    """
     HIPBLAS_OP_N = chipblas.HIPBLAS_OP_N
     HIPBLAS_OP_T = chipblas.HIPBLAS_OP_T
     HIPBLAS_OP_C = chipblas.HIPBLAS_OP_C
@@ -735,6 +805,14 @@ class _hipblasPointerMode_t__Base(enum.IntEnum):
     """
     pass
 class hipblasPointerMode_t(_hipblasPointerMode_t__Base):
+    """Indicates if scalar pointers are on host or device. This is used for scalars alpha and beta and for scalar function return values.
+
+    Attributes:
+        HIPBLAS_POINTER_MODE_HOST:
+            Scalar values affected by this variable will be located on the host.
+        HIPBLAS_POINTER_MODE_DEVICE:
+            Scalar values affected by this variable will be located on the device.
+    """
     HIPBLAS_POINTER_MODE_HOST = chipblas.HIPBLAS_POINTER_MODE_HOST
     HIPBLAS_POINTER_MODE_DEVICE = chipblas.HIPBLAS_POINTER_MODE_DEVICE
     @staticmethod
@@ -748,6 +826,16 @@ class _hipblasFillMode_t__Base(enum.IntEnum):
     """
     pass
 class hipblasFillMode_t(_hipblasFillMode_t__Base):
+    """Used by the Hermitian, symmetric and triangular matrix routines to specify whether the upper or lower triangle is being referenced.
+
+    Attributes:
+        HIPBLAS_FILL_MODE_UPPER:
+            Upper triangle
+        HIPBLAS_FILL_MODE_LOWER:
+            Lower triangle
+        HIPBLAS_FILL_MODE_FULL:
+            (undocumented)
+    """
     HIPBLAS_FILL_MODE_UPPER = chipblas.HIPBLAS_FILL_MODE_UPPER
     HIPBLAS_FILL_MODE_LOWER = chipblas.HIPBLAS_FILL_MODE_LOWER
     HIPBLAS_FILL_MODE_FULL = chipblas.HIPBLAS_FILL_MODE_FULL
@@ -762,6 +850,14 @@ class _hipblasDiagType_t__Base(enum.IntEnum):
     """
     pass
 class hipblasDiagType_t(_hipblasDiagType_t__Base):
+    """It is used by the triangular matrix routines to specify whether the matrix is unit triangular.
+
+    Attributes:
+        HIPBLAS_DIAG_NON_UNIT:
+            Non-unit triangular.
+        HIPBLAS_DIAG_UNIT:
+            Unit triangular.
+    """
     HIPBLAS_DIAG_NON_UNIT = chipblas.HIPBLAS_DIAG_NON_UNIT
     HIPBLAS_DIAG_UNIT = chipblas.HIPBLAS_DIAG_UNIT
     @staticmethod
@@ -775,6 +871,16 @@ class _hipblasSideMode_t__Base(enum.IntEnum):
     """
     pass
 class hipblasSideMode_t(_hipblasSideMode_t__Base):
+    """Indicates the side matrix A is located relative to matrix B during multiplication.
+
+    Attributes:
+        HIPBLAS_SIDE_LEFT:
+            (undocumented)
+        HIPBLAS_SIDE_RIGHT:
+            (undocumented)
+        HIPBLAS_SIDE_BOTH:
+            (undocumented)
+    """
     HIPBLAS_SIDE_LEFT = chipblas.HIPBLAS_SIDE_LEFT
     HIPBLAS_SIDE_RIGHT = chipblas.HIPBLAS_SIDE_RIGHT
     HIPBLAS_SIDE_BOTH = chipblas.HIPBLAS_SIDE_BOTH
@@ -789,6 +895,42 @@ class _hipblasDatatype_t__Base(enum.IntEnum):
     """
     pass
 class hipblasDatatype_t(_hipblasDatatype_t__Base):
+    """Indicates the precision width of data stored in a blas type.
+
+    Attributes:
+        HIPBLAS_R_16F:
+            16 bit floating point, real
+        HIPBLAS_R_32F:
+            32 bit floating point, real
+        HIPBLAS_R_64F:
+            64 bit floating point, real
+        HIPBLAS_C_16F:
+            16 bit floating point, complex
+        HIPBLAS_C_32F:
+            32 bit floating point, complex
+        HIPBLAS_C_64F:
+            64 bit floating point, complex
+        HIPBLAS_R_8I:
+            8 bit signed integer, real
+        HIPBLAS_R_8U:
+            8 bit unsigned integer, real
+        HIPBLAS_R_32I:
+            32 bit signed integer, real
+        HIPBLAS_R_32U:
+            32 bit unsigned integer, real
+        HIPBLAS_C_8I:
+            8 bit signed integer, complex
+        HIPBLAS_C_8U:
+            8 bit unsigned integer, complex
+        HIPBLAS_C_32I:
+            32 bit signed integer, complex
+        HIPBLAS_C_32U:
+            32 bit unsigned integer, complex
+        HIPBLAS_R_16B:
+            16 bit bfloat, real
+        HIPBLAS_C_16B:
+            16 bit bfloat, complex
+    """
     HIPBLAS_R_16F = chipblas.HIPBLAS_R_16F
     HIPBLAS_R_32F = chipblas.HIPBLAS_R_32F
     HIPBLAS_R_64F = chipblas.HIPBLAS_R_64F
@@ -816,6 +958,12 @@ class _hipblasGemmAlgo_t__Base(enum.IntEnum):
     """
     pass
 class hipblasGemmAlgo_t(_hipblasGemmAlgo_t__Base):
+    """Indicates if layer is active with bitmask.
+
+    Attributes:
+        HIPBLAS_GEMM_DEFAULT:
+            enumerator rocblas_gemm_algo_standard
+    """
     HIPBLAS_GEMM_DEFAULT = chipblas.HIPBLAS_GEMM_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -828,6 +976,14 @@ class _hipblasAtomicsMode_t__Base(enum.IntEnum):
     """
     pass
 class hipblasAtomicsMode_t(_hipblasAtomicsMode_t__Base):
+    """Indicates if atomics operations are allowed. Not allowing atomic operations may generally improve determinism and repeatability of results at a cost of performance.
+
+    Attributes:
+        HIPBLAS_ATOMICS_NOT_ALLOWED:
+            Algorithms will refrain from atomics where applicable.
+        HIPBLAS_ATOMICS_ALLOWED:
+            Algorithms will take advantage of atomics where applicable.
+    """
     HIPBLAS_ATOMICS_NOT_ALLOWED = chipblas.HIPBLAS_ATOMICS_NOT_ALLOWED
     HIPBLAS_ATOMICS_ALLOWED = chipblas.HIPBLAS_ATOMICS_ALLOWED
     @staticmethod
@@ -841,6 +997,16 @@ class _hipblasInt8Datatype_t__Base(enum.IntEnum):
     """
     pass
 class hipblasInt8Datatype_t(_hipblasInt8Datatype_t__Base):
+    """hipblasInt8Datatype_t
+
+    Attributes:
+        HIPBLAS_INT8_DATATYPE_DEFAULT:
+            (undocumented)
+        HIPBLAS_INT8_DATATYPE_INT8:
+            (undocumented)
+        HIPBLAS_INT8_DATATYPE_PACK_INT8x4:
+            (undocumented)
+    """
     HIPBLAS_INT8_DATATYPE_DEFAULT = chipblas.HIPBLAS_INT8_DATATYPE_DEFAULT
     HIPBLAS_INT8_DATATYPE_INT8 = chipblas.HIPBLAS_INT8_DATATYPE_INT8
     HIPBLAS_INT8_DATATYPE_PACK_INT8x4 = chipblas.HIPBLAS_INT8_DATATYPE_PACK_INT8x4

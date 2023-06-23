@@ -35,7 +35,7 @@ autodoc_default_options = {
     'special-members': '__init__, __getitem__',
     'inherited-members': True,
     'show-inheritance': True,
-    'imported-members': True,
+    'imported-members': False,
     'member-order': 'bysource', # bysource: seems unfortunately not to work for Cython modules
 }
 
@@ -78,7 +78,7 @@ article_pages = [
       "os": os_support,
       "author": author,
       "date": date,
-      "read-time": "20 min read",
+      "read-time": "10 min read",
     },
     {
       "file": "user_guide/4_report_bugs",
