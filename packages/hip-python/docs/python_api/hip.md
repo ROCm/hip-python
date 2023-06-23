@@ -1,11 +1,8 @@
 # hip.hip
 
+<!-- global automodule options are set in conf.py -->
 ```{eval-rst}
 .. automodule:: hip.hip
-   :members:
-   :undoc-members:
-   :private-members:
-   :special-members:
-   :show-inheritance:
+
 
 ```

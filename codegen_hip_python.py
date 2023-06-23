@@ -575,7 +575,7 @@ if __name__ == "__main__":
                     HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
 
                     """
-                )   
+                )
             )
             if output_dir == hip_output_dir:
                 init_content += "\nfrom . import _util"
@@ -614,16 +614,12 @@ if __name__ == "__main__":
                 f"""\
                 # {pkg}.{lib}
 
+                <!-- global automodule options are set in conf.py -->
                 ```{{eval-rst}}
                 .. automodule:: {pkg}.{lib}
-                   :members:
-                   :undoc-members:
-                   :private-members:
-                   :special-members:
-                   :show-inheritance:
                 {extra}
-                ```
-                """
+
+                ```"""
             ))
 
     HIP_PYTHON_DOCS = os.path.join("packages","hip-python","docs")

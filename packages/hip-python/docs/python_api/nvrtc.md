@@ -1,11 +1,8 @@
 # cuda.nvrtc
 
+<!-- global automodule options are set in conf.py -->
 ```{eval-rst}
 .. automodule:: cuda.nvrtc
-   :members:
-   :undoc-members:
-   :private-members:
-   :special-members:
-   :show-inheritance:
    :noindex:
+
 ```

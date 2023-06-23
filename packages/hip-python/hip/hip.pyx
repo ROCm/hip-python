@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 """
 Attributes:
     HIP_VERSION_MAJOR (`~.int`):
@@ -550,22 +551,22 @@ cdef class hipDeviceArch_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -995,22 +996,22 @@ cdef class hipUUID_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -1204,22 +1205,22 @@ cdef class hipDeviceProp_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -2258,22 +2259,22 @@ cdef class hipPointerAttribute_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -2801,22 +2802,22 @@ cdef class hipChannelFormatDesc:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -3087,22 +3088,22 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -3339,22 +3340,22 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -3621,22 +3622,22 @@ cdef class hipArray:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -3965,22 +3966,22 @@ cdef class hip_Memcpy2D:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -4415,22 +4416,22 @@ cdef class hipMipmappedArray:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -4829,22 +4830,22 @@ cdef class HIP_TEXTURE_DESC_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -5262,22 +5263,22 @@ cdef class hipResourceDesc_union_0_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -5456,22 +5457,22 @@ cdef class hipResourceDesc_union_0_struct_1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -5650,22 +5651,22 @@ cdef class hipResourceDesc_union_0_struct_2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -5887,22 +5888,22 @@ cdef class hipResourceDesc_union_0_struct_3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -6154,22 +6155,22 @@ cdef class hipResourceDesc_union_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -6370,22 +6371,22 @@ cdef class hipResourceDesc:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -6585,22 +6586,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -6779,22 +6780,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -6973,22 +6974,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -7234,22 +7235,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -7525,22 +7526,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -7732,22 +7733,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -7956,22 +7957,22 @@ cdef class HIP_RESOURCE_DESC_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -8188,22 +8189,22 @@ cdef class hipResourceViewDesc:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -8500,22 +8501,22 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -8847,22 +8848,22 @@ cdef class hipPitchedPtr:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -9106,22 +9107,22 @@ cdef class hipExtent:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -9341,22 +9342,22 @@ cdef class hipPos:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -9576,22 +9577,22 @@ cdef class hipMemcpy3DParms:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -9827,22 +9828,22 @@ cdef class HIP_MEMCPY3D:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -10426,22 +10427,22 @@ cdef class uchar1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -10631,22 +10632,22 @@ cdef class uchar2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -10851,22 +10852,22 @@ cdef class uchar3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -11086,22 +11087,22 @@ cdef class uchar4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -11336,22 +11337,22 @@ cdef class char1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -11541,22 +11542,22 @@ cdef class char2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -11761,22 +11762,22 @@ cdef class char3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -11996,22 +11997,22 @@ cdef class char4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -12246,22 +12247,22 @@ cdef class ushort1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -12451,22 +12452,22 @@ cdef class ushort2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -12671,22 +12672,22 @@ cdef class ushort3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -12906,22 +12907,22 @@ cdef class ushort4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -13156,22 +13157,22 @@ cdef class short1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -13361,22 +13362,22 @@ cdef class short2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -13581,22 +13582,22 @@ cdef class short3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -13816,22 +13817,22 @@ cdef class short4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -14066,22 +14067,22 @@ cdef class uint1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -14271,22 +14272,22 @@ cdef class uint2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -14491,22 +14492,22 @@ cdef class uint3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -14726,22 +14727,22 @@ cdef class uint4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -14976,22 +14977,22 @@ cdef class int1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -15181,22 +15182,22 @@ cdef class int2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -15401,22 +15402,22 @@ cdef class int3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -15636,22 +15637,22 @@ cdef class int4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -15886,22 +15887,22 @@ cdef class ulong1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -16091,22 +16092,22 @@ cdef class ulong2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -16311,22 +16312,22 @@ cdef class ulong3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -16546,22 +16547,22 @@ cdef class ulong4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -16796,22 +16797,22 @@ cdef class long1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -17001,22 +17002,22 @@ cdef class long2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -17221,22 +17222,22 @@ cdef class long3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -17456,22 +17457,22 @@ cdef class long4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -17706,22 +17707,22 @@ cdef class ulonglong1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -17911,22 +17912,22 @@ cdef class ulonglong2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -18131,22 +18132,22 @@ cdef class ulonglong3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -18366,22 +18367,22 @@ cdef class ulonglong4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -18616,22 +18617,22 @@ cdef class longlong1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -18821,22 +18822,22 @@ cdef class longlong2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -19041,22 +19042,22 @@ cdef class longlong3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -19276,22 +19277,22 @@ cdef class longlong4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -19526,22 +19527,22 @@ cdef class float1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -19731,22 +19732,22 @@ cdef class float2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -19951,22 +19952,22 @@ cdef class float3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -20186,22 +20187,22 @@ cdef class float4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -20436,22 +20437,22 @@ cdef class double1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -20641,22 +20642,22 @@ cdef class double2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -20861,22 +20862,22 @@ cdef class double3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -21096,22 +21097,22 @@ cdef class double4:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -21335,7 +21336,23 @@ cdef class double4:
 
 @cython.embedsignature(True)
 def hipCreateChannelDesc(int x, int y, int z, int w, object f):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        x (`~.int`):
+            (undocumented)
+
+        y (`~.int`):
+            (undocumented)
+
+        z (`~.int`):
+            (undocumented)
+
+        w (`~.int`):
+            (undocumented)
+
+        f (`~.hipChannelFormatKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -21361,22 +21378,22 @@ cdef class __hip_texture:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -21541,22 +21558,22 @@ cdef class textureReference:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -21916,22 +21933,22 @@ cdef class hipTextureDesc:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -22268,22 +22285,22 @@ cdef class __hip_surface:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -22407,22 +22424,22 @@ cdef class surfaceReference:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -22615,22 +22632,22 @@ cdef class ihipCtx_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -22769,22 +22786,22 @@ cdef class ihipStream_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -22908,22 +22925,22 @@ cdef class hipIpcMemHandle_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -23117,22 +23134,22 @@ cdef class hipIpcEventHandle_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -23326,22 +23343,22 @@ cdef class ihipModule_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -23465,22 +23482,22 @@ cdef class ihipModuleSymbol_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -23604,22 +23621,22 @@ cdef class ihipMemPoolHandle_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -23743,22 +23760,22 @@ cdef class hipFuncAttributes:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -24083,22 +24100,22 @@ cdef class ihipEvent_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -24318,22 +24335,22 @@ cdef class hipMemLocation:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -24554,22 +24571,22 @@ cdef class hipMemAccessDesc:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -24798,22 +24815,22 @@ cdef class hipMemPoolProps:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -25071,22 +25088,22 @@ cdef class hipMemPoolPtrExportData:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -25350,22 +25367,22 @@ cdef class dim3:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -25588,22 +25605,22 @@ cdef class hipLaunchParams_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -25883,22 +25900,22 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -26121,22 +26138,22 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -26328,22 +26345,22 @@ cdef class hipExternalMemoryHandleDesc_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -26575,22 +26592,22 @@ cdef class hipExternalMemoryBufferDesc_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -26829,22 +26846,22 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -27067,22 +27084,22 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -27274,22 +27291,22 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -27506,22 +27523,22 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -27711,22 +27728,22 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -27916,22 +27933,22 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -28139,22 +28156,22 @@ cdef class hipExternalSemaphoreSignalParams_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -28371,22 +28388,22 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -28576,22 +28593,22 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -28796,22 +28813,22 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -29019,22 +29036,22 @@ cdef class hipExternalSemaphoreWaitParams_st:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -29281,22 +29298,22 @@ cdef class _hipGraphicsResource:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -29422,22 +29439,22 @@ cdef class ihipGraph:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -29561,22 +29578,22 @@ cdef class hipGraphNode:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -29700,22 +29717,22 @@ cdef class hipGraphExec:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -29839,22 +29856,22 @@ cdef class hipUserObject:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -30002,22 +30019,22 @@ cdef class hipHostFn_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -30111,22 +30128,22 @@ cdef class hipHostNodeParams:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -30329,22 +30346,22 @@ cdef class hipKernelNodeParams:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -30622,22 +30639,22 @@ cdef class hipMemsetParams:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -30938,22 +30955,22 @@ cdef class hipAccessPolicyWindow:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -31216,22 +31233,22 @@ cdef class hipKernelNodeAttrValue:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -31534,22 +31551,22 @@ cdef class hipMemAllocationProp_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -31769,22 +31786,22 @@ cdef class hipMemAllocationProp:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -32033,22 +32050,22 @@ cdef class ihipMemGenericAllocationHandle:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -32223,22 +32240,22 @@ cdef class hipArrayMapInfo_union_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -32415,22 +32432,22 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -32725,22 +32742,22 @@ cdef class hipArrayMapInfo_union_1_struct_1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -32960,22 +32977,22 @@ cdef class hipArrayMapInfo_union_1:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -33160,22 +33177,22 @@ cdef class hipArrayMapInfo_union_2:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -33344,22 +33361,22 @@ cdef class hipArrayMapInfo:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -33682,6 +33699,10 @@ def hipInit(unsigned int flags):
     Most HIP APIs implicitly initialize the HIP runtime.
     This API provides control over the timing of the initialization.
 
+    Args:
+        flags (`~.int`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -33745,7 +33766,7 @@ def hipDeviceGet(int ordinal):
     r"""Returns a handle to a compute device
 
     Args:
-        ordinal (`~.int`): **[in]** 
+        ordinal (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -33763,7 +33784,7 @@ def hipDeviceComputeCapability(int device):
     r"""Returns the compute capability of the device
 
     Args:
-        device (`~.int`): **[in]** 
+        device (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
@@ -33783,11 +33804,11 @@ def hipDeviceGetName(object name, int len, int device):
     r"""Returns an identifer string for the device.
 
     Args:
-        name (`~.hip._util.types.Pointer`/`~.object`): **[out]** 
+        name (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
 
-        len (`~.int`): **[in]** 
+        len (`~.int`) -- *IN*:
 
-        device (`~.int`): **[in]** 
+        device (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -33808,9 +33829,9 @@ def hipDeviceGetUuid(object uuid, int device):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        uuid (`~.hipUUID_t`/`~.object`): **[out]** 
+        uuid (`~.hipUUID_t`/`~.object`) -- *OUT*:
 
-        device (`~.int`): **[in]** 
+        device (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -33828,11 +33849,11 @@ def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
     r"""Returns a value for attr of link between two devices
 
     Args:
-        attr (`~.hipDeviceP2PAttr`): **[in]** 
+        attr (`~.hipDeviceP2PAttr`) -- *IN*:
 
-        srcDevice (`~.int`): **[in]** 
+        srcDevice (`~.int`) -- *IN*:
 
-        dstDevice (`~.int`): **[in]** 
+        dstDevice (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -33852,11 +33873,11 @@ def hipDeviceGetPCIBusId(object pciBusId, int len, int device):
     r"""Returns a PCI Bus Id string for the device, overloaded to take int device ID.
 
     Args:
-        pciBusId (`~.hip._util.types.Pointer`/`~.object`): **[out]** 
+        pciBusId (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
 
-        len (`~.int`): **[in]** 
+        len (`~.int`) -- *IN*:
 
-        device (`~.int`): **[in]** 
+        device (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -33873,13 +33894,15 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
     r"""Returns a handle to a compute device.
 
     Args:
-        PCI: **[in]** Bus ID
+        pciBusId (`~.bytes`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
-        * `~.int`: handle
+        * `~.int`:
+                handle
     """
     cdef int device
     _hipDeviceGetByPCIBusId__retval = hipError_t(chip.hipDeviceGetByPCIBusId(&device,pciBusId))    # fully specified
@@ -33891,7 +33914,7 @@ def hipDeviceTotalMem(int device):
     r"""Returns the total amount of memory on the device.
 
     Args:
-        device (`~.int`): **[in]** 
+        device (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -33973,7 +33996,8 @@ def hipSetDevice(int deviceId):
         `~.hipGetDevice`, `~.hipGetDeviceCount`
 
     Args:
-        deviceId (`~.int`): **[in]** Valid device in range 0...hipGetDeviceCount().
+        deviceId (`~.int`) -- *IN*:
+            Valid device in range 0...hipGetDeviceCount().
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -33996,7 +34020,6 @@ def hipGetDevice():
         `~.hipSetDevice`, `~.hipGetDevicesizeBytes`
 
     Args:
-        device: **[out]** device is written with the default device
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34018,6 +34041,8 @@ def hipGetDeviceCount():
     are no such devices, then ``hipGetDeviceCount`` will return `~.hipErrorNoDevice`. If 1 or more
     devices can be found, then hipGetDeviceCount returns `~.hipSuccess`.
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -34033,11 +34058,14 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
     r"""Query for a specific device attribute.
 
     Args:
-        pi (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to value to return
+        pi (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            pointer to value to return
 
-        attr (`~.hipDeviceAttribute_t`): **[in]** attribute to query
+        attr (`~.hipDeviceAttribute_t`) -- *IN*:
+            attribute to query
 
-        deviceId (`~.int`): **[in]** which device to query for information
+        deviceId (`~.int`) -- *IN*:
+            which device to query for information
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34064,13 +34092,15 @@ def hipDeviceGetDefaultMemPool(int device):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device (`~.int`): **[in]** Device index for query the default memory pool
+        device (`~.int`) -- *IN*:
+            Device index for query the default memory pool
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.chipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.ihipMemPoolHandle_t`: Default memory pool to return
+        * `~.ihipMemPoolHandle_t`:
+                Default memory pool to return
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipDeviceGetDefaultMemPool__retval = hipError_t(chip.hipDeviceGetDefaultMemPool(&mem_pool._ptr,device))    # fully specified
@@ -34098,9 +34128,11 @@ def hipDeviceSetMemPool(int device, object mem_pool):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device (`~.int`): **[in]** Device index for the update
+        device (`~.int`) -- *IN*:
+            Device index for the update
 
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Memory pool for update as the current on the specified device
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            Memory pool for update as the current on the specified device
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34130,13 +34162,15 @@ def hipDeviceGetMemPool(int device):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device (`~.int`): **[in]** Device index to query the current memory pool
+        device (`~.int`) -- *IN*:
+            Device index to query the current memory pool
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.ihipMemPoolHandle_t`: Current memory pool on the specified device
+        * `~.ihipMemPoolHandle_t`:
+                Current memory pool on the specified device
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipDeviceGetMemPool__retval = hipError_t(chip.hipDeviceGetMemPool(&mem_pool._ptr,device))    # fully specified
@@ -34159,9 +34193,11 @@ def hipGetDeviceProperties(object prop, int deviceId):
     Populates hipGetDeviceProperties with information for the specified device.
 
     Args:
-        prop (`~.hipDeviceProp_t`/`~.object`): **[out]** written with device properties
+        prop (`~.hipDeviceProp_t`/`~.object`) -- *OUT*:
+            written with device properties
 
-        deviceId (`~.int`): **[in]** which device to query for information
+        deviceId (`~.int`) -- *IN*:
+            which device to query for information
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34178,7 +34214,7 @@ def hipDeviceSetCacheConfig(object cacheConfig):
     r"""Set L1/Shared cache partition.
 
     Args:
-        cacheConfig (`~.hipFuncCache_t`): **[in]** 
+        cacheConfig (`~.hipFuncCache_t`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34215,7 +34251,7 @@ def hipDeviceGetLimit(object limit):
     r"""Get Resource limits of current device
 
     Args:
-        limit (`~.hipLimit_t`): **[in]** 
+        limit (`~.hipLimit_t`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -34236,9 +34272,9 @@ def hipDeviceSetLimit(object limit, unsigned long value):
     r"""Set Resource limits of current device
 
     Args:
-        limit (`~.hipLimit_t`): **[in]** 
+        limit (`~.hipLimit_t`) -- *IN*:
 
-        value (`~.int`): **[in]** 
+        value (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34292,7 +34328,7 @@ def hipDeviceSetSharedMemConfig(object config):
     ignored on those architectures.
 
     Args:
-        config (`~.hipSharedMemConfig`): **[in]** 
+        config (`~.hipSharedMemConfig`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34327,7 +34363,7 @@ def hipSetDeviceFlags(unsigned int flags):
         ROCm silently ignores this flag.
 
     Args:
-        flags (`~.int`): **[in]** 
+        flags (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34342,12 +34378,18 @@ def hipSetDeviceFlags(unsigned int flags):
 def hipChooseDevice(object prop):
     r"""Device which matches hipDeviceProp_t is returned
 
+    Args:
+        prop (`~.hipDeviceProp_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.int`: ID
-        * : properties pointer
+        * `~.int`:
+                ID
+        * :
+                properties pointer
     """
     cdef int device
     _hipChooseDevice__retval = hipError_t(chip.hipChooseDevice(&device,
@@ -34362,16 +34404,20 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
     Queries and returns the HSA link type and the hop count between the two specified devices.
 
     Args:
-        device1 (`~.int`): **[in]** Ordinal for device1
+        device1 (`~.int`) -- *IN*:
+            Ordinal for device1
 
-        device2 (`~.int`): **[in]** Ordinal for device2
+        device2 (`~.int`) -- *IN*:
+            Ordinal for device2
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipInvalidDevice`, `~.hipErrorRuntimeOther`
-        * `~.int`: Returns the link type (See hsa_amd_link_info_type_t) between the two devices
-        * `~.int`: Returns the hop count between the two devices
+        * `~.int`:
+                Returns the link type (See hsa_amd_link_info_type_t) between the two devices
+        * `~.int`:
+                Returns the hop count between the two devices
     """
     cdef unsigned int linktype
     cdef unsigned int hopcount
@@ -34395,10 +34441,12 @@ def hipIpcGetMemHandle(object handle, object devPtr):
     new memory.
 
     Args:
-        handle (`~.hipIpcMemHandle_st`/`~.object`):  Pointer to user allocated hipIpcMemHandle to return
+        handle (`~.hipIpcMemHandle_st`/`~.object`):
+            - Pointer to user allocated hipIpcMemHandle to return
             the handle in.
 
-        devPtr (`~.hip._util.types.Pointer`/`~.object`):  Base pointer to previously allocated device memory
+        devPtr (`~.hip._util.types.Pointer`/`~.object`):
+            - Base pointer to previously allocated device memory
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34443,9 +34491,11 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
         This is diffrent from CUDA.
 
     Args:
-        handle (`~.hipIpcMemHandle_st`):  hipIpcMemHandle to open
+        handle (`~.hipIpcMemHandle_st`):
+            - hipIpcMemHandle to open
 
-        flags (`~.int`):  Flags for this operation. Must be specified as hipIpcMemLazyEnablePeerAccess
+        flags (`~.int`):
+            - Flags for this operation. Must be specified as hipIpcMemLazyEnablePeerAccess
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -34454,7 +34504,8 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
             hipErrorMapFailed,
             hipErrorInvalidHandle,
             hipErrorTooManyPeers
-        * `~.hip._util.types.Pointer`/`~.object`:  Returned device pointer
+        * `~.hip._util.types.Pointer`/`~.object`:
+                - Returned device pointer
     """
     devPtr = hip._util.types.Pointer.from_ptr(NULL)
     _hipIpcOpenMemHandle__retval = hipError_t(chip.hipIpcOpenMemHandle(
@@ -34475,7 +34526,8 @@ def hipIpcCloseMemHandle(object devPtr):
     last mapping using them.
 
     Args:
-        devPtr (`~.hip._util.types.Pointer`/`~.object`):  Device pointer returned by hipIpcOpenMemHandle
+        devPtr (`~.hip._util.types.Pointer`/`~.object`):
+            - Device pointer returned by hipIpcOpenMemHandle
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34499,9 +34551,11 @@ def hipIpcGetEventHandle(object handle, object event):
     will result in undefined behavior.
 
     Args:
-        handle (`~.hipIpcEventHandle_st`/`~.object`): **[out]** Pointer to hipIpcEventHandle to return the opaque event handle
+        handle (`~.hipIpcEventHandle_st`/`~.object`) -- *OUT*:
+            Pointer to hipIpcEventHandle to return the opaque event handle
 
-        event (`~.ihipEvent_t`/`~.object`): **[in]** Event allocated with hipEventInterprocess and hipEventDisableTiming flags
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            Event allocated with hipEventInterprocess and hipEventDisableTiming flags
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34525,13 +34579,15 @@ def hipIpcOpenEventHandle(object handle):
     handle is returned by hipIpcGetEventHandle, it will return hipErrorInvalidContext.
 
     Args:
-        handle (`~.hipIpcEventHandle_st`): **[in]** The opaque interprocess handle to open
+        handle (`~.hipIpcEventHandle_st`) -- *IN*:
+            The opaque interprocess handle to open
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidContext`
-        * `~.ihipEvent_t`: Pointer to hipEvent_t to return the event
+        * `~.ihipEvent_t`:
+                Pointer to hipEvent_t to return the event
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipIpcOpenEventHandle__retval = hipError_t(chip.hipIpcOpenEventHandle(&event._ptr,
@@ -34547,11 +34603,14 @@ def hipFuncSetAttribute(object func, object attr, int value):
     ignored on those architectures.
 
     Args:
-        func (`~.hip._util.types.Pointer`/`~.object`): **[in]** ;
+        func (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            ;
 
-        attr (`~.hipFuncAttribute`): **[in]** ;
+        attr (`~.hipFuncAttribute`) -- *IN*:
+            ;
 
-        value (`~.int`): **[in]** ;
+        value (`~.int`) -- *IN*:
+            ;
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34570,7 +34629,11 @@ def hipFuncSetCacheConfig(object func, object config):
     r"""Set Cache configuration for a specific function
 
     Args:
-        config (`~.hipFuncCache_t`): **[in]** ;
+        func (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        config (`~.hipFuncCache_t`) -- *IN*:
+            ;
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34594,9 +34657,9 @@ def hipFuncSetSharedMemConfig(object func, object config):
     ignored on those architectures.
 
     Args:
-        func (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
+        func (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
 
-        config (`~.hipSharedMemConfig`): **[in]** 
+        config (`~.hipSharedMemConfig`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34657,7 +34720,8 @@ def hipGetErrorName(object hip_error):
         `~.hipGetErrorString`, `~.hipGetLastError`, `~.hipPeakAtLastError`, `~.hipError_t`
 
     Args:
-        hip_error (`~.hipError_t`): Error code to convert to name.
+        hip_error (`~.hipError_t`):
+            Error code to convert to name.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34678,7 +34742,8 @@ def hipGetErrorString(object hipError):
         `~.hipGetErrorName`, `~.hipGetLastError`, `~.hipPeakAtLastError`, `~.hipError_t`
 
     Args:
-        hipError (`~.hipError_t`): Error code to convert to string.
+        hipError (`~.hipError_t`):
+            Error code to convert to string.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34699,9 +34764,11 @@ def hipDrvGetErrorName(object hipError, object errorString):
         `~.hipGetErrorName`, `~.hipGetLastError`, `~.hipPeakAtLastError`, `~.hipError_t`
 
     Args:
-        hipError (`~.hipError_t`): **[in]** Error code to convert to string.
+        hipError (`~.hipError_t`) -- *IN*:
+            Error code to convert to string.
 
-        const: **[out]** char pointer to the NULL-terminated error string
+        errorString (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34723,9 +34790,11 @@ def hipDrvGetErrorString(object hipError, object errorString):
         `~.hipGetErrorName`, `~.hipGetLastError`, `~.hipPeakAtLastError`, `~.hipError_t`
 
     Args:
-        hipError (`~.hipError_t`): **[in]** Error code to convert to string.
+        hipError (`~.hipError_t`) -- *IN*:
+            Error code to convert to string.
 
-        const: **[out]** char pointer to the NULL-terminated error string
+        errorString (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34756,7 +34825,8 @@ def hipStreamCreate():
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
         * `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.ihipStream_t`: Valid pointer to hipStream_t.  This function writes the memory with the
+        * `~.ihipStream_t`:
+                Valid pointer to hipStream_t.  This function writes the memory with the
                 newly created stream.
     """
     stream = ihipStream_t.from_ptr(NULL)
@@ -34778,13 +34848,15 @@ def hipStreamCreateWithFlags(unsigned int flags):
         `~.hipStreamCreate`, `~.hipStreamCreateWithPriority`, `~.hipStreamSynchronize`, `~.hipStreamWaitEvent`, `~.hipStreamDestroy`
 
     Args:
-        flags (`~.int`): **[in]** to control stream creation.
+        flags (`~.int`) -- *IN*:
+            to control stream creation.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.ihipStream_t`: Pointer to new stream
+        * `~.ihipStream_t`:
+                Pointer to new stream
     """
     stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreateWithFlags__retval = hipError_t(chip.hipStreamCreateWithFlags(&stream._ptr,flags))    # fully specified
@@ -34805,15 +34877,18 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
         `~.hipStreamCreate`, `~.hipStreamSynchronize`, `~.hipStreamWaitEvent`, `~.hipStreamDestroy`
 
     Args:
-        flags (`~.int`): **[in]** to control stream creation.
+        flags (`~.int`) -- *IN*:
+            to control stream creation.
 
-        priority (`~.int`): **[in]** of the stream. Lower numbers represent higher priorities.
+        priority (`~.int`) -- *IN*:
+            of the stream. Lower numbers represent higher priorities.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.ihipStream_t`: Pointer to new stream
+        * `~.ihipStream_t`:
+                Pointer to new stream
     """
     stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreateWithPriority__retval = hipError_t(chip.hipStreamCreateWithPriority(&stream._ptr,flags,priority))    # fully specified
@@ -34835,8 +34910,10 @@ def hipDeviceGetStreamPriorityRange():
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`
-        * `~.int`: pointer in which value corresponding to least priority is returned.
-        * `~.int`: pointer in which value corresponding to greatest priority is returned.
+        * `~.int`:
+                pointer in which value corresponding to least priority is returned.
+        * `~.int`:
+                pointer in which value corresponding to greatest priority is returned.
     """
     cdef int leastPriority
     cdef int greatestPriority
@@ -34861,7 +34938,8 @@ def hipStreamDestroy(object stream):
         `~.hipStreamSynchronize`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in,out]** Valid pointer to hipStream_t.  This function writes the memory with the
+        stream (`~.ihipStream_t`/`~.object`) -- *IN,OUT*:
+            Valid pointer to hipStream_t.  This function writes the memory with the
             newly created stream.
 
     Returns:
@@ -34888,7 +34966,8 @@ def hipStreamQuery(object stream):
         `~.hipStreamDestroy`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream to query
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream to query
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34917,7 +34996,8 @@ def hipStreamSynchronize(object stream):
         `~.hipStreamCreate`, `~.hipStreamCreateWithFlags`, `~.hipStreamCreateWithPriority`, `~.hipStreamWaitEvent`, `~.hipStreamDestroy`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream identifier.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream identifier.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34945,11 +35025,14 @@ def hipStreamWaitEvent(object stream, object event, unsigned int flags):
         `~.hipStreamCreate`, `~.hipStreamCreateWithFlags`, `~.hipStreamCreateWithPriority`, `~.hipStreamSynchronize`, `~.hipStreamDestroy`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream to make wait.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream to make wait.
 
-        event (`~.ihipEvent_t`/`~.object`): **[in]** event to wait on
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            event to wait on
 
-        flags (`~.int`): **[in]** control operation [must be 0]
+        flags (`~.int`) -- *IN*:
+            control operation [must be 0]
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -34972,14 +35055,16 @@ def hipStreamGetFlags(object stream):
         `~.hipStreamCreateWithFlags`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream to be queried
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream to be queried
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidHandle`
         * `~.hipSuccess` `~.hipErrorInvalidValue` `~.hipErrorInvalidHandle`
-        * `~.int`: Pointer to an unsigned integer in which the stream's flags are returned
+        * `~.int`:
+                Pointer to an unsigned integer in which the stream's flags are returned
     """
     cdef unsigned int flags
     _hipStreamGetFlags__retval = hipError_t(chip.hipStreamGetFlags(
@@ -34997,14 +35082,16 @@ def hipStreamGetPriority(object stream):
         `~.hipStreamCreateWithFlags`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream to be queried
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream to be queried
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidHandle`
         * `~.hipSuccess` `~.hipErrorInvalidValue` `~.hipErrorInvalidHandle`
-        * `~.int`: Pointer to an unsigned integer in which the stream's priority is returned
+        * `~.int`:
+                Pointer to an unsigned integer in which the stream's priority is returned
     """
     cdef int priority
     _hipStreamGetPriority__retval = hipError_t(chip.hipStreamGetPriority(
@@ -35025,14 +35112,17 @@ def hipExtStreamCreateWithCUMask(unsigned int cuMaskSize):
         `~.hipStreamCreate`, `~.hipStreamSynchronize`, `~.hipStreamWaitEvent`, `~.hipStreamDestroy`
 
     Args:
-        cuMaskSize (`~.int`): **[in]** Size of CU mask bit array passed in.
+        cuMaskSize (`~.int`) -- *IN*:
+            Size of CU mask bit array passed in.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidHandle`, `~.hipErrorInvalidValue`
-        * `~.ihipStream_t`: Pointer to new stream
-        * `~.int`: Bit-vector representing the CU mask. Each active bit represents using one CU.
+        * `~.ihipStream_t`:
+                Pointer to new stream
+        * `~.int`:
+                Bit-vector representing the CU mask. Each active bit represents using one CU.
                 The first 32 bits represent the first 32 CUs, and so on. If its size is greater than physical
                 CU number (i.e., multiProcessorCount member of hipDeviceProp_t), the extra elements are ignored.
                 It is user's responsibility to make sure the input is meaningful.
@@ -35051,15 +35141,18 @@ def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
         `~.hipStreamCreate`, `~.hipStreamSynchronize`, `~.hipStreamWaitEvent`, `~.hipStreamDestroy`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream to be queried
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream to be queried
 
-        cuMaskSize (`~.int`): **[in]** number of the block of memories (uint32_t *) allocated by user
+        cuMaskSize (`~.int`) -- *IN*:
+            number of the block of memories (uint32_t *) allocated by user
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidHandle`, `~.hipErrorInvalidValue`
-        * `~.int`: Pointer to a pre-allocated block of memories (uint32_t *) in which
+        * `~.int`:
+                Pointer to a pre-allocated block of memories (uint32_t *) in which
                 the stream's CU mask is returned. The CU mask is returned in a chunck of 32 bits where
                 each active bit represents one active CU
     """
@@ -35082,22 +35175,22 @@ cdef class hipStreamCallback_t:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -35190,13 +35283,17 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
         `~.hipStreamWaitEvent`, `~.hipStreamDestroy`, `~.hipStreamCreateWithPriority`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream to add callback to
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream to add callback to
 
-        callback (`~.hipStreamCallback_t`/`~.object`): **[in]**  The function to call once preceding stream operations are complete
+        callback (`~.hipStreamCallback_t`/`~.object`) -- *IN*:
+            - The function to call once preceding stream operations are complete
 
-        userData (`~.hip._util.types.Pointer`/`~.object`): **[in]**  User specified data to be passed to the callback function
+        userData (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - User specified data to be passed to the callback function
 
-        flags (`~.int`): **[in]**  Reserved for future use, must be 0
+        flags (`~.int`) -- *IN*:
+            - Reserved for future use, must be 0
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35238,16 +35335,21 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
         `~.hipStreamWriteValue32`, `~.hipDeviceGetAttribute`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Pointer to memory object allocated using 'hipMallocSignalMemory' flag
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
 
-        value (`~.int`): **[in]**  Value to be used in compare operation
+        value (`~.int`) -- *IN*:
+            - Value to be used in compare operation
 
-        flags (`~.int`): **[in]**  Defines the compare operation, supported values are hipStreamWaitValueGte
+        flags (`~.int`) -- *IN*:
+            - Defines the compare operation, supported values are hipStreamWaitValueGte
             hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor
 
-        mask (`~.int`): **[in]**  Mask to be applied on value at memory before it is compared with value,
+        mask (`~.int`) -- *IN*:
+            - Mask to be applied on value at memory before it is compared with value,
             default value is set to enable every bit
 
     Returns:
@@ -35289,16 +35391,21 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
         `~.hipStreamWriteValue32`, `~.hipDeviceGetAttribute`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Pointer to memory object allocated using 'hipMallocSignalMemory' flag
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
 
-        value (`~.int`): **[in]**  Value to be used in compare operation
+        value (`~.int`) -- *IN*:
+            - Value to be used in compare operation
 
-        flags (`~.int`): **[in]**  Defines the compare operation, supported values are hipStreamWaitValueGte
+        flags (`~.int`) -- *IN*:
+            - Defines the compare operation, supported values are hipStreamWaitValueGte
             hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor.
 
-        mask (`~.int`): **[in]**  Mask to be applied on value at memory before it is compared with value
+        mask (`~.int`) -- *IN*:
+            - Mask to be applied on value at memory before it is compared with value
             default value is set to enable every bit
 
     Returns:
@@ -35328,13 +35435,17 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
         `~.hipStreamWaitValue64`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Pointer to a GPU accessible memory object
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Pointer to a GPU accessible memory object
 
-        value (`~.int`): **[in]**  Value to be written
+        value (`~.int`) -- *IN*:
+            - Value to be written
 
-        flags (`~.int`): **[in]**  reserved, ignored for now, will be used in future releases
+        flags (`~.int`) -- *IN*:
+            - reserved, ignored for now, will be used in future releases
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35363,13 +35474,17 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
         `~.hipStreamWaitValue64`
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Pointer to a GPU accessible memory object
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Pointer to a GPU accessible memory object
 
-        value (`~.int`): **[in]**  Value to be written
+        value (`~.int`) -- *IN*:
+            - Value to be written
 
-        flags (`~.int`): **[in]**  reserved, ignored for now, will be used in future releases
+        flags (`~.int`) -- *IN*:
+            - reserved, ignored for now, will be used in future releases
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35390,7 +35505,8 @@ def hipEventCreateWithFlags(unsigned int flags):
         `~.hipEventCreate`, `~.hipEventSynchronize`, `~.hipEventDestroy`, `~.hipEventElapsedTime`
 
     Args:
-        flags (`~.int`): **[in]** Flags to control event behavior.  Valid values are `~.hipEventDefault`,
+        flags (`~.int`) -- *IN*:
+            Flags to control event behavior.  Valid values are `~.hipEventDefault`,
             `~.hipEventBlockingSync`, `~.hipEventDisableTiming`, `~.hipEventInterprocess`
               `~.hipEventDefault` : Default flag.  The event will use active synchronization and will support
             timing.  Blocking synchronization provides lowest possible latency at the expense of dedicating a
@@ -35408,7 +35524,8 @@ def hipEventCreateWithFlags(unsigned int flags):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidValue`,
             `~.hipErrorLaunchFailure`, `~.hipErrorOutOfMemory`
-        * `~.ihipEvent_t`: Returns the newly created event.
+        * `~.ihipEvent_t`:
+                Returns the newly created event.
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipEventCreateWithFlags__retval = hipError_t(chip.hipEventCreateWithFlags(&event._ptr,flags))    # fully specified
@@ -35417,7 +35534,7 @@ def hipEventCreateWithFlags(unsigned int flags):
 
 @cython.embedsignature(True)
 def hipEventCreate():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     Create an event
 
@@ -35430,7 +35547,8 @@ def hipEventCreate():
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorNotInitialized`, `~.hipErrorInvalidValue`,
             `~.hipErrorLaunchFailure`, `~.hipErrorOutOfMemory`
-        * `~.ihipEvent_t`: Returns the newly created event.
+        * `~.ihipEvent_t`:
+                Returns the newly created event.
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipEventCreate__retval = hipError_t(chip.hipEventCreate(&event._ptr))    # fully specified
@@ -35439,7 +35557,14 @@ def hipEventCreate():
 
 @cython.embedsignature(True)
 def hipEventRecord(object event, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        event (`~.ihipEvent_t`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35465,7 +35590,8 @@ def hipEventDestroy(object event):
         `~.hipEventElapsedTime`
 
     Args:
-        event (`~.ihipEvent_t`/`~.object`): **[in]** Event to destroy.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            Event to destroy.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -35495,7 +35621,8 @@ def hipEventSynchronize(object event):
         `~.hipEventElapsedTime`
 
     Args:
-        event (`~.ihipEvent_t`/`~.object`): **[in]** Event on which to wait.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            Event on which to wait.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35533,16 +35660,19 @@ def hipEventElapsedTime(object start, object stop):
         `~.hipEventSynchronize`
 
     Args:
-        start (`~.ihipEvent_t`/`~.object`): **[in]** Start event.
+        start (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            Start event.
 
-        stop (`~.ihipEvent_t`/`~.object`): **[in]** Stop event.
+        stop (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            Stop event.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotReady`, `~.hipErrorInvalidHandle`,
             `~.hipErrorNotInitialized`, `~.hipErrorLaunchFailure`
-        * `~.float`: Return time between start and stop in ms.
+        * `~.float`:
+                Return time between start and stop in ms.
     """
     cdef float ms
     _hipEventElapsedTime__retval = hipError_t(chip.hipEventElapsedTime(&ms,
@@ -35565,7 +35695,8 @@ def hipEventQuery(object event):
         `~.hipEventSynchronize`, `~.hipEventElapsedTime`
 
     Args:
-        event (`~.ihipEvent_t`/`~.object`): **[in]** Event to query.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            Event to query.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35586,9 +35717,11 @@ def hipPointerGetAttributes(object attributes, object ptr):
         `~.hipPointerGetAttribute`
 
     Args:
-        attributes (`~.hipPointerAttribute_t`/`~.object`): **[out]** attributes for the specified pointer
+        attributes (`~.hipPointerAttribute_t`/`~.object`) -- *OUT*:
+            attributes for the specified pointer
 
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to get attributes for
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to get attributes for
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35613,11 +35746,14 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
         `~.hipPointerGetAttributes`
 
     Args:
-        data (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** returned pointer attribute value
+        data (`~.hip._util.types.Pointer`/`~.object`) -- *IN,OUT*:
+            returned pointer attribute value
 
-        atribute: **[in]** attribute to query for
+        attribute (`~.hipPointer_attribute`):
+            (undocumented)
 
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to get attributes for
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to get attributes for
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35644,16 +35780,20 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
         `~.hipPointerGetAttribute`
 
     Args:
-        numAttributes (`~.int`): **[in]** number of attributes to query for
+        numAttributes (`~.int`) -- *IN*:
+            number of attributes to query for
 
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to get attributes for
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to get attributes for
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
-        * `~.hipPointer_attribute`: attributes to query for
-        * `~.hip._util.types.Pointer`/`~.object`: a two-dimensional containing pointers to memory locations
+        * `~.hipPointer_attribute`:
+                attributes to query for
+        * `~.hip._util.types.Pointer`/`~.object`:
+                a two-dimensional containing pointers to memory locations
                 where the result of each attribute query will be written to
     """
     cdef chip.hipPointer_attribute attributes
@@ -35671,9 +35811,11 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
     See:
 
     Args:
-        extSem_out (`~.hip._util.types.Pointer`/`~.object`): **[out]** External semaphores to be waited on
+        extSem_out (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            External semaphores to be waited on
 
-        semHandleDesc (`~.hipExternalSemaphoreHandleDesc_st`/`~.object`): **[in]** Semaphore import handle descriptor
+        semHandleDesc (`~.hipExternalSemaphoreHandleDesc_st`/`~.object`) -- *IN*:
+            Semaphore import handle descriptor
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35693,13 +35835,17 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
     See:
 
     Args:
-        extSem_out: **[in]** External semaphores to be waited on
+        extSemArray (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        paramsArray (`~.hipExternalSemaphoreSignalParams_st`/`~.object`): **[in]** Array of semaphore parameters
+        paramsArray (`~.hipExternalSemaphoreSignalParams_st`/`~.object`) -- *IN*:
+            Array of semaphore parameters
 
-        numExtSems (`~.int`): **[in]** Number of semaphores to wait on
+        numExtSems (`~.int`) -- *IN*:
+            Number of semaphores to wait on
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to enqueue the wait operations in
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream to enqueue the wait operations in
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35720,13 +35866,17 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
     See:
 
     Args:
-        extSem_out: **[in]** External semaphores to be waited on
+        extSemArray (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        paramsArray (`~.hipExternalSemaphoreWaitParams_st`/`~.object`): **[in]** Array of semaphore parameters
+        paramsArray (`~.hipExternalSemaphoreWaitParams_st`/`~.object`) -- *IN*:
+            Array of semaphore parameters
 
-        numExtSems (`~.int`): **[in]** Number of semaphores to wait on
+        numExtSems (`~.int`) -- *IN*:
+            Number of semaphores to wait on
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to enqueue the wait operations in
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream to enqueue the wait operations in
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35747,7 +35897,8 @@ def hipDestroyExternalSemaphore(object extSem):
     See:
 
     Args:
-        extSem (`~.hip._util.types.Pointer`/`~.object`): **[in]** handle to an external memory object
+        extSem (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            handle to an external memory object
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35766,9 +35917,11 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
     See:
 
     Args:
-        extMem_out (`~.hip._util.types.Pointer`/`~.object`): **[out]** Returned handle to an external memory object
+        extMem_out (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Returned handle to an external memory object
 
-        memHandleDesc (`~.hipExternalMemoryHandleDesc_st`/`~.object`): **[in]** Memory import handle descriptor
+        memHandleDesc (`~.hipExternalMemoryHandleDesc_st`/`~.object`) -- *IN*:
+            Memory import handle descriptor
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35788,15 +35941,18 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
     See:
 
     Args:
-        extMem (`~.hip._util.types.Pointer`/`~.object`): **[in]** Handle to external memory object
+        extMem (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Handle to external memory object
 
-        bufferDesc (`~.hipExternalMemoryBufferDesc_st`/`~.object`): **[in]** Buffer descriptor
+        bufferDesc (`~.hipExternalMemoryBufferDesc_st`/`~.object`) -- *IN*:
+            Buffer descriptor
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`
-        * `~.hip._util.types.Pointer`/`~.object`: Returned device pointer to buffer
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Returned device pointer to buffer
     """
     devPtr = hip._util.types.Pointer.from_ptr(NULL)
     _hipExternalMemoryGetMappedBuffer__retval = hipError_t(chip.hipExternalMemoryGetMappedBuffer(
@@ -35813,7 +35969,8 @@ def hipDestroyExternalMemory(object extMem):
     See:
 
     Args:
-        extMem (`~.hip._util.types.Pointer`/`~.object`): **[in]** External memory object to be destroyed
+        extMem (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            External memory object to be destroyed
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35836,13 +35993,15 @@ def hipMalloc(unsigned long size):
         `~.hipHostFree`, `~.hipHostMalloc`
 
     Args:
-        size (`~.int`): **[in]** Requested memory size
+        size (`~.int`) -- *IN*:
+            Requested memory size
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`, `~.hipErrorInvalidValue` (bad context, null *ptr)
-        * `~.hip._util.types.DeviceArray`/`~.object`: Pointer to the allocated memory
+        * `~.hip._util.types.DeviceArray`/`~.object`:
+                Pointer to the allocated memory
     """
     ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMalloc__retval = hipError_t(chip.hipMalloc(
@@ -35862,15 +36021,18 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
         `~.hipHostFree`, `~.hipHostMalloc`
 
     Args:
-        size: **[in]** Requested memory size
+        sizeBytes (`~.int`):
+            (undocumented)
 
-        flags (`~.int`): **[in]** Type of memory allocation
+        flags (`~.int`) -- *IN*:
+            Type of memory allocation
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`, `~.hipErrorInvalidValue` (bad context, null *ptr)
-        * `~.hip._util.types.DeviceArray`/`~.object`: Pointer to the allocated memory
+        * `~.hip._util.types.DeviceArray`/`~.object`:
+                Pointer to the allocated memory
     """
     ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipExtMallocWithFlags__retval = hipError_t(chip.hipExtMallocWithFlags(
@@ -35889,13 +36051,15 @@ def hipMallocHost(unsigned long size):
         use hipHostMalloc() instead
 
     Args:
-        size (`~.int`): **[in]** Requested memory size
+        size (`~.int`) -- *IN*:
+            Requested memory size
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated host pinned memory
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Pointer to the allocated host pinned memory
     """
     ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
@@ -35913,13 +36077,15 @@ def hipMemAllocHost(unsigned long size):
         use hipHostMalloc() instead
 
     Args:
-        size (`~.int`): **[in]** Requested memory size
+        size (`~.int`) -- *IN*:
+            Requested memory size
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated host pinned memory
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Pointer to the allocated host pinned memory
     """
     ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipMemAllocHost__retval = hipError_t(chip.hipMemAllocHost(
@@ -35937,15 +36103,18 @@ def hipHostMalloc(unsigned long size, unsigned int flags):
         `~.hipSetDeviceFlags`, `~.hipHostFree`
 
     Args:
-        size (`~.int`): **[in]** Requested memory size
+        size (`~.int`) -- *IN*:
+            Requested memory size
 
-        flags (`~.int`): **[in]** Type of host memory allocation
+        flags (`~.int`) -- *IN*:
+            Type of host memory allocation
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated host pinned memory
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Pointer to the allocated host pinned memory
     """
     ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipHostMalloc__retval = hipError_t(chip.hipHostMalloc(
@@ -35958,16 +36127,19 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
     r"""Allocates memory that will be automatically managed by HIP.
 
     Args:
-        size (`~.int`): **[in]**  requested allocation size in bytes
+        size (`~.int`) -- *IN*:
+            - requested allocation size in bytes
 
-        flags (`~.int`): **[in]**  must be either hipMemAttachGlobal or hipMemAttachHost
+        flags (`~.int`) -- *IN*:
+            - must be either hipMemAttachGlobal or hipMemAttachHost
             (defaults to hipMemAttachGlobal)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorMemoryAllocation`, `~.hipErrorNotSupported`, `~.hipErrorInvalidValue`
-        * `~.hip._util.types.DeviceArray`/`~.object`:  pointer to allocated device memory
+        * `~.hip._util.types.DeviceArray`/`~.object`:
+                - pointer to allocated device memory
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
@@ -35981,13 +36153,17 @@ def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object 
     r"""Prefetches memory to the specified destination device using HIP.
 
     Args:
-        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to be prefetched
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to be prefetched
 
-        count (`~.int`): **[in]** size in bytes for prefetching
+        count (`~.int`) -- *IN*:
+            size in bytes for prefetching
 
-        device (`~.int`): **[in]** destination device to prefetch to
+        device (`~.int`) -- *IN*:
+            destination device to prefetch to
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream to enqueue prefetch operation
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream to enqueue prefetch operation
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36005,13 +36181,17 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
     r"""Advise about the usage of a given memory range to HIP.
 
     Args:
-        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to memory to set the advice for
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to memory to set the advice for
 
-        count (`~.int`): **[in]** size in bytes of the memory range
+        count (`~.int`) -- *IN*:
+            size in bytes of the memory range
 
-        advice (`~.hipMemoryAdvise`): **[in]** advice to be applied for the specified memory range
+        advice (`~.hipMemoryAdvise`) -- *IN*:
+            advice to be applied for the specified memory range
 
-        device (`~.int`): **[in]** device to apply the advice for
+        device (`~.int`) -- *IN*:
+            device to apply the advice for
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36030,16 +36210,21 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
     r"""Query an attribute of a given memory range in HIP.
 
     Args:
-        data (`~.hip._util.types.Pointer`/`~.object`): **[in,out]** a pointer to a memory location where the result of each
+        data (`~.hip._util.types.Pointer`/`~.object`) -- *IN,OUT*:
+            a pointer to a memory location where the result of each
             attribute query will be written to
 
-        data_size (`~.int`): **[in]** the size of data
+        data_size (`~.int`) -- *IN*:
+            the size of data
 
-        attribute (`~.hipMemRangeAttribute`): **[in]** the attribute to query
+        attribute (`~.hipMemRangeAttribute`) -- *IN*:
+            the attribute to query
 
-        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** start of the range to query
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            start of the range to query
 
-        count (`~.int`): **[in]** size of the range to query
+        count (`~.int`) -- *IN*:
+            size of the range to query
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36059,21 +36244,27 @@ def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsig
     r"""Query attributes of a given memory range in HIP.
 
     Args:
-        num_attributes (`~.int`): **[in]** an array of attributes to query (numAttributes and the number
+        num_attributes (`~.int`) -- *IN*:
+            an array of attributes to query (numAttributes and the number
             of attributes in this array should match)
 
-        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** start of the range to query
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            start of the range to query
 
-        count (`~.int`): **[in]** size of the range to query
+        count (`~.int`) -- *IN*:
+            size of the range to query
 
     Returns:
         A `~.tuple` of size 4 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hip._util.types.Pointer`/`~.object`: a two-dimensional array containing pointers to memory locations
+        * `~.hip._util.types.Pointer`/`~.object`:
+                a two-dimensional array containing pointers to memory locations
                 where the result of each attribute query will be written to
-        * `~.int`: an array, containing the sizes of each result
-        * `~.hipMemRangeAttribute`: the attribute to query
+        * `~.int`:
+                an array, containing the sizes of each result
+        * `~.hipMemRangeAttribute`:
+                the attribute to query
     """
     data = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long data_sizes
@@ -36089,14 +36280,18 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
     r"""Attach memory to a stream asynchronously in HIP.
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  stream in which to enqueue the attach operation
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - stream in which to enqueue the attach operation
 
-        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory (must be a pointer to managed memory or
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory (must be a pointer to managed memory or
             to a valid host-accessible region of system-allocated memory)
 
-        length (`~.int`): **[in]**  length of memory (defaults to zero)
+        length (`~.int`) -- *IN*:
+            - length of memory (defaults to zero)
 
-        flags (`~.int`): **[in]**  must be one of hipMemAttachGlobal, hipMemAttachHost or
+        flags (`~.int`) -- *IN*:
+            - must be one of hipMemAttachGlobal, hipMemAttachHost or
             hipMemAttachSingle (defaults to hipMemAttachSingle)
 
     Returns:
@@ -36141,16 +36336,19 @@ def hipMallocAsync(unsigned long size, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        size (`~.int`): **[in]** Number of bytes to allocate
+        size (`~.int`) -- *IN*:
+            Number of bytes to allocate
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** The stream establishing the stream ordering contract and
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            The stream establishing the stream ordering contract and
             the memory pool to allocate from
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.DeviceArray`/`~.object`: Returned device pointer of memory allocation
+        * `~.hip._util.types.DeviceArray`/`~.object`:
+                Returned device pointer of memory allocation
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocAsync__retval = hipError_t(chip.hipMallocAsync(
@@ -36182,9 +36380,11 @@ def hipFreeAsync(object dev_ptr, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to device memory to free
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Pointer to device memory to free
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** The stream, where the destruciton will occur according to the execution order
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            The stream, where the destruciton will occur according to the execution order
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36222,9 +36422,11 @@ def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** The memory pool to trim allocations
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            The memory pool to trim allocations
 
-        min_bytes_to_hold (`~.int`): **[in]** If the pool has less than min_bytes_to_hold reserved,
+        min_bytes_to_hold (`~.int`) -- *IN*:
+            If the pool has less than min_bytes_to_hold reserved,
             then the TrimTo operation is a no-op.  Otherwise the memory pool will contain
             at least min_bytes_to_hold bytes reserved after the operation.
 
@@ -36272,11 +36474,14 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** The memory pool to modify
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            The memory pool to modify
 
-        attr (`~.hipMemPoolAttr`): **[in]** The attribute to modify
+        attr (`~.hipMemPoolAttr`) -- *IN*:
+            The attribute to modify
 
-        value (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to the value to assign
+        value (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Pointer to the value to assign
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36325,11 +36530,14 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** The memory pool to get attributes of
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            The memory pool to get attributes of
 
-        attr (`~.hipMemPoolAttr`): **[in]** The attribute to get
+        attr (`~.hipMemPoolAttr`) -- *IN*:
+            The attribute to get
 
-        value (`~.hip._util.types.Pointer`/`~.object`): **[in]** Retrieved value
+        value (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Retrieved value
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36357,11 +36565,14 @@ def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Memory pool for acccess change
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            Memory pool for acccess change
 
-        desc_list (`~.hipMemAccessDesc`/`~.object`): **[in]** Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
+        desc_list (`~.hipMemAccessDesc`/`~.object`) -- *IN*:
+            Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
 
-        count (`~.int`): **[in]** Number of descriptors in the map array.
+        count (`~.int`) -- *IN*:
+            Number of descriptors in the map array.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36389,15 +36600,18 @@ def hipMemPoolGetAccess(object mem_pool, object location):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Memory pool being queried
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            Memory pool being queried
 
-        location (`~.hipMemLocation`/`~.object`): **[in]** Location/device for memory pool access
+        location (`~.hipMemLocation`/`~.object`) -- *IN*:
+            Location/device for memory pool access
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipMemAccessFlags`: Accessibility of the memory pool from the specified location/device
+        * `~.hipMemAccessFlags`:
+                Accessibility of the memory pool from the specified location/device
     """
     cdef chip.hipMemAccessFlags flags
     _hipMemPoolGetAccess__retval = hipError_t(chip.hipMemPoolGetAccess(&flags,
@@ -36427,13 +36641,15 @@ def hipMemPoolCreate(object pool_props):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        pool_props (`~.hipMemPoolProps`/`~.object`): **[in]** Memory pool properties
+        pool_props (`~.hipMemPoolProps`/`~.object`) -- *IN*:
+            Memory pool properties
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.ihipMemPoolHandle_t`: Contains createed memory pool
+        * `~.ihipMemPoolHandle_t`:
+                Contains createed memory pool
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipMemPoolCreate__retval = hipError_t(chip.hipMemPoolCreate(&mem_pool._ptr,
@@ -36466,7 +36682,8 @@ def hipMemPoolDestroy(object mem_pool):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Memory pool for destruction
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            Memory pool for destruction
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36508,17 +36725,21 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        size (`~.int`): **[in]** Number of bytes to allocate
+        size (`~.int`) -- *IN*:
+            Number of bytes to allocate
 
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** The pool to allocate from
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            The pool to allocate from
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** The stream establishing the stream ordering semantic
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            The stream establishing the stream ordering semantic
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.DeviceArray`/`~.object`: Returned device pointer
+        * `~.hip._util.types.DeviceArray`/`~.object`:
+                Returned device pointer
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocFromPoolAsync__retval = hipError_t(chip.hipMallocFromPoolAsync(
@@ -36551,13 +36772,17 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shared_handle (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to the location in which to store the requested handle
+        shared_handle (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Pointer to the location in which to store the requested handle
 
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Pool to export
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            Pool to export
 
-        handle_type (`~.hipMemAllocationHandleType`): **[in]** The type of handle to create
+        handle_type (`~.hipMemAllocationHandleType`) -- *IN*:
+            The type of handle to create
 
-        flags (`~.int`): **[in]** Must be 0
+        flags (`~.int`) -- *IN*:
+            Must be 0
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36591,17 +36816,21 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shared_handle (`~.hip._util.types.Pointer`/`~.object`): **[in]** OS handle of the pool to open
+        shared_handle (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            OS handle of the pool to open
 
-        handle_type (`~.hipMemAllocationHandleType`): **[in]** The type of handle being imported
+        handle_type (`~.hipMemAllocationHandleType`) -- *IN*:
+            The type of handle being imported
 
-        flags (`~.int`): **[in]** Must be 0
+        flags (`~.int`) -- *IN*:
+            Must be 0
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorOutOfMemory`
-        * `~.ihipMemPoolHandle_t`: Returned memory pool
+        * `~.ihipMemPoolHandle_t`:
+                Returned memory pool
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
@@ -36627,9 +36856,11 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        export_data (`~.hipMemPoolPtrExportData`/`~.object`): **[out]** Returned export data
+        export_data (`~.hipMemPoolPtrExportData`/`~.object`) -- *OUT*:
+            Returned export data
 
-        dev_ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to memory being exported
+        dev_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Pointer to memory being exported
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36667,15 +36898,18 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`): **[in]** Memory pool from which to import a pointer
+        mem_pool (`~.ihipMemPoolHandle_t`/`~.object`) -- *IN*:
+            Memory pool from which to import a pointer
 
-        export_data (`~.hipMemPoolPtrExportData`/`~.object`): **[in]** Data specifying the memory to import
+        export_data (`~.hipMemPoolPtrExportData`/`~.object`) -- *IN*:
+            Data specifying the memory to import
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotInitialized`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.Pointer`/`~.object`: Pointer to imported memory
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Pointer to imported memory
     """
     dev_ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipMemPoolImportPointer__retval = hipError_t(chip.hipMemPoolImportPointer(
@@ -36695,15 +36929,18 @@ def hipHostAlloc(unsigned long size, unsigned int flags):
         use hipHostMalloc() instead
 
     Args:
-        size (`~.int`): **[in]** Requested memory size
+        size (`~.int`) -- *IN*:
+            Requested memory size
 
-        flags (`~.int`): **[in]** Type of host memory allocation
+        flags (`~.int`) -- *IN*:
+            Type of host memory allocation
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated host pinned memory
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Pointer to the allocated host pinned memory
     """
     ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipHostAlloc__retval = hipError_t(chip.hipHostAlloc(
@@ -36719,11 +36956,11 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
         `~.hipSetDeviceFlags`, `~.hipHostMalloc`
 
     Args:
-        dstPtr: **[out]** Device Pointer mapped to passed host pointer
+        hstPtr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Host Pointer allocated through hipHostMalloc
 
-        hstPtr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Host Pointer allocated through hipHostMalloc
-
-        flags (`~.int`): **[in]** Flags to be passed for extension
+        flags (`~.int`) -- *IN*:
+            Flags to be passed for extension
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36745,13 +36982,15 @@ def hipHostGetFlags(object hostPtr):
         `~.hipHostMalloc`
 
     Args:
-        hostPtr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Host Pointer allocated through hipHostMalloc
+        hostPtr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Host Pointer allocated through hipHostMalloc
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.int`: Memory location to store flags
+        * `~.int`:
+                Memory location to store flags
     """
     cdef unsigned int flagsPtr
     _hipHostGetFlags__retval = hipError_t(chip.hipHostGetFlags(&flagsPtr,
@@ -36791,11 +37030,14 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
         `~.hipHostUnregister`, `~.hipHostGetFlags`, `~.hipHostGetDevicePointer`
 
     Args:
-        hostPtr (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to host memory to be registered.
+        hostPtr (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Pointer to host memory to be registered.
 
-        sizeBytes (`~.int`): **[in]** size of the host memory
+        sizeBytes (`~.int`) -- *IN*:
+            size of the host memory
 
-        flags (`~.int`): **[in]** .  See below.
+        flags (`~.int`) -- *IN*:
+            .  See below.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36815,7 +37057,8 @@ def hipHostUnregister(object hostPtr):
         `~.hipHostRegister`
 
     Args:
-        hostPtr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Host pointer previously registered with `~.hipHostRegister`
+        hostPtr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Host pointer previously registered with `~.hipHostRegister`
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36829,7 +37072,7 @@ def hipHostUnregister(object hostPtr):
 
 @cython.embedsignature(True)
 def hipMallocPitch(unsigned long width, unsigned long height):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
@@ -36843,16 +37086,20 @@ def hipMallocPitch(unsigned long width, unsigned long height):
         `~.hipMalloc3DArray`, `~.hipHostMalloc`
 
     Args:
-        width (`~.int`): **[in]** Requested pitched allocation width (in bytes)
+        width (`~.int`) -- *IN*:
+            Requested pitched allocation width (in bytes)
 
-        height (`~.int`): **[in]** Requested pitched allocation height
+        height (`~.int`) -- *IN*:
+            Requested pitched allocation height
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: Error code
-        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated device memory
-        * `~.int`: Pitch for allocation (in bytes)
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Pointer to the allocated device memory
+        * `~.int`:
+                Pitch for allocation (in bytes)
     """
     ptr = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long pitch
@@ -36863,7 +37110,7 @@ def hipMallocPitch(unsigned long width, unsigned long height):
 
 @cython.embedsignature(True)
 def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned int elementSizeBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
@@ -36880,16 +37127,23 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
         `~.hipMalloc3DArray`, `~.hipHostMalloc`
 
     Args:
-        width: **[in]** Requested pitched allocation width (in bytes)
+        widthInBytes (`~.int`):
+            (undocumented)
 
-        height (`~.int`): **[in]** Requested pitched allocation height
+        height (`~.int`) -- *IN*:
+            Requested pitched allocation height
+
+        elementSizeBytes (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: Error code
-        * `~.hip._util.types.Pointer`/`~.object`: Pointer to the allocated device memory
-        * `~.int`: Pitch for allocation (in bytes)
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Pointer to the allocated device memory
+        * `~.int`:
+                Pitch for allocation (in bytes)
     """
     dptr = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long pitch
@@ -36909,7 +37163,8 @@ def hipFree(object ptr):
         `~.hipMalloc3DArray`, `~.hipHostMalloc`
 
     Args:
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to memory to be freed
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Pointer to memory to be freed
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -36931,7 +37186,8 @@ def hipFreeHost(object ptr):
         use hipHostFree() instead
 
     Args:
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to memory to be freed
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Pointer to memory to be freed
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36956,7 +37212,8 @@ def hipHostFree(object ptr):
         `~.hipMalloc3DArray`, `~.hipHostMalloc`
 
     Args:
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to memory to be freed
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Pointer to memory to be freed
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36996,13 +37253,17 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being copy to
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Data being copy from
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
 
-        copyType: **[in]** Memory copy type
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37019,7 +37280,23 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
 
 @cython.embedsignature(True)
 def hipMemcpyWithStream(object dst, object src, unsigned long sizeBytes, object kind, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37048,11 +37325,14 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being copy to
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Data being copy from
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37079,11 +37359,14 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being copy to
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Data being copy from
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37110,11 +37393,14 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being copy to
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Data being copy from
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37141,11 +37427,17 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being copy to
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Data being copy from
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37173,11 +37465,17 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being copy to
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Data being copy from
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37205,11 +37503,17 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
         `~.hipMemHostAlloc`, `~.hipMemHostGetDevicePointer`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being copy to
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Data being copy from
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37232,16 +37536,20 @@ def hipModuleGetGlobal(object hmod, const char * name):
     If one of them is NULL, it is ignored and hipSuccess is returned.
 
     Args:
-        hmod (`~.ihipModule_t`/`~.object`): **[in]** Module to retrieve global from
+        hmod (`~.ihipModule_t`/`~.object`) -- *IN*:
+            Module to retrieve global from
 
-        name (`~.bytes`): **[in]** Name of global to retrieve
+        name (`~.bytes`) -- *IN*:
+            Name of global to retrieve
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotFound`, `~.hipErrorInvalidContext`
-        * `~.hip._util.types.Pointer`/`~.object`: Returns global device pointer
-        * `~.int`: Returns global size in bytes
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Returns global device pointer
+        * `~.int`:
+                Returns global size in bytes
     """
     dptr = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long bytes
@@ -37256,13 +37564,15 @@ def hipGetSymbolAddress(object symbol):
     r"""Gets device pointer associated with symbol on the device.
 
     Args:
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the symbole of the device
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to the symbole of the device
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hip._util.types.Pointer`/`~.object`: pointer to the device associated the symbole
+        * `~.hip._util.types.Pointer`/`~.object`:
+                pointer to the device associated the symbole
     """
     devPtr = hip._util.types.Pointer.from_ptr(NULL)
     _hipGetSymbolAddress__retval = hipError_t(chip.hipGetSymbolAddress(
@@ -37276,13 +37586,15 @@ def hipGetSymbolSize(object symbol):
     r"""Gets the size of the given symbol on the device.
 
     Args:
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the device symbole
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to the device symbole
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.int`: pointer to the size
+        * `~.int`:
+                pointer to the size
     """
     cdef unsigned long size
     _hipGetSymbolSize__retval = hipError_t(chip.hipGetSymbolSize(&size,
@@ -37301,15 +37613,20 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
     https://github.com/ROCm-Developer-Tools/HIP/blob/rocm-5.0.x/docs/markdown/hip_porting_guide.md
 
     Args:
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to the device symbole
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            pointer to the device symbole
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the source address
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to the source address
 
-        sizeBytes (`~.int`): **[in]** size in bytes to copy
+        sizeBytes (`~.int`) -- *IN*:
+            size in bytes to copy
 
-        offset (`~.int`): **[in]** offset in bytes from start of symbole
+        offset (`~.int`) -- *IN*:
+            offset in bytes from start of symbole
 
-        kind (`~.hipMemcpyKind`): **[in]** type of memory transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            type of memory transfer
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37329,17 +37646,23 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
     r"""Copies data to the given symbol on the device asynchronously.
 
     Args:
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[out]** pointer to the device symbole
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            pointer to the device symbole
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the source address
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to the source address
 
-        sizeBytes (`~.int`): **[in]** size in bytes to copy
+        sizeBytes (`~.int`) -- *IN*:
+            size in bytes to copy
 
-        offset (`~.int`): **[in]** offset in bytes from start of symbole
+        offset (`~.int`) -- *IN*:
+            offset in bytes from start of symbole
 
-        kind (`~.hipMemcpyKind`): **[in]** type of memory transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            type of memory transfer
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream identifier
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37360,15 +37683,20 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
     r"""Copies data from the given symbol on the device.
 
     Args:
-        dptr: **[out]** Returns pointer to destinition memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the symbole address on the device
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to the symbole address on the device
 
-        sizeBytes (`~.int`): **[in]** size in bytes to copy
+        sizeBytes (`~.int`) -- *IN*:
+            size in bytes to copy
 
-        offset (`~.int`): **[in]** offset in bytes from the start of symbole
+        offset (`~.int`) -- *IN*:
+            offset in bytes from the start of symbole
 
-        kind (`~.hipMemcpyKind`): **[in]** type of memory transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            type of memory transfer
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37388,17 +37716,23 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
     r"""Copies data from the given symbol on the device asynchronously.
 
     Args:
-        dptr: **[out]** Returns pointer to destinition memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the symbole address on the device
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to the symbole address on the device
 
-        sizeBytes (`~.int`): **[in]** size in bytes to copy
+        sizeBytes (`~.int`) -- *IN*:
+            size in bytes to copy
 
-        offset (`~.int`): **[in]** offset in bytes from the start of symbole
+        offset (`~.int`) -- *IN*:
+            offset in bytes from the start of symbole
 
-        kind (`~.hipMemcpyKind`): **[in]** type of memory transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            type of memory transfer
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            stream identifier
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37441,13 +37775,20 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
         `~.hipMemcpyFromSymbolAsync`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being copy to
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being copy to
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Data being copy from
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Data being copy from
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
 
-        accelerator_view: **[in]** Accelerator view which the copy is being enqueued
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37469,11 +37810,14 @@ def hipMemset(object dst, int value, unsigned long sizeBytes):
     byte value value.
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Data being filled
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Data being filled
 
-        constant: **[in]** value to be set
+        value (`~.int`):
+            (undocumented)
 
-        sizeBytes (`~.int`): **[in]** Data size in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            Data size in bytes
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37491,11 +37835,14 @@ def hipMemsetD8(object dest, unsigned char value, unsigned long count):
     byte value value.
 
     Args:
-        dst: **[out]** Data ptr to be filled
+        dest (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        constant: **[in]** value to be set
+        value (`~.int`):
+            (undocumented)
 
-        number: **[in]** of values to be set
+        count (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37518,13 +37865,17 @@ def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, obje
     streams.
 
     Args:
-        dst: **[out]** Data ptr to be filled
+        dest (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        constant: **[in]** value to be set
+        value (`~.int`):
+            (undocumented)
 
-        number: **[in]** of values to be set
+        count (`~.int`):
+            (undocumented)
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37543,11 +37894,14 @@ def hipMemsetD16(object dest, unsigned short value, unsigned long count):
     short value value.
 
     Args:
-        dst: **[out]** Data ptr to be filled
+        dest (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        constant: **[in]** value to be set
+        value (`~.int`):
+            (undocumented)
 
-        number: **[in]** of values to be set
+        count (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37570,13 +37924,17 @@ def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, ob
     streams.
 
     Args:
-        dst: **[out]** Data ptr to be filled
+        dest (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        constant: **[in]** value to be set
+        value (`~.int`):
+            (undocumented)
 
-        number: **[in]** of values to be set
+        count (`~.int`):
+            (undocumented)
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37595,11 +37953,14 @@ def hipMemsetD32(object dest, int value, unsigned long count):
     value for specified number of times.
 
     Args:
-        dst: **[out]** Data being filled
+        dest (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        constant: **[in]** value to be set
+        value (`~.int`):
+            (undocumented)
 
-        number: **[in]** of values to be set
+        count (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37622,13 +37983,17 @@ def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream
     streams.
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to device memory
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Pointer to device memory
 
-        value (`~.int`): **[in]**  Value to set for each byte of specified memory
+        value (`~.int`) -- *IN*:
+            - Value to set for each byte of specified memory
 
-        sizeBytes (`~.int`): **[in]**  Size in bytes to set
+        sizeBytes (`~.int`) -- *IN*:
+            - Size in bytes to set
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37652,13 +38017,17 @@ def hipMemsetD32Async(object dst, int value, unsigned long count, object stream)
     streams.
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to device memory
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Pointer to device memory
 
-        value (`~.int`): **[in]**  Value to set for each byte of specified memory
+        value (`~.int`) -- *IN*:
+            - Value to set for each byte of specified memory
 
-        count (`~.int`): **[in]**  number of values to be set
+        count (`~.int`) -- *IN*:
+            - number of values to be set
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37676,15 +38045,18 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
     r"""Fills the memory area pointed to by dst with the constant value.
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]** Pointer to device memory
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            Pointer to device memory
 
-        pitch (`~.int`): **[in]**  data size in bytes
+        pitch (`~.int`) -- *IN*:
+            - data size in bytes
 
-        value (`~.int`): **[in]**  constant value to be set
+        value (`~.int`) -- *IN*:
+            - constant value to be set
 
-        width (`~.int`): **[in]** 
+        width (`~.int`) -- *IN*:
 
-        height (`~.int`): **[in]** 
+        height (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37701,17 +38073,20 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
     r"""Fills asynchronously the memory area pointed to by dst with the constant value.
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer to device memory
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Pointer to device memory
 
-        pitch (`~.int`): **[in]**  data size in bytes
+        pitch (`~.int`) -- *IN*:
+            - data size in bytes
 
-        value (`~.int`): **[in]**  constant value to be set
+        value (`~.int`) -- *IN*:
+            - constant value to be set
 
-        width (`~.int`): **[in]** 
+        width (`~.int`) -- *IN*:
 
-        height (`~.int`): **[in]** 
+        height (`~.int`) -- *IN*:
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** 
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37729,11 +38104,12 @@ def hipMemset3D(object pitchedDevPtr, int value, object extent):
     r"""Fills synchronously the memory area pointed to by pitchedDevPtr with the constant value.
 
     Args:
-        pitchedDevPtr (`~.hipPitchedPtr`): **[in]** 
+        pitchedDevPtr (`~.hipPitchedPtr`) -- *IN*:
 
-        value (`~.int`): **[in]**  constant value to be set
+        value (`~.int`) -- *IN*:
+            - constant value to be set
 
-        extent (`~.hipExtent`): **[in]** 
+        extent (`~.hipExtent`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37751,13 +38127,14 @@ def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stre
     r"""Fills asynchronously the memory area pointed to by pitchedDevPtr with the constant value.
 
     Args:
-        pitchedDevPtr (`~.hipPitchedPtr`): **[in]** 
+        pitchedDevPtr (`~.hipPitchedPtr`) -- *IN*:
 
-        value (`~.int`): **[in]**  constant value to be set
+        value (`~.int`) -- *IN*:
+            - constant value to be set
 
-        extent (`~.hipExtent`): **[in]** 
+        extent (`~.hipExtent`) -- *IN*:
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** 
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37782,6 +38159,8 @@ def hipMemGetInfo():
         On HCC, the free memory only accounts for memory allocated by this process and may be
         optimistic.
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -37795,7 +38174,11 @@ def hipMemGetInfo():
 
 @cython.embedsignature(True)
 def hipMemPtrGetInfo(object ptr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37816,19 +38199,24 @@ def hipMallocArray(object desc, unsigned long width, unsigned long height, unsig
         `~.hipMalloc`, `~.hipMallocPitch`, `~.hipFree`, `~.hipFreeArray`, `~.hipHostMalloc`, `~.hipHostFree`
 
     Args:
-        desc (`~.hipChannelFormatDesc`/`~.object`): **[in]** Requested channel format
+        desc (`~.hipChannelFormatDesc`/`~.object`) -- *IN*:
+            Requested channel format
 
-        width (`~.int`): **[in]** Requested array allocation width
+        width (`~.int`) -- *IN*:
+            Requested array allocation width
 
-        height (`~.int`): **[in]** Requested array allocation height
+        height (`~.int`) -- *IN*:
+            Requested array allocation height
 
-        flags (`~.int`): **[in]** Requested properties of allocated array
+        flags (`~.int`) -- *IN*:
+            Requested properties of allocated array
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hipArray`: Pointer to allocated array in device memory
+        * `~.hipArray`:
+                Pointer to allocated array in device memory
     """
     array = hipArray.from_ptr(NULL)
     _hipMallocArray__retval = hipError_t(chip.hipMallocArray(&array._ptr,
@@ -37838,7 +38226,11 @@ def hipMallocArray(object desc, unsigned long width, unsigned long height, unsig
 
 @cython.embedsignature(True)
 def hipArrayCreate(object pAllocateArray):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        pAllocateArray (`~.HIP_ARRAY_DESCRIPTOR`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37853,7 +38245,11 @@ def hipArrayCreate(object pAllocateArray):
 
 @cython.embedsignature(True)
 def hipArrayDestroy(object array):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        array (`~.hipArray`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37867,7 +38263,11 @@ def hipArrayDestroy(object array):
 
 @cython.embedsignature(True)
 def hipArray3DCreate(object pAllocateArray):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        pAllocateArray (`~.HIP_ARRAY3D_DESCRIPTOR`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37882,7 +38282,14 @@ def hipArray3DCreate(object pAllocateArray):
 
 @cython.embedsignature(True)
 def hipMalloc3D(object pitchedDevPtr, object extent):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        pitchedDevPtr (`~.hipPitchedPtr`/`~.object`):
+            (undocumented)
+
+        extent (`~.hipExtent`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37903,7 +38310,8 @@ def hipFreeArray(object array):
         `~.hipMalloc`, `~.hipMallocPitch`, `~.hipFree`, `~.hipMallocArray`, `~.hipHostMalloc`, `~.hipHostFree`
 
     Args:
-        array (`~.hipArray`/`~.object`): **[in]** Pointer to array to free
+        array (`~.hipArray`/`~.object`) -- *IN*:
+            Pointer to array to free
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37920,7 +38328,8 @@ def hipFreeMipmappedArray(object mipmappedArray):
     r"""Frees a mipmapped array on the device
 
     Args:
-        mipmappedArray (`~.hipMipmappedArray`/`~.object`): **[in]**  Pointer to mipmapped array to free
+        mipmappedArray (`~.hipMipmappedArray`/`~.object`) -- *IN*:
+            - Pointer to mipmapped array to free
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -37940,17 +38349,21 @@ def hipMalloc3DArray(object desc, object extent, unsigned int flags):
         `~.hipMalloc`, `~.hipMallocPitch`, `~.hipFree`, `~.hipFreeArray`, `~.hipHostMalloc`, `~.hipHostFree`
 
     Args:
-        desc (`~.hipChannelFormatDesc`/`~.object`): **[in]** Requested channel format
+        desc (`~.hipChannelFormatDesc`/`~.object`) -- *IN*:
+            Requested channel format
 
-        extent (`~.hipExtent`): **[in]** Requested array allocation width, height and depth
+        extent (`~.hipExtent`) -- *IN*:
+            Requested array allocation width, height and depth
 
-        flags (`~.int`): **[in]** Requested properties of allocated array
+        flags (`~.int`) -- *IN*:
+            Requested properties of allocated array
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hipArray`: Pointer to allocated array in device memory
+        * `~.hipArray`:
+                Pointer to allocated array in device memory
     """
     array = hipArray.from_ptr(NULL)
     _hipMalloc3DArray__retval = hipError_t(chip.hipMalloc3DArray(&array._ptr,
@@ -37964,19 +38377,24 @@ def hipMallocMipmappedArray(object desc, object extent, unsigned int numLevels, 
     r"""Allocate a mipmapped array on the device
 
     Args:
-        desc (`~.hipChannelFormatDesc`/`~.object`): **[in]**  Requested channel format
+        desc (`~.hipChannelFormatDesc`/`~.object`) -- *IN*:
+            - Requested channel format
 
-        extent (`~.hipExtent`): **[in]**  Requested allocation size (width field in elements)
+        extent (`~.hipExtent`) -- *IN*:
+            - Requested allocation size (width field in elements)
 
-        numLevels (`~.int`): **[in]**  Number of mipmap levels to allocate
+        numLevels (`~.int`) -- *IN*:
+            - Number of mipmap levels to allocate
 
-        flags (`~.int`): **[in]**  Flags for extensions
+        flags (`~.int`) -- *IN*:
+            - Flags for extensions
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryAllocation`
-        * `~.hipMipmappedArray`:  Pointer to allocated mipmapped array in device memory
+        * `~.hipMipmappedArray`:
+                - Pointer to allocated mipmapped array in device memory
     """
     mipmappedArray = hipMipmappedArray.from_ptr(NULL)
     _hipMallocMipmappedArray__retval = hipError_t(chip.hipMallocMipmappedArray(&mipmappedArray._ptr,
@@ -37990,15 +38408,18 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
     r"""Gets a mipmap level of a HIP mipmapped array
 
     Args:
-        mipmappedArray (`~.hipMipmappedArray`/`~.object`): **[in]**  HIP mipmapped array
+        mipmappedArray (`~.hipMipmappedArray`/`~.object`) -- *IN*:
+            - HIP mipmapped array
 
-        level (`~.int`): **[in]**  Mipmap level
+        level (`~.int`) -- *IN*:
+            - Mipmap level
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipArray`:  Returned mipmap level HIP array
+        * `~.hipArray`:
+                - Returned mipmap level HIP array
     """
     levelArray = hipArray.from_ptr(NULL)
     _hipGetMipmappedArrayLevel__retval = hipError_t(chip.hipGetMipmappedArrayLevel(&levelArray._ptr,
@@ -38015,19 +38436,26 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Destination memory address
 
-        dpitch (`~.int`): **[in]** Pitch of destination memory
+        dpitch (`~.int`) -- *IN*:
+            Pitch of destination memory
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Source memory address
 
-        spitch (`~.int`): **[in]** Pitch of source memory
+        spitch (`~.int`) -- *IN*:
+            Pitch of source memory
 
-        width (`~.int`): **[in]** Width of matrix transfer (columns in bytes)
+        width (`~.int`) -- *IN*:
+            Width of matrix transfer (columns in bytes)
 
-        height (`~.int`): **[in]** Height of matrix transfer (rows)
+        height (`~.int`) -- *IN*:
+            Height of matrix transfer (rows)
 
-        kind (`~.hipMemcpyKind`): **[in]** Type of transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            Type of transfer
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38052,7 +38480,8 @@ def hipMemcpyParam2D(object pCopy):
         `~.hipMemcpyToSymbol`, `~.hipMemcpyAsync`
 
     Args:
-        pCopy (`~.hip_Memcpy2D`/`~.object`): **[in]** Parameters for the memory copy
+        pCopy (`~.hip_Memcpy2D`/`~.object`) -- *IN*:
+            Parameters for the memory copy
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38074,9 +38503,11 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
         `~.hipMemcpyToSymbol`, `~.hipMemcpyAsync`
 
     Args:
-        pCopy (`~.hip_Memcpy2D`/`~.object`): **[in]** Parameters for the memory copy
+        pCopy (`~.hip_Memcpy2D`/`~.object`) -- *IN*:
+            Parameters for the memory copy
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to use
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream to use
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38099,21 +38530,29 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Destination memory address
 
-        dpitch (`~.int`): **[in]** Pitch of destination memory
+        dpitch (`~.int`) -- *IN*:
+            Pitch of destination memory
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Source memory address
 
-        spitch (`~.int`): **[in]** Pitch of source memory
+        spitch (`~.int`) -- *IN*:
+            Pitch of source memory
 
-        width (`~.int`): **[in]** Width of matrix transfer (columns in bytes)
+        width (`~.int`) -- *IN*:
+            Width of matrix transfer (columns in bytes)
 
-        height (`~.int`): **[in]** Height of matrix transfer (rows)
+        height (`~.int`) -- *IN*:
+            Height of matrix transfer (rows)
 
-        kind (`~.hipMemcpyKind`): **[in]** Type of transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            Type of transfer
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to use
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream to use
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38139,21 +38578,29 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hipArray`/`~.object`): **[in]** Destination memory address
+        dst (`~.hipArray`/`~.object`) -- *IN*:
+            Destination memory address
 
-        wOffset (`~.int`): **[in]** Destination starting X offset
+        wOffset (`~.int`) -- *IN*:
+            Destination starting X offset
 
-        hOffset (`~.int`): **[in]** Destination starting Y offset
+        hOffset (`~.int`) -- *IN*:
+            Destination starting Y offset
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Source memory address
 
-        spitch (`~.int`): **[in]** Pitch of source memory
+        spitch (`~.int`) -- *IN*:
+            Pitch of source memory
 
-        width (`~.int`): **[in]** Width of matrix transfer (columns in bytes)
+        width (`~.int`) -- *IN*:
+            Width of matrix transfer (columns in bytes)
 
-        height (`~.int`): **[in]** Height of matrix transfer (rows)
+        height (`~.int`) -- *IN*:
+            Height of matrix transfer (rows)
 
-        kind (`~.hipMemcpyKind`): **[in]** Type of transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            Type of transfer
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38178,23 +38625,32 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hipArray`/`~.object`): **[in]** Destination memory address
+        dst (`~.hipArray`/`~.object`) -- *IN*:
+            Destination memory address
 
-        wOffset (`~.int`): **[in]** Destination starting X offset
+        wOffset (`~.int`) -- *IN*:
+            Destination starting X offset
 
-        hOffset (`~.int`): **[in]** Destination starting Y offset
+        hOffset (`~.int`) -- *IN*:
+            Destination starting Y offset
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Source memory address
 
-        spitch (`~.int`): **[in]** Pitch of source memory
+        spitch (`~.int`) -- *IN*:
+            Pitch of source memory
 
-        width (`~.int`): **[in]** Width of matrix transfer (columns in bytes)
+        width (`~.int`) -- *IN*:
+            Width of matrix transfer (columns in bytes)
 
-        height (`~.int`): **[in]** Height of matrix transfer (rows)
+        height (`~.int`) -- *IN*:
+            Height of matrix transfer (rows)
 
-        kind (`~.hipMemcpyKind`): **[in]** Type of transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            Type of transfer
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Accelerator view which the copy is being enqueued
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Accelerator view which the copy is being enqueued
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38220,17 +38676,23 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hipArray`/`~.object`): **[in]** Destination memory address
+        dst (`~.hipArray`/`~.object`) -- *IN*:
+            Destination memory address
 
-        wOffset (`~.int`): **[in]** Destination starting X offset
+        wOffset (`~.int`) -- *IN*:
+            Destination starting X offset
 
-        hOffset (`~.int`): **[in]** Destination starting Y offset
+        hOffset (`~.int`) -- *IN*:
+            Destination starting Y offset
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source memory address
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Source memory address
 
-        count (`~.int`): **[in]** size in bytes to copy
+        count (`~.int`) -- *IN*:
+            size in bytes to copy
 
-        kind (`~.hipMemcpyKind`): **[in]** Type of transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            Type of transfer
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38255,17 +38717,23 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Destination memory address
 
-        srcArray (`~.hipArray`/`~.object`): **[in]** Source memory address
+        srcArray (`~.hipArray`/`~.object`) -- *IN*:
+            Source memory address
 
-        woffset: **[in]** Source starting X offset
+        wOffset (`~.int`):
+            (undocumented)
 
-        hOffset (`~.int`): **[in]** Source starting Y offset
+        hOffset (`~.int`) -- *IN*:
+            Source starting Y offset
 
-        count (`~.int`): **[in]** Size in bytes to copy
+        count (`~.int`) -- *IN*:
+            Size in bytes to copy
 
-        kind (`~.hipMemcpyKind`): **[in]** Type of transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            Type of transfer
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38290,21 +38758,29 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Destination memory address
 
-        dpitch (`~.int`): **[in]** Pitch of destination memory
+        dpitch (`~.int`) -- *IN*:
+            Pitch of destination memory
 
-        src (`~.hipArray`/`~.object`): **[in]** Source memory address
+        src (`~.hipArray`/`~.object`) -- *IN*:
+            Source memory address
 
-        wOffset (`~.int`): **[in]** Source starting X offset
+        wOffset (`~.int`) -- *IN*:
+            Source starting X offset
 
-        hOffset (`~.int`): **[in]** Source starting Y offset
+        hOffset (`~.int`) -- *IN*:
+            Source starting Y offset
 
-        width (`~.int`): **[in]** Width of matrix transfer (columns in bytes)
+        width (`~.int`) -- *IN*:
+            Width of matrix transfer (columns in bytes)
 
-        height (`~.int`): **[in]** Height of matrix transfer (rows)
+        height (`~.int`) -- *IN*:
+            Height of matrix transfer (rows)
 
-        kind (`~.hipMemcpyKind`): **[in]** Type of transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            Type of transfer
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38329,23 +38805,32 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Destination memory address
 
-        dpitch (`~.int`): **[in]** Pitch of destination memory
+        dpitch (`~.int`) -- *IN*:
+            Pitch of destination memory
 
-        src (`~.hipArray`/`~.object`): **[in]** Source memory address
+        src (`~.hipArray`/`~.object`) -- *IN*:
+            Source memory address
 
-        wOffset (`~.int`): **[in]** Source starting X offset
+        wOffset (`~.int`) -- *IN*:
+            Source starting X offset
 
-        hOffset (`~.int`): **[in]** Source starting Y offset
+        hOffset (`~.int`) -- *IN*:
+            Source starting Y offset
 
-        width (`~.int`): **[in]** Width of matrix transfer (columns in bytes)
+        width (`~.int`) -- *IN*:
+            Width of matrix transfer (columns in bytes)
 
-        height (`~.int`): **[in]** Height of matrix transfer (rows)
+        height (`~.int`) -- *IN*:
+            Height of matrix transfer (rows)
 
-        kind (`~.hipMemcpyKind`): **[in]** Type of transfer
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            Type of transfer
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Accelerator view which the copy is being enqueued
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Accelerator view which the copy is being enqueued
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38371,13 +38856,17 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
         `~.hipMemcpyAsync`
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]** Destination memory address
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Destination memory address
 
-        srcArray (`~.hipArray`/`~.object`): **[in]** Source array
+        srcArray (`~.hipArray`/`~.object`) -- *IN*:
+            Source array
 
-        srcoffset: **[in]** Offset in bytes of source array
+        srcOffset (`~.int`):
+            (undocumented)
 
-        count (`~.int`): **[in]** Size of memory copy in bytes
+        count (`~.int`) -- *IN*:
+            Size of memory copy in bytes
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38400,13 +38889,17 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
         `~.hipMemcpyAsync`
 
     Args:
-        dstArray (`~.hipArray`/`~.object`): **[in]** Destination memory address
+        dstArray (`~.hipArray`/`~.object`) -- *IN*:
+            Destination memory address
 
-        dstOffset (`~.int`): **[in]** Offset in bytes of destination array
+        dstOffset (`~.int`) -- *IN*:
+            Offset in bytes of destination array
 
-        srcHost (`~.hip._util.types.Pointer`/`~.object`): **[in]** Source host pointer
+        srcHost (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Source host pointer
 
-        count (`~.int`): **[in]** Size of memory copy in bytes
+        count (`~.int`) -- *IN*:
+            Size of memory copy in bytes
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38429,7 +38922,8 @@ def hipMemcpy3D(object p):
         `~.hipMemcpyAsync`
 
     Args:
-        p (`~.hipMemcpy3DParms`/`~.object`): **[in]** 3D memory copy parameters
+        p (`~.hipMemcpy3DParms`/`~.object`) -- *IN*:
+            3D memory copy parameters
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38451,9 +38945,11 @@ def hipMemcpy3DAsync(object p, object stream):
         `~.hipMemcpyAsync`
 
     Args:
-        p (`~.hipMemcpy3DParms`/`~.object`): **[in]** 3D memory copy parameters
+        p (`~.hipMemcpy3DParms`/`~.object`) -- *IN*:
+            3D memory copy parameters
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to use
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream to use
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38476,7 +38972,8 @@ def hipDrvMemcpy3D(object pCopy):
         `~.hipMemcpyAsync`
 
     Args:
-        pCopy (`~.HIP_MEMCPY3D`/`~.object`): **[in]** 3D memory copy parameters
+        pCopy (`~.HIP_MEMCPY3D`/`~.object`) -- *IN*:
+            3D memory copy parameters
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38498,9 +38995,11 @@ def hipDrvMemcpy3DAsync(object pCopy, object stream):
         `~.hipMemcpyAsync`
 
     Args:
-        pCopy (`~.HIP_MEMCPY3D`/`~.object`): **[in]** 3D memory copy parameters
+        pCopy (`~.HIP_MEMCPY3D`/`~.object`) -- *IN*:
+            3D memory copy parameters
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream to use
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream to use
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38525,16 +39024,19 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
     device is not a peer of itself.
 
     Args:
-        device: **[in]**  device from where memory may be accessed.
+        deviceId (`~.int`):
+            (undocumented)
 
-        peerDevice: **[in]**  device where memory is physically located
+        peerDeviceId (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`,
         * `~.hipErrorInvalidDevice` if deviceId or peerDeviceId are not valid devices
-        * `~.int`: Returns the peer access capability (0 or 1)
+        * `~.int`:
+                Returns the peer access capability (0 or 1)
     """
     cdef int canAccessPeer
     _hipDeviceCanAccessPeer__retval = hipError_t(chip.hipDeviceCanAccessPeer(&canAccessPeer,deviceId,peerDeviceId))    # fully specified
@@ -38554,9 +39056,9 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
     Returns `~.hipSuccess`, `~.hipErrorInvalidDevice`, `~.hipErrorInvalidValue`,
 
     Args:
-        peerDeviceId (`~.int`): **[in]** 
+        peerDeviceId (`~.int`) -- *IN*:
 
-        flags (`~.int`): **[in]** 
+        flags (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38576,7 +39078,7 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
     enabled from the current device.
 
     Args:
-        peerDeviceId (`~.int`): **[in]** 
+        peerDeviceId (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38596,15 +39098,18 @@ def hipMemGetAddressRange(object pbase, object dptr):
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        pbase (`~.hip._util.types.Pointer`/`~.object`): **[out]**  BAse pointer address
+        pbase (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            - BAse pointer address
 
-        dptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device Pointer
+        dptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Device Pointer
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidDevicePointer`
-        * `~.int`:  Size of allocation
+        * `~.int`:
+                - Size of allocation
     """
     cdef unsigned long psize
     _hipMemGetAddressRange__retval = hipError_t(chip.hipMemGetAddressRange(
@@ -38618,15 +39123,20 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
     r"""Copies memory from one device to memory on another device.
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]**  Destination device pointer.
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            - Destination device pointer.
 
-        dstDeviceId (`~.int`): **[in]**  Destination device
+        dstDeviceId (`~.int`) -- *IN*:
+            - Destination device
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Source device pointer
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Source device pointer
 
-        srcDeviceId (`~.int`): **[in]**  Source device
+        srcDeviceId (`~.int`) -- *IN*:
+            - Source device
 
-        sizeBytes (`~.int`): **[in]**  Size of memory copy in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            - Size of memory copy in bytes
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38644,17 +39154,23 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
     r"""Copies memory from one device to memory on another device.
 
     Args:
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[out]**  Destination device pointer.
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            - Destination device pointer.
 
-        dstDevice: **[in]**  Destination device
+        dstDeviceId (`~.int`):
+            (undocumented)
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Source device pointer
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Source device pointer
 
-        srcDevice (`~.int`): **[in]**  Source device
+        srcDevice (`~.int`) -- *IN*:
+            - Source device
 
-        sizeBytes (`~.int`): **[in]**  Size of memory copy in bytes
+        sizeBytes (`~.int`) -- *IN*:
+            - Size of memory copy in bytes
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream identifier
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream identifier
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38677,9 +39193,10 @@ def hipCtxCreate(unsigned int flags, int device):
         `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        flags (`~.int`): **[in]** 
+        flags (`~.int`) -- *IN*:
 
-        associated: **[in]** device handle
+        device (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -38701,7 +39218,8 @@ def hipCtxDestroy(object ctx):
         `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize` , `~.hipCtxGetDevice`
 
     Args:
-        ctx (`~.ihipCtx_t`/`~.object`): **[in]** Context to destroy
+        ctx (`~.ihipCtx_t`/`~.object`) -- *IN*:
+            Context to destroy
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38741,7 +39259,7 @@ def hipCtxPushCurrent(object ctx):
         `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize` , `~.hipCtxGetDevice`
 
     Args:
-        ctx (`~.ihipCtx_t`/`~.object`): **[in]** 
+        ctx (`~.ihipCtx_t`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38762,7 +39280,7 @@ def hipCtxSetCurrent(object ctx):
         `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize` , `~.hipCtxGetDevice`
 
     Args:
-        ctx (`~.ihipCtx_t`/`~.object`): **[in]** 
+        ctx (`~.ihipCtx_t`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38828,7 +39346,8 @@ def hipCtxGetApiVersion(object ctx):
         `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        ctx (`~.ihipCtx_t`/`~.object`): **[in]** Context to check
+        ctx (`~.ihipCtx_t`/`~.object`) -- *IN*:
+            Context to check
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -38855,7 +39374,6 @@ def hipCtxGetCacheConfig():
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        cacheConfiguration: **[out]** 
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38880,7 +39398,8 @@ def hipCtxSetCacheConfig(object cacheConfig):
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        cacheConfiguration: **[in]** 
+        cacheConfig (`~.hipFuncCache_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38906,7 +39425,8 @@ def hipCtxSetSharedMemConfig(object config):
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        sharedMemoryConfiguration: **[in]** 
+        config (`~.hipSharedMemConfig`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -38932,7 +39452,6 @@ def hipCtxGetSharedMemConfig():
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        sharedMemoryConfiguration: **[out]** 
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39001,9 +39520,9 @@ def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
         PeerToPeer support is experimental.
 
     Args:
-        peerCtx (`~.ihipCtx_t`/`~.object`): **[in]** 
+        peerCtx (`~.ihipCtx_t`/`~.object`) -- *IN*:
 
-        flags (`~.int`): **[in]** 
+        flags (`~.int`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39033,7 +39552,7 @@ def hipCtxDisablePeerAccess(object peerCtx):
         PeerToPeer support is experimental.
 
     Args:
-        peerCtx (`~.ihipCtx_t`/`~.object`): **[in]** 
+        peerCtx (`~.ihipCtx_t`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39054,11 +39573,8 @@ def hipDevicePrimaryCtxGetState(int dev):
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        Device: **[in]** to get primary context flags for
-
-        Pointer: **[out]** to store flags
-
-        Pointer: **[out]** to store context state; 0 = inactive, 1 = active
+        dev (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39084,7 +39600,8 @@ def hipDevicePrimaryCtxRelease(int dev):
         HIP/HCC path.
 
     Args:
-        Device: **[in]** which primary context is released
+        dev (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39104,9 +39621,8 @@ def hipDevicePrimaryCtxRetain(int dev):
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        Returned: **[out]** context handle of the new context
-
-        Device: **[in]** which primary context is released
+        dev (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39127,7 +39643,8 @@ def hipDevicePrimaryCtxReset(int dev):
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        Device: **[in]** which primary context is reset
+        dev (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39147,9 +39664,11 @@ def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
         `~.hipCtxSetCurrent`, `~.hipCtxPushCurrent`, `~.hipCtxSetCacheConfig`, `~.hipCtxSynchronize`, `~.hipCtxGetDevice`
 
     Args:
-        Device: **[in]** for which the primary context flags are set
+        dev (`~.int`):
+            (undocumented)
 
-        New: **[in]** flags for the device
+        flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39168,7 +39687,7 @@ def hipModuleLoad(const char * fname):
         File/memory resources allocated in this function are released only in hipModuleUnload.
 
     Args:
-        fname (`~.bytes`): **[in]** 
+        fname (`~.bytes`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -39187,7 +39706,7 @@ def hipModuleUnload(object module):
     r"""Frees the module
 
     Args:
-        module (`~.ihipModule_t`/`~.object`): **[in]** 
+        module (`~.ihipModule_t`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39205,9 +39724,9 @@ def hipModuleGetFunction(object module, const char * kname):
     r"""Function with kname will be extracted if present in module
 
     Args:
-        module (`~.ihipModule_t`/`~.object`): **[in]** 
+        module (`~.ihipModule_t`/`~.object`) -- *IN*:
 
-        kname (`~.bytes`): **[in]** 
+        kname (`~.bytes`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -39227,9 +39746,9 @@ def hipFuncGetAttributes(object attr, object func):
     r"""Find out attributes for a given function.
 
     Args:
-        attr (`~.hipFuncAttributes`/`~.object`): **[out]** 
+        attr (`~.hipFuncAttributes`/`~.object`) -- *OUT*:
 
-        func (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
+        func (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39247,9 +39766,9 @@ def hipFuncGetAttribute(object attrib, object hfunc):
     r"""Find out a specific attribute for a given function.
 
     Args:
-        attrib (`~.hipFunction_attribute`): **[in]** 
+        attrib (`~.hipFunction_attribute`) -- *IN*:
 
-        hfunc (`~.ihipModuleSymbol_t`/`~.object`): **[in]** 
+        hfunc (`~.ihipModuleSymbol_t`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -39270,9 +39789,9 @@ def hipModuleGetTexRef(object hmod, const char * name):
     r"""returns the handle of the texture reference with the name from the module.
 
     Args:
-        hmod (`~.ihipModule_t`/`~.object`): **[in]** 
+        hmod (`~.ihipModule_t`/`~.object`) -- *IN*:
 
-        name (`~.bytes`): **[in]** 
+        name (`~.bytes`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -39292,7 +39811,7 @@ def hipModuleLoadData(object image):
     location.
 
     Args:
-        image (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
+        image (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -39312,18 +39831,21 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
     location. Options are not used. hipModuleLoadData is called.
 
     Args:
-        image (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
+        image (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
 
-        number: **[in]** of options
+        numOptions (`~.int`):
+            (undocumented)
 
-        option: **[in]** values for JIT
+        optionValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
         * `~.ihipModule_t`:
-        * `~.hipJitOption`: for JIT
+        * `~.hipJitOption`:
+                for JIT
     """
     module = ihipModule_t.from_ptr(NULL)
     cdef chip.hipJitOption options
@@ -39347,29 +39869,39 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
         refer to hip_porting_driver_api.md for sample usage.
 
     Args:
-        f (`~.ihipModuleSymbol_t`/`~.object`): **[in]** Kernel to launch.
+        f (`~.ihipModuleSymbol_t`/`~.object`) -- *IN*:
+            Kernel to launch.
 
-        gridDimX (`~.int`): **[in]** X grid dimension specified as multiple of blockDimX.
+        gridDimX (`~.int`) -- *IN*:
+            X grid dimension specified as multiple of blockDimX.
 
-        gridDimY (`~.int`): **[in]** Y grid dimension specified as multiple of blockDimY.
+        gridDimY (`~.int`) -- *IN*:
+            Y grid dimension specified as multiple of blockDimY.
 
-        gridDimZ (`~.int`): **[in]** Z grid dimension specified as multiple of blockDimZ.
+        gridDimZ (`~.int`) -- *IN*:
+            Z grid dimension specified as multiple of blockDimZ.
 
-        blockDimX (`~.int`): **[in]** X block dimensions specified in work-items
+        blockDimX (`~.int`) -- *IN*:
+            X block dimensions specified in work-items
 
-        blockDimY (`~.int`): **[in]** Y grid dimension specified in work-items
+        blockDimY (`~.int`) -- *IN*:
+            Y grid dimension specified in work-items
 
-        blockDimZ (`~.int`): **[in]** Z grid dimension specified in work-items
+        blockDimZ (`~.int`) -- *IN*:
+            Z grid dimension specified in work-items
 
-        sharedMemBytes (`~.int`): **[in]** Amount of dynamic shared memory to allocate for this kernel. The
+        sharedMemBytes (`~.int`) -- *IN*:
+            Amount of dynamic shared memory to allocate for this kernel. The
             HIP-Clang compiler provides support for extern shared declarations.
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream where the kernel should be dispatched.  May be 0, in which case th
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream where the kernel should be dispatched.  May be 0, in which case th
             default stream is used with associated synchronization rules.
 
-        kernelParams (`~.hip._util.types.Pointer`/`~.object`): **[in]** 
+        kernelParams (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
 
-        extra (`~.hip._hip_helpers.HipModuleLaunchKernel_extra`/`~.object`): **[in]** Pointer to kernel arguments.   These are passed directly to the kernel and
+        extra (`~.hip._hip_helpers.HipModuleLaunchKernel_extra`/`~.object`) -- *IN*:
+            Pointer to kernel arguments.   These are passed directly to the kernel and
             must be in the memory layout and alignment expected by the kernel.
 
     Returns:
@@ -39394,18 +39926,24 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f (`~.hip._util.types.Pointer`/`~.object`): **[in]** Kernel to launch.
+        f (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Kernel to launch.
 
-        gridDim (`~.dim3`): **[in]** Grid dimensions specified as multiple of blockDim.
+        gridDim (`~.dim3`) -- *IN*:
+            Grid dimensions specified as multiple of blockDim.
 
-        blockDim: **[in]** Block dimensions specified in work-items
+        blockDimX (`~.dim3`):
+            (undocumented)
 
-        kernelParams (`~.hip._util.types.Pointer`/`~.object`): **[in]** A list of kernel arguments
+        kernelParams (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            A list of kernel arguments
 
-        sharedMemBytes (`~.int`): **[in]** Amount of dynamic shared memory to allocate for this kernel. The
+        sharedMemBytes (`~.int`) -- *IN*:
+            Amount of dynamic shared memory to allocate for this kernel. The
             HIP-Clang compiler provides support for extern shared declarations.
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream where the kernel should be dispatched.  May be 0, in which case th
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream where the kernel should be dispatched.  May be 0, in which case th
             default stream is used with associated synchronization rules.
 
     Returns:
@@ -39428,11 +39966,14 @@ def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevice
     synchronize as they execute.
 
     Args:
-        launchParamsList (`~.hipLaunchParams_t`/`~.object`): **[in]** List of launch parameters, one per device.
+        launchParamsList (`~.hipLaunchParams_t`/`~.object`) -- *IN*:
+            List of launch parameters, one per device.
 
-        numDevices (`~.int`): **[in]** Size of the launchParamsList array.
+        numDevices (`~.int`) -- *IN*:
+            Size of the launchParamsList array.
 
-        flags (`~.int`): **[in]** Flags to control launch behavior.
+        flags (`~.int`) -- *IN*:
+            Flags to control launch behavior.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39450,11 +39991,14 @@ def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, 
     on respective streams before enqueuing any other work on the specified streams from any other threads
 
     Args:
-        hipLaunchParams: **[in]** List of launch parameters, one per device.
+        launchParamsList (`~.hipLaunchParams_t`/`~.object`):
+            (undocumented)
 
-        numDevices (`~.int`): **[in]** Size of the launchParamsList array.
+        numDevices (`~.int`) -- *IN*:
+            Size of the launchParamsList array.
 
-        flags (`~.int`): **[in]** Flags to control launch behavior.
+        flags (`~.int`) -- *IN*:
+            Flags to control launch behavior.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39474,18 +40018,23 @@ def hipModuleOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMem
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f (`~.ihipModuleSymbol_t`/`~.object`): **[in]** kernel function for which occupancy is calulated
+        f (`~.ihipModuleSymbol_t`/`~.object`) -- *IN*:
+            kernel function for which occupancy is calulated
 
-        dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
+        dynSharedMemPerBlk (`~.int`) -- *IN*:
+            dynamic shared memory usage (in bytes) intended for each block
 
-        blockSizeLimit (`~.int`): **[in]** the maximum block size for the kernel, use 0 for no limit
+        blockSizeLimit (`~.int`) -- *IN*:
+            the maximum block size for the kernel, use 0 for no limit
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-        * `~.int`: minimum grid size for maximum potential occupancy
-        * `~.int`: block size for maximum potential occupancy
+        * `~.int`:
+                minimum grid size for maximum potential occupancy
+        * `~.int`:
+                block size for maximum potential occupancy
     """
     cdef int gridSize
     cdef int blockSize
@@ -39502,20 +40051,26 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, unsigned long dyn
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f (`~.ihipModuleSymbol_t`/`~.object`): **[in]** kernel function for which occupancy is calulated
+        f (`~.ihipModuleSymbol_t`/`~.object`) -- *IN*:
+            kernel function for which occupancy is calulated
 
-        dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
+        dynSharedMemPerBlk (`~.int`) -- *IN*:
+            dynamic shared memory usage (in bytes) intended for each block
 
-        blockSizeLimit (`~.int`): **[in]** the maximum block size for the kernel, use 0 for no limit
+        blockSizeLimit (`~.int`) -- *IN*:
+            the maximum block size for the kernel, use 0 for no limit
 
-        flags (`~.int`): **[in]** Extra flags for occupancy calculation (only default supported)
+        flags (`~.int`) -- *IN*:
+            Extra flags for occupancy calculation (only default supported)
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-        * `~.int`: minimum grid size for maximum potential occupancy
-        * `~.int`: block size for maximum potential occupancy
+        * `~.int`:
+                minimum grid size for maximum potential occupancy
+        * `~.int`:
+                block size for maximum potential occupancy
     """
     cdef int gridSize
     cdef int blockSize
@@ -39529,17 +40084,21 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, 
     r"""Returns occupancy for a device function.
 
     Args:
-        func: **[in]** Kernel function (hipFunction) for which occupancy is calulated
+        f (`~.ihipModuleSymbol_t`/`~.object`):
+            (undocumented)
 
-        blockSize (`~.int`): **[in]** Block size the kernel is intended to be launched with
+        blockSize (`~.int`) -- *IN*:
+            Block size the kernel is intended to be launched with
 
-        dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
+        dynSharedMemPerBlk (`~.int`) -- *IN*:
+            dynamic shared memory usage (in bytes) intended for each block
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`
-        * `~.int`: Returned occupancy
+        * `~.int`:
+                Returned occupancy
     """
     cdef int numBlocks
     _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
@@ -39552,19 +40111,24 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int bl
     r"""Returns occupancy for a device function.
 
     Args:
-        f (`~.ihipModuleSymbol_t`/`~.object`): **[in]** Kernel function(hipFunction_t) for which occupancy is calulated
+        f (`~.ihipModuleSymbol_t`/`~.object`) -- *IN*:
+            Kernel function(hipFunction_t) for which occupancy is calulated
 
-        blockSize (`~.int`): **[in]** Block size the kernel is intended to be launched with
+        blockSize (`~.int`) -- *IN*:
+            Block size the kernel is intended to be launched with
 
-        dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
+        dynSharedMemPerBlk (`~.int`) -- *IN*:
+            dynamic shared memory usage (in bytes) intended for each block
 
-        flags (`~.int`): **[in]** Extra flags for occupancy calculation (only default supported)
+        flags (`~.int`) -- *IN*:
+            Extra flags for occupancy calculation (only default supported)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`
-        * `~.int`: Returned occupancy
+        * `~.int`:
+                Returned occupancy
     """
     cdef int numBlocks
     _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
@@ -39577,17 +40141,21 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsign
     r"""Returns occupancy for a device function.
 
     Args:
-        func: **[in]** Kernel function for which occupancy is calulated
+        f (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
-        blockSize (`~.int`): **[in]** Block size the kernel is intended to be launched with
+        blockSize (`~.int`) -- *IN*:
+            Block size the kernel is intended to be launched with
 
-        dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
+        dynSharedMemPerBlk (`~.int`) -- *IN*:
+            dynamic shared memory usage (in bytes) intended for each block
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`
-        * `~.int`: Returned occupancy
+        * `~.int`:
+                Returned occupancy
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
@@ -39600,19 +40168,24 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
     r"""Returns occupancy for a device function.
 
     Args:
-        f (`~.hip._util.types.Pointer`/`~.object`): **[in]** Kernel function for which occupancy is calulated
+        f (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Kernel function for which occupancy is calulated
 
-        blockSize (`~.int`): **[in]** Block size the kernel is intended to be launched with
+        blockSize (`~.int`) -- *IN*:
+            Block size the kernel is intended to be launched with
 
-        dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
+        dynSharedMemPerBlk (`~.int`) -- *IN*:
+            dynamic shared memory usage (in bytes) intended for each block
 
-        flags (`~.int`): **[in]** Extra flags for occupancy calculation (currently ignored)
+        flags (`~.int`) -- *IN*:
+            Extra flags for occupancy calculation (currently ignored)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`
-        * `~.int`: Returned occupancy
+        * `~.int`:
+                Returned occupancy
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
@@ -39628,18 +40201,23 @@ def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f (`~.hip._util.types.Pointer`/`~.object`): **[in]** kernel function for which occupancy is calulated
+        f (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            kernel function for which occupancy is calulated
 
-        dynSharedMemPerBlk (`~.int`): **[in]** dynamic shared memory usage (in bytes) intended for each block
+        dynSharedMemPerBlk (`~.int`) -- *IN*:
+            dynamic shared memory usage (in bytes) intended for each block
 
-        blockSizeLimit (`~.int`): **[in]** the maximum block size for the kernel, use 0 for no limit
+        blockSizeLimit (`~.int`) -- *IN*:
+            the maximum block size for the kernel, use 0 for no limit
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-        * `~.int`: minimum grid size for maximum potential occupancy
-        * `~.int`: block size for maximum potential occupancy
+        * `~.int`:
+                minimum grid size for maximum potential occupancy
+        * `~.int`:
+                block size for maximum potential occupancy
     """
     cdef int gridSize
     cdef int blockSize
@@ -39690,14 +40268,18 @@ def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, o
     size gridDim x blockDim >= 2^32.
 
     Args:
-        gridDim (`~.dim3`): **[in]** grid dimension specified as multiple of blockDim.
+        gridDim (`~.dim3`) -- *IN*:
+            grid dimension specified as multiple of blockDim.
 
-        blockDim (`~.dim3`): **[in]** block dimensions specified in work-items
+        blockDim (`~.dim3`) -- *IN*:
+            block dimensions specified in work-items
 
-        sharedMem (`~.int`): **[in]** Amount of dynamic shared memory to allocate for this kernel. The
+        sharedMem (`~.int`) -- *IN*:
+            Amount of dynamic shared memory to allocate for this kernel. The
             HIP-Clang compiler provides support for extern shared declarations.
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream where the kernel should be dispatched.  May be 0, in which case the
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream where the kernel should be dispatched.  May be 0, in which case the
             default stream is used with associated synchronization rules.
 
     Returns:
@@ -39717,11 +40299,14 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
     r"""Set a kernel argument.
 
     Args:
-        arg (`~.hip._util.types.Pointer`/`~.object`): **[in]** Pointer the argument in host memory.
+        arg (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Pointer the argument in host memory.
 
-        size (`~.int`): **[in]** Size of the argument.
+        size (`~.int`) -- *IN*:
+            Size of the argument.
 
-        offset (`~.int`): **[in]** Offset of the argument on the argument stack.
+        offset (`~.int`) -- *IN*:
+            Offset of the argument on the argument stack.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39738,7 +40323,8 @@ def hipLaunchByPtr(object func):
     r"""Launch a kernel.
 
     Args:
-        func (`~.hip._util.types.Pointer`/`~.object`): **[in]** Kernel to launch.
+        func (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Kernel to launch.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39755,18 +40341,24 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
     r"""C compliant kernel launch API
 
     Args:
-        function_address (`~.hip._util.types.Pointer`/`~.object`): **[in]**  kernel stub function pointer.
+        function_address (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - kernel stub function pointer.
 
-        numBlocks (`~.dim3`): **[in]**  number of blocks
+        numBlocks (`~.dim3`) -- *IN*:
+            - number of blocks
 
-        dimBlocks (`~.dim3`): **[in]**  dimension of a block
+        dimBlocks (`~.dim3`) -- *IN*:
+            - dimension of a block
 
-        args (`~.hip._util.types.Pointer`/`~.object`): **[in]**  kernel arguments
+        args (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - kernel arguments
 
-        sharedMemBytes (`~.int`): **[in]**  Amount of dynamic shared memory to allocate for this kernel. The
+        sharedMemBytes (`~.int`) -- *IN*:
+            - Amount of dynamic shared memory to allocate for this kernel. The
             HIP-Clang compiler provides support for extern shared declarations.
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream where the kernel should be dispatched.  May be 0, in which case th
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream where the kernel should be dispatched.  May be 0, in which case th
             default stream is used with associated synchronization rules.
 
     Returns:
@@ -39792,11 +40384,14 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  stream to enqueue work to.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - stream to enqueue work to.
 
-        fn (`~.hipHostFn_t`/`~.object`): **[in]**  function to call once operations enqueued preceeding are complete.
+        fn (`~.hipHostFn_t`/`~.object`) -- *IN*:
+            - function to call once operations enqueued preceeding are complete.
 
-        userData (`~.hip._util.types.Pointer`/`~.object`): **[in]**  User-specified data to be passed to the function.
+        userData (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - User-specified data to be passed to the function.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39813,12 +40408,13 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
 
 @cython.embedsignature(True)
 def hipDrvMemcpy2DUnaligned(object pCopy):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     Copies memory for 2D arrays.
 
     Args:
-        pCopy (`~.hip_Memcpy2D`/`~.object`):  Parameters for the memory copy
+        pCopy (`~.hip_Memcpy2D`/`~.object`):
+            - Parameters for the memory copy
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39835,27 +40431,36 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
     r"""Launches kernel from the pointer address, with arguments and shared memory on stream.
 
     Args:
-        function_address (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the Kernel to launch.
+        function_address (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to the Kernel to launch.
 
-        numBlocks (`~.dim3`): **[in]** number of blocks.
+        numBlocks (`~.dim3`) -- *IN*:
+            number of blocks.
 
-        dimBlocks (`~.dim3`): **[in]** dimension of a block.
+        dimBlocks (`~.dim3`) -- *IN*:
+            dimension of a block.
 
-        args (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to kernel arguments.
+        args (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to kernel arguments.
 
-        sharedMemBytes (`~.int`): **[in]** Amount of dynamic shared memory to allocate for this kernel.
+        sharedMemBytes (`~.int`) -- *IN*:
+            Amount of dynamic shared memory to allocate for this kernel.
             HIP-Clang compiler provides support for extern shared declarations.
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]** Stream where the kernel should be dispatched.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            Stream where the kernel should be dispatched.
 
-        startEvent (`~.ihipEvent_t`/`~.object`): **[in]** If non-null, specified event will be updated to track the start time of
+        startEvent (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            If non-null, specified event will be updated to track the start time of
             the kernel launch. The event must be created before calling this API.
 
-        stopEvent (`~.ihipEvent_t`/`~.object`): **[in]** If non-null, specified event will be updated to track the stop time of
+        stopEvent (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            If non-null, specified event will be updated to track the stop time of
             the kernel launch. The event must be created before calling this API.
             May be 0, in which case the default stream is used with associated synchronization rules.
 
-        flags (`~.int`): **[in]** . The value of hipExtAnyOrderLaunch, signifies if kernel can be
+        flags (`~.int`) -- *IN*:
+            . The value of hipExtAnyOrderLaunch, signifies if kernel can be
             launched in any order.
 
     Returns:
@@ -39879,11 +40484,14 @@ def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object des
     r"""Binds a mipmapped array to a texture.
 
     Args:
-        tex (`~.textureReference`/`~.object`): **[in]** pointer to the texture reference to bind
+        tex (`~.textureReference`/`~.object`) -- *IN*:
+            pointer to the texture reference to bind
 
-        mipmappedArray (`~.hipMipmappedArray`/`~.object`): **[in]** memory mipmapped array on the device
+        mipmappedArray (`~.hipMipmappedArray`/`~.object`) -- *IN*:
+            memory mipmapped array on the device
 
-        desc (`~.hipChannelFormatDesc`/`~.object`): **[in]** opointer to the channel format
+        desc (`~.hipChannelFormatDesc`/`~.object`) -- *IN*:
+            opointer to the channel format
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39906,17 +40514,21 @@ def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc
         return hipErrorNotSupported.
 
     Args:
-        pResDesc (`~.hipResourceDesc`/`~.object`): **[in]** pointer to resource descriptor
+        pResDesc (`~.hipResourceDesc`/`~.object`) -- *IN*:
+            pointer to resource descriptor
 
-        pTexDesc (`~.hipTextureDesc`/`~.object`): **[in]** pointer to texture descriptor
+        pTexDesc (`~.hipTextureDesc`/`~.object`) -- *IN*:
+            pointer to texture descriptor
 
-        pResViewDesc (`~.hipResourceViewDesc`/`~.object`): **[in]** pointer to resource view descriptor
+        pResViewDesc (`~.hipResourceViewDesc`/`~.object`) -- *IN*:
+            pointer to resource view descriptor
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue, hipErrorNotSupported, hipErrorOutOfMemory
-        * `~.__hip_texture`: pointer to the texture object to create
+        * `~.__hip_texture`:
+                pointer to the texture object to create
     """
     pTexObject = __hip_texture.from_ptr(NULL)
     _hipCreateTextureObject__retval = hipError_t(chip.hipCreateTextureObject(&pTexObject._ptr,
@@ -39931,7 +40543,8 @@ def hipDestroyTextureObject(object textureObject):
     r"""Destroys a texture object.
 
     Args:
-        textureObject (`~.__hip_texture`/`~.object`): **[in]** texture object to destroy
+        textureObject (`~.__hip_texture`/`~.object`) -- *IN*:
+            texture object to destroy
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39948,9 +40561,11 @@ def hipGetChannelDesc(object desc, object array):
     r"""Gets the channel descriptor in an array.
 
     Args:
-        desc (`~.hipChannelFormatDesc`/`~.object`): **[in]** pointer to channel format descriptor
+        desc (`~.hipChannelFormatDesc`/`~.object`) -- *IN*:
+            pointer to channel format descriptor
 
-        array (`~.hipArray`/`~.object`): **[out]** memory array on the device
+        array (`~.hipArray`/`~.object`) -- *OUT*:
+            memory array on the device
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39968,9 +40583,11 @@ def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
     r"""Gets resource descriptor for the texture object.
 
     Args:
-        pResDesc (`~.hipResourceDesc`/`~.object`): **[out]** pointer to resource descriptor
+        pResDesc (`~.hipResourceDesc`/`~.object`) -- *OUT*:
+            pointer to resource descriptor
 
-        textureObject (`~.__hip_texture`/`~.object`): **[in]** texture object
+        textureObject (`~.__hip_texture`/`~.object`) -- *IN*:
+            texture object
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -39988,9 +40605,11 @@ def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObjec
     r"""Gets resource view descriptor for the texture object.
 
     Args:
-        pResViewDesc (`~.hipResourceViewDesc`/`~.object`): **[out]** pointer to resource view descriptor
+        pResViewDesc (`~.hipResourceViewDesc`/`~.object`) -- *OUT*:
+            pointer to resource view descriptor
 
-        textureObject (`~.__hip_texture`/`~.object`): **[in]** texture object
+        textureObject (`~.__hip_texture`/`~.object`) -- *IN*:
+            texture object
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40008,9 +40627,11 @@ def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
     r"""Gets texture descriptor for the texture object.
 
     Args:
-        pTexDesc (`~.hipTextureDesc`/`~.object`): **[out]** pointer to texture descriptor
+        pTexDesc (`~.hipTextureDesc`/`~.object`) -- *OUT*:
+            pointer to texture descriptor
 
-        textureObject (`~.__hip_texture`/`~.object`): **[in]** texture object
+        textureObject (`~.__hip_texture`/`~.object`) -- *IN*:
+            texture object
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40028,17 +40649,21 @@ def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
     r"""Creates a texture object.
 
     Args:
-        pResDesc (`~.HIP_RESOURCE_DESC_st`/`~.object`): **[in]** pointer to resource descriptor
+        pResDesc (`~.HIP_RESOURCE_DESC_st`/`~.object`) -- *IN*:
+            pointer to resource descriptor
 
-        pTexDesc (`~.HIP_TEXTURE_DESC_st`/`~.object`): **[in]** pointer to texture descriptor
+        pTexDesc (`~.HIP_TEXTURE_DESC_st`/`~.object`) -- *IN*:
+            pointer to texture descriptor
 
-        pResViewDesc (`~.HIP_RESOURCE_VIEW_DESC_st`/`~.object`): **[in]** pointer to resource view descriptor
+        pResViewDesc (`~.HIP_RESOURCE_VIEW_DESC_st`/`~.object`) -- *IN*:
+            pointer to resource view descriptor
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
-        * `~.__hip_texture`: pointer to texture object to create
+        * `~.__hip_texture`:
+                pointer to texture object to create
     """
     pTexObject = __hip_texture.from_ptr(NULL)
     _hipTexObjectCreate__retval = hipError_t(chip.hipTexObjectCreate(&pTexObject._ptr,
@@ -40053,7 +40678,8 @@ def hipTexObjectDestroy(object texObject):
     r"""Destroys a texture object.
 
     Args:
-        texObject (`~.__hip_texture`/`~.object`): **[in]** texture object to destroy
+        texObject (`~.__hip_texture`/`~.object`) -- *IN*:
+            texture object to destroy
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40070,9 +40696,11 @@ def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
     r"""Gets resource descriptor of a texture object.
 
     Args:
-        pResDesc (`~.HIP_RESOURCE_DESC_st`/`~.object`): **[out]** pointer to resource descriptor
+        pResDesc (`~.HIP_RESOURCE_DESC_st`/`~.object`) -- *OUT*:
+            pointer to resource descriptor
 
-        texObject (`~.__hip_texture`/`~.object`): **[in]** texture object
+        texObject (`~.__hip_texture`/`~.object`) -- *IN*:
+            texture object
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40090,9 +40718,11 @@ def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
     r"""Gets resource view descriptor of a texture object.
 
     Args:
-        pResViewDesc (`~.HIP_RESOURCE_VIEW_DESC_st`/`~.object`): **[out]** pointer to resource view descriptor
+        pResViewDesc (`~.HIP_RESOURCE_VIEW_DESC_st`/`~.object`) -- *OUT*:
+            pointer to resource view descriptor
 
-        texObject (`~.__hip_texture`/`~.object`): **[in]** texture object
+        texObject (`~.__hip_texture`/`~.object`) -- *IN*:
+            texture object
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40110,9 +40740,11 @@ def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
     r"""Gets texture descriptor of a texture object.
 
     Args:
-        pTexDesc (`~.HIP_TEXTURE_DESC_st`/`~.object`): **[out]** pointer to texture descriptor
+        pTexDesc (`~.HIP_TEXTURE_DESC_st`/`~.object`) -- *OUT*:
+            pointer to texture descriptor
 
-        texObject (`~.__hip_texture`/`~.object`): **[in]** texture object
+        texObject (`~.__hip_texture`/`~.object`) -- *IN*:
+            texture object
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40130,13 +40762,15 @@ def hipGetTextureReference(object symbol):
     r"""Gets the texture reference related with the symbol.
 
     Args:
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]** pointer to the symbol related with the texture for the reference
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            pointer to the symbol related with the texture for the reference
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: hipSuccess, hipErrorInvalidValue
-        * `~.textureReference`: texture reference
+        * `~.textureReference`:
+                texture reference
     """
     texref = textureReference.from_ptr(NULL)
     _hipGetTextureReference__retval = hipError_t(chip.hipGetTextureReference(&texref._ptr,
@@ -40146,7 +40780,17 @@ def hipGetTextureReference(object symbol):
 
 @cython.embedsignature(True)
 def hipTexRefSetAddressMode(object texRef, int dim, object am):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        dim (`~.int`):
+            (undocumented)
+
+        am (`~.hipTextureAddressMode`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40162,7 +40806,17 @@ def hipTexRefSetAddressMode(object texRef, int dim, object am):
 
 @cython.embedsignature(True)
 def hipTexRefSetArray(object tex, object array, unsigned int flags):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        tex (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        array (`~.hipArray`/`~.object`):
+            (undocumented)
+
+        flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40177,7 +40831,14 @@ def hipTexRefSetArray(object tex, object array, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipTexRefSetFilterMode(object texRef, object fm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        fm (`~.hipTextureFilterMode`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40193,7 +40854,14 @@ def hipTexRefSetFilterMode(object texRef, object fm):
 
 @cython.embedsignature(True)
 def hipTexRefSetFlags(object texRef, unsigned int Flags):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        Flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40207,7 +40875,17 @@ def hipTexRefSetFlags(object texRef, unsigned int Flags):
 
 @cython.embedsignature(True)
 def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        fmt (`~.hipArray_Format`):
+            (undocumented)
+
+        NumPackedComponents (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40223,7 +40901,20 @@ def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
 
 @cython.embedsignature(True)
 def hipBindTexture(object tex, object devPtr, object desc, unsigned long size):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        tex (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        devPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        desc (`~.hipChannelFormatDesc`/`~.object`):
+            (undocumented)
+
+        size (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40240,7 +40931,26 @@ def hipBindTexture(object tex, object devPtr, object desc, unsigned long size):
 
 @cython.embedsignature(True)
 def hipBindTexture2D(object tex, object devPtr, object desc, unsigned long width, unsigned long height, unsigned long pitch):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        tex (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        devPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        desc (`~.hipChannelFormatDesc`/`~.object`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
+
+        pitch (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40257,7 +40967,17 @@ def hipBindTexture2D(object tex, object devPtr, object desc, unsigned long width
 
 @cython.embedsignature(True)
 def hipBindTextureToArray(object tex, object array, object desc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        tex (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        array (`~.hipArray`/`~.object`):
+            (undocumented)
+
+        desc (`~.hipChannelFormatDesc`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40273,7 +40993,11 @@ def hipBindTextureToArray(object tex, object array, object desc):
 
 @cython.embedsignature(True)
 def hipGetTextureAlignmentOffset(object texref):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texref (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40288,7 +41012,11 @@ def hipGetTextureAlignmentOffset(object texref):
 
 @cython.embedsignature(True)
 def hipUnbindTexture(object tex):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        tex (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40302,7 +41030,11 @@ def hipUnbindTexture(object tex):
 
 @cython.embedsignature(True)
 def hipTexRefGetAddress(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40318,7 +41050,14 @@ def hipTexRefGetAddress(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetAddressMode(object texRef, int dim):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        dim (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40333,7 +41072,11 @@ def hipTexRefGetAddressMode(object texRef, int dim):
 
 @cython.embedsignature(True)
 def hipTexRefGetFilterMode(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40348,7 +41091,11 @@ def hipTexRefGetFilterMode(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetFlags(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40363,7 +41110,11 @@ def hipTexRefGetFlags(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetFormat(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40379,7 +41130,11 @@ def hipTexRefGetFormat(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMaxAnisotropy(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40394,7 +41149,11 @@ def hipTexRefGetMaxAnisotropy(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMipmapFilterMode(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40409,7 +41168,11 @@ def hipTexRefGetMipmapFilterMode(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMipmapLevelBias(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40424,7 +41187,11 @@ def hipTexRefGetMipmapLevelBias(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMipmapLevelClamp(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40440,7 +41207,11 @@ def hipTexRefGetMipmapLevelClamp(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMipMappedArray(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40455,7 +41226,17 @@ def hipTexRefGetMipMappedArray(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefSetAddress(object texRef, object dptr, unsigned long bytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        dptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bytes (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40471,7 +41252,20 @@ def hipTexRefSetAddress(object texRef, object dptr, unsigned long bytes):
 
 @cython.embedsignature(True)
 def hipTexRefSetAddress2D(object texRef, object desc, object dptr, unsigned long Pitch):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        desc (`~.HIP_ARRAY_DESCRIPTOR`/`~.object`):
+            (undocumented)
+
+        dptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        Pitch (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40487,7 +41281,14 @@ def hipTexRefSetAddress2D(object texRef, object desc, object dptr, unsigned long
 
 @cython.embedsignature(True)
 def hipTexRefSetMaxAnisotropy(object texRef, unsigned int maxAniso):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        maxAniso (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40501,7 +41302,11 @@ def hipTexRefSetMaxAnisotropy(object texRef, unsigned int maxAniso):
 
 @cython.embedsignature(True)
 def hipTexRefSetBorderColor(object texRef):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40516,7 +41321,14 @@ def hipTexRefSetBorderColor(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefSetMipmapFilterMode(object texRef, object fm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        fm (`~.hipTextureFilterMode`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40532,7 +41344,14 @@ def hipTexRefSetMipmapFilterMode(object texRef, object fm):
 
 @cython.embedsignature(True)
 def hipTexRefSetMipmapLevelBias(object texRef, float bias):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        bias (`~.float`/`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40546,7 +41365,17 @@ def hipTexRefSetMipmapLevelBias(object texRef, float bias):
 
 @cython.embedsignature(True)
 def hipTexRefSetMipmapLevelClamp(object texRef, float minMipMapLevelClamp, float maxMipMapLevelClamp):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        minMipMapLevelClamp (`~.float`/`~.int`):
+            (undocumented)
+
+        maxMipMapLevelClamp (`~.float`/`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40560,7 +41389,17 @@ def hipTexRefSetMipmapLevelClamp(object texRef, float minMipMapLevelClamp, float
 
 @cython.embedsignature(True)
 def hipTexRefSetMipmappedArray(object texRef, object mipmappedArray, unsigned int Flags):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        texRef (`~.textureReference`/`~.object`):
+            (undocumented)
+
+        mipmappedArray (`~.hipMipmappedArray`/`~.object`):
+            (undocumented)
+
+        Flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40575,11 +41414,18 @@ def hipTexRefSetMipmappedArray(object texRef, object mipmappedArray, unsigned in
 
 @cython.embedsignature(True)
 def hipMipmappedArrayCreate(object pMipmappedArrayDesc, unsigned int numMipmapLevels):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     @{
 
     This section describes the texture management functions currently unsupported in HIP runtime.
+
+    Args:
+        pMipmappedArrayDesc (`~.HIP_ARRAY3D_DESCRIPTOR`/`~.object`):
+            (undocumented)
+
+        numMipmapLevels (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40594,7 +41440,11 @@ def hipMipmappedArrayCreate(object pMipmappedArrayDesc, unsigned int numMipmapLe
 
 @cython.embedsignature(True)
 def hipMipmappedArrayDestroy(object hMipmappedArray):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        hMipmappedArray (`~.hipMipmappedArray`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40608,7 +41458,14 @@ def hipMipmappedArrayDestroy(object hMipmappedArray):
 
 @cython.embedsignature(True)
 def hipMipmappedArrayGetLevel(object hMipMappedArray, unsigned int level):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        hMipMappedArray (`~.hipMipmappedArray`/`~.object`):
+            (undocumented)
+
+        level (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40623,10 +41480,14 @@ def hipMipmappedArrayGetLevel(object hMipMappedArray, unsigned int level):
 
 @cython.embedsignature(True)
 def hipApiName(unsigned int id):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     @{
     This section describes the callback/Activity of HIP runtime API.
+
+    Args:
+        id (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40639,7 +41500,11 @@ def hipApiName(unsigned int id):
 
 @cython.embedsignature(True)
 def hipKernelNameRef(object f):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        f (`~.ihipModuleSymbol_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40653,7 +41518,14 @@ def hipKernelNameRef(object f):
 
 @cython.embedsignature(True)
 def hipKernelNameRefByPtr(object hostFunction, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        hostFunction (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40668,7 +41540,11 @@ def hipKernelNameRefByPtr(object hostFunction, object stream):
 
 @cython.embedsignature(True)
 def hipGetStreamDeviceId(object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40689,9 +41565,11 @@ def hipStreamBeginCapture(object stream, object mode):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream to initiate capture.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream to initiate capture.
 
-        mode (`~.hipStreamCaptureMode`): **[in]**  Controls the interaction of this capture sequence with other API calls that
+        mode (`~.hipStreamCaptureMode`) -- *IN*:
+            - Controls the interaction of this capture sequence with other API calls that
             are not safe.
 
     Returns:
@@ -40715,13 +41593,15 @@ def hipStreamEndCapture(object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream to end capture.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream to end capture.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.ihipGraph`:  returns the graph captured.
+        * `~.ihipGraph`:
+                - returns the graph captured.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipStreamEndCapture__retval = hipError_t(chip.hipStreamEndCapture(
@@ -40738,14 +41618,17 @@ def hipStreamGetCaptureInfo(object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream under capture.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream under capture.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorStreamCaptureImplicit`
-        * `~.hipStreamCaptureStatus`:  returns current status of the capture.
-        * `~.int`:  unique ID of the capture.
+        * `~.hipStreamCaptureStatus`:
+                - returns current status of the capture.
+        * `~.int`:
+                - unique ID of the capture.
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
@@ -40763,18 +41646,24 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream under capture.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream under capture.
 
-        dependencies_out (`~.hip._util.types.Pointer`/`~.object`): **[out]**  returns pointer to an array of nodes.
+        dependencies_out (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            - returns pointer to an array of nodes.
 
     Returns:
         A `~.tuple` of size 5 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorStreamCaptureImplicit`
-        * `~.hipStreamCaptureStatus`:  returns current status of the capture.
-        * `~.int`:  unique ID of the capture.
-        * `~.ihipGraph`:  returns the graph being captured into.
-        * `~.int`:  returns size of the array returned in dependencies_out.
+        * `~.hipStreamCaptureStatus`:
+                - returns current status of the capture.
+        * `~.int`:
+                - unique ID of the capture.
+        * `~.ihipGraph`:
+                - returns the graph being captured into.
+        * `~.int`:
+                - returns size of the array returned in dependencies_out.
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
@@ -40795,13 +41684,15 @@ def hipStreamIsCapturing(object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream under capture.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream under capture.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorStreamCaptureImplicit`
-        * `~.hipStreamCaptureStatus`:  returns current status of the capture.
+        * `~.hipStreamCaptureStatus`:
+                - returns current status of the capture.
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     _hipStreamIsCapturing__retval = hipError_t(chip.hipStreamIsCapturing(
@@ -40818,15 +41709,21 @@ def hipStreamUpdateCaptureDependencies(object stream, unsigned long numDependenc
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  Stream under capture.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - Stream under capture.
 
-        numDependencies (`~.int`): **[in]**  size of the array in dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - size of the array in dependencies.
+
+        flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorIllegalState`
-        * `~.hipGraphNode`:  pointer to an array of nodes to Add/Replace.
+        * `~.hipGraphNode`:
+                - pointer to an array of nodes to Add/Replace.
     """
     dependencies = hipGraphNode.from_ptr(NULL)
     _hipStreamUpdateCaptureDependencies__retval = hipError_t(chip.hipStreamUpdateCaptureDependencies(
@@ -40846,7 +41743,8 @@ def hipThreadExchangeStreamCaptureMode():
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipStreamCaptureMode`:  Pointer to mode value to swap with the current mode
+        * `~.hipStreamCaptureMode`:
+                - Pointer to mode value to swap with the current mode
     """
     cdef chip.hipStreamCaptureMode mode
     _hipThreadExchangeStreamCaptureMode__retval = hipError_t(chip.hipThreadExchangeStreamCaptureMode(&mode))    # fully specified
@@ -40862,13 +41760,15 @@ def hipGraphCreate(unsigned int flags):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        flags (`~.int`): **[in]**  flags for graph creation, must be 0.
+        flags (`~.int`) -- *IN*:
+            - flags for graph creation, must be 0.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryAllocation`
-        * `~.ihipGraph`:  pointer to graph to create.
+        * `~.ihipGraph`:
+                - pointer to graph to create.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphCreate__retval = hipError_t(chip.hipGraphCreate(&pGraph._ptr,flags))    # fully specified
@@ -40884,7 +41784,8 @@ def hipGraphDestroy(object graph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to destroy.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to destroy.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -40905,16 +41806,20 @@ def hipGraphAddDependencies(object graph, unsigned long numDependencies):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to add dependencies.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of the graph to add dependencies.
 
-        numDependencies (`~.int`): **[in]**  the number of dependencies to add.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of dependencies to add.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to the graph nodes with dependenties to add from.
-        * `~.hipGraphNode`:  pointer to the graph nodes to add dependenties to.
+        * `~.hipGraphNode`:
+                - pointer to the graph nodes with dependenties to add from.
+        * `~.hipGraphNode`:
+                - pointer to the graph nodes to add dependenties to.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -40932,16 +41837,20 @@ def hipGraphRemoveDependencies(object graph, unsigned long numDependencies):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to remove dependencies.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of the graph to remove dependencies.
 
-        numDependencies (`~.int`): **[in]**  the number of dependencies to remove.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of dependencies to remove.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  Array of nodes that provide the dependencies.
-        * `~.hipGraphNode`:  Array of dependent nodes.
+        * `~.hipGraphNode`:
+                - Array of nodes that provide the dependencies.
+        * `~.hipGraphNode`:
+                - Array of dependent nodes.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -40964,15 +41873,19 @@ def hipGraphGetEdges(object graph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to get the edges from.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of the graph to get the edges from.
 
     Returns:
         A `~.tuple` of size 4 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to the graph nodes to return edge endpoints.
-        * `~.hipGraphNode`:  pointer to the graph nodes to return edge endpoints.
-        * `~.int`:  returns number of edges.
+        * `~.hipGraphNode`:
+                - pointer to the graph nodes to return edge endpoints.
+        * `~.hipGraphNode`:
+                - pointer to the graph nodes to return edge endpoints.
+        * `~.int`:
+                - returns number of edges.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -40996,14 +41909,17 @@ def hipGraphGetNodes(object graph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to get the nodes.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to get the nodes.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to return the  graph nodes.
-        * `~.int`:  returns number of graph nodes.
+        * `~.hipGraphNode`:
+                - pointer to return the  graph nodes.
+        * `~.int`:
+                - returns number of graph nodes.
     """
     nodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long numNodes
@@ -41026,14 +41942,17 @@ def hipGraphGetRootNodes(object graph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to get the nodes.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of the graph to get the nodes.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to return the graph's root nodes.
-        * `~.int`:  returns the number of graph's root nodes.
+        * `~.hipGraphNode`:
+                - pointer to return the graph's root nodes.
+        * `~.int`:
+                - returns the number of graph's root nodes.
     """
     pRootNodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumRootNodes
@@ -41056,14 +41975,17 @@ def hipGraphNodeGetDependencies(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  graph node to get the dependencies from.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - graph node to get the dependencies from.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to to return the dependencies.
-        * `~.int`:   returns the number of graph node dependencies.
+        * `~.hipGraphNode`:
+                - pointer to to return the dependencies.
+        * `~.int`:
+                -  returns the number of graph node dependencies.
     """
     pDependencies = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumDependencies
@@ -41087,14 +42009,17 @@ def hipGraphNodeGetDependentNodes(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  graph node to get the Dependent nodes from.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - graph node to get the Dependent nodes from.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to return the graph dependent nodes.
-        * `~.int`:  returns the number of graph node dependent nodes.
+        * `~.hipGraphNode`:
+                - pointer to return the graph dependent nodes.
+        * `~.int`:
+                - returns the number of graph node dependent nodes.
     """
     pDependentNodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumDependentNodes
@@ -41112,13 +42037,15 @@ def hipGraphNodeGetType(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the graph to add dependencies.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the graph to add dependencies.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNodeType`:  pointer to the return the type
+        * `~.hipGraphNodeType`:
+                - pointer to the return the type
     """
     cdef chip.hipGraphNodeType pType
     _hipGraphNodeGetType__retval = hipError_t(chip.hipGraphNodeGetType(
@@ -41135,7 +42062,8 @@ def hipGraphDestroyNode(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  graph node to remove
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - graph node to remove
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41156,13 +42084,15 @@ def hipGraphClone(object originalGraph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        originalGraph (`~.ihipGraph`/`~.object`): **[in]**  original graph to clone from.
+        originalGraph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - original graph to clone from.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorMemoryAllocation`
-        * `~.ihipGraph`:  Returns newly created cloned graph.
+        * `~.ihipGraph`:
+                - Returns newly created cloned graph.
     """
     pGraphClone = ihipGraph.from_ptr(NULL)
     _hipGraphClone__retval = hipError_t(chip.hipGraphClone(&pGraphClone._ptr,
@@ -41179,15 +42109,18 @@ def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        originalNode (`~.hipGraphNode`/`~.object`): **[in]**  original node handle.
+        originalNode (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - original node handle.
 
-        clonedGraph (`~.ihipGraph`/`~.object`): **[in]**  Cloned graph to query.
+        clonedGraph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - Cloned graph to query.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  Returns the cloned node.
+        * `~.hipGraphNode`:
+                - Returns the cloned node.
     """
     pNode = hipGraphNode.from_ptr(NULL)
     _hipGraphNodeFindInClone__retval = hipError_t(chip.hipGraphNodeFindInClone(&pNode._ptr,
@@ -41205,18 +42138,23 @@ def hipGraphInstantiate(object graph, char * pLogBuffer, unsigned long bufferSiz
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to instantiate.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to instantiate.
 
-        pLogBuffer (`~.bytes`): **[out]**  pointer to log buffer.
+        pLogBuffer (`~.bytes`) -- *OUT*:
+            - pointer to log buffer.
 
-        bufferSize (`~.int`): **[out]**  the size of log buffer.
+        bufferSize (`~.int`) -- *OUT*:
+            - the size of log buffer.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorOutOfMemory`
-        * `~.hipGraphExec`:  pointer to instantiated executable graph that is created.
-        * `~.hipGraphNode`:  pointer to error node in case error occured in graph instantiation,
+        * `~.hipGraphExec`:
+                - pointer to instantiated executable graph that is created.
+        * `~.hipGraphNode`:
+                - pointer to error node in case error occured in graph instantiation,
                 it could modify the correponding node.
     """
     pGraphExec = hipGraphExec.from_ptr(NULL)
@@ -41235,15 +42173,18 @@ def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to instantiate.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to instantiate.
 
-        flags (`~.int`): **[in]**  Flags to control instantiation.
+        flags (`~.int`) -- *IN*:
+            - Flags to control instantiation.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphExec`:  pointer to instantiated executable graph that is created.
+        * `~.hipGraphExec`:
+                - pointer to instantiated executable graph that is created.
     """
     pGraphExec = hipGraphExec.from_ptr(NULL)
     _hipGraphInstantiateWithFlags__retval = hipError_t(chip.hipGraphInstantiateWithFlags(&pGraphExec._ptr,
@@ -41260,9 +42201,11 @@ def hipGraphLaunch(object graphExec, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of executable graph to launch.
+        graphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of executable graph to launch.
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  instance of stream in which to launch executable graph.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - instance of stream in which to launch executable graph.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41284,9 +42227,11 @@ def hipGraphUpload(object graphExec, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of executable graph to launch.
+        graphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of executable graph to launch.
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  instance of stream in which to launch executable graph.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - instance of stream in which to launch executable graph.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41308,7 +42253,8 @@ def hipGraphExecDestroy(object graphExec):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        pGraphExec: **[in]**  instance of executable graph to destry.
+        graphExec (`~.hipGraphExec`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41330,16 +42276,20 @@ def hipGraphExecUpdate(object hGraphExec, object hGraph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of executable graph to update.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of executable graph to update.
 
-        hGraph (`~.ihipGraph`/`~.object`): **[in]**  graph that contains the updated parameters.
+        hGraph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - graph that contains the updated parameters.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorGraphExecUpdateFailure`
-        * `~.hipGraphNode`:   node which caused the permissibility check to forbid the update.
-        * `~.hipGraphExecUpdateResult`:  Whether the graph update was permitted.
+        * `~.hipGraphNode`:
+                -  node which caused the permissibility check to forbid the update.
+        * `~.hipGraphExecUpdateResult`:
+                - Whether the graph update was permitted.
     """
     hErrorNode_out = hipGraphNode.from_ptr(NULL)
     cdef chip.hipGraphExecUpdateResult updateResult_out
@@ -41358,18 +42308,23 @@ def hipGraphAddKernelNode(object graph, unsigned long numDependencies, object pN
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to add the created node.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to add the created node.
 
-        numDependencies (`~.int`): **[in]**  the number of the dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of the dependencies.
 
-        pNodeParams (`~.hipKernelNodeParams`/`~.object`): **[in]**  pointer to the parameters to the kernel execution node on the GPU.
+        pNodeParams (`~.hipKernelNodeParams`/`~.object`) -- *IN*:
+            - pointer to the parameters to the kernel execution node on the GPU.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorInvalidDeviceFunction`
-        * `~.hipGraphNode`:  pointer to graph node to create.
-        * `~.hipGraphNode`:  pointer to the dependencies on the kernel execution node.
+        * `~.hipGraphNode`:
+                - pointer to graph node to create.
+        * `~.hipGraphNode`:
+                - pointer to the dependencies on the kernel execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -41388,9 +42343,11 @@ def hipGraphKernelNodeGetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to get parameters from.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to get parameters from.
 
-        pNodeParams (`~.hipKernelNodeParams`/`~.object`): **[out]**  pointer to the parameters
+        pNodeParams (`~.hipKernelNodeParams`/`~.object`) -- *OUT*:
+            - pointer to the parameters
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41412,9 +42369,11 @@ def hipGraphKernelNodeSetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        pNodeParams (`~.hipKernelNodeParams`/`~.object`): **[in]**  const pointer to the parameters.
+        pNodeParams (`~.hipKernelNodeParams`/`~.object`) -- *IN*:
+            - const pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41436,11 +42395,14 @@ def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNode
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        pNodeParams (`~.hipKernelNodeParams`/`~.object`): **[in]**  const pointer to the kernel node parameters.
+        pNodeParams (`~.hipKernelNodeParams`/`~.object`) -- *IN*:
+            - const pointer to the kernel node parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41463,18 +42425,23 @@ def hipGraphAddMemcpyNode(object graph, unsigned long numDependencies, object pC
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to add the created node.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to add the created node.
 
-        numDependencies (`~.int`): **[in]**  the number of the dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of the dependencies.
 
-        pCopyParams (`~.hipMemcpy3DParms`/`~.object`): **[in]**  const pointer to the parameters for the memory copy.
+        pCopyParams (`~.hipMemcpy3DParms`/`~.object`) -- *IN*:
+            - const pointer to the parameters for the memory copy.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to graph node to create.
-        * `~.hipGraphNode`:  const pointer to the dependencies on the memcpy execution node.
+        * `~.hipGraphNode`:
+                - pointer to graph node to create.
+        * `~.hipGraphNode`:
+                - const pointer to the dependencies on the memcpy execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -41493,9 +42460,11 @@ def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to get parameters from.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to get parameters from.
 
-        pNodeParams (`~.hipMemcpy3DParms`/`~.object`): **[out]**  pointer to the parameters.
+        pNodeParams (`~.hipMemcpy3DParms`/`~.object`) -- *OUT*:
+            - pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41517,9 +42486,11 @@ def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        pNodeParams (`~.hipMemcpy3DParms`/`~.object`): **[in]**  const pointer to the parameters.
+        pNodeParams (`~.hipMemcpy3DParms`/`~.object`) -- *IN*:
+            - const pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41541,11 +42512,14 @@ def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hNode (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        hNode (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        attr (`~.hipKernelNodeAttrID`): **[in]**  the attribute node is set to.
+        attr (`~.hipKernelNodeAttrID`) -- *IN*:
+            - the attribute node is set to.
 
-        value (`~.hipKernelNodeAttrValue`/`~.object`): **[in]**  const pointer to the parameters.
+        value (`~.hipKernelNodeAttrValue`/`~.object`) -- *IN*:
+            - const pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41569,11 +42543,14 @@ def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hNode (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        hNode (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        attr (`~.hipKernelNodeAttrID`): **[in]**  the attribute node is set to.
+        attr (`~.hipKernelNodeAttrID`) -- *IN*:
+            - the attribute node is set to.
 
-        value (`~.hipKernelNodeAttrValue`/`~.object`): **[in]**  const pointer to the parameters.
+        value (`~.hipKernelNodeAttrValue`/`~.object`) -- *IN*:
+            - const pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41597,11 +42574,14 @@ def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNode
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        pNodeParams (`~.hipMemcpy3DParms`/`~.object`): **[in]**  const pointer to the kernel node parameters.
+        pNodeParams (`~.hipMemcpy3DParms`/`~.object`) -- *IN*:
+            - const pointer to the kernel node parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41624,24 +42604,32 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to add the created node.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to add the created node.
 
-        numDependencies (`~.int`): **[in]**  the number of the dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of the dependencies.
 
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the destination.
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the source.
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the source.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to graph node to create.
-        * `~.hipGraphNode`:  const pointer to the dependencies on the memcpy execution node.
+        * `~.hipGraphNode`:
+                - pointer to graph node to create.
+        * `~.hipGraphNode`:
+                - const pointer to the dependencies on the memcpy execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -41663,15 +42651,20 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the destination.
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the source.
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the source.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41697,17 +42690,23 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the destination.
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the source.
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the source.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41733,26 +42732,35 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to add the created node.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to add the created node.
 
-        numDependencies (`~.int`): **[in]**  the number of the dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of the dependencies.
 
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the destination.
 
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Device symbol address.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        offset (`~.int`): **[in]**  Offset from start of symbol in bytes.
+        offset (`~.int`) -- *IN*:
+            - Offset from start of symbol in bytes.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to graph node to create.
-        * `~.hipGraphNode`:  const pointer to the dependencies on the memcpy execution node.
+        * `~.hipGraphNode`:
+                - pointer to graph node to create.
+        * `~.hipGraphNode`:
+                - const pointer to the dependencies on the memcpy execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -41774,17 +42782,23 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the destination.
 
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Device symbol address.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        offset (`~.int`): **[in]**  Offset from start of symbol in bytes.
+        offset (`~.int`) -- *IN*:
+            - Offset from start of symbol in bytes.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41810,19 +42824,26 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        dst (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address to the destination.
+        dst (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address to the destination.
 
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Device symbol address.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        offset (`~.int`): **[in]**  Offset from start of symbol in bytes.
+        offset (`~.int`) -- *IN*:
+            - Offset from start of symbol in bytes.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41848,26 +42869,35 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of graph to add the created node.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of graph to add the created node.
 
-        numDependencies (`~.int`): **[in]**  the number of the dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of the dependencies.
 
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Device symbol address.
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address of the src.
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address of the src.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        offset (`~.int`): **[in]**  Offset from start of symbol in bytes.
+        offset (`~.int`) -- *IN*:
+            - Offset from start of symbol in bytes.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to graph node to create.
-        * `~.hipGraphNode`:  const pointer to the dependencies on the memcpy execution node.
+        * `~.hipGraphNode`:
+                - pointer to graph node to create.
+        * `~.hipGraphNode`:
+                - const pointer to the dependencies on the memcpy execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -41889,17 +42919,23 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Device symbol address.
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address of the src.
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address of the src.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        offset (`~.int`): **[in]**  Offset from start of symbol in bytes.
+        offset (`~.int`) -- *IN*:
+            - Offset from start of symbol in bytes.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41925,19 +42961,26 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        symbol (`~.hip._util.types.Pointer`/`~.object`): **[in]**  Device symbol address.
+        symbol (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - Device symbol address.
 
-        src (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to memory address of the src.
+        src (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to memory address of the src.
 
-        count (`~.int`): **[in]**  the size of the memory to copy.
+        count (`~.int`) -- *IN*:
+            - the size of the memory to copy.
 
-        offset (`~.int`): **[in]**  Offset from start of symbol in bytes.
+        offset (`~.int`) -- *IN*:
+            - Offset from start of symbol in bytes.
 
-        kind (`~.hipMemcpyKind`): **[in]**  the type of memory copy.
+        kind (`~.hipMemcpyKind`) -- *IN*:
+            - the type of memory copy.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -41963,18 +43006,23 @@ def hipGraphAddMemsetNode(object graph, unsigned long numDependencies, object pM
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to add the created node.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of the graph to add the created node.
 
-        numDependencies (`~.int`): **[in]**  the number of the dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of the dependencies.
 
-        pMemsetParams (`~.hipMemsetParams`/`~.object`): **[in]**  const pointer to the parameters for the memory set.
+        pMemsetParams (`~.hipMemsetParams`/`~.object`) -- *IN*:
+            - const pointer to the parameters for the memory set.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to the graph node to create.
-        * `~.hipGraphNode`:  const pointer to the dependencies on the memset execution node.
+        * `~.hipGraphNode`:
+                - pointer to the graph node to create.
+        * `~.hipGraphNode`:
+                - const pointer to the dependencies on the memset execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -41993,9 +43041,11 @@ def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instane of the node to get parameters from.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instane of the node to get parameters from.
 
-        pNodeParams (`~.hipMemsetParams`/`~.object`): **[out]**  pointer to the parameters.
+        pNodeParams (`~.hipMemsetParams`/`~.object`) -- *OUT*:
+            - pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42017,9 +43067,11 @@ def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        pNodeParams (`~.hipMemsetParams`/`~.object`): **[in]**  pointer to the parameters.
+        pNodeParams (`~.hipMemsetParams`/`~.object`) -- *IN*:
+            - pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42041,11 +43093,14 @@ def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNode
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        pNodeParams (`~.hipMemsetParams`/`~.object`): **[in]**  pointer to the parameters.
+        pNodeParams (`~.hipMemsetParams`/`~.object`) -- *IN*:
+            - pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42068,18 +43123,23 @@ def hipGraphAddHostNode(object graph, unsigned long numDependencies, object pNod
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to add the created node.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of the graph to add the created node.
 
-        numDependencies (`~.int`): **[in]**  the number of the dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of the dependencies.
 
-        pNodeParams (`~.hipHostNodeParams`/`~.object`): **[in]** pointer to the parameters.
+        pNodeParams (`~.hipHostNodeParams`/`~.object`) -- *IN*:
+            -pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to the graph node to create.
-        * `~.hipGraphNode`:  const pointer to the dependencies on the memset execution node.
+        * `~.hipGraphNode`:
+                - pointer to the graph node to create.
+        * `~.hipGraphNode`:
+                - const pointer to the dependencies on the memset execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -42098,9 +43158,11 @@ def hipGraphHostNodeGetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instane of the node to get parameters from.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instane of the node to get parameters from.
 
-        pNodeParams (`~.hipHostNodeParams`/`~.object`): **[out]**  pointer to the parameters.
+        pNodeParams (`~.hipHostNodeParams`/`~.object`) -- *OUT*:
+            - pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42122,9 +43184,11 @@ def hipGraphHostNodeSetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        pNodeParams (`~.hipHostNodeParams`/`~.object`): **[in]**  pointer to the parameters.
+        pNodeParams (`~.hipHostNodeParams`/`~.object`) -- *IN*:
+            - pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42146,11 +43210,14 @@ def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodePa
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instance of the node to set parameters to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instance of the node to set parameters to.
 
-        pNodeParams (`~.hipHostNodeParams`/`~.object`): **[in]**  pointer to the parameters.
+        pNodeParams (`~.hipHostNodeParams`/`~.object`) -- *IN*:
+            - pointer to the parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42173,18 +43240,23 @@ def hipGraphAddChildGraphNode(object graph, unsigned long numDependencies, objec
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instance of the graph to add the created node.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instance of the graph to add the created node.
 
-        numDependencies (`~.int`): **[in]**  the number of the dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of the dependencies.
 
-        childGraph (`~.ihipGraph`/`~.object`): **[in]**  the graph to clone into this node
+        childGraph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - the graph to clone into this node
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to the graph node to create.
-        * `~.hipGraphNode`:  const pointer to the dependencies on the memset execution node.
+        * `~.hipGraphNode`:
+                - pointer to the graph node to create.
+        * `~.hipGraphNode`:
+                - const pointer to the dependencies on the memset execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -42203,13 +43275,15 @@ def hipGraphChildGraphNodeGetGraph(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instane of the node to get child graph.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instane of the node to get child graph.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.ihipGraph`:  pointer to get the graph.
+        * `~.ihipGraph`:
+                - pointer to get the graph.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphChildGraphNodeGetGraph__retval = hipError_t(chip.hipGraphChildGraphNodeGetGraph(
@@ -42226,11 +43300,14 @@ def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object c
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        node (`~.hipGraphNode`/`~.object`): **[in]**  node from the graph which was used to instantiate graphExec.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - node from the graph which was used to instantiate graphExec.
 
-        childGraph (`~.ihipGraph`/`~.object`): **[in]**  child graph with updated parameters.
+        childGraph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - child graph with updated parameters.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42253,16 +43330,20 @@ def hipGraphAddEmptyNode(object graph, unsigned long numDependencies):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instane of the graph the node is add to.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instane of the graph the node is add to.
 
-        numDependencies (`~.int`): **[in]**  the number of dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of dependencies.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to the graph node to create and add to the graph.
-        * `~.hipGraphNode`:  const pointer to the node dependenties.
+        * `~.hipGraphNode`:
+                - pointer to the graph node to create and add to the graph.
+        * `~.hipGraphNode`:
+                - const pointer to the node dependenties.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -42280,18 +43361,23 @@ def hipGraphAddEventRecordNode(object graph, unsigned long numDependencies, obje
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instane of the graph the node to be added.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instane of the graph the node to be added.
 
-        numDependencies (`~.int`): **[in]**  the number of dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of dependencies.
 
-        event (`~.ihipEvent_t`/`~.object`): **[in]**  Event for the node.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            - Event for the node.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to the graph node to create and add to the graph.
-        * `~.hipGraphNode`:  const pointer to the node dependenties.
+        * `~.hipGraphNode`:
+                - pointer to the graph node to create and add to the graph.
+        * `~.hipGraphNode`:
+                - const pointer to the node dependenties.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -42310,13 +43396,15 @@ def hipGraphEventRecordNodeGetEvent(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**   instane of the node to get event from.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            -  instane of the node to get event from.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.ihipEvent_t`:  Pointer to return the event.
+        * `~.ihipEvent_t`:
+                - Pointer to return the event.
     """
     event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventRecordNodeGetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeGetEvent(
@@ -42333,9 +43421,11 @@ def hipGraphEventRecordNodeSetEvent(object node, object event):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instane of the node to set event to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instane of the node to set event to.
 
-        event (`~.ihipEvent_t`/`~.object`): **[in]**  pointer to the event.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            - pointer to the event.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42357,11 +43447,14 @@ def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        hNode (`~.hipGraphNode`/`~.object`): **[in]**  node from the graph which was used to instantiate graphExec.
+        hNode (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - node from the graph which was used to instantiate graphExec.
 
-        event (`~.ihipEvent_t`/`~.object`): **[in]**  pointer to the event.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            - pointer to the event.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42384,18 +43477,23 @@ def hipGraphAddEventWaitNode(object graph, unsigned long numDependencies, object
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  instane of the graph the node to be added.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - instane of the graph the node to be added.
 
-        numDependencies (`~.int`): **[in]**  the number of dependencies.
+        numDependencies (`~.int`) -- *IN*:
+            - the number of dependencies.
 
-        event (`~.ihipEvent_t`/`~.object`): **[in]**  Event for the node.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            - Event for the node.
 
     Returns:
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipGraphNode`:  pointer to the graph node to create and add to the graph.
-        * `~.hipGraphNode`:  const pointer to the node dependenties.
+        * `~.hipGraphNode`:
+                - pointer to the graph node to create and add to the graph.
+        * `~.hipGraphNode`:
+                - const pointer to the node dependenties.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -42414,13 +43512,15 @@ def hipGraphEventWaitNodeGetEvent(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**   instane of the node to get event from.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            -  instane of the node to get event from.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.ihipEvent_t`:  Pointer to return the event.
+        * `~.ihipEvent_t`:
+                - Pointer to return the event.
     """
     event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventWaitNodeGetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeGetEvent(
@@ -42437,9 +43537,11 @@ def hipGraphEventWaitNodeSetEvent(object node, object event):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node (`~.hipGraphNode`/`~.object`): **[in]**  instane of the node to set event to.
+        node (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - instane of the node to set event to.
 
-        event (`~.ihipEvent_t`/`~.object`): **[in]**  pointer to the event.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            - pointer to the event.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42461,11 +43563,14 @@ def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object ev
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec (`~.hipGraphExec`/`~.object`): **[in]**  instance of the executable graph with the node.
+        hGraphExec (`~.hipGraphExec`/`~.object`) -- *IN*:
+            - instance of the executable graph with the node.
 
-        hNode (`~.hipGraphNode`/`~.object`): **[in]**  node from the graph which was used to instantiate graphExec.
+        hNode (`~.hipGraphNode`/`~.object`) -- *IN*:
+            - node from the graph which was used to instantiate graphExec.
 
-        event (`~.ihipEvent_t`/`~.object`): **[in]**  pointer to the event.
+        event (`~.ihipEvent_t`/`~.object`) -- *IN*:
+            - pointer to the event.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42488,11 +43593,14 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device (`~.int`): **[in]**  device the attr is get for.
+        device (`~.int`) -- *IN*:
+            - device the attr is get for.
 
-        attr (`~.hipGraphMemAttributeType`): **[in]**  attr to get.
+        attr (`~.hipGraphMemAttributeType`) -- *IN*:
+            - attr to get.
 
-        value (`~.hip._util.types.Pointer`/`~.object`): **[out]**  value for specific attr.
+        value (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            - value for specific attr.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42515,11 +43623,14 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device (`~.int`): **[in]**  device the attr is set for.
+        device (`~.int`) -- *IN*:
+            - device the attr is set for.
 
-        attr (`~.hipGraphMemAttributeType`): **[in]**  attr to set.
+        attr (`~.hipGraphMemAttributeType`) -- *IN*:
+            - attr to set.
 
-        value (`~.hip._util.types.Pointer`/`~.object`): **[in]**  value for specific attr.
+        value (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - value for specific attr.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42542,7 +43653,8 @@ def hipDeviceGraphMemTrim(int device):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device (`~.int`): **[in]**  device the memory is used for graphs
+        device (`~.int`) -- *IN*:
+            - device the memory is used for graphs
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42562,19 +43674,24 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  pointer to pass to destroy function.
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - pointer to pass to destroy function.
 
-        destroy (`~.hipHostFn_t`/`~.object`): **[in]**  destroy callback to remove resource.
+        destroy (`~.hipHostFn_t`/`~.object`) -- *IN*:
+            - destroy callback to remove resource.
 
-        initialRefcount (`~.int`): **[in]**  reference to resource.
+        initialRefcount (`~.int`) -- *IN*:
+            - reference to resource.
 
-        flags (`~.int`): **[in]**  flags passed to API.
+        flags (`~.int`) -- *IN*:
+            - flags passed to API.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`
-        * `~.hipUserObject`:  pointer to instace of userobj.
+        * `~.hipUserObject`:
+                - pointer to instace of userobj.
     """
     object_out = hipUserObject.from_ptr(NULL)
     _hipUserObjectCreate__retval = hipError_t(chip.hipUserObjectCreate(&object_out._ptr,
@@ -42592,9 +43709,11 @@ def hipUserObjectRelease(object object, unsigned int count):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        object (`~.hipUserObject`/`~.object`): **[in]**  pointer to instace of userobj.
+        object (`~.hipUserObject`/`~.object`) -- *IN*:
+            - pointer to instace of userobj.
 
-        count (`~.int`): **[in]**  reference to resource to be retained.
+        count (`~.int`) -- *IN*:
+            - reference to resource to be retained.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42615,9 +43734,11 @@ def hipUserObjectRetain(object object, unsigned int count):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        object (`~.hipUserObject`/`~.object`): **[in]**  pointer to instace of userobj.
+        object (`~.hipUserObject`/`~.object`) -- *IN*:
+            - pointer to instace of userobj.
 
-        count (`~.int`): **[in]**  reference to resource to be retained.
+        count (`~.int`) -- *IN*:
+            - reference to resource to be retained.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42638,13 +43759,17 @@ def hipGraphRetainUserObject(object graph, object object, unsigned int count, un
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  pointer to graph to retain the user object for.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - pointer to graph to retain the user object for.
 
-        object (`~.hipUserObject`/`~.object`): **[in]**  pointer to instace of userobj.
+        object (`~.hipUserObject`/`~.object`) -- *IN*:
+            - pointer to instace of userobj.
 
-        count (`~.int`): **[in]**  reference to resource to be retained.
+        count (`~.int`) -- *IN*:
+            - reference to resource to be retained.
 
-        flags (`~.int`): **[in]**  flags passed to API.
+        flags (`~.int`) -- *IN*:
+            - flags passed to API.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42666,11 +43791,14 @@ def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph (`~.ihipGraph`/`~.object`): **[in]**  pointer to graph to retain the user object for.
+        graph (`~.ihipGraph`/`~.object`) -- *IN*:
+            - pointer to graph to retain the user object for.
 
-        object (`~.hipUserObject`/`~.object`): **[in]**  pointer to instace of userobj.
+        object (`~.hipUserObject`/`~.object`) -- *IN*:
+            - pointer to instace of userobj.
 
-        count (`~.int`): **[in]**  reference to resource to be retained.
+        count (`~.int`) -- *IN*:
+            - reference to resource to be retained.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42692,9 +43820,11 @@ def hipMemAddressFree(object devPtr, unsigned long size):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        devPtr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  starting address of the range.
+        devPtr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - starting address of the range.
 
-        size (`~.int`): **[in]**  size of the range.
+        size (`~.int`) -- *IN*:
+            - size of the range.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42715,19 +43845,24 @@ def hipMemAddressReserve(unsigned long size, unsigned long alignment, object add
         it is still open to changes and may have outstanding issues.
 
     Args:
-        size (`~.int`): **[in]**  size of the reservation.
+        size (`~.int`) -- *IN*:
+            - size of the reservation.
 
-        alignment (`~.int`): **[in]**  alignment of the address.
+        alignment (`~.int`) -- *IN*:
+            - alignment of the address.
 
-        addr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  requested starting address of the range.
+        addr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - requested starting address of the range.
 
-        flags (`~.int`): **[in]**  currently unused, must be zero.
+        flags (`~.int`) -- *IN*:
+            - currently unused, must be zero.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.hip._util.types.Pointer`/`~.object`:  starting address of the reserved range.
+        * `~.hip._util.types.Pointer`/`~.object`:
+                - starting address of the reserved range.
     """
     ptr = hip._util.types.Pointer.from_ptr(NULL)
     _hipMemAddressReserve__retval = hipError_t(chip.hipMemAddressReserve(
@@ -42745,17 +43880,21 @@ def hipMemCreate(unsigned long size, object prop, unsigned long long flags):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        size (`~.int`): **[in]**  size of the allocation.
+        size (`~.int`) -- *IN*:
+            - size of the allocation.
 
-        prop (`~.hipMemAllocationProp`/`~.object`): **[in]**  properties of the allocation.
+        prop (`~.hipMemAllocationProp`/`~.object`) -- *IN*:
+            - properties of the allocation.
 
-        flags (`~.int`): **[in]**  currently unused, must be zero.
+        flags (`~.int`) -- *IN*:
+            - currently unused, must be zero.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.ihipMemGenericAllocationHandle`:  value of the returned handle.
+        * `~.ihipMemGenericAllocationHandle`:
+                - value of the returned handle.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemCreate__retval = hipError_t(chip.hipMemCreate(&handle._ptr,size,
@@ -42772,13 +43911,17 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shareableHandle (`~.hip._util.types.Pointer`/`~.object`): **[out]**  value of the returned handle.
+        shareableHandle (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            - value of the returned handle.
 
-        handle (`~.ihipMemGenericAllocationHandle`/`~.object`): **[in]**  handle to share.
+        handle (`~.ihipMemGenericAllocationHandle`/`~.object`) -- *IN*:
+            - handle to share.
 
-        handleType (`~.hipMemAllocationHandleType`): **[in]**  type of the shareable handle.
+        handleType (`~.hipMemAllocationHandleType`) -- *IN*:
+            - type of the shareable handle.
 
-        flags (`~.int`): **[in]**  currently unused, must be zero.
+        flags (`~.int`) -- *IN*:
+            - currently unused, must be zero.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42802,15 +43945,18 @@ def hipMemGetAccess(object location, object ptr):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        location (`~.hipMemLocation`/`~.object`): **[in]**  target location.
+        location (`~.hipMemLocation`/`~.object`) -- *IN*:
+            - target location.
 
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  address to check the access flags.
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - address to check the access flags.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.int`:  flags for this location.
+        * `~.int`:
+                - flags for this location.
     """
     cdef unsigned long long flags
     _hipMemGetAccess__retval = hipError_t(chip.hipMemGetAccess(&flags,
@@ -42828,15 +43974,18 @@ def hipMemGetAllocationGranularity(object prop, object option):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        prop (`~.hipMemAllocationProp`/`~.object`): **[in]**  location properties.
+        prop (`~.hipMemAllocationProp`/`~.object`) -- *IN*:
+            - location properties.
 
-        option (`~.hipMemAllocationGranularity_flags`): **[in]**  determines which granularity to return.
+        option (`~.hipMemAllocationGranularity_flags`) -- *IN*:
+            - determines which granularity to return.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.int`:  returned granularity.
+        * `~.int`:
+                - returned granularity.
     """
     cdef unsigned long granularity
     if not isinstance(option,_hipMemAllocationGranularity_flags__Base):
@@ -42855,9 +44004,11 @@ def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        prop (`~.hipMemAllocationProp`/`~.object`): **[out]**  properties of the given handle.
+        prop (`~.hipMemAllocationProp`/`~.object`) -- *OUT*:
+            - properties of the given handle.
 
-        handle (`~.ihipMemGenericAllocationHandle`/`~.object`): **[in]**  handle to perform the query on.
+        handle (`~.ihipMemGenericAllocationHandle`/`~.object`) -- *IN*:
+            - handle to perform the query on.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42879,15 +44030,18 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        osHandle (`~.hip._util.types.Pointer`/`~.object`): **[in]**  shareable handle representing the memory allocation.
+        osHandle (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - shareable handle representing the memory allocation.
 
-        shHandleType (`~.hipMemAllocationHandleType`): **[in]**  handle type.
+        shHandleType (`~.hipMemAllocationHandleType`) -- *IN*:
+            - handle type.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.ihipMemGenericAllocationHandle`:  returned value.
+        * `~.ihipMemGenericAllocationHandle`:
+                - returned value.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     if not isinstance(shHandleType,_hipMemAllocationHandleType__Base):
@@ -42906,15 +44060,20 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  address where the memory will be mapped.
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - address where the memory will be mapped.
 
-        size (`~.int`): **[in]**  size of the mapping.
+        size (`~.int`) -- *IN*:
+            - size of the mapping.
 
-        offset (`~.int`): **[in]**  offset into the memory, currently must be zero.
+        offset (`~.int`) -- *IN*:
+            - offset into the memory, currently must be zero.
 
-        handle (`~.ihipMemGenericAllocationHandle`/`~.object`): **[in]**  memory allocation to be mapped.
+        handle (`~.ihipMemGenericAllocationHandle`/`~.object`) -- *IN*:
+            - memory allocation to be mapped.
 
-        flags (`~.int`): **[in]**  currently unused, must be zero.
+        flags (`~.int`) -- *IN*:
+            - currently unused, must be zero.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42936,11 +44095,14 @@ def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mapInfoList (`~.hipArrayMapInfo`/`~.object`): **[in]**  list of hipArrayMapInfo.
+        mapInfoList (`~.hipArrayMapInfo`/`~.object`) -- *IN*:
+            - list of hipArrayMapInfo.
 
-        count (`~.int`): **[in]**  number of hipArrayMapInfo in mapInfoList.
+        count (`~.int`) -- *IN*:
+            - number of hipArrayMapInfo in mapInfoList.
 
-        stream (`~.ihipStream_t`/`~.object`): **[in]**  stream identifier for the stream to use for map or unmap operations.
+        stream (`~.ihipStream_t`/`~.object`) -- *IN*:
+            - stream identifier for the stream to use for map or unmap operations.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42962,7 +44124,8 @@ def hipMemRelease(object handle):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        handle (`~.ihipMemGenericAllocationHandle`/`~.object`): **[in]**  handle of the memory allocation.
+        handle (`~.ihipMemGenericAllocationHandle`/`~.object`) -- *IN*:
+            - handle of the memory allocation.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -42983,13 +44146,15 @@ def hipMemRetainAllocationHandle(object addr):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        addr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  address to look up.
+        addr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - address to look up.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hipError_t`: `~.hipSuccess`, `~.hipErrorInvalidValue`, `~.hipErrorNotSupported`
-        * `~.ihipMemGenericAllocationHandle`:  handle representing addr.
+        * `~.ihipMemGenericAllocationHandle`:
+                - handle representing addr.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemRetainAllocationHandle__retval = hipError_t(chip.hipMemRetainAllocationHandle(&handle._ptr,
@@ -43006,13 +44171,17 @@ def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long c
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  starting address of the virtual address range.
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - starting address of the virtual address range.
 
-        size (`~.int`): **[in]**  size of the range.
+        size (`~.int`) -- *IN*:
+            - size of the range.
 
-        desc (`~.hipMemAccessDesc`/`~.object`): **[in]**  array of hipMemAccessDesc.
+        desc (`~.hipMemAccessDesc`/`~.object`) -- *IN*:
+            - array of hipMemAccessDesc.
 
-        count (`~.int`): **[in]**  number of hipMemAccessDesc in desc.
+        count (`~.int`) -- *IN*:
+            - number of hipMemAccessDesc in desc.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43034,9 +44203,11 @@ def hipMemUnmap(object ptr, unsigned long size):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr (`~.hip._util.types.Pointer`/`~.object`): **[in]**  starting address of the range to unmap.
+        ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            - starting address of the range to unmap.
 
-        size (`~.int`): **[in]**  size of the virtual address range.
+        size (`~.int`) -- *IN*:
+            - size of the virtual address range.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43050,7 +44221,14 @@ def hipMemUnmap(object ptr, unsigned long size):
 
 @cython.embedsignature(True)
 def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        hipDeviceCount (`~.int`):
+            (undocumented)
+
+        deviceList (`~.hipGLDeviceList`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43067,7 +44245,14 @@ def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
 
 @cython.embedsignature(True)
 def hipGraphicsGLRegisterBuffer(unsigned int buffer, unsigned int flags):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        buffer (`~.int`):
+            (undocumented)
+
+        flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43081,7 +44266,17 @@ def hipGraphicsGLRegisterBuffer(unsigned int buffer, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipGraphicsGLRegisterImage(unsigned int image, unsigned int target, unsigned int flags):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        image (`~.int`):
+            (undocumented)
+
+        target (`~.int`):
+            (undocumented)
+
+        flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43095,7 +44290,14 @@ def hipGraphicsGLRegisterImage(unsigned int image, unsigned int target, unsigned
 
 @cython.embedsignature(True)
 def hipGraphicsMapResources(int count, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        count (`~.int`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43110,7 +44312,17 @@ def hipGraphicsMapResources(int count, object stream):
 
 @cython.embedsignature(True)
 def hipGraphicsSubResourceGetMappedArray(object resource, unsigned int arrayIndex, unsigned int mipLevel):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        resource (`~._hipGraphicsResource`/`~.object`):
+            (undocumented)
+
+        arrayIndex (`~.int`):
+            (undocumented)
+
+        mipLevel (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43125,7 +44337,11 @@ def hipGraphicsSubResourceGetMappedArray(object resource, unsigned int arrayInde
 
 @cython.embedsignature(True)
 def hipGraphicsResourceGetMappedPointer(object resource):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        resource (`~._hipGraphicsResource`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43142,7 +44358,14 @@ def hipGraphicsResourceGetMappedPointer(object resource):
 
 @cython.embedsignature(True)
 def hipGraphicsUnmapResources(int count, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        count (`~.int`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43157,7 +44380,11 @@ def hipGraphicsUnmapResources(int count, object stream):
 
 @cython.embedsignature(True)
 def hipGraphicsUnregisterResource(object resource):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        resource (`~._hipGraphicsResource`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43171,7 +44398,20 @@ def hipGraphicsUnregisterResource(object resource):
 
 @cython.embedsignature(True)
 def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43188,7 +44428,23 @@ def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
 
 @cython.embedsignature(True)
 def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        symbol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
+
+        offset (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43205,7 +44461,23 @@ def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, un
 
 @cython.embedsignature(True)
 def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        symbol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
+
+        offset (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43222,7 +44494,29 @@ def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, 
 
 @cython.embedsignature(True)
 def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dpitch (`~.int`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        spitch (`~.int`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43239,7 +44533,32 @@ def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long 
 
 @cython.embedsignature(True)
 def hipMemcpy2DFromArray_spt(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dpitch (`~.int`):
+            (undocumented)
+
+        src (`~.hipArray`/`~.object`):
+            (undocumented)
+
+        wOffset (`~.int`):
+            (undocumented)
+
+        hOffset (`~.int`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43256,7 +44575,11 @@ def hipMemcpy2DFromArray_spt(object dst, unsigned long dpitch, object src, unsig
 
 @cython.embedsignature(True)
 def hipMemcpy3D_spt(object p):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        p (`~.hipMemcpy3DParms`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43270,7 +44593,17 @@ def hipMemcpy3D_spt(object p):
 
 @cython.embedsignature(True)
 def hipMemset_spt(object dst, int value, unsigned long sizeBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        value (`~.int`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43284,7 +44617,20 @@ def hipMemset_spt(object dst, int value, unsigned long sizeBytes):
 
 @cython.embedsignature(True)
 def hipMemsetAsync_spt(object dst, int value, unsigned long sizeBytes, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        value (`~.int`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43299,7 +44645,23 @@ def hipMemsetAsync_spt(object dst, int value, unsigned long sizeBytes, object st
 
 @cython.embedsignature(True)
 def hipMemset2D_spt(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pitch (`~.int`):
+            (undocumented)
+
+        value (`~.int`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43313,7 +44675,26 @@ def hipMemset2D_spt(object dst, unsigned long pitch, int value, unsigned long wi
 
 @cython.embedsignature(True)
 def hipMemset2DAsync_spt(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pitch (`~.int`):
+            (undocumented)
+
+        value (`~.int`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43328,7 +44709,20 @@ def hipMemset2DAsync_spt(object dst, unsigned long pitch, int value, unsigned lo
 
 @cython.embedsignature(True)
 def hipMemset3DAsync_spt(object pitchedDevPtr, int value, object extent, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        pitchedDevPtr (`~.hipPitchedPtr`):
+            (undocumented)
+
+        value (`~.int`):
+            (undocumented)
+
+        extent (`~.hipExtent`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43344,7 +44738,17 @@ def hipMemset3DAsync_spt(object pitchedDevPtr, int value, object extent, object 
 
 @cython.embedsignature(True)
 def hipMemset3D_spt(object pitchedDevPtr, int value, object extent):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        pitchedDevPtr (`~.hipPitchedPtr`):
+            (undocumented)
+
+        value (`~.int`):
+            (undocumented)
+
+        extent (`~.hipExtent`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43359,7 +44763,23 @@ def hipMemset3D_spt(object pitchedDevPtr, int value, object extent):
 
 @cython.embedsignature(True)
 def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object kind, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43377,7 +44797,14 @@ def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object k
 
 @cython.embedsignature(True)
 def hipMemcpy3DAsync_spt(object p, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        p (`~.hipMemcpy3DParms`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43392,7 +44819,32 @@ def hipMemcpy3DAsync_spt(object p, object stream):
 
 @cython.embedsignature(True)
 def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dpitch (`~.int`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        spitch (`~.int`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43410,7 +44862,26 @@ def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned 
 
 @cython.embedsignature(True)
 def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        symbol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
+
+        offset (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43428,7 +44899,26 @@ def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBy
 
 @cython.embedsignature(True)
 def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        symbol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sizeBytes (`~.int`):
+            (undocumented)
+
+        offset (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43446,7 +44936,26 @@ def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeByte
 
 @cython.embedsignature(True)
 def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, unsigned long hOffset, unsigned long count, object kind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        src (`~.hipArray`/`~.object`):
+            (undocumented)
+
+        wOffsetSrc (`~.int`):
+            (undocumented)
+
+        hOffset (`~.int`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43463,7 +44972,32 @@ def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, uns
 
 @cython.embedsignature(True)
 def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hipArray`/`~.object`):
+            (undocumented)
+
+        wOffset (`~.int`):
+            (undocumented)
+
+        hOffset (`~.int`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        spitch (`~.int`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43480,7 +45014,35 @@ def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOff
 
 @cython.embedsignature(True)
 def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, unsigned long wOffsetSrc, unsigned long hOffsetSrc, unsigned long width, unsigned long height, object kind, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dpitch (`~.int`):
+            (undocumented)
+
+        src (`~.hipArray`/`~.object`):
+            (undocumented)
+
+        wOffsetSrc (`~.int`):
+            (undocumented)
+
+        hOffsetSrc (`~.int`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43498,7 +45060,35 @@ def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, 
 
 @cython.embedsignature(True)
 def hipMemcpy2DToArrayAsync_spt(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dst (`~.hipArray`/`~.object`):
+            (undocumented)
+
+        wOffset (`~.int`):
+            (undocumented)
+
+        hOffset (`~.int`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        spitch (`~.int`):
+            (undocumented)
+
+        width (`~.int`):
+            (undocumented)
+
+        height (`~.int`):
+            (undocumented)
+
+        kind (`~.hipMemcpyKind`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43516,7 +45106,11 @@ def hipMemcpy2DToArrayAsync_spt(object dst, unsigned long wOffset, unsigned long
 
 @cython.embedsignature(True)
 def hipStreamQuery_spt(object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43530,7 +45124,11 @@ def hipStreamQuery_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamSynchronize_spt(object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43544,7 +45142,11 @@ def hipStreamSynchronize_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetPriority_spt(object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43559,7 +45161,17 @@ def hipStreamGetPriority_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamWaitEvent_spt(object stream, object event, unsigned int flags):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+        event (`~.ihipEvent_t`/`~.object`):
+            (undocumented)
+
+        flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43574,7 +45186,11 @@ def hipStreamWaitEvent_spt(object stream, object event, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipStreamGetFlags_spt(object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43589,7 +45205,20 @@ def hipStreamGetFlags_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamAddCallback_spt(object stream, object callback, object userData, unsigned int flags):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+        callback (`~.hipStreamCallback_t`/`~.object`):
+            (undocumented)
+
+        userData (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        flags (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43605,7 +45234,14 @@ def hipStreamAddCallback_spt(object stream, object callback, object userData, un
 
 @cython.embedsignature(True)
 def hipEventRecord_spt(object event, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        event (`~.ihipEvent_t`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43620,7 +45256,26 @@ def hipEventRecord_spt(object event, object stream):
 
 @cython.embedsignature(True)
 def hipLaunchCooperativeKernel_spt(object f, object gridDim, object blockDim, object kernelParams, unsigned int sharedMemBytes, object hStream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        f (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        gridDim (`~.dim3`):
+            (undocumented)
+
+        blockDim (`~.dim3`):
+            (undocumented)
+
+        kernelParams (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sharedMemBytes (`~.int`):
+            (undocumented)
+
+        hStream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43638,7 +45293,26 @@ def hipLaunchCooperativeKernel_spt(object f, object gridDim, object blockDim, ob
 
 @cython.embedsignature(True)
 def hipLaunchKernel_spt(object function_address, object numBlocks, object dimBlocks, object args, unsigned long sharedMemBytes, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        function_address (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        numBlocks (`~.dim3`):
+            (undocumented)
+
+        dimBlocks (`~.dim3`):
+            (undocumented)
+
+        args (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sharedMemBytes (`~.int`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43656,7 +45330,14 @@ def hipLaunchKernel_spt(object function_address, object numBlocks, object dimBlo
 
 @cython.embedsignature(True)
 def hipGraphLaunch_spt(object graphExec, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        graphExec (`~.hipGraphExec`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43671,7 +45352,14 @@ def hipGraphLaunch_spt(object graphExec, object stream):
 
 @cython.embedsignature(True)
 def hipStreamBeginCapture_spt(object stream, object mode):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+        mode (`~.hipStreamCaptureMode`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43687,7 +45375,11 @@ def hipStreamBeginCapture_spt(object stream, object mode):
 
 @cython.embedsignature(True)
 def hipStreamEndCapture_spt(object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43702,7 +45394,11 @@ def hipStreamEndCapture_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamIsCapturing_spt(object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43717,7 +45413,11 @@ def hipStreamIsCapturing_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetCaptureInfo_spt(object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43733,7 +45433,14 @@ def hipStreamGetCaptureInfo_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+        dependencies_out (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43752,7 +45459,17 @@ def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
 
 @cython.embedsignature(True)
 def hipLaunchHostFunc_spt(object stream, object fn, object userData):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+        fn (`~.hipHostFn_t`/`~.object`):
+            (undocumented)
+
+        userData (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -43794,4 +45511,770 @@ class hipLibraryPropertyType(_hipLibraryPropertyType__Base):
     @staticmethod
     def ctypes_type():
         """The type of the enum constants as ctypes type."""
-        return ctypes.c_uint 
+        return ctypes.c_uint
+
+__all__ = [
+    "HIP_VERSION_MAJOR",
+    "HIP_VERSION_MINOR",
+    "HIP_VERSION_PATCH",
+    "HIP_VERSION_GITHASH",
+    "HIP_VERSION_BUILD_ID",
+    "HIP_VERSION_BUILD_NAME",
+    "HIP_VERSION",
+    "HIP_TRSA_OVERRIDE_FORMAT",
+    "HIP_TRSF_READ_AS_INTEGER",
+    "HIP_TRSF_NORMALIZED_COORDINATES",
+    "HIP_TRSF_SRGB",
+    "hipTextureType1D",
+    "hipTextureType2D",
+    "hipTextureType3D",
+    "hipTextureTypeCubemap",
+    "hipTextureType1DLayered",
+    "hipTextureType2DLayered",
+    "hipTextureTypeCubemapLayered",
+    "HIP_IMAGE_OBJECT_SIZE_DWORD",
+    "HIP_SAMPLER_OBJECT_SIZE_DWORD",
+    "HIP_SAMPLER_OBJECT_OFFSET_DWORD",
+    "HIP_TEXTURE_OBJECT_SIZE_DWORD",
+    "HIP_LAUNCH_PARAM_BUFFER_POINTER",
+    "HIP_LAUNCH_PARAM_BUFFER_SIZE",
+    "HIP_LAUNCH_PARAM_END",
+    "hipIpcMemLazyEnablePeerAccess",
+    "HIP_IPC_HANDLE_SIZE",
+    "hipStreamDefault",
+    "hipStreamNonBlocking",
+    "hipEventDefault",
+    "hipEventBlockingSync",
+    "hipEventDisableTiming",
+    "hipEventInterprocess",
+    "hipEventReleaseToDevice",
+    "hipEventReleaseToSystem",
+    "hipHostMallocDefault",
+    "hipHostMallocPortable",
+    "hipHostMallocMapped",
+    "hipHostMallocWriteCombined",
+    "hipHostMallocNumaUser",
+    "hipHostMallocCoherent",
+    "hipHostMallocNonCoherent",
+    "hipMemAttachGlobal",
+    "hipMemAttachHost",
+    "hipMemAttachSingle",
+    "hipDeviceMallocDefault",
+    "hipDeviceMallocFinegrained",
+    "hipMallocSignalMemory",
+    "hipHostRegisterDefault",
+    "hipHostRegisterPortable",
+    "hipHostRegisterMapped",
+    "hipHostRegisterIoMemory",
+    "hipExtHostRegisterCoarseGrained",
+    "hipDeviceScheduleAuto",
+    "hipDeviceScheduleSpin",
+    "hipDeviceScheduleYield",
+    "hipDeviceScheduleBlockingSync",
+    "hipDeviceScheduleMask",
+    "hipDeviceMapHost",
+    "hipDeviceLmemResizeToMax",
+    "hipArrayDefault",
+    "hipArrayLayered",
+    "hipArraySurfaceLoadStore",
+    "hipArrayCubemap",
+    "hipArrayTextureGather",
+    "hipOccupancyDefault",
+    "hipCooperativeLaunchMultiDeviceNoPreSync",
+    "hipCooperativeLaunchMultiDeviceNoPostSync",
+    "hipCpuDeviceId",
+    "hipInvalidDeviceId",
+    "hipExtAnyOrderLaunch",
+    "hipStreamWaitValueGte",
+    "hipStreamWaitValueEq",
+    "hipStreamWaitValueAnd",
+    "hipStreamWaitValueNor",
+    "hipDeviceArch_t",
+    "hipUUID_t",
+    "hipUUID",
+    "hipDeviceProp_t",
+    "_hipMemoryType__Base",
+    "hipMemoryType",
+    "hipPointerAttribute_t",
+    "_hipError_t__Base",
+    "hipError_t",
+    "_hipDeviceAttribute_t__Base",
+    "hipDeviceAttribute_t",
+    "_hipComputeMode__Base",
+    "hipComputeMode",
+    "_hipChannelFormatKind__Base",
+    "hipChannelFormatKind",
+    "hipChannelFormatDesc",
+    "_hipArray_Format__Base",
+    "hipArray_Format",
+    "HIP_ARRAY_DESCRIPTOR",
+    "HIP_ARRAY3D_DESCRIPTOR",
+    "hipArray",
+    "hip_Memcpy2D",
+    "hipArray_t",
+    "hiparray",
+    "hipArray_const_t",
+    "hipMipmappedArray",
+    "hipMipmappedArray_t",
+    "hipMipmappedArray_const_t",
+    "_hipResourceType__Base",
+    "hipResourceType",
+    "_HIPresourcetype_enum__Base",
+    "HIPresourcetype_enum",
+    "HIPresourcetype",
+    "hipResourcetype",
+    "_HIPaddress_mode_enum__Base",
+    "HIPaddress_mode_enum",
+    "HIPaddress_mode",
+    "_HIPfilter_mode_enum__Base",
+    "HIPfilter_mode_enum",
+    "HIPfilter_mode",
+    "HIP_TEXTURE_DESC_st",
+    "HIP_TEXTURE_DESC",
+    "_hipResourceViewFormat__Base",
+    "hipResourceViewFormat",
+    "_HIPresourceViewFormat_enum__Base",
+    "HIPresourceViewFormat_enum",
+    "HIPresourceViewFormat",
+    "hipResourceDesc_union_0_struct_0",
+    "hipResourceDesc_union_0_struct_1",
+    "hipResourceDesc_union_0_struct_2",
+    "hipResourceDesc_union_0_struct_3",
+    "hipResourceDesc_union_0",
+    "hipResourceDesc",
+    "HIP_RESOURCE_DESC_st_union_0_struct_0",
+    "HIP_RESOURCE_DESC_st_union_0_struct_1",
+    "HIP_RESOURCE_DESC_st_union_0_struct_2",
+    "HIP_RESOURCE_DESC_st_union_0_struct_3",
+    "HIP_RESOURCE_DESC_st_union_0_struct_4",
+    "HIP_RESOURCE_DESC_st_union_0",
+    "HIP_RESOURCE_DESC_st",
+    "HIP_RESOURCE_DESC",
+    "hipResourceViewDesc",
+    "HIP_RESOURCE_VIEW_DESC_st",
+    "HIP_RESOURCE_VIEW_DESC",
+    "_hipMemcpyKind__Base",
+    "hipMemcpyKind",
+    "hipPitchedPtr",
+    "hipExtent",
+    "hipPos",
+    "hipMemcpy3DParms",
+    "HIP_MEMCPY3D",
+    "_hipFunction_attribute__Base",
+    "hipFunction_attribute",
+    "_hipPointer_attribute__Base",
+    "hipPointer_attribute",
+    "uchar1",
+    "uchar2",
+    "uchar3",
+    "uchar4",
+    "char1",
+    "char2",
+    "char3",
+    "char4",
+    "ushort1",
+    "ushort2",
+    "ushort3",
+    "ushort4",
+    "short1",
+    "short2",
+    "short3",
+    "short4",
+    "uint1",
+    "uint2",
+    "uint3",
+    "uint4",
+    "int1",
+    "int2",
+    "int3",
+    "int4",
+    "ulong1",
+    "ulong2",
+    "ulong3",
+    "ulong4",
+    "long1",
+    "long2",
+    "long3",
+    "long4",
+    "ulonglong1",
+    "ulonglong2",
+    "ulonglong3",
+    "ulonglong4",
+    "longlong1",
+    "longlong2",
+    "longlong3",
+    "longlong4",
+    "float1",
+    "float2",
+    "float3",
+    "float4",
+    "double1",
+    "double2",
+    "double3",
+    "double4",
+    "hipCreateChannelDesc",
+    "__hip_texture",
+    "hipTextureObject_t",
+    "_hipTextureAddressMode__Base",
+    "hipTextureAddressMode",
+    "_hipTextureFilterMode__Base",
+    "hipTextureFilterMode",
+    "_hipTextureReadMode__Base",
+    "hipTextureReadMode",
+    "textureReference",
+    "hipTextureDesc",
+    "__hip_surface",
+    "hipSurfaceObject_t",
+    "surfaceReference",
+    "_hipSurfaceBoundaryMode__Base",
+    "hipSurfaceBoundaryMode",
+    "ihipCtx_t",
+    "hipCtx_t",
+    "_hipDeviceP2PAttr__Base",
+    "hipDeviceP2PAttr",
+    "ihipStream_t",
+    "hipStream_t",
+    "hipIpcMemHandle_st",
+    "hipIpcMemHandle_t",
+    "hipIpcEventHandle_st",
+    "hipIpcEventHandle_t",
+    "ihipModule_t",
+    "hipModule_t",
+    "ihipModuleSymbol_t",
+    "hipFunction_t",
+    "ihipMemPoolHandle_t",
+    "hipMemPool_t",
+    "hipFuncAttributes",
+    "ihipEvent_t",
+    "hipEvent_t",
+    "_hipLimit_t__Base",
+    "hipLimit_t",
+    "_hipMemoryAdvise__Base",
+    "hipMemoryAdvise",
+    "_hipMemRangeCoherencyMode__Base",
+    "hipMemRangeCoherencyMode",
+    "_hipMemRangeAttribute__Base",
+    "hipMemRangeAttribute",
+    "_hipMemPoolAttr__Base",
+    "hipMemPoolAttr",
+    "_hipMemLocationType__Base",
+    "hipMemLocationType",
+    "hipMemLocation",
+    "_hipMemAccessFlags__Base",
+    "hipMemAccessFlags",
+    "hipMemAccessDesc",
+    "_hipMemAllocationType__Base",
+    "hipMemAllocationType",
+    "_hipMemAllocationHandleType__Base",
+    "hipMemAllocationHandleType",
+    "hipMemPoolProps",
+    "hipMemPoolPtrExportData",
+    "_hipJitOption__Base",
+    "hipJitOption",
+    "_hipFuncAttribute__Base",
+    "hipFuncAttribute",
+    "_hipFuncCache_t__Base",
+    "hipFuncCache_t",
+    "_hipSharedMemConfig__Base",
+    "hipSharedMemConfig",
+    "dim3",
+    "hipLaunchParams_t",
+    "hipLaunchParams",
+    "_hipExternalMemoryHandleType_enum__Base",
+    "hipExternalMemoryHandleType_enum",
+    "hipExternalMemoryHandleType",
+    "hipExternalMemoryHandleDesc_st_union_0_struct_0",
+    "hipExternalMemoryHandleDesc_st_union_0",
+    "hipExternalMemoryHandleDesc_st",
+    "hipExternalMemoryHandleDesc",
+    "hipExternalMemoryBufferDesc_st",
+    "hipExternalMemoryBufferDesc",
+    "_hipExternalSemaphoreHandleType_enum__Base",
+    "hipExternalSemaphoreHandleType_enum",
+    "hipExternalSemaphoreHandleType",
+    "hipExternalSemaphoreHandleDesc_st_union_0_struct_0",
+    "hipExternalSemaphoreHandleDesc_st_union_0",
+    "hipExternalSemaphoreHandleDesc_st",
+    "hipExternalSemaphoreHandleDesc",
+    "hipExternalSemaphoreSignalParams_st_struct_0_struct_0",
+    "hipExternalSemaphoreSignalParams_st_struct_0_struct_1",
+    "hipExternalSemaphoreSignalParams_st_struct_0",
+    "hipExternalSemaphoreSignalParams_st",
+    "hipExternalSemaphoreSignalParams",
+    "hipExternalSemaphoreWaitParams_st_struct_0_struct_0",
+    "hipExternalSemaphoreWaitParams_st_struct_0_struct_1",
+    "hipExternalSemaphoreWaitParams_st_struct_0",
+    "hipExternalSemaphoreWaitParams_st",
+    "hipExternalSemaphoreWaitParams",
+    "_hipGLDeviceList__Base",
+    "hipGLDeviceList",
+    "_hipGraphicsRegisterFlags__Base",
+    "hipGraphicsRegisterFlags",
+    "_hipGraphicsResource",
+    "hipGraphicsResource",
+    "hipGraphicsResource_t",
+    "ihipGraph",
+    "hipGraph_t",
+    "hipGraphNode",
+    "hipGraphNode_t",
+    "hipGraphExec",
+    "hipGraphExec_t",
+    "hipUserObject",
+    "hipUserObject_t",
+    "_hipGraphNodeType__Base",
+    "hipGraphNodeType",
+    "hipHostFn_t",
+    "hipHostNodeParams",
+    "hipKernelNodeParams",
+    "hipMemsetParams",
+    "_hipKernelNodeAttrID__Base",
+    "hipKernelNodeAttrID",
+    "_hipAccessProperty__Base",
+    "hipAccessProperty",
+    "hipAccessPolicyWindow",
+    "hipKernelNodeAttrValue",
+    "_hipGraphExecUpdateResult__Base",
+    "hipGraphExecUpdateResult",
+    "_hipStreamCaptureMode__Base",
+    "hipStreamCaptureMode",
+    "_hipStreamCaptureStatus__Base",
+    "hipStreamCaptureStatus",
+    "_hipStreamUpdateCaptureDependenciesFlags__Base",
+    "hipStreamUpdateCaptureDependenciesFlags",
+    "_hipGraphMemAttributeType__Base",
+    "hipGraphMemAttributeType",
+    "_hipUserObjectFlags__Base",
+    "hipUserObjectFlags",
+    "_hipUserObjectRetainFlags__Base",
+    "hipUserObjectRetainFlags",
+    "_hipGraphInstantiateFlags__Base",
+    "hipGraphInstantiateFlags",
+    "hipMemAllocationProp_struct_0",
+    "hipMemAllocationProp",
+    "ihipMemGenericAllocationHandle",
+    "hipMemGenericAllocationHandle_t",
+    "_hipMemAllocationGranularity_flags__Base",
+    "hipMemAllocationGranularity_flags",
+    "_hipMemHandleType__Base",
+    "hipMemHandleType",
+    "_hipMemOperationType__Base",
+    "hipMemOperationType",
+    "_hipArraySparseSubresourceType__Base",
+    "hipArraySparseSubresourceType",
+    "hipArrayMapInfo_union_0",
+    "hipArrayMapInfo_union_1_struct_0",
+    "hipArrayMapInfo_union_1_struct_1",
+    "hipArrayMapInfo_union_1",
+    "hipArrayMapInfo_union_2",
+    "hipArrayMapInfo",
+    "hipInit",
+    "hipDriverGetVersion",
+    "hipRuntimeGetVersion",
+    "hipDeviceGet",
+    "hipDeviceComputeCapability",
+    "hipDeviceGetName",
+    "hipDeviceGetUuid",
+    "hipDeviceGetP2PAttribute",
+    "hipDeviceGetPCIBusId",
+    "hipDeviceGetByPCIBusId",
+    "hipDeviceTotalMem",
+    "hipDeviceSynchronize",
+    "hipDeviceReset",
+    "hipSetDevice",
+    "hipGetDevice",
+    "hipGetDeviceCount",
+    "hipDeviceGetAttribute",
+    "hipDeviceGetDefaultMemPool",
+    "hipDeviceSetMemPool",
+    "hipDeviceGetMemPool",
+    "hipGetDeviceProperties",
+    "hipDeviceSetCacheConfig",
+    "hipDeviceGetCacheConfig",
+    "hipDeviceGetLimit",
+    "hipDeviceSetLimit",
+    "hipDeviceGetSharedMemConfig",
+    "hipGetDeviceFlags",
+    "hipDeviceSetSharedMemConfig",
+    "hipSetDeviceFlags",
+    "hipChooseDevice",
+    "hipExtGetLinkTypeAndHopCount",
+    "hipIpcGetMemHandle",
+    "hipIpcOpenMemHandle",
+    "hipIpcCloseMemHandle",
+    "hipIpcGetEventHandle",
+    "hipIpcOpenEventHandle",
+    "hipFuncSetAttribute",
+    "hipFuncSetCacheConfig",
+    "hipFuncSetSharedMemConfig",
+    "hipGetLastError",
+    "hipPeekAtLastError",
+    "hipGetErrorName",
+    "hipGetErrorString",
+    "hipDrvGetErrorName",
+    "hipDrvGetErrorString",
+    "hipStreamCreate",
+    "hipStreamCreateWithFlags",
+    "hipStreamCreateWithPriority",
+    "hipDeviceGetStreamPriorityRange",
+    "hipStreamDestroy",
+    "hipStreamQuery",
+    "hipStreamSynchronize",
+    "hipStreamWaitEvent",
+    "hipStreamGetFlags",
+    "hipStreamGetPriority",
+    "hipExtStreamCreateWithCUMask",
+    "hipExtStreamGetCUMask",
+    "hipStreamCallback_t",
+    "hipStreamAddCallback",
+    "hipStreamWaitValue32",
+    "hipStreamWaitValue64",
+    "hipStreamWriteValue32",
+    "hipStreamWriteValue64",
+    "hipEventCreateWithFlags",
+    "hipEventCreate",
+    "hipEventRecord",
+    "hipEventDestroy",
+    "hipEventSynchronize",
+    "hipEventElapsedTime",
+    "hipEventQuery",
+    "hipPointerGetAttributes",
+    "hipPointerGetAttribute",
+    "hipDrvPointerGetAttributes",
+    "hipImportExternalSemaphore",
+    "hipSignalExternalSemaphoresAsync",
+    "hipWaitExternalSemaphoresAsync",
+    "hipDestroyExternalSemaphore",
+    "hipImportExternalMemory",
+    "hipExternalMemoryGetMappedBuffer",
+    "hipDestroyExternalMemory",
+    "hipMalloc",
+    "hipExtMallocWithFlags",
+    "hipMallocHost",
+    "hipMemAllocHost",
+    "hipHostMalloc",
+    "hipMallocManaged",
+    "hipMemPrefetchAsync",
+    "hipMemAdvise",
+    "hipMemRangeGetAttribute",
+    "hipMemRangeGetAttributes",
+    "hipStreamAttachMemAsync",
+    "hipMallocAsync",
+    "hipFreeAsync",
+    "hipMemPoolTrimTo",
+    "hipMemPoolSetAttribute",
+    "hipMemPoolGetAttribute",
+    "hipMemPoolSetAccess",
+    "hipMemPoolGetAccess",
+    "hipMemPoolCreate",
+    "hipMemPoolDestroy",
+    "hipMallocFromPoolAsync",
+    "hipMemPoolExportToShareableHandle",
+    "hipMemPoolImportFromShareableHandle",
+    "hipMemPoolExportPointer",
+    "hipMemPoolImportPointer",
+    "hipHostAlloc",
+    "hipHostGetDevicePointer",
+    "hipHostGetFlags",
+    "hipHostRegister",
+    "hipHostUnregister",
+    "hipMallocPitch",
+    "hipMemAllocPitch",
+    "hipFree",
+    "hipFreeHost",
+    "hipHostFree",
+    "hipMemcpy",
+    "hipMemcpyWithStream",
+    "hipMemcpyHtoD",
+    "hipMemcpyDtoH",
+    "hipMemcpyDtoD",
+    "hipMemcpyHtoDAsync",
+    "hipMemcpyDtoHAsync",
+    "hipMemcpyDtoDAsync",
+    "hipModuleGetGlobal",
+    "hipGetSymbolAddress",
+    "hipGetSymbolSize",
+    "hipMemcpyToSymbol",
+    "hipMemcpyToSymbolAsync",
+    "hipMemcpyFromSymbol",
+    "hipMemcpyFromSymbolAsync",
+    "hipMemcpyAsync",
+    "hipMemset",
+    "hipMemsetD8",
+    "hipMemsetD8Async",
+    "hipMemsetD16",
+    "hipMemsetD16Async",
+    "hipMemsetD32",
+    "hipMemsetAsync",
+    "hipMemsetD32Async",
+    "hipMemset2D",
+    "hipMemset2DAsync",
+    "hipMemset3D",
+    "hipMemset3DAsync",
+    "hipMemGetInfo",
+    "hipMemPtrGetInfo",
+    "hipMallocArray",
+    "hipArrayCreate",
+    "hipArrayDestroy",
+    "hipArray3DCreate",
+    "hipMalloc3D",
+    "hipFreeArray",
+    "hipFreeMipmappedArray",
+    "hipMalloc3DArray",
+    "hipMallocMipmappedArray",
+    "hipGetMipmappedArrayLevel",
+    "hipMemcpy2D",
+    "hipMemcpyParam2D",
+    "hipMemcpyParam2DAsync",
+    "hipMemcpy2DAsync",
+    "hipMemcpy2DToArray",
+    "hipMemcpy2DToArrayAsync",
+    "hipMemcpyToArray",
+    "hipMemcpyFromArray",
+    "hipMemcpy2DFromArray",
+    "hipMemcpy2DFromArrayAsync",
+    "hipMemcpyAtoH",
+    "hipMemcpyHtoA",
+    "hipMemcpy3D",
+    "hipMemcpy3DAsync",
+    "hipDrvMemcpy3D",
+    "hipDrvMemcpy3DAsync",
+    "hipDeviceCanAccessPeer",
+    "hipDeviceEnablePeerAccess",
+    "hipDeviceDisablePeerAccess",
+    "hipMemGetAddressRange",
+    "hipMemcpyPeer",
+    "hipMemcpyPeerAsync",
+    "hipCtxCreate",
+    "hipCtxDestroy",
+    "hipCtxPopCurrent",
+    "hipCtxPushCurrent",
+    "hipCtxSetCurrent",
+    "hipCtxGetCurrent",
+    "hipCtxGetDevice",
+    "hipCtxGetApiVersion",
+    "hipCtxGetCacheConfig",
+    "hipCtxSetCacheConfig",
+    "hipCtxSetSharedMemConfig",
+    "hipCtxGetSharedMemConfig",
+    "hipCtxSynchronize",
+    "hipCtxGetFlags",
+    "hipCtxEnablePeerAccess",
+    "hipCtxDisablePeerAccess",
+    "hipDevicePrimaryCtxGetState",
+    "hipDevicePrimaryCtxRelease",
+    "hipDevicePrimaryCtxRetain",
+    "hipDevicePrimaryCtxReset",
+    "hipDevicePrimaryCtxSetFlags",
+    "hipModuleLoad",
+    "hipModuleUnload",
+    "hipModuleGetFunction",
+    "hipFuncGetAttributes",
+    "hipFuncGetAttribute",
+    "hipModuleGetTexRef",
+    "hipModuleLoadData",
+    "hipModuleLoadDataEx",
+    "hipModuleLaunchKernel",
+    "hipLaunchCooperativeKernel",
+    "hipLaunchCooperativeKernelMultiDevice",
+    "hipExtLaunchMultiKernelMultiDevice",
+    "hipModuleOccupancyMaxPotentialBlockSize",
+    "hipModuleOccupancyMaxPotentialBlockSizeWithFlags",
+    "hipModuleOccupancyMaxActiveBlocksPerMultiprocessor",
+    "hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags",
+    "hipOccupancyMaxActiveBlocksPerMultiprocessor",
+    "hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags",
+    "hipOccupancyMaxPotentialBlockSize",
+    "hipProfilerStart",
+    "hipProfilerStop",
+    "hipConfigureCall",
+    "hipSetupArgument",
+    "hipLaunchByPtr",
+    "hipLaunchKernel",
+    "hipLaunchHostFunc",
+    "hipDrvMemcpy2DUnaligned",
+    "hipExtLaunchKernel",
+    "hipBindTextureToMipmappedArray",
+    "hipCreateTextureObject",
+    "hipDestroyTextureObject",
+    "hipGetChannelDesc",
+    "hipGetTextureObjectResourceDesc",
+    "hipGetTextureObjectResourceViewDesc",
+    "hipGetTextureObjectTextureDesc",
+    "hipTexObjectCreate",
+    "hipTexObjectDestroy",
+    "hipTexObjectGetResourceDesc",
+    "hipTexObjectGetResourceViewDesc",
+    "hipTexObjectGetTextureDesc",
+    "hipGetTextureReference",
+    "hipTexRefSetAddressMode",
+    "hipTexRefSetArray",
+    "hipTexRefSetFilterMode",
+    "hipTexRefSetFlags",
+    "hipTexRefSetFormat",
+    "hipBindTexture",
+    "hipBindTexture2D",
+    "hipBindTextureToArray",
+    "hipGetTextureAlignmentOffset",
+    "hipUnbindTexture",
+    "hipTexRefGetAddress",
+    "hipTexRefGetAddressMode",
+    "hipTexRefGetFilterMode",
+    "hipTexRefGetFlags",
+    "hipTexRefGetFormat",
+    "hipTexRefGetMaxAnisotropy",
+    "hipTexRefGetMipmapFilterMode",
+    "hipTexRefGetMipmapLevelBias",
+    "hipTexRefGetMipmapLevelClamp",
+    "hipTexRefGetMipMappedArray",
+    "hipTexRefSetAddress",
+    "hipTexRefSetAddress2D",
+    "hipTexRefSetMaxAnisotropy",
+    "hipTexRefSetBorderColor",
+    "hipTexRefSetMipmapFilterMode",
+    "hipTexRefSetMipmapLevelBias",
+    "hipTexRefSetMipmapLevelClamp",
+    "hipTexRefSetMipmappedArray",
+    "hipMipmappedArrayCreate",
+    "hipMipmappedArrayDestroy",
+    "hipMipmappedArrayGetLevel",
+    "hipApiName",
+    "hipKernelNameRef",
+    "hipKernelNameRefByPtr",
+    "hipGetStreamDeviceId",
+    "hipStreamBeginCapture",
+    "hipStreamEndCapture",
+    "hipStreamGetCaptureInfo",
+    "hipStreamGetCaptureInfo_v2",
+    "hipStreamIsCapturing",
+    "hipStreamUpdateCaptureDependencies",
+    "hipThreadExchangeStreamCaptureMode",
+    "hipGraphCreate",
+    "hipGraphDestroy",
+    "hipGraphAddDependencies",
+    "hipGraphRemoveDependencies",
+    "hipGraphGetEdges",
+    "hipGraphGetNodes",
+    "hipGraphGetRootNodes",
+    "hipGraphNodeGetDependencies",
+    "hipGraphNodeGetDependentNodes",
+    "hipGraphNodeGetType",
+    "hipGraphDestroyNode",
+    "hipGraphClone",
+    "hipGraphNodeFindInClone",
+    "hipGraphInstantiate",
+    "hipGraphInstantiateWithFlags",
+    "hipGraphLaunch",
+    "hipGraphUpload",
+    "hipGraphExecDestroy",
+    "hipGraphExecUpdate",
+    "hipGraphAddKernelNode",
+    "hipGraphKernelNodeGetParams",
+    "hipGraphKernelNodeSetParams",
+    "hipGraphExecKernelNodeSetParams",
+    "hipGraphAddMemcpyNode",
+    "hipGraphMemcpyNodeGetParams",
+    "hipGraphMemcpyNodeSetParams",
+    "hipGraphKernelNodeSetAttribute",
+    "hipGraphKernelNodeGetAttribute",
+    "hipGraphExecMemcpyNodeSetParams",
+    "hipGraphAddMemcpyNode1D",
+    "hipGraphMemcpyNodeSetParams1D",
+    "hipGraphExecMemcpyNodeSetParams1D",
+    "hipGraphAddMemcpyNodeFromSymbol",
+    "hipGraphMemcpyNodeSetParamsFromSymbol",
+    "hipGraphExecMemcpyNodeSetParamsFromSymbol",
+    "hipGraphAddMemcpyNodeToSymbol",
+    "hipGraphMemcpyNodeSetParamsToSymbol",
+    "hipGraphExecMemcpyNodeSetParamsToSymbol",
+    "hipGraphAddMemsetNode",
+    "hipGraphMemsetNodeGetParams",
+    "hipGraphMemsetNodeSetParams",
+    "hipGraphExecMemsetNodeSetParams",
+    "hipGraphAddHostNode",
+    "hipGraphHostNodeGetParams",
+    "hipGraphHostNodeSetParams",
+    "hipGraphExecHostNodeSetParams",
+    "hipGraphAddChildGraphNode",
+    "hipGraphChildGraphNodeGetGraph",
+    "hipGraphExecChildGraphNodeSetParams",
+    "hipGraphAddEmptyNode",
+    "hipGraphAddEventRecordNode",
+    "hipGraphEventRecordNodeGetEvent",
+    "hipGraphEventRecordNodeSetEvent",
+    "hipGraphExecEventRecordNodeSetEvent",
+    "hipGraphAddEventWaitNode",
+    "hipGraphEventWaitNodeGetEvent",
+    "hipGraphEventWaitNodeSetEvent",
+    "hipGraphExecEventWaitNodeSetEvent",
+    "hipDeviceGetGraphMemAttribute",
+    "hipDeviceSetGraphMemAttribute",
+    "hipDeviceGraphMemTrim",
+    "hipUserObjectCreate",
+    "hipUserObjectRelease",
+    "hipUserObjectRetain",
+    "hipGraphRetainUserObject",
+    "hipGraphReleaseUserObject",
+    "hipMemAddressFree",
+    "hipMemAddressReserve",
+    "hipMemCreate",
+    "hipMemExportToShareableHandle",
+    "hipMemGetAccess",
+    "hipMemGetAllocationGranularity",
+    "hipMemGetAllocationPropertiesFromHandle",
+    "hipMemImportFromShareableHandle",
+    "hipMemMap",
+    "hipMemMapArrayAsync",
+    "hipMemRelease",
+    "hipMemRetainAllocationHandle",
+    "hipMemSetAccess",
+    "hipMemUnmap",
+    "hipGLGetDevices",
+    "hipGraphicsGLRegisterBuffer",
+    "hipGraphicsGLRegisterImage",
+    "hipGraphicsMapResources",
+    "hipGraphicsSubResourceGetMappedArray",
+    "hipGraphicsResourceGetMappedPointer",
+    "hipGraphicsUnmapResources",
+    "hipGraphicsUnregisterResource",
+    "hipMemcpy_spt",
+    "hipMemcpyToSymbol_spt",
+    "hipMemcpyFromSymbol_spt",
+    "hipMemcpy2D_spt",
+    "hipMemcpy2DFromArray_spt",
+    "hipMemcpy3D_spt",
+    "hipMemset_spt",
+    "hipMemsetAsync_spt",
+    "hipMemset2D_spt",
+    "hipMemset2DAsync_spt",
+    "hipMemset3DAsync_spt",
+    "hipMemset3D_spt",
+    "hipMemcpyAsync_spt",
+    "hipMemcpy3DAsync_spt",
+    "hipMemcpy2DAsync_spt",
+    "hipMemcpyFromSymbolAsync_spt",
+    "hipMemcpyToSymbolAsync_spt",
+    "hipMemcpyFromArray_spt",
+    "hipMemcpy2DToArray_spt",
+    "hipMemcpy2DFromArrayAsync_spt",
+    "hipMemcpy2DToArrayAsync_spt",
+    "hipStreamQuery_spt",
+    "hipStreamSynchronize_spt",
+    "hipStreamGetPriority_spt",
+    "hipStreamWaitEvent_spt",
+    "hipStreamGetFlags_spt",
+    "hipStreamAddCallback_spt",
+    "hipEventRecord_spt",
+    "hipLaunchCooperativeKernel_spt",
+    "hipLaunchKernel_spt",
+    "hipGraphLaunch_spt",
+    "hipStreamBeginCapture_spt",
+    "hipStreamEndCapture_spt",
+    "hipStreamIsCapturing_spt",
+    "hipStreamGetCaptureInfo_spt",
+    "hipStreamGetCaptureInfo_v2_spt",
+    "hipLaunchHostFunc_spt",
+    "_hipDataType__Base",
+    "hipDataType",
+    "_hipLibraryPropertyType__Base",
+    "hipLibraryPropertyType",
+]

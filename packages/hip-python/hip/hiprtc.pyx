@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 """
 Attributes:
     hiprtcLinkState:
@@ -129,22 +130,22 @@ cdef class ihiprtcLinkState:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -267,7 +268,8 @@ def hiprtcGetErrorString(object result):
         `~.hiprtcResult`
 
     Args:
-        result (`~.hiprtcResult`): **[in]** code to convert to string.
+        result (`~.hiprtcResult`) -- *IN*:
+            code to convert to string.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -288,8 +290,10 @@ def hiprtcVersion():
         A `~.tuple` of size 3 that contains (in that order):
 
         * `~.hiprtcResult`
-        * `~.int`: HIP Runtime Compilation major version.
-        * `~.int`: HIP Runtime Compilation minor version.
+        * `~.int`:
+                HIP Runtime Compilation major version.
+        * `~.int`:
+                HIP Runtime Compilation minor version.
     """
     cdef int major
     cdef int minor
@@ -310,22 +314,22 @@ cdef class _hiprtcProgram:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -446,9 +450,11 @@ def hiprtcAddNameExpression(object prog, const char * name_expression):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
-        name_expression (`~.bytes`): **[in]** const char pointer to the name expression.
+        name_expression (`~.bytes`) -- *IN*:
+            const char pointer to the name expression.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -471,11 +477,14 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
-        numOptions (`~.int`): **[in]** number of compiler options.
+        numOptions (`~.int`) -- *IN*:
+            number of compiler options.
 
-        options (`~.hip._util.types.ListOfBytes`/`~.object`): **[in]** compiler options as const array of strins.
+        options (`~.hip._util.types.ListOfBytes`/`~.object`) -- *IN*:
+            compiler options as const array of strins.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -502,21 +511,27 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
         `~.hiprtcResult`
 
     Args:
-        src (`~.bytes`): **[in]** const char pointer to the program source.
+        src (`~.bytes`) -- *IN*:
+            const char pointer to the program source.
 
-        name (`~.bytes`): **[in]** const char pointer to the program name.
+        name (`~.bytes`) -- *IN*:
+            const char pointer to the program name.
 
-        numHeaders (`~.int`): **[in]** number of headers.
+        numHeaders (`~.int`) -- *IN*:
+            number of headers.
 
-        headers (`~.hip._util.types.ListOfBytes`/`~.object`): **[in]** array of strings pointing to headers.
+        headers (`~.hip._util.types.ListOfBytes`/`~.object`) -- *IN*:
+            array of strings pointing to headers.
 
-        includeNames (`~.hip._util.types.ListOfBytes`/`~.object`): **[in]** array of strings pointing to names included in program source.
+        includeNames (`~.hip._util.types.ListOfBytes`/`~.object`) -- *IN*:
+            array of strings pointing to names included in program source.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
-        * `~._hiprtcProgram`: runtime compilation program instance.
+        * `~._hiprtcProgram`:
+                runtime compilation program instance.
     """
     prog = _hiprtcProgram.from_ptr(NULL)
     _hiprtcCreateProgram__retval = hiprtcResult(chiprtc.hiprtcCreateProgram(&prog._ptr,src,name,numHeaders,
@@ -535,7 +550,8 @@ def hiprtcDestroyProgram(object prog):
         `~.hiprtcResult`
 
     Args:
-        prog (`~.hip._util.types.Pointer`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -562,15 +578,18 @@ def hiprtcGetLoweredName(object prog, const char * name_expression):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
-        name_expression (`~.bytes`): **[in]** const char pointer to the name expression.
+        name_expression (`~.bytes`) -- *IN*:
+            const char pointer to the name expression.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
-        * `~.bytes`: const char array to the lowered (mangled) name.
+        * `~.bytes`:
+                const char array to the lowered (mangled) name.
     """
     cdef const char * lowered_name
     _hiprtcGetLoweredName__retval = hiprtcResult(chiprtc.hiprtcGetLoweredName(
@@ -586,9 +605,11 @@ def hiprtcGetProgramLog(object prog, object log):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
-        log (`~.hip._util.types.Pointer`/`~.object`): **[out]** memory pointer to the generated log.
+        log (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            memory pointer to the generated log.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -609,13 +630,15 @@ def hiprtcGetProgramLogSize(object prog):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
-        * `~.int`: size of generated log.
+        * `~.int`:
+                size of generated log.
     """
     cdef unsigned long logSizeRet
     _hiprtcGetProgramLogSize__retval = hiprtcResult(chiprtc.hiprtcGetProgramLogSize(
@@ -631,9 +654,11 @@ def hiprtcGetCode(object prog, object code):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
-        code (`~.hip._util.types.Pointer`/`~.object`): **[out]** char pointer to binary.
+        code (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            char pointer to binary.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -654,9 +679,8 @@ def hiprtcGetCodeSize(object prog):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
-
-        code: **[out]** the size of binary.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -677,9 +701,11 @@ def hiprtcGetBitcode(object prog, object bitcode):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
-        code: **[out]** char pointer to bitcode.
+        bitcode (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -700,9 +726,8 @@ def hiprtcGetBitcodeSize(object prog):
         `~.hiprtcResult`
 
     Args:
-        prog (`~._hiprtcProgram`/`~.object`): **[in]** runtime compilation program instance.
-
-        code: **[out]** the size of bitcode.
+        prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
+            runtime compilation program instance.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -723,9 +748,14 @@ def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_
         `~.hiprtcResult`
 
     Args:
-        hip_jit_options: **[in]** 
+        num_options (`~.int`):
+            (undocumented)
 
-        hiprtc: **[out]** link state instance
+        option_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        option_vals_pptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -749,10 +779,23 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
         `~.hiprtcResult`
 
     Args:
-        hiprtc: **[in]** link state, jit input type, file path,
-            option reated parameters.
+        hip_link_state (`~.ihiprtcLinkState`/`~.object`):
+            (undocumented)
 
-        None: **[out]** .
+        input_type (`~.hiprtcJITInputType`):
+            (undocumented)
+
+        file_path (`~.bytes`):
+            (undocumented)
+
+        num_options (`~.int`):
+            (undocumented)
+
+        options_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        option_values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -779,10 +822,29 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, un
         `~.hiprtcResult`
 
     Args:
-        hiprtc: **[in]** link state, jit input type, image_ptr ,
-            option reated parameters.
+        hip_link_state (`~.ihiprtcLinkState`/`~.object`):
+            (undocumented)
 
-        None: **[out]** .
+        input_type (`~.hiprtcJITInputType`):
+            (undocumented)
+
+        image (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        image_size (`~.int`):
+            (undocumented)
+
+        name (`~.bytes`):
+            (undocumented)
+
+        num_options (`~.int`):
+            (undocumented)
+
+        options_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        option_values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -810,11 +872,8 @@ def hiprtcLinkComplete(object hip_link_state):
         `~.hiprtcResult`
 
     Args:
-        hiprtc: **[in]** link state instance
-
-        linked_binary: **[out]** .
-
-        linked_binary_size: **[out]** .
+        hip_link_state (`~.ihiprtcLinkState`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -840,9 +899,8 @@ def hiprtcLinkDestroy(object hip_link_state):
         `~.hiprtcResult`
 
     Args:
-        hiprtc: **[in]** link state instance
-
-        code: **[out]** the size of binary.
+        hip_link_state (`~.ihiprtcLinkState`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
@@ -853,3 +911,34 @@ def hiprtcLinkDestroy(object hip_link_state):
     _hiprtcLinkDestroy__retval = hiprtcResult(chiprtc.hiprtcLinkDestroy(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr))    # fully specified
     return (_hiprtcLinkDestroy__retval,)
+
+__all__ = [
+    "_hiprtcResult__Base",
+    "hiprtcResult",
+    "_hiprtcJIT_option__Base",
+    "hiprtcJIT_option",
+    "_hiprtcJITInputType__Base",
+    "hiprtcJITInputType",
+    "ihiprtcLinkState",
+    "hiprtcLinkState",
+    "hiprtcGetErrorString",
+    "hiprtcVersion",
+    "_hiprtcProgram",
+    "hiprtcProgram",
+    "hiprtcAddNameExpression",
+    "hiprtcCompileProgram",
+    "hiprtcCreateProgram",
+    "hiprtcDestroyProgram",
+    "hiprtcGetLoweredName",
+    "hiprtcGetProgramLog",
+    "hiprtcGetProgramLogSize",
+    "hiprtcGetCode",
+    "hiprtcGetCodeSize",
+    "hiprtcGetBitcode",
+    "hiprtcGetBitcodeSize",
+    "hiprtcLinkCreate",
+    "hiprtcLinkAddFile",
+    "hiprtcLinkAddData",
+    "hiprtcLinkComplete",
+    "hiprtcLinkDestroy",
+]

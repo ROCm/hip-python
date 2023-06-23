@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 """
 Attributes:
     NCCL_MAJOR (`~.int`):
@@ -93,22 +94,22 @@ cdef class ncclComm:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -232,22 +233,22 @@ cdef class ncclUniqueId:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -452,6 +453,8 @@ def ncclGetVersion():
     This integer is coded with the MAJOR, MINOR and PATCH level of the
     NCCL library
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -464,7 +467,9 @@ def ncclGetVersion():
 
 @cython.embedsignature(True)
 def pncclGetVersion():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -484,9 +489,10 @@ def ncclGetUniqueId(object uniqueId):
     called once and the Id should be distributed to all ranks in the
     communicator before calling ncclCommInitRank.
 
-    @param[in]
-    uniqueId     ncclUniqueId*
-                 pointer to uniqueId
+    Args:
+        uniqueId (`~.ncclUniqueId`/`~.object`) -- *IN*:
+            ncclUniqueId*
+            pointer to uniqueId
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -500,7 +506,11 @@ def ncclGetUniqueId(object uniqueId):
 
 @cython.embedsignature(True)
 def pncclGetUniqueId(object uniqueId):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        uniqueId (`~.ncclUniqueId`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -522,14 +532,23 @@ def ncclCommInitRank(int nranks, object commId, int rank):
     ncclCommInitRank implicitly syncronizes with other ranks, so it must be
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
-    @param[in]
-    comm        ncclComm_t*
-                communicator struct pointer
+    Args:
+        nranks (`~.int`):
+            (undocumented)
+
+        commId (`~.ncclUniqueId`):
+            (undocumented)
+
+        rank (`~.int`):
+            (undocumented)
 
     Returns:
-        A `~.tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.ncclResult_t`
+        * `~.ncclComm`:
+                ncclComm_t*
+                communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRank__retval = ncclResult_t(crccl.ncclCommInitRank(&comm._ptr,nranks,
@@ -539,7 +558,17 @@ def ncclCommInitRank(int nranks, object commId, int rank):
 
 @cython.embedsignature(True)
 def pncclCommInitRank(int nranks, object commId, int rank):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        nranks (`~.int`):
+            (undocumented)
+
+        commId (`~.ncclUniqueId`):
+            (undocumented)
+
+        rank (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -565,14 +594,26 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     ncclCommInitRankMulti implicitly syncronizes with other ranks, so it must be
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
-    @param[in]
-    comm        ncclComm_t*
-                communicator struct pointer
+    Args:
+        nranks (`~.int`):
+            (undocumented)
+
+        commId (`~.ncclUniqueId`):
+            (undocumented)
+
+        rank (`~.int`):
+            (undocumented)
+
+        virtualId (`~.int`):
+            (undocumented)
 
     Returns:
-        A `~.tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.ncclResult_t`
+        * `~.ncclComm`:
+                ncclComm_t*
+                communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRankMulti__retval = ncclResult_t(crccl.ncclCommInitRankMulti(&comm._ptr,nranks,
@@ -582,7 +623,20 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
 
 @cython.embedsignature(True)
 def pncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        nranks (`~.int`):
+            (undocumented)
+
+        commId (`~.ncclUniqueId`):
+            (undocumented)
+
+        rank (`~.int`):
+            (undocumented)
+
+        virtualId (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -605,6 +659,16 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
     If devlist is NULL, the first ndev HIP devices are used.
     Order of devlist defines user-order of processors within the communicator.
 
+    Args:
+        comm (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ndev (`~.int`):
+            (undocumented)
+
+        devlist (`~.hip._util.types.ListOfInt`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -618,7 +682,17 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
 
 @cython.embedsignature(True)
 def pncclCommInitAll(object comm, int ndev, object devlist):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ndev (`~.int`):
+            (undocumented)
+
+        devlist (`~.hip._util.types.ListOfInt`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -635,6 +709,10 @@ def pncclCommInitAll(object comm, int ndev, object devlist):
 def ncclCommDestroy(object comm):
     r"""Frees resources associated with communicator object, but waits for any operations that might still be running on the device */
 
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -647,7 +725,11 @@ def ncclCommDestroy(object comm):
 
 @cython.embedsignature(True)
 def pncclCommDestroy(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -663,6 +745,10 @@ def pncclCommDestroy(object comm):
 def ncclCommAbort(object comm):
     r"""Frees resources associated with communicator object and aborts any operations that might still be running on the device. */
 
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -675,7 +761,11 @@ def ncclCommAbort(object comm):
 
 @cython.embedsignature(True)
 def pncclCommAbort(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -691,6 +781,10 @@ def pncclCommAbort(object comm):
 def ncclGetErrorString(object result):
     r"""Returns a string for each error code. */
 
+    Args:
+        result (`~.ncclResult_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -704,7 +798,11 @@ def ncclGetErrorString(object result):
 
 @cython.embedsignature(True)
 def pncclGetErrorString(object result):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        result (`~.ncclResult_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -722,6 +820,10 @@ def ncclGetLastError(object comm):
     r"""Returns a human-readable message of the last error that occurred.
     comm is currently unused and can be set to NULL
 
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -734,7 +836,11 @@ def ncclGetLastError(object comm):
 
 @cython.embedsignature(True)
 def pncclGetError(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -748,7 +854,14 @@ def pncclGetError(object comm):
 
 @cython.embedsignature(True)
 def ncclCommGetAsyncError(object comm, object asyncError):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        asyncError (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -763,7 +876,14 @@ def ncclCommGetAsyncError(object comm, object asyncError):
 
 @cython.embedsignature(True)
 def pncclCommGetAsyncError(object comm, object asyncError):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        asyncError (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -780,6 +900,10 @@ def pncclCommGetAsyncError(object comm, object asyncError):
 def ncclCommCount(object comm):
     r"""Gets the number of ranks in the communicator clique. */
 
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -793,7 +917,11 @@ def ncclCommCount(object comm):
 
 @cython.embedsignature(True)
 def pncclCommCount(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -810,6 +938,10 @@ def pncclCommCount(object comm):
 def ncclCommCuDevice(object comm):
     r"""Returns the rocm device number associated with the communicator. */
 
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -823,7 +955,11 @@ def ncclCommCuDevice(object comm):
 
 @cython.embedsignature(True)
 def pncclCommCuDevice(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -840,6 +976,10 @@ def pncclCommCuDevice(object comm):
 def ncclCommUserRank(object comm):
     r"""Returns the user-ordered "rank" associated with the communicator. */
 
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -853,7 +993,11 @@ def ncclCommUserRank(object comm):
 
 @cython.embedsignature(True)
 def pncclCommUserRank(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -938,7 +1082,23 @@ class ncclScalarResidence_t(_ncclScalarResidence_t__Base):
 
 @cython.embedsignature(True)
 def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        op (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        scalar (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        residence (`~.ncclScalarResidence_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -958,7 +1118,23 @@ def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object r
 
 @cython.embedsignature(True)
 def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        op (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        scalar (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        residence (`~.ncclScalarResidence_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -978,7 +1154,14 @@ def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object 
 
 @cython.embedsignature(True)
 def ncclRedOpDestroy(object op, object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -994,7 +1177,14 @@ def ncclRedOpDestroy(object op, object comm):
 
 @cython.embedsignature(True)
 def pncclRedOpDestroy(object op, object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1020,6 +1210,31 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
 
     In-place operation will happen if sendbuff == recvbuff.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1039,7 +1254,32 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
 
 @cython.embedsignature(True)
 def pncclReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1068,6 +1308,25 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
 
     This operation is implicitely in place.
 
+    Args:
+        buff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1084,7 +1343,26 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
 
 @cython.embedsignature(True)
 def pncclBcast(object buff, unsigned long count, object datatype, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        buff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1110,6 +1388,28 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
 
     In-place operation will happen if sendbuff == recvbuff.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1127,7 +1427,29 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
 
 @cython.embedsignature(True)
 def pncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object datatype, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1153,6 +1475,28 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
 
     In-place operation will happen if sendbuff == recvbuff.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1172,7 +1516,29 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
 
 @cython.embedsignature(True)
 def pncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1203,6 +1569,28 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
 
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1222,7 +1610,29 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
 
 @cython.embedsignature(True)
 def pncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, object op, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1252,6 +1662,25 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
 
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1269,7 +1698,26 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
 
 @cython.embedsignature(True)
 def pncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1298,6 +1746,25 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
     need to progress concurrently to complete, they must be fused within a ncclGroupStart/
     ncclGroupEnd section.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        peer (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1314,7 +1781,26 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
 
 @cython.embedsignature(True)
 def pncclSend(object sendbuff, unsigned long count, object datatype, int peer, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        peer (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1342,6 +1828,25 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
     need to progress concurrently to complete, they must be fused within a ncclGroupStart/
     ncclGroupEnd section.
 
+    Args:
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        peer (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1358,7 +1863,26 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
 
 @cython.embedsignature(True)
 def pncclRecv(object recvbuff, unsigned long count, object datatype, int peer, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        peer (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1386,6 +1910,28 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
 
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1403,7 +1949,29 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
 
 @cython.embedsignature(True)
 def pncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1432,6 +2000,28 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
 
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1449,7 +2039,29 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
 
 @cython.embedsignature(True)
 def pncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1476,6 +2088,25 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
 
     In-place operation will happen if sendbuff == recvbuff.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1493,7 +2124,26 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
 
 @cython.embedsignature(True)
 def pncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object datatype, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1523,6 +2173,34 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
 
     In-place operation will happen if sendbuff == recvbuff.
 
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcounts (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        sdispls (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcounts (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        rdispls (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1544,7 +2222,35 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
 
 @cython.embedsignature(True)
 def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object recvbuff, object recvcounts, object rdispls, object datatype, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcounts (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        sdispls (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcounts (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        rdispls (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1584,7 +2290,7 @@ def ncclGroupStart():
 
 @cython.embedsignature(True)
 def pncclGroupStart():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1614,7 +2320,7 @@ def ncclGroupEnd():
 
 @cython.embedsignature(True)
 def pncclGroupEnd():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1623,3 +2329,87 @@ def pncclGroupEnd():
     """
     _pncclGroupEnd__retval = ncclResult_t(crccl.pncclGroupEnd())    # fully specified
     return (_pncclGroupEnd__retval,)
+
+__all__ = [
+    "NCCL_MAJOR",
+    "NCCL_MINOR",
+    "NCCL_PATCH",
+    "NCCL_SUFFIX",
+    "NCCL_VERSION_CODE",
+    "RCCL_BFLOAT16",
+    "RCCL_GATHER_SCATTER",
+    "RCCL_ALLTOALLV",
+    "RCCL_MULTIRANKPERGPU",
+    "NCCL_UNIQUE_ID_BYTES",
+    "ncclComm",
+    "ncclComm_t",
+    "ncclUniqueId",
+    "_ncclResult_t__Base",
+    "ncclResult_t",
+    "ncclGetVersion",
+    "pncclGetVersion",
+    "ncclGetUniqueId",
+    "pncclGetUniqueId",
+    "ncclCommInitRank",
+    "pncclCommInitRank",
+    "ncclCommInitRankMulti",
+    "pncclCommInitRankMulti",
+    "ncclCommInitAll",
+    "pncclCommInitAll",
+    "ncclCommDestroy",
+    "pncclCommDestroy",
+    "ncclCommAbort",
+    "pncclCommAbort",
+    "ncclGetErrorString",
+    "pncclGetErrorString",
+    "ncclGetLastError",
+    "pncclGetError",
+    "ncclCommGetAsyncError",
+    "pncclCommGetAsyncError",
+    "ncclCommCount",
+    "pncclCommCount",
+    "ncclCommCuDevice",
+    "pncclCommCuDevice",
+    "ncclCommUserRank",
+    "pncclCommUserRank",
+    "_ncclRedOp_dummy_t__Base",
+    "ncclRedOp_dummy_t",
+    "_ncclRedOp_t__Base",
+    "ncclRedOp_t",
+    "_ncclDataType_t__Base",
+    "ncclDataType_t",
+    "_ncclScalarResidence_t__Base",
+    "ncclScalarResidence_t",
+    "ncclRedOpCreatePreMulSum",
+    "pncclRedOpCreatePreMulSum",
+    "ncclRedOpDestroy",
+    "pncclRedOpDestroy",
+    "ncclReduce",
+    "pncclReduce",
+    "ncclBcast",
+    "pncclBcast",
+    "ncclBroadcast",
+    "pncclBroadcast",
+    "ncclAllReduce",
+    "pncclAllReduce",
+    "ncclReduceScatter",
+    "pncclReduceScatter",
+    "ncclAllGather",
+    "pncclAllGather",
+    "ncclSend",
+    "pncclSend",
+    "ncclRecv",
+    "pncclRecv",
+    "ncclGather",
+    "pncclGather",
+    "ncclScatter",
+    "pncclScatter",
+    "ncclAllToAll",
+    "pncclAllToAll",
+    "ncclAllToAllv",
+    "pncclAllToAllv",
+    "ncclGroupStart",
+    "pncclGroupStart",
+    "ncclGroupEnd",
+    "pncclGroupEnd",
+]

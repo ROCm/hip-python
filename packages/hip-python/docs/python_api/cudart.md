@@ -1,11 +1,8 @@
 # cuda.cudart
 
+<!-- global automodule options are set in conf.py -->
 ```{eval-rst}
 .. automodule:: cuda.cudart
-   :members:
-   :undoc-members:
-   :private-members:
-   :special-members:
-   :show-inheritance:
    :noindex:
+
 ```

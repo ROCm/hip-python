@@ -261,12 +261,12 @@ a textual description of the main steps.
 
 * How I can use HIP Python's {py:obj}`~.hipblas` module.
 * That I can pass {py:obj}`numpy` arrays to HIP runtime routines such
-  as {py:obj}`hipMemcpy` and {py:obj}`hipMemcpyAsync`.
+  as {py:obj}`~.hipMemcpy` and {py:obj}`~.hipMemcpyAsync`.
 :::
 
 [This example](hipblas_with_numpy) demonstrates how to initialize and use HIP Python's {py:obj}`~.hipblas`
 module. Furthermore, it shows that you can simply pass {py:obj}`numpy` arrays to HIP runtime routines such
-as {py:obj}`hipMemcpy` and {py:obj}`hipMemcpyAsync`. This works because some of HIP Python's interfaces 
+as {py:obj}`~.hipMemcpy` and {py:obj}`~.hipMemcpyAsync`. This works because some of HIP Python's interfaces 
 support automatic conversion from various different types---in particular such types that implement the Python [buffer protocol](https://docs.python.org/3/c-api/buffer.html). The {py:obj}`~numpy.numpy` arrays implement the Python buffer protocol
 and thus can be directly passed to those interfaces.
 
@@ -330,7 +330,7 @@ with respect to the specified type and shape information.
 1. The host data is copied to the device array (line 26).
 1. Within a loop over the row indices (index: `r`):
    1. A pointer to row with index `r` is created via array subscript (line 31). This yields `row`.
-   1. `row` is passed to a {py:obj}`hipblasSscal` call that
+   1. `row` is passed to a {py:obj}`~.hipblasSscal` call that
       writes index `r` to all elements of the row (line 34).
 1. Data is copied back from the device to the host array.
 1. Finally, a check is performed on the host if the row values equal the respective row index (lines 44-50).
@@ -396,7 +396,7 @@ Within a loop that per iteration multiplies the problem size `n` by `10` (line 3
 * How I can run a complex in-place forward FFT via {py:obj}`~.hipfftExecZ2Z`.
 :::
 
-[This example](hipfft) demonstrates the usage of HIP Python's {py:obj}`~.hipfft` library.
+[This example](hipfft_py) demonstrates the usage of HIP Python's {py:obj}`~.hipfft` library.
 
 We perform a double-complex-to-double-complex in-place forward FFT
 of a constant time signal {math}`f(t) = 1-1j` of which we have {math}`N` samples.
@@ -408,7 +408,7 @@ The resulting FFT coefficients are all zero --- aside from the first one, which 
    :start-after: [literalinclude-begin]
    :linenos:
    :emphasize-lines: 25,28
-   :name: hipfft
+   :name: hipfft_py
    :caption: A simple complex FFT with hipFFT
 ```
 

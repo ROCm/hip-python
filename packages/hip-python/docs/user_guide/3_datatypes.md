@@ -114,8 +114,9 @@ The type is used as return value for:
 * {py:obj}`~.hipMallocAsync`
 * {py:obj}`~.hipMallocFromPoolAsync`
 
-It can be passed directly to all functions that expect
-a `~.Pointer` attribute.
+It can be passed to functions that expect
+a {py:obj}`~.Pointer` argument and where passing an instance of this type instead make sense, e.g.
+you can pass it as copy destination or copy source in {py:obj}`~.hip.hipMemcpy`.
 
 :::{note}
 
@@ -125,7 +126,7 @@ of a `~.DeviceArray` instance and how use the `[]` operator
 to retrieve a subarray.
 :::
 
-## Simple Lists
+## List Types
 
 The types
 
@@ -135,9 +136,16 @@ The types
 * {py:obj}`~.types.ListOfUnsigned`,
 * {py:obj}`~.types.ListOfUnsignedLong`,
 
-are used to convert simple Python `list` or `tuple` objects
-whose elements are `bytes`, can be used to construct a `~.Pointer`,
-or can be converted to `int`, `unsigned`, `unsigned long`, respectively.
+are used for simple Python `list` or `tuple` objects
+whose elements are {py:obj}`bytes`, can be used to construct a {py:obj}`~.Pointer`,
+or can be converted to the C types `int`, `unsigned`, `unsigned long`, respectively.
+
+Python {py:obj}`bytes` can be 
+
+You can initialize such objects yourself and pass them functions that expect
+a `~.Pointer` attribute --- again, only where it makes sense.
+
+### 
 
 ## Usage in HIP Python
 

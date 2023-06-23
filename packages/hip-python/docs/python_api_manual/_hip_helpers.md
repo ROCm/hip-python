@@ -22,12 +22,8 @@
   -->
 # hip._hip_helpers
 
+<!-- global automodule options are set in conf.py -->
 ```{eval-rst}
 .. automodule:: hip._hip_helpers
-   :members:
-   :undoc-members:
-   :private-members:
-   :special-members:
-   :show-inheritance:
 
 ```
