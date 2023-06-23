@@ -6,7 +6,11 @@ cimport hip.chip
 
 import ctypes
 
-# TODO for CUDA alignment must be 8 bytes, so all entries must be adjusted accordingly
+__all__ = [
+    # __all__ is important for generating the API documentation in source order
+    "HipModuleLaunchKernel_extra",
+]
+
 # @param [in] extra Pointer to kernel arguments.   These are passed directly to the kernel and
 #                   must be in the memory layout and alignment expected by the kernel.
 

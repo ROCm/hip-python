@@ -22,11 +22,8 @@
   -->
 # hip._util.types
 
+<!-- global automodule options are set in conf.py -->
 ```{eval-rst}
 .. automodule:: hip._util.types
-   :members:
-   :undoc-members:
-   :private-members:
-   :special-members:
-   :show-inheritance:
+
 ```

@@ -883,7 +883,9 @@ class DoxygenGrammar:
         PARAM_NAMES = pyp.Group(pyp.delimitedList(IDENT))
         param = (
             self._pyp_cmd("param")
+            + pyp.Optional("\n").suppress()
             + pyp.Optional(PARAM_DIR,default=None)
+            + pyp.Optional("\n").suppress()
             + PARAM_NAMES
             + section_body
         )

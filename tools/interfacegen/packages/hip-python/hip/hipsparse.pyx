@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 """
 Attributes:
     bsrsv2Info_t:
@@ -82,22 +83,22 @@ cdef class bsrsv2Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -221,22 +222,22 @@ cdef class bsrsm2Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -360,22 +361,22 @@ cdef class bsrilu02Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -499,22 +500,22 @@ cdef class bsric02Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -638,22 +639,22 @@ cdef class csrsv2Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -777,22 +778,22 @@ cdef class csrsm2Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -916,22 +917,22 @@ cdef class csrilu02Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -1055,22 +1056,22 @@ cdef class csric02Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -1194,22 +1195,22 @@ cdef class csrgemm2Info:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -1333,22 +1334,22 @@ cdef class pruneInfo:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -1472,22 +1473,22 @@ cdef class csru2csrInfo:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -1777,6 +1778,10 @@ def hipsparseCreate(object handle):
     all subsequent library function calls. The handle should be destroyed at the end
     using hipsparseDestroy().
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1793,6 +1798,10 @@ def hipsparseDestroy(object handle):
 
     ``hipsparseDestroy`` destroys the hipSPARSE library context and releases all
     resources used by the hipSPARSE library.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1813,6 +1822,13 @@ def hipsparseGetVersion(object handle, object version):
     - minor = version / 100 % 1000
     - major = version / 100000
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        version (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1829,6 +1845,13 @@ def hipsparseGetGitRevision(object handle, char * rev):
     r"""Get hipSPARSE git revision
 
     ``hipsparseGetGitRevision`` gets the hipSPARSE library git commit revision (SHA-1).
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rev (`~.bytes`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1847,6 +1870,13 @@ def hipsparseSetStream(object handle, object streamId):
     ``hipsparseSetStream`` specifies the stream to be used by the hipSPARSE library
     context and all subsequent function calls.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        streamId (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1864,6 +1894,10 @@ def hipsparseGetStream(object handle):
 
     ``hipsparseGetStream`` gets the hipSPARSE library context stream which is currently
     used for all subsequent function calls.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1885,6 +1919,13 @@ def hipsparseSetPointerMode(object handle, object mode):
     by reference on the host. Valid pointer modes are ``HIPSPARSE_POINTER_MODE_HOST`` 
     or ``HIPSPARSE_POINTER_MODE_DEVICE.``
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mode (`~.hipsparsePointerMode_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1903,6 +1944,13 @@ def hipsparseGetPointerMode(object handle, object mode):
 
     ``hipsparseGetPointerMode`` gets the hipSPARSE library context pointer mode which
     is currently used for all subsequent function calls.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mode (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1924,6 +1972,10 @@ def hipsparseCreateMatDescr(object descrA):
     ``hipsparseIndexBase_t`` to ``HIPSPARSE_INDEX_BASE_ZERO`` . It should be destroyed
     at the end using hipsparseDestroyMatDescr().
 
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1941,6 +1993,10 @@ def hipsparseDestroyMatDescr(object descrA):
     ``hipsparseDestroyMatDescr`` destroys a matrix descriptor and releases all
     resources used by the descriptor.
 
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1957,6 +2013,13 @@ def hipsparseCopyMatDescr(object dest, object src):
 
     ``hipsparseCopyMatDescr`` copies a matrix descriptor. Both, source and destination
     matrix descriptors must be initialized prior to calling ``hipsparseCopyMatDescr.``
+
+    Args:
+        dest (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        src (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -1978,6 +2041,13 @@ def hipsparseSetMatType(object descrA, object type):
     ``HIPSPARSE_MATRIX_TYPE_SYMMETRIC`` , ``HIPSPARSE_MATRIX_TYPE_HERMITIAN`` or
     ``HIPSPARSE_MATRIX_TYPE_TRIANGULAR`` .
 
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        type (`~.hipsparseMatrixType_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -1995,6 +2065,10 @@ def hipsparseGetMatType(object descrA):
     r"""Get the matrix type of a matrix descriptor
 
     ``hipsparseGetMatType`` returns the matrix type of a matrix descriptor.
+
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2014,6 +2088,13 @@ def hipsparseSetMatFillMode(object descrA, object fillMode):
     Valid fill modes are ``HIPSPARSE_FILL_MODE_LOWER`` or
     ``HIPSPARSE_FILL_MODE_UPPER`` .
 
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        fillMode (`~.hipsparseFillMode_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2032,6 +2113,10 @@ def hipsparseGetMatFillMode(object descrA):
 
     ``hipsparseGetMatFillMode`` returns the matrix fill mode of a matrix descriptor.
 
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2049,6 +2134,13 @@ def hipsparseSetMatDiagType(object descrA, object diagType):
     ``hipsparseSetMatDiagType`` sets the matrix diagonal type of a matrix
     descriptor. Valid diagonal types are ``HIPSPARSE_DIAG_TYPE_UNIT`` or
     ``HIPSPARSE_DIAG_TYPE_NON_UNIT`` .
+
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        diagType (`~.hipsparseDiagType_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2069,6 +2161,10 @@ def hipsparseGetMatDiagType(object descrA):
     ``hipsparseGetMatDiagType`` returns the matrix diagonal type of a matrix
     descriptor.
 
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2085,6 +2181,13 @@ def hipsparseSetMatIndexBase(object descrA, object base):
 
     ``hipsparseSetMatIndexBase`` sets the index base of a matrix descriptor. Valid
     options are ``HIPSPARSE_INDEX_BASE_ZERO`` or ``HIPSPARSE_INDEX_BASE_ONE`` .
+
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        base (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2104,6 +2207,10 @@ def hipsparseGetMatIndexBase(object descrA):
 
     ``hipsparseGetMatIndexBase`` returns the index base of a matrix descriptor.
 
+    Args:
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2121,6 +2228,10 @@ def hipsparseCreateHybMat(object hybA):
     ``hipsparseCreateHybMat`` creates a structure that holds the matrix in ``HYB``
     storage format. It should be destroyed at the end using hipsparseDestroyHybMat().
 
+    Args:
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2136,6 +2247,10 @@ def hipsparseDestroyHybMat(object hybA):
     r"""Destroy a ``HYB`` matrix structure
 
     ``hipsparseDestroyHybMat`` destroys a ``HYB`` structure.
+
+    Args:
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2155,6 +2270,8 @@ def hipsparseCreateBsrsv2Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyBsrsv2Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2170,6 +2287,10 @@ def hipsparseDestroyBsrsv2Info(object info):
     r"""Destroy a bsrsv2 info structure
 
     ``hipsparseDestroyBsrsv2Info`` destroys a bsrsv2 info structure.
+
+    Args:
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2189,6 +2310,8 @@ def hipsparseCreateBsrsm2Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyBsrsm2Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2204,6 +2327,10 @@ def hipsparseDestroyBsrsm2Info(object info):
     r"""Destroy a bsrsm2 info structure
 
     ``hipsparseDestroyBsrsm2Info`` destroys a bsrsm2 info structure.
+
+    Args:
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2223,6 +2350,8 @@ def hipsparseCreateBsrilu02Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyBsrilu02Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2238,6 +2367,10 @@ def hipsparseDestroyBsrilu02Info(object info):
     r"""Destroy a bsrilu02 info structure
 
     ``hipsparseDestroyBsrilu02Info`` destroys a bsrilu02 info structure.
+
+    Args:
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2257,6 +2390,8 @@ def hipsparseCreateBsric02Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyBsric02Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2272,6 +2407,10 @@ def hipsparseDestroyBsric02Info(object info):
     r"""Destroy a bsric02 info structure
 
     ``hipsparseDestroyBsric02Info`` destroys a bsric02 info structure.
+
+    Args:
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2291,6 +2430,8 @@ def hipsparseCreateCsrsv2Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsrsv2Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2306,6 +2447,10 @@ def hipsparseDestroyCsrsv2Info(object info):
     r"""Destroy a csrsv2 info structure
 
     ``hipsparseDestroyCsrsv2Info`` destroys a csrsv2 info structure.
+
+    Args:
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2325,6 +2470,8 @@ def hipsparseCreateCsrsm2Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsrsm2Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2340,6 +2487,10 @@ def hipsparseDestroyCsrsm2Info(object info):
     r"""Destroy a csrsm2 info structure
 
     ``hipsparseDestroyCsrsm2Info`` destroys a csrsm2 info structure.
+
+    Args:
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2359,6 +2510,8 @@ def hipsparseCreateCsrilu02Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsrilu02Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2374,6 +2527,10 @@ def hipsparseDestroyCsrilu02Info(object info):
     r"""Destroy a csrilu02 info structure
 
     ``hipsparseDestroyCsrilu02Info`` destroys a csrilu02 info structure.
+
+    Args:
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2393,6 +2550,8 @@ def hipsparseCreateCsric02Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsric02Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2408,6 +2567,10 @@ def hipsparseDestroyCsric02Info(object info):
     r"""Destroy a csric02 info structure
 
     ``hipsparseDestroyCsric02Info`` destroys a csric02 info structure.
+
+    Args:
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2427,6 +2590,8 @@ def hipsparseCreateCsru2csrInfo():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsru2csrInfo().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2442,6 +2607,10 @@ def hipsparseDestroyCsru2csrInfo(object info):
     r"""Destroy a csru2csr info structure
 
     ``hipsparseDestroyCsru2csrInfo`` destroys a csru2csr info structure.
+
+    Args:
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2461,6 +2630,10 @@ def hipsparseCreateColorInfo(object info):
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyColorInfo().
 
+    Args:
+        info (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2476,6 +2649,10 @@ def hipsparseDestroyColorInfo(object info):
     r"""Destroy a color info structure
 
     ``hipsparseDestroyColorInfo`` destroys a color info structure.
+
+    Args:
+        info (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2495,6 +2672,8 @@ def hipsparseCreateCsrgemm2Info():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyCsrgemm2Info().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2510,6 +2689,10 @@ def hipsparseDestroyCsrgemm2Info(object info):
     r"""Destroy a csrgemm2 info structure
 
     ``hipsparseDestroyCsrgemm2Info`` destroys a csrgemm2 info structure.
+
+    Args:
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2529,6 +2712,8 @@ def hipsparseCreatePruneInfo():
     that is gathered during the analysis routines available. It should be destroyed
     at the end using hipsparseDestroyPruneInfo().
 
+    Args:
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2544,6 +2729,10 @@ def hipsparseDestroyPruneInfo(object info):
     r"""Destroy a prune info structure
 
     ``hipsparseDestroyPruneInfo`` destroys a prune info structure.
+
+    Args:
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2577,6 +2766,28 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2595,7 +2806,29 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 
 @cython.embedsignature(True)
 def hipsparseDaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2615,7 +2848,29 @@ def hipsparseDaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 
 @cython.embedsignature(True)
 def hipsparseCaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        xVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2635,7 +2890,29 @@ def hipsparseCaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 
 @cython.embedsignature(True)
 def hipsparseZaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        xVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2675,6 +2952,28 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        result (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2693,7 +2992,29 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
 
 @cython.embedsignature(True)
 def hipsparseDdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        result (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2713,7 +3034,29 @@ def hipsparseDdoti(object handle, int nnz, object xVal, object xInd, object y, o
 
 @cython.embedsignature(True)
 def hipsparseCdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
+
+        result (`~.float2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2733,7 +3076,29 @@ def hipsparseCdoti(object handle, int nnz, object xVal, object xInd, object y, o
 
 @cython.embedsignature(True)
 def hipsparseZdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
+
+        result (`~.double2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2774,6 +3139,28 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
+
+        result (`~.float2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2792,7 +3179,29 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
 
 @cython.embedsignature(True)
 def hipsparseZdotci(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
+
+        result (`~.double2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2828,6 +3237,25 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2845,7 +3273,26 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
 
 @cython.embedsignature(True)
 def hipsparseDgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2864,7 +3311,26 @@ def hipsparseDgthr(object handle, int nnz, object y, object xVal, object xInd, o
 
 @cython.embedsignature(True)
 def hipsparseCgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
+
+        xVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2883,7 +3349,26 @@ def hipsparseCgthr(object handle, int nnz, object y, object xVal, object xInd, o
 
 @cython.embedsignature(True)
 def hipsparseZgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
+
+        xVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2921,6 +3406,25 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -2938,7 +3442,26 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 
 @cython.embedsignature(True)
 def hipsparseDgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2957,7 +3480,26 @@ def hipsparseDgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 
 @cython.embedsignature(True)
 def hipsparseCgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
+
+        xVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -2976,7 +3518,26 @@ def hipsparseCgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 
 @cython.embedsignature(True)
 def hipsparseZgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
+
+        xVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3019,6 +3580,31 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        c (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        s (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3038,7 +3624,32 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
 
 @cython.embedsignature(True)
 def hipsparseDroti(object handle, int nnz, object xVal, object xInd, object y, object c, object s, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        c (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        s (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3076,6 +3687,25 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3093,7 +3723,26 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
 
 @cython.embedsignature(True)
 def hipsparseDsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3112,7 +3761,26 @@ def hipsparseDsctr(object handle, int nnz, object xVal, object xInd, object y, o
 
 @cython.embedsignature(True)
 def hipsparseCsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3131,7 +3799,26 @@ def hipsparseCsctr(object handle, int nnz, object xVal, object xInd, object y, o
 
 @cython.embedsignature(True)
 def hipsparseZsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        xVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3192,6 +3879,46 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3214,7 +3941,47 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
 
 @cython.embedsignature(True)
 def hipsparseDcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3238,7 +4005,47 @@ def hipsparseDcsrmv(object handle, object transA, int m, int n, int nnz, object 
 
 @cython.embedsignature(True)
 def hipsparseCcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3262,7 +4069,47 @@ def hipsparseCcsrmv(object handle, object transA, int m, int n, int nnz, object 
 
 @cython.embedsignature(True)
 def hipsparseZcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3301,6 +4148,16 @@ def hipsparseXcsrsv2_zeroPivot(object handle, object info, object position):
         ``hipsparseXcsrsv2_zeroPivot`` is a blocking function. It might influence
         performance negatively.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        position (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3323,6 +4180,37 @@ def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3343,7 +4231,38 @@ def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 
 @cython.embedsignature(True)
 def hipsparseDcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3365,7 +4284,38 @@ def hipsparseDcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 
 @cython.embedsignature(True)
 def hipsparseCcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3387,7 +4337,38 @@ def hipsparseCcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 
 @cython.embedsignature(True)
 def hipsparseZcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3417,6 +4398,37 @@ def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3437,7 +4449,38 @@ def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 
 @cython.embedsignature(True)
 def hipsparseDcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3459,7 +4502,38 @@ def hipsparseDcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 
 @cython.embedsignature(True)
 def hipsparseCcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3481,7 +4555,38 @@ def hipsparseCcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 
 @cython.embedsignature(True)
 def hipsparseZcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3512,6 +4617,40 @@ def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, obje
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3534,7 +4673,41 @@ def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 
 @cython.embedsignature(True)
 def hipsparseDcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3558,7 +4731,41 @@ def hipsparseDcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 
 @cython.embedsignature(True)
 def hipsparseCcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3582,7 +4789,41 @@ def hipsparseCcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 
 @cython.embedsignature(True)
 def hipsparseZcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3640,6 +4881,49 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` and
         ``trans`` == ``HIPSPARSE_OPERATION_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        f (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3665,7 +4949,50 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
 
 @cython.embedsignature(True)
 def hipsparseDcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        f (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3692,7 +5019,50 @@ def hipsparseDcsrsv2_solve(object handle, object transA, int m, int nnz, object 
 
 @cython.embedsignature(True)
 def hipsparseCcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        f (`~.float2`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3719,7 +5089,50 @@ def hipsparseCcsrsv2_solve(object handle, object transA, int m, int nnz, object 
 
 @cython.embedsignature(True)
 def hipsparseZcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsv2Info`/`~.object`):
+            (undocumented)
+
+        f (`~.double2`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3776,6 +5189,31 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3796,7 +5234,32 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseDhybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3818,7 +5281,32 @@ def hipsparseDhybmv(object handle, object transA, object alpha, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseChybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3840,7 +5328,32 @@ def hipsparseChybmv(object handle, object transA, object alpha, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseZhybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3894,6 +5407,52 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -3918,7 +5477,53 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 
 @cython.embedsignature(True)
 def hipsparseDbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3944,7 +5549,53 @@ def hipsparseDbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 
 @cython.embedsignature(True)
 def hipsparseCbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -3970,7 +5621,53 @@ def hipsparseCbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 
 @cython.embedsignature(True)
 def hipsparseZbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4029,6 +5726,61 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
         Currently, ``block_dim`` == 1 is not supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        trans (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        sizeOfMask (`~.int`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrMaskPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrEndPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -4055,7 +5807,62 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 
 @cython.embedsignature(True)
 def hipsparseDbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        trans (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        sizeOfMask (`~.int`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrMaskPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrEndPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4083,7 +5890,62 @@ def hipsparseDbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 
 @cython.embedsignature(True)
 def hipsparseCbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        trans (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        sizeOfMask (`~.int`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrMaskPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrEndPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4111,7 +5973,62 @@ def hipsparseCbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 
 @cython.embedsignature(True)
 def hipsparseZbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        trans (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        sizeOfMask (`~.int`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrMaskPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrEndPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4153,6 +6070,16 @@ def hipsparseXbsrsv2_zeroPivot(object handle, object info, object position):
         ``hipsparseXbsrsv2_zeroPivot`` is a blocking function. It might influence
         performance negatively.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        position (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -4172,6 +6099,43 @@ def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     ``hipsparseXbsrsv2_bufferSize`` returns the size of the temporary storage buffer that
     is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
     temporary storage buffer must be allocated by the user.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4195,7 +6159,44 @@ def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 
 @cython.embedsignature(True)
 def hipsparseDbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4219,7 +6220,44 @@ def hipsparseDbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 
 @cython.embedsignature(True)
 def hipsparseCbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4243,7 +6281,44 @@ def hipsparseCbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 
 @cython.embedsignature(True)
 def hipsparseZbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4273,6 +6348,43 @@ def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -4295,7 +6407,44 @@ def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 
 @cython.embedsignature(True)
 def hipsparseDbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4319,7 +6468,44 @@ def hipsparseDbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 
 @cython.embedsignature(True)
 def hipsparseCbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4343,7 +6529,44 @@ def hipsparseCbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 
 @cython.embedsignature(True)
 def hipsparseZbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4378,6 +6601,46 @@ def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb,
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -4402,7 +6665,47 @@ def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 
 @cython.embedsignature(True)
 def hipsparseDbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4428,7 +6731,47 @@ def hipsparseDbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 
 @cython.embedsignature(True)
 def hipsparseCbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4454,7 +6797,47 @@ def hipsparseCbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 
 @cython.embedsignature(True)
 def hipsparseZbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4513,6 +6896,55 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` and
         ``trans`` == ``HIPSPARSE_OPERATION_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        f (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -4540,7 +6972,56 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 
 @cython.embedsignature(True)
 def hipsparseDbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        f (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4569,7 +7050,56 @@ def hipsparseDbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 
 @cython.embedsignature(True)
 def hipsparseCbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        f (`~.float2`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4598,7 +7128,56 @@ def hipsparseCbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 
 @cython.embedsignature(True)
 def hipsparseZbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsv2Info`/`~.object`):
+            (undocumented)
+
+        f (`~.double2`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4633,6 +7212,25 @@ def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int n
     required by hipsparseXgemvi(). The temporary storage buffer must be allocated by the
     user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -4648,7 +7246,26 @@ def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int n
 
 @cython.embedsignature(True)
 def hipsparseDgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4665,7 +7282,26 @@ def hipsparseDgemvi_bufferSize(object handle, object transA, int m, int n, int n
 
 @cython.embedsignature(True)
 def hipsparseCgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4682,7 +7318,26 @@ def hipsparseCgemvi_bufferSize(object handle, object transA, int m, int n, int n
 
 @cython.embedsignature(True)
 def hipsparseZgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4728,6 +7383,49 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
     Note:
         Currently, only ``trans`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -4751,7 +7449,50 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
 
 @cython.embedsignature(True)
 def hipsparseDgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4776,7 +7517,50 @@ def hipsparseDgemvi(object handle, object transA, int m, int n, object alpha, ob
 
 @cython.embedsignature(True)
 def hipsparseCgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        A (`~.float2`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        y (`~.float2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4801,7 +7585,50 @@ def hipsparseCgemvi(object handle, object transA, int m, int n, object alpha, ob
 
 @cython.embedsignature(True)
 def hipsparseZgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        A (`~.double2`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        xInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        y (`~.double2`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4866,6 +7693,64 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
     Note:
         Currently, only ``trans_A`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        kb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -4892,7 +7777,65 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
 
 @cython.embedsignature(True)
 def hipsparseDbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        kb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4920,7 +7863,65 @@ def hipsparseDbsrmm(object handle, object dirA, object transA, object transB, in
 
 @cython.embedsignature(True)
 def hipsparseCbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        kb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        C (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -4948,7 +7949,65 @@ def hipsparseCbsrmm(object handle, object dirA, object transA, object transB, in
 
 @cython.embedsignature(True)
 def hipsparseZbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        kb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        C (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5018,6 +8077,55 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -5040,7 +8148,56 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 
 @cython.embedsignature(True)
 def hipsparseDcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5064,7 +8221,56 @@ def hipsparseDcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 
 @cython.embedsignature(True)
 def hipsparseCcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        C (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5088,7 +8294,56 @@ def hipsparseCcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 
 @cython.embedsignature(True)
 def hipsparseZcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        C (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5166,6 +8421,58 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -5190,7 +8497,59 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
 
 @cython.embedsignature(True)
 def hipsparseDcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5216,7 +8575,59 @@ def hipsparseDcsrmm2(object handle, object transA, object transB, int m, int n, 
 
 @cython.embedsignature(True)
 def hipsparseCcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        C (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5242,7 +8653,59 @@ def hipsparseCcsrmm2(object handle, object transA, object transB, int m, int n, 
 
 @cython.embedsignature(True)
 def hipsparseZcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        C (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5282,6 +8745,16 @@ def hipsparseXbsrsm2_zeroPivot(object handle, object info, object position):
         ``hipsparseXbsrsm2_zeroPivot`` is a blocking function. It might influence
         performance negatively.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        position (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -5301,6 +8774,49 @@ def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     ``hipsparseXbsrsm2_buffer_size`` returns the size of the temporary storage buffer that
     is required by hipsparseXbsrsm2_analysis() and hipsparseXbsrsm2_solve(). The
     temporary storage buffer must be allocated by the user.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5326,7 +8842,50 @@ def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 
 @cython.embedsignature(True)
 def hipsparseDbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5352,7 +8911,50 @@ def hipsparseDbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 
 @cython.embedsignature(True)
 def hipsparseCbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5378,7 +8980,50 @@ def hipsparseCbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 
 @cython.embedsignature(True)
 def hipsparseZbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5415,6 +9060,52 @@ def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object 
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -5441,7 +9132,53 @@ def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object 
 
 @cython.embedsignature(True)
 def hipsparseDbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5469,7 +9206,53 @@ def hipsparseDbsrsm2_analysis(object handle, object dirA, object transA, object 
 
 @cython.embedsignature(True)
 def hipsparseCbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5497,7 +9280,53 @@ def hipsparseCbsrsm2_analysis(object handle, object dirA, object transA, object 
 
 @cython.embedsignature(True)
 def hipsparseZbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5573,6 +9402,67 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
         Currently, only ``trans_A`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` and
         ``trans_X`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        X (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldx (`~.int`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -5602,7 +9492,68 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
 
 @cython.embedsignature(True)
 def hipsparseDbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        X (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldx (`~.int`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5633,7 +9584,68 @@ def hipsparseDbsrsm2_solve(object handle, object dirA, object transA, object tra
 
 @cython.embedsignature(True)
 def hipsparseCbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        X (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldx (`~.int`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5664,7 +9676,68 @@ def hipsparseCbsrsm2_solve(object handle, object dirA, object transA, object tra
 
 @cython.embedsignature(True)
 def hipsparseZbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrsm2Info`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        X (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldx (`~.int`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5709,6 +9782,16 @@ def hipsparseXcsrsm2_zeroPivot(object handle, object info, object position):
         ``hipsparseXcsrsm2_zeroPivot`` is a blocking function. It might influence
         performance negatively.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        position (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -5728,6 +9811,58 @@ def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     ``hipsparseXcsrsm2_bufferSizeExt`` returns the size of the temporary storage buffer
     that is required by hipsparseXcsrsm2_analysis() and hipsparseXcsrsm2_solve(). The
     temporary storage buffer must be allocated by the user.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5755,7 +9890,59 @@ def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 
 @cython.embedsignature(True)
 def hipsparseDcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5783,7 +9970,59 @@ def hipsparseDcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 
 @cython.embedsignature(True)
 def hipsparseCcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5811,7 +10050,59 @@ def hipsparseCcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 
 @cython.embedsignature(True)
 def hipsparseZcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5850,6 +10141,58 @@ def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object tra
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -5876,7 +10219,59 @@ def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object tra
 
 @cython.embedsignature(True)
 def hipsparseDcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5904,7 +10299,59 @@ def hipsparseDcsrsm2_analysis(object handle, int algo, object transA, object tra
 
 @cython.embedsignature(True)
 def hipsparseCcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -5932,7 +10379,59 @@ def hipsparseCcsrsm2_analysis(object handle, int algo, object transA, object tra
 
 @cython.embedsignature(True)
 def hipsparseZcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6018,6 +10517,58 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
         Currently, only ``trans_A`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` and
         ``trans_B`` != ``HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -6044,7 +10595,59 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
 
 @cython.embedsignature(True)
 def hipsparseDcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6072,7 +10675,59 @@ def hipsparseDcsrsm2_solve(object handle, int algo, object transA, object transB
 
 @cython.embedsignature(True)
 def hipsparseCcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6100,7 +10755,59 @@ def hipsparseCcsrsm2_solve(object handle, int algo, object transA, object transB
 
 @cython.embedsignature(True)
 def hipsparseZcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nrhs (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        info (`~.csrsm2Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6167,6 +10874,49 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        cscValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscColPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -6186,7 +10936,50 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
 
 @cython.embedsignature(True)
 def hipsparseDgemmi(object handle, int m, int n, int k, int nnz, object alpha, object A, int lda, object cscValB, object cscColPtrB, object cscRowIndB, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        cscValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscColPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6207,7 +11000,50 @@ def hipsparseDgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
 
 @cython.embedsignature(True)
 def hipsparseCgemmi(object handle, int m, int n, int k, int nnz, object alpha, object A, int lda, object cscValB, object cscColPtrB, object cscRowIndB, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        A (`~.float2`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        cscValB (`~.float2`/`~.object`):
+            (undocumented)
+
+        cscColPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        C (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6228,7 +11064,50 @@ def hipsparseCgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
 
 @cython.embedsignature(True)
 def hipsparseZgemmi(object handle, int m, int n, int k, int nnz, object alpha, object A, int lda, object cscValB, object cscColPtrB, object cscRowIndB, object beta, object C, int ldc):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        A (`~.double2`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        cscValB (`~.double2`/`~.object`):
+            (undocumented)
+
+        cscColPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        C (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6262,6 +11141,49 @@ def hipsparseXcsrgeamNnz(object handle, int m, int n, object descrA, int nnzA, o
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6306,6 +11228,64 @@ def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, 
         This function is non blocking and executed asynchronously with respect to the
         host. It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -6332,7 +11312,65 @@ def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, 
 
 @cython.embedsignature(True)
 def hipsparseDcsrgeam(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object beta, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6360,7 +11398,65 @@ def hipsparseDcsrgeam(object handle, int m, int n, object alpha, object descrA, 
 
 @cython.embedsignature(True)
 def hipsparseCcsrgeam(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object beta, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6388,7 +11484,65 @@ def hipsparseCcsrgeam(object handle, int m, int n, object alpha, object descrA, 
 
 @cython.embedsignature(True)
 def hipsparseZcsrgeam(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object beta, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6425,6 +11579,67 @@ def hipsparseScsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -6452,7 +11667,68 @@ def hipsparseScsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
 
 @cython.embedsignature(True)
 def hipsparseDcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6481,7 +11757,68 @@ def hipsparseDcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
 
 @cython.embedsignature(True)
 def hipsparseCcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedValB (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6510,7 +11847,68 @@ def hipsparseCcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
 
 @cython.embedsignature(True)
 def hipsparseZcsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedValB (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6552,6 +11950,52 @@ def hipsparseXcsrgeam2Nnz(object handle, int m, int n, object descrA, int nnzA, 
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        workspace (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6597,6 +12041,67 @@ def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA,
         This function is non blocking and executed asynchronously with respect to the
         host. It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -6624,7 +12129,68 @@ def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA,
 
 @cython.embedsignature(True)
 def hipsparseDcsrgeam2(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6653,7 +12219,68 @@ def hipsparseDcsrgeam2(object handle, int m, int n, object alpha, object descrA,
 
 @cython.embedsignature(True)
 def hipsparseCcsrgeam2(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedValB (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6682,7 +12309,68 @@ def hipsparseCcsrgeam2(object handle, int m, int n, object alpha, object descrA,
 
 @cython.embedsignature(True)
 def hipsparseZcsrgeam2(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrSortedValB (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6732,6 +12420,58 @@ def hipsparseXcsrgemmNnz(object handle, object transA, object transB, int m, int
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6810,6 +12550,67 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
         Please note, that for matrix products with more than 4096 non-zero entries per
         row, additional temporary storage buffer is allocated by the algorithm.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -6838,7 +12639,68 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
 
 @cython.embedsignature(True)
 def hipsparseDcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6868,7 +12730,68 @@ def hipsparseDcsrgemm(object handle, object transA, object transB, int m, int n,
 
 @cython.embedsignature(True)
 def hipsparseCcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6898,7 +12821,68 @@ def hipsparseCcsrgemm(object handle, object transA, object transB, int m, int n,
 
 @cython.embedsignature(True)
 def hipsparseZcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        transA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        transB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6945,6 +12929,67 @@ def hipsparseScsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -6970,7 +13015,68 @@ def hipsparseScsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
 
 @cython.embedsignature(True)
 def hipsparseDcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrRowPtrD, object csrColIndD, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -6997,7 +13103,68 @@ def hipsparseDcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
 
 @cython.embedsignature(True)
 def hipsparseCcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrRowPtrD, object csrColIndD, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7024,7 +13191,68 @@ def hipsparseCcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
 
 @cython.embedsignature(True)
 def hipsparseZcsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrRowPtrD, object csrColIndD, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7069,6 +13297,70 @@ def hipsparseXcsrgemm2Nnz(object handle, int m, int n, int k, object descrA, int
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7130,6 +13422,88 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
         Please note, that for matrix products with more than 4096 non-zero entries per
         row, additional temporary storage buffer is allocated by the algorithm.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrValD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7162,7 +13536,89 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
 
 @cython.embedsignature(True)
 def hipsparseDcsrgemm2(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrValD, object csrRowPtrD, object csrColIndD, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrValD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7196,7 +13652,89 @@ def hipsparseDcsrgemm2(object handle, int m, int n, int k, object alpha, object 
 
 @cython.embedsignature(True)
 def hipsparseCcsrgemm2(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrValD, object csrRowPtrD, object csrColIndD, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        alpha (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.float2`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrValD (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7230,7 +13768,89 @@ def hipsparseCcsrgemm2(object handle, int m, int n, int k, object alpha, object 
 
 @cython.embedsignature(True)
 def hipsparseZcsrgemm2(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrValD, object csrRowPtrD, object csrColIndD, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        k (`~.int`):
+            (undocumented)
+
+        alpha (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        csrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzB (`~.int`):
+            (undocumented)
+
+        csrValB (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.double2`/`~.object`):
+            (undocumented)
+
+        descrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzD (`~.int`):
+            (undocumented)
+
+        csrValD (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndD (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrgemm2Info`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7284,6 +13904,16 @@ def hipsparseXbsrilu02_zeroPivot(object handle, object info, object position):
         ``hipsparseXbsrilu02_zeroPivot`` is a blocking function. It might influence
         performance negatively.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        position (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7313,6 +13943,22 @@ def hipsparseSbsrilu02_numericBoost(object handle, object info, int enable_boost
     Note:
         ``tol`` and ``boost_val`` can be in host or device memory.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        enable_boost (`~.int`):
+            (undocumented)
+
+        tol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        boost_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7328,7 +13974,23 @@ def hipsparseSbsrilu02_numericBoost(object handle, object info, int enable_boost
 
 @cython.embedsignature(True)
 def hipsparseDbsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        enable_boost (`~.int`):
+            (undocumented)
+
+        tol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        boost_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7345,7 +14007,23 @@ def hipsparseDbsrilu02_numericBoost(object handle, object info, int enable_boost
 
 @cython.embedsignature(True)
 def hipsparseCbsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        enable_boost (`~.int`):
+            (undocumented)
+
+        tol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        boost_val (`~.float2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7362,7 +14040,23 @@ def hipsparseCbsrilu02_numericBoost(object handle, object info, int enable_boost
 
 @cython.embedsignature(True)
 def hipsparseZbsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        enable_boost (`~.int`):
+            (undocumented)
+
+        tol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        boost_val (`~.double2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7386,6 +14080,40 @@ def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     that is required by hipsparseXbsrilu02_analysis() and hipsparseXbsrilu02_solve().
     The temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7406,7 +14134,41 @@ def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 
 @cython.embedsignature(True)
 def hipsparseDbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7428,7 +14190,41 @@ def hipsparseDbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 
 @cython.embedsignature(True)
 def hipsparseCbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7450,7 +14246,41 @@ def hipsparseCbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 
 @cython.embedsignature(True)
 def hipsparseZbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7484,6 +14314,43 @@ def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7506,7 +14373,44 @@ def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 
 @cython.embedsignature(True)
 def hipsparseDbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7530,7 +14434,44 @@ def hipsparseDbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 
 @cython.embedsignature(True)
 def hipsparseCbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7554,7 +14495,44 @@ def hipsparseCbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 
 @cython.embedsignature(True)
 def hipsparseZbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7592,6 +14570,43 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA_valM (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7614,7 +14629,44 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 
 @cython.embedsignature(True)
 def hipsparseDbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA_valM (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7638,7 +14690,44 @@ def hipsparseDbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 
 @cython.embedsignature(True)
 def hipsparseCbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA_valM (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7662,7 +14751,44 @@ def hipsparseCbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 
 @cython.embedsignature(True)
 def hipsparseZbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedValA_valM (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7701,6 +14827,16 @@ def hipsparseXcsrilu02_zeroPivot(object handle, object info, object position):
         ``hipsparseXcsrilu02_zeroPivot`` is a blocking function. It might influence
         performance negatively.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        position (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7730,6 +14866,22 @@ def hipsparseScsrilu02_numericBoost(object handle, object info, int enable_boost
     Note:
         ``tol`` and ``boost_val`` can be in host or device memory.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        enable_boost (`~.int`):
+            (undocumented)
+
+        tol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        boost_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7745,7 +14897,23 @@ def hipsparseScsrilu02_numericBoost(object handle, object info, int enable_boost
 
 @cython.embedsignature(True)
 def hipsparseDcsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        enable_boost (`~.int`):
+            (undocumented)
+
+        tol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        boost_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7762,7 +14930,23 @@ def hipsparseDcsrilu02_numericBoost(object handle, object info, int enable_boost
 
 @cython.embedsignature(True)
 def hipsparseCcsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        enable_boost (`~.int`):
+            (undocumented)
+
+        tol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        boost_val (`~.float2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7779,7 +14963,23 @@ def hipsparseCcsrilu02_numericBoost(object handle, object info, int enable_boost
 
 @cython.embedsignature(True)
 def hipsparseZcsrilu02_numericBoost(object handle, object info, int enable_boost, object tol, object boost_val):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        enable_boost (`~.int`):
+            (undocumented)
+
+        tol (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        boost_val (`~.double2`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7803,6 +15003,34 @@ def hipsparseScsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
     that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7821,7 +15049,35 @@ def hipsparseScsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
 
 @cython.embedsignature(True)
 def hipsparseDcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7841,7 +15097,35 @@ def hipsparseDcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
 
 @cython.embedsignature(True)
 def hipsparseCcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7861,7 +15145,35 @@ def hipsparseCcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
 
 @cython.embedsignature(True)
 def hipsparseZcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7888,6 +15200,34 @@ def hipsparseScsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
     that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7906,7 +15246,35 @@ def hipsparseScsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
 
 @cython.embedsignature(True)
 def hipsparseDcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7926,7 +15294,35 @@ def hipsparseDcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
 
 @cython.embedsignature(True)
 def hipsparseCcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7946,7 +15342,35 @@ def hipsparseCcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
 
 @cython.embedsignature(True)
 def hipsparseZcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -7978,6 +15402,37 @@ def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -7998,7 +15453,38 @@ def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 
 @cython.embedsignature(True)
 def hipsparseDcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8020,7 +15506,38 @@ def hipsparseDcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 
 @cython.embedsignature(True)
 def hipsparseCcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8042,7 +15559,38 @@ def hipsparseCcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 
 @cython.embedsignature(True)
 def hipsparseZcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8082,6 +15630,37 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA_valM (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8102,7 +15681,38 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
 
 @cython.embedsignature(True)
 def hipsparseDcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA_valM (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8124,7 +15734,38 @@ def hipsparseDcsrilu02(object handle, int m, int nnz, object descrA, object csrS
 
 @cython.embedsignature(True)
 def hipsparseCcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA_valM (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8146,7 +15787,38 @@ def hipsparseCcsrilu02(object handle, int m, int nnz, object descrA, object csrS
 
 @cython.embedsignature(True)
 def hipsparseZcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA_valM (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csrilu02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8188,6 +15860,16 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
         ``hipsparseXbsric02_zeroPivot`` is a blocking function. It might influence
         performance negatively.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        position (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8209,6 +15891,40 @@ def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     that is required by hipsparseXbsric02_analysis() and hipsparseXbsric02(). The
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8229,7 +15945,41 @@ def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 
 @cython.embedsignature(True)
 def hipsparseDbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8251,7 +16001,41 @@ def hipsparseDbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 
 @cython.embedsignature(True)
 def hipsparseCbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8273,7 +16057,41 @@ def hipsparseCbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 
 @cython.embedsignature(True)
 def hipsparseZbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8307,6 +16125,43 @@ def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8329,7 +16184,44 @@ def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 
 @cython.embedsignature(True)
 def hipsparseDbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8353,7 +16245,44 @@ def hipsparseDbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 
 @cython.embedsignature(True)
 def hipsparseCbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8377,7 +16306,44 @@ def hipsparseCbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 
 @cython.embedsignature(True)
 def hipsparseZbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8415,6 +16381,43 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8437,7 +16440,44 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
 
 @cython.embedsignature(True)
 def hipsparseDbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8461,7 +16501,44 @@ def hipsparseDbsric02(object handle, object dirA, int mb, int nnzb, object descr
 
 @cython.embedsignature(True)
 def hipsparseCbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8485,7 +16562,44 @@ def hipsparseCbsric02(object handle, object dirA, int mb, int nnzb, object descr
 
 @cython.embedsignature(True)
 def hipsparseZbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        info (`~.bsric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8524,6 +16638,16 @@ def hipsparseXcsric02_zeroPivot(object handle, object info, object position):
         ``hipsparseXcsric02_zeroPivot`` is a blocking function. It might influence
         performance negatively.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        position (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8544,6 +16668,34 @@ def hipsparseScsric02_bufferSize(object handle, int m, int nnz, object descrA, o
     ``hipsparseXcsric02_bufferSize`` returns the size of the temporary storage buffer
     that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8562,7 +16714,35 @@ def hipsparseScsric02_bufferSize(object handle, int m, int nnz, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseDcsric02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8582,7 +16762,35 @@ def hipsparseDcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseCcsric02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8602,7 +16810,35 @@ def hipsparseCcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseZcsric02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8628,6 +16864,34 @@ def hipsparseScsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
     ``hipsparseXcsric02_bufferSizeExt`` returns the size of the temporary storage buffer
     that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8646,7 +16910,35 @@ def hipsparseScsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
 
 @cython.embedsignature(True)
 def hipsparseDcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8666,7 +16958,35 @@ def hipsparseDcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
 
 @cython.embedsignature(True)
 def hipsparseCcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8686,7 +17006,35 @@ def hipsparseCcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
 
 @cython.embedsignature(True)
 def hipsparseZcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        pBufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8718,6 +17066,37 @@ def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, obj
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8738,7 +17117,38 @@ def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, obj
 
 @cython.embedsignature(True)
 def hipsparseDcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8760,7 +17170,38 @@ def hipsparseDcsric02_analysis(object handle, int m, int nnz, object descrA, obj
 
 @cython.embedsignature(True)
 def hipsparseCcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8782,7 +17223,38 @@ def hipsparseCcsric02_analysis(object handle, int m, int nnz, object descrA, obj
 
 @cython.embedsignature(True)
 def hipsparseZcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8822,6 +17294,37 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA_valM (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8842,7 +17345,38 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
 
 @cython.embedsignature(True)
 def hipsparseDcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA_valM (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8864,7 +17398,38 @@ def hipsparseDcsric02(object handle, int m, int nnz, object descrA, object csrSo
 
 @cython.embedsignature(True)
 def hipsparseCcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA_valM (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8886,7 +17451,38 @@ def hipsparseCcsric02(object handle, int m, int nnz, object descrA, object csrSo
 
 @cython.embedsignature(True)
 def hipsparseZcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA_valM (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csric02Info`/`~.object`):
+            (undocumented)
+
+        policy (`~.hipsparseSolvePolicy_t`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8914,6 +17510,34 @@ def hipsparseSgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
     that is required by hipsparseXgtsv2(). The temporary storage buffer must be
     allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -8931,7 +17555,35 @@ def hipsparseSgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
 
 @cython.embedsignature(True)
 def hipsparseDgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int db, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        db (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8950,7 +17602,35 @@ def hipsparseDgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
 
 @cython.embedsignature(True)
 def hipsparseCgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8969,7 +17649,35 @@ def hipsparseCgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
 
 @cython.embedsignature(True)
 def hipsparseZgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -8996,6 +17704,34 @@ def hipsparseSgtsv2(object handle, int m, int n, object dl, object d, object du,
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9013,7 +17749,35 @@ def hipsparseSgtsv2(object handle, int m, int n, object dl, object d, object du,
 
 @cython.embedsignature(True)
 def hipsparseDgtsv2(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9032,7 +17796,35 @@ def hipsparseDgtsv2(object handle, int m, int n, object dl, object d, object du,
 
 @cython.embedsignature(True)
 def hipsparseCgtsv2(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9051,7 +17843,35 @@ def hipsparseCgtsv2(object handle, int m, int n, object dl, object d, object du,
 
 @cython.embedsignature(True)
 def hipsparseZgtsv2(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9076,6 +17896,34 @@ def hipsparseSgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
     buffer that is required by hipsparseXgtsv2_nopivot(). The temporary storage buffer
     must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9093,7 +17941,35 @@ def hipsparseSgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
 
 @cython.embedsignature(True)
 def hipsparseDgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int db, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        db (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9112,7 +17988,35 @@ def hipsparseDgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
 
 @cython.embedsignature(True)
 def hipsparseCgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9131,7 +18035,35 @@ def hipsparseCgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
 
 @cython.embedsignature(True)
 def hipsparseZgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9158,6 +18090,34 @@ def hipsparseSgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9175,7 +18135,35 @@ def hipsparseSgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
 
 @cython.embedsignature(True)
 def hipsparseDgtsv2_nopivot(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9194,7 +18182,35 @@ def hipsparseDgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
 
 @cython.embedsignature(True)
 def hipsparseCgtsv2_nopivot(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        B (`~.float2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9213,7 +18229,35 @@ def hipsparseCgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
 
 @cython.embedsignature(True)
 def hipsparseZgtsv2_nopivot(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        B (`~.double2`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9238,6 +18282,34 @@ def hipsparseSgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
     buffer that is required by hipsparseXgtsv2StridedBatch(). The temporary storage buffer
     must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9255,7 +18327,35 @@ def hipsparseSgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
 
 @cython.embedsignature(True)
 def hipsparseDgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9274,7 +18374,35 @@ def hipsparseDgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
 
 @cython.embedsignature(True)
 def hipsparseCgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9293,7 +18421,35 @@ def hipsparseCgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
 
 @cython.embedsignature(True)
 def hipsparseZgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9320,6 +18476,34 @@ def hipsparseSgtsv2StridedBatch(object handle, int m, object dl, object d, objec
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9337,7 +18521,35 @@ def hipsparseSgtsv2StridedBatch(object handle, int m, object dl, object d, objec
 
 @cython.embedsignature(True)
 def hipsparseDgtsv2StridedBatch(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9356,7 +18568,35 @@ def hipsparseDgtsv2StridedBatch(object handle, int m, object dl, object d, objec
 
 @cython.embedsignature(True)
 def hipsparseCgtsv2StridedBatch(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9375,7 +18615,35 @@ def hipsparseCgtsv2StridedBatch(object handle, int m, object dl, object d, objec
 
 @cython.embedsignature(True)
 def hipsparseZgtsv2StridedBatch(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9400,6 +18668,34 @@ def hipsparseSgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     buffer that is required by hipsparseXgtsvInterleavedBatch(). The temporary storage buffer
     must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9417,7 +18713,35 @@ def hipsparseSgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 
 @cython.embedsignature(True)
 def hipsparseDgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9436,7 +18760,35 @@ def hipsparseDgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 
 @cython.embedsignature(True)
 def hipsparseCgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9455,7 +18807,35 @@ def hipsparseCgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 
 @cython.embedsignature(True)
 def hipsparseZgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9482,6 +18862,34 @@ def hipsparseSgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9499,7 +18907,35 @@ def hipsparseSgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
 
 @cython.embedsignature(True)
 def hipsparseDgtsvInterleavedBatch(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9518,7 +18954,35 @@ def hipsparseDgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
 
 @cython.embedsignature(True)
 def hipsparseCgtsvInterleavedBatch(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9537,7 +19001,35 @@ def hipsparseCgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
 
 @cython.embedsignature(True)
 def hipsparseZgtsvInterleavedBatch(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9562,6 +19054,40 @@ def hipsparseSgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
     buffer that is required by hipsparseXgpsvInterleavedBatch(). The temporary storage buffer
     must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        ds (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dw (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9581,7 +19107,41 @@ def hipsparseSgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 
 @cython.embedsignature(True)
 def hipsparseDgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        ds (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dw (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9602,7 +19162,41 @@ def hipsparseDgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 
 @cython.embedsignature(True)
 def hipsparseCgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        ds (`~.float2`/`~.object`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        dw (`~.float2`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9623,7 +19217,41 @@ def hipsparseCgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 
 @cython.embedsignature(True)
 def hipsparseZgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        ds (`~.double2`/`~.object`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        dw (`~.double2`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9652,6 +19280,40 @@ def hipsparseSgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        ds (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dw (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9671,7 +19333,41 @@ def hipsparseSgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 
 @cython.embedsignature(True)
 def hipsparseDgpsvInterleavedBatch(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        ds (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dl (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        d (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        du (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dw (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9692,7 +19388,41 @@ def hipsparseDgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 
 @cython.embedsignature(True)
 def hipsparseCgpsvInterleavedBatch(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        ds (`~.float2`/`~.object`):
+            (undocumented)
+
+        dl (`~.float2`/`~.object`):
+            (undocumented)
+
+        d (`~.float2`/`~.object`):
+            (undocumented)
+
+        du (`~.float2`/`~.object`):
+            (undocumented)
+
+        dw (`~.float2`/`~.object`):
+            (undocumented)
+
+        x (`~.float2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9713,7 +19443,41 @@ def hipsparseCgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 
 @cython.embedsignature(True)
 def hipsparseZgpsvInterleavedBatch(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        algo (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        ds (`~.double2`/`~.object`):
+            (undocumented)
+
+        dl (`~.double2`/`~.object`):
+            (undocumented)
+
+        d (`~.double2`/`~.object`):
+            (undocumented)
+
+        du (`~.double2`/`~.object`):
+            (undocumented)
+
+        dw (`~.double2`/`~.object`):
+            (undocumented)
+
+        x (`~.double2`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9739,6 +19503,34 @@ def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, objec
 
     The routine does support asynchronous execution if the pointer mode is set to device.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        nnzPerRowColumn (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9757,7 +19549,35 @@ def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, objec
 
 @cython.embedsignature(True)
 def hipsparseDnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        nnzPerRowColumn (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9777,7 +19597,35 @@ def hipsparseDnnz(object handle, object dirA, int m, int n, object descrA, objec
 
 @cython.embedsignature(True)
 def hipsparseCnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.float2`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        nnzPerRowColumn (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9797,7 +19645,35 @@ def hipsparseCnnz(object handle, object dirA, int m, int n, object descrA, objec
 
 @cython.embedsignature(True)
 def hipsparseZnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.double2`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        nnzPerRowColumn (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9823,6 +19699,37 @@ def hipsparseSdense2csr(object handle, int m, int n, object descr, object A, int
     It is executed asynchronously with respect to the host and may return control to the
     application on the host before the entire result is ready.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        nnz_per_rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9841,7 +19748,38 @@ def hipsparseSdense2csr(object handle, int m, int n, object descr, object A, int
 
 @cython.embedsignature(True)
 def hipsparseDdense2csr(object handle, int m, int n, object descr, object A, int ld, object nnz_per_rows, object csr_val, object csr_row_ptr, object csr_col_ind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        nnz_per_rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9861,7 +19799,38 @@ def hipsparseDdense2csr(object handle, int m, int n, object descr, object A, int
 
 @cython.embedsignature(True)
 def hipsparseCdense2csr(object handle, int m, int n, object descr, object A, int ld, object nnz_per_rows, object csr_val, object csr_row_ptr, object csr_col_ind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.float2`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        nnz_per_rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9881,7 +19850,38 @@ def hipsparseCdense2csr(object handle, int m, int n, object descr, object A, int
 
 @cython.embedsignature(True)
 def hipsparseZdense2csr(object handle, int m, int n, object descr, object A, int ld, object nnz_per_rows, object csr_val, object csr_row_ptr, object csr_col_ind):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.double2`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        nnz_per_rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9908,6 +19908,40 @@ def hipsparseSpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
     that is required by hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr(). The
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -9927,7 +19961,41 @@ def hipsparseSpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csr_bufferSize(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9948,7 +20016,41 @@ def hipsparseDpruneDense2csr_bufferSize(object handle, int m, int n, object A, i
 
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9969,7 +20071,41 @@ def hipsparseSpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A
 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -9996,6 +20132,37 @@ def hipsparseSpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
 
     The routine does support asynchronous execution if the pointer mode is set to device.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10014,7 +20181,38 @@ def hipsparseSpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrNnz(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrRowPtr, object nnzTotalDevHostPtr, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10049,6 +20247,40 @@ def hipsparseSpruneDense2csr(object handle, int m, int n, object A, int lda, obj
     executed asynchronously with respect to the host and may return control to the
     application on the host before the entire result is ready.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10068,7 +20300,41 @@ def hipsparseSpruneDense2csr(object handle, int m, int n, object A, int lda, obj
 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csr(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10111,6 +20377,43 @@ def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
        pos = max(pos, 0)
        threshold = sorted_A[pos]
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10130,7 +20433,44 @@ def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrByPercentage_bufferSize(object handle, int m, int n, object A, int lda, double percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10173,6 +20513,43 @@ def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
        pos = max(pos, 0)
        threshold = sorted_A[pos]
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10192,7 +20569,44 @@ def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int n, object A, int lda, double percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10236,6 +20650,40 @@ def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
        pos = max(pos, 0)
        threshold = sorted_A[pos]
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10254,7 +20702,41 @@ def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrNnzByPercentage(object handle, int m, int n, object A, int lda, double percentage, object descr, object csrRowPtr, object nnzTotalDevHostPtr, object info, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10297,6 +20779,43 @@ def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, 
        pos = max(pos, 0)
        threshold = sorted_A[pos]
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10316,7 +20835,44 @@ def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, 
 
 @cython.embedsignature(True)
 def hipsparseDpruneDense2csrByPercentage(object handle, int m, int n, object A, int lda, double percentage, object descr, object csrVal, object csrRowPtr, object csrColInd, object info, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10343,6 +20899,37 @@ def hipsparseSdense2csc(object handle, int m, int n, object descr, object A, int
     All the parameters are assumed to have been pre-allocated by the user and the arrays are filled in based on nnz_per_columns, which can be pre-computed with hipsparseXnnz().
     It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        nnz_per_columns (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10361,7 +20948,38 @@ def hipsparseSdense2csc(object handle, int m, int n, object descr, object A, int
 
 @cython.embedsignature(True)
 def hipsparseDdense2csc(object handle, int m, int n, object descr, object A, int ld, object nnz_per_columns, object csc_val, object csc_row_ind, object csc_col_ptr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        nnz_per_columns (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10381,7 +20999,38 @@ def hipsparseDdense2csc(object handle, int m, int n, object descr, object A, int
 
 @cython.embedsignature(True)
 def hipsparseCdense2csc(object handle, int m, int n, object descr, object A, int ld, object nnz_per_columns, object csc_val, object csc_row_ind, object csc_col_ptr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.float2`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        nnz_per_columns (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        csc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10401,7 +21050,38 @@ def hipsparseCdense2csc(object handle, int m, int n, object descr, object A, int
 
 @cython.embedsignature(True)
 def hipsparseZdense2csc(object handle, int m, int n, object descr, object A, int ld, object nnz_per_columns, object csc_val, object csc_row_ind, object csc_col_ptr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.double2`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        nnz_per_columns (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        csc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10424,6 +21104,34 @@ def hipsparseScsr2dense(object handle, int m, int n, object descr, object csr_va
     r"""This function converts the sparse matrix in CSR format into a dense matrix.
     It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10441,7 +21149,35 @@ def hipsparseScsr2dense(object handle, int m, int n, object descr, object csr_va
 
 @cython.embedsignature(True)
 def hipsparseDcsr2dense(object handle, int m, int n, object descr, object csr_val, object csr_row_ptr, object csr_col_ind, object A, int ld):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10460,7 +21196,35 @@ def hipsparseDcsr2dense(object handle, int m, int n, object descr, object csr_va
 
 @cython.embedsignature(True)
 def hipsparseCcsr2dense(object handle, int m, int n, object descr, object csr_val, object csr_row_ptr, object csr_col_ind, object A, int ld):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.float2`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10479,7 +21243,35 @@ def hipsparseCcsr2dense(object handle, int m, int n, object descr, object csr_va
 
 @cython.embedsignature(True)
 def hipsparseZcsr2dense(object handle, int m, int n, object descr, object csr_val, object csr_row_ptr, object csr_col_ind, object A, int ld):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.double2`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10501,6 +21293,34 @@ def hipsparseScsc2dense(object handle, int m, int n, object descr, object csc_va
     r"""This function converts the sparse matrix in CSC format into a dense matrix.
     It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10518,7 +21338,35 @@ def hipsparseScsc2dense(object handle, int m, int n, object descr, object csc_va
 
 @cython.embedsignature(True)
 def hipsparseDcsc2dense(object handle, int m, int n, object descr, object csc_val, object csc_row_ind, object csc_col_ptr, object A, int ld):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10537,7 +21385,35 @@ def hipsparseDcsc2dense(object handle, int m, int n, object descr, object csc_va
 
 @cython.embedsignature(True)
 def hipsparseCcsc2dense(object handle, int m, int n, object descr, object csc_val, object csc_row_ind, object csc_col_ptr, object A, int ld):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        csc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.float2`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10556,7 +21432,35 @@ def hipsparseCcsc2dense(object handle, int m, int n, object descr, object csc_va
 
 @cython.embedsignature(True)
 def hipsparseZcsc2dense(object handle, int m, int n, object descr, object csc_val, object csc_row_ind, object csc_col_ptr, object A, int ld):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        csc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.double2`/`~.object`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10580,6 +21484,40 @@ def hipsparseXcsr2bsrNnz(object handle, object dirA, int m, int n, object descrA
 
     The routine does support asynchronous execution if the pointer mode is set to device.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrNnzb (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10600,11 +21538,36 @@ def hipsparseXcsr2bsrNnz(object handle, object dirA, int m, int n, object descrA
 
 @cython.embedsignature(True)
 def hipsparseSnnz_compress(object handle, int m, object descrA, object csrValA, object csrRowPtrA, object nnzPerRow, object nnzC, float tol):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
 
     Given a sparse CSR matrix and a non-negative tolerance, this function computes how many entries would be left
     in each row of the matrix if elements less than the tolerance were removed. It also computes the total number
     of remaining elements in the matrix.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzPerRow (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        tol (`~.float`/`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10623,7 +21586,32 @@ def hipsparseSnnz_compress(object handle, int m, object descrA, object csrValA, 
 
 @cython.embedsignature(True)
 def hipsparseDnnz_compress(object handle, int m, object descrA, object csrValA, object csrRowPtrA, object nnzPerRow, object nnzC, double tol):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzPerRow (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        tol (`~.float`/`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10642,7 +21630,32 @@ def hipsparseDnnz_compress(object handle, int m, object descrA, object csrValA, 
 
 @cython.embedsignature(True)
 def hipsparseCnnz_compress(object handle, int m, object descrA, object csrValA, object csrRowPtrA, object nnzPerRow, object nnzC, object tol):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzPerRow (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        tol (`~.float2`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10662,7 +21675,32 @@ def hipsparseCnnz_compress(object handle, int m, object descrA, object csrValA, 
 
 @cython.embedsignature(True)
 def hipsparseZnnz_compress(object handle, int m, object descrA, object csrValA, object csrRowPtrA, object nnzPerRow, object nnzC, object tol):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzPerRow (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        tol (`~.double2`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10695,6 +21733,25 @@ def hipsparseXcsr2coo(object handle, object csrRowPtr, int nnz, int m, object co
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        cooRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10725,6 +21782,43 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrSortedVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedColPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        copyValues (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10747,7 +21841,44 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 
 @cython.embedsignature(True)
 def hipsparseDcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrSortedVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedColPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        copyValues (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10771,7 +21902,44 @@ def hipsparseDcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 
 @cython.embedsignature(True)
 def hipsparseCcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrSortedVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        cscSortedRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedColPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        copyValues (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10795,7 +21963,44 @@ def hipsparseCcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 
 @cython.embedsignature(True)
 def hipsparseZcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrSortedVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        cscSortedRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscSortedColPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        copyValues (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10848,6 +22053,52 @@ def hipsparseCsr2cscEx2_bufferSize(object handle, int m, int n, int nnz, object 
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscColPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valType (`~.hipDataType`):
+            (undocumented)
+
+        copyValues (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        alg (`~.hipsparseCsr2CscAlg_t`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10889,6 +22140,52 @@ def hipsparseCsr2cscEx2(object handle, int m, int n, int nnz, object csrVal, obj
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscColPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valType (`~.hipDataType`):
+            (undocumented)
+
+        copyValues (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        alg (`~.hipsparseCsr2CscAlg_t`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10929,6 +22226,37 @@ def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSort
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        userEllWidth (`~.int`):
+            (undocumented)
+
+        partitionType (`~.hipsparseHybPartition_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -10948,7 +22276,38 @@ def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSort
 
 @cython.embedsignature(True)
 def hipsparseDcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        userEllWidth (`~.int`):
+            (undocumented)
+
+        partitionType (`~.hipsparseHybPartition_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10969,7 +22328,38 @@ def hipsparseDcsr2hyb(object handle, int m, int n, object descrA, object csrSort
 
 @cython.embedsignature(True)
 def hipsparseCcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        userEllWidth (`~.int`):
+            (undocumented)
+
+        partitionType (`~.hipsparseHybPartition_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -10990,7 +22380,38 @@ def hipsparseCcsr2hyb(object handle, int m, int n, object descrA, object csrSort
 
 @cython.embedsignature(True)
 def hipsparseZcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        userEllWidth (`~.int`):
+            (undocumented)
+
+        partitionType (`~.hipsparseHybPartition_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11017,6 +22438,37 @@ def hipsparseSgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
     required by hipsparseXgebsr2gebsc().
     The temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        bsr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer_size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11033,7 +22485,38 @@ def hipsparseSgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
 
 @cython.embedsignature(True)
 def hipsparseDgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        bsr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer_size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11051,7 +22534,38 @@ def hipsparseDgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
 
 @cython.embedsignature(True)
 def hipsparseCgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        bsr_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer_size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11069,7 +22583,38 @@ def hipsparseCgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, ob
 
 @cython.embedsignature(True)
 def hipsparseZgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        bsr_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer_size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11104,6 +22649,52 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        bsr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        bsc_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        copy_values (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idx_base (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        temp_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11127,7 +22718,53 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 
 @cython.embedsignature(True)
 def hipsparseDgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        bsr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        bsc_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        copy_values (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idx_base (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        temp_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11152,7 +22789,53 @@ def hipsparseDgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 
 @cython.embedsignature(True)
 def hipsparseCgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        bsr_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        bsc_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        copy_values (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idx_base (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        temp_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11177,7 +22860,53 @@ def hipsparseCgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 
 @cython.embedsignature(True)
 def hipsparseZgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        bsr_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        bsc_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsc_row_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsc_col_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        copy_values (`~.hipsparseAction_t`):
+            (undocumented)
+
+        idx_base (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        temp_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11213,6 +22942,40 @@ def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 
     The routine does support asynchronous execution if the pointer mode is set to device.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer_size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11232,7 +22995,41 @@ def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 
 @cython.embedsignature(True)
 def hipsparseDcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer_size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11253,7 +23050,41 @@ def hipsparseDcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 
 @cython.embedsignature(True)
 def hipsparseCcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer_size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11274,7 +23105,41 @@ def hipsparseCcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 
 @cython.embedsignature(True)
 def hipsparseZcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer_size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11297,6 +23162,46 @@ def hipsparseZcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 def hipsparseXcsr2gebsrNnz(object handle, object dir, int m, int n, object csr_descr, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_row_ptr, int row_block_dim, int col_block_dim, object bsr_nnz_devhost, object p_buffer):
     r"""This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse
     GEneral BSR matrix given a sparse CSR matrix as input.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        bsr_nnz_devhost (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        p_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11327,6 +23232,52 @@ def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     the GEneral BSR matrix. Allocation size for ``bsr_val`` and ``bsr_col_ind`` is computed using
     ``csr2gebsr_nnz()`` which also fills in ``bsr_row_ptr.``
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11350,7 +23301,53 @@ def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 
 @cython.embedsignature(True)
 def hipsparseDcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_val (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11375,7 +23372,53 @@ def hipsparseDcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 
 @cython.embedsignature(True)
 def hipsparseCcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_val (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11400,7 +23443,53 @@ def hipsparseCcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 
 @cython.embedsignature(True)
 def hipsparseZcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dir (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        csr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        csr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_descr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_val (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsr_row_ptr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsr_col_ind (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        row_block_dim (`~.int`):
+            (undocumented)
+
+        col_block_dim (`~.int`):
+            (undocumented)
+
+        p_buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11436,6 +23525,46 @@ def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     ``hipsparseXcsr2bsr`` requires extra temporary storage that is allocated internally if
     ``block_dim>16``
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11458,7 +23587,47 @@ def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseDcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11482,7 +23651,47 @@ def hipsparseDcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseCcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11506,7 +23715,47 @@ def hipsparseCcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 
 @cython.embedsignature(True)
 def hipsparseZcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11542,6 +23791,46 @@ def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11564,7 +23853,47 @@ def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 
 @cython.embedsignature(True)
 def hipsparseDbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11588,7 +23917,47 @@ def hipsparseDbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 
 @cython.embedsignature(True)
 def hipsparseCbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11612,7 +23981,47 @@ def hipsparseCbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 
 @cython.embedsignature(True)
 def hipsparseZbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        blockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11648,6 +24057,49 @@ def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descr
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDim (`~.int`):
+            (undocumented)
+
+        colBlockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11670,7 +24122,50 @@ def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 
 @cython.embedsignature(True)
 def hipsparseDgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDim (`~.int`):
+            (undocumented)
+
+        colBlockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11694,7 +24189,50 @@ def hipsparseDgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 
 @cython.embedsignature(True)
 def hipsparseCgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDim (`~.int`):
+            (undocumented)
+
+        colBlockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11718,7 +24256,50 @@ def hipsparseCgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 
 @cython.embedsignature(True)
 def hipsparseZgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDim (`~.int`):
+            (undocumented)
+
+        colBlockDim (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11750,6 +24331,46 @@ def hipsparseScsr2csr_compress(object handle, int m, int n, object descrA, objec
     Note:
         In the case of complex matrices only the magnitude of the real part of ``tol`` is used.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        nnzPerRow (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        tol (`~.float`/`~.int`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11770,7 +24391,47 @@ def hipsparseScsr2csr_compress(object handle, int m, int n, object descrA, objec
 
 @cython.embedsignature(True)
 def hipsparseDcsr2csr_compress(object handle, int m, int n, object descrA, object csrValA, object csrColIndA, object csrRowPtrA, int nnzA, object nnzPerRow, object csrValC, object csrColIndC, object csrRowPtrC, double tol):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        nnzPerRow (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        tol (`~.float`/`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11792,7 +24453,47 @@ def hipsparseDcsr2csr_compress(object handle, int m, int n, object descrA, objec
 
 @cython.embedsignature(True)
 def hipsparseCcsr2csr_compress(object handle, int m, int n, object descrA, object csrValA, object csrColIndA, object csrRowPtrA, int nnzA, object nnzPerRow, object csrValC, object csrColIndC, object csrRowPtrC, object tol):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        nnzPerRow (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        tol (`~.float2`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11815,7 +24516,47 @@ def hipsparseCcsr2csr_compress(object handle, int m, int n, object descrA, objec
 
 @cython.embedsignature(True)
 def hipsparseZcsr2csr_compress(object handle, int m, int n, object descrA, object csrValA, object csrColIndA, object csrRowPtrA, int nnzA, object nnzPerRow, object csrValC, object csrColIndC, object csrRowPtrC, object tol):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        nnzPerRow (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        tol (`~.double2`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11844,6 +24585,49 @@ def hipsparseSpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
     is required by ``hipsparseXpruneCsr2csrNnz`` and hipsparseXpruneCsr2csr. The
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11866,7 +24650,50 @@ def hipsparseSpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11896,6 +24723,49 @@ def hipsparseSpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
     is required by ``hipsparseXpruneCsr2csrNnz`` and hipsparseXpruneCsr2csr. The
     temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11918,7 +24788,50 @@ def hipsparseSpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -11951,6 +24864,46 @@ def hipsparseSpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
     Note:
         The routine does support asynchronous execution if the pointer mode is set to device.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -11972,7 +24925,47 @@ def hipsparseSpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrRowPtrC, object nnzTotalDevHostPtr, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12007,6 +25000,49 @@ def hipsparseSpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
     is executed asynchronously with respect to the host and may return control to the application on the host
     before the entire result is ready.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12029,7 +25065,50 @@ def hipsparseSpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        threshold (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12059,6 +25138,52 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
     is required by ``hipsparseXpruneCsr2csrNnzByPercentage.``
     The temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12081,7 +25206,53 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, double percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12111,6 +25282,52 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
     is required by ``hipsparseXpruneCsr2csrNnzByPercentage.``
     The temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12133,7 +25350,53 @@ def hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, double percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12166,6 +25429,49 @@ def hipsparseSpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
     Note:
         The routine does support asynchronous execution if the pointer mode is set to device.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12187,7 +25493,50 @@ def hipsparseSpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, double percentage, object descrC, object csrRowPtrC, object nnzTotalDevHostPtr, object info, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12222,6 +25571,52 @@ def hipsparseSpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
     is executed asynchronously with respect to the host and may return control to the application on the host
     before the entire result is ready.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12244,7 +25639,53 @@ def hipsparseSpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
 
 @cython.embedsignature(True)
 def hipsparseDpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, double percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnzA (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        percentage (`~.float`/`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.pruneInfo`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12276,6 +25717,25 @@ def hipsparseShyb2csr(object handle, object descrA, object hybA, object csrSorte
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12293,7 +25753,26 @@ def hipsparseShyb2csr(object handle, object descrA, object hybA, object csrSorte
 
 @cython.embedsignature(True)
 def hipsparseDhyb2csr(object handle, object descrA, object hybA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12312,7 +25791,26 @@ def hipsparseDhyb2csr(object handle, object descrA, object hybA, object csrSorte
 
 @cython.embedsignature(True)
 def hipsparseChyb2csr(object handle, object descrA, object hybA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12331,7 +25829,26 @@ def hipsparseChyb2csr(object handle, object descrA, object hybA, object csrSorte
 
 @cython.embedsignature(True)
 def hipsparseZhyb2csr(object handle, object descrA, object hybA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        hybA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrSortedRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrSortedColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12365,6 +25882,25 @@ def hipsparseXcoo2csr(object handle, object cooRowInd, int nnz, int m, object cs
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12397,6 +25933,16 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        p (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12415,6 +25961,28 @@ def hipsparseXcsrsort_bufferSizeExt(object handle, int m, int n, int nnz, object
     ``hipsparseXcsrsort_bufferSizeExt`` returns the size of the temporary storage buffer
     required by hipsparseXcsrsort(). The temporary storage buffer must be allocated by
     the user.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12447,6 +26015,34 @@ def hipsparseXcsrsort(object handle, int m, int n, int nnz, object descrA, objec
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        P (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12469,6 +26065,28 @@ def hipsparseXcscsort_bufferSizeExt(object handle, int m, int n, int nnz, object
     ``hipsparseXcscsort_bufferSizeExt`` returns the size of the temporary storage buffer
     required by hipsparseXcscsort(). The temporary storage buffer must be allocated by
     the user.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        cscColPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12501,6 +26119,34 @@ def hipsparseXcscsort(object handle, int m, int n, int nnz, object descrA, objec
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscColPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        P (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12523,6 +26169,28 @@ def hipsparseXcoosort_bufferSizeExt(object handle, int m, int n, int nnz, object
     ``hipsparseXcoosort_bufferSizeExt`` returns the size of the temporary storage buffer
     required by hipsparseXcoosort(). The temporary storage buffer must be allocated by
     the user.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        cooRows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooCols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12556,6 +26224,31 @@ def hipsparseXcoosortByRow(object handle, int m, int n, int nnz, object cooRows,
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        cooRows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooCols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        P (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12591,6 +26284,31 @@ def hipsparseXcoosortByColumn(object handle, int m, int n, int nnz, object cooRo
         This function is non blocking and executed asynchronously with respect to the host.
         It may return before the actual computation has finished.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        cooRows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooCols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        P (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12614,6 +26332,49 @@ def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     that is required by hipsparseXgebsr2gebsrNnz() and hipsparseXgebsr2gebsr().
     The temporary storage buffer must be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12633,7 +26394,50 @@ def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 
 @cython.embedsignature(True)
 def hipsparseDgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12654,7 +26458,50 @@ def hipsparseDgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 
 @cython.embedsignature(True)
 def hipsparseCgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12675,7 +26522,50 @@ def hipsparseCgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 
 @cython.embedsignature(True)
 def hipsparseZgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12701,6 +26591,55 @@ def hipsparseXgebsr2gebsrNnz(object handle, object dirA, int mb, int nb, int nnz
     or device pointer), and computes the row pointer array for ``C.``
 
     The routine does support asynchronous execution.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        nnzTotalDevHostPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12733,6 +26672,61 @@ def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     ``nnzb_C`` elements and space for the values array of ``C`` to have ``nnzb_C*roc_block_dim_C*col_block_dim_C`` and then calls
     hipsparseXgebsr2gebsr() to complete the conversion.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12756,7 +26750,62 @@ def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 
 @cython.embedsignature(True)
 def hipsparseDgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12781,7 +26830,62 @@ def hipsparseDgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 
 @cython.embedsignature(True)
 def hipsparseCgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValC (`~.float2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12806,7 +26910,62 @@ def hipsparseCgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 
 @cython.embedsignature(True)
 def hipsparseZgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dirA (`~.hipsparseDirection_t`):
+            (undocumented)
+
+        mb (`~.int`):
+            (undocumented)
+
+        nb (`~.int`):
+            (undocumented)
+
+        nnzb (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimA (`~.int`):
+            (undocumented)
+
+        colBlockDimA (`~.int`):
+            (undocumented)
+
+        descrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrValC (`~.double2`/`~.object`):
+            (undocumented)
+
+        bsrRowPtrC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bsrColIndC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rowBlockDimC (`~.int`):
+            (undocumented)
+
+        colBlockDimC (`~.int`):
+            (undocumented)
+
+        buffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12834,6 +26993,34 @@ def hipsparseScsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
     r"""This function calculates the amount of temporary storage required for
     hipsparseXcsru2csr() and hipsparseXcsr2csru().
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12851,7 +27038,35 @@ def hipsparseScsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
 
 @cython.embedsignature(True)
 def hipsparseDcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12870,7 +27085,35 @@ def hipsparseDcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
 
 @cython.embedsignature(True)
 def hipsparseCcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12889,7 +27132,35 @@ def hipsparseCcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
 
 @cython.embedsignature(True)
 def hipsparseZcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object info, object pBufferSizeInBytes):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBufferSizeInBytes (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12911,6 +27182,37 @@ def hipsparseScsru2csr(object handle, int m, int n, int nnz, object descrA, obje
     r"""This function converts unsorted CSR format to sorted CSR format. The required
     temporary storage has to be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -12929,7 +27231,38 @@ def hipsparseScsru2csr(object handle, int m, int n, int nnz, object descrA, obje
 
 @cython.embedsignature(True)
 def hipsparseDcsru2csr(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12949,7 +27282,38 @@ def hipsparseDcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
 
 @cython.embedsignature(True)
 def hipsparseCcsru2csr(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12969,7 +27333,38 @@ def hipsparseCcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
 
 @cython.embedsignature(True)
 def hipsparseZcsru2csr(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -12992,6 +27387,37 @@ def hipsparseScsr2csru(object handle, int m, int n, int nnz, object descrA, obje
     r"""This function converts sorted CSR format to unsorted CSR format. The required
     temporary storage has to be allocated by the user.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -13010,7 +27436,38 @@ def hipsparseScsr2csru(object handle, int m, int n, int nnz, object descrA, obje
 
 @cython.embedsignature(True)
 def hipsparseDcsr2csru(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13030,7 +27487,38 @@ def hipsparseDcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
 
 @cython.embedsignature(True)
 def hipsparseCcsr2csru(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13050,7 +27538,38 @@ def hipsparseCcsr2csru(object handle, int m, int n, int nnz, object descrA, obje
 
 @cython.embedsignature(True)
 def hipsparseZcsr2csru(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrVal (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.csru2csrInfo`/`~.object`):
+            (undocumented)
+
+        pBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13074,6 +27593,43 @@ def hipsparseScsrcolor(object handle, int m, int nnz, object descrA, object csrV
 
     ``hipsparseXcsrcolor`` performs the coloring of the undirected graph represented by the (symmetric) sparsity pattern of the matrix :math:`A` stored in CSR format. Graph coloring is a way of coloring the nodes of a graph such that no two adjacent nodes are of the same color. The ``fraction_to_color`` is a parameter to only color a given percentage of the graph nodes, the remaining uncolored nodes receive distinct new colors. The optional ``reordering`` array is a permutation array such that unknowns of the same color are grouped. The matrix :math:`A` must be stored as a general matrix with a symmetric sparsity pattern, and if the matrix :math:`A` is non-symmetric then the user is responsible to provide the symmetric part :math:`\frac{A+A^T}{2}`.
 
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        fractionToColor (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ncolors (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        coloring (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        reordering (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -13095,7 +27651,44 @@ def hipsparseScsrcolor(object handle, int m, int nnz, object descrA, object csrV
 
 @cython.embedsignature(True)
 def hipsparseDcsrcolor(object handle, int m, int nnz, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object fractionToColor, object ncolors, object coloring, object reordering, object info):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        fractionToColor (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ncolors (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        coloring (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        reordering (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13118,7 +27711,44 @@ def hipsparseDcsrcolor(object handle, int m, int nnz, object descrA, object csrV
 
 @cython.embedsignature(True)
 def hipsparseCcsrcolor(object handle, int m, int nnz, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object fractionToColor, object ncolors, object coloring, object reordering, object info):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.float2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        fractionToColor (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ncolors (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        coloring (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        reordering (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13141,7 +27771,44 @@ def hipsparseCcsrcolor(object handle, int m, int nnz, object descrA, object csrV
 
 @cython.embedsignature(True)
 def hipsparseZcsrcolor(object handle, int m, int nnz, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object fractionToColor, object ncolors, object coloring, object reordering, object info):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        descrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValA (`~.double2`/`~.object`):
+            (undocumented)
+
+        csrRowPtrA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        fractionToColor (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ncolors (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        coloring (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        reordering (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        info (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13175,22 +27842,22 @@ cdef class hipsparseSpGEMMDescr:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -13314,22 +27981,22 @@ cdef class hipsparseSpSVDescr:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -13453,22 +28120,22 @@ cdef class hipsparseSpSMDescr:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -13757,7 +28424,32 @@ class hipsparseSpGEMMAlg_t(_hipsparseSpGEMMAlg_t__Base):
 
 @cython.embedsignature(True)
 def hipsparseCreateSpVec(object spVecDescr, long size, long nnz, object indices, object values, object idxType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        size (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        indices (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxType (`~.hipsparseIndexType_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        valueType (`~.hipDataType`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13779,7 +28471,11 @@ def hipsparseCreateSpVec(object spVecDescr, long size, long nnz, object indices,
 
 @cython.embedsignature(True)
 def hipsparseDestroySpVec(object spVecDescr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13793,7 +28489,32 @@ def hipsparseDestroySpVec(object spVecDescr):
 
 @cython.embedsignature(True)
 def hipsparseSpVecGet(object spVecDescr, object size, object nnz, object indices, object values, object idxType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        indices (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13814,7 +28535,14 @@ def hipsparseSpVecGet(object spVecDescr, object size, object nnz, object indices
 
 @cython.embedsignature(True)
 def hipsparseSpVecGetIndexBase(object spVecDescr, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13829,7 +28557,14 @@ def hipsparseSpVecGetIndexBase(object spVecDescr, object idxBase):
 
 @cython.embedsignature(True)
 def hipsparseSpVecGetValues(object spVecDescr, object values):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13844,7 +28579,14 @@ def hipsparseSpVecGetValues(object spVecDescr, object values):
 
 @cython.embedsignature(True)
 def hipsparseSpVecSetValues(object spVecDescr, object values):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13859,7 +28601,38 @@ def hipsparseSpVecSetValues(object spVecDescr, object values):
 
 @cython.embedsignature(True)
 def hipsparseCreateCoo(object spMatDescr, long rows, long cols, long nnz, object cooRowInd, object cooColInd, object cooValues, object cooIdxType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.int`):
+            (undocumented)
+
+        cols (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        cooRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooIdxType (`~.hipsparseIndexType_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        valueType (`~.hipDataType`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13882,7 +28655,35 @@ def hipsparseCreateCoo(object spMatDescr, long rows, long cols, long nnz, object
 
 @cython.embedsignature(True)
 def hipsparseCreateCooAoS(object spMatDescr, long rows, long cols, long nnz, object cooInd, object cooValues, object cooIdxType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.int`):
+            (undocumented)
+
+        cols (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        cooInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooIdxType (`~.hipsparseIndexType_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        valueType (`~.hipDataType`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13904,7 +28705,41 @@ def hipsparseCreateCooAoS(object spMatDescr, long rows, long cols, long nnz, obj
 
 @cython.embedsignature(True)
 def hipsparseCreateCsr(object spMatDescr, long rows, long cols, long nnz, object csrRowOffsets, object csrColInd, object csrValues, object csrRowOffsetsType, object csrColIndType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.int`):
+            (undocumented)
+
+        cols (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        csrRowOffsets (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowOffsetsType (`~.hipsparseIndexType_t`):
+            (undocumented)
+
+        csrColIndType (`~.hipsparseIndexType_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        valueType (`~.hipDataType`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13929,7 +28764,41 @@ def hipsparseCreateCsr(object spMatDescr, long rows, long cols, long nnz, object
 
 @cython.embedsignature(True)
 def hipsparseCreateCsc(object spMatDescr, long rows, long cols, long nnz, object cscColOffsets, object cscRowInd, object cscValues, object cscColOffsetsType, object cscRowIndType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.int`):
+            (undocumented)
+
+        cols (`~.int`):
+            (undocumented)
+
+        nnz (`~.int`):
+            (undocumented)
+
+        cscColOffsets (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscColOffsetsType (`~.hipsparseIndexType_t`):
+            (undocumented)
+
+        cscRowIndType (`~.hipsparseIndexType_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        valueType (`~.hipDataType`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13954,7 +28823,38 @@ def hipsparseCreateCsc(object spMatDescr, long rows, long cols, long nnz, object
 
 @cython.embedsignature(True)
 def hipsparseCreateBlockedEll(object spMatDescr, long rows, long cols, long ellBlockSize, long ellCols, object ellColInd, object ellValue, object ellIdxType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.int`):
+            (undocumented)
+
+        cols (`~.int`):
+            (undocumented)
+
+        ellBlockSize (`~.int`):
+            (undocumented)
+
+        ellCols (`~.int`):
+            (undocumented)
+
+        ellColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ellValue (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ellIdxType (`~.hipsparseIndexType_t`):
+            (undocumented)
+
+        idxBase (`~.hipsparseIndexBase_t`):
+            (undocumented)
+
+        valueType (`~.hipDataType`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13976,7 +28876,11 @@ def hipsparseCreateBlockedEll(object spMatDescr, long rows, long cols, long ellB
 
 @cython.embedsignature(True)
 def hipsparseDestroySpMat(object spMatDescr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -13990,7 +28894,38 @@ def hipsparseDestroySpMat(object spMatDescr):
 
 @cython.embedsignature(True)
 def hipsparseCooGet(object spMatDescr, object rows, object cols, object nnz, object cooRowInd, object cooColInd, object cooValues, object idxType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14013,7 +28948,35 @@ def hipsparseCooGet(object spMatDescr, object rows, object cols, object nnz, obj
 
 @cython.embedsignature(True)
 def hipsparseCooAoSGet(object spMatDescr, object rows, object cols, object nnz, object cooInd, object cooValues, object idxType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14035,7 +28998,41 @@ def hipsparseCooAoSGet(object spMatDescr, object rows, object cols, object nnz, 
 
 @cython.embedsignature(True)
 def hipsparseCsrGet(object spMatDescr, object rows, object cols, object nnz, object csrRowOffsets, object csrColInd, object csrValues, object csrRowOffsetsType, object csrColIndType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowOffsets (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowOffsetsType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColIndType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14059,7 +29056,38 @@ def hipsparseCsrGet(object spMatDescr, object rows, object cols, object nnz, obj
 
 @cython.embedsignature(True)
 def hipsparseBlockedEllGet(object spMatDescr, object rows, object cols, object ellBlockSize, object ellCols, object ellColInd, object ellValue, object ellIdxType, object idxBase, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ellBlockSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ellCols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ellColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ellValue (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ellIdxType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14082,7 +29110,20 @@ def hipsparseBlockedEllGet(object spMatDescr, object rows, object cols, object e
 
 @cython.embedsignature(True)
 def hipsparseCsrSetPointers(object spMatDescr, object csrRowOffsets, object csrColInd, object csrValues):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrRowOffsets (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        csrValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14099,7 +29140,20 @@ def hipsparseCsrSetPointers(object spMatDescr, object csrRowOffsets, object csrC
 
 @cython.embedsignature(True)
 def hipsparseCscSetPointers(object spMatDescr, object cscColOffsets, object cscRowInd, object cscValues):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscColOffsets (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cscValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14116,7 +29170,20 @@ def hipsparseCscSetPointers(object spMatDescr, object cscColOffsets, object cscR
 
 @cython.embedsignature(True)
 def hipsparseCooSetPointers(object spMatDescr, object cooRowInd, object cooColInd, object cooValues):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooRowInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooColInd (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cooValues (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14133,7 +29200,20 @@ def hipsparseCooSetPointers(object spMatDescr, object cooRowInd, object cooColIn
 
 @cython.embedsignature(True)
 def hipsparseSpMatGetSize(object spMatDescr, object rows, object cols, object nnz):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        nnz (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14150,7 +29230,14 @@ def hipsparseSpMatGetSize(object spMatDescr, object rows, object cols, object nn
 
 @cython.embedsignature(True)
 def hipsparseSpMatGetFormat(object spMatDescr, object format):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        format (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14165,7 +29252,14 @@ def hipsparseSpMatGetFormat(object spMatDescr, object format):
 
 @cython.embedsignature(True)
 def hipsparseSpMatGetIndexBase(object spMatDescr, object idxBase):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        idxBase (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14180,7 +29274,14 @@ def hipsparseSpMatGetIndexBase(object spMatDescr, object idxBase):
 
 @cython.embedsignature(True)
 def hipsparseSpMatGetValues(object spMatDescr, object values):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14195,7 +29296,14 @@ def hipsparseSpMatGetValues(object spMatDescr, object values):
 
 @cython.embedsignature(True)
 def hipsparseSpMatSetValues(object spMatDescr, object values):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14210,7 +29318,14 @@ def hipsparseSpMatSetValues(object spMatDescr, object values):
 
 @cython.embedsignature(True)
 def hipsparseSpMatGetStridedBatch(object spMatDescr, object batchCount):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14225,7 +29340,14 @@ def hipsparseSpMatGetStridedBatch(object spMatDescr, object batchCount):
 
 @cython.embedsignature(True)
 def hipsparseSpMatSetStridedBatch(object spMatDescr, int batchCount):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14239,7 +29361,17 @@ def hipsparseSpMatSetStridedBatch(object spMatDescr, int batchCount):
 
 @cython.embedsignature(True)
 def hipsparseCooSetStridedBatch(object spMatDescr, int batchCount, long batchStride):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14253,7 +29385,20 @@ def hipsparseCooSetStridedBatch(object spMatDescr, int batchCount, long batchStr
 
 @cython.embedsignature(True)
 def hipsparseCsrSetStridedBatch(object spMatDescr, int batchCount, long offsetsBatchStride, long columnsValuesBatchStride):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        offsetsBatchStride (`~.int`):
+            (undocumented)
+
+        columnsValuesBatchStride (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14267,7 +29412,20 @@ def hipsparseCsrSetStridedBatch(object spMatDescr, int batchCount, long offsetsB
 
 @cython.embedsignature(True)
 def hipsparseSpMatGetAttribute(object spMatDescr, object attribute, object data, unsigned long dataSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        attribute (`~.hipsparseSpMatAttribute_t`):
+            (undocumented)
+
+        data (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dataSize (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14284,7 +29442,20 @@ def hipsparseSpMatGetAttribute(object spMatDescr, object attribute, object data,
 
 @cython.embedsignature(True)
 def hipsparseSpMatSetAttribute(object spMatDescr, object attribute, object data, unsigned long dataSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        spMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        attribute (`~.hipsparseSpMatAttribute_t`):
+            (undocumented)
+
+        data (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        dataSize (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14301,7 +29472,20 @@ def hipsparseSpMatSetAttribute(object spMatDescr, object attribute, object data,
 
 @cython.embedsignature(True)
 def hipsparseCreateDnVec(object dnVecDescr, long size, object values, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        size (`~.int`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hipDataType`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14318,7 +29502,11 @@ def hipsparseCreateDnVec(object dnVecDescr, long size, object values, object val
 
 @cython.embedsignature(True)
 def hipsparseDestroyDnVec(object dnVecDescr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14332,7 +29520,20 @@ def hipsparseDestroyDnVec(object dnVecDescr):
 
 @cython.embedsignature(True)
 def hipsparseDnVecGet(object dnVecDescr, object size, object values, object valueType):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        size (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14349,7 +29550,14 @@ def hipsparseDnVecGet(object dnVecDescr, object size, object values, object valu
 
 @cython.embedsignature(True)
 def hipsparseDnVecGetValues(object dnVecDescr, object values):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14364,7 +29572,14 @@ def hipsparseDnVecGetValues(object dnVecDescr, object values):
 
 @cython.embedsignature(True)
 def hipsparseDnVecSetValues(object dnVecDescr, object values):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnVecDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14379,7 +29594,29 @@ def hipsparseDnVecSetValues(object dnVecDescr, object values):
 
 @cython.embedsignature(True)
 def hipsparseCreateDnMat(object dnMatDescr, long rows, long cols, long ld, object values, object valueType, object order):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.int`):
+            (undocumented)
+
+        cols (`~.int`):
+            (undocumented)
+
+        ld (`~.int`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hipDataType`):
+            (undocumented)
+
+        order (`~.hipsparseOrder_t`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14398,7 +29635,11 @@ def hipsparseCreateDnMat(object dnMatDescr, long rows, long cols, long ld, objec
 
 @cython.embedsignature(True)
 def hipsparseDestroyDnMat(object dnMatDescr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14412,7 +29653,29 @@ def hipsparseDestroyDnMat(object dnMatDescr):
 
 @cython.embedsignature(True)
 def hipsparseDnMatGet(object dnMatDescr, object rows, object cols, object ld, object values, object valueType, object order):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        rows (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        cols (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ld (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        valueType (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        order (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14432,7 +29695,14 @@ def hipsparseDnMatGet(object dnMatDescr, object rows, object cols, object ld, ob
 
 @cython.embedsignature(True)
 def hipsparseDnMatGetValues(object dnMatDescr, object values):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14447,7 +29717,14 @@ def hipsparseDnMatGetValues(object dnMatDescr, object values):
 
 @cython.embedsignature(True)
 def hipsparseDnMatSetValues(object dnMatDescr, object values):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        values (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14462,7 +29739,17 @@ def hipsparseDnMatSetValues(object dnMatDescr, object values):
 
 @cython.embedsignature(True)
 def hipsparseDnMatGetStridedBatch(object dnMatDescr, object batchCount, object batchStride):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchStride (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14478,7 +29765,17 @@ def hipsparseDnMatGetStridedBatch(object dnMatDescr, object batchCount, object b
 
 @cython.embedsignature(True)
 def hipsparseDnMatSetStridedBatch(object dnMatDescr, int batchCount, long batchStride):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        dnMatDescr (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+        batchStride (`~.int`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14492,7 +29789,23 @@ def hipsparseDnMatSetStridedBatch(object dnMatDescr, int batchCount, long batchS
 
 @cython.embedsignature(True)
 def hipsparseAxpby(object handle, object alpha, object vecX, object beta, object vecY):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14510,7 +29823,17 @@ def hipsparseAxpby(object handle, object alpha, object vecX, object beta, object
 
 @cython.embedsignature(True)
 def hipsparseGather(object handle, object vecY, object vecX):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14526,7 +29849,17 @@ def hipsparseGather(object handle, object vecY, object vecX):
 
 @cython.embedsignature(True)
 def hipsparseScatter(object handle, object vecX, object vecY):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14542,7 +29875,23 @@ def hipsparseScatter(object handle, object vecX, object vecY):
 
 @cython.embedsignature(True)
 def hipsparseRot(object handle, object c_coeff, object s_coeff, object vecX, object vecY):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        c_coeff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        s_coeff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14560,7 +29909,23 @@ def hipsparseRot(object handle, object c_coeff, object s_coeff, object vecX, obj
 
 @cython.embedsignature(True)
 def hipsparseSparseToDense_bufferSize(object handle, object matA, object matB, object alg, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alg (`~.hipsparseSparseToDenseAlg_t`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14579,7 +29944,23 @@ def hipsparseSparseToDense_bufferSize(object handle, object matA, object matB, o
 
 @cython.embedsignature(True)
 def hipsparseSparseToDense(object handle, object matA, object matB, object alg, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alg (`~.hipsparseSparseToDenseAlg_t`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14598,7 +29979,23 @@ def hipsparseSparseToDense(object handle, object matA, object matB, object alg, 
 
 @cython.embedsignature(True)
 def hipsparseDenseToSparse_bufferSize(object handle, object matA, object matB, object alg, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alg (`~.hipsparseDenseToSparseAlg_t`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14617,7 +30014,23 @@ def hipsparseDenseToSparse_bufferSize(object handle, object matA, object matB, o
 
 @cython.embedsignature(True)
 def hipsparseDenseToSparse_analysis(object handle, object matA, object matB, object alg, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alg (`~.hipsparseDenseToSparseAlg_t`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14636,7 +30049,23 @@ def hipsparseDenseToSparse_analysis(object handle, object matA, object matB, obj
 
 @cython.embedsignature(True)
 def hipsparseDenseToSparse_convert(object handle, object matA, object matB, object alg, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alg (`~.hipsparseDenseToSparseAlg_t`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14655,7 +30084,29 @@ def hipsparseDenseToSparse_convert(object handle, object matA, object matB, obje
 
 @cython.embedsignature(True)
 def hipsparseSpVV_bufferSize(object handle, object opX, object vecX, object vecY, object result, object computeType, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        result (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14677,7 +30128,29 @@ def hipsparseSpVV_bufferSize(object handle, object opX, object vecX, object vecY
 
 @cython.embedsignature(True)
 def hipsparseSpVV(object handle, object opX, object vecX, object vecY, object result, object computeType, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opX (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        result (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14699,7 +30172,38 @@ def hipsparseSpVV(object handle, object opX, object vecX, object vecY, object re
 
 @cython.embedsignature(True)
 def hipsparseSpMV_bufferSize(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpMVAlg_t`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14725,7 +30229,38 @@ def hipsparseSpMV_bufferSize(object handle, object opA, object alpha, object mat
 
 @cython.embedsignature(True)
 def hipsparseSpMV_preprocess(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpMVAlg_t`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14751,7 +30286,38 @@ def hipsparseSpMV_preprocess(object handle, object opA, object alpha, object mat
 
 @cython.embedsignature(True)
 def hipsparseSpMV(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecX (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        vecY (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpMVAlg_t`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14777,7 +30343,41 @@ def hipsparseSpMV(object handle, object opA, object alpha, object matA, object v
 
 @cython.embedsignature(True)
 def hipsparseSpMM_bufferSize(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpMMAlg_t`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14805,7 +30405,41 @@ def hipsparseSpMM_bufferSize(object handle, object opA, object opB, object alpha
 
 @cython.embedsignature(True)
 def hipsparseSpMM_preprocess(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpMMAlg_t`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14833,7 +30467,41 @@ def hipsparseSpMM_preprocess(object handle, object opA, object opB, object alpha
 
 @cython.embedsignature(True)
 def hipsparseSpMM(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpMMAlg_t`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14861,7 +30529,9 @@ def hipsparseSpMM(object handle, object opA, object opB, object alpha, object ma
 
 @cython.embedsignature(True)
 def hipsparseSpGEMM_createDescr():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14875,7 +30545,11 @@ def hipsparseSpGEMM_createDescr():
 
 @cython.embedsignature(True)
 def hipsparseSpGEMM_destroyDescr(object descr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        descr (`~.hipsparseSpGEMMDescr`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14889,7 +30563,47 @@ def hipsparseSpGEMM_destroyDescr(object descr):
 
 @cython.embedsignature(True)
 def hipsparseSpGEMM_workEstimation(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr, object bufferSize1, object externalBuffer1):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpGEMMAlg_t`):
+            (undocumented)
+
+        spgemmDescr (`~.hipsparseSpGEMMDescr`/`~.object`):
+            (undocumented)
+
+        bufferSize1 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        externalBuffer1 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14919,7 +30633,47 @@ def hipsparseSpGEMM_workEstimation(object handle, object opA, object opB, object
 
 @cython.embedsignature(True)
 def hipsparseSpGEMM_compute(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr, object bufferSize2, object externalBuffer2):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpGEMMAlg_t`):
+            (undocumented)
+
+        spgemmDescr (`~.hipsparseSpGEMMDescr`/`~.object`):
+            (undocumented)
+
+        bufferSize2 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        externalBuffer2 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14949,7 +30703,41 @@ def hipsparseSpGEMM_compute(object handle, object opA, object opB, object alpha,
 
 @cython.embedsignature(True)
 def hipsparseSpGEMM_copy(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpGEMMAlg_t`):
+            (undocumented)
+
+        spgemmDescr (`~.hipsparseSpGEMMDescr`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -14977,7 +30765,38 @@ def hipsparseSpGEMM_copy(object handle, object opA, object opB, object alpha, ob
 
 @cython.embedsignature(True)
 def hipsparseSpGEMMreuse_workEstimation(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize1, object externalBuffer1):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alg (`~.hipsparseSpGEMMAlg_t`):
+            (undocumented)
+
+        spgemmDescr (`~.hipsparseSpGEMMDescr`/`~.object`):
+            (undocumented)
+
+        bufferSize1 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        externalBuffer1 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15003,7 +30822,50 @@ def hipsparseSpGEMMreuse_workEstimation(object handle, object opA, object opB, o
 
 @cython.embedsignature(True)
 def hipsparseSpGEMMreuse_nnz(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize2, object externalBuffer2, object bufferSize3, object externalBuffer3, object bufferSize4, object externalBuffer4):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alg (`~.hipsparseSpGEMMAlg_t`):
+            (undocumented)
+
+        spgemmDescr (`~.hipsparseSpGEMMDescr`/`~.object`):
+            (undocumented)
+
+        bufferSize2 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        externalBuffer2 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize3 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        externalBuffer3 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        bufferSize4 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        externalBuffer4 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15033,7 +30895,41 @@ def hipsparseSpGEMMreuse_nnz(object handle, object opA, object opB, object matA,
 
 @cython.embedsignature(True)
 def hipsparseSpGEMMreuse_compute(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpGEMMAlg_t`):
+            (undocumented)
+
+        spgemmDescr (`~.hipsparseSpGEMMDescr`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15061,7 +30957,38 @@ def hipsparseSpGEMMreuse_compute(object handle, object opA, object opB, object a
 
 @cython.embedsignature(True)
 def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize5, object externalBuffer5):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        alg (`~.hipsparseSpGEMMAlg_t`):
+            (undocumented)
+
+        spgemmDescr (`~.hipsparseSpGEMMDescr`/`~.object`):
+            (undocumented)
+
+        bufferSize5 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        externalBuffer5 (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15087,7 +31014,41 @@ def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA
 
 @cython.embedsignature(True)
 def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSDDMMAlg_t`):
+            (undocumented)
+
+        tempBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15115,7 +31076,41 @@ def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A
 
 @cython.embedsignature(True)
 def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSDDMMAlg_t`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15143,7 +31138,41 @@ def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alph
 
 @cython.embedsignature(True)
 def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSDDMMAlg_t`):
+            (undocumented)
+
+        tempBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15171,7 +31200,9 @@ def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alph
 
 @cython.embedsignature(True)
 def hipsparseSpSV_createDescr():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15185,7 +31216,11 @@ def hipsparseSpSV_createDescr():
 
 @cython.embedsignature(True)
 def hipsparseSpSV_destroyDescr(object descr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        descr (`~.hipsparseSpSVDescr`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15199,7 +31234,38 @@ def hipsparseSpSV_destroyDescr(object descr):
 
 @cython.embedsignature(True)
 def hipsparseSpSV_bufferSize(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpSVAlg_t`):
+            (undocumented)
+
+        spsvDescr (`~.hipsparseSpSVDescr`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15225,7 +31291,38 @@ def hipsparseSpSV_bufferSize(object handle, object opA, object alpha, object mat
 
 @cython.embedsignature(True)
 def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpSVAlg_t`):
+            (undocumented)
+
+        spsvDescr (`~.hipsparseSpSVDescr`/`~.object`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15251,7 +31348,38 @@ def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA,
 
 @cython.embedsignature(True)
 def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        x (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        y (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpSVAlg_t`):
+            (undocumented)
+
+        spsvDescr (`~.hipsparseSpSVDescr`/`~.object`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15277,7 +31405,9 @@ def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, ob
 
 @cython.embedsignature(True)
 def hipsparseSpSM_createDescr():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15291,7 +31421,11 @@ def hipsparseSpSM_createDescr():
 
 @cython.embedsignature(True)
 def hipsparseSpSM_destroyDescr(object descr):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        descr (`~.hipsparseSpSMDescr`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15305,7 +31439,41 @@ def hipsparseSpSM_destroyDescr(object descr):
 
 @cython.embedsignature(True)
 def hipsparseSpSM_bufferSize(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object bufferSize):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpSMAlg_t`):
+            (undocumented)
+
+        spsmDescr (`~.hipsparseSpSMDescr`/`~.object`):
+            (undocumented)
+
+        bufferSize (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15333,7 +31501,41 @@ def hipsparseSpSM_bufferSize(object handle, object opA, object opB, object alpha
 
 @cython.embedsignature(True)
 def hipsparseSpSM_analysis(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpSMAlg_t`):
+            (undocumented)
+
+        spsmDescr (`~.hipsparseSpSMDescr`/`~.object`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15361,7 +31563,41 @@ def hipsparseSpSM_analysis(object handle, object opA, object opB, object alpha, 
 
 @cython.embedsignature(True)
 def hipsparseSpSM_solve(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object externalBuffer):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matA (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matB (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        matC (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSpSMAlg_t`):
+            (undocumented)
+
+        spsmDescr (`~.hipsparseSpSMDescr`/`~.object`):
+            (undocumented)
+
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -15385,3 +31621,609 @@ def hipsparseSpSM_solve(object handle, object opA, object opB, object alpha, obj
         hipsparseSpSMDescr.from_pyobj(spsmDescr)._ptr,
         <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpSM_solve__retval,)
+
+__all__ = [
+    "bsrsv2Info",
+    "bsrsv2Info_t",
+    "bsrsm2Info",
+    "bsrsm2Info_t",
+    "bsrilu02Info",
+    "bsrilu02Info_t",
+    "bsric02Info",
+    "bsric02Info_t",
+    "csrsv2Info",
+    "csrsv2Info_t",
+    "csrsm2Info",
+    "csrsm2Info_t",
+    "csrilu02Info",
+    "csrilu02Info_t",
+    "csric02Info",
+    "csric02Info_t",
+    "csrgemm2Info",
+    "csrgemm2Info_t",
+    "pruneInfo",
+    "pruneInfo_t",
+    "csru2csrInfo",
+    "csru2csrInfo_t",
+    "_hipsparseStatus_t__Base",
+    "hipsparseStatus_t",
+    "_hipsparsePointerMode_t__Base",
+    "hipsparsePointerMode_t",
+    "_hipsparseAction_t__Base",
+    "hipsparseAction_t",
+    "_hipsparseMatrixType_t__Base",
+    "hipsparseMatrixType_t",
+    "_hipsparseFillMode_t__Base",
+    "hipsparseFillMode_t",
+    "_hipsparseDiagType_t__Base",
+    "hipsparseDiagType_t",
+    "_hipsparseIndexBase_t__Base",
+    "hipsparseIndexBase_t",
+    "_hipsparseOperation_t__Base",
+    "hipsparseOperation_t",
+    "_hipsparseHybPartition_t__Base",
+    "hipsparseHybPartition_t",
+    "_hipsparseSolvePolicy_t__Base",
+    "hipsparseSolvePolicy_t",
+    "_hipsparseSideMode_t__Base",
+    "hipsparseSideMode_t",
+    "_hipsparseDirection_t__Base",
+    "hipsparseDirection_t",
+    "hipsparseCreate",
+    "hipsparseDestroy",
+    "hipsparseGetVersion",
+    "hipsparseGetGitRevision",
+    "hipsparseSetStream",
+    "hipsparseGetStream",
+    "hipsparseSetPointerMode",
+    "hipsparseGetPointerMode",
+    "hipsparseCreateMatDescr",
+    "hipsparseDestroyMatDescr",
+    "hipsparseCopyMatDescr",
+    "hipsparseSetMatType",
+    "hipsparseGetMatType",
+    "hipsparseSetMatFillMode",
+    "hipsparseGetMatFillMode",
+    "hipsparseSetMatDiagType",
+    "hipsparseGetMatDiagType",
+    "hipsparseSetMatIndexBase",
+    "hipsparseGetMatIndexBase",
+    "hipsparseCreateHybMat",
+    "hipsparseDestroyHybMat",
+    "hipsparseCreateBsrsv2Info",
+    "hipsparseDestroyBsrsv2Info",
+    "hipsparseCreateBsrsm2Info",
+    "hipsparseDestroyBsrsm2Info",
+    "hipsparseCreateBsrilu02Info",
+    "hipsparseDestroyBsrilu02Info",
+    "hipsparseCreateBsric02Info",
+    "hipsparseDestroyBsric02Info",
+    "hipsparseCreateCsrsv2Info",
+    "hipsparseDestroyCsrsv2Info",
+    "hipsparseCreateCsrsm2Info",
+    "hipsparseDestroyCsrsm2Info",
+    "hipsparseCreateCsrilu02Info",
+    "hipsparseDestroyCsrilu02Info",
+    "hipsparseCreateCsric02Info",
+    "hipsparseDestroyCsric02Info",
+    "hipsparseCreateCsru2csrInfo",
+    "hipsparseDestroyCsru2csrInfo",
+    "hipsparseCreateColorInfo",
+    "hipsparseDestroyColorInfo",
+    "hipsparseCreateCsrgemm2Info",
+    "hipsparseDestroyCsrgemm2Info",
+    "hipsparseCreatePruneInfo",
+    "hipsparseDestroyPruneInfo",
+    "hipsparseSaxpyi",
+    "hipsparseDaxpyi",
+    "hipsparseCaxpyi",
+    "hipsparseZaxpyi",
+    "hipsparseSdoti",
+    "hipsparseDdoti",
+    "hipsparseCdoti",
+    "hipsparseZdoti",
+    "hipsparseCdotci",
+    "hipsparseZdotci",
+    "hipsparseSgthr",
+    "hipsparseDgthr",
+    "hipsparseCgthr",
+    "hipsparseZgthr",
+    "hipsparseSgthrz",
+    "hipsparseDgthrz",
+    "hipsparseCgthrz",
+    "hipsparseZgthrz",
+    "hipsparseSroti",
+    "hipsparseDroti",
+    "hipsparseSsctr",
+    "hipsparseDsctr",
+    "hipsparseCsctr",
+    "hipsparseZsctr",
+    "hipsparseScsrmv",
+    "hipsparseDcsrmv",
+    "hipsparseCcsrmv",
+    "hipsparseZcsrmv",
+    "hipsparseXcsrsv2_zeroPivot",
+    "hipsparseScsrsv2_bufferSize",
+    "hipsparseDcsrsv2_bufferSize",
+    "hipsparseCcsrsv2_bufferSize",
+    "hipsparseZcsrsv2_bufferSize",
+    "hipsparseScsrsv2_bufferSizeExt",
+    "hipsparseDcsrsv2_bufferSizeExt",
+    "hipsparseCcsrsv2_bufferSizeExt",
+    "hipsparseZcsrsv2_bufferSizeExt",
+    "hipsparseScsrsv2_analysis",
+    "hipsparseDcsrsv2_analysis",
+    "hipsparseCcsrsv2_analysis",
+    "hipsparseZcsrsv2_analysis",
+    "hipsparseScsrsv2_solve",
+    "hipsparseDcsrsv2_solve",
+    "hipsparseCcsrsv2_solve",
+    "hipsparseZcsrsv2_solve",
+    "hipsparseShybmv",
+    "hipsparseDhybmv",
+    "hipsparseChybmv",
+    "hipsparseZhybmv",
+    "hipsparseSbsrmv",
+    "hipsparseDbsrmv",
+    "hipsparseCbsrmv",
+    "hipsparseZbsrmv",
+    "hipsparseSbsrxmv",
+    "hipsparseDbsrxmv",
+    "hipsparseCbsrxmv",
+    "hipsparseZbsrxmv",
+    "hipsparseXbsrsv2_zeroPivot",
+    "hipsparseSbsrsv2_bufferSize",
+    "hipsparseDbsrsv2_bufferSize",
+    "hipsparseCbsrsv2_bufferSize",
+    "hipsparseZbsrsv2_bufferSize",
+    "hipsparseSbsrsv2_bufferSizeExt",
+    "hipsparseDbsrsv2_bufferSizeExt",
+    "hipsparseCbsrsv2_bufferSizeExt",
+    "hipsparseZbsrsv2_bufferSizeExt",
+    "hipsparseSbsrsv2_analysis",
+    "hipsparseDbsrsv2_analysis",
+    "hipsparseCbsrsv2_analysis",
+    "hipsparseZbsrsv2_analysis",
+    "hipsparseSbsrsv2_solve",
+    "hipsparseDbsrsv2_solve",
+    "hipsparseCbsrsv2_solve",
+    "hipsparseZbsrsv2_solve",
+    "hipsparseSgemvi_bufferSize",
+    "hipsparseDgemvi_bufferSize",
+    "hipsparseCgemvi_bufferSize",
+    "hipsparseZgemvi_bufferSize",
+    "hipsparseSgemvi",
+    "hipsparseDgemvi",
+    "hipsparseCgemvi",
+    "hipsparseZgemvi",
+    "hipsparseSbsrmm",
+    "hipsparseDbsrmm",
+    "hipsparseCbsrmm",
+    "hipsparseZbsrmm",
+    "hipsparseScsrmm",
+    "hipsparseDcsrmm",
+    "hipsparseCcsrmm",
+    "hipsparseZcsrmm",
+    "hipsparseScsrmm2",
+    "hipsparseDcsrmm2",
+    "hipsparseCcsrmm2",
+    "hipsparseZcsrmm2",
+    "hipsparseXbsrsm2_zeroPivot",
+    "hipsparseSbsrsm2_bufferSize",
+    "hipsparseDbsrsm2_bufferSize",
+    "hipsparseCbsrsm2_bufferSize",
+    "hipsparseZbsrsm2_bufferSize",
+    "hipsparseSbsrsm2_analysis",
+    "hipsparseDbsrsm2_analysis",
+    "hipsparseCbsrsm2_analysis",
+    "hipsparseZbsrsm2_analysis",
+    "hipsparseSbsrsm2_solve",
+    "hipsparseDbsrsm2_solve",
+    "hipsparseCbsrsm2_solve",
+    "hipsparseZbsrsm2_solve",
+    "hipsparseXcsrsm2_zeroPivot",
+    "hipsparseScsrsm2_bufferSizeExt",
+    "hipsparseDcsrsm2_bufferSizeExt",
+    "hipsparseCcsrsm2_bufferSizeExt",
+    "hipsparseZcsrsm2_bufferSizeExt",
+    "hipsparseScsrsm2_analysis",
+    "hipsparseDcsrsm2_analysis",
+    "hipsparseCcsrsm2_analysis",
+    "hipsparseZcsrsm2_analysis",
+    "hipsparseScsrsm2_solve",
+    "hipsparseDcsrsm2_solve",
+    "hipsparseCcsrsm2_solve",
+    "hipsparseZcsrsm2_solve",
+    "hipsparseSgemmi",
+    "hipsparseDgemmi",
+    "hipsparseCgemmi",
+    "hipsparseZgemmi",
+    "hipsparseXcsrgeamNnz",
+    "hipsparseScsrgeam",
+    "hipsparseDcsrgeam",
+    "hipsparseCcsrgeam",
+    "hipsparseZcsrgeam",
+    "hipsparseScsrgeam2_bufferSizeExt",
+    "hipsparseDcsrgeam2_bufferSizeExt",
+    "hipsparseCcsrgeam2_bufferSizeExt",
+    "hipsparseZcsrgeam2_bufferSizeExt",
+    "hipsparseXcsrgeam2Nnz",
+    "hipsparseScsrgeam2",
+    "hipsparseDcsrgeam2",
+    "hipsparseCcsrgeam2",
+    "hipsparseZcsrgeam2",
+    "hipsparseXcsrgemmNnz",
+    "hipsparseScsrgemm",
+    "hipsparseDcsrgemm",
+    "hipsparseCcsrgemm",
+    "hipsparseZcsrgemm",
+    "hipsparseScsrgemm2_bufferSizeExt",
+    "hipsparseDcsrgemm2_bufferSizeExt",
+    "hipsparseCcsrgemm2_bufferSizeExt",
+    "hipsparseZcsrgemm2_bufferSizeExt",
+    "hipsparseXcsrgemm2Nnz",
+    "hipsparseScsrgemm2",
+    "hipsparseDcsrgemm2",
+    "hipsparseCcsrgemm2",
+    "hipsparseZcsrgemm2",
+    "hipsparseXbsrilu02_zeroPivot",
+    "hipsparseSbsrilu02_numericBoost",
+    "hipsparseDbsrilu02_numericBoost",
+    "hipsparseCbsrilu02_numericBoost",
+    "hipsparseZbsrilu02_numericBoost",
+    "hipsparseSbsrilu02_bufferSize",
+    "hipsparseDbsrilu02_bufferSize",
+    "hipsparseCbsrilu02_bufferSize",
+    "hipsparseZbsrilu02_bufferSize",
+    "hipsparseSbsrilu02_analysis",
+    "hipsparseDbsrilu02_analysis",
+    "hipsparseCbsrilu02_analysis",
+    "hipsparseZbsrilu02_analysis",
+    "hipsparseSbsrilu02",
+    "hipsparseDbsrilu02",
+    "hipsparseCbsrilu02",
+    "hipsparseZbsrilu02",
+    "hipsparseXcsrilu02_zeroPivot",
+    "hipsparseScsrilu02_numericBoost",
+    "hipsparseDcsrilu02_numericBoost",
+    "hipsparseCcsrilu02_numericBoost",
+    "hipsparseZcsrilu02_numericBoost",
+    "hipsparseScsrilu02_bufferSize",
+    "hipsparseDcsrilu02_bufferSize",
+    "hipsparseCcsrilu02_bufferSize",
+    "hipsparseZcsrilu02_bufferSize",
+    "hipsparseScsrilu02_bufferSizeExt",
+    "hipsparseDcsrilu02_bufferSizeExt",
+    "hipsparseCcsrilu02_bufferSizeExt",
+    "hipsparseZcsrilu02_bufferSizeExt",
+    "hipsparseScsrilu02_analysis",
+    "hipsparseDcsrilu02_analysis",
+    "hipsparseCcsrilu02_analysis",
+    "hipsparseZcsrilu02_analysis",
+    "hipsparseScsrilu02",
+    "hipsparseDcsrilu02",
+    "hipsparseCcsrilu02",
+    "hipsparseZcsrilu02",
+    "hipsparseXbsric02_zeroPivot",
+    "hipsparseSbsric02_bufferSize",
+    "hipsparseDbsric02_bufferSize",
+    "hipsparseCbsric02_bufferSize",
+    "hipsparseZbsric02_bufferSize",
+    "hipsparseSbsric02_analysis",
+    "hipsparseDbsric02_analysis",
+    "hipsparseCbsric02_analysis",
+    "hipsparseZbsric02_analysis",
+    "hipsparseSbsric02",
+    "hipsparseDbsric02",
+    "hipsparseCbsric02",
+    "hipsparseZbsric02",
+    "hipsparseXcsric02_zeroPivot",
+    "hipsparseScsric02_bufferSize",
+    "hipsparseDcsric02_bufferSize",
+    "hipsparseCcsric02_bufferSize",
+    "hipsparseZcsric02_bufferSize",
+    "hipsparseScsric02_bufferSizeExt",
+    "hipsparseDcsric02_bufferSizeExt",
+    "hipsparseCcsric02_bufferSizeExt",
+    "hipsparseZcsric02_bufferSizeExt",
+    "hipsparseScsric02_analysis",
+    "hipsparseDcsric02_analysis",
+    "hipsparseCcsric02_analysis",
+    "hipsparseZcsric02_analysis",
+    "hipsparseScsric02",
+    "hipsparseDcsric02",
+    "hipsparseCcsric02",
+    "hipsparseZcsric02",
+    "hipsparseSgtsv2_bufferSizeExt",
+    "hipsparseDgtsv2_bufferSizeExt",
+    "hipsparseCgtsv2_bufferSizeExt",
+    "hipsparseZgtsv2_bufferSizeExt",
+    "hipsparseSgtsv2",
+    "hipsparseDgtsv2",
+    "hipsparseCgtsv2",
+    "hipsparseZgtsv2",
+    "hipsparseSgtsv2_nopivot_bufferSizeExt",
+    "hipsparseDgtsv2_nopivot_bufferSizeExt",
+    "hipsparseCgtsv2_nopivot_bufferSizeExt",
+    "hipsparseZgtsv2_nopivot_bufferSizeExt",
+    "hipsparseSgtsv2_nopivot",
+    "hipsparseDgtsv2_nopivot",
+    "hipsparseCgtsv2_nopivot",
+    "hipsparseZgtsv2_nopivot",
+    "hipsparseSgtsv2StridedBatch_bufferSizeExt",
+    "hipsparseDgtsv2StridedBatch_bufferSizeExt",
+    "hipsparseCgtsv2StridedBatch_bufferSizeExt",
+    "hipsparseZgtsv2StridedBatch_bufferSizeExt",
+    "hipsparseSgtsv2StridedBatch",
+    "hipsparseDgtsv2StridedBatch",
+    "hipsparseCgtsv2StridedBatch",
+    "hipsparseZgtsv2StridedBatch",
+    "hipsparseSgtsvInterleavedBatch_bufferSizeExt",
+    "hipsparseDgtsvInterleavedBatch_bufferSizeExt",
+    "hipsparseCgtsvInterleavedBatch_bufferSizeExt",
+    "hipsparseZgtsvInterleavedBatch_bufferSizeExt",
+    "hipsparseSgtsvInterleavedBatch",
+    "hipsparseDgtsvInterleavedBatch",
+    "hipsparseCgtsvInterleavedBatch",
+    "hipsparseZgtsvInterleavedBatch",
+    "hipsparseSgpsvInterleavedBatch_bufferSizeExt",
+    "hipsparseDgpsvInterleavedBatch_bufferSizeExt",
+    "hipsparseCgpsvInterleavedBatch_bufferSizeExt",
+    "hipsparseZgpsvInterleavedBatch_bufferSizeExt",
+    "hipsparseSgpsvInterleavedBatch",
+    "hipsparseDgpsvInterleavedBatch",
+    "hipsparseCgpsvInterleavedBatch",
+    "hipsparseZgpsvInterleavedBatch",
+    "hipsparseSnnz",
+    "hipsparseDnnz",
+    "hipsparseCnnz",
+    "hipsparseZnnz",
+    "hipsparseSdense2csr",
+    "hipsparseDdense2csr",
+    "hipsparseCdense2csr",
+    "hipsparseZdense2csr",
+    "hipsparseSpruneDense2csr_bufferSize",
+    "hipsparseDpruneDense2csr_bufferSize",
+    "hipsparseSpruneDense2csr_bufferSizeExt",
+    "hipsparseDpruneDense2csr_bufferSizeExt",
+    "hipsparseSpruneDense2csrNnz",
+    "hipsparseDpruneDense2csrNnz",
+    "hipsparseSpruneDense2csr",
+    "hipsparseDpruneDense2csr",
+    "hipsparseSpruneDense2csrByPercentage_bufferSize",
+    "hipsparseDpruneDense2csrByPercentage_bufferSize",
+    "hipsparseSpruneDense2csrByPercentage_bufferSizeExt",
+    "hipsparseDpruneDense2csrByPercentage_bufferSizeExt",
+    "hipsparseSpruneDense2csrNnzByPercentage",
+    "hipsparseDpruneDense2csrNnzByPercentage",
+    "hipsparseSpruneDense2csrByPercentage",
+    "hipsparseDpruneDense2csrByPercentage",
+    "hipsparseSdense2csc",
+    "hipsparseDdense2csc",
+    "hipsparseCdense2csc",
+    "hipsparseZdense2csc",
+    "hipsparseScsr2dense",
+    "hipsparseDcsr2dense",
+    "hipsparseCcsr2dense",
+    "hipsparseZcsr2dense",
+    "hipsparseScsc2dense",
+    "hipsparseDcsc2dense",
+    "hipsparseCcsc2dense",
+    "hipsparseZcsc2dense",
+    "hipsparseXcsr2bsrNnz",
+    "hipsparseSnnz_compress",
+    "hipsparseDnnz_compress",
+    "hipsparseCnnz_compress",
+    "hipsparseZnnz_compress",
+    "hipsparseXcsr2coo",
+    "hipsparseScsr2csc",
+    "hipsparseDcsr2csc",
+    "hipsparseCcsr2csc",
+    "hipsparseZcsr2csc",
+    "_hipsparseCsr2CscAlg_t__Base",
+    "hipsparseCsr2CscAlg_t",
+    "hipsparseCsr2cscEx2_bufferSize",
+    "hipsparseCsr2cscEx2",
+    "hipsparseScsr2hyb",
+    "hipsparseDcsr2hyb",
+    "hipsparseCcsr2hyb",
+    "hipsparseZcsr2hyb",
+    "hipsparseSgebsr2gebsc_bufferSize",
+    "hipsparseDgebsr2gebsc_bufferSize",
+    "hipsparseCgebsr2gebsc_bufferSize",
+    "hipsparseZgebsr2gebsc_bufferSize",
+    "hipsparseSgebsr2gebsc",
+    "hipsparseDgebsr2gebsc",
+    "hipsparseCgebsr2gebsc",
+    "hipsparseZgebsr2gebsc",
+    "hipsparseScsr2gebsr_bufferSize",
+    "hipsparseDcsr2gebsr_bufferSize",
+    "hipsparseCcsr2gebsr_bufferSize",
+    "hipsparseZcsr2gebsr_bufferSize",
+    "hipsparseXcsr2gebsrNnz",
+    "hipsparseScsr2gebsr",
+    "hipsparseDcsr2gebsr",
+    "hipsparseCcsr2gebsr",
+    "hipsparseZcsr2gebsr",
+    "hipsparseScsr2bsr",
+    "hipsparseDcsr2bsr",
+    "hipsparseCcsr2bsr",
+    "hipsparseZcsr2bsr",
+    "hipsparseSbsr2csr",
+    "hipsparseDbsr2csr",
+    "hipsparseCbsr2csr",
+    "hipsparseZbsr2csr",
+    "hipsparseSgebsr2csr",
+    "hipsparseDgebsr2csr",
+    "hipsparseCgebsr2csr",
+    "hipsparseZgebsr2csr",
+    "hipsparseScsr2csr_compress",
+    "hipsparseDcsr2csr_compress",
+    "hipsparseCcsr2csr_compress",
+    "hipsparseZcsr2csr_compress",
+    "hipsparseSpruneCsr2csr_bufferSize",
+    "hipsparseDpruneCsr2csr_bufferSize",
+    "hipsparseSpruneCsr2csr_bufferSizeExt",
+    "hipsparseDpruneCsr2csr_bufferSizeExt",
+    "hipsparseSpruneCsr2csrNnz",
+    "hipsparseDpruneCsr2csrNnz",
+    "hipsparseSpruneCsr2csr",
+    "hipsparseDpruneCsr2csr",
+    "hipsparseSpruneCsr2csrByPercentage_bufferSize",
+    "hipsparseDpruneCsr2csrByPercentage_bufferSize",
+    "hipsparseSpruneCsr2csrByPercentage_bufferSizeExt",
+    "hipsparseDpruneCsr2csrByPercentage_bufferSizeExt",
+    "hipsparseSpruneCsr2csrNnzByPercentage",
+    "hipsparseDpruneCsr2csrNnzByPercentage",
+    "hipsparseSpruneCsr2csrByPercentage",
+    "hipsparseDpruneCsr2csrByPercentage",
+    "hipsparseShyb2csr",
+    "hipsparseDhyb2csr",
+    "hipsparseChyb2csr",
+    "hipsparseZhyb2csr",
+    "hipsparseXcoo2csr",
+    "hipsparseCreateIdentityPermutation",
+    "hipsparseXcsrsort_bufferSizeExt",
+    "hipsparseXcsrsort",
+    "hipsparseXcscsort_bufferSizeExt",
+    "hipsparseXcscsort",
+    "hipsparseXcoosort_bufferSizeExt",
+    "hipsparseXcoosortByRow",
+    "hipsparseXcoosortByColumn",
+    "hipsparseSgebsr2gebsr_bufferSize",
+    "hipsparseDgebsr2gebsr_bufferSize",
+    "hipsparseCgebsr2gebsr_bufferSize",
+    "hipsparseZgebsr2gebsr_bufferSize",
+    "hipsparseXgebsr2gebsrNnz",
+    "hipsparseSgebsr2gebsr",
+    "hipsparseDgebsr2gebsr",
+    "hipsparseCgebsr2gebsr",
+    "hipsparseZgebsr2gebsr",
+    "hipsparseScsru2csr_bufferSizeExt",
+    "hipsparseDcsru2csr_bufferSizeExt",
+    "hipsparseCcsru2csr_bufferSizeExt",
+    "hipsparseZcsru2csr_bufferSizeExt",
+    "hipsparseScsru2csr",
+    "hipsparseDcsru2csr",
+    "hipsparseCcsru2csr",
+    "hipsparseZcsru2csr",
+    "hipsparseScsr2csru",
+    "hipsparseDcsr2csru",
+    "hipsparseCcsr2csru",
+    "hipsparseZcsr2csru",
+    "hipsparseScsrcolor",
+    "hipsparseDcsrcolor",
+    "hipsparseCcsrcolor",
+    "hipsparseZcsrcolor",
+    "hipsparseSpGEMMDescr",
+    "hipsparseSpGEMMDescr_t",
+    "hipsparseSpSVDescr",
+    "hipsparseSpSVDescr_t",
+    "hipsparseSpSMDescr",
+    "hipsparseSpSMDescr_t",
+    "_hipsparseFormat_t__Base",
+    "hipsparseFormat_t",
+    "_hipsparseOrder_t__Base",
+    "hipsparseOrder_t",
+    "_hipsparseIndexType_t__Base",
+    "hipsparseIndexType_t",
+    "_hipsparseSpMVAlg_t__Base",
+    "hipsparseSpMVAlg_t",
+    "_hipsparseSpMMAlg_t__Base",
+    "hipsparseSpMMAlg_t",
+    "_hipsparseSparseToDenseAlg_t__Base",
+    "hipsparseSparseToDenseAlg_t",
+    "_hipsparseDenseToSparseAlg_t__Base",
+    "hipsparseDenseToSparseAlg_t",
+    "_hipsparseSDDMMAlg_t__Base",
+    "hipsparseSDDMMAlg_t",
+    "_hipsparseSpSVAlg_t__Base",
+    "hipsparseSpSVAlg_t",
+    "_hipsparseSpSMAlg_t__Base",
+    "hipsparseSpSMAlg_t",
+    "_hipsparseSpMatAttribute_t__Base",
+    "hipsparseSpMatAttribute_t",
+    "_hipsparseSpGEMMAlg_t__Base",
+    "hipsparseSpGEMMAlg_t",
+    "hipsparseCreateSpVec",
+    "hipsparseDestroySpVec",
+    "hipsparseSpVecGet",
+    "hipsparseSpVecGetIndexBase",
+    "hipsparseSpVecGetValues",
+    "hipsparseSpVecSetValues",
+    "hipsparseCreateCoo",
+    "hipsparseCreateCooAoS",
+    "hipsparseCreateCsr",
+    "hipsparseCreateCsc",
+    "hipsparseCreateBlockedEll",
+    "hipsparseDestroySpMat",
+    "hipsparseCooGet",
+    "hipsparseCooAoSGet",
+    "hipsparseCsrGet",
+    "hipsparseBlockedEllGet",
+    "hipsparseCsrSetPointers",
+    "hipsparseCscSetPointers",
+    "hipsparseCooSetPointers",
+    "hipsparseSpMatGetSize",
+    "hipsparseSpMatGetFormat",
+    "hipsparseSpMatGetIndexBase",
+    "hipsparseSpMatGetValues",
+    "hipsparseSpMatSetValues",
+    "hipsparseSpMatGetStridedBatch",
+    "hipsparseSpMatSetStridedBatch",
+    "hipsparseCooSetStridedBatch",
+    "hipsparseCsrSetStridedBatch",
+    "hipsparseSpMatGetAttribute",
+    "hipsparseSpMatSetAttribute",
+    "hipsparseCreateDnVec",
+    "hipsparseDestroyDnVec",
+    "hipsparseDnVecGet",
+    "hipsparseDnVecGetValues",
+    "hipsparseDnVecSetValues",
+    "hipsparseCreateDnMat",
+    "hipsparseDestroyDnMat",
+    "hipsparseDnMatGet",
+    "hipsparseDnMatGetValues",
+    "hipsparseDnMatSetValues",
+    "hipsparseDnMatGetStridedBatch",
+    "hipsparseDnMatSetStridedBatch",
+    "hipsparseAxpby",
+    "hipsparseGather",
+    "hipsparseScatter",
+    "hipsparseRot",
+    "hipsparseSparseToDense_bufferSize",
+    "hipsparseSparseToDense",
+    "hipsparseDenseToSparse_bufferSize",
+    "hipsparseDenseToSparse_analysis",
+    "hipsparseDenseToSparse_convert",
+    "hipsparseSpVV_bufferSize",
+    "hipsparseSpVV",
+    "hipsparseSpMV_bufferSize",
+    "hipsparseSpMV_preprocess",
+    "hipsparseSpMV",
+    "hipsparseSpMM_bufferSize",
+    "hipsparseSpMM_preprocess",
+    "hipsparseSpMM",
+    "hipsparseSpGEMM_createDescr",
+    "hipsparseSpGEMM_destroyDescr",
+    "hipsparseSpGEMM_workEstimation",
+    "hipsparseSpGEMM_compute",
+    "hipsparseSpGEMM_copy",
+    "hipsparseSpGEMMreuse_workEstimation",
+    "hipsparseSpGEMMreuse_nnz",
+    "hipsparseSpGEMMreuse_compute",
+    "hipsparseSpGEMMreuse_copy",
+    "hipsparseSDDMM",
+    "hipsparseSDDMM_bufferSize",
+    "hipsparseSDDMM_preprocess",
+    "hipsparseSpSV_createDescr",
+    "hipsparseSpSV_destroyDescr",
+    "hipsparseSpSV_bufferSize",
+    "hipsparseSpSV_analysis",
+    "hipsparseSpSV_solve",
+    "hipsparseSpSM_createDescr",
+    "hipsparseSpSM_destroyDescr",
+    "hipsparseSpSM_bufferSize",
+    "hipsparseSpSM_analysis",
+    "hipsparseSpSM_solve",
+]

@@ -161,7 +161,7 @@ def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
     return "hip._util.types.Pointer"
 
 
-default_c_interface_decl_preamble = """\
+LICENSE_TEXT = """\
 # MIT License
 # 
 # Copyright (c) 2023 Advanced Micro Devices, Inc.
@@ -183,56 +183,20 @@ default_c_interface_decl_preamble = """\
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+"""
+
+default_c_interface_decl_preamble = f"""\
+{LICENSE_TEXT}
 from libc.stdint cimport *
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
-default_c_interface_impl_preamble = """\
-# MIT License
-# 
-# Copyright (c) 2023 Advanced Micro Devices, Inc.
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+default_c_interface_impl_preamble = f"""\
+{LICENSE_TEXT}
 """
 
-default_python_interface_decl_preamble = """\
-# MIT License
-# 
-# Copyright (c) 2023 Advanced Micro Devices, Inc.
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+default_python_interface_decl_preamble = f"""\
+{LICENSE_TEXT}
 from libc cimport stdlib
 from libc cimport string
 from libc.stdint cimport *
@@ -242,28 +206,8 @@ cimport hip._util.types
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
-default_python_interface_impl_preamble = """\
-# MIT License
-# 
-# Copyright (c) 2023 Advanced Micro Devices, Inc.
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+default_python_interface_impl_preamble = f"""\
+{LICENSE_TEXT}
 
 \"""
 [ATTRIBUTES]
@@ -325,22 +269,22 @@ cdef class {{name}}:
     that you can pass as argument instead:
     
     * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL`.
+      This will set the ``self._ptr`` attribute to ``NULL`.
     * `~.Pointer` and its subclasses:
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-    `~.Py_buffer` object ownership is not transferred!
+      Copies ``pyobj._ptr`` to ``self._ptr``.
+      `~.Py_buffer` object ownership is not transferred!
     * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
     * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
     * `object` that implements the Python buffer protocol:
-        If the object represents a simple contiguous array,
-        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
-        sets the `self._py_buffer_acquired` flag to `True`, and
-        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
     
     Type checks are performed in the above order.
 
@@ -681,6 +625,7 @@ class MacroDefinitionMixin(CythonMixin):
                         """
                 )
             )
+        self.all.append(self.cython_global_name)
         return f"{name} = {cprefix}{name}"
 
 
@@ -876,7 +821,7 @@ class RecordMixin(CythonMixin):
         assert isinstance(self, tree.Record)
         global wrapper_class_impl_base_template
         global python_interface_record_properties_name
-        name = self.renamer(self.global_name(self.sep))
+        name = self.cython_global_name
         template = Cython.Tempita.Template(wrapper_class_impl_base_template)
         return template.substitute(
             name=name,
@@ -955,6 +900,7 @@ class RecordMixin(CythonMixin):
             )
         result = self._render_python_interface_head(cprefix, all_properties_rendered)
         result += textwrap.indent("\n".join(self._python_body_epilog), indent)
+        self.all.append(self.cython_global_name)
         return result
 
 
@@ -1069,6 +1015,8 @@ class EnumMixin(CythonMixin):
                 ),
                 indent,
             )
+            self.all.append(base_class_name)
+            self.all.append(name)
             return result
 
 
@@ -1105,6 +1053,7 @@ class TypedefMixin(CythonMixin, Typed):
                         """
                 )
             )
+            self.all.append(name)
             return f"{name} = {aliased}"
         return None
 
@@ -1143,6 +1092,7 @@ class FunctionPointerMixin(CythonMixin):
         name = self.cython_global_name
         cname = cprefix + name
         template = Cython.Tempita.Template(wrapper_class_impl_base_template)
+        self.all.append(name)
         return template.substitute(
             name=name,
             cname=cname,
@@ -1337,7 +1287,7 @@ cdef void* {funptr_name} = NULL
         else:
             return None
 
-    def _create_python_docstring(self,out_arg_names,parm_python_types):
+    def _render_python_docstring(self,out_arg_names: list,parm_python_types: dict):
         """Converts doxygen comment to a Python docstring using the doxyparser API.
         """
         # TODO handle groups; issue detecting addgroup; detecting ingroup is easier
@@ -1380,14 +1330,15 @@ cdef void* {funptr_name} = NULL
                 raise RuntimeError(f"function {self.name}: doxygen: expected single text block in section 'brief'")
             docstring_body = doxygen_brief.first_block.transformed_text.strip() +"\n\n"
         else:
-            docstring_body = "(No short description)\n\n"
+            docstring_body = "(No short description, might be part of a group)\n\n"
         
         # other sections
         single_level_indent = " "*4
         docstring_returns = []
-        docstring_args = []
+        docstring_args = {}
         docstring_out_arg_returns = []
-        undocumented_parms = [parm.name for parm in self.parms]
+        parms_still_to_be_documented = [parm.name for parm in self.parms]
+        in_inout_parm_names = [name for name in parms_still_to_be_documented if name not in out_arg_names]
         for section in sections:
             if section.kind in (
               "result",
@@ -1403,25 +1354,27 @@ cdef void* {funptr_name} = NULL
                 #    <arg>: line1
                 #       line2
                 # ^ hence, 2x indent for descr
-                descr = self._dedent_first_line(self._render_doxygen_section_body(section,single_level_indent,outer_indent=single_level_indent*2).rstrip()+"\n")
+                descr = self._render_doxygen_section_body(section,single_level_indent,outer_indent=single_level_indent*2).rstrip()+"\n"
                 descr = descr.lstrip("-*")
-                dir = (f"**{section.tokens[1].replace(' ','')}** ") if section.tokens[1] != None else ""
+                # example for tokens[1]: `[ in , out ]`
+                dir = (f" -- *{section.tokens[1][1:-1].replace(' ','').upper()}*") if section.tokens[1] != None else ""
                 for name in names:
                     if not len(descr.strip()):
                         warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' has empty documentation")
-                    #
-                    if not name in undocumented_parms:
+                    
+                    if name in parms_still_to_be_documented:
+                        type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
+                        parms_still_to_be_documented.remove(name)
+                    else:
                         type_info = ""
                         warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' is not part of function signature")
-                    else:
-                        type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
-                        undocumented_parms.remove(name)
+                    
                     if name in out_arg_names:
-                        docstring_out_arg_returns.append(f"{single_level_indent}{type_info}: {descr}")
+                        docstring_out_arg_returns.append(f"{single_level_indent}{type_info}:\n{descr}")
                     else:
                         if len(type_info):
                             type_info = f" ({type_info})"
-                        docstring_args.append((name+type_info,dir,descr))
+                        docstring_args[name] = (name+type_info,dir,"\n"+descr)
             else:
                 docstring_body += "\n"
                 if section.kind in ("details","details*"):
@@ -1438,15 +1391,20 @@ cdef void* {funptr_name} = NULL
                 else:
                     docstring_body += body
         # Args
-        if len(undocumented_parms):
-            for name in undocumented_parms:
+        # append undocumented arguments too but warn
+        if len(parms_still_to_be_documented):
+            for name in parms_still_to_be_documented:
                 warnings.warn(f"function {self.name}: doxygen: function arg '{name}' is not documented")
-
+                type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
+                type_info = f" ({type_info})"
+                docstring_args[name] = (name+type_info,"",f"\n{single_level_indent*2}(undocumented)\n")
+        # now generate the arguments
         if len(docstring_args):
             docstring_body += "\nArgs:\n"
-
-            for (name, dir, descr) in docstring_args:
-                docstring_body += f"{single_level_indent}{name}: {dir}{descr}\n"
+            
+            for name in in_inout_parm_names:
+                (head, dir, descr) = docstring_args[name]
+                docstring_body += f"{single_level_indent}{head}{dir}:{descr}\n"
         
         # Return values
         retval_typename = self._python_interface_retval_typename()
@@ -1459,7 +1417,7 @@ cdef void* {funptr_name} = NULL
         elif len(docstring_returns):
             first_entry = docstring_returns[0].lstrip(" \t\n*-")
             docstring_returns[0] = f"{CythonMixin.to_sphinx_pyobj(retval_typename)}: {first_entry}"
-        docstring_returns += docstring_out_arg_returns # add the additional return parameter
+        docstring_returns += docstring_out_arg_returns # add the additional return parameters
        
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"
@@ -1473,6 +1431,8 @@ cdef void* {funptr_name} = NULL
                     prefix + descr.lstrip(" \t\n*-"),
                     single_level_indent
                 ).rstrip() + "\n"
+
+        # Clean result
         # remove multiple blank lines
         docstring_body = self.docstring_cleaner(docstring_body)
         # remove multiple blank lines
@@ -1712,7 +1672,7 @@ cdef void* {funptr_name} = NULL
         result = "@cython.embedsignature(True)\n"
         result += (
             f"def {self.cython_name}({', '.join(sig_args)}):\n"
-            + textwrap.indent(self._create_python_docstring([p.name for p in out_parms],parm_python_types), indent).rstrip()
+            + textwrap.indent(self._render_python_docstring([p.name for p in out_parms],parm_python_types), indent).rstrip()
             + "\n"
         )
         if self.has_python_body_prolog:
@@ -1737,6 +1697,7 @@ cdef void* {funptr_name} = NULL
                     result += f"{indent}return {out_args[0]}\n"
         else:
             result += f"{indent}pass"
+        self.all.append(self.cython_global_name)
         return result
 
 
@@ -1967,12 +1928,14 @@ class CythonBackend:
         result = []
         cprefix = f"{cmodule}."
         docstring_attributes = []
+        all = [] # required to define order
         for node in self.walk_filtered_nodes():
             setattr(node,"docstring_attributes",docstring_attributes)
+            setattr(node,"all",all)
             contrib = node.render_python_interface_impl(cprefix=cprefix)
             if contrib != None:
                 result.append(contrib)
-        return result, docstring_attributes
+        return result, docstring_attributes, all
 
     def render_python_interface_decl_part(self, cython_c_bindings_module: str):
         """Returns the Python interface file content for the given headers."""
@@ -1983,10 +1946,15 @@ class CythonBackend:
 
     def render_python_interface_impl_part(self, cython_c_bindings_module: str):
         """Returns the Python interface file content for the given headers."""
-        result, docstring_attributes = self.create_python_interface_impl_part(cython_c_bindings_module)
-        nl = "\n\n"
-        return ( f"""\
-{nl.join(result)}""", docstring_attributes )
+        contribs, docstring_attributes, all = self.create_python_interface_impl_part(cython_c_bindings_module)
+        result = (
+            "\n\n".join(contribs).rstrip()
+            + "\n\n"
+            + "__all__ = [\n"
+            + "\n".join([f'    "{e}",' for e in all])
+            + "\n]"
+        )
+        return (result, docstring_attributes)
 
 
 class CythonPackageGenerator:

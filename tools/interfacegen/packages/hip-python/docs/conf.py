@@ -28,7 +28,16 @@ extensions = [
 # to the sys path, i.e. do not add .. and ../hip-python-as-cuda as 
 # this breaks autodoc's automodule routine.
 
-autodoc_member_order = 'bysource' # Order members by source appearance
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'undoc-members': True,
+    'special-members': '__init__, __getitem__',
+    'inherited-members': True,
+    'show-inheritance': True,
+    'imported-members': True,
+    'member-order': 'bysource', # bysource: seems unfortunately not to work for Cython modules
+}
 
 # Rocm-docs-core
 from rocm_docs import ROCmDocs

@@ -31,6 +31,17 @@ cimport libc.stdint
 import ctypes
 import math
 
+__all__ = [
+    # __all__ is important for generating the API documentation in source order
+    "Pointer",
+    "DeviceArray",
+    "ListOfBytes",
+    "ListOfPointer",
+    "ListOfInt",
+    "ListOfUnsigned",
+    "ListOfUnsignedLong",
+]
+
 cdef class Pointer:
     """Datatype for handling Python arguments that need to be converted to a pointer type.
 

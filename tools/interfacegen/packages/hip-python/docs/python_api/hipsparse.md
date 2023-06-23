@@ -1,11 +1,8 @@
 # hip.hipsparse
 
+<!-- global automodule options are set in conf.py -->
 ```{eval-rst}
 .. automodule:: hip.hipsparse
-   :members:
-   :undoc-members:
-   :private-members:
-   :special-members:
-   :show-inheritance:
+
 
 ```
