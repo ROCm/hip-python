@@ -204,6 +204,7 @@ and then unloads the code module again via  {py:obj}`~.hipModuleUnload` before q
 with an `"ok"`.
 :::
 
+(sec_launching_kernels_with_args)=
 ## Kernels with Arguments
 
 :::{admonition} What will I learn?
