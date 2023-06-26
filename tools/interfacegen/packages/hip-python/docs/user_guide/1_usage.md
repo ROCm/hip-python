@@ -256,7 +256,7 @@ See the previous section [Launching Kernels](sec_launching_kernels) for
 a textual description of the main steps.
 :::
 
-## hipBLAS and NUMPY Interoperability
+## hipBLAS and NumPy Interoperability
 
 :::{admonition} What will I learn?
 
@@ -278,7 +278,7 @@ and thus can be directly passed to those interfaces.
    :emphasize-lines: 23-24, 35-36, 39-41, 44
    :linenos:
    :name: hipblas_with_numpy
-   :caption: hipBLAS and NUMPY Interoperability 
+   :caption: hipBLAS and NumPy Interoperability 
 ```
 
 :::{admonition} What is happening?

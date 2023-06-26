@@ -89,6 +89,8 @@ article_pages = [
     },
 ]
 
+#html_extra_path = ["_static"]
+
 docs_core = ROCmDocs(project)
 docs_core.setup()
 

@@ -39,39 +39,61 @@ This documentation has been generated based on HIP version 5.4.22804-474e8620.
 :gutter: 1
 
 :::{grid-item-card} How to Install HIP Python
-In this chapter, you learn how to identify
-the correct HIP Python packages to install for your ROCm&reg; installation, 
+
+Learn how to identify the correct HIP Python packages 
+to install for your ROCm&reg; installation, 
 where to retrieve the packages and what options
 you have to install them.
 
 - {doc}`/user_guide/0_install`
+
+```{eval-rst}
+.. image:: _static/pip_install.PNG
+   :width: 240
+   :align: center
+```
+
 :::
 
 :::{grid-item-card} How to Use HIP Python
 
-In this exhaustive chapter, you learn how to use
-HIP Python's interfaces in your Python or Cython program.
-A large number of examples is presented that cover 
+Learn how to use HIP Python's interfaces in your Python or Cython program.
+We present a large number of examples that cover 
 HIP and HIPRTC as well as multiple math libraries (HIPBLAS, HIPRAND, HIPFFT) 
 and the communication library RCCL.
-You learn how to launch your own kernels and how the different
+Learn how to launch your own kernels and how the different
 libraries interact.
 
 - {doc}`/user_guide/1_usage`
+
+```{eval-rst}
+.. image:: _static/hip_usage.PNG
+   :width: 240
+   :align: center
+```
+
 :::
 
 :::{grid-item-card} How to Port CUDA Python Applications
-This chapter explains how you can use HIP Python's CUDA Python interoperability layer
-to port or even directly run CUDA Python applications
-on AMD GPUs. The chapter covers Python and Cython programs.
+
+Learn how to identify the correct HIP Python packages for your ROCm&reg; installation, 
+where to retrieve the packages and how to install them.
 
 - {doc}`/user_guide/2_cuda_python_interop`
+
+```{eval-rst}
+.. image:: _static/cuda_interop.PNG
+   :width: 240
+   :align: center
+```
+
 :::
 
-:::{grid-item-card} HIP Python's Interoperable Datatypes
-In this chapter, you learn about the datatypes that
-HIP Python uses to ease interoperability with other
-packages such as numpy and NUMBA.
+:::{grid-item-card} HIP Python's Adapter Types
+
+Learn about the datatypes that HIP Python uses to translate between C and Python 
+and that are designed to ease interoperability with other
+packages such as [NumPy](https://numpy.org) and [Numba](https://numba.pydata.org/).
 
 - {doc}`/user_guide/3_datatypes`
 :::
