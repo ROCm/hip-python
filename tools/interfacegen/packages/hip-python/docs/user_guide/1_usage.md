@@ -143,13 +143,13 @@ interfaces is {py:obj}`~.hipMemcpyAsync` (lines 27 and 28).
 
 :::{admonition} What is happening?
 
-1. A host buffer will be filled with random numbers before
-it is asynchronously copied to the device (line 27), where a asynchronous {py:obj}`~.hipMemsetAsync` (same stream) resets all bytes to `0` (line 28). 
-1. An asynchronous memcpy (same stream) is then issued to copy the device data back to the host (line 29).
+1. A host buffer is filled with random numbers (line 18) before
+it is asynchronously copied to the device (line 23), where a asynchronous {py:obj}`~.hipMemsetAsync` (same stream) resets all bytes to `0` (line 24).
+1. An asynchronous memcpy (same stream) is then issued to copy the device data back to the host (line 25).
 All operations within the stream are executed in order.
 1. As the `~Async` operations are non-blocking, the host waits via {py:obj}`~.hipStreamSynchronize`
-until operations in the stream have been completed (line 30) before deleting
-the stream (line 31). 
+until operations in the stream have been completed (line 26) before deleting
+the stream (line 27). 
 1. Eventually the program deallocates device data via
 {py:obj}`~.hipFree` and checks if all bytes in the host buffer are now set to `0`.
 If so, it quits with an "ok".
@@ -175,7 +175,7 @@ The {ref}`example below <hiprtc_launch_kernel_no_args>` demonstrates how to do s
    :language: python
    :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 20, 25, 34, 42-44, 47-55
+   :emphasize-lines: 20, 25, 33-34, 42-44, 47-55
    :name: hiprtc_launch_kernel_no_args
    :caption: Compiling and Launching Kernels
 ```
@@ -233,7 +233,7 @@ to a fixed precision.
 The [below example](hiprtc_launch_kernel_args) demonstrates the usage of {py:obj}`~.hipModuleLaunchKernel`
 by means of a simple kernel, which scales a vector by a factor.
 Here, We pass multiple arguments that require different alignments to the aforementioned routine
-in lines 80-95. We insert some additional `unused*` arguments into the `extra` {py:obj}`tuple` to stress the
+in lines 85-90. We insert some additional `unused*` arguments into the `extra` {py:obj}`tuple` to stress the
 argument buffer allocator. Note the {py:obj}`ctypes` object construction for scalars and the direct passing of the device array `x_d`. 
 Compare the argument list with the signature of the kernel defined in line 23.
 The example also introduces HIP Python's {py:obj}`~.dim3` struct (default value per dimension is 1), which can be unpacked just
@@ -316,25 +316,26 @@ with respect to the specified type and shape information.
    :language: python
    :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 20-21, 25-27, 33
+   :emphasize-lines: 20-21, 25-27, 33, 36
    :name: hip_python_device_array
    :caption: Configuring and Slicing HIP Python's DeviceArray
 ```
 
 :::{admonition} What is happening?
 
-1. A two-dimensional row-major array of size `(3,20)` (line 18) is created on the host.
-   All elements are initialized to `1` (line 19).
-1. A device array with the same number of bytes is created on the device (line 23).
+1. A two-dimensional row-major array of size `(3,20)` is created on the host.
+   All elements are initialized to `1` (line 20-21).
+1. A device array with the same number of bytes is created on the device (line 25).
 1. The device array is reconfigured to have `float32` type and the shape of
-   the host array (line 23-25).
-1. The host data is copied to the device array (line 26).
+   the host array (line 25-27).
+1. The host data is copied to the device array (line 28).
 1. Within a loop over the row indices (index: `r`):
-   1. A pointer to row with index `r` is created via array subscript (line 31). This yields `row`.
+   1. A pointer to row with index `r` is created via array subscript (line 33). This yields `row`.
    1. `row` is passed to a {py:obj}`~.hipblasSscal` call that
-      writes index `r` to all elements of the row (line 34).
+      writes index `r` to all elements of the row (line 36).
 1. Data is copied back from the device to the host array.
-1. Finally, a check is performed on the host if the row values equal the respective row index (lines 44-50).
+1. Finally, a check is performed on the host if the row values equal the respective row index (lines 44-50). The program
+   quits with `"ok"` if all went well.
 :::
 
 :::{note}
@@ -450,7 +451,7 @@ from one GPU's device buffer to that of the other ones.
 ```
 
 :::{admonition} What is happening?
-1. In line 17, we use the device count `num_gpus` (via {py:obj}`~.hiphipGetDeviceCount`) to create an array
+1. In line 17, we use the device count `num_gpus` (via {py:obj}`~.hipGetDeviceCount`) to create an array
 of pointers (same size as `unsigned long`, `dtype="uint64"`). This array named `comms` 
 is intended to store a pointer to each device's communicator.
 1. We then create an array of device identifiers (line 18).
@@ -463,7 +464,7 @@ except device `0`. The latter's array is filled with ones.
    The first argument of the call is per-device `dx`, the second the size of `dx`.
    Then follows the {py:obj}`~.ncclDataType_t`, the root (device `0`), then the communicator (`int(comms[dev])`)
    and finally the stream ({py:obj}`None`).
-   Casting `comms[dev]` is required as the result is otherwise interpreted as single-element `Py_buffer`
+   Casting `comms[dev]` to {py:obj}`int` is required as the result is otherwise interpreted as single-element `Py_buffer`
    by HIP Python's {py:obj}`~.ncclBcast` instead of as an address.
 1. In line 39, we close the communication group again.
 1. We download all data to the host per device and check if the elements are set to `1` (lines 42-50).
