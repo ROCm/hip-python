@@ -1,0 +1,33 @@
+defaults:
+  numbered: False
+  maxdepth: 6
+root: index.md
+subtrees:
+  - caption: User Guide
+    entries:
+      - file: user_guide/0_install
+      - file: user_guide/1_usage
+      - file: user_guide/2_cuda_python_interop
+      - file: user_guide/3_datatypes
+      - file: user_guide/4_report_bugs
+      - file: user_guide/5_license
+  - caption: "HIP Python: Python API"
+    entries:
+      - file: python_api/hip
+      - file: python_api/hiprtc
+      - file: python_api/hipblas
+      - file: python_api/rccl
+      - file: python_api/hiprand
+      - file: python_api/hipfft
+      - file: python_api/hipsparse
+      - file: python_api_manual/_hip_helpers
+      - file: python_api_manual/_util_types
+  - caption: "CUDA Python Interoperability: Python API"
+    entries:
+      - file: python_api/cuda
+      - file: python_api/cudart
+      - file: python_api/nvrtc
+  - caption: Developer Guide
+    entries:
+      - file: developer_guide/0_overview
+      - file: developer_guide/4_commit_guide
