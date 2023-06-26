@@ -58,18 +58,29 @@ cdef class Pointer:
     In summary, the type can be initialized from the following Python objects:
 
     * `None`:
+
         This will set the ``self._ptr`` attribute to ``NULL``.
+
     * `~.Pointer`:
+
         Copies ``pyobj._ptr`` to ``self._ptr``.
         `~.Py_buffer` object ownership is not transferred!
+
     * `int`:
+        
         Interprets the integer value as pointer address and writes it to ``self._ptr``.
+
     * `ctypes.c_void_p`:
+        
         Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
     * `object` that implements the CUDA Array Interface protocol:
+        
         Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
         from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
     * `object` that implements the Python buffer protocol:
+        
         If the object represents a simple contiguous array,
         writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
         sets the `self._py_buffer_acquired` flag to `True`, and
@@ -818,10 +829,13 @@ cdef class ListOfBytes(Pointer):
     The type can be initialized from the following Python objects:
 
     * `list` / `tuple` of `bytes:
+
         A `list` or `tuple` of `bytes` objects.
         In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+
     * `object` that is accepted as input by `~.Pointer.__init__`:
+
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
         See `~.Pointer.__init__` for more information.
         
@@ -932,10 +946,13 @@ cdef class ListOfPointer(Pointer):
     The type can be initialized from the following Python objects:
 
     * `list` / `tuple` of `bytes`:
+
         A `list` or `tuple` of types that can be converted to `~.Pointer`.
         In this case, this type allocates an array of ``void *`` pointers wherein it stores the addresses obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+
     * `object` that is accepted as input by `~.Pointer.__init__`:
+
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
         See `~.Pointer.__init__` for more information.
     
@@ -1041,10 +1058,13 @@ cdef class ListOfInt(Pointer):
     The type can be initialized from the following Python objects:
 
     * `list` / `tuple` of types that can be converted to C type ``int``:
+
         A `list` or `tuple` of types that can be converted to C type ``int``.
         In this case, this type allocates an array of C ``int`` values wherein it stores the values obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+
     * `object` that is accepted as input by `~.Pointer.__init__`:
+
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
         See `~.Pointer` for more information.
     
@@ -1171,10 +1191,13 @@ cdef class ListOfUnsigned(Pointer):
     The type can be initialized from the following Python objects:
 
     * `list` / `tuple` of types that can be converted to C type ``unsigned``:
+
         A `list` or `tuple` of types that can be converted to C type ``unsigned``.
         In this case, this type allocates an array of C ``unsigned`` values wherein it stores the values obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+
     * `object` that is accepted as input by `~.Pointer.__init__`:
+
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
         See `~.Pointer` for more information.
     
@@ -1301,10 +1324,13 @@ cdef class ListOfUnsignedLong(Pointer):
     The type can be initialized from the following Python objects:
 
     * `list` / `tuple` of types that can be converted to C type ``unsigned long``:
+    
         A `list` or `tuple` of types that can be converted to C type ``unsigned long``.
         In this case, this type allocates an array of C ``unsigned long`` values wherein it stores the values obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+
     * `object` that is accepted as input by `~.Pointer.__init__`:
+    
         In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
         See `~.Pointer` for more information.
     

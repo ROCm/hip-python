@@ -34,9 +34,7 @@ specific helper types for {py:obj}`hip.hip` are defined in {py:obj}`hip._hip_hel
 
 Whenever a C function signature argument of pointer type is too generic --- e.g., already if it is a C ``void *``
 pointer --- HIP Python's code generator uses the {py:obj}`.types.Pointer` adapter to convert
-a select list of Python objects to the pointer type expected by the C function.
-
-This adapter type can be instantiated from the following Python objects:
+a select list of Python objects to the pointer type expected by the C function:
 
 * {py:obj}`None`:
 
@@ -114,7 +112,8 @@ Type checks are performed in the above order.
 Shape and type information and other metadata can be modified or overwritten after creation via the `~.DeviceArray.configure`
 member function. be aware that you might need to pass the ``_force=True`` keyword argument --- 
 in particular if your instance was created from a type that does not implement the 
-[CUDA Array Interface](https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html) protocol.
+[CUDA Array Interface](https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html) protocol
+or via a HIP Python device memory allocation routine.
 :::
 
 :::{admonition} See
@@ -123,7 +122,7 @@ in particular if your instance was created from a type that does not implement t
 
 ## Usage in HIP Python
 
-The type is used as return value for:
+The type is used as return value of:
 
 * {py:obj}`~.hipMalloc`
 * {py:obj}`~.hipExtMallocWithFlags`
@@ -131,8 +130,7 @@ The type is used as return value for:
 * {py:obj}`~.hipMallocAsync`
 * {py:obj}`~.hipMallocFromPoolAsync`
 
-It can be passed to functions that expect
-a {py:obj}`~.Pointer` argument and where passing an instance of this type instead make sense, e.g.
+It can be passed to functions that expect a {py:obj}`~.Pointer` argument and where passing an instance of this type instead makes sense, e.g.
 you can pass it as copy destination or copy source in {py:obj}`~.hip.hipMemcpy`.
 
 :::{note}

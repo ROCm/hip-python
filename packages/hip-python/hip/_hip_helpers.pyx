@@ -22,23 +22,21 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
     The type can be initialized from the following Python objects:
     
     * `list` or `tuple` object:
+
       `list` or `tuple` object with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
       In this case, this type allocates an appropriately sized buffer wherein it stores the 
       values of all `ctypes` datatype entries of `pyobj` plus all the addresses from the
       entries that can be converted to type `~.Pointer`. The buffer is padded with additional bytes to account 
       for the alignment requirements of each entry; for more details, see `~.hipModuleLaunchKernel`.
       Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+
     * `object` that is accepted as input by `~.Pointer.__init__`:
+      
       In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
       See `~.Pointer.__init__` for more information.
     
     Note:
         Type checks are performed in the above order.
-
-    Args:
-        pyobj (`object`): 
-            Must be either a `list` or `tuple` of objects that can be converted
-            to `~.Pointer`, or any other `object` that is accepted as input by `~.Pointer.__init__`.
 
     See:
         `~.hipModuleLaunchKernel`
@@ -166,20 +164,21 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
             libc.stdlib.free(<void*>self._config[1])
 
     def __init__(self,object pyobj):
-        """Datatype for handling Python `list` or `tuple` objects with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
-
-        Datatype for handling Python `list` or `tuple` objects with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
+        """Constructor.
 
         The type can be initialized from the following Python objects:
 
         * `list` or `tuple` object:
+
           `list` or `tuple` object with entries that are either `ctypes` datatypes or that can be converted to type `~.Pointer`.
           In this case, this type allocates an appropriately sized buffer wherein it stores the 
           values of all `ctypes` datatype entries of `pyobj` plus all the addresses from the
           entries that can be converted to type `~.Pointer`. The buffer is padded with additional bytes to account 
           for the alignment requirements of each entry; for more details, see `~.hipModuleLaunchKernel`.
           Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+
         * `object` that is accepted as input by `~.Pointer.__init__`:
+        
           In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
           See `~.Pointer.__init__` for more information.
         

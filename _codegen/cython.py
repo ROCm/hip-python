@@ -269,18 +269,29 @@ cdef class {{name}}:
     that you can pass as argument instead:
     
     * `None`:
+
       This will set the ``self._ptr`` attribute to ``NULL`.
+
     * `~.Pointer` and its subclasses:
+      
       Copies ``pyobj._ptr`` to ``self._ptr``.
       `~.Py_buffer` object ownership is not transferred!
+
     * `int`:
+      
       Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      
     * `ctypes.c_void_p`:
+      
       Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+      
       Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
       from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
     * `object` that implements the Python buffer protocol:
+      
       If the object represents a simple contiguous array,
       writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
       sets the `self._py_buffer_acquired` flag to `True`, and

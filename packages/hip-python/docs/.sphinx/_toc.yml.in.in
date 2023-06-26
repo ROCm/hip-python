@@ -29,7 +29,4 @@ subtrees:
   - caption: Developer Guide
     entries:
       - file: developer_guide/0_overview
-      - file: developer_guide/1_code_generation
-      - file: developer_guide/2_packaging
-      - file: developer_guide/3_building_docs
       - file: developer_guide/4_commit_guide

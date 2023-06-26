@@ -24,34 +24,26 @@
 
 ## Supported Hardware
 
-* See the ROCm&reg;  [Hardware_and_Software_Support](https://docs.amd.com/bundle/Hardware_and_Software_Reference_Guide/page/Hardware_and_Software_Support.html) page for a list of supported AMD&reg; GPUs.
+Currently, only AMD&reg; GPUs are supported.
 
-* Currently, NVIDIA GPUs are not supported.
+* See the ROCm&reg;  [Hardware_and_Software_Support](https://docs.amd.com/bundle/Hardware_and_Software_Reference_Guide/page/Hardware_and_Software_Support.html) page for a list of supported AMD&reg; GPUs.
 
 ## Supported Operation Systems
 
 Currently, only Linux is supported by the HIP Python interfaces's library loader.
-The next section lists additional constraints due to the required ROCm&reg; installation.
+The next section lists additional constraints with respect to the required ROCm&reg; installation.
 
 ## Software Requirements
 
-To use the `HIP Python` interfaces, you must install a HIP Python version
-that matches the `ROCm&reg;` installation, or vice versa.
+You must install a HIP Python version that is compatible with your  ROCm&reg; installation, or vice versa -- i
+n particular, if you want to use the Cython interfaces.
 See the [ROCm&reg; installation guide](https://docs.amd.com/bundle/ROCm&reg;-Installation-Guide-v5.3/page/Introduction_to_ROCm_Installation_Guide_for_Linux.html)
 for more details on how to install ROCm&reg;.
 
 :::{important}
-Identifying matching `ROCm&reg;` and `HIP Python` pairs must be done via
+Identifying matching ROCm&reg; and `HIP Python` pairs must be done via
 the HIP (runtime) version! On a system with installed ROCm&reg;, you can, e.g., run
 `hipconfig` to read out the HIP version.
-:::
-
-:::{note}
-
-You might "get away" with using incompatible HIP-HIP Python pairs if the
-definitions of the types you are using have not changed between HIP releases 
-and you are using a subset of functions that is present in the "incompatible" HIP Python package's
-interfaces too.
 :::
 
 (subsec_hip_python_versioning)=
@@ -79,13 +71,13 @@ Hence, any HIP Python package `>= 5.4.22804.0` can be used.
 
 :::{note}
 
-You might "get away" with using incompatible HIP-HIP Python pairs if the
-definitions of the types you are using have not changed between HIP releases 
-and you are using a subset of functions that is present in the "incompatible" HIP Python package's
-interfaces too.
+HIP Python package builts load HIP functions in a lazy manner.
+Therefore, you will likely "get away" with using "incompatible" HIP-HIP Python pairs if you are only using Python code, 
+if the definitions of the types that you use have not changed between ROCm&reg; releases,
+and you are using a subset of functions that is present in both ROCm&reg; releases.
 :::
 
-### Installation
+### Installation Commands
 
 After having identified the correct package for your ROCm&reg; installation, type:
 
