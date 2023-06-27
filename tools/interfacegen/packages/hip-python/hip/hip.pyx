@@ -685,6 +685,7 @@ cdef class hipDeviceArch_t:
     @staticmethod
     cdef __allocate(chip.hipDeviceArch_t** ptr):
         ptr[0] = <chip.hipDeviceArch_t*>stdlib.malloc(sizeof(chip.hipDeviceArch_t))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipDeviceArch_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -1172,6 +1173,7 @@ cdef class hipUUID_t:
     @staticmethod
     cdef __allocate(chip.hipUUID_t** ptr):
         ptr[0] = <chip.hipUUID_t*>stdlib.malloc(sizeof(chip.hipUUID_t))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipUUID_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -1407,6 +1409,7 @@ cdef class hipDeviceProp_t:
     @staticmethod
     cdef __allocate(chip.hipDeviceProp_t** ptr):
         ptr[0] = <chip.hipDeviceProp_t*>stdlib.malloc(sizeof(chip.hipDeviceProp_t))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipDeviceProp_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -2553,6 +2556,7 @@ cdef class hipPointerAttribute_t:
     @staticmethod
     cdef __allocate(chip.hipPointerAttribute_t** ptr):
         ptr[0] = <chip.hipPointerAttribute_t*>stdlib.malloc(sizeof(chip.hipPointerAttribute_t))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipPointerAttribute_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3539,6 +3543,7 @@ cdef class hipChannelFormatDesc:
     @staticmethod
     cdef __allocate(chip.hipChannelFormatDesc** ptr):
         ptr[0] = <chip.hipChannelFormatDesc*>stdlib.malloc(sizeof(chip.hipChannelFormatDesc))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipChannelFormatDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3875,6 +3880,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     @staticmethod
     cdef __allocate(chip.HIP_ARRAY_DESCRIPTOR** ptr):
         ptr[0] = <chip.HIP_ARRAY_DESCRIPTOR*>stdlib.malloc(sizeof(chip.HIP_ARRAY_DESCRIPTOR))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_ARRAY_DESCRIPTOR))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -4156,6 +4162,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     @staticmethod
     cdef __allocate(chip.HIP_ARRAY3D_DESCRIPTOR** ptr):
         ptr[0] = <chip.HIP_ARRAY3D_DESCRIPTOR*>stdlib.malloc(sizeof(chip.HIP_ARRAY3D_DESCRIPTOR))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_ARRAY3D_DESCRIPTOR))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -4469,6 +4476,7 @@ cdef class hipArray:
     @staticmethod
     cdef __allocate(chip.hipArray** ptr):
         ptr[0] = <chip.hipArray*>stdlib.malloc(sizeof(chip.hipArray))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipArray))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -4847,6 +4855,7 @@ cdef class hip_Memcpy2D:
     @staticmethod
     cdef __allocate(chip.hip_Memcpy2D** ptr):
         ptr[0] = <chip.hip_Memcpy2D*>stdlib.malloc(sizeof(chip.hip_Memcpy2D))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hip_Memcpy2D))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -5320,6 +5329,7 @@ cdef class hipMipmappedArray:
     @staticmethod
     cdef __allocate(chip.hipMipmappedArray** ptr):
         ptr[0] = <chip.hipMipmappedArray*>stdlib.malloc(sizeof(chip.hipMipmappedArray))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMipmappedArray))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -5812,6 +5822,7 @@ cdef class HIP_TEXTURE_DESC_st:
     @staticmethod
     cdef __allocate(chip.HIP_TEXTURE_DESC_st** ptr):
         ptr[0] = <chip.HIP_TEXTURE_DESC_st*>stdlib.malloc(sizeof(chip.HIP_TEXTURE_DESC_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_TEXTURE_DESC_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6415,6 +6426,7 @@ cdef class hipResourceDesc_union_0_struct_0:
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0_struct_0** ptr):
         ptr[0] = <chip.hipResourceDesc_union_0_struct_0*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipResourceDesc_union_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6622,6 +6634,7 @@ cdef class hipResourceDesc_union_0_struct_1:
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0_struct_1** ptr):
         ptr[0] = <chip.hipResourceDesc_union_0_struct_1*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipResourceDesc_union_0_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6829,6 +6842,7 @@ cdef class hipResourceDesc_union_0_struct_2:
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0_struct_2** ptr):
         ptr[0] = <chip.hipResourceDesc_union_0_struct_2*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipResourceDesc_union_0_struct_2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7093,6 +7107,7 @@ cdef class hipResourceDesc_union_0_struct_3:
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0_struct_3** ptr):
         ptr[0] = <chip.hipResourceDesc_union_0_struct_3*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipResourceDesc_union_0_struct_3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7389,6 +7404,7 @@ cdef class hipResourceDesc_union_0:
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0** ptr):
         ptr[0] = <chip.hipResourceDesc_union_0*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipResourceDesc_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7622,6 +7638,7 @@ cdef class hipResourceDesc:
     @staticmethod
     cdef __allocate(chip.hipResourceDesc** ptr):
         ptr[0] = <chip.hipResourceDesc*>stdlib.malloc(sizeof(chip.hipResourceDesc))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipResourceDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7864,6 +7881,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_0** ptr):
         ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8071,6 +8089,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_1** ptr):
         ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8278,6 +8297,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_2** ptr):
         ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8567,6 +8587,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_3** ptr):
         ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8888,6 +8909,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_4** ptr):
         ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9121,6 +9143,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0** ptr):
         ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_RESOURCE_DESC_st_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9363,6 +9386,7 @@ cdef class HIP_RESOURCE_DESC_st:
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st** ptr):
         ptr[0] = <chip.HIP_RESOURCE_DESC_st*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_RESOURCE_DESC_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9623,6 +9647,7 @@ cdef class hipResourceViewDesc:
     @staticmethod
     cdef __allocate(chip.hipResourceViewDesc** ptr):
         ptr[0] = <chip.hipResourceViewDesc*>stdlib.malloc(sizeof(chip.hipResourceViewDesc))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipResourceViewDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9968,6 +9993,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_VIEW_DESC_st** ptr):
         ptr[0] = <chip.HIP_RESOURCE_VIEW_DESC_st*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_VIEW_DESC_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_RESOURCE_VIEW_DESC_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -10363,6 +10389,7 @@ cdef class hipPitchedPtr:
     @staticmethod
     cdef __allocate(chip.hipPitchedPtr** ptr):
         ptr[0] = <chip.hipPitchedPtr*>stdlib.malloc(sizeof(chip.hipPitchedPtr))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipPitchedPtr))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -10650,6 +10677,7 @@ cdef class hipExtent:
     @staticmethod
     cdef __allocate(chip.hipExtent** ptr):
         ptr[0] = <chip.hipExtent*>stdlib.malloc(sizeof(chip.hipExtent))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExtent))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -10913,6 +10941,7 @@ cdef class hipPos:
     @staticmethod
     cdef __allocate(chip.hipPos** ptr):
         ptr[0] = <chip.hipPos*>stdlib.malloc(sizeof(chip.hipPos))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipPos))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -11176,6 +11205,7 @@ cdef class hipMemcpy3DParms:
     @staticmethod
     cdef __allocate(chip.hipMemcpy3DParms** ptr):
         ptr[0] = <chip.hipMemcpy3DParms*>stdlib.malloc(sizeof(chip.hipMemcpy3DParms))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMemcpy3DParms))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -11446,6 +11476,7 @@ cdef class HIP_MEMCPY3D:
     @staticmethod
     cdef __allocate(chip.HIP_MEMCPY3D** ptr):
         ptr[0] = <chip.HIP_MEMCPY3D*>stdlib.malloc(sizeof(chip.HIP_MEMCPY3D))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.HIP_MEMCPY3D))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -12139,6 +12170,7 @@ cdef class uchar1:
     @staticmethod
     cdef __allocate(chip.uchar1** ptr):
         ptr[0] = <chip.uchar1*>stdlib.malloc(sizeof(chip.uchar1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.uchar1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -12370,6 +12402,7 @@ cdef class uchar2:
     @staticmethod
     cdef __allocate(chip.uchar2** ptr):
         ptr[0] = <chip.uchar2*>stdlib.malloc(sizeof(chip.uchar2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.uchar2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -12617,6 +12650,7 @@ cdef class uchar3:
     @staticmethod
     cdef __allocate(chip.uchar3** ptr):
         ptr[0] = <chip.uchar3*>stdlib.malloc(sizeof(chip.uchar3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.uchar3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -12880,6 +12914,7 @@ cdef class uchar4:
     @staticmethod
     cdef __allocate(chip.uchar4** ptr):
         ptr[0] = <chip.uchar4*>stdlib.malloc(sizeof(chip.uchar4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.uchar4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -13159,6 +13194,7 @@ cdef class char1:
     @staticmethod
     cdef __allocate(chip.char1** ptr):
         ptr[0] = <chip.char1*>stdlib.malloc(sizeof(chip.char1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.char1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -13390,6 +13426,7 @@ cdef class char2:
     @staticmethod
     cdef __allocate(chip.char2** ptr):
         ptr[0] = <chip.char2*>stdlib.malloc(sizeof(chip.char2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.char2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -13637,6 +13674,7 @@ cdef class char3:
     @staticmethod
     cdef __allocate(chip.char3** ptr):
         ptr[0] = <chip.char3*>stdlib.malloc(sizeof(chip.char3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.char3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -13900,6 +13938,7 @@ cdef class char4:
     @staticmethod
     cdef __allocate(chip.char4** ptr):
         ptr[0] = <chip.char4*>stdlib.malloc(sizeof(chip.char4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.char4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -14179,6 +14218,7 @@ cdef class ushort1:
     @staticmethod
     cdef __allocate(chip.ushort1** ptr):
         ptr[0] = <chip.ushort1*>stdlib.malloc(sizeof(chip.ushort1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ushort1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -14410,6 +14450,7 @@ cdef class ushort2:
     @staticmethod
     cdef __allocate(chip.ushort2** ptr):
         ptr[0] = <chip.ushort2*>stdlib.malloc(sizeof(chip.ushort2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ushort2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -14657,6 +14698,7 @@ cdef class ushort3:
     @staticmethod
     cdef __allocate(chip.ushort3** ptr):
         ptr[0] = <chip.ushort3*>stdlib.malloc(sizeof(chip.ushort3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ushort3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -14920,6 +14962,7 @@ cdef class ushort4:
     @staticmethod
     cdef __allocate(chip.ushort4** ptr):
         ptr[0] = <chip.ushort4*>stdlib.malloc(sizeof(chip.ushort4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ushort4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -15199,6 +15242,7 @@ cdef class short1:
     @staticmethod
     cdef __allocate(chip.short1** ptr):
         ptr[0] = <chip.short1*>stdlib.malloc(sizeof(chip.short1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.short1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -15430,6 +15474,7 @@ cdef class short2:
     @staticmethod
     cdef __allocate(chip.short2** ptr):
         ptr[0] = <chip.short2*>stdlib.malloc(sizeof(chip.short2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.short2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -15677,6 +15722,7 @@ cdef class short3:
     @staticmethod
     cdef __allocate(chip.short3** ptr):
         ptr[0] = <chip.short3*>stdlib.malloc(sizeof(chip.short3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.short3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -15940,6 +15986,7 @@ cdef class short4:
     @staticmethod
     cdef __allocate(chip.short4** ptr):
         ptr[0] = <chip.short4*>stdlib.malloc(sizeof(chip.short4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.short4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -16219,6 +16266,7 @@ cdef class uint1:
     @staticmethod
     cdef __allocate(chip.uint1** ptr):
         ptr[0] = <chip.uint1*>stdlib.malloc(sizeof(chip.uint1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.uint1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -16450,6 +16498,7 @@ cdef class uint2:
     @staticmethod
     cdef __allocate(chip.uint2** ptr):
         ptr[0] = <chip.uint2*>stdlib.malloc(sizeof(chip.uint2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.uint2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -16697,6 +16746,7 @@ cdef class uint3:
     @staticmethod
     cdef __allocate(chip.uint3** ptr):
         ptr[0] = <chip.uint3*>stdlib.malloc(sizeof(chip.uint3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.uint3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -16960,6 +17010,7 @@ cdef class uint4:
     @staticmethod
     cdef __allocate(chip.uint4** ptr):
         ptr[0] = <chip.uint4*>stdlib.malloc(sizeof(chip.uint4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.uint4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -17239,6 +17290,7 @@ cdef class int1:
     @staticmethod
     cdef __allocate(chip.int1** ptr):
         ptr[0] = <chip.int1*>stdlib.malloc(sizeof(chip.int1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.int1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -17470,6 +17522,7 @@ cdef class int2:
     @staticmethod
     cdef __allocate(chip.int2** ptr):
         ptr[0] = <chip.int2*>stdlib.malloc(sizeof(chip.int2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.int2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -17717,6 +17770,7 @@ cdef class int3:
     @staticmethod
     cdef __allocate(chip.int3** ptr):
         ptr[0] = <chip.int3*>stdlib.malloc(sizeof(chip.int3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.int3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -17980,6 +18034,7 @@ cdef class int4:
     @staticmethod
     cdef __allocate(chip.int4** ptr):
         ptr[0] = <chip.int4*>stdlib.malloc(sizeof(chip.int4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.int4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -18259,6 +18314,7 @@ cdef class ulong1:
     @staticmethod
     cdef __allocate(chip.ulong1** ptr):
         ptr[0] = <chip.ulong1*>stdlib.malloc(sizeof(chip.ulong1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ulong1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -18490,6 +18546,7 @@ cdef class ulong2:
     @staticmethod
     cdef __allocate(chip.ulong2** ptr):
         ptr[0] = <chip.ulong2*>stdlib.malloc(sizeof(chip.ulong2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ulong2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -18737,6 +18794,7 @@ cdef class ulong3:
     @staticmethod
     cdef __allocate(chip.ulong3** ptr):
         ptr[0] = <chip.ulong3*>stdlib.malloc(sizeof(chip.ulong3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ulong3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -19000,6 +19058,7 @@ cdef class ulong4:
     @staticmethod
     cdef __allocate(chip.ulong4** ptr):
         ptr[0] = <chip.ulong4*>stdlib.malloc(sizeof(chip.ulong4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ulong4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -19279,6 +19338,7 @@ cdef class long1:
     @staticmethod
     cdef __allocate(chip.long1** ptr):
         ptr[0] = <chip.long1*>stdlib.malloc(sizeof(chip.long1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.long1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -19510,6 +19570,7 @@ cdef class long2:
     @staticmethod
     cdef __allocate(chip.long2** ptr):
         ptr[0] = <chip.long2*>stdlib.malloc(sizeof(chip.long2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.long2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -19757,6 +19818,7 @@ cdef class long3:
     @staticmethod
     cdef __allocate(chip.long3** ptr):
         ptr[0] = <chip.long3*>stdlib.malloc(sizeof(chip.long3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.long3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -20020,6 +20082,7 @@ cdef class long4:
     @staticmethod
     cdef __allocate(chip.long4** ptr):
         ptr[0] = <chip.long4*>stdlib.malloc(sizeof(chip.long4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.long4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -20299,6 +20362,7 @@ cdef class ulonglong1:
     @staticmethod
     cdef __allocate(chip.ulonglong1** ptr):
         ptr[0] = <chip.ulonglong1*>stdlib.malloc(sizeof(chip.ulonglong1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ulonglong1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -20530,6 +20594,7 @@ cdef class ulonglong2:
     @staticmethod
     cdef __allocate(chip.ulonglong2** ptr):
         ptr[0] = <chip.ulonglong2*>stdlib.malloc(sizeof(chip.ulonglong2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ulonglong2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -20777,6 +20842,7 @@ cdef class ulonglong3:
     @staticmethod
     cdef __allocate(chip.ulonglong3** ptr):
         ptr[0] = <chip.ulonglong3*>stdlib.malloc(sizeof(chip.ulonglong3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ulonglong3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -21040,6 +21106,7 @@ cdef class ulonglong4:
     @staticmethod
     cdef __allocate(chip.ulonglong4** ptr):
         ptr[0] = <chip.ulonglong4*>stdlib.malloc(sizeof(chip.ulonglong4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.ulonglong4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -21319,6 +21386,7 @@ cdef class longlong1:
     @staticmethod
     cdef __allocate(chip.longlong1** ptr):
         ptr[0] = <chip.longlong1*>stdlib.malloc(sizeof(chip.longlong1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.longlong1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -21550,6 +21618,7 @@ cdef class longlong2:
     @staticmethod
     cdef __allocate(chip.longlong2** ptr):
         ptr[0] = <chip.longlong2*>stdlib.malloc(sizeof(chip.longlong2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.longlong2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -21797,6 +21866,7 @@ cdef class longlong3:
     @staticmethod
     cdef __allocate(chip.longlong3** ptr):
         ptr[0] = <chip.longlong3*>stdlib.malloc(sizeof(chip.longlong3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.longlong3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -22060,6 +22130,7 @@ cdef class longlong4:
     @staticmethod
     cdef __allocate(chip.longlong4** ptr):
         ptr[0] = <chip.longlong4*>stdlib.malloc(sizeof(chip.longlong4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.longlong4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -22339,6 +22410,7 @@ cdef class float1:
     @staticmethod
     cdef __allocate(chip.float1** ptr):
         ptr[0] = <chip.float1*>stdlib.malloc(sizeof(chip.float1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.float1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -22570,6 +22642,7 @@ cdef class float2:
     @staticmethod
     cdef __allocate(chip.float2** ptr):
         ptr[0] = <chip.float2*>stdlib.malloc(sizeof(chip.float2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.float2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -22817,6 +22890,7 @@ cdef class float3:
     @staticmethod
     cdef __allocate(chip.float3** ptr):
         ptr[0] = <chip.float3*>stdlib.malloc(sizeof(chip.float3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.float3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -23080,6 +23154,7 @@ cdef class float4:
     @staticmethod
     cdef __allocate(chip.float4** ptr):
         ptr[0] = <chip.float4*>stdlib.malloc(sizeof(chip.float4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.float4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -23359,6 +23434,7 @@ cdef class double1:
     @staticmethod
     cdef __allocate(chip.double1** ptr):
         ptr[0] = <chip.double1*>stdlib.malloc(sizeof(chip.double1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.double1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -23590,6 +23666,7 @@ cdef class double2:
     @staticmethod
     cdef __allocate(chip.double2** ptr):
         ptr[0] = <chip.double2*>stdlib.malloc(sizeof(chip.double2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.double2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -23837,6 +23914,7 @@ cdef class double3:
     @staticmethod
     cdef __allocate(chip.double3** ptr):
         ptr[0] = <chip.double3*>stdlib.malloc(sizeof(chip.double3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.double3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -24100,6 +24178,7 @@ cdef class double4:
     @staticmethod
     cdef __allocate(chip.double4** ptr):
         ptr[0] = <chip.double4*>stdlib.malloc(sizeof(chip.double4))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.double4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -24627,6 +24706,7 @@ cdef class textureReference:
     @staticmethod
     cdef __allocate(chip.textureReference** ptr):
         ptr[0] = <chip.textureReference*>stdlib.malloc(sizeof(chip.textureReference))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.textureReference))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -25027,6 +25107,7 @@ cdef class hipTextureDesc:
     @staticmethod
     cdef __allocate(chip.hipTextureDesc** ptr):
         ptr[0] = <chip.hipTextureDesc*>stdlib.malloc(sizeof(chip.hipTextureDesc))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipTextureDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -25550,6 +25631,7 @@ cdef class surfaceReference:
     @staticmethod
     cdef __allocate(chip.surfaceReference** ptr):
         ptr[0] = <chip.surfaceReference*>stdlib.malloc(sizeof(chip.surfaceReference))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.surfaceReference))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -26104,6 +26186,7 @@ cdef class hipIpcMemHandle_st:
     @staticmethod
     cdef __allocate(chip.hipIpcMemHandle_st** ptr):
         ptr[0] = <chip.hipIpcMemHandle_st*>stdlib.malloc(sizeof(chip.hipIpcMemHandle_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipIpcMemHandle_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -26339,6 +26422,7 @@ cdef class hipIpcEventHandle_st:
     @staticmethod
     cdef __allocate(chip.hipIpcEventHandle_st** ptr):
         ptr[0] = <chip.hipIpcEventHandle_st*>stdlib.malloc(sizeof(chip.hipIpcEventHandle_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipIpcEventHandle_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -27018,6 +27102,7 @@ cdef class hipFuncAttributes:
     @staticmethod
     cdef __allocate(chip.hipFuncAttributes** ptr):
         ptr[0] = <chip.hipFuncAttributes*>stdlib.malloc(sizeof(chip.hipFuncAttributes))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipFuncAttributes))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -27721,6 +27806,7 @@ cdef class hipMemLocation:
     @staticmethod
     cdef __allocate(chip.hipMemLocation** ptr):
         ptr[0] = <chip.hipMemLocation*>stdlib.malloc(sizeof(chip.hipMemLocation))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMemLocation))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -27994,6 +28080,7 @@ cdef class hipMemAccessDesc:
     @staticmethod
     cdef __allocate(chip.hipMemAccessDesc** ptr):
         ptr[0] = <chip.hipMemAccessDesc*>stdlib.malloc(sizeof(chip.hipMemAccessDesc))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMemAccessDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -28287,6 +28374,7 @@ cdef class hipMemPoolProps:
     @staticmethod
     cdef __allocate(chip.hipMemPoolProps** ptr):
         ptr[0] = <chip.hipMemPoolProps*>stdlib.malloc(sizeof(chip.hipMemPoolProps))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMemPoolProps))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -28589,6 +28677,7 @@ cdef class hipMemPoolPtrExportData:
     @staticmethod
     cdef __allocate(chip.hipMemPoolPtrExportData** ptr):
         ptr[0] = <chip.hipMemPoolPtrExportData*>stdlib.malloc(sizeof(chip.hipMemPoolPtrExportData))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMemPoolPtrExportData))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -28966,6 +29055,7 @@ cdef class dim3:
     @staticmethod
     cdef __allocate(chip.dim3** ptr):
         ptr[0] = <chip.dim3*>stdlib.malloc(sizeof(chip.dim3))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.dim3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -29232,6 +29322,7 @@ cdef class hipLaunchParams_t:
     @staticmethod
     cdef __allocate(chip.hipLaunchParams_t** ptr):
         ptr[0] = <chip.hipLaunchParams_t*>stdlib.malloc(sizeof(chip.hipLaunchParams_t))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipLaunchParams_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -29561,6 +29652,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     @staticmethod
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0** ptr):
         ptr[0] = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -29824,6 +29916,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
     @staticmethod
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st_union_0** ptr):
         ptr[0] = <chip.hipExternalMemoryHandleDesc_st_union_0*>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalMemoryHandleDesc_st_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -30046,6 +30139,7 @@ cdef class hipExternalMemoryHandleDesc_st:
     @staticmethod
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st** ptr):
         ptr[0] = <chip.hipExternalMemoryHandleDesc_st*>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalMemoryHandleDesc_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -30322,6 +30416,7 @@ cdef class hipExternalMemoryBufferDesc_st:
     @staticmethod
     cdef __allocate(chip.hipExternalMemoryBufferDesc_st** ptr):
         ptr[0] = <chip.hipExternalMemoryBufferDesc_st*>stdlib.malloc(sizeof(chip.hipExternalMemoryBufferDesc_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalMemoryBufferDesc_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -30616,6 +30711,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0** ptr):
         ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -30879,6 +30975,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st_union_0** ptr):
         ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -31101,6 +31198,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st** ptr):
         ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreHandleDesc_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -31361,6 +31459,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0** ptr):
         ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -31592,6 +31691,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1** ptr):
         ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -31823,6 +31923,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0** ptr):
         ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -32074,6 +32175,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st** ptr):
         ptr[0] = <chip.hipExternalSemaphoreSignalParams_st*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreSignalParams_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -32334,6 +32436,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0** ptr):
         ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -32565,6 +32668,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1** ptr):
         ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -32812,6 +32916,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0** ptr):
         ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -33063,6 +33168,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st** ptr):
         ptr[0] = <chip.hipExternalSemaphoreWaitParams_st*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipExternalSemaphoreWaitParams_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -34280,6 +34386,7 @@ cdef class hipHostNodeParams:
     @staticmethod
     cdef __allocate(chip.hipHostNodeParams** ptr):
         ptr[0] = <chip.hipHostNodeParams*>stdlib.malloc(sizeof(chip.hipHostNodeParams))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipHostNodeParams))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -34511,6 +34618,7 @@ cdef class hipKernelNodeParams:
     @staticmethod
     cdef __allocate(chip.hipKernelNodeParams** ptr):
         ptr[0] = <chip.hipKernelNodeParams*>stdlib.malloc(sizeof(chip.hipKernelNodeParams))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipKernelNodeParams))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -34832,6 +34940,7 @@ cdef class hipMemsetParams:
     @staticmethod
     cdef __allocate(chip.hipMemsetParams** ptr):
         ptr[0] = <chip.hipMemsetParams*>stdlib.malloc(sizeof(chip.hipMemsetParams))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMemsetParams))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -35196,6 +35305,7 @@ cdef class hipAccessPolicyWindow:
     @staticmethod
     cdef __allocate(chip.hipAccessPolicyWindow** ptr):
         ptr[0] = <chip.hipAccessPolicyWindow*>stdlib.malloc(sizeof(chip.hipAccessPolicyWindow))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipAccessPolicyWindow))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -35503,6 +35613,7 @@ cdef class hipKernelNodeAttrValue:
     @staticmethod
     cdef __allocate(chip.hipKernelNodeAttrValue** ptr):
         ptr[0] = <chip.hipKernelNodeAttrValue*>stdlib.malloc(sizeof(chip.hipKernelNodeAttrValue))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipKernelNodeAttrValue))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -35914,6 +36025,7 @@ cdef class hipMemAllocationProp_struct_0:
     @staticmethod
     cdef __allocate(chip.hipMemAllocationProp_struct_0** ptr):
         ptr[0] = <chip.hipMemAllocationProp_struct_0*>stdlib.malloc(sizeof(chip.hipMemAllocationProp_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMemAllocationProp_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -36177,6 +36289,7 @@ cdef class hipMemAllocationProp:
     @staticmethod
     cdef __allocate(chip.hipMemAllocationProp** ptr):
         ptr[0] = <chip.hipMemAllocationProp*>stdlib.malloc(sizeof(chip.hipMemAllocationProp))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipMemAllocationProp))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -36699,6 +36812,7 @@ cdef class hipArrayMapInfo_union_0:
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_0** ptr):
         ptr[0] = <chip.hipArrayMapInfo_union_0*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipArrayMapInfo_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -36905,6 +37019,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_1_struct_0** ptr):
         ptr[0] = <chip.hipArrayMapInfo_union_1_struct_0*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_0))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipArrayMapInfo_union_1_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -37248,6 +37363,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_1_struct_1** ptr):
         ptr[0] = <chip.hipArrayMapInfo_union_1_struct_1*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipArrayMapInfo_union_1_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -37511,6 +37627,7 @@ cdef class hipArrayMapInfo_union_1:
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_1** ptr):
         ptr[0] = <chip.hipArrayMapInfo_union_1*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipArrayMapInfo_union_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -37726,6 +37843,7 @@ cdef class hipArrayMapInfo_union_2:
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_2** ptr):
         ptr[0] = <chip.hipArrayMapInfo_union_2*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_2))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipArrayMapInfo_union_2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -37923,6 +38041,7 @@ cdef class hipArrayMapInfo:
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo** ptr):
         ptr[0] = <chip.hipArrayMapInfo*>stdlib.malloc(sizeof(chip.hipArrayMapInfo))
+        string.memset(<void*>ptr[0], 0, sizeof(chip.hipArrayMapInfo))
 
         if ptr[0] is NULL:
             raise MemoryError

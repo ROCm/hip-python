@@ -261,7 +261,7 @@ instead of passing an instance of the type:
   
   (Input type is not allowed for function pointer wrapper types.)
 
-* {py:obj}`object` that implements the [Python buffer protocol](https://docs.python.org/3/c-api/buffer.html).
+* {py:obj}`object` that implements the [Python buffer protocol](https://docs.python.org/3/c-api/buffer.html):
   
   If the object represents a simple contiguous array, the adapter acquires the buffer handle, retrieves the buffer
   writes the buffer's data address to its pointer attribute. It releases the handle again at time of destruction.
