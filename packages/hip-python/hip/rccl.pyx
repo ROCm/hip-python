@@ -356,6 +356,7 @@ cdef class ncclUniqueId:
     @staticmethod
     cdef __allocate(crccl.ncclUniqueId** ptr):
         ptr[0] = <crccl.ncclUniqueId*>stdlib.malloc(sizeof(crccl.ncclUniqueId))
+        string.memset(<void*>ptr[0], 0, sizeof(crccl.ncclUniqueId))
 
         if ptr[0] is NULL:
             raise MemoryError

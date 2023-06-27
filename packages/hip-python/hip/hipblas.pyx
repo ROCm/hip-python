@@ -175,6 +175,7 @@ cdef class hipblasBfloat16:
     @staticmethod
     cdef __allocate(chipblas.hipblasBfloat16** ptr):
         ptr[0] = <chipblas.hipblasBfloat16*>stdlib.malloc(sizeof(chipblas.hipblasBfloat16))
+        string.memset(<void*>ptr[0], 0, sizeof(chipblas.hipblasBfloat16))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -406,6 +407,7 @@ cdef class hipblasComplex:
     @staticmethod
     cdef __allocate(chipblas.hipblasComplex** ptr):
         ptr[0] = <chipblas.hipblasComplex*>stdlib.malloc(sizeof(chipblas.hipblasComplex))
+        string.memset(<void*>ptr[0], 0, sizeof(chipblas.hipblasComplex))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -653,6 +655,7 @@ cdef class hipblasDoubleComplex:
     @staticmethod
     cdef __allocate(chipblas.hipblasDoubleComplex** ptr):
         ptr[0] = <chipblas.hipblasDoubleComplex*>stdlib.malloc(sizeof(chipblas.hipblasDoubleComplex))
+        string.memset(<void*>ptr[0], 0, sizeof(chipblas.hipblasDoubleComplex))
 
         if ptr[0] is NULL:
             raise MemoryError

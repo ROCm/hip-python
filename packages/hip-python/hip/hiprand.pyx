@@ -194,6 +194,7 @@ cdef class uint4:
     @staticmethod
     cdef __allocate(chiprand.uint4** ptr):
         ptr[0] = <chiprand.uint4*>stdlib.malloc(sizeof(chiprand.uint4))
+        string.memset(<void*>ptr[0], 0, sizeof(chiprand.uint4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -473,6 +474,7 @@ cdef class rocrand_discrete_distribution_st:
     @staticmethod
     cdef __allocate(chiprand.rocrand_discrete_distribution_st** ptr):
         ptr[0] = <chiprand.rocrand_discrete_distribution_st*>stdlib.malloc(sizeof(chiprand.rocrand_discrete_distribution_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chiprand.rocrand_discrete_distribution_st))
 
         if ptr[0] is NULL:
             raise MemoryError
