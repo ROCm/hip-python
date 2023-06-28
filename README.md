@@ -26,7 +26,7 @@ Low-level Python and Cython Bindings for HIP.
 
 ## Requirements
 
-Requires that ROCm&reg; is installed on your system.
+Requires that ROCm&trade;  is installed on your system.
 
 All Python requirements are taking care of by installation scripts. 
 If you decide not to use these scripts, take a look into the `requirements.txt` file 
@@ -38,7 +38,7 @@ in the repository's subfolders `packages/hip-python` and `packages/hip-python-as
 ### Via PyPI
 
 First identify the first three digits of the version number of the HIP runtime that is part 
-of your ROCm&reg; installation, e.g. via:
+of your ROCm&trade;  installation, e.g. via:
 
 ```shell
 # extract it visually
@@ -52,7 +52,7 @@ Then install the HIP Python package(s):
 
 ```shell
 python3 -m pip install hip-python-$hip_version
-# if you want to install the CUDA Python interoperability packages too, run:
+# if you want to install the CUDA Python interoperability package too, run:
 python3 -m pip install hip-python-as-cuda-$hip_version
 ```
 
@@ -62,7 +62,7 @@ If you have HIP Python package wheels somewhere in your filesystem, you can also
 
 ```shell
 python3 -m pip install <path/to/hip_python>.whl
-# if you want to install the CUDA Python interoperability packages too, run:
+# if you want to install the CUDA Python interoperability package too, run:
 python3 -m pip install <path/to/hip_python_as_cuda>.whl
 ```
 
@@ -82,7 +82,7 @@ cd packages
 ./build_hip_python_pkgs.sh --post-clean
 ```
 
-> **NOTE**: See the HIP Python devloper guide for more details:
+> **NOTE**: See the HIP Python developer guide for more details:
 > https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html
 
 ### Options for the Build Scripts
@@ -120,7 +120,7 @@ cd packages
     -h, --help         Show this help message.
   ```
 
-> **NOTE**: See the HIP Python devloper guide for more details:
+> **NOTE**: See the HIP Python developer guide for more details:
 > https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html
 
 ## Documentation
