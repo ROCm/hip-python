@@ -1,4 +1,25 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 from libc.stdint cimport *
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 from .chip cimport hipStream_t
@@ -10,7 +31,7 @@ cdef extern from "rccl/rccl.h":
 
     cdef int NCCL_PATCH
 
-    cdef char* NCCL_SUFFIX
+    cdef char * NCCL_SUFFIX
 
     cdef int NCCL_VERSION_CODE
 
@@ -53,18 +74,17 @@ cdef ncclResult_t ncclGetVersion(int * version) nogil
 cdef ncclResult_t pncclGetVersion(int * version) nogil
 
 
-#    @brief Generates an ID for ncclCommInitRank
+# @brief Generates an ID for ncclCommInitRank
 # 
-#    @details
-#    Generates an ID to be used in ncclCommInitRank. ncclGetUniqueId should be
-#    called once and the Id should be distributed to all ranks in the
-#    communicator before calling ncclCommInitRank.
+# @details
+# Generates an ID to be used in ncclCommInitRank. ncclGetUniqueId should be
+# called once and the Id should be distributed to all ranks in the
+# communicator before calling ncclCommInitRank.
 # 
-#    @param[in]
-#    uniqueId     ncclUniqueId*
-#                 pointer to uniqueId
-# 
-# /
+# @param[in]
+# uniqueId     ncclUniqueId*
+#              pointer to uniqueId
+#
 cdef ncclResult_t ncclGetUniqueId(ncclUniqueId * uniqueId) nogil
 
 

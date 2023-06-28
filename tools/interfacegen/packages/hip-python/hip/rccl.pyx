@@ -1,4 +1,63 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
+"""
+Attributes:
+    NCCL_MAJOR (`~.int`):
+        Macro constant.
+
+    NCCL_MINOR (`~.int`):
+        Macro constant.
+
+    NCCL_PATCH (`~.int`):
+        Macro constant.
+
+    NCCL_SUFFIX (`~.bytes`):
+        Macro constant.
+
+    NCCL_VERSION_CODE (`~.int`):
+        Macro constant.
+
+    RCCL_BFLOAT16 (`~.int`):
+        Macro constant.
+
+    RCCL_GATHER_SCATTER (`~.int`):
+        Macro constant.
+
+    RCCL_ALLTOALLV (`~.int`):
+        Macro constant.
+
+    RCCL_MULTIRANKPERGPU (`~.int`):
+        Macro constant.
+
+    NCCL_UNIQUE_ID_BYTES (`~.int`):
+        Macro constant.
+
+    ncclComm_t:
+        alias of `~.ncclComm`
+
+"""
+
 import cython
 import ctypes
 import enum
@@ -23,6 +82,53 @@ RCCL_MULTIRANKPERGPU = crccl.RCCL_MULTIRANKPERGPU
 NCCL_UNIQUE_ID_BYTES = crccl.NCCL_UNIQUE_ID_BYTES
 
 cdef class ncclComm:
+    """Python wrapper for C type crccl.ncclComm.
+    
+    Python wrapper for C type crccl.ncclComm.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+
+      This will set the ``self._ptr`` attribute to ``NULL``.
+
+    * `int`:
+      
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      
+    * `ctypes.c_void_p`:
+      
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+      
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
+    * `object` that implements the Python buffer protocol:
+      
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
     # members declared in pxd file
 
     def __cinit__(self):
@@ -50,8 +156,8 @@ cdef class ncclComm:
         returns it directly. No new ``ncclComm`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ncclComm``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `ncclComm`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -92,12 +198,17 @@ cdef class ncclComm:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<ncclComm object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -119,6 +230,53 @@ cdef class ncclComm:
 ncclComm_t = ncclComm
 
 cdef class ncclUniqueId:
+    """Python wrapper for C type crccl.ncclUniqueId.
+    
+    Python wrapper for C type crccl.ncclUniqueId.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+
+      This will set the ``self._ptr`` attribute to ``NULL``.
+
+    * `int`:
+      
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      
+    * `ctypes.c_void_p`:
+      
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+      
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
+    * `object` that implements the Python buffer protocol:
+      
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
     # members declared in pxd file
 
     def __cinit__(self):
@@ -132,7 +290,7 @@ cdef class ncclUniqueId:
         given ``crccl.ncclUniqueId`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -150,8 +308,8 @@ cdef class ncclUniqueId:
         returns it directly. No new ``ncclUniqueId`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ncclUniqueId``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `ncclUniqueId`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -194,13 +352,14 @@ cdef class ncclUniqueId:
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
+
     @staticmethod
     cdef __allocate(crccl.ncclUniqueId** ptr):
         ptr[0] = <crccl.ncclUniqueId*>stdlib.malloc(sizeof(crccl.ncclUniqueId))
+        string.memset(<void*>ptr[0], 0, sizeof(crccl.ncclUniqueId))
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef ncclUniqueId new():
@@ -209,8 +368,29 @@ cdef class ncclUniqueId:
         cdef crccl.ncclUniqueId* ptr
         ncclUniqueId.__allocate(&ptr)
         return ncclUniqueId.from_ptr(ptr, owner=True)
+
+    @staticmethod
+    cdef ncclUniqueId from_value(crccl.ncclUniqueId other):
+        """Allocate new C type and copy from ``other``.
+        """
+        wrapper = ncclUniqueId.new()
+        string.memcpy(wrapper._ptr, &other, sizeof(crccl.ncclUniqueId))
+        return wrapper
    
     def __init__(self,*args,**kwargs):
+        """Constructor type ncclUniqueId.
+
+        Constructor for type ncclUniqueId.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         ncclUniqueId.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -229,13 +409,25 @@ cdef class ncclUniqueId:
             setattr(self,k,v)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<ncclUniqueId object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        """
         return ctypes.c_void_p(int(self))
+    def c_sizeof(self):
+        """Returns the size of the underlying C type in bytes.
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        """
+        return sizeof(crccl.ncclUniqueId)
     def get_internal(self, i):
         """Get value of ``internal`` of ``self._ptr[i]``.
         """
@@ -247,6 +439,7 @@ cdef class ncclUniqueId:
     #    self._ptr[i].internal = value
     @property
     def internal(self):
+        """(undocumented)"""
         return self.get_internal(0)
     # TODO add setters
     #@internal.setter
@@ -275,6 +468,26 @@ class _ncclResult_t__Base(enum.IntEnum):
     """
     pass
 class ncclResult_t(_ncclResult_t__Base):
+    """Error type
+
+    Attributes:
+        ncclSuccess:
+            (undocumented)
+        ncclUnhandledCudaError:
+            (undocumented)
+        ncclSystemError:
+            (undocumented)
+        ncclInternalError:
+            (undocumented)
+        ncclInvalidArgument:
+            (undocumented)
+        ncclInvalidUsage:
+            (undocumented)
+        ncclRemoteError:
+            (undocumented)
+        ncclNumResults:
+            (undocumented)
+    """
     ncclSuccess = crccl.ncclSuccess
     ncclUnhandledCudaError = crccl.ncclUnhandledCudaError
     ncclSystemError = crccl.ncclSystemError
@@ -295,6 +508,13 @@ def ncclGetVersion():
 
     This integer is coded with the MAJOR, MINOR and PATCH level of the
     NCCL library
+
+    Args:
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int version
     _ncclGetVersion__retval = ncclResult_t(crccl.ncclGetVersion(&version))    # fully specified
@@ -303,7 +523,14 @@ def ncclGetVersion():
 
 @cython.embedsignature(True)
 def pncclGetVersion():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int version
     _pncclGetVersion__retval = ncclResult_t(crccl.pncclGetVersion(&version))    # fully specified
@@ -318,11 +545,15 @@ def ncclGetUniqueId(object uniqueId):
     called once and the Id should be distributed to all ranks in the
     communicator before calling ncclCommInitRank.
 
-    /
-
     Args:
-        uniqueId: **[in]** ncclUniqueId*
+        uniqueId (`~.ncclUniqueId`/`~.object`) -- *IN*:
+            ncclUniqueId*
             pointer to uniqueId
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclGetUniqueId__retval = ncclResult_t(crccl.ncclGetUniqueId(
         ncclUniqueId.from_pyobj(uniqueId)._ptr))    # fully specified
@@ -331,7 +562,16 @@ def ncclGetUniqueId(object uniqueId):
 
 @cython.embedsignature(True)
 def pncclGetUniqueId(object uniqueId):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        uniqueId (`~.ncclUniqueId`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclGetUniqueId__retval = ncclResult_t(crccl.pncclGetUniqueId(
         ncclUniqueId.from_pyobj(uniqueId)._ptr))    # fully specified
@@ -348,9 +588,22 @@ def ncclCommInitRank(int nranks, object commId, int rank):
     ncclCommInitRank implicitly syncronizes with other ranks, so it must be
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
+    Args:
+        nranks (`~.int`):
+            (undocumented)
+
+        commId (`~.ncclUniqueId`):
+            (undocumented)
+
+        rank (`~.int`):
+            (undocumented)
+
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - comm: ncclComm_t*
+        A `~.tuple` of size 2 that contains (in that order):
+
+        * `~.ncclResult_t`
+        * `~.ncclComm`:
+                ncclComm_t*
                 communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
@@ -361,7 +614,22 @@ def ncclCommInitRank(int nranks, object commId, int rank):
 
 @cython.embedsignature(True)
 def pncclCommInitRank(int nranks, object commId, int rank):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        nranks (`~.int`):
+            (undocumented)
+
+        commId (`~.ncclUniqueId`):
+            (undocumented)
+
+        rank (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     comm = ncclComm.from_ptr(NULL)
     _pncclCommInitRank__retval = ncclResult_t(crccl.pncclCommInitRank(&comm._ptr,nranks,
@@ -382,9 +650,25 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     ncclCommInitRankMulti implicitly syncronizes with other ranks, so it must be
     called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
+    Args:
+        nranks (`~.int`):
+            (undocumented)
+
+        commId (`~.ncclUniqueId`):
+            (undocumented)
+
+        rank (`~.int`):
+            (undocumented)
+
+        virtualId (`~.int`):
+            (undocumented)
+
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - comm: ncclComm_t*
+        A `~.tuple` of size 2 that contains (in that order):
+
+        * `~.ncclResult_t`
+        * `~.ncclComm`:
+                ncclComm_t*
                 communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
@@ -395,7 +679,25 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
 
 @cython.embedsignature(True)
 def pncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        nranks (`~.int`):
+            (undocumented)
+
+        commId (`~.ncclUniqueId`):
+            (undocumented)
+
+        rank (`~.int`):
+            (undocumented)
+
+        virtualId (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     comm = ncclComm.from_ptr(NULL)
     _pncclCommInitRankMulti__retval = ncclResult_t(crccl.pncclCommInitRankMulti(&comm._ptr,nranks,
@@ -412,19 +714,49 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
     comm should be pre-allocated with size at least ndev*sizeof(ncclComm_t).
     If devlist is NULL, the first ndev HIP devices are used.
     Order of devlist defines user-order of processors within the communicator.
+
+    Args:
+        comm (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ndev (`~.int`):
+            (undocumented)
+
+        devlist (`~.hip._util.types.ListOfInt`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclCommInitAll__retval = ncclResult_t(crccl.ncclCommInitAll(
-        <crccl.ncclComm_t*>hip._util.types.DataHandle.from_pyobj(comm)._ptr,ndev,
+        <crccl.ncclComm_t*>hip._util.types.Pointer.from_pyobj(comm)._ptr,ndev,
         <const int *>hip._util.types.ListOfInt.from_pyobj(devlist)._ptr))    # fully specified
     return (_ncclCommInitAll__retval,)
 
 
 @cython.embedsignature(True)
 def pncclCommInitAll(object comm, int ndev, object devlist):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ndev (`~.int`):
+            (undocumented)
+
+        devlist (`~.hip._util.types.ListOfInt`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclCommInitAll__retval = ncclResult_t(crccl.pncclCommInitAll(
-        <crccl.ncclComm_t*>hip._util.types.DataHandle.from_pyobj(comm)._ptr,ndev,
+        <crccl.ncclComm_t*>hip._util.types.Pointer.from_pyobj(comm)._ptr,ndev,
         <const int *>hip._util.types.ListOfInt.from_pyobj(devlist)._ptr))    # fully specified
     return (_pncclCommInitAll__retval,)
 
@@ -432,6 +764,15 @@ def pncclCommInitAll(object comm, int ndev, object devlist):
 @cython.embedsignature(True)
 def ncclCommDestroy(object comm):
     r"""Frees resources associated with communicator object, but waits for any operations that might still be running on the device */
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclCommDestroy__retval = ncclResult_t(crccl.ncclCommDestroy(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -440,7 +781,16 @@ def ncclCommDestroy(object comm):
 
 @cython.embedsignature(True)
 def pncclCommDestroy(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclCommDestroy__retval = ncclResult_t(crccl.pncclCommDestroy(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -450,6 +800,15 @@ def pncclCommDestroy(object comm):
 @cython.embedsignature(True)
 def ncclCommAbort(object comm):
     r"""Frees resources associated with communicator object and aborts any operations that might still be running on the device. */
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclCommAbort__retval = ncclResult_t(crccl.ncclCommAbort(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -458,7 +817,16 @@ def ncclCommAbort(object comm):
 
 @cython.embedsignature(True)
 def pncclCommAbort(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclCommAbort__retval = ncclResult_t(crccl.pncclCommAbort(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -468,6 +836,15 @@ def pncclCommAbort(object comm):
 @cython.embedsignature(True)
 def ncclGetErrorString(object result):
     r"""Returns a string for each error code. */
+
+    Args:
+        result (`~.ncclResult_t`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.bytes`
     """
     if not isinstance(result,_ncclResult_t__Base):
         raise TypeError("argument 'result' must be of type '_ncclResult_t__Base'")
@@ -477,7 +854,16 @@ def ncclGetErrorString(object result):
 
 @cython.embedsignature(True)
 def pncclGetErrorString(object result):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        result (`~.ncclResult_t`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.bytes`
     """
     if not isinstance(result,_ncclResult_t__Base):
         raise TypeError("argument 'result' must be of type '_ncclResult_t__Base'")
@@ -489,6 +875,15 @@ def pncclGetErrorString(object result):
 def ncclGetLastError(object comm):
     r"""Returns a human-readable message of the last error that occurred.
     comm is currently unused and can be set to NULL
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.bytes`
     """
     cdef const char * _ncclGetLastError__retval = crccl.ncclGetLastError(
         ncclComm.from_pyobj(comm)._ptr)    # fully specified
@@ -497,7 +892,16 @@ def ncclGetLastError(object comm):
 
 @cython.embedsignature(True)
 def pncclGetError(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.bytes`
     """
     cdef const char * _pncclGetError__retval = crccl.pncclGetError(
         ncclComm.from_pyobj(comm)._ptr)    # fully specified
@@ -506,27 +910,60 @@ def pncclGetError(object comm):
 
 @cython.embedsignature(True)
 def ncclCommGetAsyncError(object comm, object asyncError):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        asyncError (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclCommGetAsyncError__retval = ncclResult_t(crccl.ncclCommGetAsyncError(
         ncclComm.from_pyobj(comm)._ptr,
-        <crccl.ncclResult_t *>hip._util.types.DataHandle.from_pyobj(asyncError)._ptr))    # fully specified
+        <crccl.ncclResult_t *>hip._util.types.Pointer.from_pyobj(asyncError)._ptr))    # fully specified
     return (_ncclCommGetAsyncError__retval,)
 
 
 @cython.embedsignature(True)
 def pncclCommGetAsyncError(object comm, object asyncError):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        asyncError (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclCommGetAsyncError__retval = ncclResult_t(crccl.pncclCommGetAsyncError(
         ncclComm.from_pyobj(comm)._ptr,
-        <crccl.ncclResult_t *>hip._util.types.DataHandle.from_pyobj(asyncError)._ptr))    # fully specified
+        <crccl.ncclResult_t *>hip._util.types.Pointer.from_pyobj(asyncError)._ptr))    # fully specified
     return (_pncclCommGetAsyncError__retval,)
 
 
 @cython.embedsignature(True)
 def ncclCommCount(object comm):
     r"""Gets the number of ranks in the communicator clique. */
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int count
     _ncclCommCount__retval = ncclResult_t(crccl.ncclCommCount(
@@ -536,7 +973,16 @@ def ncclCommCount(object comm):
 
 @cython.embedsignature(True)
 def pncclCommCount(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int count
     _pncclCommCount__retval = ncclResult_t(crccl.pncclCommCount(
@@ -547,6 +993,15 @@ def pncclCommCount(object comm):
 @cython.embedsignature(True)
 def ncclCommCuDevice(object comm):
     r"""Returns the rocm device number associated with the communicator. */
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int device
     _ncclCommCuDevice__retval = ncclResult_t(crccl.ncclCommCuDevice(
@@ -556,7 +1011,16 @@ def ncclCommCuDevice(object comm):
 
 @cython.embedsignature(True)
 def pncclCommCuDevice(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int device
     _pncclCommCuDevice__retval = ncclResult_t(crccl.pncclCommCuDevice(
@@ -567,6 +1031,15 @@ def pncclCommCuDevice(object comm):
 @cython.embedsignature(True)
 def ncclCommUserRank(object comm):
     r"""Returns the user-ordered "rank" associated with the communicator. */
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int rank
     _ncclCommUserRank__retval = ncclResult_t(crccl.ncclCommUserRank(
@@ -576,7 +1049,16 @@ def ncclCommUserRank(object comm):
 
 @cython.embedsignature(True)
 def pncclCommUserRank(object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     cdef int rank
     _pncclCommUserRank__retval = ncclResult_t(crccl.pncclCommUserRank(
@@ -589,6 +1071,12 @@ class _ncclRedOp_dummy_t__Base(enum.IntEnum):
     """
     pass
 class ncclRedOp_dummy_t(_ncclRedOp_dummy_t__Base):
+    """Reduction operation selector
+
+    Attributes:
+        ncclNumOps_dummy:
+            (undocumented)
+    """
     ncclNumOps_dummy = crccl.ncclNumOps_dummy
     @staticmethod
     def ctypes_type():
@@ -601,6 +1089,24 @@ class _ncclRedOp_t__Base(enum.IntEnum):
     """
     pass
 class ncclRedOp_t(_ncclRedOp_t__Base):
+    """ncclRedOp_t
+
+    Attributes:
+        ncclSum:
+            (undocumented)
+        ncclProd:
+            (undocumented)
+        ncclMax:
+            (undocumented)
+        ncclMin:
+            (undocumented)
+        ncclAvg:
+            (undocumented)
+        ncclNumOps:
+            (undocumented)
+        ncclMaxRedOp:
+            (undocumented)
+    """
     ncclSum = crccl.ncclSum
     ncclProd = crccl.ncclProd
     ncclMax = crccl.ncclMax
@@ -619,6 +1125,42 @@ class _ncclDataType_t__Base(enum.IntEnum):
     """
     pass
 class ncclDataType_t(_ncclDataType_t__Base):
+    """Data types
+
+    Attributes:
+        ncclInt8:
+            (undocumented)
+        ncclChar:
+            (undocumented)
+        ncclUint8:
+            (undocumented)
+        ncclInt32:
+            (undocumented)
+        ncclInt:
+            (undocumented)
+        ncclUint32:
+            (undocumented)
+        ncclInt64:
+            (undocumented)
+        ncclUint64:
+            (undocumented)
+        ncclFloat16:
+            (undocumented)
+        ncclHalf:
+            (undocumented)
+        ncclFloat32:
+            (undocumented)
+        ncclFloat:
+            (undocumented)
+        ncclFloat64:
+            (undocumented)
+        ncclDouble:
+            (undocumented)
+        ncclBfloat16:
+            (undocumented)
+        ncclNumTypes:
+            (undocumented)
+    """
     ncclInt8 = crccl.ncclInt8
     ncclChar = crccl.ncclChar
     ncclUint8 = crccl.ncclUint8
@@ -646,6 +1188,14 @@ class _ncclScalarResidence_t__Base(enum.IntEnum):
     """
     pass
 class ncclScalarResidence_t(_ncclScalarResidence_t__Base):
+    """ncclScalarResidence_t
+
+    Attributes:
+        ncclScalarDevice:
+            (undocumented)
+        ncclScalarHostImmediate:
+            (undocumented)
+    """
     ncclScalarDevice = crccl.ncclScalarDevice
     ncclScalarHostImmediate = crccl.ncclScalarHostImmediate
     @staticmethod
@@ -656,37 +1206,91 @@ class ncclScalarResidence_t(_ncclScalarResidence_t__Base):
 
 @cython.embedsignature(True)
 def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        op (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        scalar (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        residence (`~.ncclScalarResidence_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
     if not isinstance(residence,_ncclScalarResidence_t__Base):
         raise TypeError("argument 'residence' must be of type '_ncclScalarResidence_t__Base'")
     _ncclRedOpCreatePreMulSum__retval = ncclResult_t(crccl.ncclRedOpCreatePreMulSum(
-        <crccl.ncclRedOp_t *>hip._util.types.DataHandle.from_pyobj(op)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(scalar)._ptr,datatype.value,residence.value,
+        <crccl.ncclRedOp_t *>hip._util.types.Pointer.from_pyobj(op)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(scalar)._ptr,datatype.value,residence.value,
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
     return (_ncclRedOpCreatePreMulSum__retval,)
 
 
 @cython.embedsignature(True)
 def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        op (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        scalar (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        residence (`~.ncclScalarResidence_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
     if not isinstance(residence,_ncclScalarResidence_t__Base):
         raise TypeError("argument 'residence' must be of type '_ncclScalarResidence_t__Base'")
     _pncclRedOpCreatePreMulSum__retval = ncclResult_t(crccl.pncclRedOpCreatePreMulSum(
-        <crccl.ncclRedOp_t *>hip._util.types.DataHandle.from_pyobj(op)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(scalar)._ptr,datatype.value,residence.value,
+        <crccl.ncclRedOp_t *>hip._util.types.Pointer.from_pyobj(op)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(scalar)._ptr,datatype.value,residence.value,
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
     return (_pncclRedOpCreatePreMulSum__retval,)
 
 
 @cython.embedsignature(True)
 def ncclRedOpDestroy(object op, object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
@@ -697,7 +1301,19 @@ def ncclRedOpDestroy(object op, object comm):
 
 @cython.embedsignature(True)
 def pncclRedOpDestroy(object op, object comm):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
@@ -717,14 +1333,44 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
     operation is complete.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _ncclReduce__retval = ncclResult_t(crccl.ncclReduce(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,root,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclReduce__retval,)
@@ -732,15 +1378,45 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
 
 @cython.embedsignature(True)
 def pncclReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _pncclReduce__retval = ncclResult_t(crccl.pncclReduce(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,root,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclReduce__retval,)
@@ -755,11 +1431,35 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
     operation is started.
 
     This operation is implicitely in place.
+
+    Args:
+        buff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclBcast__retval = ncclResult_t(crccl.ncclBcast(
-        <void *>hip._util.types.DataHandle.from_pyobj(buff)._ptr,count,datatype.value,root,
+        <void *>hip._util.types.Pointer.from_pyobj(buff)._ptr,count,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclBcast__retval,)
@@ -767,12 +1467,36 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
 
 @cython.embedsignature(True)
 def pncclBcast(object buff, unsigned long count, object datatype, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        buff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclBcast__retval = ncclResult_t(crccl.pncclBcast(
-        <void *>hip._util.types.DataHandle.from_pyobj(buff)._ptr,count,datatype.value,root,
+        <void *>hip._util.types.Pointer.from_pyobj(buff)._ptr,count,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclBcast__retval,)
@@ -787,12 +1511,39 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
     operation is started.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclBroadcast__retval = ncclResult_t(crccl.ncclBroadcast(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,root,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclBroadcast__retval,)
@@ -800,13 +1551,40 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
 
 @cython.embedsignature(True)
 def pncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object datatype, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclBroadcast__retval = ncclResult_t(crccl.pncclBroadcast(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,root,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclBroadcast__retval,)
@@ -820,14 +1598,41 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
     leaves identical copies of result on each recvbuff.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _ncclAllReduce__retval = ncclResult_t(crccl.ncclAllReduce(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclAllReduce__retval,)
@@ -835,15 +1640,42 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
 
 @cython.embedsignature(True)
 def pncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _pncclAllReduce__retval = ncclResult_t(crccl.pncclAllReduce(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclAllReduce__retval,)
@@ -860,14 +1692,41 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
     should have a size of at least nranks*recvcount elements.
 
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _ncclReduceScatter__retval = ncclResult_t(crccl.ncclReduceScatter(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,op.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,op.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclReduceScatter__retval,)
@@ -875,15 +1734,42 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
 
 @cython.embedsignature(True)
 def pncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, object op, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        op (`~.ncclRedOp_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _pncclReduceScatter__retval = ncclResult_t(crccl.pncclReduceScatter(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,op.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,op.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclReduceScatter__retval,)
@@ -899,12 +1785,36 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
     should have a size of at least nranks*sendcount elements.
 
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclAllGather__retval = ncclResult_t(crccl.ncclAllGather(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclAllGather__retval,)
@@ -912,13 +1822,37 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
 
 @cython.embedsignature(True)
 def pncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclAllGather__retval = ncclResult_t(crccl.pncclAllGather(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclAllGather__retval,)
@@ -935,11 +1869,35 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
     This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
     need to progress concurrently to complete, they must be fused within a ncclGroupStart/
     ncclGroupEnd section.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        peer (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclSend__retval = ncclResult_t(crccl.ncclSend(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,count,datatype.value,peer,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,count,datatype.value,peer,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclSend__retval,)
@@ -947,12 +1905,36 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
 
 @cython.embedsignature(True)
 def pncclSend(object sendbuff, unsigned long count, object datatype, int peer, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        peer (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclSend__retval = ncclResult_t(crccl.pncclSend(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,count,datatype.value,peer,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,count,datatype.value,peer,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclSend__retval,)
@@ -969,11 +1951,35 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
     This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
     need to progress concurrently to complete, they must be fused within a ncclGroupStart/
     ncclGroupEnd section.
+
+    Args:
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        peer (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclRecv__retval = ncclResult_t(crccl.ncclRecv(
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,peer,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,peer,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclRecv__retval,)
@@ -981,12 +1987,36 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
 
 @cython.embedsignature(True)
 def pncclRecv(object recvbuff, unsigned long count, object datatype, int peer, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        peer (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclRecv__retval = ncclResult_t(crccl.pncclRecv(
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,peer,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,peer,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclRecv__retval,)
@@ -1003,12 +2033,39 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
     should have a size of at least nranks*sendcount elements.
 
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclGather__retval = ncclResult_t(crccl.ncclGather(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,root,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclGather__retval,)
@@ -1016,13 +2073,40 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
 
 @cython.embedsignature(True)
 def pncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclGather__retval = ncclResult_t(crccl.pncclGather(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,root,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclGather__retval,)
@@ -1039,12 +2123,39 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
     should have a size of at least nranks*recvcount elements.
 
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclScatter__retval = ncclResult_t(crccl.ncclScatter(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,root,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclScatter__retval,)
@@ -1052,13 +2163,40 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
 
 @cython.embedsignature(True)
 def pncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, int root, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcount (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        root (`~.int`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclScatter__retval = ncclResult_t(crccl.pncclScatter(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,root,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclScatter__retval,)
@@ -1073,12 +2211,36 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
     that recvbuff and sendbuff should have a size of nranks*count elements.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclAllToAll__retval = ncclResult_t(crccl.ncclAllToAll(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclAllToAll__retval,)
@@ -1086,13 +2248,37 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
 
 @cython.embedsignature(True)
 def pncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object datatype, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        count (`~.int`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclAllToAll__retval = ncclResult_t(crccl.pncclAllToAll(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,count,datatype.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclAllToAll__retval,)
@@ -1110,14 +2296,47 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
     of datatype, not bytes.
 
     In-place operation will happen if sendbuff == recvbuff.
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcounts (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        sdispls (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcounts (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        rdispls (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclAllToAllv__retval = ncclResult_t(crccl.ncclAllToAllv(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sendcounts)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sdispls)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(recvcounts)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(rdispls)._ptr,datatype.value,
         ncclComm.from_pyobj(comm)._ptr,
@@ -1127,15 +2346,48 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
 
 @cython.embedsignature(True)
 def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object recvbuff, object recvcounts, object rdispls, object datatype, object comm, object stream):
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Args:
+        sendbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        sendcounts (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        sdispls (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        recvbuff (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        recvcounts (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        rdispls (`~.hip._util.types.ListOfUnsignedLong`/`~.object`):
+            (undocumented)
+
+        datatype (`~.ncclDataType_t`):
+            (undocumented)
+
+        comm (`~.ncclComm`/`~.object`):
+            (undocumented)
+
+        stream (`~.ihipStream_t`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclAllToAllv__retval = ncclResult_t(crccl.pncclAllToAllv(
-        <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(sendbuff)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sendcounts)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sdispls)._ptr,
-        <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(recvbuff)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(recvcounts)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(rdispls)._ptr,datatype.value,
         ncclComm.from_pyobj(comm)._ptr,
@@ -1150,6 +2402,11 @@ def ncclGroupStart():
     Start a group call. All calls to NCCL until ncclGroupEnd will be fused into
     a single NCCL operation. Nothing will be started on the CUDA stream until
     ncclGroupEnd.
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclGroupStart__retval = ncclResult_t(crccl.ncclGroupStart())    # fully specified
     return (_ncclGroupStart__retval,)
@@ -1157,7 +2414,12 @@ def ncclGroupStart():
 
 @cython.embedsignature(True)
 def pncclGroupStart():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclGroupStart__retval = ncclResult_t(crccl.pncclGroupStart())    # fully specified
     return (_pncclGroupStart__retval,)
@@ -1170,6 +2432,11 @@ def ncclGroupEnd():
     End a group call. Start a fused NCCL operation consisting of all calls since
     ncclGroupStart. Operations on the CUDA stream depending on the NCCL operations
     need to be called after ncclGroupEnd.
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _ncclGroupEnd__retval = ncclResult_t(crccl.ncclGroupEnd())    # fully specified
     return (_ncclGroupEnd__retval,)
@@ -1177,7 +2444,96 @@ def ncclGroupEnd():
 
 @cython.embedsignature(True)
 def pncclGroupEnd():
-    r"""(No short description)
+    r"""(No short description, might be part of a group)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.ncclResult_t`
     """
     _pncclGroupEnd__retval = ncclResult_t(crccl.pncclGroupEnd())    # fully specified
     return (_pncclGroupEnd__retval,)
+
+__all__ = [
+    "NCCL_MAJOR",
+    "NCCL_MINOR",
+    "NCCL_PATCH",
+    "NCCL_SUFFIX",
+    "NCCL_VERSION_CODE",
+    "RCCL_BFLOAT16",
+    "RCCL_GATHER_SCATTER",
+    "RCCL_ALLTOALLV",
+    "RCCL_MULTIRANKPERGPU",
+    "NCCL_UNIQUE_ID_BYTES",
+    "ncclComm",
+    "ncclComm_t",
+    "ncclUniqueId",
+    "_ncclResult_t__Base",
+    "ncclResult_t",
+    "ncclGetVersion",
+    "pncclGetVersion",
+    "ncclGetUniqueId",
+    "pncclGetUniqueId",
+    "ncclCommInitRank",
+    "pncclCommInitRank",
+    "ncclCommInitRankMulti",
+    "pncclCommInitRankMulti",
+    "ncclCommInitAll",
+    "pncclCommInitAll",
+    "ncclCommDestroy",
+    "pncclCommDestroy",
+    "ncclCommAbort",
+    "pncclCommAbort",
+    "ncclGetErrorString",
+    "pncclGetErrorString",
+    "ncclGetLastError",
+    "pncclGetError",
+    "ncclCommGetAsyncError",
+    "pncclCommGetAsyncError",
+    "ncclCommCount",
+    "pncclCommCount",
+    "ncclCommCuDevice",
+    "pncclCommCuDevice",
+    "ncclCommUserRank",
+    "pncclCommUserRank",
+    "_ncclRedOp_dummy_t__Base",
+    "ncclRedOp_dummy_t",
+    "_ncclRedOp_t__Base",
+    "ncclRedOp_t",
+    "_ncclDataType_t__Base",
+    "ncclDataType_t",
+    "_ncclScalarResidence_t__Base",
+    "ncclScalarResidence_t",
+    "ncclRedOpCreatePreMulSum",
+    "pncclRedOpCreatePreMulSum",
+    "ncclRedOpDestroy",
+    "pncclRedOpDestroy",
+    "ncclReduce",
+    "pncclReduce",
+    "ncclBcast",
+    "pncclBcast",
+    "ncclBroadcast",
+    "pncclBroadcast",
+    "ncclAllReduce",
+    "pncclAllReduce",
+    "ncclReduceScatter",
+    "pncclReduceScatter",
+    "ncclAllGather",
+    "pncclAllGather",
+    "ncclSend",
+    "pncclSend",
+    "ncclRecv",
+    "pncclRecv",
+    "ncclGather",
+    "pncclGather",
+    "ncclScatter",
+    "pncclScatter",
+    "ncclAllToAll",
+    "pncclAllToAll",
+    "ncclAllToAllv",
+    "pncclAllToAllv",
+    "ncclGroupStart",
+    "pncclGroupStart",
+    "ncclGroupEnd",
+    "pncclGroupEnd",
+]

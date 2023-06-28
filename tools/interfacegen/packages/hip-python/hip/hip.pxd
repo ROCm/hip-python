@@ -1,5 +1,27 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 from libc cimport stdlib
+from libc cimport string
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
@@ -21,6 +43,8 @@ cdef class hipDeviceArch_t:
     cdef __allocate(chip.hipDeviceArch_t** ptr)
     @staticmethod
     cdef hipDeviceArch_t new()
+    @staticmethod
+    cdef hipDeviceArch_t from_value(chip.hipDeviceArch_t other)
 
 
 cdef class hipUUID_t:
@@ -37,6 +61,8 @@ cdef class hipUUID_t:
     cdef __allocate(chip.hipUUID_t** ptr)
     @staticmethod
     cdef hipUUID_t new()
+    @staticmethod
+    cdef hipUUID_t from_value(chip.hipUUID_t other)
 
 
 cdef class hipDeviceProp_t:
@@ -53,6 +79,8 @@ cdef class hipDeviceProp_t:
     cdef __allocate(chip.hipDeviceProp_t** ptr)
     @staticmethod
     cdef hipDeviceProp_t new()
+    @staticmethod
+    cdef hipDeviceProp_t from_value(chip.hipDeviceProp_t other)
 
 
 cdef class hipPointerAttribute_t:
@@ -69,6 +97,8 @@ cdef class hipPointerAttribute_t:
     cdef __allocate(chip.hipPointerAttribute_t** ptr)
     @staticmethod
     cdef hipPointerAttribute_t new()
+    @staticmethod
+    cdef hipPointerAttribute_t from_value(chip.hipPointerAttribute_t other)
 
 
 cdef class hipChannelFormatDesc:
@@ -85,6 +115,8 @@ cdef class hipChannelFormatDesc:
     cdef __allocate(chip.hipChannelFormatDesc** ptr)
     @staticmethod
     cdef hipChannelFormatDesc new()
+    @staticmethod
+    cdef hipChannelFormatDesc from_value(chip.hipChannelFormatDesc other)
 
 
 cdef class HIP_ARRAY_DESCRIPTOR:
@@ -101,6 +133,8 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     cdef __allocate(chip.HIP_ARRAY_DESCRIPTOR** ptr)
     @staticmethod
     cdef HIP_ARRAY_DESCRIPTOR new()
+    @staticmethod
+    cdef HIP_ARRAY_DESCRIPTOR from_value(chip.HIP_ARRAY_DESCRIPTOR other)
 
 
 cdef class HIP_ARRAY3D_DESCRIPTOR:
@@ -117,6 +151,8 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     cdef __allocate(chip.HIP_ARRAY3D_DESCRIPTOR** ptr)
     @staticmethod
     cdef HIP_ARRAY3D_DESCRIPTOR new()
+    @staticmethod
+    cdef HIP_ARRAY3D_DESCRIPTOR from_value(chip.HIP_ARRAY3D_DESCRIPTOR other)
 
 
 cdef class hipArray:
@@ -133,6 +169,8 @@ cdef class hipArray:
     cdef __allocate(chip.hipArray** ptr)
     @staticmethod
     cdef hipArray new()
+    @staticmethod
+    cdef hipArray from_value(chip.hipArray other)
 
 
 cdef class hip_Memcpy2D:
@@ -149,6 +187,8 @@ cdef class hip_Memcpy2D:
     cdef __allocate(chip.hip_Memcpy2D** ptr)
     @staticmethod
     cdef hip_Memcpy2D new()
+    @staticmethod
+    cdef hip_Memcpy2D from_value(chip.hip_Memcpy2D other)
 
 
 cdef class hipMipmappedArray:
@@ -165,6 +205,8 @@ cdef class hipMipmappedArray:
     cdef __allocate(chip.hipMipmappedArray** ptr)
     @staticmethod
     cdef hipMipmappedArray new()
+    @staticmethod
+    cdef hipMipmappedArray from_value(chip.hipMipmappedArray other)
 
 
 cdef class HIP_TEXTURE_DESC_st:
@@ -181,6 +223,8 @@ cdef class HIP_TEXTURE_DESC_st:
     cdef __allocate(chip.HIP_TEXTURE_DESC_st** ptr)
     @staticmethod
     cdef HIP_TEXTURE_DESC_st new()
+    @staticmethod
+    cdef HIP_TEXTURE_DESC_st from_value(chip.HIP_TEXTURE_DESC_st other)
 
 
 cdef class hipResourceDesc_union_0_struct_0:
@@ -197,6 +241,8 @@ cdef class hipResourceDesc_union_0_struct_0:
     cdef __allocate(chip.hipResourceDesc_union_0_struct_0** ptr)
     @staticmethod
     cdef hipResourceDesc_union_0_struct_0 new()
+    @staticmethod
+    cdef hipResourceDesc_union_0_struct_0 from_value(chip.hipResourceDesc_union_0_struct_0 other)
 
 
 cdef class hipResourceDesc_union_0_struct_1:
@@ -213,6 +259,8 @@ cdef class hipResourceDesc_union_0_struct_1:
     cdef __allocate(chip.hipResourceDesc_union_0_struct_1** ptr)
     @staticmethod
     cdef hipResourceDesc_union_0_struct_1 new()
+    @staticmethod
+    cdef hipResourceDesc_union_0_struct_1 from_value(chip.hipResourceDesc_union_0_struct_1 other)
 
 
 cdef class hipResourceDesc_union_0_struct_2:
@@ -229,6 +277,8 @@ cdef class hipResourceDesc_union_0_struct_2:
     cdef __allocate(chip.hipResourceDesc_union_0_struct_2** ptr)
     @staticmethod
     cdef hipResourceDesc_union_0_struct_2 new()
+    @staticmethod
+    cdef hipResourceDesc_union_0_struct_2 from_value(chip.hipResourceDesc_union_0_struct_2 other)
 
 
 cdef class hipResourceDesc_union_0_struct_3:
@@ -245,6 +295,8 @@ cdef class hipResourceDesc_union_0_struct_3:
     cdef __allocate(chip.hipResourceDesc_union_0_struct_3** ptr)
     @staticmethod
     cdef hipResourceDesc_union_0_struct_3 new()
+    @staticmethod
+    cdef hipResourceDesc_union_0_struct_3 from_value(chip.hipResourceDesc_union_0_struct_3 other)
 
 
 cdef class hipResourceDesc_union_0:
@@ -261,6 +313,8 @@ cdef class hipResourceDesc_union_0:
     cdef __allocate(chip.hipResourceDesc_union_0** ptr)
     @staticmethod
     cdef hipResourceDesc_union_0 new()
+    @staticmethod
+    cdef hipResourceDesc_union_0 from_value(chip.hipResourceDesc_union_0 other)
 
 
 cdef class hipResourceDesc:
@@ -277,6 +331,8 @@ cdef class hipResourceDesc:
     cdef __allocate(chip.hipResourceDesc** ptr)
     @staticmethod
     cdef hipResourceDesc new()
+    @staticmethod
+    cdef hipResourceDesc from_value(chip.hipResourceDesc other)
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
@@ -293,6 +349,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_0** ptr)
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_0 new()
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_0 from_value(chip.HIP_RESOURCE_DESC_st_union_0_struct_0 other)
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
@@ -309,6 +367,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_1** ptr)
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_1 new()
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_1 from_value(chip.HIP_RESOURCE_DESC_st_union_0_struct_1 other)
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
@@ -325,6 +385,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_2** ptr)
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_2 new()
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_2 from_value(chip.HIP_RESOURCE_DESC_st_union_0_struct_2 other)
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
@@ -341,6 +403,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_3** ptr)
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_3 new()
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_3 from_value(chip.HIP_RESOURCE_DESC_st_union_0_struct_3 other)
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
@@ -357,6 +421,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_4** ptr)
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_4 new()
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_4 from_value(chip.HIP_RESOURCE_DESC_st_union_0_struct_4 other)
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0:
@@ -373,6 +439,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0** ptr)
     @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0 new()
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0 from_value(chip.HIP_RESOURCE_DESC_st_union_0 other)
 
 
 cdef class HIP_RESOURCE_DESC_st:
@@ -389,6 +457,8 @@ cdef class HIP_RESOURCE_DESC_st:
     cdef __allocate(chip.HIP_RESOURCE_DESC_st** ptr)
     @staticmethod
     cdef HIP_RESOURCE_DESC_st new()
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st from_value(chip.HIP_RESOURCE_DESC_st other)
 
 
 cdef class hipResourceViewDesc:
@@ -405,6 +475,8 @@ cdef class hipResourceViewDesc:
     cdef __allocate(chip.hipResourceViewDesc** ptr)
     @staticmethod
     cdef hipResourceViewDesc new()
+    @staticmethod
+    cdef hipResourceViewDesc from_value(chip.hipResourceViewDesc other)
 
 
 cdef class HIP_RESOURCE_VIEW_DESC_st:
@@ -421,6 +493,8 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     cdef __allocate(chip.HIP_RESOURCE_VIEW_DESC_st** ptr)
     @staticmethod
     cdef HIP_RESOURCE_VIEW_DESC_st new()
+    @staticmethod
+    cdef HIP_RESOURCE_VIEW_DESC_st from_value(chip.HIP_RESOURCE_VIEW_DESC_st other)
 
 
 cdef class hipPitchedPtr:
@@ -437,6 +511,8 @@ cdef class hipPitchedPtr:
     cdef __allocate(chip.hipPitchedPtr** ptr)
     @staticmethod
     cdef hipPitchedPtr new()
+    @staticmethod
+    cdef hipPitchedPtr from_value(chip.hipPitchedPtr other)
 
 
 cdef class hipExtent:
@@ -453,6 +529,8 @@ cdef class hipExtent:
     cdef __allocate(chip.hipExtent** ptr)
     @staticmethod
     cdef hipExtent new()
+    @staticmethod
+    cdef hipExtent from_value(chip.hipExtent other)
 
 
 cdef class hipPos:
@@ -469,6 +547,8 @@ cdef class hipPos:
     cdef __allocate(chip.hipPos** ptr)
     @staticmethod
     cdef hipPos new()
+    @staticmethod
+    cdef hipPos from_value(chip.hipPos other)
 
 
 cdef class hipMemcpy3DParms:
@@ -485,6 +565,8 @@ cdef class hipMemcpy3DParms:
     cdef __allocate(chip.hipMemcpy3DParms** ptr)
     @staticmethod
     cdef hipMemcpy3DParms new()
+    @staticmethod
+    cdef hipMemcpy3DParms from_value(chip.hipMemcpy3DParms other)
 
 
 cdef class HIP_MEMCPY3D:
@@ -501,6 +583,8 @@ cdef class HIP_MEMCPY3D:
     cdef __allocate(chip.HIP_MEMCPY3D** ptr)
     @staticmethod
     cdef HIP_MEMCPY3D new()
+    @staticmethod
+    cdef HIP_MEMCPY3D from_value(chip.HIP_MEMCPY3D other)
 
 
 cdef class uchar1:
@@ -517,6 +601,8 @@ cdef class uchar1:
     cdef __allocate(chip.uchar1** ptr)
     @staticmethod
     cdef uchar1 new()
+    @staticmethod
+    cdef uchar1 from_value(chip.uchar1 other)
 
 
 cdef class uchar2:
@@ -533,6 +619,8 @@ cdef class uchar2:
     cdef __allocate(chip.uchar2** ptr)
     @staticmethod
     cdef uchar2 new()
+    @staticmethod
+    cdef uchar2 from_value(chip.uchar2 other)
 
 
 cdef class uchar3:
@@ -549,6 +637,8 @@ cdef class uchar3:
     cdef __allocate(chip.uchar3** ptr)
     @staticmethod
     cdef uchar3 new()
+    @staticmethod
+    cdef uchar3 from_value(chip.uchar3 other)
 
 
 cdef class uchar4:
@@ -565,6 +655,8 @@ cdef class uchar4:
     cdef __allocate(chip.uchar4** ptr)
     @staticmethod
     cdef uchar4 new()
+    @staticmethod
+    cdef uchar4 from_value(chip.uchar4 other)
 
 
 cdef class char1:
@@ -581,6 +673,8 @@ cdef class char1:
     cdef __allocate(chip.char1** ptr)
     @staticmethod
     cdef char1 new()
+    @staticmethod
+    cdef char1 from_value(chip.char1 other)
 
 
 cdef class char2:
@@ -597,6 +691,8 @@ cdef class char2:
     cdef __allocate(chip.char2** ptr)
     @staticmethod
     cdef char2 new()
+    @staticmethod
+    cdef char2 from_value(chip.char2 other)
 
 
 cdef class char3:
@@ -613,6 +709,8 @@ cdef class char3:
     cdef __allocate(chip.char3** ptr)
     @staticmethod
     cdef char3 new()
+    @staticmethod
+    cdef char3 from_value(chip.char3 other)
 
 
 cdef class char4:
@@ -629,6 +727,8 @@ cdef class char4:
     cdef __allocate(chip.char4** ptr)
     @staticmethod
     cdef char4 new()
+    @staticmethod
+    cdef char4 from_value(chip.char4 other)
 
 
 cdef class ushort1:
@@ -645,6 +745,8 @@ cdef class ushort1:
     cdef __allocate(chip.ushort1** ptr)
     @staticmethod
     cdef ushort1 new()
+    @staticmethod
+    cdef ushort1 from_value(chip.ushort1 other)
 
 
 cdef class ushort2:
@@ -661,6 +763,8 @@ cdef class ushort2:
     cdef __allocate(chip.ushort2** ptr)
     @staticmethod
     cdef ushort2 new()
+    @staticmethod
+    cdef ushort2 from_value(chip.ushort2 other)
 
 
 cdef class ushort3:
@@ -677,6 +781,8 @@ cdef class ushort3:
     cdef __allocate(chip.ushort3** ptr)
     @staticmethod
     cdef ushort3 new()
+    @staticmethod
+    cdef ushort3 from_value(chip.ushort3 other)
 
 
 cdef class ushort4:
@@ -693,6 +799,8 @@ cdef class ushort4:
     cdef __allocate(chip.ushort4** ptr)
     @staticmethod
     cdef ushort4 new()
+    @staticmethod
+    cdef ushort4 from_value(chip.ushort4 other)
 
 
 cdef class short1:
@@ -709,6 +817,8 @@ cdef class short1:
     cdef __allocate(chip.short1** ptr)
     @staticmethod
     cdef short1 new()
+    @staticmethod
+    cdef short1 from_value(chip.short1 other)
 
 
 cdef class short2:
@@ -725,6 +835,8 @@ cdef class short2:
     cdef __allocate(chip.short2** ptr)
     @staticmethod
     cdef short2 new()
+    @staticmethod
+    cdef short2 from_value(chip.short2 other)
 
 
 cdef class short3:
@@ -741,6 +853,8 @@ cdef class short3:
     cdef __allocate(chip.short3** ptr)
     @staticmethod
     cdef short3 new()
+    @staticmethod
+    cdef short3 from_value(chip.short3 other)
 
 
 cdef class short4:
@@ -757,6 +871,8 @@ cdef class short4:
     cdef __allocate(chip.short4** ptr)
     @staticmethod
     cdef short4 new()
+    @staticmethod
+    cdef short4 from_value(chip.short4 other)
 
 
 cdef class uint1:
@@ -773,6 +889,8 @@ cdef class uint1:
     cdef __allocate(chip.uint1** ptr)
     @staticmethod
     cdef uint1 new()
+    @staticmethod
+    cdef uint1 from_value(chip.uint1 other)
 
 
 cdef class uint2:
@@ -789,6 +907,8 @@ cdef class uint2:
     cdef __allocate(chip.uint2** ptr)
     @staticmethod
     cdef uint2 new()
+    @staticmethod
+    cdef uint2 from_value(chip.uint2 other)
 
 
 cdef class uint3:
@@ -805,6 +925,8 @@ cdef class uint3:
     cdef __allocate(chip.uint3** ptr)
     @staticmethod
     cdef uint3 new()
+    @staticmethod
+    cdef uint3 from_value(chip.uint3 other)
 
 
 cdef class uint4:
@@ -821,6 +943,8 @@ cdef class uint4:
     cdef __allocate(chip.uint4** ptr)
     @staticmethod
     cdef uint4 new()
+    @staticmethod
+    cdef uint4 from_value(chip.uint4 other)
 
 
 cdef class int1:
@@ -837,6 +961,8 @@ cdef class int1:
     cdef __allocate(chip.int1** ptr)
     @staticmethod
     cdef int1 new()
+    @staticmethod
+    cdef int1 from_value(chip.int1 other)
 
 
 cdef class int2:
@@ -853,6 +979,8 @@ cdef class int2:
     cdef __allocate(chip.int2** ptr)
     @staticmethod
     cdef int2 new()
+    @staticmethod
+    cdef int2 from_value(chip.int2 other)
 
 
 cdef class int3:
@@ -869,6 +997,8 @@ cdef class int3:
     cdef __allocate(chip.int3** ptr)
     @staticmethod
     cdef int3 new()
+    @staticmethod
+    cdef int3 from_value(chip.int3 other)
 
 
 cdef class int4:
@@ -885,6 +1015,8 @@ cdef class int4:
     cdef __allocate(chip.int4** ptr)
     @staticmethod
     cdef int4 new()
+    @staticmethod
+    cdef int4 from_value(chip.int4 other)
 
 
 cdef class ulong1:
@@ -901,6 +1033,8 @@ cdef class ulong1:
     cdef __allocate(chip.ulong1** ptr)
     @staticmethod
     cdef ulong1 new()
+    @staticmethod
+    cdef ulong1 from_value(chip.ulong1 other)
 
 
 cdef class ulong2:
@@ -917,6 +1051,8 @@ cdef class ulong2:
     cdef __allocate(chip.ulong2** ptr)
     @staticmethod
     cdef ulong2 new()
+    @staticmethod
+    cdef ulong2 from_value(chip.ulong2 other)
 
 
 cdef class ulong3:
@@ -933,6 +1069,8 @@ cdef class ulong3:
     cdef __allocate(chip.ulong3** ptr)
     @staticmethod
     cdef ulong3 new()
+    @staticmethod
+    cdef ulong3 from_value(chip.ulong3 other)
 
 
 cdef class ulong4:
@@ -949,6 +1087,8 @@ cdef class ulong4:
     cdef __allocate(chip.ulong4** ptr)
     @staticmethod
     cdef ulong4 new()
+    @staticmethod
+    cdef ulong4 from_value(chip.ulong4 other)
 
 
 cdef class long1:
@@ -965,6 +1105,8 @@ cdef class long1:
     cdef __allocate(chip.long1** ptr)
     @staticmethod
     cdef long1 new()
+    @staticmethod
+    cdef long1 from_value(chip.long1 other)
 
 
 cdef class long2:
@@ -981,6 +1123,8 @@ cdef class long2:
     cdef __allocate(chip.long2** ptr)
     @staticmethod
     cdef long2 new()
+    @staticmethod
+    cdef long2 from_value(chip.long2 other)
 
 
 cdef class long3:
@@ -997,6 +1141,8 @@ cdef class long3:
     cdef __allocate(chip.long3** ptr)
     @staticmethod
     cdef long3 new()
+    @staticmethod
+    cdef long3 from_value(chip.long3 other)
 
 
 cdef class long4:
@@ -1013,6 +1159,8 @@ cdef class long4:
     cdef __allocate(chip.long4** ptr)
     @staticmethod
     cdef long4 new()
+    @staticmethod
+    cdef long4 from_value(chip.long4 other)
 
 
 cdef class ulonglong1:
@@ -1029,6 +1177,8 @@ cdef class ulonglong1:
     cdef __allocate(chip.ulonglong1** ptr)
     @staticmethod
     cdef ulonglong1 new()
+    @staticmethod
+    cdef ulonglong1 from_value(chip.ulonglong1 other)
 
 
 cdef class ulonglong2:
@@ -1045,6 +1195,8 @@ cdef class ulonglong2:
     cdef __allocate(chip.ulonglong2** ptr)
     @staticmethod
     cdef ulonglong2 new()
+    @staticmethod
+    cdef ulonglong2 from_value(chip.ulonglong2 other)
 
 
 cdef class ulonglong3:
@@ -1061,6 +1213,8 @@ cdef class ulonglong3:
     cdef __allocate(chip.ulonglong3** ptr)
     @staticmethod
     cdef ulonglong3 new()
+    @staticmethod
+    cdef ulonglong3 from_value(chip.ulonglong3 other)
 
 
 cdef class ulonglong4:
@@ -1077,6 +1231,8 @@ cdef class ulonglong4:
     cdef __allocate(chip.ulonglong4** ptr)
     @staticmethod
     cdef ulonglong4 new()
+    @staticmethod
+    cdef ulonglong4 from_value(chip.ulonglong4 other)
 
 
 cdef class longlong1:
@@ -1093,6 +1249,8 @@ cdef class longlong1:
     cdef __allocate(chip.longlong1** ptr)
     @staticmethod
     cdef longlong1 new()
+    @staticmethod
+    cdef longlong1 from_value(chip.longlong1 other)
 
 
 cdef class longlong2:
@@ -1109,6 +1267,8 @@ cdef class longlong2:
     cdef __allocate(chip.longlong2** ptr)
     @staticmethod
     cdef longlong2 new()
+    @staticmethod
+    cdef longlong2 from_value(chip.longlong2 other)
 
 
 cdef class longlong3:
@@ -1125,6 +1285,8 @@ cdef class longlong3:
     cdef __allocate(chip.longlong3** ptr)
     @staticmethod
     cdef longlong3 new()
+    @staticmethod
+    cdef longlong3 from_value(chip.longlong3 other)
 
 
 cdef class longlong4:
@@ -1141,6 +1303,8 @@ cdef class longlong4:
     cdef __allocate(chip.longlong4** ptr)
     @staticmethod
     cdef longlong4 new()
+    @staticmethod
+    cdef longlong4 from_value(chip.longlong4 other)
 
 
 cdef class float1:
@@ -1157,6 +1321,8 @@ cdef class float1:
     cdef __allocate(chip.float1** ptr)
     @staticmethod
     cdef float1 new()
+    @staticmethod
+    cdef float1 from_value(chip.float1 other)
 
 
 cdef class float2:
@@ -1173,6 +1339,8 @@ cdef class float2:
     cdef __allocate(chip.float2** ptr)
     @staticmethod
     cdef float2 new()
+    @staticmethod
+    cdef float2 from_value(chip.float2 other)
 
 
 cdef class float3:
@@ -1189,6 +1357,8 @@ cdef class float3:
     cdef __allocate(chip.float3** ptr)
     @staticmethod
     cdef float3 new()
+    @staticmethod
+    cdef float3 from_value(chip.float3 other)
 
 
 cdef class float4:
@@ -1205,6 +1375,8 @@ cdef class float4:
     cdef __allocate(chip.float4** ptr)
     @staticmethod
     cdef float4 new()
+    @staticmethod
+    cdef float4 from_value(chip.float4 other)
 
 
 cdef class double1:
@@ -1221,6 +1393,8 @@ cdef class double1:
     cdef __allocate(chip.double1** ptr)
     @staticmethod
     cdef double1 new()
+    @staticmethod
+    cdef double1 from_value(chip.double1 other)
 
 
 cdef class double2:
@@ -1237,6 +1411,8 @@ cdef class double2:
     cdef __allocate(chip.double2** ptr)
     @staticmethod
     cdef double2 new()
+    @staticmethod
+    cdef double2 from_value(chip.double2 other)
 
 
 cdef class double3:
@@ -1253,6 +1429,8 @@ cdef class double3:
     cdef __allocate(chip.double3** ptr)
     @staticmethod
     cdef double3 new()
+    @staticmethod
+    cdef double3 from_value(chip.double3 other)
 
 
 cdef class double4:
@@ -1269,6 +1447,8 @@ cdef class double4:
     cdef __allocate(chip.double4** ptr)
     @staticmethod
     cdef double4 new()
+    @staticmethod
+    cdef double4 from_value(chip.double4 other)
 
 
 cdef class __hip_texture:
@@ -1297,6 +1477,8 @@ cdef class textureReference:
     cdef __allocate(chip.textureReference** ptr)
     @staticmethod
     cdef textureReference new()
+    @staticmethod
+    cdef textureReference from_value(chip.textureReference other)
 
 
 cdef class hipTextureDesc:
@@ -1313,6 +1495,8 @@ cdef class hipTextureDesc:
     cdef __allocate(chip.hipTextureDesc** ptr)
     @staticmethod
     cdef hipTextureDesc new()
+    @staticmethod
+    cdef hipTextureDesc from_value(chip.hipTextureDesc other)
 
 
 cdef class __hip_surface:
@@ -1341,6 +1525,8 @@ cdef class surfaceReference:
     cdef __allocate(chip.surfaceReference** ptr)
     @staticmethod
     cdef surfaceReference new()
+    @staticmethod
+    cdef surfaceReference from_value(chip.surfaceReference other)
 
 
 cdef class ihipCtx_t:
@@ -1381,6 +1567,8 @@ cdef class hipIpcMemHandle_st:
     cdef __allocate(chip.hipIpcMemHandle_st** ptr)
     @staticmethod
     cdef hipIpcMemHandle_st new()
+    @staticmethod
+    cdef hipIpcMemHandle_st from_value(chip.hipIpcMemHandle_st other)
 
 
 cdef class hipIpcEventHandle_st:
@@ -1397,6 +1585,8 @@ cdef class hipIpcEventHandle_st:
     cdef __allocate(chip.hipIpcEventHandle_st** ptr)
     @staticmethod
     cdef hipIpcEventHandle_st new()
+    @staticmethod
+    cdef hipIpcEventHandle_st from_value(chip.hipIpcEventHandle_st other)
 
 
 cdef class ihipModule_t:
@@ -1449,6 +1639,8 @@ cdef class hipFuncAttributes:
     cdef __allocate(chip.hipFuncAttributes** ptr)
     @staticmethod
     cdef hipFuncAttributes new()
+    @staticmethod
+    cdef hipFuncAttributes from_value(chip.hipFuncAttributes other)
 
 
 cdef class ihipEvent_t:
@@ -1477,6 +1669,8 @@ cdef class hipMemLocation:
     cdef __allocate(chip.hipMemLocation** ptr)
     @staticmethod
     cdef hipMemLocation new()
+    @staticmethod
+    cdef hipMemLocation from_value(chip.hipMemLocation other)
 
 
 cdef class hipMemAccessDesc:
@@ -1493,6 +1687,8 @@ cdef class hipMemAccessDesc:
     cdef __allocate(chip.hipMemAccessDesc** ptr)
     @staticmethod
     cdef hipMemAccessDesc new()
+    @staticmethod
+    cdef hipMemAccessDesc from_value(chip.hipMemAccessDesc other)
 
 
 cdef class hipMemPoolProps:
@@ -1509,6 +1705,8 @@ cdef class hipMemPoolProps:
     cdef __allocate(chip.hipMemPoolProps** ptr)
     @staticmethod
     cdef hipMemPoolProps new()
+    @staticmethod
+    cdef hipMemPoolProps from_value(chip.hipMemPoolProps other)
 
 
 cdef class hipMemPoolPtrExportData:
@@ -1525,6 +1723,8 @@ cdef class hipMemPoolPtrExportData:
     cdef __allocate(chip.hipMemPoolPtrExportData** ptr)
     @staticmethod
     cdef hipMemPoolPtrExportData new()
+    @staticmethod
+    cdef hipMemPoolPtrExportData from_value(chip.hipMemPoolPtrExportData other)
 
 
 cdef class dim3:
@@ -1541,6 +1741,8 @@ cdef class dim3:
     cdef __allocate(chip.dim3** ptr)
     @staticmethod
     cdef dim3 new()
+    @staticmethod
+    cdef dim3 from_value(chip.dim3 other)
 
 
 cdef class hipLaunchParams_t:
@@ -1557,6 +1759,8 @@ cdef class hipLaunchParams_t:
     cdef __allocate(chip.hipLaunchParams_t** ptr)
     @staticmethod
     cdef hipLaunchParams_t new()
+    @staticmethod
+    cdef hipLaunchParams_t from_value(chip.hipLaunchParams_t other)
 
 
 cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
@@ -1573,6 +1777,8 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0** ptr)
     @staticmethod
     cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 new()
+    @staticmethod
+    cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 from_value(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0 other)
 
 
 cdef class hipExternalMemoryHandleDesc_st_union_0:
@@ -1589,6 +1795,8 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st_union_0** ptr)
     @staticmethod
     cdef hipExternalMemoryHandleDesc_st_union_0 new()
+    @staticmethod
+    cdef hipExternalMemoryHandleDesc_st_union_0 from_value(chip.hipExternalMemoryHandleDesc_st_union_0 other)
 
 
 cdef class hipExternalMemoryHandleDesc_st:
@@ -1605,6 +1813,8 @@ cdef class hipExternalMemoryHandleDesc_st:
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st** ptr)
     @staticmethod
     cdef hipExternalMemoryHandleDesc_st new()
+    @staticmethod
+    cdef hipExternalMemoryHandleDesc_st from_value(chip.hipExternalMemoryHandleDesc_st other)
 
 
 cdef class hipExternalMemoryBufferDesc_st:
@@ -1621,6 +1831,8 @@ cdef class hipExternalMemoryBufferDesc_st:
     cdef __allocate(chip.hipExternalMemoryBufferDesc_st** ptr)
     @staticmethod
     cdef hipExternalMemoryBufferDesc_st new()
+    @staticmethod
+    cdef hipExternalMemoryBufferDesc_st from_value(chip.hipExternalMemoryBufferDesc_st other)
 
 
 cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
@@ -1637,6 +1849,8 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0** ptr)
     @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 new()
+    @staticmethod
+    cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 from_value(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0 other)
 
 
 cdef class hipExternalSemaphoreHandleDesc_st_union_0:
@@ -1653,6 +1867,8 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st_union_0** ptr)
     @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st_union_0 new()
+    @staticmethod
+    cdef hipExternalSemaphoreHandleDesc_st_union_0 from_value(chip.hipExternalSemaphoreHandleDesc_st_union_0 other)
 
 
 cdef class hipExternalSemaphoreHandleDesc_st:
@@ -1669,6 +1885,8 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st** ptr)
     @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st new()
+    @staticmethod
+    cdef hipExternalSemaphoreHandleDesc_st from_value(chip.hipExternalSemaphoreHandleDesc_st other)
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
@@ -1685,6 +1903,8 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0** ptr)
     @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 new()
+    @staticmethod
+    cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 from_value(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0 other)
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
@@ -1701,6 +1921,8 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1** ptr)
     @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 new()
+    @staticmethod
+    cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 from_value(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1 other)
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0:
@@ -1717,6 +1939,8 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0** ptr)
     @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0 new()
+    @staticmethod
+    cdef hipExternalSemaphoreSignalParams_st_struct_0 from_value(chip.hipExternalSemaphoreSignalParams_st_struct_0 other)
 
 
 cdef class hipExternalSemaphoreSignalParams_st:
@@ -1733,6 +1957,8 @@ cdef class hipExternalSemaphoreSignalParams_st:
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st** ptr)
     @staticmethod
     cdef hipExternalSemaphoreSignalParams_st new()
+    @staticmethod
+    cdef hipExternalSemaphoreSignalParams_st from_value(chip.hipExternalSemaphoreSignalParams_st other)
 
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
@@ -1749,6 +1975,8 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0** ptr)
     @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 new()
+    @staticmethod
+    cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 from_value(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0 other)
 
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
@@ -1765,6 +1993,8 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1** ptr)
     @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 new()
+    @staticmethod
+    cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 from_value(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1 other)
 
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0:
@@ -1781,6 +2011,8 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0** ptr)
     @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0 new()
+    @staticmethod
+    cdef hipExternalSemaphoreWaitParams_st_struct_0 from_value(chip.hipExternalSemaphoreWaitParams_st_struct_0 other)
 
 
 cdef class hipExternalSemaphoreWaitParams_st:
@@ -1797,6 +2029,8 @@ cdef class hipExternalSemaphoreWaitParams_st:
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st** ptr)
     @staticmethod
     cdef hipExternalSemaphoreWaitParams_st new()
+    @staticmethod
+    cdef hipExternalSemaphoreWaitParams_st from_value(chip.hipExternalSemaphoreWaitParams_st other)
 
 
 cdef class _hipGraphicsResource:
@@ -1885,6 +2119,8 @@ cdef class hipHostNodeParams:
     cdef __allocate(chip.hipHostNodeParams** ptr)
     @staticmethod
     cdef hipHostNodeParams new()
+    @staticmethod
+    cdef hipHostNodeParams from_value(chip.hipHostNodeParams other)
 
 
 cdef class hipKernelNodeParams:
@@ -1901,6 +2137,8 @@ cdef class hipKernelNodeParams:
     cdef __allocate(chip.hipKernelNodeParams** ptr)
     @staticmethod
     cdef hipKernelNodeParams new()
+    @staticmethod
+    cdef hipKernelNodeParams from_value(chip.hipKernelNodeParams other)
 
 
 cdef class hipMemsetParams:
@@ -1917,6 +2155,8 @@ cdef class hipMemsetParams:
     cdef __allocate(chip.hipMemsetParams** ptr)
     @staticmethod
     cdef hipMemsetParams new()
+    @staticmethod
+    cdef hipMemsetParams from_value(chip.hipMemsetParams other)
 
 
 cdef class hipAccessPolicyWindow:
@@ -1933,6 +2173,8 @@ cdef class hipAccessPolicyWindow:
     cdef __allocate(chip.hipAccessPolicyWindow** ptr)
     @staticmethod
     cdef hipAccessPolicyWindow new()
+    @staticmethod
+    cdef hipAccessPolicyWindow from_value(chip.hipAccessPolicyWindow other)
 
 
 cdef class hipKernelNodeAttrValue:
@@ -1949,6 +2191,8 @@ cdef class hipKernelNodeAttrValue:
     cdef __allocate(chip.hipKernelNodeAttrValue** ptr)
     @staticmethod
     cdef hipKernelNodeAttrValue new()
+    @staticmethod
+    cdef hipKernelNodeAttrValue from_value(chip.hipKernelNodeAttrValue other)
 
 
 cdef class hipMemAllocationProp_struct_0:
@@ -1965,6 +2209,8 @@ cdef class hipMemAllocationProp_struct_0:
     cdef __allocate(chip.hipMemAllocationProp_struct_0** ptr)
     @staticmethod
     cdef hipMemAllocationProp_struct_0 new()
+    @staticmethod
+    cdef hipMemAllocationProp_struct_0 from_value(chip.hipMemAllocationProp_struct_0 other)
 
 
 cdef class hipMemAllocationProp:
@@ -1981,6 +2227,8 @@ cdef class hipMemAllocationProp:
     cdef __allocate(chip.hipMemAllocationProp** ptr)
     @staticmethod
     cdef hipMemAllocationProp new()
+    @staticmethod
+    cdef hipMemAllocationProp from_value(chip.hipMemAllocationProp other)
 
 
 cdef class ihipMemGenericAllocationHandle:
@@ -2009,6 +2257,8 @@ cdef class hipArrayMapInfo_union_0:
     cdef __allocate(chip.hipArrayMapInfo_union_0** ptr)
     @staticmethod
     cdef hipArrayMapInfo_union_0 new()
+    @staticmethod
+    cdef hipArrayMapInfo_union_0 from_value(chip.hipArrayMapInfo_union_0 other)
 
 
 cdef class hipArrayMapInfo_union_1_struct_0:
@@ -2025,6 +2275,8 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     cdef __allocate(chip.hipArrayMapInfo_union_1_struct_0** ptr)
     @staticmethod
     cdef hipArrayMapInfo_union_1_struct_0 new()
+    @staticmethod
+    cdef hipArrayMapInfo_union_1_struct_0 from_value(chip.hipArrayMapInfo_union_1_struct_0 other)
 
 
 cdef class hipArrayMapInfo_union_1_struct_1:
@@ -2041,6 +2293,8 @@ cdef class hipArrayMapInfo_union_1_struct_1:
     cdef __allocate(chip.hipArrayMapInfo_union_1_struct_1** ptr)
     @staticmethod
     cdef hipArrayMapInfo_union_1_struct_1 new()
+    @staticmethod
+    cdef hipArrayMapInfo_union_1_struct_1 from_value(chip.hipArrayMapInfo_union_1_struct_1 other)
 
 
 cdef class hipArrayMapInfo_union_1:
@@ -2057,6 +2311,8 @@ cdef class hipArrayMapInfo_union_1:
     cdef __allocate(chip.hipArrayMapInfo_union_1** ptr)
     @staticmethod
     cdef hipArrayMapInfo_union_1 new()
+    @staticmethod
+    cdef hipArrayMapInfo_union_1 from_value(chip.hipArrayMapInfo_union_1 other)
 
 
 cdef class hipArrayMapInfo_union_2:
@@ -2073,6 +2329,8 @@ cdef class hipArrayMapInfo_union_2:
     cdef __allocate(chip.hipArrayMapInfo_union_2** ptr)
     @staticmethod
     cdef hipArrayMapInfo_union_2 new()
+    @staticmethod
+    cdef hipArrayMapInfo_union_2 from_value(chip.hipArrayMapInfo_union_2 other)
 
 
 cdef class hipArrayMapInfo:
@@ -2089,6 +2347,8 @@ cdef class hipArrayMapInfo:
     cdef __allocate(chip.hipArrayMapInfo** ptr)
     @staticmethod
     cdef hipArrayMapInfo new()
+    @staticmethod
+    cdef hipArrayMapInfo from_value(chip.hipArrayMapInfo other)
 
 
 cdef class hipStreamCallback_t:

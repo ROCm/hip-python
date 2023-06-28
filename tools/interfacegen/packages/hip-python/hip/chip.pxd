@@ -1,4 +1,25 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 from libc.stdint cimport *
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 cdef extern from "hip/hip_runtime.h":
@@ -9,11 +30,11 @@ cdef extern from "hip/hip_runtime.h":
 
     cdef int HIP_VERSION_PATCH
 
-    cdef char* HIP_VERSION_GITHASH
+    cdef char * HIP_VERSION_GITHASH
 
     cdef int HIP_VERSION_BUILD_ID
 
-    cdef char* HIP_VERSION_BUILD_NAME
+    cdef char * HIP_VERSION_BUILD_NAME
 
     cdef int HIP_VERSION
 
@@ -47,11 +68,11 @@ cdef extern from "hip/hip_runtime.h":
 
     cdef int HIP_TEXTURE_OBJECT_SIZE_DWORD
 
-    cdef unsigned long int HIP_LAUNCH_PARAM_BUFFER_POINTER
+    cdef unsigned long HIP_LAUNCH_PARAM_BUFFER_POINTER
 
-    cdef unsigned long int HIP_LAUNCH_PARAM_BUFFER_SIZE
+    cdef unsigned long HIP_LAUNCH_PARAM_BUFFER_SIZE
 
-    cdef unsigned long int HIP_LAUNCH_PARAM_END
+    cdef unsigned long HIP_LAUNCH_PARAM_END
 
     cdef int hipIpcMemLazyEnablePeerAccess
 
@@ -2935,41 +2956,38 @@ cdef hipError_t hipDestroyExternalSemaphore(void * extSem) nogil
 
 
 # 
-#   @brief Imports an external memory object.
+# @brief Imports an external memory object.
 # 
-#   @param[out] extMem_out  Returned handle to an external memory object
-#   @param[in]  memHandleDesc Memory import handle descriptor
+# @param[out] extMem_out  Returned handle to an external memory object
+# @param[in]  memHandleDesc Memory import handle descriptor
 # 
-#   @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
-#   @see
-# /
+# @see
 cdef hipError_t hipImportExternalMemory(void ** extMem_out,hipExternalMemoryHandleDesc_st * memHandleDesc) nogil
 
 
 # 
-#   @brief Maps a buffer onto an imported memory object.
+# @brief Maps a buffer onto an imported memory object.
 # 
-#   @param[out] devPtr Returned device pointer to buffer
-#   @param[in]  extMem  Handle to external memory object
-#   @param[in]  bufferDesc  Buffer descriptor
+# @param[out] devPtr Returned device pointer to buffer
+# @param[in]  extMem  Handle to external memory object
+# @param[in]  bufferDesc  Buffer descriptor
 # 
-#   @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
-#   @see
-# /
+# @see
 cdef hipError_t hipExternalMemoryGetMappedBuffer(void ** devPtr,void * extMem,hipExternalMemoryBufferDesc_st * bufferDesc) nogil
 
 
 # 
-#   @brief Destroys an external memory object.
+# @brief Destroys an external memory object.
 # 
-#   @param[in] extMem  External memory object to be destroyed
+# @param[in] extMem  External memory object to be destroyed
 # 
-#   @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
-#   @see
-# /
+# @see
 cdef hipError_t hipDestroyExternalMemory(void * extMem) nogil
 
 
@@ -4238,27 +4256,25 @@ cdef hipError_t hipMemcpy2D(void * dst,unsigned long dpitch,const void * src,uns
 
 
 # 
-#    @brief Copies memory for 2D arrays.
-#    @param[in]   pCopy Parameters for the memory copy
-#    @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-#    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+#  @brief Copies memory for 2D arrays.
+#  @param[in]   pCopy Parameters for the memory copy
+#  @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+#  #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # 
-#    @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-#   hipMemcpyToSymbol, hipMemcpyAsync
-# /
+#  @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+# hipMemcpyToSymbol, hipMemcpyAsync
 cdef hipError_t hipMemcpyParam2D(hip_Memcpy2D * pCopy) nogil
 
 
 # 
-#    @brief Copies memory for 2D arrays.
-#    @param[in]   pCopy Parameters for the memory copy
-#    @param[in]   stream Stream to use
-#    @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-#   #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+#  @brief Copies memory for 2D arrays.
+#  @param[in]   pCopy Parameters for the memory copy
+#  @param[in]   stream Stream to use
+#  @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+# #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # 
-#    @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-#   hipMemcpyToSymbol, hipMemcpyAsync
-# /
+#  @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+# hipMemcpyToSymbol, hipMemcpyAsync
 cdef hipError_t hipMemcpyParam2DAsync(hip_Memcpy2D * pCopy,hipStream_t stream) nogil
 
 

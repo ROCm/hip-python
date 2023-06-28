@@ -1,4 +1,24 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 """This is the project's setup script.
 
@@ -8,7 +28,7 @@ modules. The generated Cython declaration files can be used
 by Cython users of this project.
 """
 
-__author__ = "AMD_AUTHOR"
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import os
 import warnings
@@ -16,6 +36,7 @@ import enum
 import textwrap
 import argparse
 
+# configure warnings
 original_formatwarning = warnings.formatwarning
 def custom_formatwarning(warnobj,*args,**kwargs):
     global original_formatwarning
@@ -28,6 +49,12 @@ warnings.formatwarning = custom_formatwarning
 import _controls
 import _cuda_interop_layer_gen
 import _gitversion
+import _codegen.cython
+
+# configure codegen
+# see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
+_codegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
+_cuda_interop_layer_gen.python_interface_pyobj_role_template = r"`.{name}`" # note: here we want to keep the qualifier
 
 from _codegen.cython import (
     CythonPackageGenerator,
@@ -45,7 +72,6 @@ from _codegen.tree import (
 )
 
 from _parse_hipify_perl import parse_hipify_perl
-
 
 def parse_options():
     global ROCM_INC
@@ -319,6 +345,7 @@ def generate_hipblas_package_files():
         node_filter=_controls.hipblas.node_filter,
         ptr_parm_intent=_controls.hipblas.ptr_parm_intent,
         ptr_rank=_controls.hipblas.ptr_rank,
+        raw_comment_cleaner=_controls.hipblas.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
     generator.c_interface_decl_preamble += textwrap.dedent(
@@ -443,6 +470,7 @@ def generate_hipsparse_package_files():
         macro_type=_controls.hipsparse.macro_type,
         ptr_parm_intent=_controls.hipsparse.ptr_parm_intent,
         ptr_rank=_controls.hipsparse.ptr_rank,
+        raw_comment_cleaner=_controls.hipsparse.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
     generator.c_interface_decl_preamble += textwrap.dedent(
@@ -507,16 +535,19 @@ if __name__ == "__main__":
     FULL_VERSION = (
         f"{HIP_VERSION_NAME}.{_gitversion.version(append_hash=True,append_date=True)}"
     )
+    
+    with open("LICENSE","r") as licensefile:
+        LICENSE_TEXT = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
     cuda_output_dir = os.path.join("packages", "hip-python-as-cuda", "cuda")
     for output_dir in (hip_output_dir, cuda_output_dir):
         # hip|cuda/_version.py
         with open(os.path.join(output_dir, "_version.py"), "w") as f:
             f.write(
-                textwrap.dedent(
-                    f"""\
-                # AMD_COPYRIGHT
-
-                __author__ = "AMD_AUTHOR"
+                LICENSE_TEXT
+                + textwrap.dedent(
+                f"""\
+                
+                __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
                 VERSION = __version__ = "{VERSION}"
                 FULL_VERSION = __full_version__ = "{FULL_VERSION}"
@@ -527,26 +558,32 @@ if __name__ == "__main__":
                 ).strip()
             )
         # hip|cuda/__init__.py
+        # TODO make option to use all generators or only specified ones
+        HIP_PYTHON_LIB_NAMES = AVAILABLE_GENERATORS.keys()
+
         with open(os.path.join(output_dir, "__init__.py"), "w") as f:
-            init_content = textwrap.dedent(
-                f"""\
-                # AMD_COPYRIGHT
+            init_content = (
+                LICENSE_TEXT
+                + textwrap.dedent(
+                    f"""\
+                    
+                    __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-                __author__ = "AMD_AUTHOR"
+                    from ._version import *
+                    HIP_VERSION = {HIP_VERSION}
+                    HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
+                    HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
 
-                from ._version import *
-                HIP_VERSION = {HIP_VERSION}
-                HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
-                HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
-
-                from . import _util"""
+                    """
+                )
             )
             if output_dir == hip_output_dir:
-                for pkg_name in AVAILABLE_GENERATORS.keys():
-                    init_content += f"from . import {pkg_name}\n"
+                init_content += "\nfrom . import _util"
+                for pkg_name in HIP_PYTHON_LIB_NAMES:
+                    init_content += f"\nfrom . import {pkg_name}"
             else:
                 for pkg_name in ("cuda", "cudart", "nvrtc"):
-                    init_content += f"from . import {pkg_name}\n"
+                    init_content += f"\nfrom . import {pkg_name}"
             f.write(init_content)
     # hip-python-as-cuda/requirements.txt
     requirements_file = os.path.join(
@@ -554,10 +591,10 @@ if __name__ == "__main__":
     )
     with open(requirements_file, "w") as outfile:
         outfile.write(
-            textwrap.dedent(
+            LICENSE_TEXT
+            + textwrap.dedent(
                 f"""\
-                # AMD_COPYRIGHT
-                
+            
                 # This file has been generated, do not modify.
                 
                 # Python dependencies required for development
@@ -568,3 +605,55 @@ if __name__ == "__main__":
                 hip-python=={VERSION}"""
             )
         )
+    # hip-python docs
+    # files per api
+
+    def write_pkg_markdown_file_(pkg,lib,extra=""):
+        with open(os.path.join(HIP_PYTHON_DOCS, "python_api", f"{lib}.md"),"w") as outfile:
+            outfile.write(textwrap.dedent(
+                f"""\
+                # {pkg}.{lib}
+
+                <!-- global automodule options are set in conf.py -->
+                ```{{eval-rst}}
+                .. automodule:: {pkg}.{lib}
+                {extra}
+
+                ```"""
+            ))
+
+    HIP_PYTHON_DOCS = os.path.join("packages","hip-python","docs")
+    for lib in HIP_PYTHON_LIB_NAMES:
+        write_pkg_markdown_file_("hip",lib)
+    CUDA_PYTHON_LIB_NAMES = ["cuda","cudart","nvrtc"]
+    for lib in CUDA_PYTHON_LIB_NAMES:
+        write_pkg_markdown_file_("cuda",lib,extra="   :noindex:") # noindex, prevents ambiguity issues with enum constants
+    # index.md from index.md.in
+    index_md = os.path.join(
+        HIP_PYTHON_DOCS, "index.md"
+    )
+    PYTHON_API_DOC_NAMES = [f"- {{doc}}`python_api/{lib}`" for lib in HIP_PYTHON_LIB_NAMES]
+    PYTHON_API_DOC_NAMES_CUDA = [f"- {{doc}}`python_api/{lib}`" for lib in CUDA_PYTHON_LIB_NAMES]
+    with open(index_md + ".in","r"
+         ) as infile, open(index_md, "w") as outfile:
+        
+        for key in AVAILABLE_GENERATORS:
+            rendered = infile.read()
+            rendered = rendered.replace("{PYTHON_API_DOC_NAMES}","\n".join(PYTHON_API_DOC_NAMES))
+            rendered = rendered.replace("{PYTHON_API_DOC_NAMES_CUDA}","\n".join(PYTHON_API_DOC_NAMES_CUDA))
+            rendered = rendered.replace("{HIP_VERSION_NAME}", HIP_VERSION_NAME)
+            outfile.write(rendered)
+    # _toc.yml.in from _toc.yml.in.in
+    toc_yml_md_in = os.path.join(
+        HIP_PYTHON_DOCS, ".sphinx", "_toc.yml.in"
+    )
+    PYTHON_API_FILE_NAMES = [f"      - file: python_api/{lib}" for lib in HIP_PYTHON_LIB_NAMES]
+    PYTHON_API_FILE_NAMES_CUDA = [f"      - file: python_api/{lib}" for lib in CUDA_PYTHON_LIB_NAMES]
+    with open(toc_yml_md_in + ".in","r"
+         ) as infile, open(toc_yml_md_in, "w") as outfile:
+        
+        for key in AVAILABLE_GENERATORS:
+            rendered = infile.read()
+            rendered = rendered.replace("{PYTHON_API_FILE_NAMES}","\n".join(PYTHON_API_FILE_NAMES))
+            rendered = rendered.replace("{PYTHON_API_FILE_NAMES_CUDA}","\n".join(PYTHON_API_FILE_NAMES_CUDA))
+            outfile.write(rendered)

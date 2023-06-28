@@ -1,4 +1,63 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
+"""
+Attributes:
+    HIPRAND_VERSION (`~.int`):
+        Macro constant.
+
+    HIPRAND_DEFAULT_MAX_BLOCK_SIZE (`~.int`):
+        Macro constant.
+
+    HIPRAND_DEFAULT_MIN_WARPS_PER_EU (`~.int`):
+        Macro constant.
+
+    rocrand_discrete_distribution:
+        alias of `~.rocrand_discrete_distribution_st`
+
+    rocrand_generator:
+        alias of `~.rocrand_generator_base_type`
+
+    hiprandGenerator_st:
+        alias of `~.rocrand_generator_base_type`
+
+    hiprandDiscreteDistribution_st:
+        alias of `~.rocrand_discrete_distribution_st`
+
+    hiprandGenerator_t:
+        alias of `~.rocrand_generator_base_type`
+
+    hiprandDiscreteDistribution_t:
+        alias of `~.rocrand_discrete_distribution_st`
+
+    hiprandStatus_t:
+        alias of `~.hiprandStatus`
+
+    hiprandRngType_t:
+        alias of `~.hiprandRngType`
+
+"""
+
 import cython
 import ctypes
 import enum
@@ -9,6 +68,53 @@ HIPRAND_DEFAULT_MAX_BLOCK_SIZE = chiprand.HIPRAND_DEFAULT_MAX_BLOCK_SIZE
 HIPRAND_DEFAULT_MIN_WARPS_PER_EU = chiprand.HIPRAND_DEFAULT_MIN_WARPS_PER_EU
 
 cdef class uint4:
+    """Python wrapper for C type chiprand.uint4.
+    
+    Python wrapper for C type chiprand.uint4.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+
+      This will set the ``self._ptr`` attribute to ``NULL``.
+
+    * `int`:
+      
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      
+    * `ctypes.c_void_p`:
+      
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+      
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
+    * `object` that implements the Python buffer protocol:
+      
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
     # members declared in pxd file
 
     def __cinit__(self):
@@ -22,7 +128,7 @@ cdef class uint4:
         given ``chiprand.uint4`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -40,8 +146,8 @@ cdef class uint4:
         returns it directly. No new ``uint4`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``uint4``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `uint4`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -84,13 +190,14 @@ cdef class uint4:
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
+
     @staticmethod
     cdef __allocate(chiprand.uint4** ptr):
         ptr[0] = <chiprand.uint4*>stdlib.malloc(sizeof(chiprand.uint4))
+        string.memset(<void*>ptr[0], 0, sizeof(chiprand.uint4))
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef uint4 new():
@@ -99,8 +206,29 @@ cdef class uint4:
         cdef chiprand.uint4* ptr
         uint4.__allocate(&ptr)
         return uint4.from_ptr(ptr, owner=True)
+
+    @staticmethod
+    cdef uint4 from_value(chiprand.uint4 other):
+        """Allocate new C type and copy from ``other``.
+        """
+        wrapper = uint4.new()
+        string.memcpy(wrapper._ptr, &other, sizeof(chiprand.uint4))
+        return wrapper
    
     def __init__(self,*args,**kwargs):
+        """Constructor type uint4.
+
+        Constructor for type uint4.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         uint4.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -119,13 +247,25 @@ cdef class uint4:
             setattr(self,k,v)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<uint4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        """
         return ctypes.c_void_p(int(self))
+    def c_sizeof(self):
+        """Returns the size of the underlying C type in bytes.
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        """
+        return sizeof(chiprand.uint4)
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -136,6 +276,7 @@ cdef class uint4:
         self._ptr[i].x = value
     @property
     def x(self):
+        """(undocumented)"""
         return self.get_x(0)
     @x.setter
     def x(self, unsigned int value):
@@ -151,6 +292,7 @@ cdef class uint4:
         self._ptr[i].y = value
     @property
     def y(self):
+        """(undocumented)"""
         return self.get_y(0)
     @y.setter
     def y(self, unsigned int value):
@@ -166,6 +308,7 @@ cdef class uint4:
         self._ptr[i].z = value
     @property
     def z(self):
+        """(undocumented)"""
         return self.get_z(0)
     @z.setter
     def z(self, unsigned int value):
@@ -181,6 +324,7 @@ cdef class uint4:
         self._ptr[i].w = value
     @property
     def w(self):
+        """(undocumented)"""
         return self.get_w(0)
     @w.setter
     def w(self, unsigned int value):
@@ -204,6 +348,53 @@ cdef class uint4:
 
 
 cdef class rocrand_discrete_distribution_st:
+    """Python wrapper for C type chiprand.rocrand_discrete_distribution_st.
+    
+    Python wrapper for C type chiprand.rocrand_discrete_distribution_st.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+
+      This will set the ``self._ptr`` attribute to ``NULL``.
+
+    * `int`:
+      
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      
+    * `ctypes.c_void_p`:
+      
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+      
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
+    * `object` that implements the Python buffer protocol:
+      
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
     # members declared in pxd file
 
     def __cinit__(self):
@@ -217,7 +408,7 @@ cdef class rocrand_discrete_distribution_st:
         given ``chiprand.rocrand_discrete_distribution_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
@@ -235,8 +426,8 @@ cdef class rocrand_discrete_distribution_st:
         returns it directly. No new ``rocrand_discrete_distribution_st`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``rocrand_discrete_distribution_st``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `rocrand_discrete_distribution_st`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -279,13 +470,14 @@ cdef class rocrand_discrete_distribution_st:
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
+
     @staticmethod
     cdef __allocate(chiprand.rocrand_discrete_distribution_st** ptr):
         ptr[0] = <chiprand.rocrand_discrete_distribution_st*>stdlib.malloc(sizeof(chiprand.rocrand_discrete_distribution_st))
+        string.memset(<void*>ptr[0], 0, sizeof(chiprand.rocrand_discrete_distribution_st))
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef rocrand_discrete_distribution_st new():
@@ -294,8 +486,29 @@ cdef class rocrand_discrete_distribution_st:
         cdef chiprand.rocrand_discrete_distribution_st* ptr
         rocrand_discrete_distribution_st.__allocate(&ptr)
         return rocrand_discrete_distribution_st.from_ptr(ptr, owner=True)
+
+    @staticmethod
+    cdef rocrand_discrete_distribution_st from_value(chiprand.rocrand_discrete_distribution_st other):
+        """Allocate new C type and copy from ``other``.
+        """
+        wrapper = rocrand_discrete_distribution_st.new()
+        string.memcpy(wrapper._ptr, &other, sizeof(chiprand.rocrand_discrete_distribution_st))
+        return wrapper
    
     def __init__(self,*args,**kwargs):
+        """Constructor type rocrand_discrete_distribution_st.
+
+        Constructor for type rocrand_discrete_distribution_st.
+
+        Args:
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        """
         rocrand_discrete_distribution_st.__allocate(&self._ptr)
         self.ptr_owner = True
         attribs = self.PROPERTIES()
@@ -314,13 +527,25 @@ cdef class rocrand_discrete_distribution_st:
             setattr(self,k,v)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<rocrand_discrete_distribution_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        """
         return ctypes.c_void_p(int(self))
+    def c_sizeof(self):
+        """Returns the size of the underlying C type in bytes.
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        """
+        return sizeof(chiprand.rocrand_discrete_distribution_st)
     def get_size(self, i):
         """Get value ``size`` of ``self._ptr[i]``.
         """
@@ -331,6 +556,7 @@ cdef class rocrand_discrete_distribution_st:
         self._ptr[i].size = value
     @property
     def size(self):
+        """(undocumented)"""
         return self.get_size(0)
     @size.setter
     def size(self, unsigned int value):
@@ -346,6 +572,7 @@ cdef class rocrand_discrete_distribution_st:
         self._ptr[i].offset = value
     @property
     def offset(self):
+        """(undocumented)"""
         return self.get_offset(0)
     @offset.setter
     def offset(self, unsigned int value):
@@ -365,7 +592,7 @@ cdef class rocrand_discrete_distribution_st:
         self._ptr[i].alias = <unsigned int *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.ListOfUnsigned.from_pyobj(value)))
     @property
     def alias(self):
-        """
+        """(undocumented)
         Note:
             Setting this alias can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -378,7 +605,7 @@ cdef class rocrand_discrete_distribution_st:
     def get_probability(self, i):
         """Get value ``probability`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].probability)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].probability)
     def set_probability(self, i, object value):
         """Set value ``probability`` of ``self._ptr[i]``.
 
@@ -386,10 +613,10 @@ cdef class rocrand_discrete_distribution_st:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].probability = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].probability = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def probability(self):
-        """
+        """(undocumented)
         Note:
             Setting this probability can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -402,7 +629,7 @@ cdef class rocrand_discrete_distribution_st:
     def get_cdf(self, i):
         """Get value ``cdf`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].cdf)
+        return hip._util.types.Pointer.from_ptr(self._ptr[i].cdf)
     def set_cdf(self, i, object value):
         """Set value ``cdf`` of ``self._ptr[i]``.
 
@@ -410,10 +637,10 @@ cdef class rocrand_discrete_distribution_st:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].cdf = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
+        self._ptr[i].cdf = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.Pointer.from_pyobj(value)))
     @property
     def cdf(self):
-        """
+        """(undocumented)
         Note:
             Setting this cdf can be dangerous if the underlying pointer is from a python object that
             is later on garbage collected.
@@ -443,6 +670,53 @@ cdef class rocrand_discrete_distribution_st:
 rocrand_discrete_distribution = rocrand_discrete_distribution_st
 
 cdef class rocrand_generator_base_type:
+    """Python wrapper for C type chiprand.rocrand_generator_base_type.
+    
+    Python wrapper for C type chiprand.rocrand_generator_base_type.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+
+      This will set the ``self._ptr`` attribute to ``NULL``.
+
+    * `int`:
+      
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      
+    * `ctypes.c_void_p`:
+      
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+      
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
+    * `object` that implements the Python buffer protocol:
+      
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    """
     # members declared in pxd file
 
     def __cinit__(self):
@@ -470,8 +744,8 @@ cdef class rocrand_generator_base_type:
         returns it directly. No new ``rocrand_generator_base_type`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``rocrand_generator_base_type``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `rocrand_generator_base_type`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -512,12 +786,17 @@ cdef class rocrand_generator_base_type:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
     def __int__(self):
-        """Returns the data's address as long integer."""
+        """Returns the data's address as long integer.
+        """
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<rocrand_generator_base_type object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        """Returns the data's address as `ctypes.c_void_p`"""
+        """Returns the data's address as `ctypes.c_void_p`
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        """
         return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
@@ -543,6 +822,30 @@ class _rocrand_status__Base(enum.IntEnum):
     """
     pass
 class rocrand_status(_rocrand_status__Base):
+    """rocRAND function call status type
+
+    Attributes:
+        ROCRAND_STATUS_SUCCESS:
+            No errors
+        ROCRAND_STATUS_VERSION_MISMATCH:
+            Header file and linked library version do not match
+        ROCRAND_STATUS_NOT_CREATED:
+            Generator was not created using rocrand_create_generator
+        ROCRAND_STATUS_ALLOCATION_FAILED:
+            Memory allocation failed during execution
+        ROCRAND_STATUS_TYPE_ERROR:
+            Generator type is wrong
+        ROCRAND_STATUS_OUT_OF_RANGE:
+            Argument out of range
+        ROCRAND_STATUS_LENGTH_NOT_MULTIPLE:
+            Requested size is not a multiple of quasirandom generator's dimension, or requested size is not even (see rocrand_generate_normal()), or pointer is misaligned (see rocrand_generate_normal())
+        ROCRAND_STATUS_DOUBLE_PRECISION_REQUIRED:
+            GPU does not have double precision
+        ROCRAND_STATUS_LAUNCH_FAILURE:
+            Kernel launch failure
+        ROCRAND_STATUS_INTERNAL_ERROR:
+            Internal library error
+    """
     ROCRAND_STATUS_SUCCESS = chiprand.ROCRAND_STATUS_SUCCESS
     ROCRAND_STATUS_VERSION_MISMATCH = chiprand.ROCRAND_STATUS_VERSION_MISMATCH
     ROCRAND_STATUS_NOT_CREATED = chiprand.ROCRAND_STATUS_NOT_CREATED
@@ -564,6 +867,34 @@ class _rocrand_rng_type__Base(enum.IntEnum):
     """
     pass
 class rocrand_rng_type(_rocrand_rng_type__Base):
+    """rocRAND generator type
+
+    Attributes:
+        ROCRAND_RNG_PSEUDO_DEFAULT:
+            Default pseudorandom generator
+        ROCRAND_RNG_PSEUDO_XORWOW:
+            XORWOW pseudorandom generator
+        ROCRAND_RNG_PSEUDO_MRG32K3A:
+            MRG32k3a pseudorandom generator
+        ROCRAND_RNG_PSEUDO_MTGP32:
+            Mersenne Twister MTGP32 pseudorandom generator
+        ROCRAND_RNG_PSEUDO_PHILOX4_32_10:
+            PHILOX-4x32-10 pseudorandom generator
+        ROCRAND_RNG_PSEUDO_MRG31K3P:
+            MRG31k3p pseudorandom generator
+        ROCRAND_RNG_PSEUDO_LFSR113:
+            LFSR113 pseudorandom generator
+        ROCRAND_RNG_QUASI_DEFAULT:
+            Default quasirandom generator
+        ROCRAND_RNG_QUASI_SOBOL32:
+            Sobol32 quasirandom generator
+        ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL32:
+            Scrambled Sobol32 quasirandom generator
+        ROCRAND_RNG_QUASI_SOBOL64:
+            Sobol64 quasirandom generator
+        ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL64:
+            Scrambled Sobol64 quasirandom generator
+    """
     ROCRAND_RNG_PSEUDO_DEFAULT = chiprand.ROCRAND_RNG_PSEUDO_DEFAULT
     ROCRAND_RNG_PSEUDO_XORWOW = chiprand.ROCRAND_RNG_PSEUDO_XORWOW
     ROCRAND_RNG_PSEUDO_MRG32K3A = chiprand.ROCRAND_RNG_PSEUDO_MRG32K3A
@@ -595,6 +926,38 @@ class _hiprandStatus__Base(enum.IntEnum):
     """
     pass
 class hiprandStatus(_hiprandStatus__Base):
+    """hipRAND function call status type
+
+    Attributes:
+        HIPRAND_STATUS_SUCCESS:
+            Success
+        HIPRAND_STATUS_VERSION_MISMATCH:
+            Header file and linked library version do not match
+        HIPRAND_STATUS_NOT_INITIALIZED:
+            Generator not created
+        HIPRAND_STATUS_ALLOCATION_FAILED:
+            Memory allocation failed
+        HIPRAND_STATUS_TYPE_ERROR:
+            Generator type is wrong
+        HIPRAND_STATUS_OUT_OF_RANGE:
+            Argument out of range
+        HIPRAND_STATUS_LENGTH_NOT_MULTIPLE:
+            Requested size is not a multiple of quasirandom generator's dimension, or requested size is not even (see hiprandGenerateNormal()), or pointer is misaligned (see hiprandGenerateNormal())
+        HIPRAND_STATUS_DOUBLE_PRECISION_REQUIRED:
+            GPU does not have double precision
+        HIPRAND_STATUS_LAUNCH_FAILURE:
+            Kernel launch failure
+        HIPRAND_STATUS_PREEXISTING_FAILURE:
+            Preexisting failure on library entry
+        HIPRAND_STATUS_INITIALIZATION_FAILED:
+            Initialization of HIP failed
+        HIPRAND_STATUS_ARCH_MISMATCH:
+            Architecture mismatch, GPU does not support requested feature
+        HIPRAND_STATUS_INTERNAL_ERROR:
+            Internal library error
+        HIPRAND_STATUS_NOT_IMPLEMENTED:
+            Feature not implemented yet
+    """
     HIPRAND_STATUS_SUCCESS = chiprand.HIPRAND_STATUS_SUCCESS
     HIPRAND_STATUS_VERSION_MISMATCH = chiprand.HIPRAND_STATUS_VERSION_MISMATCH
     HIPRAND_STATUS_NOT_INITIALIZED = chiprand.HIPRAND_STATUS_NOT_INITIALIZED
@@ -622,6 +985,34 @@ class _hiprandRngType__Base(enum.IntEnum):
     """
     pass
 class hiprandRngType(_hiprandRngType__Base):
+    """hipRAND generator type
+
+    Attributes:
+        HIPRAND_RNG_TEST:
+
+        HIPRAND_RNG_PSEUDO_DEFAULT:
+            Default pseudorandom generator
+        HIPRAND_RNG_PSEUDO_XORWOW:
+            XORWOW pseudorandom generator
+        HIPRAND_RNG_PSEUDO_MRG32K3A:
+            MRG32k3a pseudorandom generator
+        HIPRAND_RNG_PSEUDO_MTGP32:
+            Mersenne Twister MTGP32 pseudorandom generator
+        HIPRAND_RNG_PSEUDO_MT19937:
+            Mersenne Twister 19937
+        HIPRAND_RNG_PSEUDO_PHILOX4_32_10:
+            PHILOX_4x32 (10 rounds) pseudorandom generator
+        HIPRAND_RNG_QUASI_DEFAULT:
+            Default quasirandom generator
+        HIPRAND_RNG_QUASI_SOBOL32:
+            Sobol32 quasirandom generator
+        HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32:
+            Scrambled Sobol32 quasirandom generator
+        HIPRAND_RNG_QUASI_SOBOL64:
+            Sobol64 quasirandom generator
+        HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64:
+            Scrambled Sobol64 quasirandom generator
+    """
     HIPRAND_RNG_TEST = chiprand.HIPRAND_RNG_TEST
     HIPRAND_RNG_PSEUDO_DEFAULT = chiprand.HIPRAND_RNG_PSEUDO_DEFAULT
     HIPRAND_RNG_PSEUDO_XORWOW = chiprand.HIPRAND_RNG_PSEUDO_XORWOW
@@ -664,11 +1055,13 @@ def hiprandCreateGenerator(object rng_type):
     - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64
 
     Args:
-        rng_type:  Type of random number generator to create
+        rng_type (`~.hiprandRngType`):
+            - Type of random number generator to create
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
-        - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
+        A `~.tuple` of size 2 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
             - HIPRAND_STATUS_INITIALIZATION_FAILED if there was a problem setting up the GPU 
 
@@ -680,7 +1073,8 @@ def hiprandCreateGenerator(object rng_type):
             - HIPRAND_STATUS_NOT_IMPLEMENTED if generator of type ``rng_type`` is not implemented yet 
 
             - HIPRAND_STATUS_SUCCESS if generator was created successfully
-        - generator:  Pointer to generator
+        * `~.rocrand_generator_base_type`:
+                - Pointer to generator
     """
     generator = rocrand_generator_base_type.from_ptr(NULL)
     if not isinstance(rng_type,_hiprandRngType__Base):
@@ -711,11 +1105,13 @@ def hiprandCreateGeneratorHost(object rng_type):
     - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64
 
     Args:
-        rng_type:  Type of random number generator to create
+        rng_type (`~.hiprandRngType`):
+            - Type of random number generator to create
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
-        - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
+        A `~.tuple` of size 2 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
             - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the
               dynamically linked library version 
@@ -725,7 +1121,8 @@ def hiprandCreateGeneratorHost(object rng_type):
             - HIPRAND_STATUS_NOT_IMPLEMENTED if host generator of type ``rng_type`` is not implemented yet 
 
             - HIPRAND_STATUS_SUCCESS if generator was created successfully
-        - generator:  Pointer to generator
+        * `~.rocrand_generator_base_type`:
+                - Pointer to generator
     """
     generator = rocrand_generator_base_type.from_ptr(NULL)
     if not isinstance(rng_type,_hiprandRngType__Base):
@@ -741,11 +1138,13 @@ def hiprandDestroyGenerator(object generator):
     Destroys random number generator and frees related memory.
 
     Args:
-        generator:  Generator to be destroyed
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to be destroyed
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if generator was destroyed successfully
     """
@@ -765,15 +1164,19 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
     excluding ``2^32.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of 32-bit unsigned integers to generate
+        n (`~.int`):
+            - Number of 32-bit unsigned integers to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -781,7 +1184,7 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
     """
     _hiprandGenerate__retval = hiprandStatus(chiprand.hiprandGenerate(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <unsigned int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <unsigned int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerate__retval,)
 
 
@@ -796,15 +1199,19 @@ def hiprandGenerateChar(object generator, object output_data, unsigned long n):
     excluding ``2^8.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of 8-bit unsigned integers to generate
+        n (`~.int`):
+            - Number of 8-bit unsigned integers to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -812,7 +1219,7 @@ def hiprandGenerateChar(object generator, object output_data, unsigned long n):
     """
     _hiprandGenerateChar__retval = hiprandStatus(chiprand.hiprandGenerateChar(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <unsigned char *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <unsigned char *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateChar__retval,)
 
 
@@ -827,15 +1234,19 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
     excluding ``2^16.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of 16-bit unsigned integers to generate
+        n (`~.int`):
+            - Number of 16-bit unsigned integers to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -843,7 +1254,7 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
     """
     _hiprandGenerateShort__retval = hiprandStatus(chiprand.hiprandGenerateShort(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <unsigned short *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <unsigned short *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateShort__retval,)
 
 
@@ -858,15 +1269,19 @@ def hiprandGenerateUniform(object generator, object output_data, unsigned long n
     including ``1.0f.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of floats to generate
+        n (`~.int`):
+            - Number of floats to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -877,7 +1292,7 @@ def hiprandGenerateUniform(object generator, object output_data, unsigned long n
     """
     _hiprandGenerateUniform__retval = hiprandStatus(chiprand.hiprandGenerateUniform(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateUniform__retval,)
 
 
@@ -897,15 +1312,19 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
     each (one <tt>unsigned int</tt> value per one generated ``double).``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of floats to generate
+        n (`~.int`):
+            - Number of floats to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -916,7 +1335,7 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
     """
     _hiprandGenerateUniformDouble__retval = hiprandStatus(chiprand.hiprandGenerateUniformDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateUniformDouble__retval,)
 
 
@@ -931,28 +1350,30 @@ def hiprandGenerateUniformHalf(object generator, object output_data, unsigned lo
     including ``1.0.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of halfs to generate
+        n (`~.int`):
+            - Number of halfs to generate
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
 
-             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-             - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
-             of used quasi-random generator 
+            - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-             - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
+            - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
+            of used quasi-random generator 
 
-            /
+            - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
     """
     _hiprandGenerateUniformHalf__retval = hiprandStatus(chiprand.hiprandGenerateUniformHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
     return (_hiprandGenerateUniformHalf__retval,)
 
 
@@ -964,19 +1385,25 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
     values and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of floats to generate
+        n (`~.int`):
+            - Number of floats to generate
 
-        mean:  Mean value of normal distribution
+        mean (`~.float`/`~.int`):
+            - Mean value of normal distribution
 
-        stddev:  Standard deviation value of normal distribution
+        stddev (`~.float`/`~.int`):
+            - Standard deviation value of normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -988,7 +1415,7 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
     """
     _hiprandGenerateNormal__retval = hiprandStatus(chiprand.hiprandGenerateNormal(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateNormal__retval,)
 
 
@@ -1000,19 +1427,25 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
     numbers and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of doubles to generate
+        n (`~.int`):
+            - Number of doubles to generate
 
-        mean:  Mean value of normal distribution
+        mean (`~.float`/`~.int`):
+            - Mean value of normal distribution
 
-        stddev:  Standard deviation value of normal distribution
+        stddev (`~.float`/`~.int`):
+            - Standard deviation value of normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1024,7 +1457,7 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
     """
     _hiprandGenerateNormalDouble__retval = hiprandStatus(chiprand.hiprandGenerateNormalDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateNormalDouble__retval,)
 
 
@@ -1036,19 +1469,25 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
     numbers and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of halfs to generate
+        n (`~.int`):
+            - Number of halfs to generate
 
-        mean:  Mean value of normal distribution
+        mean (`~.int`):
+            - Mean value of normal distribution
 
-        stddev:  Standard deviation value of normal distribution
+        stddev (`~.int`):
+            - Standard deviation value of normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1060,7 +1499,7 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
     """
     _hiprandGenerateNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateNormalHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateNormalHalf__retval,)
 
 
@@ -1072,19 +1511,25 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
     and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of floats to generate
+        n (`~.int`):
+            - Number of floats to generate
 
-        mean:  Mean value of log normal distribution
+        mean (`~.float`/`~.int`):
+            - Mean value of log normal distribution
 
-        stddev:  Standard deviation value of log normal distribution
+        stddev (`~.float`/`~.int`):
+            - Standard deviation value of log normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1096,7 +1541,7 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
     """
     _hiprandGenerateLogNormal__retval = hiprandStatus(chiprand.hiprandGenerateLogNormal(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <float *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateLogNormal__retval,)
 
 
@@ -1108,19 +1553,25 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
     values and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of doubles to generate
+        n (`~.int`):
+            - Number of doubles to generate
 
-        mean:  Mean value of log normal distribution
+        mean (`~.float`/`~.int`):
+            - Mean value of log normal distribution
 
-        stddev:  Standard deviation value of log normal distribution
+        stddev (`~.float`/`~.int`):
+            - Standard deviation value of log normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1132,7 +1583,7 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
     """
     _hiprandGenerateLogNormalDouble__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <double *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateLogNormalDouble__retval,)
 
 
@@ -1144,33 +1595,37 @@ def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned 
     values and saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of halfs to generate
+        n (`~.int`):
+            - Number of halfs to generate
 
-        mean:  Mean value of log normal distribution
+        mean (`~.int`):
+            - Mean value of log normal distribution
 
-        stddev:  Standard deviation value of log normal distribution
+        stddev (`~.int`):
+            - Standard deviation value of log normal distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
 
-             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-             - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
-             aligned to ``sizeof(half2)`` bytes, or ``n`` is not a multiple of the dimension
-             of used quasi-random generator 
+            - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-             - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
+            - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
+            aligned to ``sizeof(half2)`` bytes, or ``n`` is not a multiple of the dimension
+            of used quasi-random generator 
 
-            /
+            - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
     """
     _hiprandGenerateLogNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+        <int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
     return (_hiprandGenerateLogNormalHalf__retval,)
 
 
@@ -1182,17 +1637,22 @@ def hiprandGeneratePoisson(object generator, object output_data, unsigned long n
     saves them to ``output_data.``
 
     Args:
-        generator:  Generator to use
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
 
-        output_data:  Pointer to memory to store generated numbers
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
 
-        n:  Number of 32-bit unsigned integers to generate
+        n (`~.int`):
+            - Number of 32-bit unsigned integers to generate
 
-        lambda:  lambda for the Poisson distribution
+        lambda (`~.float`/`~.int`):
+            - lambda for the Poisson distribution
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
@@ -1205,7 +1665,7 @@ def hiprandGeneratePoisson(object generator, object output_data, unsigned long n
     """
     _hiprandGeneratePoisson__retval = hiprandStatus(chiprand.hiprandGeneratePoisson(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        <unsigned int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,lambda_))    # fully specified
+        <unsigned int *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n,lambda_))    # fully specified
     return (_hiprandGeneratePoisson__retval,)
 
 
@@ -1220,11 +1680,13 @@ def hiprandGenerateSeeds(object generator):
     hiprandGenerate(), hiprandGenerateUniform(), hiprandGenerateNormal() etc.
 
     Args:
-        generator:  Generator to initialize
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to initialize
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created 
 
             - HIPRAND_STATUS_PREEXISTING_FAILURE if there was an existing error from
               a previous kernel launch 
@@ -1246,13 +1708,16 @@ def hiprandSetStream(object generator, object stream):
     All functions will use this stream.
 
     Args:
-        generator:  Generator to modify
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to modify
 
-        stream:  Stream to use or NULL for default stream
+        stream (`~.ihipStream_t`/`~.object`):
+            - Stream to use or NULL for default stream
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if stream was set successfully
     """
@@ -1272,13 +1737,16 @@ def hiprandSetPseudoRandomGeneratorSeed(object generator, unsigned long long see
     - This operation does not change the generator's offset.
 
     Args:
-        generator:  Pseudo-random number generator
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Pseudo-random number generator
 
-        seed:  New seed value
+        seed (`~.int`):
+            - New seed value
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_TYPE_ERROR if the generator is a quasi random number generator 
 
@@ -1302,13 +1770,16 @@ def hiprandSetGeneratorOffset(object generator, unsigned long long offset):
     HIPRAND_RNG_PSEUDO_MTGP32 or HIPRAND_RNG_PSEUDO_MT19937.
 
     Args:
-        generator:  Random number generator
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Random number generator
 
-        offset:  New absolute offset
+        offset (`~.int`):
+            - New absolute offset
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if offset was successfully set 
 
@@ -1331,13 +1802,16 @@ def hiprandSetQuasiRandomGeneratorDimensions(object generator, unsigned int dime
     - This operation does not change the generator's offset.
 
     Args:
-        generator:  Quasi-random number generator
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Quasi-random number generator
 
-        dimensions:  Number of dimensions
+        dimensions (`~.int`):
+            - Number of dimensions
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_NOT_CREATED if the generator wasn't created 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_CREATED if the generator wasn't created 
 
             - HIPRAND_STATUS_TYPE_ERROR if the generator is not a quasi-random number generator 
 
@@ -1358,11 +1832,13 @@ def hiprandGetVersion():
     rocRAND library.
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
-        - HIPRAND_STATUS_OUT_OF_RANGE if ``version`` is NULL 
+        A `~.tuple` of size 2 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_OUT_OF_RANGE if ``version`` is NULL 
 
             - HIPRAND_STATUS_SUCCESS if the version number was successfully returned
-        - version:  Version of the library
+        * `~.int`:
+                - Version of the library
     """
     cdef int version
     _hiprandGetVersion__retval = hiprandStatus(chiprand.hiprandGetVersion(&version))    # fully specified
@@ -1376,18 +1852,21 @@ def hiprandCreatePoissonDistribution(double lambda_):
     Construct the histogram for the Poisson distribution with lambda ``lambda.``
 
     Args:
-        lambda:  lambda for the Poisson distribution
+        lambda (`~.float`/`~.int`):
+            - lambda for the Poisson distribution
 
     Returns:
-        A ``tuple`` of size 2 that contains (in that order):
-        - HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated 
+        A `~.tuple` of size 2 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated 
 
             - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` pointer was null 
 
             - HIPRAND_STATUS_OUT_OF_RANGE if lambda is non-positive 
 
             - HIPRAND_STATUS_SUCCESS if the histogram was constructed successfully
-        - discrete_distribution:  pointer to the histogram in device memory
+        * `~.rocrand_discrete_distribution_st`:
+                - pointer to the histogram in device memory
     """
     discrete_distribution = rocrand_discrete_distribution_st.from_ptr(NULL)
     _hiprandCreatePoissonDistribution__retval = hiprandStatus(chiprand.hiprandCreatePoissonDistribution(lambda_,&discrete_distribution._ptr))    # fully specified
@@ -1402,14 +1881,65 @@ def hiprandDestroyDistribution(object discrete_distribution):
     hiprandCreatePoissonDistribution.
 
     Args:
-        discrete_distribution:  pointer to the histogram in device memory
+        discrete_distribution (`~.rocrand_discrete_distribution_st`/`~.object`):
+            - pointer to the histogram in device memory
 
     Returns:
-        A ``tuple`` of size 1 that contains (in that order):
-        - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` was null 
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` was null 
 
             - HIPRAND_STATUS_SUCCESS if the histogram was destroyed successfully
     """
     _hiprandDestroyDistribution__retval = hiprandStatus(chiprand.hiprandDestroyDistribution(
         rocrand_discrete_distribution_st.from_pyobj(discrete_distribution)._ptr))    # fully specified
     return (_hiprandDestroyDistribution__retval,)
+
+__all__ = [
+    "HIPRAND_VERSION",
+    "HIPRAND_DEFAULT_MAX_BLOCK_SIZE",
+    "HIPRAND_DEFAULT_MIN_WARPS_PER_EU",
+    "uint4",
+    "rocrand_discrete_distribution_st",
+    "rocrand_discrete_distribution",
+    "rocrand_generator_base_type",
+    "rocrand_generator",
+    "_rocrand_status__Base",
+    "rocrand_status",
+    "_rocrand_rng_type__Base",
+    "rocrand_rng_type",
+    "hiprandGenerator_st",
+    "hiprandDiscreteDistribution_st",
+    "hiprandGenerator_t",
+    "hiprandDiscreteDistribution_t",
+    "_hiprandStatus__Base",
+    "hiprandStatus",
+    "hiprandStatus_t",
+    "_hiprandRngType__Base",
+    "hiprandRngType",
+    "hiprandRngType_t",
+    "hiprandCreateGenerator",
+    "hiprandCreateGeneratorHost",
+    "hiprandDestroyGenerator",
+    "hiprandGenerate",
+    "hiprandGenerateChar",
+    "hiprandGenerateShort",
+    "hiprandGenerateUniform",
+    "hiprandGenerateUniformDouble",
+    "hiprandGenerateUniformHalf",
+    "hiprandGenerateNormal",
+    "hiprandGenerateNormalDouble",
+    "hiprandGenerateNormalHalf",
+    "hiprandGenerateLogNormal",
+    "hiprandGenerateLogNormalDouble",
+    "hiprandGenerateLogNormalHalf",
+    "hiprandGeneratePoisson",
+    "hiprandGenerateSeeds",
+    "hiprandSetStream",
+    "hiprandSetPseudoRandomGeneratorSeed",
+    "hiprandSetGeneratorOffset",
+    "hiprandSetQuasiRandomGeneratorDimensions",
+    "hiprandGetVersion",
+    "hiprandCreatePoissonDistribution",
+    "hiprandDestroyDistribution",
+]

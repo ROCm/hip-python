@@ -1,3 +1,27 @@
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+import pyparsing as pyp
+
 from _codegen.cparser import TypeHandler
 
 TypeCategory = TypeHandler.TypeCategory
@@ -31,9 +55,9 @@ class hip:
         "HIP_VERSION_MAJOR",
         "HIP_VERSION_MINOR",
         "HIP_VERSION_PATCH",
-        # "HIP_VERSION_GITHASH", # no int, is char*
+        # "HIP_VERSION_GITHASH", # no int, is char *
         "HIP_VERSION_BUILD_ID",
-        # "HIP_VERSION_BUILD_NAME", # is char*
+        # "HIP_VERSION_BUILD_NAME", # is char *
         "HIP_VERSION",
         # from hip/hip_texture_types.h
         "hipTextureType1D",
@@ -131,9 +155,9 @@ class hip:
         if node.name in hip.int_macros:
             return "int"
         if node.name in hip.void_p_macros:
-            return "unsigned long int"
+            return "unsigned long"
         if node.name in hip.str_macros:
-            return "char*"
+            return "char *"
         assert False, "Not implemented!"
 
     @staticmethod
@@ -148,7 +172,7 @@ class hip:
         work with typed arrays, so every pointer
         of basic type is actually a return value
         that is created internally by the function.
-        Exceptions are ``char*`` parameters, which
+        Exceptions are ``char *`` parameters, which
         are C-style strings.
 
         2. All ``void``, ``struct``, ``union``, ``enum`` double (``**``) pointers are
@@ -168,6 +192,11 @@ class hip:
         if parm.is_pointer_to_void(degree=2):
             if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
                 return ParmIntent.OUT
+        if (parm.parent.name, parm.name) in (
+            ("hipDeviceGetName", "name"),
+            ("hipDeviceGetPCIBusId","pciBusId"),
+        ):
+            return ParmIntent.INOUT
         return ParmIntent.IN
 
     @staticmethod
@@ -324,6 +353,14 @@ class hipblas:
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
+    
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans hipBLAS doxygen documentation strings.
+        
+        Removes the ******************************************************************
+        """
+        return raw_comment.replace("******************************************************************","")
 
 # RCCL
 
@@ -353,7 +390,7 @@ class rccl:
     def macro_type(node: MacroDefinition):
         rccl_str_macros = "NCCL_SUFFIX"
         if node.name in rccl_str_macros:
-            return "char*"
+            return "char *"
         return "int"
 
     @staticmethod
@@ -545,3 +582,19 @@ class hipsparse:
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
+    
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans hipSPARSE doxygen documentation strings.
+        
+        Removes the doxygen @{ group start parts from the comments.
+        """
+        parts = []
+        for tokens, _, __ in pyp.cppStyleComment.scanString(raw_comment):
+            stripped = tokens[0].replace(" ","").replace("\n","").replace("!","")
+            if stripped != "/**@{*/":
+                parts.append(tokens[0])
+                if "@}" in stripped or "@{" in stripped:
+                    print(tokens[0])
+                
+        return "\n".join(parts)

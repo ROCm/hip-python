@@ -1,6 +1,26 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-__author__ = "AMD_AUTHOR"
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import collections
 import re
@@ -93,6 +113,16 @@ class Node:
             return self.cursor.location.file.name
         else:
             return None
+
+    @property
+    def raw_comment(self):
+        """Returns full (doxygen) comment for this node."""
+        return self.cursor.raw_comment
+
+    @property
+    def brief_comment(self):
+        """Returns brief (doxygen) comment for this node."""
+        return self.cursor.brief_comment
 
     def get_root(self):
         curr = self
@@ -219,6 +249,8 @@ class Root(Node):
 class MacroDefinition(Node, *__MacroDefinitionMixins):
     def __init__(self, cursor: clang.cindex.Cursor, parent: Node):
         Node.__init__(self, cursor, parent)
+        for mixin in globals()["__MacroDefinitionMixins"]:
+            mixin.__init__(self)
 
 
 class Typed:
@@ -742,6 +774,8 @@ class Field(Node, Typed, *__FieldMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+        for mixin in globals()["__FieldMixins"]:
+            mixin.__init__(self)
 
 
 class Type(Node):
@@ -797,11 +831,19 @@ class Record(Type):
 
 
 class Struct(Record, *__StructMixins):
-    pass
+    
+    def __init__(self,*args,**kwargs):
+        Record.__init__(self,*args,**kwargs)
+        for mixin in globals()["__StructMixins"]:
+            mixin.__init__(self)
 
 
 class Union(Record, *__UnionMixins):
-    pass
+    
+    def __init__(self,*args,**kwargs):
+        Record.__init__(self,*args,**kwargs)
+        for mixin in globals()["__UnionMixins"]:
+            mixin.__init__(self)
 
 
 class Enum(Type, *__EnumMixins):
@@ -813,6 +855,8 @@ class Enum(Type, *__EnumMixins):
     ):
         Type.__init__(self, cursor, parent)
         self._from_typedef_with_anon_child: bool = from_typedef_with_anon_child
+        for mixin in globals()["__EnumMixins"]:
+            mixin.__init__(self)
 
     @property
     def is_incomplete(self):
@@ -907,6 +951,8 @@ class Typedef(Type, Typed, *__TypedefMixins):
     ):
         Type.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+        for mixin in globals()["__TypedefMixins"]:
+            mixin.__init__(self)
 
 
 class FunctionPointer(Type):  # TODO handle result type
@@ -961,6 +1007,8 @@ class TypedefedFunctionPointer(FunctionPointer, *__TypedefedFunctionPointerMixin
     def __init__(self, cursor: clang.cindex.Cursor, parent: Node):  # TYPEDEF_DECL
         result_type = cursor.underlying_typedef_type.get_pointee().get_result()
         FunctionPointer.__init__(self, cursor, parent, result_type)
+        for mixin in globals()["__TypedefedFunctionPointerMixins"]:
+            mixin.__init__(self)
 
 
 class AnonymousFunctionPointer(
@@ -978,6 +1026,8 @@ class AnonymousFunctionPointer(
     ):
         result_type = cursor.type.get_pointee().get_result()
         FunctionPointer.__init__(self, cursor, parent, result_type)
+        for mixin in globals()["__AnonymousFunctionPointerMixins"]:
+            mixin.__init__(self)
 
     @property
     def anon_funptr_index(self):
@@ -997,6 +1047,8 @@ class Parm(Node, Typed, *__ParmMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+        for mixin in globals()["__ParmMixins"]:
+            mixin.__init__(self)
 
     @property
     def parm_index(self):
@@ -1014,6 +1066,8 @@ class Function(Node, Typed, *__FunctionMixin):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.result_type, typeref)
+        for mixin in globals()["__FunctionMixin"]:
+            mixin.__init__(self)
 
     @property
     def parms(self):
@@ -1031,18 +1085,8 @@ class Function(Node, Typed, *__FunctionMixin):
             assert isinstance(parm, Parm)
             yield parm.global_typename(sep, renamer, prefer_canonical)
 
-    @property
-    def raw_comment(self):
-        """Returns full (doxygen) comment for this node."""
-        return self.cursor.raw_comment
-
-    @property
-    def brief_comment(self):
-        """Returns brief (doxygen) comment for this node."""
-        return self.cursor.brief_comment
-
 def from_libclang_translation_unit(
-    translation_unit: clang.cindex.TranslationUnit, warn=control.Warnings.WARN
+    translation_unit: clang.cindex.TranslationUnit, warn_mode=control.Warnings.WARN
 ) -> Root:
     """Create a tree from a libclang translation unit."""
 
@@ -1073,18 +1117,18 @@ def from_libclang_translation_unit(
     def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root: Root):
         """Handle cursors whose parent is the cursor of kind TRANSLATION_UNIT."""
         nonlocal structure_types
-        nonlocal warn
+        nonlocal warn_mode
 
         if cursor.kind in structure_types.keys():
             handle_nested_record_or_enum_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
             handle_typedef_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
-            if warn in (control.Warnings.WARN, control.Warnings.ERROR):
+            if warn_mode in (control.Warnings.WARN, control.Warnings.ERROR):
                 msg = (
                     f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
                 )
-                if warn == control.Warnings.WARN:
+                if warn_mode == control.Warnings.WARN:
                     warnings.warn(msg)
                 else:
                     print(f"ERROR: {msg}'", file=sys.stderr)
