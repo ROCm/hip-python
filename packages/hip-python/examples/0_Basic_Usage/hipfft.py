@@ -1,13 +1,37 @@
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
+
 """This example demonstrates the usage of HIP Python's HIPFFT library.
 
 This example demonstrates the usage of HIP Python's HIPFFT library.
 We perform a double-complex-to-double-complex in-place forward FFT
 of a constant time signal f(t) = 1-1j of which we have N samples.
 The resulting FFT coefficients are all zero, 
-except the first one, which equals N-Nj.
+except the first one, which has the value N-Nj.
 """
 
-
+# [literalinclude-begin]
 import numpy as np
 from hip import hip, hipfft
 

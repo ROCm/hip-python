@@ -1,21 +1,41 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-__author__ = "AMD_AUTHOR"
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-cdef class DataHandle:
+cdef class Pointer:
     cdef void* _ptr
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
 
     @staticmethod
-    cdef DataHandle from_ptr(void* ptr)
+    cdef Pointer from_ptr(void* ptr)
     
     cdef void init_from_pyobj(self, object pyobj)
 
     @staticmethod
-    cdef DataHandle from_pyobj(object pyobj)
+    cdef Pointer from_pyobj(object pyobj)
 
-cdef class DeviceArray(DataHandle):
+cdef class DeviceArray(Pointer):
     cdef size_t _itemsize
     cdef dict __dict__
 
@@ -35,18 +55,18 @@ cdef class DeviceArray(DataHandle):
     
     cdef tuple _handle_slice(self,slice subscript,size_t shape_dim)
 
-cdef class ListOfDataHandle(DataHandle):
+cdef class ListOfPointer(Pointer):
     cdef bint _owner
     
     @staticmethod
-    cdef ListOfDataHandle from_ptr(void* ptr)
+    cdef ListOfPointer from_ptr(void* ptr)
     
     cdef void init_from_pyobj(self, object pyobj)
     
     @staticmethod
-    cdef ListOfDataHandle from_pyobj(object pyobj)
+    cdef ListOfPointer from_pyobj(object pyobj)
 
-cdef class ListOfBytes(DataHandle):
+cdef class ListOfBytes(Pointer):
     cdef bint _owner
     
     @staticmethod
@@ -57,7 +77,7 @@ cdef class ListOfBytes(DataHandle):
     @staticmethod
     cdef ListOfBytes from_pyobj(object pyobj)
 
-cdef class ListOfInt(DataHandle):
+cdef class ListOfInt(Pointer):
     cdef bint _owner
     
     @staticmethod
@@ -68,7 +88,7 @@ cdef class ListOfInt(DataHandle):
     @staticmethod
     cdef ListOfInt from_pyobj(object pyobj)
 
-cdef class ListOfUnsigned(DataHandle):
+cdef class ListOfUnsigned(Pointer):
     cdef bint _owner
     
     @staticmethod
@@ -79,7 +99,7 @@ cdef class ListOfUnsigned(DataHandle):
     @staticmethod
     cdef ListOfUnsigned from_pyobj(object pyobj)
 
-cdef class ListOfUnsignedLong(DataHandle):
+cdef class ListOfUnsignedLong(Pointer):
     cdef bint _owner
     
     @staticmethod

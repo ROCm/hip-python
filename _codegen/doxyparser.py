@@ -1,6 +1,26 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-__author__ = "AMD_AUTHOR"
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import textwrap
 
@@ -8,11 +28,16 @@ import pyparsing as pyp
 
 import warnings
 
+# TODO implement: https://www.doxygen.nl/manual/htmlcmds.html
+
 pyp.ParserElement.setDefaultWhitespaceChars(' \t')
 
-def remove_doxygen_cpp_comments(text: str, dedent=True):
+def remove_doxygen_comment_chars(text: str, dedent=True):
     """Strip away doxygen C++ comment delimiters.
 
+    Note:
+        Aims to preserve the indentation of the text with respect to a prefix
+        composed of all whitespace and doxygen comment characters from line column 0 on.
     Args:
         dedent (bool): If the result should be dedented, i.e. the outermost level of indentation removed. Defaults to True.
     """
@@ -23,6 +48,8 @@ def remove_doxygen_cpp_comments(text: str, dedent=True):
         result += text[last_end:start]
         comment = text[start:end]
         if comment.lstrip().startswith("//"):
+            comment = comment.replace("//!<","",1) # TODO improve with regex
+            comment = comment.replace("///<","",1)
             comment = comment.replace("///","",1)
             comment = comment.replace("//!","",1)
             result += comment
@@ -33,17 +60,17 @@ def remove_doxygen_cpp_comments(text: str, dedent=True):
                 result_line = ln.rstrip()
                 if i == 0:
                     idx = result_line.find("/*")
-                    result_line = result_line.replace(result_line[idx:idx+3]," "*3,1)
+                    result_line = result_line.replace(result_line[idx:idx+3]," "*3,1) # preserve indentation, note: /** or /*!
                 elif i == len(lines)-1:
                     idx = result_line.rfind("*/")
-                    if idx > 0:
+                    if idx >= 0:
                         result_line = result_line[:idx]
                 if result_line.lstrip().startswith("*"):
-                    result_line = result_line.replace("*"," ",1)
+                    result_line = result_line.replace("*"," ",1) # preserve indentation
                 result += result_line
                 if has_linebreak:
-                        result += "\n"
-        else: # other commnet
+                    result += "\n"
+        else: # other comment
             result += comment
         last_end = end
     result += text[last_end:]
@@ -84,12 +111,12 @@ class format:
                 return f"**{arg}**"
             else:  # if cmd in ("p","c"): # monotype
                 return f"``{arg}``"
-            
+
         @staticmethod
         def fdollar(tokens):
             r"""\f$ .. \f$
             """
-            return f"math:`{tokens[1]}`"
+            return f":math:`{tokens[1]}`"
         
         @staticmethod
         def frnd(tokens):
@@ -98,6 +125,12 @@ class format:
                 No explicit latex mode in sphinxdoc.
             """
             return f"`{tokens[1]}`"
+        
+        @staticmethod
+        def reference(tokens):
+            reference: str = tokens[0].replace("#",".")
+            reference = reference.replace("::",".")
+            return f":py:obj:`{reference.lstrip('.')}`"
 
 # for structuring the input
 
@@ -142,12 +175,9 @@ class Node:
               Defaults to False.
         """
         if self.end != None:
-            result = self.input_string[self.begin:self.end]
-            if transform_formatting:
-                result = self.parser.formatting.transformString(result)
-            if transform_other:
-                result = self.parser.other.transformString(result)
-            return result
+            assert isinstance(self.parser, DoxygenGrammar)
+            text = self.input_string[self.begin:self.end]
+            return self.parser.transform_text_block(text,transform_formatting,transform_other)
         else:
             raise RuntimeError("'end' must not be `None`")
     
@@ -779,6 +809,14 @@ class DoxygenGrammar:
         # \}
         groupclose = self._pyp_cmd(r"\}",words=False)
 
+        # object reference:
+        # class
+        # class#member
+        # class::member
+        # #class#member
+        see_reference = pyp.Regex(r"(#|::)?(\w+(#|::)?)+")
+        in_text_reference = pyp.Regex(r"(#|::)(\w+(#|::)?)+")
+
         # \file [<name>]
         file = self._pyp_cmd("file") + OPT_WORD_OF_PRINTABLES
 
@@ -844,7 +882,9 @@ class DoxygenGrammar:
         PARAM_NAMES = pyp.Group(pyp.delimitedList(IDENT))
         param = (
             self._pyp_cmd("param")
+            + pyp.Optional("\n").suppress()
             + pyp.Optional(PARAM_DIR,default=None)
+            + pyp.Optional("\n").suppress()
             + PARAM_NAMES
             + section_body
         )
@@ -907,7 +947,7 @@ class DoxygenGrammar:
         section <<= section_no_args | param | tparam | retval | xrefitem | par | with_exceptionobject
         verbatim = code | verbatim_no_args | verbatim_with_caption | startuml
         math_block = fbr | fcurly
-        formatting = escaped | with_word | fdollar | frnd
+        formatting = escaped | with_word | fdollar | frnd | in_text_reference
         other = (
             no_args
             |with_single_line_text
@@ -1050,3 +1090,27 @@ class DoxygenGrammar:
             section = root.add_details_section(previous_end,len(original))
             scan_for_verbatim_or_math_(section.body)
         return root
+    
+            
+    def transform_text_block(self,text: str,transform_formatting: bool=True,transform_other: bool=True) -> str:
+        """Transforms a simple text block, i.e. text that is assumed to not contain any doxygen sections and no verbatim *blocks*.
+        
+        Transforms a simple text block by applying the `self.formatting` and `self.other`
+        parse actions to the input text.
+        The input text is assumed to not contain any doxygen sections and no verbatim blocks.
+        Note that the input text can contain inline math and inline code expressions.
+
+        Args:
+            text (str): The text to transform.
+            transform_formatting (bool, optional): If `self.formatting` should be applied. Defaults to `True`.
+            transform_other (bool, optional): If `self.other` should be applied. Defaults to `True`.
+
+        Returns:
+            str: The transformed text after applying the parse actions of both parsers.
+        """
+        result = text
+        if transform_formatting:
+            result = self.formatting.transformString(result)
+        if transform_other:
+            result = self.other.transformString(result)
+        return result

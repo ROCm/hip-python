@@ -1,6 +1,26 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-__author__ = "AMD_AUTHOR"
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import re
 import sys
@@ -20,6 +40,11 @@ from . import doxyparser
 
 indent = " " * 4
 
+restricted_names = keyword.kwlist + [
+    "cdef",
+    "cpdef",  # TODO extend
+]
+
 c_interface_funptr_name_template = "_{name}__funptr"
 
 python_interface_retval_template = "_{name}__retval"
@@ -33,10 +58,71 @@ python_interface_always_return_tuple = True
 
 python_interface_record_properties_name = "PROPERTIES"
 
-restricted_names = keyword.kwlist + [
-    "cdef",
-    "cpdef",  # TODO extend
-]
+python_interface_pyobj_role_template = r":py:obj:`.{name}`"
+
+def CYTHON_AUTOCONV_FROM_PYTHON_TYPES(canonical_ctype: str):
+    """Convert a canonical C type to the Python types from which
+    it is converted automatically by Cython.
+
+    Returns:
+        tuple(str): The Python types that Cython autoconverts to the C type.
+
+    Note:
+        For implementation details, see 
+        https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#automatic-type-conversions
+    """
+    tokens = [tk for tk in canonical_ctype.split(" ") if tk not in ("const","unsigned")]
+    if tokens in [
+        ["char", "*"],
+        ["char", "[]"],
+    ]:
+        return ("bytes",)
+    elif tokens in (
+        ["char"],["short"],["int"],["long"],["long","long"]
+    ):
+        return ("int",) # no long in Python 3 anymore
+    elif tokens in [
+        ["float"],["double"],["long","double"],
+    ]:
+        return ("float","int") # no long in Python 3, int can be converted to float too
+    elif len(tokens) == 2 and tokens[0] in ("union","struct","enum"):
+        raise KeyError("Cython cannot autoconvert to C structs, unions, and enums from Python types.")
+    else:
+        # C array and struct union are not handled yet
+        # requires
+        raise NotImplementedError(f"not implemented for type '{canonical_ctype}'")
+
+def CYTHON_AUTOCONV_TO_PYTHON_TYPES(canonical_ctype: str):
+    """Convert a canonical C type to the Python type to which
+    it is converted automatically by Cython.
+
+    Returns:
+        str: The Python type that Cython autoconverts to from the C type.
+
+    Note:
+        For implementation details, see 
+        https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#automatic-type-conversions
+    """
+    tokens = [tk for tk in canonical_ctype.split(" ") if tk not in ("const","unsigned")]
+    if tokens in [
+        ["char", "*"],
+        ["char", "[]"],
+    ]:
+        return "bytes"
+    elif tokens in (
+        ["char"],["short"],["int"],["long"],["long","long"]
+    ):
+        return "int" # no long in Python 3 anymore
+    elif tokens in [
+        ["float"],["double"],["long","double"],
+    ]:
+        return "float"
+    elif len(tokens) == 2 and tokens[0] in ("union","struct","enum"):
+        raise NotImplementedError("struct, union, enum types are not handled")
+    else:
+        # C array and struct union are not handled yet
+        # requires
+        raise NotImplementedError(f"not implemented for type '{canonical_ctype}'")
 
 
 def DEFAULT_RENAMER(name):  # backend-specific
@@ -47,6 +133,12 @@ def DEFAULT_RENAMER(name):  # backend-specific
         result = result.replace("[]","*")
     return result
 
+
+def DEFAULT_RAW_COMMENT_CLEANER(raw_comment: str):
+    return raw_comment
+
+def DEFAULT_DOCSTRING_CLEANER(docstring: str):
+    return docstring
 
 def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
@@ -65,23 +157,48 @@ def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
         elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
             return "hip._util.types.ListOfUnsignedLong"
     if parm_or_field.actual_rank == 2:
-        return "hip._util.types.ListOfDataHandle"
-    return "hip._util.types.DataHandle"
+        return "hip._util.types.ListOfPointer"
+    return "hip._util.types.Pointer"
 
 
-default_c_interface_decl_preamble = """\
-# AMD_COPYRIGHT
+LICENSE_TEXT = """\
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+"""
+
+default_c_interface_decl_preamble = f"""\
+{LICENSE_TEXT}
 from libc.stdint cimport *
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
-default_c_interface_impl_preamble = """\
-# AMD_COPYRIGHT
+default_c_interface_impl_preamble = f"""\
+{LICENSE_TEXT}
 """
 
-default_python_interface_decl_preamble = """\
-# AMD_COPYRIGHT
+default_python_interface_decl_preamble = f"""\
+{LICENSE_TEXT}
 from libc cimport stdlib
+from libc cimport string
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
@@ -89,8 +206,13 @@ cimport hip._util.types
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
-default_python_interface_impl_preamble = """\
-# AMD_COPYRIGHT
+default_python_interface_impl_preamble = f"""\
+{LICENSE_TEXT}
+
+\"""
+[ATTRIBUTES]
+\"""
+
 import cython
 import ctypes
 import enum
@@ -120,6 +242,8 @@ cdef class {{name}}:
     cdef __allocate({{cptr_type}}* ptr)
     @staticmethod
     cdef {{name}} new()
+    @staticmethod
+    cdef {{name}} from_value({{cname}} other)
     {{endif}}
 """
 
@@ -133,6 +257,56 @@ wrapper_class_impl_base_template = """
 {{default properties_name = None}}
 {{default all_properties_rendered = False}}
 cdef class {{name}}:
+    \"""Python wrapper for C type {{cname}}.
+    
+    Python wrapper for C type {{cname}}.
+
+    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
+    destroys it again if the wrapper type is deallocted.
+
+    This type also serves as adapter when appearing as argument type in a function signature.
+    In this case, the type can further be initialized from the following Python objects
+    that you can pass as argument instead:
+    
+    * `None`:
+
+      This will set the ``self._ptr`` attribute to ``NULL``.
+
+    * `int`:
+      
+      Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      
+    * `ctypes.c_void_p`:
+      
+      Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
+    {{if is_funptr}}
+    {{else}}
+    * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
+      
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+      from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
+    * `object` that implements the Python buffer protocol:
+      
+      If the object represents a simple contiguous array,
+      writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+      sets the `self._py_buffer_acquired` flag to `True`, and
+      writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    {{endif}}
+    
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _ptr_owner (C type ``bint``, protected):
+            If this wrapper is the owner of the underlying data.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object.
+    \"""
     # members declared in pxd file
 
     def __cinit__(self):
@@ -147,7 +321,7 @@ cdef class {{name}}:
         {{if has_new}}
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``ptr``
+        the extension type to free the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         {{endif}}
         \"""
@@ -167,8 +341,8 @@ cdef class {{name}}:
         returns it directly. No new ``{{name}}`` is created in this case.
 
         Args:
-            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``{{name}}``, ``int``, or ``ctypes.c_void_p``
+            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                            or of type `{{name}}`, `int`, or `ctypes.c_void_p`
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -222,13 +396,13 @@ cdef class {{name}}:
             self._ptr = NULL
         {{endif}}
     {{if has_new}}
+
     @staticmethod
     cdef __allocate({{cptr_type}}* ptr):
         ptr[0] = <{{cptr_type}}>stdlib.malloc(sizeof({{cname}}))
 
         if ptr[0] is NULL:
             raise MemoryError
-        # TODO init values, if present
 
     @staticmethod
     cdef {{name}} new():
@@ -237,15 +411,36 @@ cdef class {{name}}:
         cdef {{cptr_type}} ptr
         {{name}}.__allocate(&ptr)
         return {{name}}.from_ptr(ptr, owner=True)
+
+    @staticmethod
+    cdef {{name}} from_value({{cname}} other):
+        \"""Allocate new C type and copy from ``other``.
+        \"""
+        wrapper = {{name}}.new()
+        string.memcpy(wrapper._ptr, &other, sizeof({{cname}}))
+        return wrapper
    
     {{py: all_properties_and_is_no_union = all_properties_rendered and not is_union}}
     {{if all_properties_and_is_no_union}}
     def __init__(self,*args,**kwargs):
     {{else}}
-    # {{all_properties_rendered}}
-    # {{is_union}}
     def __init__(self,**kwargs):
     {{endif}}
+        \"""Constructor type {{name}}.
+
+        Constructor for type {{name}}.
+
+        Args:
+            {{if all_properties_and_is_no_union}}
+            *args:
+                Positional arguments. Initialize all or a subset of the member variables
+                according to their order of declaration.
+            {{endif}}
+            **kwargs: 
+                Can be used to initialize member variables at construction,
+                Just pass an argument expression of the form <member>=<value>
+                per member that you want to initialize.
+        \"""
         {{name}}.__allocate(&self._ptr)
         self.ptr_owner = True
         {{for k,v in defaults.items()}}
@@ -274,13 +469,27 @@ cdef class {{name}}:
     {{endif}}
     
     def __int__(self):
-        \"""Returns the data's address as long integer.\"""
+        \"""Returns the data's address as long integer.
+        \"""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
         return f"<{{name}} object, self.ptr={int(self)}>"
     def as_c_void_p(self):
-        \"""Returns the data's address as `ctypes.c_void_p`\"""
+        \"""Returns the data's address as `ctypes.c_void_p`
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        \"""
         return ctypes.c_void_p(int(self))
+    {{if has_new}}
+    def c_sizeof(self):
+        \"""Returns the size of the underlying C type in bytes.
+        Note:
+            Implements as function to not collide with 
+            autogenerated property names.
+        \"""
+        return sizeof({{cname}})
+    {{endif}}
 """
 
 wrapper_class_property_template = """\
@@ -295,6 +504,7 @@ def set_{{attr}}(self, i, {{typename}} value):
     self._ptr[i].{{attr}} = value
 @property
 def {{attr}}(self):
+    \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
 @{{attr}}.setter
 def {{attr}}(self, {{typename}} value):
@@ -314,7 +524,7 @@ def set_{{attr}}(self, i, object value):
     self._ptr[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
 @property
 def {{attr}}(self):
-    \"""
+    \"""{{brief_comment}}
     Note:
         Setting this {{attr}} can be dangerous if the underlying pointer is from a python object that
         is later on garbage collected.
@@ -335,6 +545,7 @@ def get_{{attr}}(self, i):
 #    self._ptr[i].{{attr}} = value
 @property
 def {{attr}}(self):
+    \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
 # TODO add setters
 #@{{attr}}.setter
@@ -353,6 +564,7 @@ def set_{{attr}}(self, i, value):
     self._ptr[i].{{attr}} = value.value
 @property
 def {{attr}}(self):
+    \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
 @{{attr}}.setter
 def {{attr}}(self, value):
@@ -364,17 +576,40 @@ def get_{{attr}}(self, i):
     return {{typename}}.from_ptr(&self._ptr[i].{{attr}})
 @property
 def {{attr}}(self):
+    \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
 {{endif}}
 """
 
+# doxygen parser
+DOXYGEN_CONV = doxyparser.DoxygenGrammar()
+DOXYGEN_CONV.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
+DOXYGEN_CONV.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
+DOXYGEN_CONV.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
+DOXYGEN_CONV.frnd.setParseAction(doxyparser.format.PythonDocstrings.frnd)
+def reference_(tokens):
+    global python_interface_pyobj_role_template
+    reference: str = tokens[0].replace("#",".")
+    reference = reference.replace("::",".")
+    return python_interface_pyobj_role_template.format(name=reference.lstrip('.'))
+DOXYGEN_CONV.see_reference.setParseAction(reference_)
+DOXYGEN_CONV.in_text_reference.setParseAction(reference_)
+def other_parse_action(tokens):
+    cmd = tokens[0][1:]
+    if cmd == "ref":
+        return f"``{tokens[1]}`` "
+    return [] # suppress all others
+DOXYGEN_CONV.other.setParseAction(other_parse_action)
 
 # Mixins
 class CythonMixin:
 
-    def __init__(self):  # Will not be called, attribs specified for type hinting
+    def __init__(self):
+        global DOXYGEN_CONV 
         self.renamer = DEFAULT_RENAMER
         self.sep = "_"        
+        # doxygen parser
+        self.doxygen_conv = DOXYGEN_CONV
 
     @property
     def cython_name(self):
@@ -396,6 +631,36 @@ class CythonMixin:
         else:
             return f'{renamed} "{orig_name}"'
 
+        
+    def _raw_comment_cleaned(self):
+        from . import tree
+
+        assert isinstance(self, tree.Node)
+        if self.raw_comment != None:
+            cleaned_raw_comment = self.raw_comment_cleaner(self.raw_comment)
+            return doxyparser.remove_doxygen_comment_chars(cleaned_raw_comment)
+        else:
+            return ""
+        
+    def _remove_doxygen_comment_chars(self,text: str):
+        return doxyparser.remove_doxygen_comment_chars(text)
+
+    def _as_python_comment(self,text: str, comment_chars="#"):
+        if text is not None and len(text):
+            return "".join([f"{comment_chars} " + l for l in text.splitlines(keepends=True)])
+        else:
+            return ""
+
+    def _raw_comment_as_python_comment(self,comment_chars="#"):
+        from . import tree
+
+        assert isinstance(self, tree.Node)
+        if self.raw_comment != None:
+            comment = self._raw_comment_cleaned()
+            return "".join([f"{comment_chars} " + l for l in comment.splitlines(keepends=True)])
+        else:
+            return ""
+
     def render_c_interface(self):
         """Render a Cython interface for external C code."""
         return None
@@ -407,7 +672,10 @@ class CythonMixin:
     def render_python_interface_impl(self, cprefix: str):
         """Render the implementation part for the Python interface."""
         return None
-
+    
+    @staticmethod
+    def to_sphinx_pyobj(expr: str):
+        return python_interface_pyobj_role_template.format(name=expr)
 
 class MacroDefinitionMixin(CythonMixin):
     def __init__(self):
@@ -426,6 +694,15 @@ class MacroDefinitionMixin(CythonMixin):
 
         assert isinstance(self, tree.MacroDefinition)
         name = self.renamer(self.name)
+        self.docstring_attributes.append(
+                textwrap.dedent(
+                        f"""\
+                        {name} ({self.to_sphinx_pyobj(CYTHON_AUTOCONV_TO_PYTHON_TYPES(self.macro_type(self)))}):
+                            Macro constant.
+                        """
+                )
+            )
+        self.all.append(self.cython_global_name)
         return f"{name} = {cprefix}{name}"
 
 
@@ -533,10 +810,10 @@ class FieldMixin(CythonMixin, Typed):
 
     def render_python_property(self, cprefix: str):
         from . import tree
-
         assert isinstance(self, tree.Field)
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
+
         return template.substitute(
             handler=self.ptr_complicated_type_handler(self),
             typename=self.global_typename(
@@ -547,6 +824,7 @@ class FieldMixin(CythonMixin, Typed):
                 self.is_basic_type
                 or self.is_pointer_to_char()  # TODO user should be consulted if char pointer is a string
             ),
+            brief_comment = self.doxygen_conv.transform_text_block(self.brief_comment if self.brief_comment != None else "(undocumented)"),
             is_basic_type_constantarray=self.is_basic_type_constarray,
             is_record=self.is_record,
             is_enum=self.is_enum,
@@ -621,7 +899,7 @@ class RecordMixin(CythonMixin):
         assert isinstance(self, tree.Record)
         global wrapper_class_impl_base_template
         global python_interface_record_properties_name
-        name = self.renamer(self.global_name(self.sep))
+        name = self.cython_global_name
         template = Cython.Tempita.Template(wrapper_class_impl_base_template)
         return template.substitute(
             name=name,
@@ -700,6 +978,7 @@ class RecordMixin(CythonMixin):
             )
         result = self._render_python_interface_head(cprefix, all_properties_rendered)
         result += textwrap.indent("\n".join(self._python_body_epilog), indent)
+        self.all.append(self.cython_global_name)
         return result
 
 
@@ -740,18 +1019,31 @@ class EnumMixin(CythonMixin):
         )
 
     def _render_python_enums(self, cprefix: str):
+        """Yields the enum constants' names."""
         from . import tree
 
-        # assert isinstance(self,tree.Enum)
-        """Yields the enum constants' names."""
+        #assert isinstance(self,tree.Enum)
         for child_cursor in self.cursor.get_children():
             name = self.renamer(child_cursor.spelling)
-            yield f"{name} = {cprefix}{name}"
+            yield (
+                f"{name} = {cprefix}{name}"
+            )
 
     @property
     def python_base_class_name(self):
         global python_interface_int_enum_base_class_name_template
         return python_interface_int_enum_base_class_name_template.format(name=self.cython_global_name)
+
+    def _render_python_enum_constant_docstrings(self):
+        for child_cursor in self.cursor.get_children():
+            name = self.renamer(child_cursor.spelling)
+            docu = child_cursor.brief_comment if child_cursor.brief_comment is not None else  "(undocumented)"
+            nl = "\n"
+            yield textwrap.dedent(
+                f"""\
+                {name}:
+                    {docu.replace(nl," ").rstrip()}"""
+            )
 
     def render_python_interface_impl(self, cprefix: str):
         """Renders an enum.IntEnum class.
@@ -768,19 +1060,28 @@ class EnumMixin(CythonMixin):
         global python_interface_int_enum_base_class
 
         if self.is_anonymous:
+            for child_cursor in self.cursor.get_children():
+                name = self.renamer(child_cursor.spelling)
+                self.docstring_attributes += list(self._render_python_enum_constant_docstrings())
             return "\n".join(self._render_python_enums(cprefix))
-        else:
+        else: # named enum
             name = self.cython_global_name
             base_class_name = self.python_base_class_name
             
             result = textwrap.dedent(f"""\
-               class {base_class_name}({python_interface_int_enum_base_class}):
-                   \"""Empty enum base class that allows subclassing.
-                   \"""
-                   pass
-               class {name}({base_class_name}):
-               """
+                class {base_class_name}({python_interface_int_enum_base_class}):
+                    \"""Empty enum base class that allows subclassing.
+                    \"""
+                    pass
+                class {name}({base_class_name}):
+                    \"""{self.brief_comment if self.brief_comment is not None else name}
+
+                    Attributes:
+                """
             )
+            result += textwrap.indent("\n".join(self._render_python_enum_constant_docstrings()),indent*2)
+            result += f'\n{indent}"""\n'
+            # body
             result += textwrap.indent(
                 "\n".join(self._render_python_enums(cprefix)), indent
             )
@@ -804,6 +1105,8 @@ class EnumMixin(CythonMixin):
                 ),
                 indent,
             )
+            self.all.append(base_class_name)
+            self.all.append(name)
             return result
 
 
@@ -831,7 +1134,17 @@ class TypedefMixin(CythonMixin, Typed):
         assert isinstance(self, tree.Typedef)
         name = self.cython_global_name
         if self.is_pointer_to_record(degree=(0,-1)) or self.is_pointer_to_enum(degree=(0,-1)):
-            return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
+            aliased = self.renamer(self.typeref.global_name(self.sep))
+            self.docstring_attributes.append(
+                textwrap.dedent(
+                        f"""\
+                        {name}:
+                            alias of {self.to_sphinx_pyobj(aliased)}
+                        """
+                )
+            )
+            self.all.append(name)
+            return f"{name} = {aliased}"
         return None
 
 
@@ -869,6 +1182,7 @@ class FunctionPointerMixin(CythonMixin):
         name = self.cython_global_name
         cname = cprefix + name
         template = Cython.Tempita.Template(wrapper_class_impl_base_template)
+        self.all.append(name)
         return template.substitute(
             name=name,
             cname=cname,
@@ -904,25 +1218,6 @@ class ParmMixin(CythonMixin, Typed):
         return f"{typename} {name}"
 
 class FunctionMixin(CythonMixin, Typed):
-    
-    def _raw_comment_stripped(self):
-        from . import tree
-
-        assert isinstance(self, tree.Function)
-        if self.raw_comment != None:
-            return doxyparser.remove_doxygen_cpp_comments(self.raw_comment)
-        else:
-            return ""
-
-    def _raw_comment_as_python_comment(self):
-        from . import tree
-
-        assert isinstance(self, tree.Function)
-        if self.raw_comment != None:
-            comment = self._raw_comment_stripped()
-            return "".join(["# " + l for l in comment.splitlines(keepends=True)])
-        else:
-            return ""
 
     @property
     def has_python_body_prolog(self):
@@ -1048,33 +1343,28 @@ cdef void* {funptr_name} = NULL
             result += "".join(lines[1:])
         return result
 
-    def _raw_comment_as_docstring(self,out_parms): # TODO make optional
+    def _python_interface_retval_typename(self):
+        """Returns a docstring expression for the return value type.
+        """
+        
+        typename = self.cython_global_typename
+        if self.is_void:
+            return "None"
+        elif ( self.is_basic_type or self.is_pointer_to_char(degree=1) ):
+            return CYTHON_AUTOCONV_TO_PYTHON_TYPES(typename)
+        elif self.is_enum or self.is_record or self.is_union:
+            return typename
+        else:
+            return None
+
+    def _render_python_docstring(self,out_arg_names: list,parm_python_types: dict):
         """Converts doxygen comment to a Python docstring using the doxyparser API.
         """
         # TODO handle groups; issue detecting addgroup; detecting ingroup is easier
         from . import tree
 
         assert isinstance(self, tree.Function)
-        single_level_indent = " "*4
-        doxygen_brief = None
-        docstring_returns = []
-        docstring_out_arg_returns = []
-        docstring_args = []
-
-        # Strip everything above @brief (or equivalent) away
-        translater = doxyparser.DoxygenGrammar()
-        translater.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
-        translater.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
-        translater.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
-        translater.frnd.setParseAction(doxyparser.format.PythonDocstrings.frnd)
-        def other_parse_action(tokens):
-            cmd = tokens[0][1:]
-            if cmd == "ref":
-                return f"``{tokens[1]}`` "
-            return [] # suppress all others
-        translater.other.setParseAction(other_parse_action)
-
-        tree = translater.parse_structure(self._raw_comment_stripped())
+        tree = self.doxygen_conv.parse_structure(self._raw_comment_cleaned())
         sections = list(tree.children)
         # brief
         doxygen_brief = next((sec for sec in sections if sec.kind in ("brief","short")),None)
@@ -1087,14 +1377,15 @@ cdef void* {funptr_name} = NULL
                 raise RuntimeError(f"function {self.name}: doxygen: expected single text block in section 'brief'")
             docstring_body = doxygen_brief.first_block.transformed_text.strip() +"\n\n"
         else:
-            docstring_body = "(No short description)\n\n"
+            docstring_body = "(No short description, might be part of a group)\n\n"
+        
         # other sections
-        undocumented_parms_dict = dict(
-            [(parm.name,parm) for parm in self.parms]
-        )
-        out_parms_dict = dict(
-            [(parm.name,parm) for parm in out_parms]
-        )
+        single_level_indent = " "*4
+        docstring_returns = []
+        docstring_args = {}
+        docstring_out_arg_returns = []
+        parms_still_to_be_documented = [parm.name for parm in self.parms]
+        in_inout_parm_names = [name for name in parms_still_to_be_documented if name not in out_arg_names]
         for section in sections:
             if section.kind in (
               "result",
@@ -1110,20 +1401,27 @@ cdef void* {funptr_name} = NULL
                 #    <arg>: line1
                 #       line2
                 # ^ hence, 2x indent for descr
-                descr = self._dedent_first_line(self._render_doxygen_section_body(section,single_level_indent,outer_indent=single_level_indent*2).rstrip()+"\n")
+                descr = self._render_doxygen_section_body(section,single_level_indent,outer_indent=single_level_indent*2).rstrip()+"\n"
                 descr = descr.lstrip("-*")
-                dir = (f"**{section.tokens[1].replace(' ','')}** ") if section.tokens[1] != None else ""
+                # example for tokens[1]: `[ in , out ]`
+                dir = (f" -- *{section.tokens[1][1:-1].replace(' ','').upper()}*") if section.tokens[1] != None else ""
                 for name in names:
                     if not len(descr.strip()):
                         warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' has empty documentation")
-                    if not name in undocumented_parms_dict:
+                    
+                    if name in parms_still_to_be_documented:
+                        type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
+                        parms_still_to_be_documented.remove(name)
+                    else:
+                        type_info = ""
                         warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' is not part of function signature")
+                    
+                    if name in out_arg_names:
+                        docstring_out_arg_returns.append(f"{single_level_indent}{type_info}:\n{descr}")
                     else:
-                        del undocumented_parms_dict[name]
-                    if name in out_parms_dict:
-                        docstring_out_arg_returns.append(f"{single_level_indent}{out_parms_dict[name].cython_name}: {descr}")
-                    else:
-                        docstring_args.append((name,dir,descr))
+                        if len(type_info):
+                            type_info = f" ({type_info})"
+                        docstring_args[name] = (name+type_info,dir,"\n"+descr)
             else:
                 docstring_body += "\n"
                 if section.kind in ("details","details*"):
@@ -1134,26 +1432,45 @@ cdef void* {funptr_name} = NULL
                 else:
                     docstring_body += f"\n{section.kind[0].upper() + section.kind[1:]}:\n"
                     outer_indent = single_level_indent
-                docstring_body += self._render_doxygen_section_body(section,single_level_indent,outer_indent)
+                body = self._render_doxygen_section_body(section,single_level_indent,outer_indent)
+                if section.kind in ("see","sa"):
+                    docstring_body += self.doxygen_conv.see_reference.transformString(body)
+                else:
+                    docstring_body += body
         # Args
-        if len(undocumented_parms_dict):
-            for name in undocumented_parms_dict:
+        # append undocumented arguments too but warn
+        if len(parms_still_to_be_documented):
+            for name in parms_still_to_be_documented:
                 warnings.warn(f"function {self.name}: doxygen: function arg '{name}' is not documented")
-
+                type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
+                type_info = f" ({type_info})"
+                docstring_args[name] = (name+type_info,"",f"\n{single_level_indent*2}(undocumented)\n")
+        # now generate the arguments
         if len(docstring_args):
             docstring_body += "\nArgs:\n"
-
-            for (name, dir, descr) in docstring_args:
-                docstring_body += f"{single_level_indent}{name}: {dir}{descr}\n"
+            
+            for name in in_inout_parm_names:
+                (head, dir, descr) = docstring_args[name]
+                docstring_body += f"{single_level_indent}{head}{dir}:{descr}\n"
+        
         # Return values
+        retval_typename = self._python_interface_retval_typename()
         if not len(docstring_returns) and not self.is_void:
             warnings.warn(f"function {self.name}: doxygen: undocumented return value")
-        docstring_returns += docstring_out_arg_returns # add the additional return parameter
+            if retval_typename != None:
+                docstring_returns.append(
+                    CythonMixin.to_sphinx_pyobj(retval_typename)
+                )
+        elif len(docstring_returns):
+            first_entry = docstring_returns[0].lstrip(" \t\n*-")
+            docstring_returns[0] = f"{CythonMixin.to_sphinx_pyobj(retval_typename)}: {first_entry}"
+        docstring_returns += docstring_out_arg_returns # add the additional return parameters
+       
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"
             if len(docstring_returns) > 1 or python_interface_always_return_tuple:
-                docstring_body += f"{single_level_indent}A ``tuple`` of size {len(docstring_returns)} that contains (in that order):\n"
-                prefix = "- "
+                docstring_body += f"{single_level_indent}A {self.to_sphinx_pyobj('tuple')} of size {len(docstring_returns)} that contains (in that order):\n\n"
+                prefix = "* "
             else:
                 prefix = ""
             for descr in docstring_returns:
@@ -1161,6 +1478,10 @@ cdef void* {funptr_name} = NULL
                     prefix + descr.lstrip(" \t\n*-"),
                     single_level_indent
                 ).rstrip() + "\n"
+
+        # Clean result
+        # remove multiple blank lines
+        docstring_body = self.docstring_cleaner(docstring_body)
         # remove multiple blank lines
         docstring_body = re.sub(r"(\n\s*)+\n+", "\n\n", docstring_body).rstrip()
         return f'r"""{docstring_body}\n"""' # r required if verbatim/code is in body
@@ -1168,6 +1489,7 @@ cdef void* {funptr_name} = NULL
     def _analyze_parms(self, cprefix: str):
         from . import tree
 
+        parm_python_types = {} # Python type names of signature and out args, always use original typename as key
         sig_args = []  # argument definitions that appear in the signature
         out_args = []  # return values, might include conversions
         out_parms = (
@@ -1180,6 +1502,7 @@ cdef void* {funptr_name} = NULL
             global indent
             nonlocal sig_args
             nonlocal c_interface_call_args
+            nonlocal parm_python_types
 
             parm_name = parm.cython_name
             handler_name = parm.ptr_complicated_type_handler(parm)
@@ -1187,6 +1510,7 @@ cdef void* {funptr_name} = NULL
             c_interface_call_args.append(
                 f"\n{indent*2}<{cprefix}{parm_typename}>{handler_name}.from_pyobj({parm_name})._ptr"
             )
+            parm_python_types[parm.name] = f"{handler_name}/object"
 
         def emit_data_handle_for_ptr_to_void_basic_enum_type_(parm: tree.Parm, cprefix: str):
             parm_typename = (
@@ -1220,6 +1544,7 @@ cdef void* {funptr_name} = NULL
                 prolog.append(f"cdef {parm_typename} {parm_name}")
                 out_args.append(parm_name)
                 c_interface_call_args.append(f"&{parm_name}")
+                parm_python_types[parm.name] = CYTHON_AUTOCONV_TO_PYTHON_TYPES(parm_typename)
             elif parm.is_pointer_to_enum(degree=1):
                 parm_typename = parm.lookup_innermost_type().cython_name
                 prolog.append(f"cdef {cprefix}{parm_typename} {parm_name}")
@@ -1227,6 +1552,7 @@ cdef void* {funptr_name} = NULL
                 out_args.append(
                     f"{parm_typename}({parm_name})"
                 )  # conversion from c... type required
+                parm_python_types[parm.name] = parm_typename
             elif parm.is_pointer_to_record(
                 degree=2
             ) or parm.is_pointer_to_function_proto(degree=2):
@@ -1234,6 +1560,7 @@ cdef void* {funptr_name} = NULL
                 prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
                 c_interface_call_args.append(f"&{parm_name}._ptr")
                 out_args.append(parm_name)
+                parm_python_types[parm.name] = parm_typename
             elif parm.is_pointer_to_basic_type(degree=-2) or parm.is_pointer_to_void(
                 degree=-2
             ):
@@ -1243,6 +1570,7 @@ cdef void* {funptr_name} = NULL
                 c_interface_call_args.append(
                     f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr"
                 )
+                parm_python_types[parm.name] = f"{handler_name}/object"
                 out_args.append(parm_name)
             else:
                 # If the argument was not removed from the parameter list,
@@ -1251,7 +1579,7 @@ cdef void* {funptr_name} = NULL
                 # name (see top of routine) from the out_arg_names list.
                 out_parms.pop(-1)
 
-        def handle_in_inout_ptr_no_char_ptr_(parm: tree.Parm):
+        def handle_in_inout_ptr_(parm: tree.Parm):
             global indent
             nonlocal c_interface_call_args
             nonlocal sig_args
@@ -1263,6 +1591,7 @@ cdef void* {funptr_name} = NULL
             ) or parm.is_pointer_to_function_proto(degree=1, incomplete_array=True):
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
+                parm_python_types[parm.name] = f"{parm_typename}/object" # use original name as key
                 c_interface_call_args.append(
                     f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr"
                 )
@@ -1284,6 +1613,8 @@ cdef void* {funptr_name} = NULL
             if parm.is_autoconverted_by_cython:
                 c_interface_call_args.append(f"{parm_name}")
                 sig_args.append(parm.cython_repr)
+                # TODO do the autoconversion
+                parm_python_types[parm.name] = "/".join(CYTHON_AUTOCONV_FROM_PYTHON_TYPES(parm.cython_global_typename)) # use original name as key
             elif (
                 parm.is_enum
             ):  # enums are not modelled as cdef class, so we cannot specify them as type
@@ -1298,12 +1629,14 @@ cdef void* {funptr_name} = NULL
                     )
                 )
                 c_interface_call_args.append(f"{parm_name}.value")
+                parm_python_types[parm.name] = parm.cython_global_typename
             elif parm.is_record:
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
                 c_interface_call_args.append(
                     f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr[0]"
                 )
+                parm_python_types[parm.name] = parm_typename
 
         for parm in self.parms:
             parm_name = parm.cython_name
@@ -1313,18 +1646,22 @@ cdef void* {funptr_name} = NULL
                     assert parm.is_indirection  # make exception
                     handle_out_ptr_parm(parm)
                 elif parm.is_inout_ptr:
-                    handle_in_inout_ptr_no_char_ptr_(parm)
+                    handle_in_inout_ptr_(parm)
                 else:  # in ptr
                     if parm.is_pointer_to_char(degree=1):  # autoconverted by Cython
                         c_interface_call_args.append(parm_name)
                         sig_args.append(parm.cython_repr)
+                        parm_python_types[parm.name] = "bytes"
                     else:
-                        handle_in_inout_ptr_no_char_ptr_(parm)
+                        handle_in_inout_ptr_(parm)
             else:  # no ptr
                 handle_value_parm_(parm)
 
         fully_specified = len(list(self.parms)) == len(c_interface_call_args)
+        if not fully_specified:
+            warnings.warn("_codegen.cython: not all parameters could be classified for function {self.name}")
         setattr(self, "is_python_code_complete", fully_specified)
+        assert len(parm_python_types) == len(c_interface_call_args), f"{self.name=} {str(parm_python_types)=}"
 
         return (
             fully_specified,
@@ -1333,6 +1670,7 @@ cdef void* {funptr_name} = NULL
             out_parms,
             c_interface_call_args,
             prolog,
+            parm_python_types,
         )
 
     @property
@@ -1352,16 +1690,17 @@ cdef void* {funptr_name} = NULL
         assert isinstance(self, tree.Function)
         if self.is_void:
             return c_interface_call
-        elif self.is_basic_type:
-            out_args.insert(0, retvalname)
-            return f"cdef {typename} {retvalname} = {c_interface_call}"
-        elif self.is_pointer_to_char(degree=1):
+        elif (self.is_basic_type or self.is_pointer_to_char(degree=1)):
             out_args.insert(0, retvalname)
             return f"cdef {typename} {retvalname} = {c_interface_call}"
         elif self.is_enum:
             out_args.insert(0, retvalname)
             return f"{retvalname} = {typename}({c_interface_call})"
+        elif self.is_record or self.is_union:
+            out_args.insert(0, retvalname)
+            return f"{retvalname} = {typename}.from_value({c_interface_call})"
         else:
+            warnings.warn(f"_codegen.cython: return value of function {self.name} could not be classified")
             return ""
 
     def render_python_interface_impl(self, cprefix: str) -> str:
@@ -1372,6 +1711,7 @@ cdef void* {funptr_name} = NULL
             out_parms,  # required for parsing parameter documentation
             call_args,
             prolog,
+            parm_python_types,
         ) = self._analyze_parms(cprefix)
 
         global python_interface_always_return_tuple
@@ -1379,7 +1719,7 @@ cdef void* {funptr_name} = NULL
         result = "@cython.embedsignature(True)\n"
         result += (
             f"def {self.cython_name}({', '.join(sig_args)}):\n"
-            + textwrap.indent(self._raw_comment_as_docstring(out_parms), indent).rstrip()
+            + textwrap.indent(self._render_python_docstring([p.name for p in out_parms],parm_python_types), indent).rstrip()
             + "\n"
         )
         if self.has_python_body_prolog:
@@ -1404,6 +1744,7 @@ cdef void* {funptr_name} = NULL
                     result += f"{indent}return {out_args[0]}\n"
         else:
             result += f"{indent}pass"
+        self.all.append(self.cython_global_name)
         return result
 
 
@@ -1417,11 +1758,13 @@ class CythonBackend:
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
-        warnings: control.Warnings = control.Warnings.IGNORE,
+        raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
+        docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
+        warn_mode: control.Warnings = control.Warnings.IGNORE,
     ):
         from . import tree
 
-        root = tree.from_libclang_translation_unit(translation_unit, warnings)
+        root = tree.from_libclang_translation_unit(translation_unit, warn_mode)
         return CythonBackend(
             root,
             filename,
@@ -1431,6 +1774,8 @@ class CythonBackend:
             ptr_rank,
             ptr_complicated_type_handler,
             renamer,
+            raw_comment_cleaner,
+            docstring_cleaner,
         )
 
     def __init__(
@@ -1443,6 +1788,8 @@ class CythonBackend:
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
+        raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
+        docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
     ):
         """
         Note:
@@ -1460,6 +1807,8 @@ class CythonBackend:
         self.ptr_rank = ptr_rank
         self.ptr_complicated_type_handler = ptr_complicated_type_handler
         self.renamer = renamer
+        self.raw_comment_cleaner = raw_comment_cleaner
+        self.docstring_cleaner = docstring_cleaner
 
     def walk_filtered_nodes(self):
         """Walks the filtered nodes in post-order and sets the renamer of each node.
@@ -1474,6 +1823,8 @@ class CythonBackend:
                 setattr(node, "sep", "_")
                 # set user callbacks
                 setattr(node, "renamer", self.renamer)
+                setattr(node,"raw_comment_cleaner",self.raw_comment_cleaner)
+                setattr(node,"docstring_cleaner",self.docstring_cleaner)
                 if isinstance(node, MacroDefinitionMixin):
                     setattr(node, "macro_type", self.macro_type)
                 elif isinstance(node, (FieldMixin)):
@@ -1623,11 +1974,15 @@ class CythonBackend:
 
         result = []
         cprefix = f"{cmodule}."
+        docstring_attributes = []
+        all = [] # required to define order
         for node in self.walk_filtered_nodes():
+            setattr(node,"docstring_attributes",docstring_attributes)
+            setattr(node,"all",all)
             contrib = node.render_python_interface_impl(cprefix=cprefix)
             if contrib != None:
                 result.append(contrib)
-        return result
+        return result, docstring_attributes, all
 
     def render_python_interface_decl_part(self, cython_c_bindings_module: str):
         """Returns the Python interface file content for the given headers."""
@@ -1638,10 +1993,15 @@ class CythonBackend:
 
     def render_python_interface_impl_part(self, cython_c_bindings_module: str):
         """Returns the Python interface file content for the given headers."""
-        result = self.create_python_interface_impl_part(cython_c_bindings_module)
-        nl = "\n\n"
-        return f"""\
-{nl.join(result)}"""
+        contribs, docstring_attributes, all = self.create_python_interface_impl_part(cython_c_bindings_module)
+        result = (
+            "\n\n".join(contribs).rstrip()
+            + "\n\n"
+            + "__all__ = [\n"
+            + "\n".join([f'    "{e}",' for e in all])
+            + "\n]"
+        )
+        return (result, docstring_attributes)
 
 
 class CythonPackageGenerator:
@@ -1665,7 +2025,9 @@ class CythonPackageGenerator:
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
-        warnings=control.Warnings.WARN,
+        raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
+        docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
+        warn_mode=control.Warnings.WARN,
         cflags=[],
     ):
         """Constructor.
@@ -1726,7 +2088,9 @@ class CythonPackageGenerator:
             ptr_rank,
             ptr_complicated_type_handler,
             renamer,
-            warnings,
+            raw_comment_cleaner,
+            docstring_cleaner,
+            warn_mode,
         )
 
     def write_package_files(self, output_dir: str = None):
@@ -1760,7 +2124,8 @@ class CythonPackageGenerator:
             )
 
         with open(f"{output_dir}/{self.pkg_name}.pyx", "w") as outfile:
-            outfile.write(self.python_interface_impl_preamble)
-            outfile.write(
-                self.backend.render_python_interface_impl_part(f"c{self.pkg_name}")
-            )
+            content, docstring_attributes = self.backend.render_python_interface_impl_part(f"c{self.pkg_name}")
+            if len(docstring_attributes):
+                DOCSTRING_ATTRIBS = "Attributes:\n" + textwrap.indent("\n".join(docstring_attributes)," "*4)
+            outfile.write(self.python_interface_impl_preamble.replace("[ATTRIBUTES]",DOCSTRING_ATTRIBS))
+            outfile.write(content)

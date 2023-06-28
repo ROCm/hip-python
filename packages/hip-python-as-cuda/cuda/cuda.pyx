@@ -1,6 +1,2435 @@
-# AMD_COPYRIGHT
+# MIT License
+# 
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-__author__ = "AMD_AUTHOR"
+"""
+Attributes:
+    HIP_PYTHON (`.bool`):
+        `True`.
+    hip_python_mod (module):
+        A reference to the package `.hip.hip`.
+    hip (module):
+        A reference to the package `.hip.hip`.
+    CU_TRSA_OVERRIDE_FORMAT:
+        alias of `.HIP_TRSA_OVERRIDE_FORMAT`
+    CU_TRSF_READ_AS_INTEGER:
+        alias of `.HIP_TRSF_READ_AS_INTEGER`
+    CU_TRSF_NORMALIZED_COORDINATES:
+        alias of `.HIP_TRSF_NORMALIZED_COORDINATES`
+    CU_TRSF_SRGB:
+        alias of `.HIP_TRSF_SRGB`
+    cudaTextureType1D:
+        alias of `.hipTextureType1D`
+    cudaTextureType2D:
+        alias of `.hipTextureType2D`
+    cudaTextureType3D:
+        alias of `.hipTextureType3D`
+    cudaTextureTypeCubemap:
+        alias of `.hipTextureTypeCubemap`
+    cudaTextureType1DLayered:
+        alias of `.hipTextureType1DLayered`
+    cudaTextureType2DLayered:
+        alias of `.hipTextureType2DLayered`
+    cudaTextureTypeCubemapLayered:
+        alias of `.hipTextureTypeCubemapLayered`
+    CU_LAUNCH_PARAM_BUFFER_POINTER:
+        alias of `.HIP_LAUNCH_PARAM_BUFFER_POINTER`
+    CU_LAUNCH_PARAM_BUFFER_SIZE:
+        alias of `.HIP_LAUNCH_PARAM_BUFFER_SIZE`
+    CU_LAUNCH_PARAM_END:
+        alias of `.HIP_LAUNCH_PARAM_END`
+    CU_IPC_MEM_LAZY_ENABLE_PEER_ACCESS:
+        alias of `.hipIpcMemLazyEnablePeerAccess`
+    cudaIpcMemLazyEnablePeerAccess:
+        alias of `.hipIpcMemLazyEnablePeerAccess`
+    CUDA_IPC_HANDLE_SIZE:
+        alias of `.HIP_IPC_HANDLE_SIZE`
+    CU_IPC_HANDLE_SIZE:
+        alias of `.HIP_IPC_HANDLE_SIZE`
+    CU_STREAM_DEFAULT:
+        alias of `.hipStreamDefault`
+    cudaStreamDefault:
+        alias of `.hipStreamDefault`
+    CU_STREAM_NON_BLOCKING:
+        alias of `.hipStreamNonBlocking`
+    cudaStreamNonBlocking:
+        alias of `.hipStreamNonBlocking`
+    CU_EVENT_DEFAULT:
+        alias of `.hipEventDefault`
+    cudaEventDefault:
+        alias of `.hipEventDefault`
+    CU_EVENT_BLOCKING_SYNC:
+        alias of `.hipEventBlockingSync`
+    cudaEventBlockingSync:
+        alias of `.hipEventBlockingSync`
+    CU_EVENT_DISABLE_TIMING:
+        alias of `.hipEventDisableTiming`
+    cudaEventDisableTiming:
+        alias of `.hipEventDisableTiming`
+    CU_EVENT_INTERPROCESS:
+        alias of `.hipEventInterprocess`
+    cudaEventInterprocess:
+        alias of `.hipEventInterprocess`
+    cudaHostAllocDefault:
+        alias of `.hipHostMallocDefault`
+    CU_MEMHOSTALLOC_PORTABLE:
+        alias of `.hipHostMallocPortable`
+    cudaHostAllocPortable:
+        alias of `.hipHostMallocPortable`
+    CU_MEMHOSTALLOC_DEVICEMAP:
+        alias of `.hipHostMallocMapped`
+    cudaHostAllocMapped:
+        alias of `.hipHostMallocMapped`
+    CU_MEMHOSTALLOC_WRITECOMBINED:
+        alias of `.hipHostMallocWriteCombined`
+    cudaHostAllocWriteCombined:
+        alias of `.hipHostMallocWriteCombined`
+    CU_MEM_ATTACH_GLOBAL:
+        alias of `.hipMemAttachGlobal`
+    cudaMemAttachGlobal:
+        alias of `.hipMemAttachGlobal`
+    CU_MEM_ATTACH_HOST:
+        alias of `.hipMemAttachHost`
+    cudaMemAttachHost:
+        alias of `.hipMemAttachHost`
+    CU_MEM_ATTACH_SINGLE:
+        alias of `.hipMemAttachSingle`
+    cudaMemAttachSingle:
+        alias of `.hipMemAttachSingle`
+    cudaHostRegisterDefault:
+        alias of `.hipHostRegisterDefault`
+    CU_MEMHOSTREGISTER_PORTABLE:
+        alias of `.hipHostRegisterPortable`
+    cudaHostRegisterPortable:
+        alias of `.hipHostRegisterPortable`
+    CU_MEMHOSTREGISTER_DEVICEMAP:
+        alias of `.hipHostRegisterMapped`
+    cudaHostRegisterMapped:
+        alias of `.hipHostRegisterMapped`
+    CU_MEMHOSTREGISTER_IOMEMORY:
+        alias of `.hipHostRegisterIoMemory`
+    cudaHostRegisterIoMemory:
+        alias of `.hipHostRegisterIoMemory`
+    CU_CTX_SCHED_AUTO:
+        alias of `.hipDeviceScheduleAuto`
+    cudaDeviceScheduleAuto:
+        alias of `.hipDeviceScheduleAuto`
+    CU_CTX_SCHED_SPIN:
+        alias of `.hipDeviceScheduleSpin`
+    cudaDeviceScheduleSpin:
+        alias of `.hipDeviceScheduleSpin`
+    CU_CTX_SCHED_YIELD:
+        alias of `.hipDeviceScheduleYield`
+    cudaDeviceScheduleYield:
+        alias of `.hipDeviceScheduleYield`
+    CU_CTX_BLOCKING_SYNC:
+        alias of `.hipDeviceScheduleBlockingSync`
+    CU_CTX_SCHED_BLOCKING_SYNC:
+        alias of `.hipDeviceScheduleBlockingSync`
+    cudaDeviceBlockingSync:
+        alias of `.hipDeviceScheduleBlockingSync`
+    cudaDeviceScheduleBlockingSync:
+        alias of `.hipDeviceScheduleBlockingSync`
+    CU_CTX_SCHED_MASK:
+        alias of `.hipDeviceScheduleMask`
+    cudaDeviceScheduleMask:
+        alias of `.hipDeviceScheduleMask`
+    CU_CTX_MAP_HOST:
+        alias of `.hipDeviceMapHost`
+    cudaDeviceMapHost:
+        alias of `.hipDeviceMapHost`
+    CU_CTX_LMEM_RESIZE_TO_MAX:
+        alias of `.hipDeviceLmemResizeToMax`
+    cudaDeviceLmemResizeToMax:
+        alias of `.hipDeviceLmemResizeToMax`
+    cudaArrayDefault:
+        alias of `.hipArrayDefault`
+    CUDA_ARRAY3D_LAYERED:
+        alias of `.hipArrayLayered`
+    cudaArrayLayered:
+        alias of `.hipArrayLayered`
+    CUDA_ARRAY3D_SURFACE_LDST:
+        alias of `.hipArraySurfaceLoadStore`
+    cudaArraySurfaceLoadStore:
+        alias of `.hipArraySurfaceLoadStore`
+    CUDA_ARRAY3D_CUBEMAP:
+        alias of `.hipArrayCubemap`
+    cudaArrayCubemap:
+        alias of `.hipArrayCubemap`
+    CUDA_ARRAY3D_TEXTURE_GATHER:
+        alias of `.hipArrayTextureGather`
+    cudaArrayTextureGather:
+        alias of `.hipArrayTextureGather`
+    CU_OCCUPANCY_DEFAULT:
+        alias of `.hipOccupancyDefault`
+    cudaOccupancyDefault:
+        alias of `.hipOccupancyDefault`
+    CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_PRE_LAUNCH_SYNC:
+        alias of `.hipCooperativeLaunchMultiDeviceNoPreSync`
+    cudaCooperativeLaunchMultiDeviceNoPreSync:
+        alias of `.hipCooperativeLaunchMultiDeviceNoPreSync`
+    CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_POST_LAUNCH_SYNC:
+        alias of `.hipCooperativeLaunchMultiDeviceNoPostSync`
+    cudaCooperativeLaunchMultiDeviceNoPostSync:
+        alias of `.hipCooperativeLaunchMultiDeviceNoPostSync`
+    CU_DEVICE_CPU:
+        alias of `.hipCpuDeviceId`
+    cudaCpuDeviceId:
+        alias of `.hipCpuDeviceId`
+    CU_DEVICE_INVALID:
+        alias of `.hipInvalidDeviceId`
+    cudaInvalidDeviceId:
+        alias of `.hipInvalidDeviceId`
+    CU_STREAM_WAIT_VALUE_GEQ:
+        alias of `.hipStreamWaitValueGte`
+    CU_STREAM_WAIT_VALUE_EQ:
+        alias of `.hipStreamWaitValueEq`
+    CU_STREAM_WAIT_VALUE_AND:
+        alias of `.hipStreamWaitValueAnd`
+    CU_STREAM_WAIT_VALUE_NOR:
+        alias of `.hipStreamWaitValueNor`
+    CUuuid:
+        alias of `.hipUUID`
+    cudaUUID_t:
+        alias of `.hipUUID`
+    HIP_PYTHON_CUmemorytype_HALLUCINATE:
+        Make `.CUmemorytype` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemorytype_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemorytype_enum_HALLUCINATE:
+        Make `.CUmemorytype_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemorytype_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemoryType_HALLUCINATE:
+        Make `.cudaMemoryType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemoryType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresult_HALLUCINATE:
+        Make `.CUresult` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresult_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaError_HALLUCINATE:
+        Make `.cudaError` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaError_enum_HALLUCINATE:
+        Make `.cudaError_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaError_t_HALLUCINATE:
+        Make `.cudaError_t` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaError_t_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUdevice_attribute_HALLUCINATE:
+        Make `.CUdevice_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE:
+        Make `.CUdevice_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaDeviceAttr_HALLUCINATE:
+        Make `.cudaDeviceAttr` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaDeviceAttr_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUcomputemode_HALLUCINATE:
+        Make `.CUcomputemode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUcomputemode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUcomputemode_enum_HALLUCINATE:
+        Make `.CUcomputemode_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUcomputemode_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaComputeMode_HALLUCINATE:
+        Make `.cudaComputeMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaComputeMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE:
+        Make `.cudaChannelFormatKind` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUarray_format_HALLUCINATE:
+        Make `.CUarray_format` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUarray_format_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUarray_format_enum_HALLUCINATE:
+        Make `.CUarray_format_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUarray_format_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUarray:
+        alias of `.hipArray_t`
+    cudaArray_t:
+        alias of `.hipArray_t`
+    cudaArray_const_t:
+        alias of `.hipArray_const_t`
+    CUmipmappedArray:
+        alias of `.hipMipmappedArray_t`
+    cudaMipmappedArray_t:
+        alias of `.hipMipmappedArray_t`
+    cudaMipmappedArray_const_t:
+        alias of `.hipMipmappedArray_const_t`
+    HIP_PYTHON_cudaResourceType_HALLUCINATE:
+        Make `.cudaResourceType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaResourceType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresourcetype_enum_HALLUCINATE:
+        Make `.CUresourcetype_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourcetype_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresourcetype_HALLUCINATE:
+        Make `.CUresourcetype` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourcetype_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE:
+        Make `.CUaddress_mode_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUaddress_mode_HALLUCINATE:
+        Make `.CUaddress_mode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUaddress_mode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE:
+        Make `.CUfilter_mode_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfilter_mode_HALLUCINATE:
+        Make `.CUfilter_mode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfilter_mode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUDA_TEXTURE_DESC:
+        alias of `.HIP_TEXTURE_DESC`
+    CUDA_TEXTURE_DESC_v1:
+        alias of `.HIP_TEXTURE_DESC`
+    HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE:
+        Make `.cudaResourceViewFormat` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE:
+        Make `.CUresourceViewFormat_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUresourceViewFormat_HALLUCINATE:
+        Make `.CUresourceViewFormat` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUresourceViewFormat_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUDA_RESOURCE_DESC:
+        alias of `.HIP_RESOURCE_DESC`
+    CUDA_RESOURCE_DESC_v1:
+        alias of `.HIP_RESOURCE_DESC`
+    CUDA_RESOURCE_VIEW_DESC:
+        alias of `.HIP_RESOURCE_VIEW_DESC`
+    CUDA_RESOURCE_VIEW_DESC_v1:
+        alias of `.HIP_RESOURCE_VIEW_DESC`
+    HIP_PYTHON_cudaMemcpyKind_HALLUCINATE:
+        Make `.cudaMemcpyKind` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemcpyKind_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfunction_attribute_HALLUCINATE:
+        Make `.CUfunction_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunction_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE:
+        Make `.CUfunction_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUpointer_attribute_HALLUCINATE:
+        Make `.CUpointer_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUpointer_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE:
+        Make `.CUpointer_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    cudaCreateChannelDesc:
+        alias of `.hipCreateChannelDesc`
+    CUtexObject:
+        alias of `.hipTextureObject_t`
+    CUtexObject_v1:
+        alias of `.hipTextureObject_t`
+    cudaTextureObject_t:
+        alias of `.hipTextureObject_t`
+    HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE:
+        Make `.cudaTextureAddressMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE:
+        Make `.cudaTextureFilterMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaTextureReadMode_HALLUCINATE:
+        Make `.cudaTextureReadMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaTextureReadMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUsurfObject:
+        alias of `.hipSurfaceObject_t`
+    CUsurfObject_v1:
+        alias of `.hipSurfaceObject_t`
+    cudaSurfaceObject_t:
+        alias of `.hipSurfaceObject_t`
+    HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE:
+        Make `.cudaSurfaceBoundaryMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUcontext:
+        alias of `.hipCtx_t`
+    HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE:
+        Make `.CUdevice_P2PAttribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE:
+        Make `.CUdevice_P2PAttribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE:
+        Make `.cudaDeviceP2PAttr` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUstream:
+        alias of `.hipStream_t`
+    cudaStream_t:
+        alias of `.hipStream_t`
+    CUipcMemHandle:
+        alias of `.hipIpcMemHandle_t`
+    CUipcMemHandle_v1:
+        alias of `.hipIpcMemHandle_t`
+    cudaIpcMemHandle_t:
+        alias of `.hipIpcMemHandle_t`
+    CUipcEventHandle:
+        alias of `.hipIpcEventHandle_t`
+    CUipcEventHandle_v1:
+        alias of `.hipIpcEventHandle_t`
+    cudaIpcEventHandle_t:
+        alias of `.hipIpcEventHandle_t`
+    CUmodule:
+        alias of `.hipModule_t`
+    CUfunction:
+        alias of `.hipFunction_t`
+    cudaFunction_t:
+        alias of `.hipFunction_t`
+    CUmemoryPool:
+        alias of `.hipMemPool_t`
+    cudaMemPool_t:
+        alias of `.hipMemPool_t`
+    CUevent:
+        alias of `.hipEvent_t`
+    cudaEvent_t:
+        alias of `.hipEvent_t`
+    HIP_PYTHON_CUlimit_HALLUCINATE:
+        Make `.CUlimit` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUlimit_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUlimit_enum_HALLUCINATE:
+        Make `.CUlimit_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUlimit_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaLimit_HALLUCINATE:
+        Make `.cudaLimit` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaLimit_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmem_advise_HALLUCINATE:
+        Make `.CUmem_advise` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_advise_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmem_advise_enum_HALLUCINATE:
+        Make `.CUmem_advise_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_advise_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE:
+        Make `.cudaMemoryAdvise` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmem_range_attribute_HALLUCINATE:
+        Make `.CUmem_range_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_range_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE:
+        Make `.CUmem_range_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE:
+        Make `.cudaMemRangeAttribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemPool_attribute_HALLUCINATE:
+        Make `.CUmemPool_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemPool_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE:
+        Make `.CUmemPool_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE:
+        Make `.cudaMemPoolAttr` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemLocationType_HALLUCINATE:
+        Make `.CUmemLocationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemLocationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE:
+        Make `.CUmemLocationType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemLocationType_HALLUCINATE:
+        Make `.cudaMemLocationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemLocationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAccess_flags_HALLUCINATE:
+        Make `.CUmemAccess_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAccess_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE:
+        Make `.CUmemAccess_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE:
+        Make `.cudaMemAccessFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationType_HALLUCINATE:
+        Make `.CUmemAllocationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE:
+        Make `.CUmemAllocationType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemAllocationType_HALLUCINATE:
+        Make `.cudaMemAllocationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAllocationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE:
+        Make `.CUmemAllocationHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE:
+        Make `.CUmemAllocationHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE:
+        Make `.cudaMemAllocationHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUjit_option_HALLUCINATE:
+        Make `.CUjit_option` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUjit_option_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUjit_option_enum_HALLUCINATE:
+        Make `.CUjit_option_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUjit_option_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaFuncAttribute_HALLUCINATE:
+        Make `.cudaFuncAttribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaFuncAttribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfunc_cache_HALLUCINATE:
+        Make `.CUfunc_cache` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunc_cache_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE:
+        Make `.CUfunc_cache_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaFuncCache_HALLUCINATE:
+        Make `.cudaFuncCache` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaFuncCache_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUsharedconfig_HALLUCINATE:
+        Make `.CUsharedconfig` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUsharedconfig_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE:
+        Make `.CUsharedconfig_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE:
+        Make `.cudaSharedMemConfig` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    cudaLaunchParams:
+        alias of `.hipLaunchParams`
+    HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE:
+        Make `.CUexternalMemoryHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE:
+        Make `.CUexternalMemoryHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE:
+        Make `.cudaExternalMemoryHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUDA_EXTERNAL_MEMORY_HANDLE_DESC:
+        alias of `.hipExternalMemoryHandleDesc`
+    CUDA_EXTERNAL_MEMORY_HANDLE_DESC_v1:
+        alias of `.hipExternalMemoryHandleDesc`
+    cudaExternalMemoryHandleDesc:
+        alias of `.hipExternalMemoryHandleDesc`
+    CUDA_EXTERNAL_MEMORY_BUFFER_DESC:
+        alias of `.hipExternalMemoryBufferDesc`
+    CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1:
+        alias of `.hipExternalMemoryBufferDesc`
+    cudaExternalMemoryBufferDesc:
+        alias of `.hipExternalMemoryBufferDesc`
+    HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE:
+        Make `.CUexternalSemaphoreHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE:
+        Make `.CUexternalSemaphoreHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE:
+        Make `.cudaExternalSemaphoreHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC:
+        alias of `.hipExternalSemaphoreHandleDesc`
+    CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1:
+        alias of `.hipExternalSemaphoreHandleDesc`
+    cudaExternalSemaphoreHandleDesc:
+        alias of `.hipExternalSemaphoreHandleDesc`
+    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS:
+        alias of `.hipExternalSemaphoreSignalParams`
+    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1:
+        alias of `.hipExternalSemaphoreSignalParams`
+    cudaExternalSemaphoreSignalParams:
+        alias of `.hipExternalSemaphoreSignalParams`
+    cudaExternalSemaphoreSignalParams_v1:
+        alias of `.hipExternalSemaphoreSignalParams`
+    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS:
+        alias of `.hipExternalSemaphoreWaitParams`
+    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1:
+        alias of `.hipExternalSemaphoreWaitParams`
+    cudaExternalSemaphoreWaitParams:
+        alias of `.hipExternalSemaphoreWaitParams`
+    cudaExternalSemaphoreWaitParams_v1:
+        alias of `.hipExternalSemaphoreWaitParams`
+    HIP_PYTHON_CUGLDeviceList_HALLUCINATE:
+        Make `.CUGLDeviceList` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUGLDeviceList_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE:
+        Make `.CUGLDeviceList_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGLDeviceList_HALLUCINATE:
+        Make `.cudaGLDeviceList` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGLDeviceList_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE:
+        Make `.CUgraphicsRegisterFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE:
+        Make `.CUgraphicsRegisterFlags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE:
+        Make `.cudaGraphicsRegisterFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUgraphicsResource_st:
+        alias of `.hipGraphicsResource`
+    cudaGraphicsResource:
+        alias of `.hipGraphicsResource`
+    CUgraphicsResource:
+        alias of `.hipGraphicsResource_t`
+    cudaGraphicsResource_t:
+        alias of `.hipGraphicsResource_t`
+    CUgraph:
+        alias of `.hipGraph_t`
+    cudaGraph_t:
+        alias of `.hipGraph_t`
+    CUgraphNode:
+        alias of `.hipGraphNode_t`
+    cudaGraphNode_t:
+        alias of `.hipGraphNode_t`
+    CUgraphExec:
+        alias of `.hipGraphExec_t`
+    cudaGraphExec_t:
+        alias of `.hipGraphExec_t`
+    CUuserObject:
+        alias of `.hipUserObject_t`
+    cudaUserObject_t:
+        alias of `.hipUserObject_t`
+    HIP_PYTHON_CUgraphNodeType_HALLUCINATE:
+        Make `.CUgraphNodeType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphNodeType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE:
+        Make `.CUgraphNodeType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphNodeType_HALLUCINATE:
+        Make `.cudaGraphNodeType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphNodeType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE:
+        Make `.CUkernelNodeAttrID` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE:
+        Make `.CUkernelNodeAttrID_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE:
+        Make `.cudaKernelNodeAttrID` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUaccessProperty_HALLUCINATE:
+        Make `.CUaccessProperty` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUaccessProperty_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE:
+        Make `.CUaccessProperty_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaAccessProperty_HALLUCINATE:
+        Make `.cudaAccessProperty` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaAccessProperty_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE:
+        Make `.CUgraphExecUpdateResult` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE:
+        Make `.CUgraphExecUpdateResult_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE:
+        Make `.cudaGraphExecUpdateResult` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE:
+        Make `.CUstreamCaptureMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE:
+        Make `.CUstreamCaptureMode_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE:
+        Make `.cudaStreamCaptureMode` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE:
+        Make `.CUstreamCaptureStatus` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE:
+        Make `.CUstreamCaptureStatus_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE:
+        Make `.cudaStreamCaptureStatus` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE:
+        Make `.CUstreamUpdateCaptureDependencies_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE:
+        Make `.CUstreamUpdateCaptureDependencies_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE:
+        Make `.cudaStreamUpdateCaptureDependenciesFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE:
+        Make `.CUgraphMem_attribute` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE:
+        Make `.CUgraphMem_attribute_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE:
+        Make `.cudaGraphMemAttributeType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUuserObject_flags_HALLUCINATE:
+        Make `.CUuserObject_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObject_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE:
+        Make `.CUuserObject_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE:
+        Make `.cudaUserObjectFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE:
+        Make `.CUuserObjectRetain_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE:
+        Make `.CUuserObjectRetain_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE:
+        Make `.cudaUserObjectRetainFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE:
+        Make `.CUgraphInstantiate_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE:
+        Make `.CUgraphInstantiate_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE:
+        Make `.cudaGraphInstantiateFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    CUmemGenericAllocationHandle:
+        alias of `.hipMemGenericAllocationHandle_t`
+    CUmemGenericAllocationHandle_v1:
+        alias of `.hipMemGenericAllocationHandle_t`
+    HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE:
+        Make `.CUmemAllocationGranularity_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE:
+        Make `.CUmemAllocationGranularity_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemHandleType_HALLUCINATE:
+        Make `.CUmemHandleType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemHandleType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE:
+        Make `.CUmemHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemOperationType_HALLUCINATE:
+        Make `.CUmemOperationType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemOperationType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE:
+        Make `.CUmemOperationType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE:
+        Make `.CUarraySparseSubresourceType` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE:
+        Make `.CUarraySparseSubresourceType_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    cuInit:
+        alias of `.hipInit`
+    cuDriverGetVersion:
+        alias of `.hipDriverGetVersion`
+    cudaDriverGetVersion:
+        alias of `.hipDriverGetVersion`
+    cudaRuntimeGetVersion:
+        alias of `.hipRuntimeGetVersion`
+    cuDeviceGet:
+        alias of `.hipDeviceGet`
+    cuDeviceComputeCapability:
+        alias of `.hipDeviceComputeCapability`
+    cuDeviceGetName:
+        alias of `.hipDeviceGetName`
+    cuDeviceGetUuid:
+        alias of `.hipDeviceGetUuid`
+    cuDeviceGetUuid_v2:
+        alias of `.hipDeviceGetUuid`
+    cudaDeviceGetP2PAttribute:
+        alias of `.hipDeviceGetP2PAttribute`
+    cuDeviceGetP2PAttribute:
+        alias of `.hipDeviceGetP2PAttribute`
+    cudaDeviceGetPCIBusId:
+        alias of `.hipDeviceGetPCIBusId`
+    cuDeviceGetPCIBusId:
+        alias of `.hipDeviceGetPCIBusId`
+    cudaDeviceGetByPCIBusId:
+        alias of `.hipDeviceGetByPCIBusId`
+    cuDeviceGetByPCIBusId:
+        alias of `.hipDeviceGetByPCIBusId`
+    cuDeviceTotalMem:
+        alias of `.hipDeviceTotalMem`
+    cuDeviceTotalMem_v2:
+        alias of `.hipDeviceTotalMem`
+    cudaDeviceSynchronize:
+        alias of `.hipDeviceSynchronize`
+    cudaThreadSynchronize:
+        alias of `.hipDeviceSynchronize`
+    cudaDeviceReset:
+        alias of `.hipDeviceReset`
+    cudaThreadExit:
+        alias of `.hipDeviceReset`
+    cudaSetDevice:
+        alias of `.hipSetDevice`
+    cudaGetDevice:
+        alias of `.hipGetDevice`
+    cuDeviceGetCount:
+        alias of `.hipGetDeviceCount`
+    cudaGetDeviceCount:
+        alias of `.hipGetDeviceCount`
+    cuDeviceGetAttribute:
+        alias of `.hipDeviceGetAttribute`
+    cudaDeviceGetAttribute:
+        alias of `.hipDeviceGetAttribute`
+    cuDeviceGetDefaultMemPool:
+        alias of `.hipDeviceGetDefaultMemPool`
+    cudaDeviceGetDefaultMemPool:
+        alias of `.hipDeviceGetDefaultMemPool`
+    cuDeviceSetMemPool:
+        alias of `.hipDeviceSetMemPool`
+    cudaDeviceSetMemPool:
+        alias of `.hipDeviceSetMemPool`
+    cuDeviceGetMemPool:
+        alias of `.hipDeviceGetMemPool`
+    cudaDeviceGetMemPool:
+        alias of `.hipDeviceGetMemPool`
+    cudaGetDeviceProperties:
+        alias of `.hipGetDeviceProperties`
+    cudaDeviceSetCacheConfig:
+        alias of `.hipDeviceSetCacheConfig`
+    cudaThreadSetCacheConfig:
+        alias of `.hipDeviceSetCacheConfig`
+    cudaDeviceGetCacheConfig:
+        alias of `.hipDeviceGetCacheConfig`
+    cudaThreadGetCacheConfig:
+        alias of `.hipDeviceGetCacheConfig`
+    cudaDeviceGetLimit:
+        alias of `.hipDeviceGetLimit`
+    cuCtxGetLimit:
+        alias of `.hipDeviceGetLimit`
+    cudaDeviceSetLimit:
+        alias of `.hipDeviceSetLimit`
+    cuCtxSetLimit:
+        alias of `.hipDeviceSetLimit`
+    cudaDeviceGetSharedMemConfig:
+        alias of `.hipDeviceGetSharedMemConfig`
+    cudaGetDeviceFlags:
+        alias of `.hipGetDeviceFlags`
+    cudaDeviceSetSharedMemConfig:
+        alias of `.hipDeviceSetSharedMemConfig`
+    cudaSetDeviceFlags:
+        alias of `.hipSetDeviceFlags`
+    cudaChooseDevice:
+        alias of `.hipChooseDevice`
+    cudaIpcGetMemHandle:
+        alias of `.hipIpcGetMemHandle`
+    cuIpcGetMemHandle:
+        alias of `.hipIpcGetMemHandle`
+    cudaIpcOpenMemHandle:
+        alias of `.hipIpcOpenMemHandle`
+    cuIpcOpenMemHandle:
+        alias of `.hipIpcOpenMemHandle`
+    cudaIpcCloseMemHandle:
+        alias of `.hipIpcCloseMemHandle`
+    cuIpcCloseMemHandle:
+        alias of `.hipIpcCloseMemHandle`
+    cudaIpcGetEventHandle:
+        alias of `.hipIpcGetEventHandle`
+    cuIpcGetEventHandle:
+        alias of `.hipIpcGetEventHandle`
+    cudaIpcOpenEventHandle:
+        alias of `.hipIpcOpenEventHandle`
+    cuIpcOpenEventHandle:
+        alias of `.hipIpcOpenEventHandle`
+    cudaFuncSetAttribute:
+        alias of `.hipFuncSetAttribute`
+    cudaFuncSetCacheConfig:
+        alias of `.hipFuncSetCacheConfig`
+    cudaFuncSetSharedMemConfig:
+        alias of `.hipFuncSetSharedMemConfig`
+    cudaGetLastError:
+        alias of `.hipGetLastError`
+    cudaPeekAtLastError:
+        alias of `.hipPeekAtLastError`
+    cudaGetErrorName:
+        alias of `.hipGetErrorName`
+    cudaGetErrorString:
+        alias of `.hipGetErrorString`
+    cuGetErrorName:
+        alias of `.hipDrvGetErrorName`
+    cuGetErrorString:
+        alias of `.hipDrvGetErrorString`
+    cudaStreamCreate:
+        alias of `.hipStreamCreate`
+    cuStreamCreate:
+        alias of `.hipStreamCreateWithFlags`
+    cudaStreamCreateWithFlags:
+        alias of `.hipStreamCreateWithFlags`
+    cuStreamCreateWithPriority:
+        alias of `.hipStreamCreateWithPriority`
+    cudaStreamCreateWithPriority:
+        alias of `.hipStreamCreateWithPriority`
+    cudaDeviceGetStreamPriorityRange:
+        alias of `.hipDeviceGetStreamPriorityRange`
+    cuCtxGetStreamPriorityRange:
+        alias of `.hipDeviceGetStreamPriorityRange`
+    cuStreamDestroy:
+        alias of `.hipStreamDestroy`
+    cuStreamDestroy_v2:
+        alias of `.hipStreamDestroy`
+    cudaStreamDestroy:
+        alias of `.hipStreamDestroy`
+    cuStreamQuery:
+        alias of `.hipStreamQuery`
+    cudaStreamQuery:
+        alias of `.hipStreamQuery`
+    cuStreamSynchronize:
+        alias of `.hipStreamSynchronize`
+    cudaStreamSynchronize:
+        alias of `.hipStreamSynchronize`
+    cuStreamWaitEvent:
+        alias of `.hipStreamWaitEvent`
+    cudaStreamWaitEvent:
+        alias of `.hipStreamWaitEvent`
+    cuStreamGetFlags:
+        alias of `.hipStreamGetFlags`
+    cudaStreamGetFlags:
+        alias of `.hipStreamGetFlags`
+    cuStreamGetPriority:
+        alias of `.hipStreamGetPriority`
+    cudaStreamGetPriority:
+        alias of `.hipStreamGetPriority`
+    cuStreamAddCallback:
+        alias of `.hipStreamAddCallback`
+    cudaStreamAddCallback:
+        alias of `.hipStreamAddCallback`
+    cuStreamWaitValue32:
+        alias of `.hipStreamWaitValue32`
+    cuStreamWaitValue32_v2:
+        alias of `.hipStreamWaitValue32`
+    cuStreamWaitValue64:
+        alias of `.hipStreamWaitValue64`
+    cuStreamWaitValue64_v2:
+        alias of `.hipStreamWaitValue64`
+    cuStreamWriteValue32:
+        alias of `.hipStreamWriteValue32`
+    cuStreamWriteValue32_v2:
+        alias of `.hipStreamWriteValue32`
+    cuStreamWriteValue64:
+        alias of `.hipStreamWriteValue64`
+    cuStreamWriteValue64_v2:
+        alias of `.hipStreamWriteValue64`
+    cuEventCreate:
+        alias of `.hipEventCreateWithFlags`
+    cudaEventCreateWithFlags:
+        alias of `.hipEventCreateWithFlags`
+    cudaEventCreate:
+        alias of `.hipEventCreate`
+    cuEventRecord:
+        alias of `.hipEventRecord`
+    cudaEventRecord:
+        alias of `.hipEventRecord`
+    cuEventDestroy:
+        alias of `.hipEventDestroy`
+    cuEventDestroy_v2:
+        alias of `.hipEventDestroy`
+    cudaEventDestroy:
+        alias of `.hipEventDestroy`
+    cuEventSynchronize:
+        alias of `.hipEventSynchronize`
+    cudaEventSynchronize:
+        alias of `.hipEventSynchronize`
+    cuEventElapsedTime:
+        alias of `.hipEventElapsedTime`
+    cudaEventElapsedTime:
+        alias of `.hipEventElapsedTime`
+    cuEventQuery:
+        alias of `.hipEventQuery`
+    cudaEventQuery:
+        alias of `.hipEventQuery`
+    cudaPointerGetAttributes:
+        alias of `.hipPointerGetAttributes`
+    cuPointerGetAttribute:
+        alias of `.hipPointerGetAttribute`
+    cuPointerGetAttributes:
+        alias of `.hipDrvPointerGetAttributes`
+    cuImportExternalSemaphore:
+        alias of `.hipImportExternalSemaphore`
+    cudaImportExternalSemaphore:
+        alias of `.hipImportExternalSemaphore`
+    cuSignalExternalSemaphoresAsync:
+        alias of `.hipSignalExternalSemaphoresAsync`
+    cudaSignalExternalSemaphoresAsync:
+        alias of `.hipSignalExternalSemaphoresAsync`
+    cuWaitExternalSemaphoresAsync:
+        alias of `.hipWaitExternalSemaphoresAsync`
+    cudaWaitExternalSemaphoresAsync:
+        alias of `.hipWaitExternalSemaphoresAsync`
+    cuDestroyExternalSemaphore:
+        alias of `.hipDestroyExternalSemaphore`
+    cudaDestroyExternalSemaphore:
+        alias of `.hipDestroyExternalSemaphore`
+    cuImportExternalMemory:
+        alias of `.hipImportExternalMemory`
+    cudaImportExternalMemory:
+        alias of `.hipImportExternalMemory`
+    cuExternalMemoryGetMappedBuffer:
+        alias of `.hipExternalMemoryGetMappedBuffer`
+    cudaExternalMemoryGetMappedBuffer:
+        alias of `.hipExternalMemoryGetMappedBuffer`
+    cuDestroyExternalMemory:
+        alias of `.hipDestroyExternalMemory`
+    cudaDestroyExternalMemory:
+        alias of `.hipDestroyExternalMemory`
+    cuMemAlloc:
+        alias of `.hipMalloc`
+    cuMemAlloc_v2:
+        alias of `.hipMalloc`
+    cudaMalloc:
+        alias of `.hipMalloc`
+    cuMemAllocHost:
+        alias of `.hipMemAllocHost`
+    cuMemAllocHost_v2:
+        alias of `.hipMemAllocHost`
+    cudaMallocHost:
+        alias of `.hipHostMalloc`
+    cuMemAllocManaged:
+        alias of `.hipMallocManaged`
+    cudaMallocManaged:
+        alias of `.hipMallocManaged`
+    cudaMemPrefetchAsync:
+        alias of `.hipMemPrefetchAsync`
+    cuMemPrefetchAsync:
+        alias of `.hipMemPrefetchAsync`
+    cudaMemAdvise:
+        alias of `.hipMemAdvise`
+    cuMemAdvise:
+        alias of `.hipMemAdvise`
+    cudaMemRangeGetAttribute:
+        alias of `.hipMemRangeGetAttribute`
+    cuMemRangeGetAttribute:
+        alias of `.hipMemRangeGetAttribute`
+    cudaMemRangeGetAttributes:
+        alias of `.hipMemRangeGetAttributes`
+    cuMemRangeGetAttributes:
+        alias of `.hipMemRangeGetAttributes`
+    cuStreamAttachMemAsync:
+        alias of `.hipStreamAttachMemAsync`
+    cudaStreamAttachMemAsync:
+        alias of `.hipStreamAttachMemAsync`
+    cudaMallocAsync:
+        alias of `.hipMallocAsync`
+    cuMemAllocAsync:
+        alias of `.hipMallocAsync`
+    cudaFreeAsync:
+        alias of `.hipFreeAsync`
+    cuMemFreeAsync:
+        alias of `.hipFreeAsync`
+    cudaMemPoolTrimTo:
+        alias of `.hipMemPoolTrimTo`
+    cuMemPoolTrimTo:
+        alias of `.hipMemPoolTrimTo`
+    cudaMemPoolSetAttribute:
+        alias of `.hipMemPoolSetAttribute`
+    cuMemPoolSetAttribute:
+        alias of `.hipMemPoolSetAttribute`
+    cudaMemPoolGetAttribute:
+        alias of `.hipMemPoolGetAttribute`
+    cuMemPoolGetAttribute:
+        alias of `.hipMemPoolGetAttribute`
+    cudaMemPoolSetAccess:
+        alias of `.hipMemPoolSetAccess`
+    cuMemPoolSetAccess:
+        alias of `.hipMemPoolSetAccess`
+    cudaMemPoolGetAccess:
+        alias of `.hipMemPoolGetAccess`
+    cuMemPoolGetAccess:
+        alias of `.hipMemPoolGetAccess`
+    cudaMemPoolCreate:
+        alias of `.hipMemPoolCreate`
+    cuMemPoolCreate:
+        alias of `.hipMemPoolCreate`
+    cudaMemPoolDestroy:
+        alias of `.hipMemPoolDestroy`
+    cuMemPoolDestroy:
+        alias of `.hipMemPoolDestroy`
+    cudaMallocFromPoolAsync:
+        alias of `.hipMallocFromPoolAsync`
+    cuMemAllocFromPoolAsync:
+        alias of `.hipMallocFromPoolAsync`
+    cudaMemPoolExportToShareableHandle:
+        alias of `.hipMemPoolExportToShareableHandle`
+    cuMemPoolExportToShareableHandle:
+        alias of `.hipMemPoolExportToShareableHandle`
+    cudaMemPoolImportFromShareableHandle:
+        alias of `.hipMemPoolImportFromShareableHandle`
+    cuMemPoolImportFromShareableHandle:
+        alias of `.hipMemPoolImportFromShareableHandle`
+    cudaMemPoolExportPointer:
+        alias of `.hipMemPoolExportPointer`
+    cuMemPoolExportPointer:
+        alias of `.hipMemPoolExportPointer`
+    cudaMemPoolImportPointer:
+        alias of `.hipMemPoolImportPointer`
+    cuMemPoolImportPointer:
+        alias of `.hipMemPoolImportPointer`
+    cuMemHostAlloc:
+        alias of `.hipHostAlloc`
+    cudaHostAlloc:
+        alias of `.hipHostAlloc`
+    cuMemHostGetDevicePointer:
+        alias of `.hipHostGetDevicePointer`
+    cuMemHostGetDevicePointer_v2:
+        alias of `.hipHostGetDevicePointer`
+    cudaHostGetDevicePointer:
+        alias of `.hipHostGetDevicePointer`
+    cuMemHostGetFlags:
+        alias of `.hipHostGetFlags`
+    cudaHostGetFlags:
+        alias of `.hipHostGetFlags`
+    cuMemHostRegister:
+        alias of `.hipHostRegister`
+    cuMemHostRegister_v2:
+        alias of `.hipHostRegister`
+    cudaHostRegister:
+        alias of `.hipHostRegister`
+    cuMemHostUnregister:
+        alias of `.hipHostUnregister`
+    cudaHostUnregister:
+        alias of `.hipHostUnregister`
+    cudaMallocPitch:
+        alias of `.hipMallocPitch`
+    cuMemAllocPitch:
+        alias of `.hipMemAllocPitch`
+    cuMemAllocPitch_v2:
+        alias of `.hipMemAllocPitch`
+    cuMemFree:
+        alias of `.hipFree`
+    cuMemFree_v2:
+        alias of `.hipFree`
+    cudaFree:
+        alias of `.hipFree`
+    cuMemFreeHost:
+        alias of `.hipHostFree`
+    cudaFreeHost:
+        alias of `.hipHostFree`
+    cudaMemcpy:
+        alias of `.hipMemcpy`
+    cuMemcpyHtoD:
+        alias of `.hipMemcpyHtoD`
+    cuMemcpyHtoD_v2:
+        alias of `.hipMemcpyHtoD`
+    cuMemcpyDtoH:
+        alias of `.hipMemcpyDtoH`
+    cuMemcpyDtoH_v2:
+        alias of `.hipMemcpyDtoH`
+    cuMemcpyDtoD:
+        alias of `.hipMemcpyDtoD`
+    cuMemcpyDtoD_v2:
+        alias of `.hipMemcpyDtoD`
+    cuMemcpyHtoDAsync:
+        alias of `.hipMemcpyHtoDAsync`
+    cuMemcpyHtoDAsync_v2:
+        alias of `.hipMemcpyHtoDAsync`
+    cuMemcpyDtoHAsync:
+        alias of `.hipMemcpyDtoHAsync`
+    cuMemcpyDtoHAsync_v2:
+        alias of `.hipMemcpyDtoHAsync`
+    cuMemcpyDtoDAsync:
+        alias of `.hipMemcpyDtoDAsync`
+    cuMemcpyDtoDAsync_v2:
+        alias of `.hipMemcpyDtoDAsync`
+    cuModuleGetGlobal:
+        alias of `.hipModuleGetGlobal`
+    cuModuleGetGlobal_v2:
+        alias of `.hipModuleGetGlobal`
+    cudaGetSymbolAddress:
+        alias of `.hipGetSymbolAddress`
+    cudaGetSymbolSize:
+        alias of `.hipGetSymbolSize`
+    cudaMemcpyToSymbol:
+        alias of `.hipMemcpyToSymbol`
+    cudaMemcpyToSymbolAsync:
+        alias of `.hipMemcpyToSymbolAsync`
+    cudaMemcpyFromSymbol:
+        alias of `.hipMemcpyFromSymbol`
+    cudaMemcpyFromSymbolAsync:
+        alias of `.hipMemcpyFromSymbolAsync`
+    cudaMemcpyAsync:
+        alias of `.hipMemcpyAsync`
+    cudaMemset:
+        alias of `.hipMemset`
+    cuMemsetD8:
+        alias of `.hipMemsetD8`
+    cuMemsetD8_v2:
+        alias of `.hipMemsetD8`
+    cuMemsetD8Async:
+        alias of `.hipMemsetD8Async`
+    cuMemsetD16:
+        alias of `.hipMemsetD16`
+    cuMemsetD16_v2:
+        alias of `.hipMemsetD16`
+    cuMemsetD16Async:
+        alias of `.hipMemsetD16Async`
+    cuMemsetD32:
+        alias of `.hipMemsetD32`
+    cuMemsetD32_v2:
+        alias of `.hipMemsetD32`
+    cudaMemsetAsync:
+        alias of `.hipMemsetAsync`
+    cuMemsetD32Async:
+        alias of `.hipMemsetD32Async`
+    cudaMemset2D:
+        alias of `.hipMemset2D`
+    cudaMemset2DAsync:
+        alias of `.hipMemset2DAsync`
+    cudaMemset3D:
+        alias of `.hipMemset3D`
+    cudaMemset3DAsync:
+        alias of `.hipMemset3DAsync`
+    cuMemGetInfo:
+        alias of `.hipMemGetInfo`
+    cuMemGetInfo_v2:
+        alias of `.hipMemGetInfo`
+    cudaMemGetInfo:
+        alias of `.hipMemGetInfo`
+    cudaMallocArray:
+        alias of `.hipMallocArray`
+    cuArrayCreate:
+        alias of `.hipArrayCreate`
+    cuArrayCreate_v2:
+        alias of `.hipArrayCreate`
+    cuArrayDestroy:
+        alias of `.hipArrayDestroy`
+    cuArray3DCreate:
+        alias of `.hipArray3DCreate`
+    cuArray3DCreate_v2:
+        alias of `.hipArray3DCreate`
+    cudaMalloc3D:
+        alias of `.hipMalloc3D`
+    cudaFreeArray:
+        alias of `.hipFreeArray`
+    cudaFreeMipmappedArray:
+        alias of `.hipFreeMipmappedArray`
+    cudaMalloc3DArray:
+        alias of `.hipMalloc3DArray`
+    cudaMallocMipmappedArray:
+        alias of `.hipMallocMipmappedArray`
+    cudaGetMipmappedArrayLevel:
+        alias of `.hipGetMipmappedArrayLevel`
+    cudaMemcpy2D:
+        alias of `.hipMemcpy2D`
+    cuMemcpy2D:
+        alias of `.hipMemcpyParam2D`
+    cuMemcpy2D_v2:
+        alias of `.hipMemcpyParam2D`
+    cuMemcpy2DAsync:
+        alias of `.hipMemcpyParam2DAsync`
+    cuMemcpy2DAsync_v2:
+        alias of `.hipMemcpyParam2DAsync`
+    cudaMemcpy2DAsync:
+        alias of `.hipMemcpy2DAsync`
+    cudaMemcpy2DToArray:
+        alias of `.hipMemcpy2DToArray`
+    cudaMemcpy2DToArrayAsync:
+        alias of `.hipMemcpy2DToArrayAsync`
+    cudaMemcpyToArray:
+        alias of `.hipMemcpyToArray`
+    cudaMemcpyFromArray:
+        alias of `.hipMemcpyFromArray`
+    cudaMemcpy2DFromArray:
+        alias of `.hipMemcpy2DFromArray`
+    cudaMemcpy2DFromArrayAsync:
+        alias of `.hipMemcpy2DFromArrayAsync`
+    cuMemcpyAtoH:
+        alias of `.hipMemcpyAtoH`
+    cuMemcpyAtoH_v2:
+        alias of `.hipMemcpyAtoH`
+    cuMemcpyHtoA:
+        alias of `.hipMemcpyHtoA`
+    cuMemcpyHtoA_v2:
+        alias of `.hipMemcpyHtoA`
+    cudaMemcpy3D:
+        alias of `.hipMemcpy3D`
+    cudaMemcpy3DAsync:
+        alias of `.hipMemcpy3DAsync`
+    cuMemcpy3D:
+        alias of `.hipDrvMemcpy3D`
+    cuMemcpy3D_v2:
+        alias of `.hipDrvMemcpy3D`
+    cuMemcpy3DAsync:
+        alias of `.hipDrvMemcpy3DAsync`
+    cuMemcpy3DAsync_v2:
+        alias of `.hipDrvMemcpy3DAsync`
+    cuDeviceCanAccessPeer:
+        alias of `.hipDeviceCanAccessPeer`
+    cudaDeviceCanAccessPeer:
+        alias of `.hipDeviceCanAccessPeer`
+    cudaDeviceEnablePeerAccess:
+        alias of `.hipDeviceEnablePeerAccess`
+    cudaDeviceDisablePeerAccess:
+        alias of `.hipDeviceDisablePeerAccess`
+    cuMemGetAddressRange:
+        alias of `.hipMemGetAddressRange`
+    cuMemGetAddressRange_v2:
+        alias of `.hipMemGetAddressRange`
+    cudaMemcpyPeer:
+        alias of `.hipMemcpyPeer`
+    cudaMemcpyPeerAsync:
+        alias of `.hipMemcpyPeerAsync`
+    cuCtxCreate:
+        alias of `.hipCtxCreate`
+    cuCtxCreate_v2:
+        alias of `.hipCtxCreate`
+    cuCtxDestroy:
+        alias of `.hipCtxDestroy`
+    cuCtxDestroy_v2:
+        alias of `.hipCtxDestroy`
+    cuCtxPopCurrent:
+        alias of `.hipCtxPopCurrent`
+    cuCtxPopCurrent_v2:
+        alias of `.hipCtxPopCurrent`
+    cuCtxPushCurrent:
+        alias of `.hipCtxPushCurrent`
+    cuCtxPushCurrent_v2:
+        alias of `.hipCtxPushCurrent`
+    cuCtxSetCurrent:
+        alias of `.hipCtxSetCurrent`
+    cuCtxGetCurrent:
+        alias of `.hipCtxGetCurrent`
+    cuCtxGetDevice:
+        alias of `.hipCtxGetDevice`
+    cuCtxGetApiVersion:
+        alias of `.hipCtxGetApiVersion`
+    cuCtxGetCacheConfig:
+        alias of `.hipCtxGetCacheConfig`
+    cuCtxSetCacheConfig:
+        alias of `.hipCtxSetCacheConfig`
+    cuCtxSetSharedMemConfig:
+        alias of `.hipCtxSetSharedMemConfig`
+    cuCtxGetSharedMemConfig:
+        alias of `.hipCtxGetSharedMemConfig`
+    cuCtxSynchronize:
+        alias of `.hipCtxSynchronize`
+    cuCtxGetFlags:
+        alias of `.hipCtxGetFlags`
+    cuCtxEnablePeerAccess:
+        alias of `.hipCtxEnablePeerAccess`
+    cuCtxDisablePeerAccess:
+        alias of `.hipCtxDisablePeerAccess`
+    cuDevicePrimaryCtxGetState:
+        alias of `.hipDevicePrimaryCtxGetState`
+    cuDevicePrimaryCtxRelease:
+        alias of `.hipDevicePrimaryCtxRelease`
+    cuDevicePrimaryCtxRelease_v2:
+        alias of `.hipDevicePrimaryCtxRelease`
+    cuDevicePrimaryCtxRetain:
+        alias of `.hipDevicePrimaryCtxRetain`
+    cuDevicePrimaryCtxReset:
+        alias of `.hipDevicePrimaryCtxReset`
+    cuDevicePrimaryCtxReset_v2:
+        alias of `.hipDevicePrimaryCtxReset`
+    cuDevicePrimaryCtxSetFlags:
+        alias of `.hipDevicePrimaryCtxSetFlags`
+    cuDevicePrimaryCtxSetFlags_v2:
+        alias of `.hipDevicePrimaryCtxSetFlags`
+    cuModuleLoad:
+        alias of `.hipModuleLoad`
+    cuModuleUnload:
+        alias of `.hipModuleUnload`
+    cuModuleGetFunction:
+        alias of `.hipModuleGetFunction`
+    cudaFuncGetAttributes:
+        alias of `.hipFuncGetAttributes`
+    cuFuncGetAttribute:
+        alias of `.hipFuncGetAttribute`
+    cuModuleGetTexRef:
+        alias of `.hipModuleGetTexRef`
+    cuModuleLoadData:
+        alias of `.hipModuleLoadData`
+    cuModuleLoadDataEx:
+        alias of `.hipModuleLoadDataEx`
+    cuLaunchKernel:
+        alias of `.hipModuleLaunchKernel`
+    cudaLaunchCooperativeKernel:
+        alias of `.hipLaunchCooperativeKernel`
+    cudaLaunchCooperativeKernelMultiDevice:
+        alias of `.hipLaunchCooperativeKernelMultiDevice`
+    cuOccupancyMaxPotentialBlockSize:
+        alias of `.hipModuleOccupancyMaxPotentialBlockSize`
+    cuOccupancyMaxPotentialBlockSizeWithFlags:
+        alias of `.hipModuleOccupancyMaxPotentialBlockSizeWithFlags`
+    cuOccupancyMaxActiveBlocksPerMultiprocessor:
+        alias of `.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor`
+    cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags:
+        alias of `.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags`
+    cudaOccupancyMaxActiveBlocksPerMultiprocessor:
+        alias of `.hipOccupancyMaxActiveBlocksPerMultiprocessor`
+    cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags:
+        alias of `.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags`
+    cudaOccupancyMaxPotentialBlockSize:
+        alias of `.hipOccupancyMaxPotentialBlockSize`
+    cuProfilerStart:
+        alias of `.hipProfilerStart`
+    cudaProfilerStart:
+        alias of `.hipProfilerStart`
+    cuProfilerStop:
+        alias of `.hipProfilerStop`
+    cudaProfilerStop:
+        alias of `.hipProfilerStop`
+    cudaConfigureCall:
+        alias of `.hipConfigureCall`
+    cudaSetupArgument:
+        alias of `.hipSetupArgument`
+    cudaLaunch:
+        alias of `.hipLaunchByPtr`
+    cudaLaunchKernel:
+        alias of `.hipLaunchKernel`
+    cuLaunchHostFunc:
+        alias of `.hipLaunchHostFunc`
+    cudaLaunchHostFunc:
+        alias of `.hipLaunchHostFunc`
+    cuMemcpy2DUnaligned:
+        alias of `.hipDrvMemcpy2DUnaligned`
+    cuMemcpy2DUnaligned_v2:
+        alias of `.hipDrvMemcpy2DUnaligned`
+    cudaBindTextureToMipmappedArray:
+        alias of `.hipBindTextureToMipmappedArray`
+    cudaCreateTextureObject:
+        alias of `.hipCreateTextureObject`
+    cudaDestroyTextureObject:
+        alias of `.hipDestroyTextureObject`
+    cudaGetChannelDesc:
+        alias of `.hipGetChannelDesc`
+    cudaGetTextureObjectResourceDesc:
+        alias of `.hipGetTextureObjectResourceDesc`
+    cudaGetTextureObjectResourceViewDesc:
+        alias of `.hipGetTextureObjectResourceViewDesc`
+    cudaGetTextureObjectTextureDesc:
+        alias of `.hipGetTextureObjectTextureDesc`
+    cuTexObjectCreate:
+        alias of `.hipTexObjectCreate`
+    cuTexObjectDestroy:
+        alias of `.hipTexObjectDestroy`
+    cuTexObjectGetResourceDesc:
+        alias of `.hipTexObjectGetResourceDesc`
+    cuTexObjectGetResourceViewDesc:
+        alias of `.hipTexObjectGetResourceViewDesc`
+    cuTexObjectGetTextureDesc:
+        alias of `.hipTexObjectGetTextureDesc`
+    cudaGetTextureReference:
+        alias of `.hipGetTextureReference`
+    cuTexRefSetAddressMode:
+        alias of `.hipTexRefSetAddressMode`
+    cuTexRefSetArray:
+        alias of `.hipTexRefSetArray`
+    cuTexRefSetFilterMode:
+        alias of `.hipTexRefSetFilterMode`
+    cuTexRefSetFlags:
+        alias of `.hipTexRefSetFlags`
+    cuTexRefSetFormat:
+        alias of `.hipTexRefSetFormat`
+    cudaBindTexture:
+        alias of `.hipBindTexture`
+    cudaBindTexture2D:
+        alias of `.hipBindTexture2D`
+    cudaBindTextureToArray:
+        alias of `.hipBindTextureToArray`
+    cudaGetTextureAlignmentOffset:
+        alias of `.hipGetTextureAlignmentOffset`
+    cudaUnbindTexture:
+        alias of `.hipUnbindTexture`
+    cuTexRefGetAddress:
+        alias of `.hipTexRefGetAddress`
+    cuTexRefGetAddress_v2:
+        alias of `.hipTexRefGetAddress`
+    cuTexRefGetAddressMode:
+        alias of `.hipTexRefGetAddressMode`
+    cuTexRefGetFilterMode:
+        alias of `.hipTexRefGetFilterMode`
+    cuTexRefGetFlags:
+        alias of `.hipTexRefGetFlags`
+    cuTexRefGetFormat:
+        alias of `.hipTexRefGetFormat`
+    cuTexRefGetMaxAnisotropy:
+        alias of `.hipTexRefGetMaxAnisotropy`
+    cuTexRefGetMipmapFilterMode:
+        alias of `.hipTexRefGetMipmapFilterMode`
+    cuTexRefGetMipmapLevelBias:
+        alias of `.hipTexRefGetMipmapLevelBias`
+    cuTexRefGetMipmapLevelClamp:
+        alias of `.hipTexRefGetMipmapLevelClamp`
+    cuTexRefGetMipmappedArray:
+        alias of `.hipTexRefGetMipMappedArray`
+    cuTexRefSetAddress:
+        alias of `.hipTexRefSetAddress`
+    cuTexRefSetAddress_v2:
+        alias of `.hipTexRefSetAddress`
+    cuTexRefSetAddress2D:
+        alias of `.hipTexRefSetAddress2D`
+    cuTexRefSetAddress2D_v2:
+        alias of `.hipTexRefSetAddress2D`
+    cuTexRefSetAddress2D_v3:
+        alias of `.hipTexRefSetAddress2D`
+    cuTexRefSetMaxAnisotropy:
+        alias of `.hipTexRefSetMaxAnisotropy`
+    cuTexRefSetBorderColor:
+        alias of `.hipTexRefSetBorderColor`
+    cuTexRefSetMipmapFilterMode:
+        alias of `.hipTexRefSetMipmapFilterMode`
+    cuTexRefSetMipmapLevelBias:
+        alias of `.hipTexRefSetMipmapLevelBias`
+    cuTexRefSetMipmapLevelClamp:
+        alias of `.hipTexRefSetMipmapLevelClamp`
+    cuTexRefSetMipmappedArray:
+        alias of `.hipTexRefSetMipmappedArray`
+    cuMipmappedArrayCreate:
+        alias of `.hipMipmappedArrayCreate`
+    cuMipmappedArrayDestroy:
+        alias of `.hipMipmappedArrayDestroy`
+    cuMipmappedArrayGetLevel:
+        alias of `.hipMipmappedArrayGetLevel`
+    cuStreamBeginCapture:
+        alias of `.hipStreamBeginCapture`
+    cuStreamBeginCapture_v2:
+        alias of `.hipStreamBeginCapture`
+    cudaStreamBeginCapture:
+        alias of `.hipStreamBeginCapture`
+    cuStreamEndCapture:
+        alias of `.hipStreamEndCapture`
+    cudaStreamEndCapture:
+        alias of `.hipStreamEndCapture`
+    cuStreamGetCaptureInfo:
+        alias of `.hipStreamGetCaptureInfo`
+    cudaStreamGetCaptureInfo:
+        alias of `.hipStreamGetCaptureInfo`
+    cuStreamGetCaptureInfo_v2:
+        alias of `.hipStreamGetCaptureInfo_v2`
+    cuStreamIsCapturing:
+        alias of `.hipStreamIsCapturing`
+    cudaStreamIsCapturing:
+        alias of `.hipStreamIsCapturing`
+    cuStreamUpdateCaptureDependencies:
+        alias of `.hipStreamUpdateCaptureDependencies`
+    cuThreadExchangeStreamCaptureMode:
+        alias of `.hipThreadExchangeStreamCaptureMode`
+    cudaThreadExchangeStreamCaptureMode:
+        alias of `.hipThreadExchangeStreamCaptureMode`
+    cuGraphCreate:
+        alias of `.hipGraphCreate`
+    cudaGraphCreate:
+        alias of `.hipGraphCreate`
+    cuGraphDestroy:
+        alias of `.hipGraphDestroy`
+    cudaGraphDestroy:
+        alias of `.hipGraphDestroy`
+    cuGraphAddDependencies:
+        alias of `.hipGraphAddDependencies`
+    cudaGraphAddDependencies:
+        alias of `.hipGraphAddDependencies`
+    cuGraphRemoveDependencies:
+        alias of `.hipGraphRemoveDependencies`
+    cudaGraphRemoveDependencies:
+        alias of `.hipGraphRemoveDependencies`
+    cuGraphGetEdges:
+        alias of `.hipGraphGetEdges`
+    cudaGraphGetEdges:
+        alias of `.hipGraphGetEdges`
+    cuGraphGetNodes:
+        alias of `.hipGraphGetNodes`
+    cudaGraphGetNodes:
+        alias of `.hipGraphGetNodes`
+    cuGraphGetRootNodes:
+        alias of `.hipGraphGetRootNodes`
+    cudaGraphGetRootNodes:
+        alias of `.hipGraphGetRootNodes`
+    cuGraphNodeGetDependencies:
+        alias of `.hipGraphNodeGetDependencies`
+    cudaGraphNodeGetDependencies:
+        alias of `.hipGraphNodeGetDependencies`
+    cuGraphNodeGetDependentNodes:
+        alias of `.hipGraphNodeGetDependentNodes`
+    cudaGraphNodeGetDependentNodes:
+        alias of `.hipGraphNodeGetDependentNodes`
+    cuGraphNodeGetType:
+        alias of `.hipGraphNodeGetType`
+    cudaGraphNodeGetType:
+        alias of `.hipGraphNodeGetType`
+    cuGraphDestroyNode:
+        alias of `.hipGraphDestroyNode`
+    cudaGraphDestroyNode:
+        alias of `.hipGraphDestroyNode`
+    cuGraphClone:
+        alias of `.hipGraphClone`
+    cudaGraphClone:
+        alias of `.hipGraphClone`
+    cuGraphNodeFindInClone:
+        alias of `.hipGraphNodeFindInClone`
+    cudaGraphNodeFindInClone:
+        alias of `.hipGraphNodeFindInClone`
+    cuGraphInstantiate:
+        alias of `.hipGraphInstantiate`
+    cuGraphInstantiate_v2:
+        alias of `.hipGraphInstantiate`
+    cudaGraphInstantiate:
+        alias of `.hipGraphInstantiate`
+    cuGraphInstantiateWithFlags:
+        alias of `.hipGraphInstantiateWithFlags`
+    cudaGraphInstantiateWithFlags:
+        alias of `.hipGraphInstantiateWithFlags`
+    cuGraphLaunch:
+        alias of `.hipGraphLaunch`
+    cudaGraphLaunch:
+        alias of `.hipGraphLaunch`
+    cuGraphUpload:
+        alias of `.hipGraphUpload`
+    cudaGraphUpload:
+        alias of `.hipGraphUpload`
+    cuGraphExecDestroy:
+        alias of `.hipGraphExecDestroy`
+    cudaGraphExecDestroy:
+        alias of `.hipGraphExecDestroy`
+    cuGraphExecUpdate:
+        alias of `.hipGraphExecUpdate`
+    cudaGraphExecUpdate:
+        alias of `.hipGraphExecUpdate`
+    cuGraphAddKernelNode:
+        alias of `.hipGraphAddKernelNode`
+    cudaGraphAddKernelNode:
+        alias of `.hipGraphAddKernelNode`
+    cuGraphKernelNodeGetParams:
+        alias of `.hipGraphKernelNodeGetParams`
+    cudaGraphKernelNodeGetParams:
+        alias of `.hipGraphKernelNodeGetParams`
+    cuGraphKernelNodeSetParams:
+        alias of `.hipGraphKernelNodeSetParams`
+    cudaGraphKernelNodeSetParams:
+        alias of `.hipGraphKernelNodeSetParams`
+    cuGraphExecKernelNodeSetParams:
+        alias of `.hipGraphExecKernelNodeSetParams`
+    cudaGraphExecKernelNodeSetParams:
+        alias of `.hipGraphExecKernelNodeSetParams`
+    cudaGraphAddMemcpyNode:
+        alias of `.hipGraphAddMemcpyNode`
+    cuGraphMemcpyNodeGetParams:
+        alias of `.hipGraphMemcpyNodeGetParams`
+    cudaGraphMemcpyNodeGetParams:
+        alias of `.hipGraphMemcpyNodeGetParams`
+    cuGraphMemcpyNodeSetParams:
+        alias of `.hipGraphMemcpyNodeSetParams`
+    cudaGraphMemcpyNodeSetParams:
+        alias of `.hipGraphMemcpyNodeSetParams`
+    cuGraphKernelNodeSetAttribute:
+        alias of `.hipGraphKernelNodeSetAttribute`
+    cudaGraphKernelNodeSetAttribute:
+        alias of `.hipGraphKernelNodeSetAttribute`
+    cuGraphKernelNodeGetAttribute:
+        alias of `.hipGraphKernelNodeGetAttribute`
+    cudaGraphKernelNodeGetAttribute:
+        alias of `.hipGraphKernelNodeGetAttribute`
+    cudaGraphExecMemcpyNodeSetParams:
+        alias of `.hipGraphExecMemcpyNodeSetParams`
+    cudaGraphAddMemcpyNode1D:
+        alias of `.hipGraphAddMemcpyNode1D`
+    cudaGraphMemcpyNodeSetParams1D:
+        alias of `.hipGraphMemcpyNodeSetParams1D`
+    cudaGraphExecMemcpyNodeSetParams1D:
+        alias of `.hipGraphExecMemcpyNodeSetParams1D`
+    cudaGraphAddMemcpyNodeFromSymbol:
+        alias of `.hipGraphAddMemcpyNodeFromSymbol`
+    cudaGraphMemcpyNodeSetParamsFromSymbol:
+        alias of `.hipGraphMemcpyNodeSetParamsFromSymbol`
+    cudaGraphExecMemcpyNodeSetParamsFromSymbol:
+        alias of `.hipGraphExecMemcpyNodeSetParamsFromSymbol`
+    cudaGraphAddMemcpyNodeToSymbol:
+        alias of `.hipGraphAddMemcpyNodeToSymbol`
+    cudaGraphMemcpyNodeSetParamsToSymbol:
+        alias of `.hipGraphMemcpyNodeSetParamsToSymbol`
+    cudaGraphExecMemcpyNodeSetParamsToSymbol:
+        alias of `.hipGraphExecMemcpyNodeSetParamsToSymbol`
+    cudaGraphAddMemsetNode:
+        alias of `.hipGraphAddMemsetNode`
+    cuGraphMemsetNodeGetParams:
+        alias of `.hipGraphMemsetNodeGetParams`
+    cudaGraphMemsetNodeGetParams:
+        alias of `.hipGraphMemsetNodeGetParams`
+    cuGraphMemsetNodeSetParams:
+        alias of `.hipGraphMemsetNodeSetParams`
+    cudaGraphMemsetNodeSetParams:
+        alias of `.hipGraphMemsetNodeSetParams`
+    cudaGraphExecMemsetNodeSetParams:
+        alias of `.hipGraphExecMemsetNodeSetParams`
+    cuGraphAddHostNode:
+        alias of `.hipGraphAddHostNode`
+    cudaGraphAddHostNode:
+        alias of `.hipGraphAddHostNode`
+    cuGraphHostNodeGetParams:
+        alias of `.hipGraphHostNodeGetParams`
+    cudaGraphHostNodeGetParams:
+        alias of `.hipGraphHostNodeGetParams`
+    cuGraphHostNodeSetParams:
+        alias of `.hipGraphHostNodeSetParams`
+    cudaGraphHostNodeSetParams:
+        alias of `.hipGraphHostNodeSetParams`
+    cuGraphExecHostNodeSetParams:
+        alias of `.hipGraphExecHostNodeSetParams`
+    cudaGraphExecHostNodeSetParams:
+        alias of `.hipGraphExecHostNodeSetParams`
+    cuGraphAddChildGraphNode:
+        alias of `.hipGraphAddChildGraphNode`
+    cudaGraphAddChildGraphNode:
+        alias of `.hipGraphAddChildGraphNode`
+    cuGraphChildGraphNodeGetGraph:
+        alias of `.hipGraphChildGraphNodeGetGraph`
+    cudaGraphChildGraphNodeGetGraph:
+        alias of `.hipGraphChildGraphNodeGetGraph`
+    cuGraphExecChildGraphNodeSetParams:
+        alias of `.hipGraphExecChildGraphNodeSetParams`
+    cudaGraphExecChildGraphNodeSetParams:
+        alias of `.hipGraphExecChildGraphNodeSetParams`
+    cuGraphAddEmptyNode:
+        alias of `.hipGraphAddEmptyNode`
+    cudaGraphAddEmptyNode:
+        alias of `.hipGraphAddEmptyNode`
+    cuGraphAddEventRecordNode:
+        alias of `.hipGraphAddEventRecordNode`
+    cudaGraphAddEventRecordNode:
+        alias of `.hipGraphAddEventRecordNode`
+    cuGraphEventRecordNodeGetEvent:
+        alias of `.hipGraphEventRecordNodeGetEvent`
+    cudaGraphEventRecordNodeGetEvent:
+        alias of `.hipGraphEventRecordNodeGetEvent`
+    cuGraphEventRecordNodeSetEvent:
+        alias of `.hipGraphEventRecordNodeSetEvent`
+    cudaGraphEventRecordNodeSetEvent:
+        alias of `.hipGraphEventRecordNodeSetEvent`
+    cuGraphExecEventRecordNodeSetEvent:
+        alias of `.hipGraphExecEventRecordNodeSetEvent`
+    cudaGraphExecEventRecordNodeSetEvent:
+        alias of `.hipGraphExecEventRecordNodeSetEvent`
+    cuGraphAddEventWaitNode:
+        alias of `.hipGraphAddEventWaitNode`
+    cudaGraphAddEventWaitNode:
+        alias of `.hipGraphAddEventWaitNode`
+    cuGraphEventWaitNodeGetEvent:
+        alias of `.hipGraphEventWaitNodeGetEvent`
+    cudaGraphEventWaitNodeGetEvent:
+        alias of `.hipGraphEventWaitNodeGetEvent`
+    cuGraphEventWaitNodeSetEvent:
+        alias of `.hipGraphEventWaitNodeSetEvent`
+    cudaGraphEventWaitNodeSetEvent:
+        alias of `.hipGraphEventWaitNodeSetEvent`
+    cuGraphExecEventWaitNodeSetEvent:
+        alias of `.hipGraphExecEventWaitNodeSetEvent`
+    cudaGraphExecEventWaitNodeSetEvent:
+        alias of `.hipGraphExecEventWaitNodeSetEvent`
+    cuDeviceGetGraphMemAttribute:
+        alias of `.hipDeviceGetGraphMemAttribute`
+    cudaDeviceGetGraphMemAttribute:
+        alias of `.hipDeviceGetGraphMemAttribute`
+    cuDeviceSetGraphMemAttribute:
+        alias of `.hipDeviceSetGraphMemAttribute`
+    cudaDeviceSetGraphMemAttribute:
+        alias of `.hipDeviceSetGraphMemAttribute`
+    cuDeviceGraphMemTrim:
+        alias of `.hipDeviceGraphMemTrim`
+    cudaDeviceGraphMemTrim:
+        alias of `.hipDeviceGraphMemTrim`
+    cuUserObjectCreate:
+        alias of `.hipUserObjectCreate`
+    cudaUserObjectCreate:
+        alias of `.hipUserObjectCreate`
+    cuUserObjectRelease:
+        alias of `.hipUserObjectRelease`
+    cudaUserObjectRelease:
+        alias of `.hipUserObjectRelease`
+    cuUserObjectRetain:
+        alias of `.hipUserObjectRetain`
+    cudaUserObjectRetain:
+        alias of `.hipUserObjectRetain`
+    cuGraphRetainUserObject:
+        alias of `.hipGraphRetainUserObject`
+    cudaGraphRetainUserObject:
+        alias of `.hipGraphRetainUserObject`
+    cuGraphReleaseUserObject:
+        alias of `.hipGraphReleaseUserObject`
+    cudaGraphReleaseUserObject:
+        alias of `.hipGraphReleaseUserObject`
+    cuMemAddressFree:
+        alias of `.hipMemAddressFree`
+    cuMemAddressReserve:
+        alias of `.hipMemAddressReserve`
+    cuMemCreate:
+        alias of `.hipMemCreate`
+    cuMemExportToShareableHandle:
+        alias of `.hipMemExportToShareableHandle`
+    cuMemGetAccess:
+        alias of `.hipMemGetAccess`
+    cuMemGetAllocationGranularity:
+        alias of `.hipMemGetAllocationGranularity`
+    cuMemGetAllocationPropertiesFromHandle:
+        alias of `.hipMemGetAllocationPropertiesFromHandle`
+    cuMemImportFromShareableHandle:
+        alias of `.hipMemImportFromShareableHandle`
+    cuMemMap:
+        alias of `.hipMemMap`
+    cuMemMapArrayAsync:
+        alias of `.hipMemMapArrayAsync`
+    cuMemRelease:
+        alias of `.hipMemRelease`
+    cuMemRetainAllocationHandle:
+        alias of `.hipMemRetainAllocationHandle`
+    cuMemSetAccess:
+        alias of `.hipMemSetAccess`
+    cuMemUnmap:
+        alias of `.hipMemUnmap`
+    cuGLGetDevices:
+        alias of `.hipGLGetDevices`
+    cudaGLGetDevices:
+        alias of `.hipGLGetDevices`
+    cuGraphicsGLRegisterBuffer:
+        alias of `.hipGraphicsGLRegisterBuffer`
+    cudaGraphicsGLRegisterBuffer:
+        alias of `.hipGraphicsGLRegisterBuffer`
+    cuGraphicsGLRegisterImage:
+        alias of `.hipGraphicsGLRegisterImage`
+    cudaGraphicsGLRegisterImage:
+        alias of `.hipGraphicsGLRegisterImage`
+    cuGraphicsMapResources:
+        alias of `.hipGraphicsMapResources`
+    cudaGraphicsMapResources:
+        alias of `.hipGraphicsMapResources`
+    cuGraphicsSubResourceGetMappedArray:
+        alias of `.hipGraphicsSubResourceGetMappedArray`
+    cudaGraphicsSubResourceGetMappedArray:
+        alias of `.hipGraphicsSubResourceGetMappedArray`
+    cuGraphicsResourceGetMappedPointer:
+        alias of `.hipGraphicsResourceGetMappedPointer`
+    cuGraphicsResourceGetMappedPointer_v2:
+        alias of `.hipGraphicsResourceGetMappedPointer`
+    cudaGraphicsResourceGetMappedPointer:
+        alias of `.hipGraphicsResourceGetMappedPointer`
+    cuGraphicsUnmapResources:
+        alias of `.hipGraphicsUnmapResources`
+    cudaGraphicsUnmapResources:
+        alias of `.hipGraphicsUnmapResources`
+    cuGraphicsUnregisterResource:
+        alias of `.hipGraphicsUnregisterResource`
+    cudaGraphicsUnregisterResource:
+        alias of `.hipGraphicsUnregisterResource`
+
+"""
+
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import os
 import enum
@@ -9,7 +2438,7 @@ import hip.hip
 hip = hip.hip # makes hip types and routines accessible without import
                             # allows checks such as `hasattr(cuda.cuda,"hip")`
 
-HIP_PYTHON_MOD = hip
+hip_python_mod = hip
 globals()["HIP_PYTHON"] = True
 
 def _hip_python_get_bool_environ_var(env_var, default):
@@ -123,7 +2552,6 @@ CUuuid = hip.hipUUID
 cudaUUID_t = hip.hipUUID
 cdef class cudaDeviceProp(hip.hip.hipDeviceProp_t):
     pass
-
 HIP_PYTHON_CUmemorytype_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_HALLUCINATE","false")
 
 class _CUmemorytype_EnumMeta(enum.EnumMeta):
@@ -187,7 +2615,7 @@ class _CUmemorytype_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemorytype(hip._hipMemoryType__Base,metaclass=_CUmemorytype_EnumMeta):
+class CUmemorytype(hip._hipMemoryType__Base,metaclass=_CUmemorytype_EnumMeta):                
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -200,7 +2628,6 @@ class CUmemorytype(hip._hipMemoryType__Base,metaclass=_CUmemorytype_EnumMeta):
     CU_MEMORYTYPE_UNIFIED = hip.chip.hipMemoryTypeUnified
     hipMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
     cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
-
 HIP_PYTHON_CUmemorytype_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_enum_HALLUCINATE","false")
 
 class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
@@ -264,7 +2691,7 @@ class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemorytype_enum(hip._hipMemoryType__Base,metaclass=_CUmemorytype_enum_EnumMeta):
+class CUmemorytype_enum(hip._hipMemoryType__Base,metaclass=_CUmemorytype_enum_EnumMeta):                
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -277,7 +2704,6 @@ class CUmemorytype_enum(hip._hipMemoryType__Base,metaclass=_CUmemorytype_enum_En
     CU_MEMORYTYPE_UNIFIED = hip.chip.hipMemoryTypeUnified
     hipMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
     cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
-
 HIP_PYTHON_cudaMemoryType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryType_HALLUCINATE","false")
 
 class _cudaMemoryType_EnumMeta(enum.EnumMeta):
@@ -341,7 +2767,7 @@ class _cudaMemoryType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemoryType(hip._hipMemoryType__Base,metaclass=_cudaMemoryType_EnumMeta):
+class cudaMemoryType(hip._hipMemoryType__Base,metaclass=_cudaMemoryType_EnumMeta):                
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -356,7 +2782,6 @@ class cudaMemoryType(hip._hipMemoryType__Base,metaclass=_cudaMemoryType_EnumMeta
     cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
 cdef class cudaPointerAttributes(hip.hip.hipPointerAttribute_t):
     pass
-
 HIP_PYTHON_CUresult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresult_HALLUCINATE","false")
 
 class _CUresult_EnumMeta(enum.EnumMeta):
@@ -420,7 +2845,7 @@ class _CUresult_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUresult(hip._hipError_t__Base,metaclass=_CUresult_EnumMeta):
+class CUresult(hip._hipError_t__Base,metaclass=_CUresult_EnumMeta):                
     hipSuccess = hip.chip.hipSuccess
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
@@ -631,7 +3056,6 @@ class CUresult(hip._hipError_t__Base,metaclass=_CUresult_EnumMeta):
     hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
-
 HIP_PYTHON_cudaError_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_HALLUCINATE","false")
 
 class _cudaError_EnumMeta(enum.EnumMeta):
@@ -695,7 +3119,7 @@ class _cudaError_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaError(hip._hipError_t__Base,metaclass=_cudaError_EnumMeta):
+class cudaError(hip._hipError_t__Base,metaclass=_cudaError_EnumMeta):                
     hipSuccess = hip.chip.hipSuccess
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
@@ -906,7 +3330,6 @@ class cudaError(hip._hipError_t__Base,metaclass=_cudaError_EnumMeta):
     hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
-
 HIP_PYTHON_cudaError_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_enum_HALLUCINATE","false")
 
 class _cudaError_enum_EnumMeta(enum.EnumMeta):
@@ -970,7 +3393,7 @@ class _cudaError_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaError_enum(hip._hipError_t__Base,metaclass=_cudaError_enum_EnumMeta):
+class cudaError_enum(hip._hipError_t__Base,metaclass=_cudaError_enum_EnumMeta):                
     hipSuccess = hip.chip.hipSuccess
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
@@ -1181,7 +3604,6 @@ class cudaError_enum(hip._hipError_t__Base,metaclass=_cudaError_enum_EnumMeta):
     hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
-
 HIP_PYTHON_cudaError_t_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_t_HALLUCINATE","false")
 
 class _cudaError_t_EnumMeta(enum.EnumMeta):
@@ -1245,7 +3667,7 @@ class _cudaError_t_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaError_t(hip._hipError_t__Base,metaclass=_cudaError_t_EnumMeta):
+class cudaError_t(hip._hipError_t__Base,metaclass=_cudaError_t_EnumMeta):                
     hipSuccess = hip.chip.hipSuccess
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
@@ -1456,7 +3878,6 @@ class cudaError_t(hip._hipError_t__Base,metaclass=_cudaError_t_EnumMeta):
     hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
-
 HIP_PYTHON_CUdevice_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_HALLUCINATE","false")
 
 class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
@@ -1520,7 +3941,7 @@ class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUdevice_attribute(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_attribute_EnumMeta):
+class CUdevice_attribute(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_attribute_EnumMeta):                
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
@@ -1820,7 +4241,6 @@ class CUdevice_attribute(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_att
     hipDeviceAttributeWallClockRate = hip.chip.hipDeviceAttributeWallClockRate
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
-
 HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE","false")
 
 class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
@@ -1884,7 +4304,7 @@ class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUdevice_attribute_enum(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_attribute_enum_EnumMeta):
+class CUdevice_attribute_enum(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_attribute_enum_EnumMeta):                
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
@@ -2184,7 +4604,6 @@ class CUdevice_attribute_enum(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevic
     hipDeviceAttributeWallClockRate = hip.chip.hipDeviceAttributeWallClockRate
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
-
 HIP_PYTHON_cudaDeviceAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceAttr_HALLUCINATE","false")
 
 class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
@@ -2248,7 +4667,7 @@ class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaDeviceAttr(hip._hipDeviceAttribute_t__Base,metaclass=_cudaDeviceAttr_EnumMeta):
+class cudaDeviceAttr(hip._hipDeviceAttribute_t__Base,metaclass=_cudaDeviceAttr_EnumMeta):                
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
@@ -2548,7 +4967,6 @@ class cudaDeviceAttr(hip._hipDeviceAttribute_t__Base,metaclass=_cudaDeviceAttr_E
     hipDeviceAttributeWallClockRate = hip.chip.hipDeviceAttributeWallClockRate
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
-
 HIP_PYTHON_CUcomputemode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_HALLUCINATE","false")
 
 class _CUcomputemode_EnumMeta(enum.EnumMeta):
@@ -2612,7 +5030,7 @@ class _CUcomputemode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUcomputemode(hip._hipComputeMode__Base,metaclass=_CUcomputemode_EnumMeta):
+class CUcomputemode(hip._hipComputeMode__Base,metaclass=_CUcomputemode_EnumMeta):                
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -2625,7 +5043,6 @@ class CUcomputemode(hip._hipComputeMode__Base,metaclass=_CUcomputemode_EnumMeta)
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     CU_COMPUTEMODE_EXCLUSIVE_PROCESS = hip.chip.hipComputeModeExclusiveProcess
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
-
 HIP_PYTHON_CUcomputemode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_enum_HALLUCINATE","false")
 
 class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
@@ -2689,7 +5106,7 @@ class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUcomputemode_enum(hip._hipComputeMode__Base,metaclass=_CUcomputemode_enum_EnumMeta):
+class CUcomputemode_enum(hip._hipComputeMode__Base,metaclass=_CUcomputemode_enum_EnumMeta):                
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -2702,7 +5119,6 @@ class CUcomputemode_enum(hip._hipComputeMode__Base,metaclass=_CUcomputemode_enum
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     CU_COMPUTEMODE_EXCLUSIVE_PROCESS = hip.chip.hipComputeModeExclusiveProcess
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
-
 HIP_PYTHON_cudaComputeMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaComputeMode_HALLUCINATE","false")
 
 class _cudaComputeMode_EnumMeta(enum.EnumMeta):
@@ -2766,7 +5182,7 @@ class _cudaComputeMode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaComputeMode(hip._hipComputeMode__Base,metaclass=_cudaComputeMode_EnumMeta):
+class cudaComputeMode(hip._hipComputeMode__Base,metaclass=_cudaComputeMode_EnumMeta):                
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -2779,7 +5195,6 @@ class cudaComputeMode(hip._hipComputeMode__Base,metaclass=_cudaComputeMode_EnumM
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     CU_COMPUTEMODE_EXCLUSIVE_PROCESS = hip.chip.hipComputeModeExclusiveProcess
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
-
 HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE","false")
 
 class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
@@ -2843,7 +5258,7 @@ class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaChannelFormatKind(hip._hipChannelFormatKind__Base,metaclass=_cudaChannelFormatKind_EnumMeta):
+class cudaChannelFormatKind(hip._hipChannelFormatKind__Base,metaclass=_cudaChannelFormatKind_EnumMeta):                
     hipChannelFormatKindSigned = hip.chip.hipChannelFormatKindSigned
     cudaChannelFormatKindSigned = hip.chip.hipChannelFormatKindSigned
     hipChannelFormatKindUnsigned = hip.chip.hipChannelFormatKindUnsigned
@@ -2854,7 +5269,6 @@ class cudaChannelFormatKind(hip._hipChannelFormatKind__Base,metaclass=_cudaChann
     cudaChannelFormatKindNone = hip.chip.hipChannelFormatKindNone
 cdef class cudaChannelFormatDesc(hip.hip.hipChannelFormatDesc):
     pass
-
 HIP_PYTHON_CUarray_format_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_HALLUCINATE","false")
 
 class _CUarray_format_EnumMeta(enum.EnumMeta):
@@ -2918,7 +5332,7 @@ class _CUarray_format_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUarray_format(hip._hipArray_Format__Base,metaclass=_CUarray_format_EnumMeta):
+class CUarray_format(hip._hipArray_Format__Base,metaclass=_CUarray_format_EnumMeta):                
     HIP_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     CU_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT16 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT16
@@ -2935,7 +5349,6 @@ class CUarray_format(hip._hipArray_Format__Base,metaclass=_CUarray_format_EnumMe
     CU_AD_FORMAT_HALF = hip.chip.HIP_AD_FORMAT_HALF
     HIP_AD_FORMAT_FLOAT = hip.chip.HIP_AD_FORMAT_FLOAT
     CU_AD_FORMAT_FLOAT = hip.chip.HIP_AD_FORMAT_FLOAT
-
 HIP_PYTHON_CUarray_format_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_enum_HALLUCINATE","false")
 
 class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
@@ -2999,7 +5412,7 @@ class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUarray_format_enum(hip._hipArray_Format__Base,metaclass=_CUarray_format_enum_EnumMeta):
+class CUarray_format_enum(hip._hipArray_Format__Base,metaclass=_CUarray_format_enum_EnumMeta):                
     HIP_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     CU_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT16 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT16
@@ -3056,7 +5469,6 @@ cdef class cudaMipmappedArray(hip.hip.hipMipmappedArray):
 CUmipmappedArray = hip.hipMipmappedArray_t
 cudaMipmappedArray_t = hip.hipMipmappedArray_t
 cudaMipmappedArray_const_t = hip.hipMipmappedArray_const_t
-
 HIP_PYTHON_cudaResourceType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceType_HALLUCINATE","false")
 
 class _cudaResourceType_EnumMeta(enum.EnumMeta):
@@ -3120,7 +5532,7 @@ class _cudaResourceType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaResourceType(hip._hipResourceType__Base,metaclass=_cudaResourceType_EnumMeta):
+class cudaResourceType(hip._hipResourceType__Base,metaclass=_cudaResourceType_EnumMeta):                
     hipResourceTypeArray = hip.chip.hipResourceTypeArray
     cudaResourceTypeArray = hip.chip.hipResourceTypeArray
     hipResourceTypeMipmappedArray = hip.chip.hipResourceTypeMipmappedArray
@@ -3129,7 +5541,6 @@ class cudaResourceType(hip._hipResourceType__Base,metaclass=_cudaResourceType_En
     cudaResourceTypeLinear = hip.chip.hipResourceTypeLinear
     hipResourceTypePitch2D = hip.chip.hipResourceTypePitch2D
     cudaResourceTypePitch2D = hip.chip.hipResourceTypePitch2D
-
 HIP_PYTHON_CUresourcetype_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_enum_HALLUCINATE","false")
 
 class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
@@ -3193,7 +5604,7 @@ class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUresourcetype_enum(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_enum_EnumMeta):
+class CUresourcetype_enum(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_enum_EnumMeta):                
     HIP_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     CU_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = hip.chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
@@ -3202,7 +5613,6 @@ class CUresourcetype_enum(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcet
     CU_RESOURCE_TYPE_LINEAR = hip.chip.HIP_RESOURCE_TYPE_LINEAR
     HIP_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
     CU_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
-
 HIP_PYTHON_CUresourcetype_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_HALLUCINATE","false")
 
 class _CUresourcetype_EnumMeta(enum.EnumMeta):
@@ -3266,7 +5676,7 @@ class _CUresourcetype_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUresourcetype(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_EnumMeta):
+class CUresourcetype(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_EnumMeta):                
     HIP_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     CU_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = hip.chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
@@ -3275,7 +5685,6 @@ class CUresourcetype(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_E
     CU_RESOURCE_TYPE_LINEAR = hip.chip.HIP_RESOURCE_TYPE_LINEAR
     HIP_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
     CU_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
-
 HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE","false")
 
 class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
@@ -3339,7 +5748,7 @@ class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUaddress_mode_enum(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_enum_EnumMeta):
+class CUaddress_mode_enum(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_enum_EnumMeta):                
     HIP_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     CU_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = hip.chip.HIP_TR_ADDRESS_MODE_CLAMP
@@ -3348,7 +5757,6 @@ class CUaddress_mode_enum(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_m
     CU_TR_ADDRESS_MODE_MIRROR = hip.chip.HIP_TR_ADDRESS_MODE_MIRROR
     HIP_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
     CU_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
-
 HIP_PYTHON_CUaddress_mode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_HALLUCINATE","false")
 
 class _CUaddress_mode_EnumMeta(enum.EnumMeta):
@@ -3412,7 +5820,7 @@ class _CUaddress_mode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUaddress_mode(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_EnumMeta):
+class CUaddress_mode(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_EnumMeta):                
     HIP_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     CU_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = hip.chip.HIP_TR_ADDRESS_MODE_CLAMP
@@ -3421,7 +5829,6 @@ class CUaddress_mode(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_E
     CU_TR_ADDRESS_MODE_MIRROR = hip.chip.HIP_TR_ADDRESS_MODE_MIRROR
     HIP_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
     CU_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
-
 HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE","false")
 
 class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
@@ -3485,12 +5892,11 @@ class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUfilter_mode_enum(hip._HIPfilter_mode_enum__Base,metaclass=_CUfilter_mode_enum_EnumMeta):
+class CUfilter_mode_enum(hip._HIPfilter_mode_enum__Base,metaclass=_CUfilter_mode_enum_EnumMeta):                
     HIP_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     CU_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
     CU_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
-
 HIP_PYTHON_CUfilter_mode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_HALLUCINATE","false")
 
 class _CUfilter_mode_EnumMeta(enum.EnumMeta):
@@ -3554,7 +5960,7 @@ class _CUfilter_mode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUfilter_mode(hip._HIPfilter_mode_enum__Base,metaclass=_CUfilter_mode_EnumMeta):
+class CUfilter_mode(hip._HIPfilter_mode_enum__Base,metaclass=_CUfilter_mode_EnumMeta):                
     HIP_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     CU_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
@@ -3563,7 +5969,6 @@ cdef class CUDA_TEXTURE_DESC_st(hip.hip.HIP_TEXTURE_DESC_st):
     pass
 CUDA_TEXTURE_DESC = hip.HIP_TEXTURE_DESC
 CUDA_TEXTURE_DESC_v1 = hip.HIP_TEXTURE_DESC
-
 HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE","false")
 
 class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
@@ -3627,7 +6032,7 @@ class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaResourceViewFormat(hip._hipResourceViewFormat__Base,metaclass=_cudaResourceViewFormat_EnumMeta):
+class cudaResourceViewFormat(hip._hipResourceViewFormat__Base,metaclass=_cudaResourceViewFormat_EnumMeta):                
     hipResViewFormatNone = hip.chip.hipResViewFormatNone
     cudaResViewFormatNone = hip.chip.hipResViewFormatNone
     hipResViewFormatUnsignedChar1 = hip.chip.hipResViewFormatUnsignedChar1
@@ -3698,7 +6103,6 @@ class cudaResourceViewFormat(hip._hipResourceViewFormat__Base,metaclass=_cudaRes
     cudaResViewFormatSignedBlockCompressed6H = hip.chip.hipResViewFormatSignedBlockCompressed6H
     hipResViewFormatUnsignedBlockCompressed7 = hip.chip.hipResViewFormatUnsignedBlockCompressed7
     cudaResViewFormatUnsignedBlockCompressed7 = hip.chip.hipResViewFormatUnsignedBlockCompressed7
-
 HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE","false")
 
 class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
@@ -3762,7 +6166,7 @@ class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUresourceViewFormat_enum(hip._HIPresourceViewFormat_enum__Base,metaclass=_CUresourceViewFormat_enum_EnumMeta):
+class CUresourceViewFormat_enum(hip._HIPresourceViewFormat_enum__Base,metaclass=_CUresourceViewFormat_enum_EnumMeta):                
     HIP_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     CU_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_UINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X8
@@ -3833,7 +6237,6 @@ class CUresourceViewFormat_enum(hip._HIPresourceViewFormat_enum__Base,metaclass=
     CU_RES_VIEW_FORMAT_SIGNED_BC6H = hip.chip.HIP_RES_VIEW_FORMAT_SIGNED_BC6H
     HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
     CU_RES_VIEW_FORMAT_UNSIGNED_BC7 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
-
 HIP_PYTHON_CUresourceViewFormat_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_HALLUCINATE","false")
 
 class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
@@ -3897,7 +6300,7 @@ class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUresourceViewFormat(hip._HIPresourceViewFormat_enum__Base,metaclass=_CUresourceViewFormat_EnumMeta):
+class CUresourceViewFormat(hip._HIPresourceViewFormat_enum__Base,metaclass=_CUresourceViewFormat_EnumMeta):                
     HIP_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     CU_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_UINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X8
@@ -3980,7 +6383,6 @@ cdef class CUDA_RESOURCE_VIEW_DESC_st(hip.hip.HIP_RESOURCE_VIEW_DESC_st):
     pass
 CUDA_RESOURCE_VIEW_DESC = hip.HIP_RESOURCE_VIEW_DESC
 CUDA_RESOURCE_VIEW_DESC_v1 = hip.HIP_RESOURCE_VIEW_DESC
-
 HIP_PYTHON_cudaMemcpyKind_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemcpyKind_HALLUCINATE","false")
 
 class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
@@ -4044,7 +6446,7 @@ class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemcpyKind(hip._hipMemcpyKind__Base,metaclass=_cudaMemcpyKind_EnumMeta):
+class cudaMemcpyKind(hip._hipMemcpyKind__Base,metaclass=_cudaMemcpyKind_EnumMeta):                
     hipMemcpyHostToHost = hip.chip.hipMemcpyHostToHost
     cudaMemcpyHostToHost = hip.chip.hipMemcpyHostToHost
     hipMemcpyHostToDevice = hip.chip.hipMemcpyHostToDevice
@@ -4073,7 +6475,6 @@ cdef class CUDA_MEMCPY3D_v1_st(hip.hip.HIP_MEMCPY3D):
     pass
 cdef class CUDA_MEMCPY3D_v2(hip.hip.HIP_MEMCPY3D):
     pass
-
 HIP_PYTHON_CUfunction_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_HALLUCINATE","false")
 
 class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
@@ -4137,7 +6538,7 @@ class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUfunction_attribute(hip._hipFunction_attribute__Base,metaclass=_CUfunction_attribute_EnumMeta):
+class CUfunction_attribute(hip._hipFunction_attribute__Base,metaclass=_CUfunction_attribute_EnumMeta):                
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
@@ -4160,7 +6561,6 @@ class CUfunction_attribute(hip._hipFunction_attribute__Base,metaclass=_CUfunctio
     CU_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT = hip.chip.HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
     HIP_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
     CU_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
-
 HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE","false")
 
 class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
@@ -4224,7 +6624,7 @@ class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUfunction_attribute_enum(hip._hipFunction_attribute__Base,metaclass=_CUfunction_attribute_enum_EnumMeta):
+class CUfunction_attribute_enum(hip._hipFunction_attribute__Base,metaclass=_CUfunction_attribute_enum_EnumMeta):                
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
@@ -4247,7 +6647,6 @@ class CUfunction_attribute_enum(hip._hipFunction_attribute__Base,metaclass=_CUfu
     CU_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT = hip.chip.HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
     HIP_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
     CU_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
-
 HIP_PYTHON_CUpointer_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_HALLUCINATE","false")
 
 class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
@@ -4311,7 +6710,7 @@ class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUpointer_attribute(hip._hipPointer_attribute__Base,metaclass=_CUpointer_attribute_EnumMeta):
+class CUpointer_attribute(hip._hipPointer_attribute__Base,metaclass=_CUpointer_attribute_EnumMeta):                
     HIP_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     CU_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_MEMORY_TYPE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
@@ -4346,7 +6745,6 @@ class CUpointer_attribute(hip._hipPointer_attribute__Base,metaclass=_CUpointer_a
     CU_POINTER_ATTRIBUTE_ACCESS_FLAGS = hip.chip.HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
     HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
     CU_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
-
 HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE","false")
 
 class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
@@ -4410,7 +6808,7 @@ class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUpointer_attribute_enum(hip._hipPointer_attribute__Base,metaclass=_CUpointer_attribute_enum_EnumMeta):
+class CUpointer_attribute_enum(hip._hipPointer_attribute__Base,metaclass=_CUpointer_attribute_enum_EnumMeta):                
     HIP_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     CU_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_MEMORY_TYPE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
@@ -4449,7 +6847,6 @@ cudaCreateChannelDesc = hip.hipCreateChannelDesc
 CUtexObject = hip.hipTextureObject_t
 CUtexObject_v1 = hip.hipTextureObject_t
 cudaTextureObject_t = hip.hipTextureObject_t
-
 HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE","false")
 
 class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
@@ -4513,7 +6910,7 @@ class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaTextureAddressMode(hip._hipTextureAddressMode__Base,metaclass=_cudaTextureAddressMode_EnumMeta):
+class cudaTextureAddressMode(hip._hipTextureAddressMode__Base,metaclass=_cudaTextureAddressMode_EnumMeta):                
     hipAddressModeWrap = hip.chip.hipAddressModeWrap
     cudaAddressModeWrap = hip.chip.hipAddressModeWrap
     hipAddressModeClamp = hip.chip.hipAddressModeClamp
@@ -4522,7 +6919,6 @@ class cudaTextureAddressMode(hip._hipTextureAddressMode__Base,metaclass=_cudaTex
     cudaAddressModeMirror = hip.chip.hipAddressModeMirror
     hipAddressModeBorder = hip.chip.hipAddressModeBorder
     cudaAddressModeBorder = hip.chip.hipAddressModeBorder
-
 HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE","false")
 
 class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
@@ -4586,12 +6982,11 @@ class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaTextureFilterMode(hip._hipTextureFilterMode__Base,metaclass=_cudaTextureFilterMode_EnumMeta):
+class cudaTextureFilterMode(hip._hipTextureFilterMode__Base,metaclass=_cudaTextureFilterMode_EnumMeta):                
     hipFilterModePoint = hip.chip.hipFilterModePoint
     cudaFilterModePoint = hip.chip.hipFilterModePoint
     hipFilterModeLinear = hip.chip.hipFilterModeLinear
     cudaFilterModeLinear = hip.chip.hipFilterModeLinear
-
 HIP_PYTHON_cudaTextureReadMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureReadMode_HALLUCINATE","false")
 
 class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
@@ -4655,7 +7050,7 @@ class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaTextureReadMode(hip._hipTextureReadMode__Base,metaclass=_cudaTextureReadMode_EnumMeta):
+class cudaTextureReadMode(hip._hipTextureReadMode__Base,metaclass=_cudaTextureReadMode_EnumMeta):                
     hipReadModeElementType = hip.chip.hipReadModeElementType
     cudaReadModeElementType = hip.chip.hipReadModeElementType
     hipReadModeNormalizedFloat = hip.chip.hipReadModeNormalizedFloat
@@ -4671,7 +7066,6 @@ CUsurfObject_v1 = hip.hipSurfaceObject_t
 cudaSurfaceObject_t = hip.hipSurfaceObject_t
 cdef class surfaceReference(hip.hip.surfaceReference):
     pass
-
 HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE","false")
 
 class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
@@ -4735,7 +7129,7 @@ class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaSurfaceBoundaryMode(hip._hipSurfaceBoundaryMode__Base,metaclass=_cudaSurfaceBoundaryMode_EnumMeta):
+class cudaSurfaceBoundaryMode(hip._hipSurfaceBoundaryMode__Base,metaclass=_cudaSurfaceBoundaryMode_EnumMeta):                
     hipBoundaryModeZero = hip.chip.hipBoundaryModeZero
     cudaBoundaryModeZero = hip.chip.hipBoundaryModeZero
     hipBoundaryModeTrap = hip.chip.hipBoundaryModeTrap
@@ -4745,7 +7139,6 @@ class cudaSurfaceBoundaryMode(hip._hipSurfaceBoundaryMode__Base,metaclass=_cudaS
 cdef class CUctx_st(hip.hip.ihipCtx_t):
     pass
 CUcontext = hip.hipCtx_t
-
 HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE","false")
 
 class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
@@ -4809,7 +7202,7 @@ class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUdevice_P2PAttribute(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PAttribute_EnumMeta):
+class CUdevice_P2PAttribute(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PAttribute_EnumMeta):                
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -4824,7 +7217,6 @@ class CUdevice_P2PAttribute(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PA
     CU_DEVICE_P2P_ATTRIBUTE_ARRAY_ACCESS_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     CU_DEVICE_P2P_ATTRIBUTE_CUDA_ARRAY_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     cudaDevP2PAttrCudaArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
-
 HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE","false")
 
 class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
@@ -4888,7 +7280,7 @@ class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUdevice_P2PAttribute_enum(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PAttribute_enum_EnumMeta):
+class CUdevice_P2PAttribute_enum(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PAttribute_enum_EnumMeta):                
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -4903,7 +7295,6 @@ class CUdevice_P2PAttribute_enum(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice
     CU_DEVICE_P2P_ATTRIBUTE_ARRAY_ACCESS_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     CU_DEVICE_P2P_ATTRIBUTE_CUDA_ARRAY_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     cudaDevP2PAttrCudaArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
-
 HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE","false")
 
 class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
@@ -4967,7 +7358,7 @@ class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaDeviceP2PAttr(hip._hipDeviceP2PAttr__Base,metaclass=_cudaDeviceP2PAttr_EnumMeta):
+class cudaDeviceP2PAttr(hip._hipDeviceP2PAttr__Base,metaclass=_cudaDeviceP2PAttr_EnumMeta):                
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -5017,7 +7408,6 @@ cdef class CUevent_st(hip.hip.ihipEvent_t):
     pass
 CUevent = hip.hipEvent_t
 cudaEvent_t = hip.hipEvent_t
-
 HIP_PYTHON_CUlimit_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_HALLUCINATE","false")
 
 class _CUlimit_EnumMeta(enum.EnumMeta):
@@ -5081,7 +7471,7 @@ class _CUlimit_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUlimit(hip._hipLimit_t__Base,metaclass=_CUlimit_EnumMeta):
+class CUlimit(hip._hipLimit_t__Base,metaclass=_CUlimit_EnumMeta):                
     hipLimitStackSize = hip.chip.hipLimitStackSize
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
@@ -5092,7 +7482,6 @@ class CUlimit(hip._hipLimit_t__Base,metaclass=_CUlimit_EnumMeta):
     CU_LIMIT_MALLOC_HEAP_SIZE = hip.chip.hipLimitMallocHeapSize
     cudaLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
-
 HIP_PYTHON_CUlimit_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_enum_HALLUCINATE","false")
 
 class _CUlimit_enum_EnumMeta(enum.EnumMeta):
@@ -5156,7 +7545,7 @@ class _CUlimit_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUlimit_enum(hip._hipLimit_t__Base,metaclass=_CUlimit_enum_EnumMeta):
+class CUlimit_enum(hip._hipLimit_t__Base,metaclass=_CUlimit_enum_EnumMeta):                
     hipLimitStackSize = hip.chip.hipLimitStackSize
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
@@ -5167,7 +7556,6 @@ class CUlimit_enum(hip._hipLimit_t__Base,metaclass=_CUlimit_enum_EnumMeta):
     CU_LIMIT_MALLOC_HEAP_SIZE = hip.chip.hipLimitMallocHeapSize
     cudaLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
-
 HIP_PYTHON_cudaLimit_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaLimit_HALLUCINATE","false")
 
 class _cudaLimit_EnumMeta(enum.EnumMeta):
@@ -5231,7 +7619,7 @@ class _cudaLimit_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaLimit(hip._hipLimit_t__Base,metaclass=_cudaLimit_EnumMeta):
+class cudaLimit(hip._hipLimit_t__Base,metaclass=_cudaLimit_EnumMeta):                
     hipLimitStackSize = hip.chip.hipLimitStackSize
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
@@ -5242,7 +7630,6 @@ class cudaLimit(hip._hipLimit_t__Base,metaclass=_cudaLimit_EnumMeta):
     CU_LIMIT_MALLOC_HEAP_SIZE = hip.chip.hipLimitMallocHeapSize
     cudaLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
-
 HIP_PYTHON_CUmem_advise_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_HALLUCINATE","false")
 
 class _CUmem_advise_EnumMeta(enum.EnumMeta):
@@ -5306,7 +7693,7 @@ class _CUmem_advise_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmem_advise(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_EnumMeta):
+class CUmem_advise(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_EnumMeta):                
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -5327,7 +7714,6 @@ class CUmem_advise(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_EnumMeta):
     cudaMemAdviseUnsetAccessedBy = hip.chip.hipMemAdviseUnsetAccessedBy
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
-
 HIP_PYTHON_CUmem_advise_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_enum_HALLUCINATE","false")
 
 class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
@@ -5391,7 +7777,7 @@ class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmem_advise_enum(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_enum_EnumMeta):
+class CUmem_advise_enum(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_enum_EnumMeta):                
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -5412,7 +7798,6 @@ class CUmem_advise_enum(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_enum_
     cudaMemAdviseUnsetAccessedBy = hip.chip.hipMemAdviseUnsetAccessedBy
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
-
 HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE","false")
 
 class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
@@ -5476,7 +7861,7 @@ class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemoryAdvise(hip._hipMemoryAdvise__Base,metaclass=_cudaMemoryAdvise_EnumMeta):
+class cudaMemoryAdvise(hip._hipMemoryAdvise__Base,metaclass=_cudaMemoryAdvise_EnumMeta):                
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -5497,7 +7882,6 @@ class cudaMemoryAdvise(hip._hipMemoryAdvise__Base,metaclass=_cudaMemoryAdvise_En
     cudaMemAdviseUnsetAccessedBy = hip.chip.hipMemAdviseUnsetAccessedBy
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
-
 HIP_PYTHON_CUmem_range_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_HALLUCINATE","false")
 
 class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
@@ -5561,7 +7945,7 @@ class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmem_range_attribute(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_range_attribute_EnumMeta):
+class CUmem_range_attribute(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_range_attribute_EnumMeta):                
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -5575,7 +7959,6 @@ class CUmem_range_attribute(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_ran
     CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     cudaMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
-
 HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE","false")
 
 class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
@@ -5639,7 +8022,7 @@ class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmem_range_attribute_enum(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_range_attribute_enum_EnumMeta):
+class CUmem_range_attribute_enum(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_range_attribute_enum_EnumMeta):                
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -5653,7 +8036,6 @@ class CUmem_range_attribute_enum(hip._hipMemRangeAttribute__Base,metaclass=_CUme
     CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     cudaMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
-
 HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE","false")
 
 class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
@@ -5717,7 +8099,7 @@ class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemRangeAttribute(hip._hipMemRangeAttribute__Base,metaclass=_cudaMemRangeAttribute_EnumMeta):
+class cudaMemRangeAttribute(hip._hipMemRangeAttribute__Base,metaclass=_cudaMemRangeAttribute_EnumMeta):                
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -5731,7 +8113,6 @@ class cudaMemRangeAttribute(hip._hipMemRangeAttribute__Base,metaclass=_cudaMemRa
     CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     cudaMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
-
 HIP_PYTHON_CUmemPool_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_HALLUCINATE","false")
 
 class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
@@ -5795,7 +8176,7 @@ class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemPool_attribute(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribute_EnumMeta):
+class CUmemPool_attribute(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribute_EnumMeta):                
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -5820,7 +8201,6 @@ class CUmemPool_attribute(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribu
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     CU_MEMPOOL_ATTR_USED_MEM_HIGH = hip.chip.hipMemPoolAttrUsedMemHigh
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
-
 HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE","false")
 
 class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
@@ -5884,7 +8264,7 @@ class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemPool_attribute_enum(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribute_enum_EnumMeta):
+class CUmemPool_attribute_enum(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribute_enum_EnumMeta):                
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -5909,7 +8289,6 @@ class CUmemPool_attribute_enum(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_at
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     CU_MEMPOOL_ATTR_USED_MEM_HIGH = hip.chip.hipMemPoolAttrUsedMemHigh
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
-
 HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE","false")
 
 class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
@@ -5973,7 +8352,7 @@ class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemPoolAttr(hip._hipMemPoolAttr__Base,metaclass=_cudaMemPoolAttr_EnumMeta):
+class cudaMemPoolAttr(hip._hipMemPoolAttr__Base,metaclass=_cudaMemPoolAttr_EnumMeta):                
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -5998,7 +8377,6 @@ class cudaMemPoolAttr(hip._hipMemPoolAttr__Base,metaclass=_cudaMemPoolAttr_EnumM
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     CU_MEMPOOL_ATTR_USED_MEM_HIGH = hip.chip.hipMemPoolAttrUsedMemHigh
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
-
 HIP_PYTHON_CUmemLocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_HALLUCINATE","false")
 
 class _CUmemLocationType_EnumMeta(enum.EnumMeta):
@@ -6062,14 +8440,13 @@ class _CUmemLocationType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemLocationType(hip._hipMemLocationType__Base,metaclass=_CUmemLocationType_EnumMeta):
+class CUmemLocationType(hip._hipMemLocationType__Base,metaclass=_CUmemLocationType_EnumMeta):                
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
     CU_MEM_LOCATION_TYPE_DEVICE = hip.chip.hipMemLocationTypeDevice
     cudaMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
-
 HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE","false")
 
 class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
@@ -6133,14 +8510,13 @@ class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemLocationType_enum(hip._hipMemLocationType__Base,metaclass=_CUmemLocationType_enum_EnumMeta):
+class CUmemLocationType_enum(hip._hipMemLocationType__Base,metaclass=_CUmemLocationType_enum_EnumMeta):                
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
     CU_MEM_LOCATION_TYPE_DEVICE = hip.chip.hipMemLocationTypeDevice
     cudaMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
-
 HIP_PYTHON_cudaMemLocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemLocationType_HALLUCINATE","false")
 
 class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
@@ -6204,7 +8580,7 @@ class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemLocationType(hip._hipMemLocationType__Base,metaclass=_cudaMemLocationType_EnumMeta):
+class cudaMemLocationType(hip._hipMemLocationType__Base,metaclass=_cudaMemLocationType_EnumMeta):                
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
@@ -6219,7 +8595,6 @@ cdef class CUmemLocation_v1(hip.hip.hipMemLocation):
     pass
 cdef class cudaMemLocation(hip.hip.hipMemLocation):
     pass
-
 HIP_PYTHON_CUmemAccess_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_HALLUCINATE","false")
 
 class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
@@ -6283,7 +8658,7 @@ class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemAccess_flags(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flags_EnumMeta):
+class CUmemAccess_flags(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flags_EnumMeta):                
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -6293,7 +8668,6 @@ class CUmemAccess_flags(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flag
     hipMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
     CU_MEM_ACCESS_FLAGS_PROT_READWRITE = hip.chip.hipMemAccessFlagsProtReadWrite
     cudaMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
-
 HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE","false")
 
 class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
@@ -6357,7 +8731,7 @@ class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemAccess_flags_enum(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flags_enum_EnumMeta):
+class CUmemAccess_flags_enum(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flags_enum_EnumMeta):                
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -6367,7 +8741,6 @@ class CUmemAccess_flags_enum(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess
     hipMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
     CU_MEM_ACCESS_FLAGS_PROT_READWRITE = hip.chip.hipMemAccessFlagsProtReadWrite
     cudaMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
-
 HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE","false")
 
 class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
@@ -6431,7 +8804,7 @@ class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemAccessFlags(hip._hipMemAccessFlags__Base,metaclass=_cudaMemAccessFlags_EnumMeta):
+class cudaMemAccessFlags(hip._hipMemAccessFlags__Base,metaclass=_cudaMemAccessFlags_EnumMeta):                
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -6449,7 +8822,6 @@ cdef class CUmemAccessDesc_v1(hip.hip.hipMemAccessDesc):
     pass
 cdef class cudaMemAccessDesc(hip.hip.hipMemAccessDesc):
     pass
-
 HIP_PYTHON_CUmemAllocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_HALLUCINATE","false")
 
 class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
@@ -6513,7 +8885,7 @@ class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemAllocationType(hip._hipMemAllocationType__Base,metaclass=_CUmemAllocationType_EnumMeta):
+class CUmemAllocationType(hip._hipMemAllocationType__Base,metaclass=_CUmemAllocationType_EnumMeta):                
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -6523,7 +8895,6 @@ class CUmemAllocationType(hip._hipMemAllocationType__Base,metaclass=_CUmemAlloca
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     CU_MEM_ALLOCATION_TYPE_MAX = hip.chip.hipMemAllocationTypeMax
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
-
 HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE","false")
 
 class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
@@ -6587,7 +8958,7 @@ class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemAllocationType_enum(hip._hipMemAllocationType__Base,metaclass=_CUmemAllocationType_enum_EnumMeta):
+class CUmemAllocationType_enum(hip._hipMemAllocationType__Base,metaclass=_CUmemAllocationType_enum_EnumMeta):                
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -6597,7 +8968,6 @@ class CUmemAllocationType_enum(hip._hipMemAllocationType__Base,metaclass=_CUmemA
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     CU_MEM_ALLOCATION_TYPE_MAX = hip.chip.hipMemAllocationTypeMax
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
-
 HIP_PYTHON_cudaMemAllocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationType_HALLUCINATE","false")
 
 class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
@@ -6661,7 +9031,7 @@ class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemAllocationType(hip._hipMemAllocationType__Base,metaclass=_cudaMemAllocationType_EnumMeta):
+class cudaMemAllocationType(hip._hipMemAllocationType__Base,metaclass=_cudaMemAllocationType_EnumMeta):                
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -6671,7 +9041,6 @@ class cudaMemAllocationType(hip._hipMemAllocationType__Base,metaclass=_cudaMemAl
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     CU_MEM_ALLOCATION_TYPE_MAX = hip.chip.hipMemAllocationTypeMax
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
-
 HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE","false")
 
 class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
@@ -6735,7 +9104,7 @@ class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=_CUmemAllocationHandleType_EnumMeta):
+class CUmemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=_CUmemAllocationHandleType_EnumMeta):                
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -6748,7 +9117,6 @@ class CUmemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=
     hipMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
     CU_MEM_HANDLE_TYPE_WIN32_KMT = hip.chip.hipMemHandleTypeWin32Kmt
     cudaMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
-
 HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE","false")
 
 class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
@@ -6812,7 +9180,7 @@ class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemAllocationHandleType_enum(hip._hipMemAllocationHandleType__Base,metaclass=_CUmemAllocationHandleType_enum_EnumMeta):
+class CUmemAllocationHandleType_enum(hip._hipMemAllocationHandleType__Base,metaclass=_CUmemAllocationHandleType_enum_EnumMeta):                
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -6825,7 +9193,6 @@ class CUmemAllocationHandleType_enum(hip._hipMemAllocationHandleType__Base,metac
     hipMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
     CU_MEM_HANDLE_TYPE_WIN32_KMT = hip.chip.hipMemHandleTypeWin32Kmt
     cudaMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
-
 HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE","false")
 
 class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
@@ -6889,7 +9256,7 @@ class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaMemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=_cudaMemAllocationHandleType_EnumMeta):
+class cudaMemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=_cudaMemAllocationHandleType_EnumMeta):                
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -6918,7 +9285,6 @@ cdef class CUmemPoolPtrExportData_v1(hip.hip.hipMemPoolPtrExportData):
     pass
 cdef class cudaMemPoolPtrExportData(hip.hip.hipMemPoolPtrExportData):
     pass
-
 HIP_PYTHON_CUjit_option_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_HALLUCINATE","false")
 
 class _CUjit_option_EnumMeta(enum.EnumMeta):
@@ -6982,7 +9348,7 @@ class _CUjit_option_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUjit_option(hip._hipJitOption__Base,metaclass=_CUjit_option_EnumMeta):
+class CUjit_option(hip._hipJitOption__Base,metaclass=_CUjit_option_EnumMeta):                
     hipJitOptionMaxRegisters = hip.chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = hip.chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = hip.chip.hipJitOptionWallTime
@@ -7001,7 +9367,6 @@ class CUjit_option(hip._hipJitOption__Base,metaclass=_CUjit_option_EnumMeta):
     hipJitOptionSm3xOpt = hip.chip.hipJitOptionSm3xOpt
     hipJitOptionFastCompile = hip.chip.hipJitOptionFastCompile
     hipJitOptionNumOptions = hip.chip.hipJitOptionNumOptions
-
 HIP_PYTHON_CUjit_option_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_enum_HALLUCINATE","false")
 
 class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
@@ -7065,7 +9430,7 @@ class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUjit_option_enum(hip._hipJitOption__Base,metaclass=_CUjit_option_enum_EnumMeta):
+class CUjit_option_enum(hip._hipJitOption__Base,metaclass=_CUjit_option_enum_EnumMeta):                
     hipJitOptionMaxRegisters = hip.chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = hip.chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = hip.chip.hipJitOptionWallTime
@@ -7084,7 +9449,6 @@ class CUjit_option_enum(hip._hipJitOption__Base,metaclass=_CUjit_option_enum_Enu
     hipJitOptionSm3xOpt = hip.chip.hipJitOptionSm3xOpt
     hipJitOptionFastCompile = hip.chip.hipJitOptionFastCompile
     hipJitOptionNumOptions = hip.chip.hipJitOptionNumOptions
-
 HIP_PYTHON_cudaFuncAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncAttribute_HALLUCINATE","false")
 
 class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
@@ -7148,14 +9512,13 @@ class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaFuncAttribute(hip._hipFuncAttribute__Base,metaclass=_cudaFuncAttribute_EnumMeta):
+class cudaFuncAttribute(hip._hipFuncAttribute__Base,metaclass=_cudaFuncAttribute_EnumMeta):                
     hipFuncAttributeMaxDynamicSharedMemorySize = hip.chip.hipFuncAttributeMaxDynamicSharedMemorySize
     cudaFuncAttributeMaxDynamicSharedMemorySize = hip.chip.hipFuncAttributeMaxDynamicSharedMemorySize
     hipFuncAttributePreferredSharedMemoryCarveout = hip.chip.hipFuncAttributePreferredSharedMemoryCarveout
     cudaFuncAttributePreferredSharedMemoryCarveout = hip.chip.hipFuncAttributePreferredSharedMemoryCarveout
     hipFuncAttributeMax = hip.chip.hipFuncAttributeMax
     cudaFuncAttributeMax = hip.chip.hipFuncAttributeMax
-
 HIP_PYTHON_CUfunc_cache_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_HALLUCINATE","false")
 
 class _CUfunc_cache_EnumMeta(enum.EnumMeta):
@@ -7219,7 +9582,7 @@ class _CUfunc_cache_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUfunc_cache(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_EnumMeta):
+class CUfunc_cache(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_EnumMeta):                
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -7232,7 +9595,6 @@ class CUfunc_cache(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_EnumMeta):
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     CU_FUNC_CACHE_PREFER_EQUAL = hip.chip.hipFuncCachePreferEqual
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
-
 HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE","false")
 
 class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
@@ -7296,7 +9658,7 @@ class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUfunc_cache_enum(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_enum_EnumMeta):
+class CUfunc_cache_enum(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_enum_EnumMeta):                
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -7309,7 +9671,6 @@ class CUfunc_cache_enum(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_enum_E
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     CU_FUNC_CACHE_PREFER_EQUAL = hip.chip.hipFuncCachePreferEqual
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
-
 HIP_PYTHON_cudaFuncCache_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncCache_HALLUCINATE","false")
 
 class _cudaFuncCache_EnumMeta(enum.EnumMeta):
@@ -7373,7 +9734,7 @@ class _cudaFuncCache_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaFuncCache(hip._hipFuncCache_t__Base,metaclass=_cudaFuncCache_EnumMeta):
+class cudaFuncCache(hip._hipFuncCache_t__Base,metaclass=_cudaFuncCache_EnumMeta):                
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -7386,7 +9747,6 @@ class cudaFuncCache(hip._hipFuncCache_t__Base,metaclass=_cudaFuncCache_EnumMeta)
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     CU_FUNC_CACHE_PREFER_EQUAL = hip.chip.hipFuncCachePreferEqual
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
-
 HIP_PYTHON_CUsharedconfig_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_HALLUCINATE","false")
 
 class _CUsharedconfig_EnumMeta(enum.EnumMeta):
@@ -7450,7 +9810,7 @@ class _CUsharedconfig_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUsharedconfig(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_EnumMeta):
+class CUsharedconfig(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_EnumMeta):                
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -7460,7 +9820,6 @@ class CUsharedconfig(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_Enu
     hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
     CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
-
 HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE","false")
 
 class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
@@ -7524,7 +9883,7 @@ class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUsharedconfig_enum(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_enum_EnumMeta):
+class CUsharedconfig_enum(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_enum_EnumMeta):                
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -7534,7 +9893,6 @@ class CUsharedconfig_enum(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfi
     hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
     CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
-
 HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE","false")
 
 class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
@@ -7598,7 +9956,7 @@ class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaSharedMemConfig(hip._hipSharedMemConfig__Base,metaclass=_cudaSharedMemConfig_EnumMeta):
+class cudaSharedMemConfig(hip._hipSharedMemConfig__Base,metaclass=_cudaSharedMemConfig_EnumMeta):                
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -7609,7 +9967,6 @@ class cudaSharedMemConfig(hip._hipSharedMemConfig__Base,metaclass=_cudaSharedMem
     CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
 cudaLaunchParams = hip.hipLaunchParams
-
 HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE","false")
 
 class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
@@ -7673,7 +10030,7 @@ class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUexternalMemoryHandleType_enum(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_CUexternalMemoryHandleType_enum_EnumMeta):
+class CUexternalMemoryHandleType_enum(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_CUexternalMemoryHandleType_enum_EnumMeta):                
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -7695,7 +10052,6 @@ class CUexternalMemoryHandleType_enum(hip._hipExternalMemoryHandleType_enum__Bas
     hipExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE_KMT = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     cudaExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
-
 HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE","false")
 
 class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
@@ -7759,7 +10115,7 @@ class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUexternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_CUexternalMemoryHandleType_EnumMeta):
+class CUexternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_CUexternalMemoryHandleType_EnumMeta):                
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -7781,7 +10137,6 @@ class CUexternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,met
     hipExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE_KMT = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     cudaExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
-
 HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE","false")
 
 class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
@@ -7845,7 +10200,7 @@ class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaExternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_cudaExternalMemoryHandleType_EnumMeta):
+class cudaExternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_cudaExternalMemoryHandleType_EnumMeta):                
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -7877,7 +10232,6 @@ cdef class CUDA_EXTERNAL_MEMORY_BUFFER_DESC_st(hip.hip.hipExternalMemoryBufferDe
 CUDA_EXTERNAL_MEMORY_BUFFER_DESC = hip.hipExternalMemoryBufferDesc
 CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1 = hip.hipExternalMemoryBufferDesc
 cudaExternalMemoryBufferDesc = hip.hipExternalMemoryBufferDesc
-
 HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE","false")
 
 class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
@@ -7941,7 +10295,7 @@ class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUexternalSemaphoreHandleType_enum(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_CUexternalSemaphoreHandleType_enum_EnumMeta):
+class CUexternalSemaphoreHandleType_enum(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_CUexternalSemaphoreHandleType_enum_EnumMeta):                
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -7954,7 +10308,6 @@ class CUexternalSemaphoreHandleType_enum(hip._hipExternalSemaphoreHandleType_enu
     hipExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     cudaExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
-
 HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE","false")
 
 class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
@@ -8018,7 +10371,7 @@ class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUexternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_CUexternalSemaphoreHandleType_EnumMeta):
+class CUexternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_CUexternalSemaphoreHandleType_EnumMeta):                
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -8031,7 +10384,6 @@ class CUexternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Ba
     hipExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     cudaExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
-
 HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE","false")
 
 class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
@@ -8095,7 +10447,7 @@ class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaExternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_cudaExternalSemaphoreHandleType_EnumMeta):
+class cudaExternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_cudaExternalSemaphoreHandleType_EnumMeta):                
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -8125,7 +10477,6 @@ CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS = hip.hipExternalSemaphoreWaitParams
 CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1 = hip.hipExternalSemaphoreWaitParams
 cudaExternalSemaphoreWaitParams = hip.hipExternalSemaphoreWaitParams
 cudaExternalSemaphoreWaitParams_v1 = hip.hipExternalSemaphoreWaitParams
-
 HIP_PYTHON_CUGLDeviceList_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_HALLUCINATE","false")
 
 class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
@@ -8189,7 +10540,7 @@ class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_EnumMeta):
+class CUGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_EnumMeta):                
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -8199,7 +10550,6 @@ class CUGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_EnumMe
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     CU_GL_DEVICE_LIST_NEXT_FRAME = hip.chip.hipGLDeviceListNextFrame
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
-
 HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE","false")
 
 class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
@@ -8263,7 +10613,7 @@ class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUGLDeviceList_enum(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_enum_EnumMeta):
+class CUGLDeviceList_enum(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_enum_EnumMeta):                
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -8273,7 +10623,6 @@ class CUGLDeviceList_enum(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_e
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     CU_GL_DEVICE_LIST_NEXT_FRAME = hip.chip.hipGLDeviceListNextFrame
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
-
 HIP_PYTHON_cudaGLDeviceList_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGLDeviceList_HALLUCINATE","false")
 
 class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
@@ -8337,7 +10686,7 @@ class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_cudaGLDeviceList_EnumMeta):
+class cudaGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_cudaGLDeviceList_EnumMeta):                
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -8347,7 +10696,6 @@ class cudaGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_cudaGLDeviceList_En
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     CU_GL_DEVICE_LIST_NEXT_FRAME = hip.chip.hipGLDeviceListNextFrame
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
-
 HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE","false")
 
 class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
@@ -8411,7 +10759,7 @@ class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUgraphicsRegisterFlags_EnumMeta):
+class CUgraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUgraphicsRegisterFlags_EnumMeta):                
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -8427,7 +10775,6 @@ class CUgraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUg
     hipGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
     CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER = hip.chip.hipGraphicsRegisterFlagsTextureGather
     cudaGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
-
 HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE","false")
 
 class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
@@ -8491,7 +10838,7 @@ class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphicsRegisterFlags_enum(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUgraphicsRegisterFlags_enum_EnumMeta):
+class CUgraphicsRegisterFlags_enum(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUgraphicsRegisterFlags_enum_EnumMeta):                
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -8507,7 +10854,6 @@ class CUgraphicsRegisterFlags_enum(hip._hipGraphicsRegisterFlags__Base,metaclass
     hipGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
     CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER = hip.chip.hipGraphicsRegisterFlagsTextureGather
     cudaGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
-
 HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE","false")
 
 class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
@@ -8571,7 +10917,7 @@ class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaGraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_cudaGraphicsRegisterFlags_EnumMeta):
+class cudaGraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_cudaGraphicsRegisterFlags_EnumMeta):                
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -8607,7 +10953,6 @@ cdef class CUuserObject_st(hip.hip.hipUserObject):
     pass
 CUuserObject = hip.hipUserObject_t
 cudaUserObject_t = hip.hipUserObject_t
-
 HIP_PYTHON_CUgraphNodeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_HALLUCINATE","false")
 
 class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
@@ -8671,7 +11016,7 @@ class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphNodeType(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_EnumMeta):
+class CUgraphNodeType(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_EnumMeta):                
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -8707,7 +11052,6 @@ class CUgraphNodeType(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_Enu
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
     CU_GRAPH_NODE_TYPE_COUNT = hip.chip.hipGraphNodeTypeCount
     cudaGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
-
 HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE","false")
 
 class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
@@ -8771,7 +11115,7 @@ class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphNodeType_enum(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_enum_EnumMeta):
+class CUgraphNodeType_enum(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_enum_EnumMeta):                
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -8807,7 +11151,6 @@ class CUgraphNodeType_enum(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeTyp
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
     CU_GRAPH_NODE_TYPE_COUNT = hip.chip.hipGraphNodeTypeCount
     cudaGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
-
 HIP_PYTHON_cudaGraphNodeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphNodeType_HALLUCINATE","false")
 
 class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
@@ -8871,7 +11214,7 @@ class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaGraphNodeType(hip._hipGraphNodeType__Base,metaclass=_cudaGraphNodeType_EnumMeta):
+class cudaGraphNodeType(hip._hipGraphNodeType__Base,metaclass=_cudaGraphNodeType_EnumMeta):                
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -8935,7 +11278,6 @@ cdef class CUDA_MEMSET_NODE_PARAMS_v1(hip.hip.hipMemsetParams):
     pass
 cdef class cudaMemsetParams(hip.hip.hipMemsetParams):
     pass
-
 HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE","false")
 
 class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
@@ -8999,14 +11341,13 @@ class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUkernelNodeAttrID(hip._hipKernelNodeAttrID__Base,metaclass=_CUkernelNodeAttrID_EnumMeta):
+class CUkernelNodeAttrID(hip._hipKernelNodeAttrID__Base,metaclass=_CUkernelNodeAttrID_EnumMeta):                
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     CU_KERNEL_NODE_ATTRIBUTE_COOPERATIVE = hip.chip.hipKernelNodeAttributeCooperative
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
-
 HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE","false")
 
 class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
@@ -9070,14 +11411,13 @@ class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUkernelNodeAttrID_enum(hip._hipKernelNodeAttrID__Base,metaclass=_CUkernelNodeAttrID_enum_EnumMeta):
+class CUkernelNodeAttrID_enum(hip._hipKernelNodeAttrID__Base,metaclass=_CUkernelNodeAttrID_enum_EnumMeta):                
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     CU_KERNEL_NODE_ATTRIBUTE_COOPERATIVE = hip.chip.hipKernelNodeAttributeCooperative
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
-
 HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE","false")
 
 class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
@@ -9141,14 +11481,13 @@ class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaKernelNodeAttrID(hip._hipKernelNodeAttrID__Base,metaclass=_cudaKernelNodeAttrID_EnumMeta):
+class cudaKernelNodeAttrID(hip._hipKernelNodeAttrID__Base,metaclass=_cudaKernelNodeAttrID_EnumMeta):                
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     CU_KERNEL_NODE_ATTRIBUTE_COOPERATIVE = hip.chip.hipKernelNodeAttributeCooperative
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
-
 HIP_PYTHON_CUaccessProperty_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_HALLUCINATE","false")
 
 class _CUaccessProperty_EnumMeta(enum.EnumMeta):
@@ -9212,7 +11551,7 @@ class _CUaccessProperty_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUaccessProperty(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_EnumMeta):
+class CUaccessProperty(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_EnumMeta):                
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -9222,7 +11561,6 @@ class CUaccessProperty(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_
     hipAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
     CU_ACCESS_PROPERTY_PERSISTING = hip.chip.hipAccessPropertyPersisting
     cudaAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
-
 HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE","false")
 
 class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
@@ -9286,7 +11624,7 @@ class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUaccessProperty_enum(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_enum_EnumMeta):
+class CUaccessProperty_enum(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_enum_EnumMeta):                
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -9296,7 +11634,6 @@ class CUaccessProperty_enum(hip._hipAccessProperty__Base,metaclass=_CUaccessProp
     hipAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
     CU_ACCESS_PROPERTY_PERSISTING = hip.chip.hipAccessPropertyPersisting
     cudaAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
-
 HIP_PYTHON_cudaAccessProperty_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaAccessProperty_HALLUCINATE","false")
 
 class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
@@ -9360,7 +11697,7 @@ class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaAccessProperty(hip._hipAccessProperty__Base,metaclass=_cudaAccessProperty_EnumMeta):
+class cudaAccessProperty(hip._hipAccessProperty__Base,metaclass=_cudaAccessProperty_EnumMeta):                
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -9384,7 +11721,6 @@ cdef class CUkernelNodeAttrValue_v1(hip.hip.hipKernelNodeAttrValue):
     pass
 cdef class cudaKernelNodeAttrValue(hip.hip.hipKernelNodeAttrValue):
     pass
-
 HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE","false")
 
 class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
@@ -9448,7 +11784,7 @@ class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_CUgraphExecUpdateResult_EnumMeta):
+class CUgraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_CUgraphExecUpdateResult_EnumMeta):                
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -9473,7 +11809,6 @@ class CUgraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_CUg
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
-
 HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE","false")
 
 class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
@@ -9537,7 +11872,7 @@ class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphExecUpdateResult_enum(hip._hipGraphExecUpdateResult__Base,metaclass=_CUgraphExecUpdateResult_enum_EnumMeta):
+class CUgraphExecUpdateResult_enum(hip._hipGraphExecUpdateResult__Base,metaclass=_CUgraphExecUpdateResult_enum_EnumMeta):                
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -9562,7 +11897,6 @@ class CUgraphExecUpdateResult_enum(hip._hipGraphExecUpdateResult__Base,metaclass
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
-
 HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE","false")
 
 class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
@@ -9626,7 +11960,7 @@ class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaGraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_cudaGraphExecUpdateResult_EnumMeta):
+class cudaGraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_cudaGraphExecUpdateResult_EnumMeta):                
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -9651,7 +11985,6 @@ class cudaGraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_c
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
-
 HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE","false")
 
 class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
@@ -9715,7 +12048,7 @@ class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUstreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCaptureMode_EnumMeta):
+class CUstreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCaptureMode_EnumMeta):                
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -9725,7 +12058,6 @@ class CUstreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCap
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     CU_STREAM_CAPTURE_MODE_RELAXED = hip.chip.hipStreamCaptureModeRelaxed
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
-
 HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE","false")
 
 class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
@@ -9789,7 +12121,7 @@ class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUstreamCaptureMode_enum(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCaptureMode_enum_EnumMeta):
+class CUstreamCaptureMode_enum(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCaptureMode_enum_EnumMeta):                
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -9799,7 +12131,6 @@ class CUstreamCaptureMode_enum(hip._hipStreamCaptureMode__Base,metaclass=_CUstre
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     CU_STREAM_CAPTURE_MODE_RELAXED = hip.chip.hipStreamCaptureModeRelaxed
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
-
 HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE","false")
 
 class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
@@ -9863,7 +12194,7 @@ class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaStreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_cudaStreamCaptureMode_EnumMeta):
+class cudaStreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_cudaStreamCaptureMode_EnumMeta):                
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -9873,7 +12204,6 @@ class cudaStreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_cudaStrea
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     CU_STREAM_CAPTURE_MODE_RELAXED = hip.chip.hipStreamCaptureModeRelaxed
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
-
 HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE","false")
 
 class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
@@ -9937,7 +12267,7 @@ class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUstreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_CUstreamCaptureStatus_EnumMeta):
+class CUstreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_CUstreamCaptureStatus_EnumMeta):                
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -9947,7 +12277,6 @@ class CUstreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_CUstrea
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     CU_STREAM_CAPTURE_STATUS_INVALIDATED = hip.chip.hipStreamCaptureStatusInvalidated
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
-
 HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE","false")
 
 class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
@@ -10011,7 +12340,7 @@ class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUstreamCaptureStatus_enum(hip._hipStreamCaptureStatus__Base,metaclass=_CUstreamCaptureStatus_enum_EnumMeta):
+class CUstreamCaptureStatus_enum(hip._hipStreamCaptureStatus__Base,metaclass=_CUstreamCaptureStatus_enum_EnumMeta):                
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -10021,7 +12350,6 @@ class CUstreamCaptureStatus_enum(hip._hipStreamCaptureStatus__Base,metaclass=_CU
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     CU_STREAM_CAPTURE_STATUS_INVALIDATED = hip.chip.hipStreamCaptureStatusInvalidated
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
-
 HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE","false")
 
 class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
@@ -10085,7 +12413,7 @@ class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaStreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_cudaStreamCaptureStatus_EnumMeta):
+class cudaStreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_cudaStreamCaptureStatus_EnumMeta):                
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -10095,7 +12423,6 @@ class cudaStreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_cudaS
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     CU_STREAM_CAPTURE_STATUS_INVALIDATED = hip.chip.hipStreamCaptureStatusInvalidated
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
-
 HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE","false")
 
 class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
@@ -10159,14 +12486,13 @@ class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUstreamUpdateCaptureDependencies_flags(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_CUstreamUpdateCaptureDependencies_flags_EnumMeta):
+class CUstreamUpdateCaptureDependencies_flags(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_CUstreamUpdateCaptureDependencies_flags_EnumMeta):                
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     CU_STREAM_SET_CAPTURE_DEPENDENCIES = hip.chip.hipStreamSetCaptureDependencies
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
-
 HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE","false")
 
 class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
@@ -10230,14 +12556,13 @@ class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUstreamUpdateCaptureDependencies_flags_enum(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta):
+class CUstreamUpdateCaptureDependencies_flags_enum(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta):                
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     CU_STREAM_SET_CAPTURE_DEPENDENCIES = hip.chip.hipStreamSetCaptureDependencies
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
-
 HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE","false")
 
 class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
@@ -10301,14 +12626,13 @@ class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaStreamUpdateCaptureDependenciesFlags(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_cudaStreamUpdateCaptureDependenciesFlags_EnumMeta):
+class cudaStreamUpdateCaptureDependenciesFlags(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_cudaStreamUpdateCaptureDependenciesFlags_EnumMeta):                
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     CU_STREAM_SET_CAPTURE_DEPENDENCIES = hip.chip.hipStreamSetCaptureDependencies
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
-
 HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE","false")
 
 class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
@@ -10372,7 +12696,7 @@ class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphMem_attribute(hip._hipGraphMemAttributeType__Base,metaclass=_CUgraphMem_attribute_EnumMeta):
+class CUgraphMem_attribute(hip._hipGraphMemAttributeType__Base,metaclass=_CUgraphMem_attribute_EnumMeta):                
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -10385,7 +12709,6 @@ class CUgraphMem_attribute(hip._hipGraphMemAttributeType__Base,metaclass=_CUgrap
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH = hip.chip.hipGraphMemAttrReservedMemHigh
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
-
 HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE","false")
 
 class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
@@ -10449,7 +12772,7 @@ class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphMem_attribute_enum(hip._hipGraphMemAttributeType__Base,metaclass=_CUgraphMem_attribute_enum_EnumMeta):
+class CUgraphMem_attribute_enum(hip._hipGraphMemAttributeType__Base,metaclass=_CUgraphMem_attribute_enum_EnumMeta):                
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -10462,7 +12785,6 @@ class CUgraphMem_attribute_enum(hip._hipGraphMemAttributeType__Base,metaclass=_C
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH = hip.chip.hipGraphMemAttrReservedMemHigh
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
-
 HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE","false")
 
 class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
@@ -10526,7 +12848,7 @@ class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaGraphMemAttributeType(hip._hipGraphMemAttributeType__Base,metaclass=_cudaGraphMemAttributeType_EnumMeta):
+class cudaGraphMemAttributeType(hip._hipGraphMemAttributeType__Base,metaclass=_cudaGraphMemAttributeType_EnumMeta):                
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -10539,7 +12861,6 @@ class cudaGraphMemAttributeType(hip._hipGraphMemAttributeType__Base,metaclass=_c
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH = hip.chip.hipGraphMemAttrReservedMemHigh
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
-
 HIP_PYTHON_CUuserObject_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_HALLUCINATE","false")
 
 class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
@@ -10603,11 +12924,10 @@ class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUuserObject_flags(hip._hipUserObjectFlags__Base,metaclass=_CUuserObject_flags_EnumMeta):
+class CUuserObject_flags(hip._hipUserObjectFlags__Base,metaclass=_CUuserObject_flags_EnumMeta):                
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
-
 HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE","false")
 
 class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
@@ -10671,11 +12991,10 @@ class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUuserObject_flags_enum(hip._hipUserObjectFlags__Base,metaclass=_CUuserObject_flags_enum_EnumMeta):
+class CUuserObject_flags_enum(hip._hipUserObjectFlags__Base,metaclass=_CUuserObject_flags_enum_EnumMeta):                
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
-
 HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE","false")
 
 class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
@@ -10739,11 +13058,10 @@ class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaUserObjectFlags(hip._hipUserObjectFlags__Base,metaclass=_cudaUserObjectFlags_EnumMeta):
+class cudaUserObjectFlags(hip._hipUserObjectFlags__Base,metaclass=_cudaUserObjectFlags_EnumMeta):                
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
-
 HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE","false")
 
 class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
@@ -10807,11 +13125,10 @@ class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUuserObjectRetain_flags(hip._hipUserObjectRetainFlags__Base,metaclass=_CUuserObjectRetain_flags_EnumMeta):
+class CUuserObjectRetain_flags(hip._hipUserObjectRetainFlags__Base,metaclass=_CUuserObjectRetain_flags_EnumMeta):                
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
-
 HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE","false")
 
 class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
@@ -10875,11 +13192,10 @@ class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUuserObjectRetain_flags_enum(hip._hipUserObjectRetainFlags__Base,metaclass=_CUuserObjectRetain_flags_enum_EnumMeta):
+class CUuserObjectRetain_flags_enum(hip._hipUserObjectRetainFlags__Base,metaclass=_CUuserObjectRetain_flags_enum_EnumMeta):                
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
-
 HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE","false")
 
 class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
@@ -10943,11 +13259,10 @@ class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaUserObjectRetainFlags(hip._hipUserObjectRetainFlags__Base,metaclass=_cudaUserObjectRetainFlags_EnumMeta):
+class cudaUserObjectRetainFlags(hip._hipUserObjectRetainFlags__Base,metaclass=_cudaUserObjectRetainFlags_EnumMeta):                
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
-
 HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE","false")
 
 class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
@@ -11011,11 +13326,10 @@ class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphInstantiate_flags(hip._hipGraphInstantiateFlags__Base,metaclass=_CUgraphInstantiate_flags_EnumMeta):
+class CUgraphInstantiate_flags(hip._hipGraphInstantiateFlags__Base,metaclass=_CUgraphInstantiate_flags_EnumMeta):                
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
-
 HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE","false")
 
 class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
@@ -11079,11 +13393,10 @@ class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUgraphInstantiate_flags_enum(hip._hipGraphInstantiateFlags__Base,metaclass=_CUgraphInstantiate_flags_enum_EnumMeta):
+class CUgraphInstantiate_flags_enum(hip._hipGraphInstantiateFlags__Base,metaclass=_CUgraphInstantiate_flags_enum_EnumMeta):                
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
-
 HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE","false")
 
 class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
@@ -11147,7 +13460,7 @@ class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class cudaGraphInstantiateFlags(hip._hipGraphInstantiateFlags__Base,metaclass=_cudaGraphInstantiateFlags_EnumMeta):
+class cudaGraphInstantiateFlags(hip._hipGraphInstantiateFlags__Base,metaclass=_cudaGraphInstantiateFlags_EnumMeta):                
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
@@ -11159,7 +13472,6 @@ cdef class CUmemAllocationProp_v1(hip.hip.hipMemAllocationProp):
     pass
 CUmemGenericAllocationHandle = hip.hipMemGenericAllocationHandle_t
 CUmemGenericAllocationHandle_v1 = hip.hipMemGenericAllocationHandle_t
-
 HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE","false")
 
 class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
@@ -11223,12 +13535,11 @@ class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemAllocationGranularity_flags(hip._hipMemAllocationGranularity_flags__Base,metaclass=_CUmemAllocationGranularity_flags_EnumMeta):
+class CUmemAllocationGranularity_flags(hip._hipMemAllocationGranularity_flags__Base,metaclass=_CUmemAllocationGranularity_flags_EnumMeta):                
     hipMemAllocationGranularityMinimum = hip.chip.hipMemAllocationGranularityMinimum
     CU_MEM_ALLOC_GRANULARITY_MINIMUM = hip.chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = hip.chip.hipMemAllocationGranularityRecommended
     CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
-
 HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE","false")
 
 class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
@@ -11292,12 +13603,11 @@ class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemAllocationGranularity_flags_enum(hip._hipMemAllocationGranularity_flags__Base,metaclass=_CUmemAllocationGranularity_flags_enum_EnumMeta):
+class CUmemAllocationGranularity_flags_enum(hip._hipMemAllocationGranularity_flags__Base,metaclass=_CUmemAllocationGranularity_flags_enum_EnumMeta):                
     hipMemAllocationGranularityMinimum = hip.chip.hipMemAllocationGranularityMinimum
     CU_MEM_ALLOC_GRANULARITY_MINIMUM = hip.chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = hip.chip.hipMemAllocationGranularityRecommended
     CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
-
 HIP_PYTHON_CUmemHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_HALLUCINATE","false")
 
 class _CUmemHandleType_EnumMeta(enum.EnumMeta):
@@ -11361,10 +13671,9 @@ class _CUmemHandleType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemHandleType(hip._hipMemHandleType__Base,metaclass=_CUmemHandleType_EnumMeta):
+class CUmemHandleType(hip._hipMemHandleType__Base,metaclass=_CUmemHandleType_EnumMeta):                
     hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
     CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
-
 HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE","false")
 
 class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
@@ -11428,10 +13737,9 @@ class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemHandleType_enum(hip._hipMemHandleType__Base,metaclass=_CUmemHandleType_enum_EnumMeta):
+class CUmemHandleType_enum(hip._hipMemHandleType__Base,metaclass=_CUmemHandleType_enum_EnumMeta):                
     hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
     CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
-
 HIP_PYTHON_CUmemOperationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_HALLUCINATE","false")
 
 class _CUmemOperationType_EnumMeta(enum.EnumMeta):
@@ -11495,12 +13803,11 @@ class _CUmemOperationType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemOperationType(hip._hipMemOperationType__Base,metaclass=_CUmemOperationType_EnumMeta):
+class CUmemOperationType(hip._hipMemOperationType__Base,metaclass=_CUmemOperationType_EnumMeta):                
     hipMemOperationTypeMap = hip.chip.hipMemOperationTypeMap
     CU_MEM_OPERATION_TYPE_MAP = hip.chip.hipMemOperationTypeMap
     hipMemOperationTypeUnmap = hip.chip.hipMemOperationTypeUnmap
     CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
-
 HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE","false")
 
 class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
@@ -11564,12 +13871,11 @@ class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUmemOperationType_enum(hip._hipMemOperationType__Base,metaclass=_CUmemOperationType_enum_EnumMeta):
+class CUmemOperationType_enum(hip._hipMemOperationType__Base,metaclass=_CUmemOperationType_enum_EnumMeta):                
     hipMemOperationTypeMap = hip.chip.hipMemOperationTypeMap
     CU_MEM_OPERATION_TYPE_MAP = hip.chip.hipMemOperationTypeMap
     hipMemOperationTypeUnmap = hip.chip.hipMemOperationTypeUnmap
     CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
-
 HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE","false")
 
 class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
@@ -11633,12 +13939,11 @@ class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUarraySparseSubresourceType(hip._hipArraySparseSubresourceType__Base,metaclass=_CUarraySparseSubresourceType_EnumMeta):
+class CUarraySparseSubresourceType(hip._hipArraySparseSubresourceType__Base,metaclass=_CUarraySparseSubresourceType_EnumMeta):                
     hipArraySparseSubresourceTypeSparseLevel = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = hip.chip.hipArraySparseSubresourceTypeMiptail
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_MIPTAIL = hip.chip.hipArraySparseSubresourceTypeMiptail
-
 HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE","false")
 
 class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
@@ -11702,7 +14007,7 @@ class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
                 return HallucinatedEnumConstant()
 
 
-class CUarraySparseSubresourceType_enum(hip._hipArraySparseSubresourceType__Base,metaclass=_CUarraySparseSubresourceType_enum_EnumMeta):
+class CUarraySparseSubresourceType_enum(hip._hipArraySparseSubresourceType__Base,metaclass=_CUarraySparseSubresourceType_enum_EnumMeta):                
     hipArraySparseSubresourceTypeSparseLevel = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = hip.chip.hipArraySparseSubresourceTypeMiptail
@@ -12262,3 +14567,1192 @@ cuGraphicsUnmapResources = hip.hipGraphicsUnmapResources
 cudaGraphicsUnmapResources = hip.hipGraphicsUnmapResources
 cuGraphicsUnregisterResource = hip.hipGraphicsUnregisterResource
 cudaGraphicsUnregisterResource = hip.hipGraphicsUnregisterResource
+
+__all__ = [
+    "HIP_PYTHON",
+    "hip_python_mod",
+    "hip",
+    "CU_TRSA_OVERRIDE_FORMAT",
+    "CU_TRSF_READ_AS_INTEGER",
+    "CU_TRSF_NORMALIZED_COORDINATES",
+    "CU_TRSF_SRGB",
+    "cudaTextureType1D",
+    "cudaTextureType2D",
+    "cudaTextureType3D",
+    "cudaTextureTypeCubemap",
+    "cudaTextureType1DLayered",
+    "cudaTextureType2DLayered",
+    "cudaTextureTypeCubemapLayered",
+    "CU_LAUNCH_PARAM_BUFFER_POINTER",
+    "CU_LAUNCH_PARAM_BUFFER_SIZE",
+    "CU_LAUNCH_PARAM_END",
+    "CU_IPC_MEM_LAZY_ENABLE_PEER_ACCESS",
+    "cudaIpcMemLazyEnablePeerAccess",
+    "CUDA_IPC_HANDLE_SIZE",
+    "CU_IPC_HANDLE_SIZE",
+    "CU_STREAM_DEFAULT",
+    "cudaStreamDefault",
+    "CU_STREAM_NON_BLOCKING",
+    "cudaStreamNonBlocking",
+    "CU_EVENT_DEFAULT",
+    "cudaEventDefault",
+    "CU_EVENT_BLOCKING_SYNC",
+    "cudaEventBlockingSync",
+    "CU_EVENT_DISABLE_TIMING",
+    "cudaEventDisableTiming",
+    "CU_EVENT_INTERPROCESS",
+    "cudaEventInterprocess",
+    "cudaHostAllocDefault",
+    "CU_MEMHOSTALLOC_PORTABLE",
+    "cudaHostAllocPortable",
+    "CU_MEMHOSTALLOC_DEVICEMAP",
+    "cudaHostAllocMapped",
+    "CU_MEMHOSTALLOC_WRITECOMBINED",
+    "cudaHostAllocWriteCombined",
+    "CU_MEM_ATTACH_GLOBAL",
+    "cudaMemAttachGlobal",
+    "CU_MEM_ATTACH_HOST",
+    "cudaMemAttachHost",
+    "CU_MEM_ATTACH_SINGLE",
+    "cudaMemAttachSingle",
+    "cudaHostRegisterDefault",
+    "CU_MEMHOSTREGISTER_PORTABLE",
+    "cudaHostRegisterPortable",
+    "CU_MEMHOSTREGISTER_DEVICEMAP",
+    "cudaHostRegisterMapped",
+    "CU_MEMHOSTREGISTER_IOMEMORY",
+    "cudaHostRegisterIoMemory",
+    "CU_CTX_SCHED_AUTO",
+    "cudaDeviceScheduleAuto",
+    "CU_CTX_SCHED_SPIN",
+    "cudaDeviceScheduleSpin",
+    "CU_CTX_SCHED_YIELD",
+    "cudaDeviceScheduleYield",
+    "CU_CTX_BLOCKING_SYNC",
+    "CU_CTX_SCHED_BLOCKING_SYNC",
+    "cudaDeviceBlockingSync",
+    "cudaDeviceScheduleBlockingSync",
+    "CU_CTX_SCHED_MASK",
+    "cudaDeviceScheduleMask",
+    "CU_CTX_MAP_HOST",
+    "cudaDeviceMapHost",
+    "CU_CTX_LMEM_RESIZE_TO_MAX",
+    "cudaDeviceLmemResizeToMax",
+    "cudaArrayDefault",
+    "CUDA_ARRAY3D_LAYERED",
+    "cudaArrayLayered",
+    "CUDA_ARRAY3D_SURFACE_LDST",
+    "cudaArraySurfaceLoadStore",
+    "CUDA_ARRAY3D_CUBEMAP",
+    "cudaArrayCubemap",
+    "CUDA_ARRAY3D_TEXTURE_GATHER",
+    "cudaArrayTextureGather",
+    "CU_OCCUPANCY_DEFAULT",
+    "cudaOccupancyDefault",
+    "CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_PRE_LAUNCH_SYNC",
+    "cudaCooperativeLaunchMultiDeviceNoPreSync",
+    "CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_POST_LAUNCH_SYNC",
+    "cudaCooperativeLaunchMultiDeviceNoPostSync",
+    "CU_DEVICE_CPU",
+    "cudaCpuDeviceId",
+    "CU_DEVICE_INVALID",
+    "cudaInvalidDeviceId",
+    "CU_STREAM_WAIT_VALUE_GEQ",
+    "CU_STREAM_WAIT_VALUE_EQ",
+    "CU_STREAM_WAIT_VALUE_AND",
+    "CU_STREAM_WAIT_VALUE_NOR",
+    "HIP_SUCCESS",
+    "HIP_ERROR_INVALID_VALUE",
+    "HIP_ERROR_NOT_INITIALIZED",
+    "HIP_ERROR_LAUNCH_OUT_OF_RESOURCES",
+    "CUuuid_st",
+    "CUuuid",
+    "cudaUUID_t",
+    "cudaDeviceProp",
+    "_CUmemorytype_EnumMeta",
+    "HIP_PYTHON_CUmemorytype_HALLUCINATE",
+    "CUmemorytype",
+    "_CUmemorytype_enum_EnumMeta",
+    "HIP_PYTHON_CUmemorytype_enum_HALLUCINATE",
+    "CUmemorytype_enum",
+    "_cudaMemoryType_EnumMeta",
+    "HIP_PYTHON_cudaMemoryType_HALLUCINATE",
+    "cudaMemoryType",
+    "cudaPointerAttributes",
+    "_CUresult_EnumMeta",
+    "HIP_PYTHON_CUresult_HALLUCINATE",
+    "CUresult",
+    "_cudaError_EnumMeta",
+    "HIP_PYTHON_cudaError_HALLUCINATE",
+    "cudaError",
+    "_cudaError_enum_EnumMeta",
+    "HIP_PYTHON_cudaError_enum_HALLUCINATE",
+    "cudaError_enum",
+    "_cudaError_t_EnumMeta",
+    "HIP_PYTHON_cudaError_t_HALLUCINATE",
+    "cudaError_t",
+    "_CUdevice_attribute_EnumMeta",
+    "HIP_PYTHON_CUdevice_attribute_HALLUCINATE",
+    "CUdevice_attribute",
+    "_CUdevice_attribute_enum_EnumMeta",
+    "HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE",
+    "CUdevice_attribute_enum",
+    "_cudaDeviceAttr_EnumMeta",
+    "HIP_PYTHON_cudaDeviceAttr_HALLUCINATE",
+    "cudaDeviceAttr",
+    "_CUcomputemode_EnumMeta",
+    "HIP_PYTHON_CUcomputemode_HALLUCINATE",
+    "CUcomputemode",
+    "_CUcomputemode_enum_EnumMeta",
+    "HIP_PYTHON_CUcomputemode_enum_HALLUCINATE",
+    "CUcomputemode_enum",
+    "_cudaComputeMode_EnumMeta",
+    "HIP_PYTHON_cudaComputeMode_HALLUCINATE",
+    "cudaComputeMode",
+    "_cudaChannelFormatKind_EnumMeta",
+    "HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE",
+    "cudaChannelFormatKind",
+    "cudaChannelFormatDesc",
+    "_CUarray_format_EnumMeta",
+    "HIP_PYTHON_CUarray_format_HALLUCINATE",
+    "CUarray_format",
+    "_CUarray_format_enum_EnumMeta",
+    "HIP_PYTHON_CUarray_format_enum_HALLUCINATE",
+    "CUarray_format_enum",
+    "CUDA_ARRAY_DESCRIPTOR",
+    "CUDA_ARRAY_DESCRIPTOR_st",
+    "CUDA_ARRAY_DESCRIPTOR_v1",
+    "CUDA_ARRAY_DESCRIPTOR_v1_st",
+    "CUDA_ARRAY_DESCRIPTOR_v2",
+    "CUDA_ARRAY3D_DESCRIPTOR",
+    "CUDA_ARRAY3D_DESCRIPTOR_st",
+    "CUDA_ARRAY3D_DESCRIPTOR_v2",
+    "CUarray_st",
+    "cudaArray",
+    "CUDA_MEMCPY2D",
+    "CUDA_MEMCPY2D_st",
+    "CUDA_MEMCPY2D_v1",
+    "CUDA_MEMCPY2D_v1_st",
+    "CUDA_MEMCPY2D_v2",
+    "CUarray",
+    "cudaArray_t",
+    "cudaArray_const_t",
+    "CUmipmappedArray_st",
+    "cudaMipmappedArray",
+    "CUmipmappedArray",
+    "cudaMipmappedArray_t",
+    "cudaMipmappedArray_const_t",
+    "_cudaResourceType_EnumMeta",
+    "HIP_PYTHON_cudaResourceType_HALLUCINATE",
+    "cudaResourceType",
+    "_CUresourcetype_enum_EnumMeta",
+    "HIP_PYTHON_CUresourcetype_enum_HALLUCINATE",
+    "CUresourcetype_enum",
+    "_CUresourcetype_EnumMeta",
+    "HIP_PYTHON_CUresourcetype_HALLUCINATE",
+    "CUresourcetype",
+    "_CUaddress_mode_enum_EnumMeta",
+    "HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE",
+    "CUaddress_mode_enum",
+    "_CUaddress_mode_EnumMeta",
+    "HIP_PYTHON_CUaddress_mode_HALLUCINATE",
+    "CUaddress_mode",
+    "_CUfilter_mode_enum_EnumMeta",
+    "HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE",
+    "CUfilter_mode_enum",
+    "_CUfilter_mode_EnumMeta",
+    "HIP_PYTHON_CUfilter_mode_HALLUCINATE",
+    "CUfilter_mode",
+    "CUDA_TEXTURE_DESC_st",
+    "CUDA_TEXTURE_DESC",
+    "CUDA_TEXTURE_DESC_v1",
+    "_cudaResourceViewFormat_EnumMeta",
+    "HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE",
+    "cudaResourceViewFormat",
+    "_CUresourceViewFormat_enum_EnumMeta",
+    "HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE",
+    "CUresourceViewFormat_enum",
+    "_CUresourceViewFormat_EnumMeta",
+    "HIP_PYTHON_CUresourceViewFormat_HALLUCINATE",
+    "CUresourceViewFormat",
+    "cudaResourceDesc",
+    "CUDA_RESOURCE_DESC_st",
+    "CUDA_RESOURCE_DESC",
+    "CUDA_RESOURCE_DESC_v1",
+    "cudaResourceViewDesc",
+    "CUDA_RESOURCE_VIEW_DESC_st",
+    "CUDA_RESOURCE_VIEW_DESC",
+    "CUDA_RESOURCE_VIEW_DESC_v1",
+    "_cudaMemcpyKind_EnumMeta",
+    "HIP_PYTHON_cudaMemcpyKind_HALLUCINATE",
+    "cudaMemcpyKind",
+    "cudaPitchedPtr",
+    "cudaExtent",
+    "cudaPos",
+    "cudaMemcpy3DParms",
+    "CUDA_MEMCPY3D",
+    "CUDA_MEMCPY3D_st",
+    "CUDA_MEMCPY3D_v1",
+    "CUDA_MEMCPY3D_v1_st",
+    "CUDA_MEMCPY3D_v2",
+    "_CUfunction_attribute_EnumMeta",
+    "HIP_PYTHON_CUfunction_attribute_HALLUCINATE",
+    "CUfunction_attribute",
+    "_CUfunction_attribute_enum_EnumMeta",
+    "HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE",
+    "CUfunction_attribute_enum",
+    "_CUpointer_attribute_EnumMeta",
+    "HIP_PYTHON_CUpointer_attribute_HALLUCINATE",
+    "CUpointer_attribute",
+    "_CUpointer_attribute_enum_EnumMeta",
+    "HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE",
+    "CUpointer_attribute_enum",
+    "cudaCreateChannelDesc",
+    "CUtexObject",
+    "CUtexObject_v1",
+    "cudaTextureObject_t",
+    "_cudaTextureAddressMode_EnumMeta",
+    "HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE",
+    "cudaTextureAddressMode",
+    "_cudaTextureFilterMode_EnumMeta",
+    "HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE",
+    "cudaTextureFilterMode",
+    "_cudaTextureReadMode_EnumMeta",
+    "HIP_PYTHON_cudaTextureReadMode_HALLUCINATE",
+    "cudaTextureReadMode",
+    "CUtexref_st",
+    "textureReference",
+    "cudaTextureDesc",
+    "CUsurfObject",
+    "CUsurfObject_v1",
+    "cudaSurfaceObject_t",
+    "surfaceReference",
+    "_cudaSurfaceBoundaryMode_EnumMeta",
+    "HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE",
+    "cudaSurfaceBoundaryMode",
+    "CUctx_st",
+    "CUcontext",
+    "_CUdevice_P2PAttribute_EnumMeta",
+    "HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE",
+    "CUdevice_P2PAttribute",
+    "_CUdevice_P2PAttribute_enum_EnumMeta",
+    "HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE",
+    "CUdevice_P2PAttribute_enum",
+    "_cudaDeviceP2PAttr_EnumMeta",
+    "HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE",
+    "cudaDeviceP2PAttr",
+    "CUstream_st",
+    "CUstream",
+    "cudaStream_t",
+    "CUipcMemHandle_st",
+    "cudaIpcMemHandle_st",
+    "CUipcMemHandle",
+    "CUipcMemHandle_v1",
+    "cudaIpcMemHandle_t",
+    "CUipcEventHandle_st",
+    "cudaIpcEventHandle_st",
+    "CUipcEventHandle",
+    "CUipcEventHandle_v1",
+    "cudaIpcEventHandle_t",
+    "CUmod_st",
+    "CUmodule",
+    "CUfunc_st",
+    "CUfunction",
+    "cudaFunction_t",
+    "CUmemPoolHandle_st",
+    "CUmemoryPool",
+    "cudaMemPool_t",
+    "cudaFuncAttributes",
+    "CUevent_st",
+    "CUevent",
+    "cudaEvent_t",
+    "_CUlimit_EnumMeta",
+    "HIP_PYTHON_CUlimit_HALLUCINATE",
+    "CUlimit",
+    "_CUlimit_enum_EnumMeta",
+    "HIP_PYTHON_CUlimit_enum_HALLUCINATE",
+    "CUlimit_enum",
+    "_cudaLimit_EnumMeta",
+    "HIP_PYTHON_cudaLimit_HALLUCINATE",
+    "cudaLimit",
+    "_CUmem_advise_EnumMeta",
+    "HIP_PYTHON_CUmem_advise_HALLUCINATE",
+    "CUmem_advise",
+    "_CUmem_advise_enum_EnumMeta",
+    "HIP_PYTHON_CUmem_advise_enum_HALLUCINATE",
+    "CUmem_advise_enum",
+    "_cudaMemoryAdvise_EnumMeta",
+    "HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE",
+    "cudaMemoryAdvise",
+    "_CUmem_range_attribute_EnumMeta",
+    "HIP_PYTHON_CUmem_range_attribute_HALLUCINATE",
+    "CUmem_range_attribute",
+    "_CUmem_range_attribute_enum_EnumMeta",
+    "HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE",
+    "CUmem_range_attribute_enum",
+    "_cudaMemRangeAttribute_EnumMeta",
+    "HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE",
+    "cudaMemRangeAttribute",
+    "_CUmemPool_attribute_EnumMeta",
+    "HIP_PYTHON_CUmemPool_attribute_HALLUCINATE",
+    "CUmemPool_attribute",
+    "_CUmemPool_attribute_enum_EnumMeta",
+    "HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE",
+    "CUmemPool_attribute_enum",
+    "_cudaMemPoolAttr_EnumMeta",
+    "HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE",
+    "cudaMemPoolAttr",
+    "_CUmemLocationType_EnumMeta",
+    "HIP_PYTHON_CUmemLocationType_HALLUCINATE",
+    "CUmemLocationType",
+    "_CUmemLocationType_enum_EnumMeta",
+    "HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE",
+    "CUmemLocationType_enum",
+    "_cudaMemLocationType_EnumMeta",
+    "HIP_PYTHON_cudaMemLocationType_HALLUCINATE",
+    "cudaMemLocationType",
+    "CUmemLocation",
+    "CUmemLocation_st",
+    "CUmemLocation_v1",
+    "cudaMemLocation",
+    "_CUmemAccess_flags_EnumMeta",
+    "HIP_PYTHON_CUmemAccess_flags_HALLUCINATE",
+    "CUmemAccess_flags",
+    "_CUmemAccess_flags_enum_EnumMeta",
+    "HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE",
+    "CUmemAccess_flags_enum",
+    "_cudaMemAccessFlags_EnumMeta",
+    "HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE",
+    "cudaMemAccessFlags",
+    "CUmemAccessDesc",
+    "CUmemAccessDesc_st",
+    "CUmemAccessDesc_v1",
+    "cudaMemAccessDesc",
+    "_CUmemAllocationType_EnumMeta",
+    "HIP_PYTHON_CUmemAllocationType_HALLUCINATE",
+    "CUmemAllocationType",
+    "_CUmemAllocationType_enum_EnumMeta",
+    "HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE",
+    "CUmemAllocationType_enum",
+    "_cudaMemAllocationType_EnumMeta",
+    "HIP_PYTHON_cudaMemAllocationType_HALLUCINATE",
+    "cudaMemAllocationType",
+    "_CUmemAllocationHandleType_EnumMeta",
+    "HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE",
+    "CUmemAllocationHandleType",
+    "_CUmemAllocationHandleType_enum_EnumMeta",
+    "HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE",
+    "CUmemAllocationHandleType_enum",
+    "_cudaMemAllocationHandleType_EnumMeta",
+    "HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE",
+    "cudaMemAllocationHandleType",
+    "CUmemPoolProps",
+    "CUmemPoolProps_st",
+    "CUmemPoolProps_v1",
+    "cudaMemPoolProps",
+    "CUmemPoolPtrExportData",
+    "CUmemPoolPtrExportData_st",
+    "CUmemPoolPtrExportData_v1",
+    "cudaMemPoolPtrExportData",
+    "_CUjit_option_EnumMeta",
+    "HIP_PYTHON_CUjit_option_HALLUCINATE",
+    "CUjit_option",
+    "_CUjit_option_enum_EnumMeta",
+    "HIP_PYTHON_CUjit_option_enum_HALLUCINATE",
+    "CUjit_option_enum",
+    "_cudaFuncAttribute_EnumMeta",
+    "HIP_PYTHON_cudaFuncAttribute_HALLUCINATE",
+    "cudaFuncAttribute",
+    "_CUfunc_cache_EnumMeta",
+    "HIP_PYTHON_CUfunc_cache_HALLUCINATE",
+    "CUfunc_cache",
+    "_CUfunc_cache_enum_EnumMeta",
+    "HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE",
+    "CUfunc_cache_enum",
+    "_cudaFuncCache_EnumMeta",
+    "HIP_PYTHON_cudaFuncCache_HALLUCINATE",
+    "cudaFuncCache",
+    "_CUsharedconfig_EnumMeta",
+    "HIP_PYTHON_CUsharedconfig_HALLUCINATE",
+    "CUsharedconfig",
+    "_CUsharedconfig_enum_EnumMeta",
+    "HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE",
+    "CUsharedconfig_enum",
+    "_cudaSharedMemConfig_EnumMeta",
+    "HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE",
+    "cudaSharedMemConfig",
+    "cudaLaunchParams",
+    "_CUexternalMemoryHandleType_enum_EnumMeta",
+    "HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE",
+    "CUexternalMemoryHandleType_enum",
+    "_CUexternalMemoryHandleType_EnumMeta",
+    "HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE",
+    "CUexternalMemoryHandleType",
+    "_cudaExternalMemoryHandleType_EnumMeta",
+    "HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE",
+    "cudaExternalMemoryHandleType",
+    "CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st",
+    "CUDA_EXTERNAL_MEMORY_HANDLE_DESC",
+    "CUDA_EXTERNAL_MEMORY_HANDLE_DESC_v1",
+    "cudaExternalMemoryHandleDesc",
+    "CUDA_EXTERNAL_MEMORY_BUFFER_DESC_st",
+    "CUDA_EXTERNAL_MEMORY_BUFFER_DESC",
+    "CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1",
+    "cudaExternalMemoryBufferDesc",
+    "_CUexternalSemaphoreHandleType_enum_EnumMeta",
+    "HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE",
+    "CUexternalSemaphoreHandleType_enum",
+    "_CUexternalSemaphoreHandleType_EnumMeta",
+    "HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE",
+    "CUexternalSemaphoreHandleType",
+    "_cudaExternalSemaphoreHandleType_EnumMeta",
+    "HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE",
+    "cudaExternalSemaphoreHandleType",
+    "CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st",
+    "CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC",
+    "CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1",
+    "cudaExternalSemaphoreHandleDesc",
+    "CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_st",
+    "CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS",
+    "CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1",
+    "cudaExternalSemaphoreSignalParams",
+    "cudaExternalSemaphoreSignalParams_v1",
+    "CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_st",
+    "CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS",
+    "CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1",
+    "cudaExternalSemaphoreWaitParams",
+    "cudaExternalSemaphoreWaitParams_v1",
+    "_CUGLDeviceList_EnumMeta",
+    "HIP_PYTHON_CUGLDeviceList_HALLUCINATE",
+    "CUGLDeviceList",
+    "_CUGLDeviceList_enum_EnumMeta",
+    "HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE",
+    "CUGLDeviceList_enum",
+    "_cudaGLDeviceList_EnumMeta",
+    "HIP_PYTHON_cudaGLDeviceList_HALLUCINATE",
+    "cudaGLDeviceList",
+    "_CUgraphicsRegisterFlags_EnumMeta",
+    "HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE",
+    "CUgraphicsRegisterFlags",
+    "_CUgraphicsRegisterFlags_enum_EnumMeta",
+    "HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE",
+    "CUgraphicsRegisterFlags_enum",
+    "_cudaGraphicsRegisterFlags_EnumMeta",
+    "HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE",
+    "cudaGraphicsRegisterFlags",
+    "CUgraphicsResource_st",
+    "cudaGraphicsResource",
+    "CUgraphicsResource",
+    "cudaGraphicsResource_t",
+    "CUgraph_st",
+    "CUgraph",
+    "cudaGraph_t",
+    "CUgraphNode_st",
+    "CUgraphNode",
+    "cudaGraphNode_t",
+    "CUgraphExec_st",
+    "CUgraphExec",
+    "cudaGraphExec_t",
+    "CUuserObject_st",
+    "CUuserObject",
+    "cudaUserObject_t",
+    "_CUgraphNodeType_EnumMeta",
+    "HIP_PYTHON_CUgraphNodeType_HALLUCINATE",
+    "CUgraphNodeType",
+    "_CUgraphNodeType_enum_EnumMeta",
+    "HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE",
+    "CUgraphNodeType_enum",
+    "_cudaGraphNodeType_EnumMeta",
+    "HIP_PYTHON_cudaGraphNodeType_HALLUCINATE",
+    "cudaGraphNodeType",
+    "CUhostFn",
+    "cudaHostFn_t",
+    "CUDA_HOST_NODE_PARAMS",
+    "CUDA_HOST_NODE_PARAMS_st",
+    "CUDA_HOST_NODE_PARAMS_v1",
+    "cudaHostNodeParams",
+    "CUDA_KERNEL_NODE_PARAMS",
+    "CUDA_KERNEL_NODE_PARAMS_st",
+    "CUDA_KERNEL_NODE_PARAMS_v1",
+    "cudaKernelNodeParams",
+    "CUDA_MEMSET_NODE_PARAMS",
+    "CUDA_MEMSET_NODE_PARAMS_st",
+    "CUDA_MEMSET_NODE_PARAMS_v1",
+    "cudaMemsetParams",
+    "_CUkernelNodeAttrID_EnumMeta",
+    "HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE",
+    "CUkernelNodeAttrID",
+    "_CUkernelNodeAttrID_enum_EnumMeta",
+    "HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE",
+    "CUkernelNodeAttrID_enum",
+    "_cudaKernelNodeAttrID_EnumMeta",
+    "HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE",
+    "cudaKernelNodeAttrID",
+    "_CUaccessProperty_EnumMeta",
+    "HIP_PYTHON_CUaccessProperty_HALLUCINATE",
+    "CUaccessProperty",
+    "_CUaccessProperty_enum_EnumMeta",
+    "HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE",
+    "CUaccessProperty_enum",
+    "_cudaAccessProperty_EnumMeta",
+    "HIP_PYTHON_cudaAccessProperty_HALLUCINATE",
+    "cudaAccessProperty",
+    "CUaccessPolicyWindow",
+    "CUaccessPolicyWindow_st",
+    "cudaAccessPolicyWindow",
+    "CUkernelNodeAttrValue",
+    "CUkernelNodeAttrValue_union",
+    "CUkernelNodeAttrValue_v1",
+    "cudaKernelNodeAttrValue",
+    "_CUgraphExecUpdateResult_EnumMeta",
+    "HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE",
+    "CUgraphExecUpdateResult",
+    "_CUgraphExecUpdateResult_enum_EnumMeta",
+    "HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE",
+    "CUgraphExecUpdateResult_enum",
+    "_cudaGraphExecUpdateResult_EnumMeta",
+    "HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE",
+    "cudaGraphExecUpdateResult",
+    "_CUstreamCaptureMode_EnumMeta",
+    "HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE",
+    "CUstreamCaptureMode",
+    "_CUstreamCaptureMode_enum_EnumMeta",
+    "HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE",
+    "CUstreamCaptureMode_enum",
+    "_cudaStreamCaptureMode_EnumMeta",
+    "HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE",
+    "cudaStreamCaptureMode",
+    "_CUstreamCaptureStatus_EnumMeta",
+    "HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE",
+    "CUstreamCaptureStatus",
+    "_CUstreamCaptureStatus_enum_EnumMeta",
+    "HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE",
+    "CUstreamCaptureStatus_enum",
+    "_cudaStreamCaptureStatus_EnumMeta",
+    "HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE",
+    "cudaStreamCaptureStatus",
+    "_CUstreamUpdateCaptureDependencies_flags_EnumMeta",
+    "HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE",
+    "CUstreamUpdateCaptureDependencies_flags",
+    "_CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta",
+    "HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE",
+    "CUstreamUpdateCaptureDependencies_flags_enum",
+    "_cudaStreamUpdateCaptureDependenciesFlags_EnumMeta",
+    "HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE",
+    "cudaStreamUpdateCaptureDependenciesFlags",
+    "_CUgraphMem_attribute_EnumMeta",
+    "HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE",
+    "CUgraphMem_attribute",
+    "_CUgraphMem_attribute_enum_EnumMeta",
+    "HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE",
+    "CUgraphMem_attribute_enum",
+    "_cudaGraphMemAttributeType_EnumMeta",
+    "HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE",
+    "cudaGraphMemAttributeType",
+    "_CUuserObject_flags_EnumMeta",
+    "HIP_PYTHON_CUuserObject_flags_HALLUCINATE",
+    "CUuserObject_flags",
+    "_CUuserObject_flags_enum_EnumMeta",
+    "HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE",
+    "CUuserObject_flags_enum",
+    "_cudaUserObjectFlags_EnumMeta",
+    "HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE",
+    "cudaUserObjectFlags",
+    "_CUuserObjectRetain_flags_EnumMeta",
+    "HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE",
+    "CUuserObjectRetain_flags",
+    "_CUuserObjectRetain_flags_enum_EnumMeta",
+    "HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE",
+    "CUuserObjectRetain_flags_enum",
+    "_cudaUserObjectRetainFlags_EnumMeta",
+    "HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE",
+    "cudaUserObjectRetainFlags",
+    "_CUgraphInstantiate_flags_EnumMeta",
+    "HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE",
+    "CUgraphInstantiate_flags",
+    "_CUgraphInstantiate_flags_enum_EnumMeta",
+    "HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE",
+    "CUgraphInstantiate_flags_enum",
+    "_cudaGraphInstantiateFlags_EnumMeta",
+    "HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE",
+    "cudaGraphInstantiateFlags",
+    "CUmemAllocationProp",
+    "CUmemAllocationProp_st",
+    "CUmemAllocationProp_v1",
+    "CUmemGenericAllocationHandle",
+    "CUmemGenericAllocationHandle_v1",
+    "_CUmemAllocationGranularity_flags_EnumMeta",
+    "HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE",
+    "CUmemAllocationGranularity_flags",
+    "_CUmemAllocationGranularity_flags_enum_EnumMeta",
+    "HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE",
+    "CUmemAllocationGranularity_flags_enum",
+    "_CUmemHandleType_EnumMeta",
+    "HIP_PYTHON_CUmemHandleType_HALLUCINATE",
+    "CUmemHandleType",
+    "_CUmemHandleType_enum_EnumMeta",
+    "HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE",
+    "CUmemHandleType_enum",
+    "_CUmemOperationType_EnumMeta",
+    "HIP_PYTHON_CUmemOperationType_HALLUCINATE",
+    "CUmemOperationType",
+    "_CUmemOperationType_enum_EnumMeta",
+    "HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE",
+    "CUmemOperationType_enum",
+    "_CUarraySparseSubresourceType_EnumMeta",
+    "HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE",
+    "CUarraySparseSubresourceType",
+    "_CUarraySparseSubresourceType_enum_EnumMeta",
+    "HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE",
+    "CUarraySparseSubresourceType_enum",
+    "CUarrayMapInfo",
+    "CUarrayMapInfo_st",
+    "CUarrayMapInfo_v1",
+    "cuInit",
+    "cuDriverGetVersion",
+    "cudaDriverGetVersion",
+    "cudaRuntimeGetVersion",
+    "cuDeviceGet",
+    "cuDeviceComputeCapability",
+    "cuDeviceGetName",
+    "cuDeviceGetUuid",
+    "cuDeviceGetUuid_v2",
+    "cudaDeviceGetP2PAttribute",
+    "cuDeviceGetP2PAttribute",
+    "cudaDeviceGetPCIBusId",
+    "cuDeviceGetPCIBusId",
+    "cudaDeviceGetByPCIBusId",
+    "cuDeviceGetByPCIBusId",
+    "cuDeviceTotalMem",
+    "cuDeviceTotalMem_v2",
+    "cudaDeviceSynchronize",
+    "cudaThreadSynchronize",
+    "cudaDeviceReset",
+    "cudaThreadExit",
+    "cudaSetDevice",
+    "cudaGetDevice",
+    "cuDeviceGetCount",
+    "cudaGetDeviceCount",
+    "cuDeviceGetAttribute",
+    "cudaDeviceGetAttribute",
+    "cuDeviceGetDefaultMemPool",
+    "cudaDeviceGetDefaultMemPool",
+    "cuDeviceSetMemPool",
+    "cudaDeviceSetMemPool",
+    "cuDeviceGetMemPool",
+    "cudaDeviceGetMemPool",
+    "cudaGetDeviceProperties",
+    "cudaDeviceSetCacheConfig",
+    "cudaThreadSetCacheConfig",
+    "cudaDeviceGetCacheConfig",
+    "cudaThreadGetCacheConfig",
+    "cudaDeviceGetLimit",
+    "cuCtxGetLimit",
+    "cudaDeviceSetLimit",
+    "cuCtxSetLimit",
+    "cudaDeviceGetSharedMemConfig",
+    "cudaGetDeviceFlags",
+    "cudaDeviceSetSharedMemConfig",
+    "cudaSetDeviceFlags",
+    "cudaChooseDevice",
+    "cudaIpcGetMemHandle",
+    "cuIpcGetMemHandle",
+    "cudaIpcOpenMemHandle",
+    "cuIpcOpenMemHandle",
+    "cudaIpcCloseMemHandle",
+    "cuIpcCloseMemHandle",
+    "cudaIpcGetEventHandle",
+    "cuIpcGetEventHandle",
+    "cudaIpcOpenEventHandle",
+    "cuIpcOpenEventHandle",
+    "cudaFuncSetAttribute",
+    "cudaFuncSetCacheConfig",
+    "cudaFuncSetSharedMemConfig",
+    "cudaGetLastError",
+    "cudaPeekAtLastError",
+    "cudaGetErrorName",
+    "cudaGetErrorString",
+    "cuGetErrorName",
+    "cuGetErrorString",
+    "cudaStreamCreate",
+    "cuStreamCreate",
+    "cudaStreamCreateWithFlags",
+    "cuStreamCreateWithPriority",
+    "cudaStreamCreateWithPriority",
+    "cudaDeviceGetStreamPriorityRange",
+    "cuCtxGetStreamPriorityRange",
+    "cuStreamDestroy",
+    "cuStreamDestroy_v2",
+    "cudaStreamDestroy",
+    "cuStreamQuery",
+    "cudaStreamQuery",
+    "cuStreamSynchronize",
+    "cudaStreamSynchronize",
+    "cuStreamWaitEvent",
+    "cudaStreamWaitEvent",
+    "cuStreamGetFlags",
+    "cudaStreamGetFlags",
+    "cuStreamGetPriority",
+    "cudaStreamGetPriority",
+    "CUstreamCallback",
+    "cudaStreamCallback_t",
+    "cuStreamAddCallback",
+    "cudaStreamAddCallback",
+    "cuStreamWaitValue32",
+    "cuStreamWaitValue32_v2",
+    "cuStreamWaitValue64",
+    "cuStreamWaitValue64_v2",
+    "cuStreamWriteValue32",
+    "cuStreamWriteValue32_v2",
+    "cuStreamWriteValue64",
+    "cuStreamWriteValue64_v2",
+    "cuEventCreate",
+    "cudaEventCreateWithFlags",
+    "cudaEventCreate",
+    "cuEventRecord",
+    "cudaEventRecord",
+    "cuEventDestroy",
+    "cuEventDestroy_v2",
+    "cudaEventDestroy",
+    "cuEventSynchronize",
+    "cudaEventSynchronize",
+    "cuEventElapsedTime",
+    "cudaEventElapsedTime",
+    "cuEventQuery",
+    "cudaEventQuery",
+    "cudaPointerGetAttributes",
+    "cuPointerGetAttribute",
+    "cuPointerGetAttributes",
+    "cuImportExternalSemaphore",
+    "cudaImportExternalSemaphore",
+    "cuSignalExternalSemaphoresAsync",
+    "cudaSignalExternalSemaphoresAsync",
+    "cuWaitExternalSemaphoresAsync",
+    "cudaWaitExternalSemaphoresAsync",
+    "cuDestroyExternalSemaphore",
+    "cudaDestroyExternalSemaphore",
+    "cuImportExternalMemory",
+    "cudaImportExternalMemory",
+    "cuExternalMemoryGetMappedBuffer",
+    "cudaExternalMemoryGetMappedBuffer",
+    "cuDestroyExternalMemory",
+    "cudaDestroyExternalMemory",
+    "cuMemAlloc",
+    "cuMemAlloc_v2",
+    "cudaMalloc",
+    "cuMemAllocHost",
+    "cuMemAllocHost_v2",
+    "cudaMallocHost",
+    "cuMemAllocManaged",
+    "cudaMallocManaged",
+    "cudaMemPrefetchAsync",
+    "cuMemPrefetchAsync",
+    "cudaMemAdvise",
+    "cuMemAdvise",
+    "cudaMemRangeGetAttribute",
+    "cuMemRangeGetAttribute",
+    "cudaMemRangeGetAttributes",
+    "cuMemRangeGetAttributes",
+    "cuStreamAttachMemAsync",
+    "cudaStreamAttachMemAsync",
+    "cudaMallocAsync",
+    "cuMemAllocAsync",
+    "cudaFreeAsync",
+    "cuMemFreeAsync",
+    "cudaMemPoolTrimTo",
+    "cuMemPoolTrimTo",
+    "cudaMemPoolSetAttribute",
+    "cuMemPoolSetAttribute",
+    "cudaMemPoolGetAttribute",
+    "cuMemPoolGetAttribute",
+    "cudaMemPoolSetAccess",
+    "cuMemPoolSetAccess",
+    "cudaMemPoolGetAccess",
+    "cuMemPoolGetAccess",
+    "cudaMemPoolCreate",
+    "cuMemPoolCreate",
+    "cudaMemPoolDestroy",
+    "cuMemPoolDestroy",
+    "cudaMallocFromPoolAsync",
+    "cuMemAllocFromPoolAsync",
+    "cudaMemPoolExportToShareableHandle",
+    "cuMemPoolExportToShareableHandle",
+    "cudaMemPoolImportFromShareableHandle",
+    "cuMemPoolImportFromShareableHandle",
+    "cudaMemPoolExportPointer",
+    "cuMemPoolExportPointer",
+    "cudaMemPoolImportPointer",
+    "cuMemPoolImportPointer",
+    "cuMemHostAlloc",
+    "cudaHostAlloc",
+    "cuMemHostGetDevicePointer",
+    "cuMemHostGetDevicePointer_v2",
+    "cudaHostGetDevicePointer",
+    "cuMemHostGetFlags",
+    "cudaHostGetFlags",
+    "cuMemHostRegister",
+    "cuMemHostRegister_v2",
+    "cudaHostRegister",
+    "cuMemHostUnregister",
+    "cudaHostUnregister",
+    "cudaMallocPitch",
+    "cuMemAllocPitch",
+    "cuMemAllocPitch_v2",
+    "cuMemFree",
+    "cuMemFree_v2",
+    "cudaFree",
+    "cuMemFreeHost",
+    "cudaFreeHost",
+    "cudaMemcpy",
+    "cuMemcpyHtoD",
+    "cuMemcpyHtoD_v2",
+    "cuMemcpyDtoH",
+    "cuMemcpyDtoH_v2",
+    "cuMemcpyDtoD",
+    "cuMemcpyDtoD_v2",
+    "cuMemcpyHtoDAsync",
+    "cuMemcpyHtoDAsync_v2",
+    "cuMemcpyDtoHAsync",
+    "cuMemcpyDtoHAsync_v2",
+    "cuMemcpyDtoDAsync",
+    "cuMemcpyDtoDAsync_v2",
+    "cuModuleGetGlobal",
+    "cuModuleGetGlobal_v2",
+    "cudaGetSymbolAddress",
+    "cudaGetSymbolSize",
+    "cudaMemcpyToSymbol",
+    "cudaMemcpyToSymbolAsync",
+    "cudaMemcpyFromSymbol",
+    "cudaMemcpyFromSymbolAsync",
+    "cudaMemcpyAsync",
+    "cudaMemset",
+    "cuMemsetD8",
+    "cuMemsetD8_v2",
+    "cuMemsetD8Async",
+    "cuMemsetD16",
+    "cuMemsetD16_v2",
+    "cuMemsetD16Async",
+    "cuMemsetD32",
+    "cuMemsetD32_v2",
+    "cudaMemsetAsync",
+    "cuMemsetD32Async",
+    "cudaMemset2D",
+    "cudaMemset2DAsync",
+    "cudaMemset3D",
+    "cudaMemset3DAsync",
+    "cuMemGetInfo",
+    "cuMemGetInfo_v2",
+    "cudaMemGetInfo",
+    "cudaMallocArray",
+    "cuArrayCreate",
+    "cuArrayCreate_v2",
+    "cuArrayDestroy",
+    "cuArray3DCreate",
+    "cuArray3DCreate_v2",
+    "cudaMalloc3D",
+    "cudaFreeArray",
+    "cudaFreeMipmappedArray",
+    "cudaMalloc3DArray",
+    "cudaMallocMipmappedArray",
+    "cudaGetMipmappedArrayLevel",
+    "cudaMemcpy2D",
+    "cuMemcpy2D",
+    "cuMemcpy2D_v2",
+    "cuMemcpy2DAsync",
+    "cuMemcpy2DAsync_v2",
+    "cudaMemcpy2DAsync",
+    "cudaMemcpy2DToArray",
+    "cudaMemcpy2DToArrayAsync",
+    "cudaMemcpyToArray",
+    "cudaMemcpyFromArray",
+    "cudaMemcpy2DFromArray",
+    "cudaMemcpy2DFromArrayAsync",
+    "cuMemcpyAtoH",
+    "cuMemcpyAtoH_v2",
+    "cuMemcpyHtoA",
+    "cuMemcpyHtoA_v2",
+    "cudaMemcpy3D",
+    "cudaMemcpy3DAsync",
+    "cuMemcpy3D",
+    "cuMemcpy3D_v2",
+    "cuMemcpy3DAsync",
+    "cuMemcpy3DAsync_v2",
+    "cuDeviceCanAccessPeer",
+    "cudaDeviceCanAccessPeer",
+    "cudaDeviceEnablePeerAccess",
+    "cudaDeviceDisablePeerAccess",
+    "cuMemGetAddressRange",
+    "cuMemGetAddressRange_v2",
+    "cudaMemcpyPeer",
+    "cudaMemcpyPeerAsync",
+    "cuCtxCreate",
+    "cuCtxCreate_v2",
+    "cuCtxDestroy",
+    "cuCtxDestroy_v2",
+    "cuCtxPopCurrent",
+    "cuCtxPopCurrent_v2",
+    "cuCtxPushCurrent",
+    "cuCtxPushCurrent_v2",
+    "cuCtxSetCurrent",
+    "cuCtxGetCurrent",
+    "cuCtxGetDevice",
+    "cuCtxGetApiVersion",
+    "cuCtxGetCacheConfig",
+    "cuCtxSetCacheConfig",
+    "cuCtxSetSharedMemConfig",
+    "cuCtxGetSharedMemConfig",
+    "cuCtxSynchronize",
+    "cuCtxGetFlags",
+    "cuCtxEnablePeerAccess",
+    "cuCtxDisablePeerAccess",
+    "cuDevicePrimaryCtxGetState",
+    "cuDevicePrimaryCtxRelease",
+    "cuDevicePrimaryCtxRelease_v2",
+    "cuDevicePrimaryCtxRetain",
+    "cuDevicePrimaryCtxReset",
+    "cuDevicePrimaryCtxReset_v2",
+    "cuDevicePrimaryCtxSetFlags",
+    "cuDevicePrimaryCtxSetFlags_v2",
+    "cuModuleLoad",
+    "cuModuleUnload",
+    "cuModuleGetFunction",
+    "cudaFuncGetAttributes",
+    "cuFuncGetAttribute",
+    "cuModuleGetTexRef",
+    "cuModuleLoadData",
+    "cuModuleLoadDataEx",
+    "cuLaunchKernel",
+    "cudaLaunchCooperativeKernel",
+    "cudaLaunchCooperativeKernelMultiDevice",
+    "cuOccupancyMaxPotentialBlockSize",
+    "cuOccupancyMaxPotentialBlockSizeWithFlags",
+    "cuOccupancyMaxActiveBlocksPerMultiprocessor",
+    "cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags",
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor",
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags",
+    "cudaOccupancyMaxPotentialBlockSize",
+    "cuProfilerStart",
+    "cudaProfilerStart",
+    "cuProfilerStop",
+    "cudaProfilerStop",
+    "cudaConfigureCall",
+    "cudaSetupArgument",
+    "cudaLaunch",
+    "cudaLaunchKernel",
+    "cuLaunchHostFunc",
+    "cudaLaunchHostFunc",
+    "cuMemcpy2DUnaligned",
+    "cuMemcpy2DUnaligned_v2",
+    "cudaBindTextureToMipmappedArray",
+    "cudaCreateTextureObject",
+    "cudaDestroyTextureObject",
+    "cudaGetChannelDesc",
+    "cudaGetTextureObjectResourceDesc",
+    "cudaGetTextureObjectResourceViewDesc",
+    "cudaGetTextureObjectTextureDesc",
+    "cuTexObjectCreate",
+    "cuTexObjectDestroy",
+    "cuTexObjectGetResourceDesc",
+    "cuTexObjectGetResourceViewDesc",
+    "cuTexObjectGetTextureDesc",
+    "cudaGetTextureReference",
+    "cuTexRefSetAddressMode",
+    "cuTexRefSetArray",
+    "cuTexRefSetFilterMode",
+    "cuTexRefSetFlags",
+    "cuTexRefSetFormat",
+    "cudaBindTexture",
+    "cudaBindTexture2D",
+    "cudaBindTextureToArray",
+    "cudaGetTextureAlignmentOffset",
+    "cudaUnbindTexture",
+    "cuTexRefGetAddress",
+    "cuTexRefGetAddress_v2",
+    "cuTexRefGetAddressMode",
+    "cuTexRefGetFilterMode",
+    "cuTexRefGetFlags",
+    "cuTexRefGetFormat",
+    "cuTexRefGetMaxAnisotropy",
+    "cuTexRefGetMipmapFilterMode",
+    "cuTexRefGetMipmapLevelBias",
+    "cuTexRefGetMipmapLevelClamp",
+    "cuTexRefGetMipmappedArray",
+    "cuTexRefSetAddress",
+    "cuTexRefSetAddress_v2",
+    "cuTexRefSetAddress2D",
+    "cuTexRefSetAddress2D_v2",
+    "cuTexRefSetAddress2D_v3",
+    "cuTexRefSetMaxAnisotropy",
+    "cuTexRefSetBorderColor",
+    "cuTexRefSetMipmapFilterMode",
+    "cuTexRefSetMipmapLevelBias",
+    "cuTexRefSetMipmapLevelClamp",
+    "cuTexRefSetMipmappedArray",
+    "cuMipmappedArrayCreate",
+    "cuMipmappedArrayDestroy",
+    "cuMipmappedArrayGetLevel",
+    "cuStreamBeginCapture",
+    "cuStreamBeginCapture_v2",
+    "cudaStreamBeginCapture",
+    "cuStreamEndCapture",
+    "cudaStreamEndCapture",
+    "cuStreamGetCaptureInfo",
+    "cudaStreamGetCaptureInfo",
+    "cuStreamGetCaptureInfo_v2",
+    "cuStreamIsCapturing",
+    "cudaStreamIsCapturing",
+    "cuStreamUpdateCaptureDependencies",
+    "cuThreadExchangeStreamCaptureMode",
+    "cudaThreadExchangeStreamCaptureMode",
+    "cuGraphCreate",
+    "cudaGraphCreate",
+    "cuGraphDestroy",
+    "cudaGraphDestroy",
+    "cuGraphAddDependencies",
+    "cudaGraphAddDependencies",
+    "cuGraphRemoveDependencies",
+    "cudaGraphRemoveDependencies",
+    "cuGraphGetEdges",
+    "cudaGraphGetEdges",
+    "cuGraphGetNodes",
+    "cudaGraphGetNodes",
+    "cuGraphGetRootNodes",
+    "cudaGraphGetRootNodes",
+    "cuGraphNodeGetDependencies",
+    "cudaGraphNodeGetDependencies",
+    "cuGraphNodeGetDependentNodes",
+    "cudaGraphNodeGetDependentNodes",
+    "cuGraphNodeGetType",
+    "cudaGraphNodeGetType",
+    "cuGraphDestroyNode",
+    "cudaGraphDestroyNode",
+    "cuGraphClone",
+    "cudaGraphClone",
+    "cuGraphNodeFindInClone",
+    "cudaGraphNodeFindInClone",
+    "cuGraphInstantiate",
+    "cuGraphInstantiate_v2",
+    "cudaGraphInstantiate",
+    "cuGraphInstantiateWithFlags",
+    "cudaGraphInstantiateWithFlags",
+    "cuGraphLaunch",
+    "cudaGraphLaunch",
+    "cuGraphUpload",
+    "cudaGraphUpload",
+    "cuGraphExecDestroy",
+    "cudaGraphExecDestroy",
+    "cuGraphExecUpdate",
+    "cudaGraphExecUpdate",
+    "cuGraphAddKernelNode",
+    "cudaGraphAddKernelNode",
+    "cuGraphKernelNodeGetParams",
+    "cudaGraphKernelNodeGetParams",
+    "cuGraphKernelNodeSetParams",
+    "cudaGraphKernelNodeSetParams",
+    "cuGraphExecKernelNodeSetParams",
+    "cudaGraphExecKernelNodeSetParams",
+    "cudaGraphAddMemcpyNode",
+    "cuGraphMemcpyNodeGetParams",
+    "cudaGraphMemcpyNodeGetParams",
+    "cuGraphMemcpyNodeSetParams",
+    "cudaGraphMemcpyNodeSetParams",
+    "cuGraphKernelNodeSetAttribute",
+    "cudaGraphKernelNodeSetAttribute",
+    "cuGraphKernelNodeGetAttribute",
+    "cudaGraphKernelNodeGetAttribute",
+    "cudaGraphExecMemcpyNodeSetParams",
+    "cudaGraphAddMemcpyNode1D",
+    "cudaGraphMemcpyNodeSetParams1D",
+    "cudaGraphExecMemcpyNodeSetParams1D",
+    "cudaGraphAddMemcpyNodeFromSymbol",
+    "cudaGraphMemcpyNodeSetParamsFromSymbol",
+    "cudaGraphExecMemcpyNodeSetParamsFromSymbol",
+    "cudaGraphAddMemcpyNodeToSymbol",
+    "cudaGraphMemcpyNodeSetParamsToSymbol",
+    "cudaGraphExecMemcpyNodeSetParamsToSymbol",
+    "cudaGraphAddMemsetNode",
+    "cuGraphMemsetNodeGetParams",
+    "cudaGraphMemsetNodeGetParams",
+    "cuGraphMemsetNodeSetParams",
+    "cudaGraphMemsetNodeSetParams",
+    "cudaGraphExecMemsetNodeSetParams",
+    "cuGraphAddHostNode",
+    "cudaGraphAddHostNode",
+    "cuGraphHostNodeGetParams",
+    "cudaGraphHostNodeGetParams",
+    "cuGraphHostNodeSetParams",
+    "cudaGraphHostNodeSetParams",
+    "cuGraphExecHostNodeSetParams",
+    "cudaGraphExecHostNodeSetParams",
+    "cuGraphAddChildGraphNode",
+    "cudaGraphAddChildGraphNode",
+    "cuGraphChildGraphNodeGetGraph",
+    "cudaGraphChildGraphNodeGetGraph",
+    "cuGraphExecChildGraphNodeSetParams",
+    "cudaGraphExecChildGraphNodeSetParams",
+    "cuGraphAddEmptyNode",
+    "cudaGraphAddEmptyNode",
+    "cuGraphAddEventRecordNode",
+    "cudaGraphAddEventRecordNode",
+    "cuGraphEventRecordNodeGetEvent",
+    "cudaGraphEventRecordNodeGetEvent",
+    "cuGraphEventRecordNodeSetEvent",
+    "cudaGraphEventRecordNodeSetEvent",
+    "cuGraphExecEventRecordNodeSetEvent",
+    "cudaGraphExecEventRecordNodeSetEvent",
+    "cuGraphAddEventWaitNode",
+    "cudaGraphAddEventWaitNode",
+    "cuGraphEventWaitNodeGetEvent",
+    "cudaGraphEventWaitNodeGetEvent",
+    "cuGraphEventWaitNodeSetEvent",
+    "cudaGraphEventWaitNodeSetEvent",
+    "cuGraphExecEventWaitNodeSetEvent",
+    "cudaGraphExecEventWaitNodeSetEvent",
+    "cuDeviceGetGraphMemAttribute",
+    "cudaDeviceGetGraphMemAttribute",
+    "cuDeviceSetGraphMemAttribute",
+    "cudaDeviceSetGraphMemAttribute",
+    "cuDeviceGraphMemTrim",
+    "cudaDeviceGraphMemTrim",
+    "cuUserObjectCreate",
+    "cudaUserObjectCreate",
+    "cuUserObjectRelease",
+    "cudaUserObjectRelease",
+    "cuUserObjectRetain",
+    "cudaUserObjectRetain",
+    "cuGraphRetainUserObject",
+    "cudaGraphRetainUserObject",
+    "cuGraphReleaseUserObject",
+    "cudaGraphReleaseUserObject",
+    "cuMemAddressFree",
+    "cuMemAddressReserve",
+    "cuMemCreate",
+    "cuMemExportToShareableHandle",
+    "cuMemGetAccess",
+    "cuMemGetAllocationGranularity",
+    "cuMemGetAllocationPropertiesFromHandle",
+    "cuMemImportFromShareableHandle",
+    "cuMemMap",
+    "cuMemMapArrayAsync",
+    "cuMemRelease",
+    "cuMemRetainAllocationHandle",
+    "cuMemSetAccess",
+    "cuMemUnmap",
+    "cuGLGetDevices",
+    "cudaGLGetDevices",
+    "cuGraphicsGLRegisterBuffer",
+    "cudaGraphicsGLRegisterBuffer",
+    "cuGraphicsGLRegisterImage",
+    "cudaGraphicsGLRegisterImage",
+    "cuGraphicsMapResources",
+    "cudaGraphicsMapResources",
+    "cuGraphicsSubResourceGetMappedArray",
+    "cudaGraphicsSubResourceGetMappedArray",
+    "cuGraphicsResourceGetMappedPointer",
+    "cuGraphicsResourceGetMappedPointer_v2",
+    "cudaGraphicsResourceGetMappedPointer",
+    "cuGraphicsUnmapResources",
+    "cudaGraphicsUnmapResources",
+    "cuGraphicsUnregisterResource",
+    "cudaGraphicsUnregisterResource",
+]
