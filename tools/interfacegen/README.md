@@ -93,7 +93,7 @@ cd packages
   Usage: ./generate_hip_python_pkgs.sh [OPTIONS]
 
   Options:
-    --rocm-path       Path to a ROCm&reg; installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+    --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
     -l, --libs        HIP Python modules to generate as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
     --pre-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
     --post-clean      Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
@@ -107,7 +107,7 @@ cd packages
   Usage: ./build_hip_python_pkgs.sh [OPTIONS]
 
   Options:
-    --rocm-path        Path to a ROCm&reg; installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+    --rocm-path        Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
     --no-hip           Do not build package 'hip-python'.
     --no-cuda          Do not build package 'hip-python-as-cuda'.
     --no-docs          Do not build the docs of package 'hip-python'.
