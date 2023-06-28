@@ -76,8 +76,9 @@ libraries interact.
 
 :::{grid-item-card} How to Port CUDA Python Applications
 
-Learn how to identify the correct HIP Python packages for your ROCm&reg; installation, 
-where to retrieve the packages and how to install them.
+Learn how you can use HIP Python's CUDA Python interoperability layer
+to port or even directly run CUDA Python applications
+on AMD GPUs. The chapter covers Python and Cython programs.
 
 - {doc}`/user_guide/2_cuda_python_interop`
 
