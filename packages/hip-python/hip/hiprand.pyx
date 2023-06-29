@@ -874,6 +874,16 @@ class rocrand_rng_type(_rocrand_rng_type__Base):
             MRG31k3p pseudorandom generator
         ROCRAND_RNG_PSEUDO_LFSR113:
             LFSR113 pseudorandom generator
+        ROCRAND_RNG_PSEUDO_MT19937:
+            Mersenne Twister MT19937 pseudorandom generator
+        ROCRAND_RNG_PSEUDO_THREEFRY2_32_20:
+            (undocumented)
+        ROCRAND_RNG_PSEUDO_THREEFRY2_64_20:
+            (undocumented)
+        ROCRAND_RNG_PSEUDO_THREEFRY4_32_20:
+            (undocumented)
+        ROCRAND_RNG_PSEUDO_THREEFRY4_64_20:
+            (undocumented)
         ROCRAND_RNG_QUASI_DEFAULT:
             Default quasirandom generator
         ROCRAND_RNG_QUASI_SOBOL32:
@@ -892,11 +902,49 @@ class rocrand_rng_type(_rocrand_rng_type__Base):
     ROCRAND_RNG_PSEUDO_PHILOX4_32_10 = chiprand.ROCRAND_RNG_PSEUDO_PHILOX4_32_10
     ROCRAND_RNG_PSEUDO_MRG31K3P = chiprand.ROCRAND_RNG_PSEUDO_MRG31K3P
     ROCRAND_RNG_PSEUDO_LFSR113 = chiprand.ROCRAND_RNG_PSEUDO_LFSR113
+    ROCRAND_RNG_PSEUDO_MT19937 = chiprand.ROCRAND_RNG_PSEUDO_MT19937
+    ROCRAND_RNG_PSEUDO_THREEFRY2_32_20 = chiprand.ROCRAND_RNG_PSEUDO_THREEFRY2_32_20
+    ROCRAND_RNG_PSEUDO_THREEFRY2_64_20 = chiprand.ROCRAND_RNG_PSEUDO_THREEFRY2_64_20
+    ROCRAND_RNG_PSEUDO_THREEFRY4_32_20 = chiprand.ROCRAND_RNG_PSEUDO_THREEFRY4_32_20
+    ROCRAND_RNG_PSEUDO_THREEFRY4_64_20 = chiprand.ROCRAND_RNG_PSEUDO_THREEFRY4_64_20
     ROCRAND_RNG_QUASI_DEFAULT = chiprand.ROCRAND_RNG_QUASI_DEFAULT
     ROCRAND_RNG_QUASI_SOBOL32 = chiprand.ROCRAND_RNG_QUASI_SOBOL32
     ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL32 = chiprand.ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL32
     ROCRAND_RNG_QUASI_SOBOL64 = chiprand.ROCRAND_RNG_QUASI_SOBOL64
     ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL64 = chiprand.ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL64
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
+
+class _rocrand_ordering__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class rocrand_ordering(_rocrand_ordering__Base):
+    """rocRAND generator ordering
+
+    Attributes:
+        ROCRAND_ORDERING_PSEUDO_BEST:
+            Best ordering for pseudorandom results
+        ROCRAND_ORDERING_PSEUDO_DEFAULT:
+            Default ordering for pseudorandom results
+        ROCRAND_ORDERING_PSEUDO_SEEDED:
+            Fast lower quality pseudorandom results
+        ROCRAND_ORDERING_PSEUDO_LEGACY:
+            Legacy ordering for pseudorandom results
+        ROCRAND_ORDERING_PSEUDO_DYNAMIC:
+            Adjust to the device executing the generator
+        ROCRAND_ORDERING_QUASI_DEFAULT:
+            n-dimensional ordering for quasirandom results
+    """
+    ROCRAND_ORDERING_PSEUDO_BEST = chiprand.ROCRAND_ORDERING_PSEUDO_BEST
+    ROCRAND_ORDERING_PSEUDO_DEFAULT = chiprand.ROCRAND_ORDERING_PSEUDO_DEFAULT
+    ROCRAND_ORDERING_PSEUDO_SEEDED = chiprand.ROCRAND_ORDERING_PSEUDO_SEEDED
+    ROCRAND_ORDERING_PSEUDO_LEGACY = chiprand.ROCRAND_ORDERING_PSEUDO_LEGACY
+    ROCRAND_ORDERING_PSEUDO_DYNAMIC = chiprand.ROCRAND_ORDERING_PSEUDO_DYNAMIC
+    ROCRAND_ORDERING_QUASI_DEFAULT = chiprand.ROCRAND_ORDERING_QUASI_DEFAULT
     @staticmethod
     def ctypes_type():
         """The type of the enum constants as ctypes type."""
@@ -1153,6 +1201,9 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
     Generated numbers are between ``0`` and ``2^32,`` including ``0`` and
     excluding ``2^32.``
 
+    Note: ``generator`` must be not be of type ``HIPRAND_RNG_QUASI_SOBOL64``
+    or ``HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64.``
+
     Args:
         generator (`~.rocrand_generator_base_type`/`~.object`):
             - Generator to use
@@ -1249,6 +1300,44 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
 
 
 @cython.embedsignature(True)
+def hiprandGenerateLongLong(object generator, object output_data, unsigned long n):
+    r"""Generates uniformly distributed 64-bit unsigned integers.
+
+    Generates ``n`` uniformly distributed 64-bit unsigned integers and
+    saves them to ``output_data.``
+
+    Generated numbers are between ``0`` and ``2^64,`` including ``0`` and
+    excluding ``2^64.``
+
+    Note: ``generator`` must be of type ``HIPRAND_RNG_QUASI_SOBOL64``
+    or ``HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64.``
+
+    Args:
+        generator (`~.rocrand_generator_base_type`/`~.object`):
+            - Generator to use
+
+        output_data (`~.hip._util.types.Pointer`/`~.object`):
+            - Pointer to memory to store generated numbers
+
+        n (`~.int`):
+            - Number of 64-bit unsigned integers to generate
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hiprandStatus`: HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+
+            - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+
+            - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    """
+    _hiprandGenerateLongLong__retval = hiprandStatus(chiprand.hiprandGenerateLongLong(
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <unsigned long long *>hip._util.types.Pointer.from_pyobj(output_data)._ptr,n))    # fully specified
+    return (_hiprandGenerateLongLong__retval,)
+
+
+@cython.embedsignature(True)
 def hiprandGenerateUniform(object generator, object output_data, unsigned long n):
     r"""Generates uniformly distributed floats.
 
@@ -1297,8 +1386,9 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
     including ``1.0.``
 
     Note: When ``generator`` is of type: ``HIPRAND_RNG_PSEUDO_MRG32K3A,``
-    ``HIPRAND_RNG_PSEUDO_MTGP32,`` or ``HIPRAND_RNG_QUASI_SOBOL32,``
-    then the returned ``double`` values are generated from only 32 random bits
+    ``HIPRAND_RNG_PSEUDO_MTGP32,`` ``HIPRAND_RNG_QUASI_SOBOL32,`` or
+    ``HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32`` then the returned ``double``
+    values are generated from only 32 random bits
     each (one <tt>unsigned int</tt> value per one generated ``double).``
 
     Args:
@@ -1898,6 +1988,8 @@ __all__ = [
     "rocrand_status",
     "_rocrand_rng_type__Base",
     "rocrand_rng_type",
+    "_rocrand_ordering__Base",
+    "rocrand_ordering",
     "hiprandGenerator_st",
     "hiprandDiscreteDistribution_st",
     "hiprandGenerator_t",
@@ -1914,6 +2006,7 @@ __all__ = [
     "hiprandGenerate",
     "hiprandGenerateChar",
     "hiprandGenerateShort",
+    "hiprandGenerateLongLong",
     "hiprandGenerateUniform",
     "hiprandGenerateUniformDouble",
     "hiprandGenerateUniformHalf",

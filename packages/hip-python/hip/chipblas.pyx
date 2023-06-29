@@ -86,22 +86,6 @@ cdef hipblasStatus_t hipblasGetPointerMode(void * handle,hipblasPointerMode_t * 
     return (<hipblasStatus_t (*)(void *,hipblasPointerMode_t *) nogil> _hipblasGetPointerMode__funptr)(handle,mode)
 
 
-cdef void* _hipblasSetInt8Datatype__funptr = NULL
-# \brief Set hipblas int8 Datatype */
-cdef hipblasStatus_t hipblasSetInt8Datatype(void * handle,hipblasInt8Datatype_t int8Type) nogil:
-    global _hipblasSetInt8Datatype__funptr
-    __init_symbol(&_hipblasSetInt8Datatype__funptr,"hipblasSetInt8Datatype")
-    return (<hipblasStatus_t (*)(void *,hipblasInt8Datatype_t) nogil> _hipblasSetInt8Datatype__funptr)(handle,int8Type)
-
-
-cdef void* _hipblasGetInt8Datatype__funptr = NULL
-# \brief Get hipblas int8 Datatype*/
-cdef hipblasStatus_t hipblasGetInt8Datatype(void * handle,hipblasInt8Datatype_t * int8Type) nogil:
-    global _hipblasGetInt8Datatype__funptr
-    __init_symbol(&_hipblasGetInt8Datatype__funptr,"hipblasGetInt8Datatype")
-    return (<hipblasStatus_t (*)(void *,hipblasInt8Datatype_t *) nogil> _hipblasGetInt8Datatype__funptr)(handle,int8Type)
-
-
 cdef void* _hipblasSetVector__funptr = NULL
 # \brief copy vector from host to device
 # @param[in]
@@ -2771,31 +2755,31 @@ cdef void* _hipblasSswapBatched__funptr = NULL
 # batchCount [int]
 #             number of instances in the batch.
 #
-cdef hipblasStatus_t hipblasSswapBatched(void * handle,int n,float ** x,int incx,float ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasSswapBatched(void * handle,int n,float *const* x,int incx,float *const* y,int incy,int batchCount) nogil:
     global _hipblasSswapBatched__funptr
     __init_symbol(&_hipblasSswapBatched__funptr,"hipblasSswapBatched")
-    return (<hipblasStatus_t (*)(void *,int,float **,int,float **,int,int) nogil> _hipblasSswapBatched__funptr)(handle,n,x,incx,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,int,float *const*,int,float *const*,int,int) nogil> _hipblasSswapBatched__funptr)(handle,n,x,incx,y,incy,batchCount)
 
 
 cdef void* _hipblasDswapBatched__funptr = NULL
-cdef hipblasStatus_t hipblasDswapBatched(void * handle,int n,double ** x,int incx,double ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasDswapBatched(void * handle,int n,double *const* x,int incx,double *const* y,int incy,int batchCount) nogil:
     global _hipblasDswapBatched__funptr
     __init_symbol(&_hipblasDswapBatched__funptr,"hipblasDswapBatched")
-    return (<hipblasStatus_t (*)(void *,int,double **,int,double **,int,int) nogil> _hipblasDswapBatched__funptr)(handle,n,x,incx,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,int,double *const*,int,double *const*,int,int) nogil> _hipblasDswapBatched__funptr)(handle,n,x,incx,y,incy,batchCount)
 
 
 cdef void* _hipblasCswapBatched__funptr = NULL
-cdef hipblasStatus_t hipblasCswapBatched(void * handle,int n,hipblasComplex ** x,int incx,hipblasComplex ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasCswapBatched(void * handle,int n,hipblasComplex *const* x,int incx,hipblasComplex *const* y,int incy,int batchCount) nogil:
     global _hipblasCswapBatched__funptr
     __init_symbol(&_hipblasCswapBatched__funptr,"hipblasCswapBatched")
-    return (<hipblasStatus_t (*)(void *,int,hipblasComplex **,int,hipblasComplex **,int,int) nogil> _hipblasCswapBatched__funptr)(handle,n,x,incx,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *const*,int,hipblasComplex *const*,int,int) nogil> _hipblasCswapBatched__funptr)(handle,n,x,incx,y,incy,batchCount)
 
 
 cdef void* _hipblasZswapBatched__funptr = NULL
-cdef hipblasStatus_t hipblasZswapBatched(void * handle,int n,hipblasDoubleComplex ** x,int incx,hipblasDoubleComplex ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasZswapBatched(void * handle,int n,hipblasDoubleComplex *const* x,int incx,hipblasDoubleComplex *const* y,int incy,int batchCount) nogil:
     global _hipblasZswapBatched__funptr
     __init_symbol(&_hipblasZswapBatched__funptr,"hipblasZswapBatched")
-    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex **,int,hipblasDoubleComplex **,int,int) nogil> _hipblasZswapBatched__funptr)(handle,n,x,incx,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *const*,int,int) nogil> _hipblasZswapBatched__funptr)(handle,n,x,incx,y,incy,batchCount)
 
 
 cdef void* _hipblasSswapStridedBatched__funptr = NULL
@@ -5478,17 +5462,17 @@ cdef void* _hipblasSsbmvBatched__funptr = NULL
 # batchCount [int]
 #             number of instances in the batch
 #
-cdef hipblasStatus_t hipblasSsbmvBatched(void * handle,hipblasFillMode_t uplo,int n,int k,const float * alpha,const float *const* AP,int lda,const float *const* x,int incx,const float * beta,float ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasSsbmvBatched(void * handle,hipblasFillMode_t uplo,int n,int k,const float * alpha,const float *const* AP,int lda,const float *const* x,int incx,const float * beta,float *const* y,int incy,int batchCount) nogil:
     global _hipblasSsbmvBatched__funptr
     __init_symbol(&_hipblasSsbmvBatched__funptr,"hipblasSsbmvBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,int,const float *,const float *const*,int,const float *const*,int,const float *,float **,int,int) nogil> _hipblasSsbmvBatched__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,int,const float *,const float *const*,int,const float *const*,int,const float *,float *const*,int,int) nogil> _hipblasSsbmvBatched__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
 
 
 cdef void* _hipblasDsbmvBatched__funptr = NULL
-cdef hipblasStatus_t hipblasDsbmvBatched(void * handle,hipblasFillMode_t uplo,int n,int k,const double * alpha,const double *const* AP,int lda,const double *const* x,int incx,const double * beta,double ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasDsbmvBatched(void * handle,hipblasFillMode_t uplo,int n,int k,const double * alpha,const double *const* AP,int lda,const double *const* x,int incx,const double * beta,double *const* y,int incy,int batchCount) nogil:
     global _hipblasDsbmvBatched__funptr
     __init_symbol(&_hipblasDsbmvBatched__funptr,"hipblasDsbmvBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,int,const double *,const double *const*,int,const double *const*,int,const double *,double **,int,int) nogil> _hipblasDsbmvBatched__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,int,const double *,const double *const*,int,const double *const*,int,const double *,double *const*,int,int) nogil> _hipblasDsbmvBatched__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
 
 
 cdef void* _hipblasSsbmvStridedBatched__funptr = NULL
@@ -5679,17 +5663,17 @@ cdef void* _hipblasSspmvBatched__funptr = NULL
 # batchCount [int]
 #             number of instances in the batch
 #
-cdef hipblasStatus_t hipblasSspmvBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* AP,const float *const* x,int incx,const float * beta,float ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasSspmvBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* AP,const float *const* x,int incx,const float * beta,float *const* y,int incy,int batchCount) nogil:
     global _hipblasSspmvBatched__funptr
     __init_symbol(&_hipblasSspmvBatched__funptr,"hipblasSspmvBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *const*,const float *const*,int,const float *,float **,int,int) nogil> _hipblasSspmvBatched__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *const*,const float *const*,int,const float *,float *const*,int,int) nogil> _hipblasSspmvBatched__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy,batchCount)
 
 
 cdef void* _hipblasDspmvBatched__funptr = NULL
-cdef hipblasStatus_t hipblasDspmvBatched(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double *const* AP,const double *const* x,int incx,const double * beta,double ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasDspmvBatched(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double *const* AP,const double *const* x,int incx,const double * beta,double *const* y,int incy,int batchCount) nogil:
     global _hipblasDspmvBatched__funptr
     __init_symbol(&_hipblasDspmvBatched__funptr,"hipblasDspmvBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *const*,const double *const*,int,const double *,double **,int,int) nogil> _hipblasDspmvBatched__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *const*,const double *const*,int,const double *,double *const*,int,int) nogil> _hipblasDspmvBatched__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy,batchCount)
 
 
 cdef void* _hipblasSspmvStridedBatched__funptr = NULL
@@ -6423,31 +6407,31 @@ cdef void* _hipblasSsymvBatched__funptr = NULL
 # batchCount [int]
 #             number of instances in the batch
 #
-cdef hipblasStatus_t hipblasSsymvBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* AP,int lda,const float *const* x,int incx,const float * beta,float ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasSsymvBatched(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float *const* AP,int lda,const float *const* x,int incx,const float * beta,float *const* y,int incy,int batchCount) nogil:
     global _hipblasSsymvBatched__funptr
     __init_symbol(&_hipblasSsymvBatched__funptr,"hipblasSsymvBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *const*,int,const float *const*,int,const float *,float **,int,int) nogil> _hipblasSsymvBatched__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *const*,int,const float *const*,int,const float *,float *const*,int,int) nogil> _hipblasSsymvBatched__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
 
 
 cdef void* _hipblasDsymvBatched__funptr = NULL
-cdef hipblasStatus_t hipblasDsymvBatched(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double *const* AP,int lda,const double *const* x,int incx,const double * beta,double ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasDsymvBatched(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double *const* AP,int lda,const double *const* x,int incx,const double * beta,double *const* y,int incy,int batchCount) nogil:
     global _hipblasDsymvBatched__funptr
     __init_symbol(&_hipblasDsymvBatched__funptr,"hipblasDsymvBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *const*,int,const double *const*,int,const double *,double **,int,int) nogil> _hipblasDsymvBatched__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *const*,int,const double *const*,int,const double *,double *const*,int,int) nogil> _hipblasDsymvBatched__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
 
 
 cdef void* _hipblasCsymvBatched__funptr = NULL
-cdef hipblasStatus_t hipblasCsymvBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* x,int incx,hipblasComplex * beta,hipblasComplex ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasCsymvBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* x,int incx,hipblasComplex * beta,hipblasComplex *const* y,int incy,int batchCount) nogil:
     global _hipblasCsymvBatched__funptr
     __init_symbol(&_hipblasCsymvBatched__funptr,"hipblasCsymvBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *const*,int,hipblasComplex *const*,int,hipblasComplex *,hipblasComplex **,int,int) nogil> _hipblasCsymvBatched__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *const*,int,hipblasComplex *const*,int,hipblasComplex *,hipblasComplex *const*,int,int) nogil> _hipblasCsymvBatched__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
 
 
 cdef void* _hipblasZsymvBatched__funptr = NULL
-cdef hipblasStatus_t hipblasZsymvBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex *const* AP,int lda,hipblasDoubleComplex *const* x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex ** y,int incy,int batchCount) nogil:
+cdef hipblasStatus_t hipblasZsymvBatched(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex *const* AP,int lda,hipblasDoubleComplex *const* x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex *const* y,int incy,int batchCount) nogil:
     global _hipblasZsymvBatched__funptr
     __init_symbol(&_hipblasZsymvBatched__funptr,"hipblasZsymvBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *,hipblasDoubleComplex **,int,int) nogil> _hipblasZsymvBatched__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *,hipblasDoubleComplex *const*,int,int) nogil> _hipblasZsymvBatched__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy,batchCount)
 
 
 cdef void* _hipblasSsymvStridedBatched__funptr = NULL
@@ -11690,17 +11674,178 @@ cdef void* _hipblasStrmm__funptr = NULL
 # 
 # \details
 # 
-# trmm performs one of the matrix-matrix operations
+#    #ifndef HIPBLAS_V1  //  deprecated
 # 
-# B := alpha*op( A )*B,   or   B := alpha*B*op( A )
+#            hipblasStatus_t hipblasStrmm(hipblasHandle_t    handle,
+#                                         hipblasSideMode_t  side,
+#                                         hipblasFillMode_t  uplo,
+#                                         hipblasOperation_t transA,
+#                                         hipblasDiagType_t  diag,
+#                                         int                m,
+#                                         int                n,
+#                                         const float*       alpha,
+#                                         const float*       AP,
+#                                         int                lda,
+#                                         float*             BP,
+#                                         int                ldb);
 # 
-# where  alpha  is a scalar,  B  is an m by n matrix,  A  is a unit, or
-# non-unit,  upper or lower triangular matrix  and  op( A )  is one  of
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
 # 
-#     op( A ) = A   or   op( A ) = A^T   or   op( A ) = A^H.
+#            hipblasStatus_t hipblasStrmmOutofplace(hipblasHandle_t    handle,
+#                                                   hipblasSideMode_t  side,
+#                                                   hipblasFillMode_t  uplo,
+#                                                   hipblasOperation_t transA,
+#                                                   hipblasDiagType_t  diag,
+#                                                   int                m,
+#                                                   int                n,
+#                                                   const float*       alpha,
+#                                                   const float*       AP,
+#                                                   int                lda,
+#                                                   const float*       BP,
+#                                                   int                ldb,
+#                                                   float*             CP,
+#                                                   int                ldc);
 # 
+#     #endif
 # 
-# - Supported precisions in rocBLAS : s,d,c,z
+#     #ifndef HIPBLAS_V1  //  deprecated
+# 
+#            hipblasStatus_t hipblasDtrmm(hipblasHandle_t    handle,
+#                                         hipblasSideMode_t  side,
+#                                         hipblasFillMode_t  uplo,
+#                                         hipblasOperation_t transA,
+#                                         hipblasDiagType_t  diag,
+#                                         int                m,
+#                                         int                n,
+#                                         const double*      alpha,
+#                                         const double*      AP,
+#                                         int                lda,
+#                                         double*            BP,
+#                                         int                ldb);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#            hipblasStatus_t hipblasDtrmmOutofplace(hipblasHandle_t    handle,
+#                                                   hipblasSideMode_t  side,
+#                                                   hipblasFillMode_t  uplo,
+#                                                   hipblasOperation_t transA,
+#                                                   hipblasDiagType_t  diag,
+#                                                   int                m,
+#                                                   int                n,
+#                                                   const double*      alpha,
+#                                                   const double*      AP,
+#                                                   int                lda,
+#                                                   const double*      BP,
+#                                                   int                ldb,
+#                                                   double*            CP,
+#                                                   int                ldc);
+# 
+#     #endif
+# 
+#     #ifndef HIPBLAS_V1  //  deprecated
+# 
+#            hipblasStatus_t hipblasCtrmm(hipblasHandle_t       handle,
+#                                         hipblasSideMode_t     side,
+#                                         hipblasFillMode_t     uplo,
+#                                         hipblasOperation_t    transA,
+#                                         hipblasDiagType_t     diag,
+#                                         int                   m,
+#                                         int                   n,
+#                                         const hipblasComplex* alpha,
+#                                         const hipblasComplex* AP,
+#                                         int                   lda,
+#                                         hipblasComplex*       BP,
+#                                         int                   ldb);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#            hipblasStatus_t hipblasCtrmmOutofplace(hipblasHandle_t       handle,
+#                                                   hipblasSideMode_t     side,
+#                                                   hipblasFillMode_t     uplo,
+#                                                   hipblasOperation_t    transA,
+#                                                   hipblasDiagType_t     diag,
+#                                                   int                   m,
+#                                                   int                   n,
+#                                                   const hipblasComplex* alpha,
+#                                                   const hipblasComplex* AP,
+#                                                   int                   lda,
+#                                                   const hipblasComplex* BP,
+#                                                   int                   ldb,
+#                                                   hipblasComplex*       CP,
+#                                                   int                   ldc);
+# 
+#     #endif
+# 
+#     #ifndef HIPBLAS_V1  //  deprecated
+# 
+#            hipblasStatus_t hipblasZtrmm(hipblasHandle_t             handle,
+#                                         hipblasSideMode_t           side,
+#                                         hipblasFillMode_t           uplo,
+#                                         hipblasOperation_t          transA,
+#                                         hipblasDiagType_t           diag,
+#                                         int                         m,
+#                                         int                         n,
+#                                         const hipblasDoubleComplex* alpha,
+#                                         const hipblasDoubleComplex* AP,
+#                                         int                         lda,
+#                                         hipblasDoubleComplex*       BP,
+#                                         int                         ldb);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#            hipblasStatus_t hipblasZtrmmOutofplace(hipblasHandle_t             handle,
+#                                                   hipblasSideMode_t           side,
+#                                                   hipblasFillMode_t           uplo,
+#                                                   hipblasOperation_t          transA,
+#                                                   hipblasDiagType_t           diag,
+#                                                   int                         m,
+#                                                   int                         n,
+#                                                   const hipblasDoubleComplex* alpha,
+#                                                   const hipblasDoubleComplex* AP,
+#                                                   int                         lda,
+#                                                   const hipblasDoubleComplex* BP,
+#                                                   int                         ldb,
+#                                                   hipblasDoubleComplex*       CP,
+#                                                   int                         ldc);
+# 
+#     #endif
+# 
+# The deprecated Legacy BLAS in-place trmm performs one of the matrix-matrix operations:
+# 
+#     B := alpha*op( A )*B,   or
+#     B := alpha*B*op( A ),
+# 
+# The new trmm performs one of the matrix-matrix operations:
+# 
+#     C := alpha*op( A )*B,   or
+#     C := alpha*B*op( A ),
+# 
+# The in-place functionality is still available in the new trmmm by setting pointer C equal to pointer B,
+# and ldc equal to ldb.
+# 
+#     alpha  is a scalar,  B  is an m by n matrix, C  is an m by n matrix,  A  is a unit, or
+#     non-unit,  upper or lower triangular matrix  and  op( A )  is one  of
+# 
+#     op( A ) = A     or
+#     op( A ) = A^T   or
+#     op( A ) = A^H.
+# 
+#     When uplo == rocblas_fill_upper the  leading  k by k
+#     upper triangular part of the array  A must contain the upper
+#     triangular matrix and the strictly lower triangular part of
+#     A is not referenced. Here k is m when side == rocblas_side_left
+#     and is n when side == rocblas_side_right.
+# 
+#     When uplo == rocblas_fill_lower the  leading  k by k
+#     lower triangular part of the array  A must contain the lower
+#     triangular matrix  and the strictly upper triangular part of
+#     A is not referenced. Here k is m when  side == rocblas_side_left
+#     and is n when side == rocblas_side_right.
+# 
+#     Note that when  diag == rocblas_diagonal_unit  the diagonal elements of
+#     A  are not referenced either,  but are assumed to be  unity.
+# 
+# - Supported precisions in hipBLAS : s,d,c,z
 # - Supported precisions in cuBLAS  : s,d,c,z
 # 
 # @param[in]
@@ -11808,22 +11953,212 @@ cdef hipblasStatus_t hipblasZtrmm(void * handle,hipblasSideMode_t side,hipblasFi
     return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
+cdef void* _hipblasStrmmOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasStrmmOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,const float * BP,int ldb,float * CP,int ldc) nogil:
+    global _hipblasStrmmOutofplace__funptr
+    __init_symbol(&_hipblasStrmmOutofplace__funptr,"hipblasStrmmOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *,int,const float *,int,float *,int) nogil> _hipblasStrmmOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,CP,ldc)
+
+
+cdef void* _hipblasDtrmmOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasDtrmmOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double * AP,int lda,const double * BP,int ldb,double * CP,int ldc) nogil:
+    global _hipblasDtrmmOutofplace__funptr
+    __init_symbol(&_hipblasDtrmmOutofplace__funptr,"hipblasDtrmmOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *,int,const double *,int,double *,int) nogil> _hipblasDtrmmOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,CP,ldc)
+
+
+cdef void* _hipblasCtrmmOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasCtrmmOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * CP,int ldc) nogil:
+    global _hipblasCtrmmOutofplace__funptr
+    __init_symbol(&_hipblasCtrmmOutofplace__funptr,"hipblasCtrmmOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrmmOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,CP,ldc)
+
+
+cdef void* _hipblasZtrmmOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasZtrmmOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * CP,int ldc) nogil:
+    global _hipblasZtrmmOutofplace__funptr
+    __init_symbol(&_hipblasZtrmmOutofplace__funptr,"hipblasZtrmmOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrmmOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,CP,ldc)
+
+
 cdef void* _hipblasStrmmBatched__funptr = NULL
 # @{
 # \brief BLAS Level 3 API
 # 
 # \details
+# The hipBLAS trmm_batched API is from Legacy BLAS and it supports only in-place functionality.
+# It is deprecated and it will be replaced with an API that supports both in-place and
+# out-of-place functionality. The new API is available in hipBLAS versions 1.x.x and later.
+# To get the new API compile with the directive -DHIPBLAS_V1.
 # 
-# trmmBatched performs one of the batched matrix-matrix operations
+#     #ifndef HIPBLAS_V1  //  deprecated
 # 
-# B_i := alpha*op( A_i )*B_i,   or   B_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batchCount -1
+#         hipblasStatus_t hipblasStrmmBatched(hipblasHandle_t    handle,
+#                                             hipblasSideMode_t  side,
+#                                             hipblasFillMode_t  uplo,
+#                                             hipblasOperation_t transA,
+#                                             hipblasDiagType_t  diag,
+#                                             int                m,
+#                                             int                n,
+#                                             const float*       alpha,
+#                                             const float* const AP[],
+#                                             int                lda,
+#                                             float* const       BP[],
+#                                             int                ldb,
+#                                             int                batchCount);
 # 
-# where  alpha  is a scalar,  B_i  is an m by n matrix,  A_i  is a unit, or
-# non-unit,  upper or lower triangular matrix  and  op( A_i )  is one  of
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#         hipblasStatus_t hipblasStrmmBatchedOutofplace(
+#                                             hipblasHandle_t    handle,
+#                                             hipblasSideMode_t  side,
+#                                             hipblasFillMode_t  uplo,
+#                                             hipblasOperation_t transA,
+#                                             hipblasDiagType_t  diag,
+#                                             int                m,
+#                                             int                n,
+#                                             const float*       alpha,
+#                                             const float* const AP[],
+#                                             int                lda,
+#                                             const float* const BP[],
+#                                             int                ldb,
+#                                             float* const       CP[],
+#                                             int                ldc,
+#                                             int                batchCount);
+# 
+#     #endif
+# 
+#     #ifndef HIPBLAS_V1  //  deprecated
+# 
+#         hipblasStatus_t hipblasDtrmmBatched(hipblasHandle_t     handle,
+#                                             hipblasSideMode_t   side,
+#                                             hipblasFillMode_t   uplo,
+#                                             hipblasOperation_t  transA,
+#                                             hipblasDiagType_t   diag,
+#                                             int                 m,
+#                                             int                 n,
+#                                             const double*       alpha,
+#                                             const double* const AP[],
+#                                             int                 lda,
+#                                             double* const       BP[],
+#                                             int                 ldb,
+#                                             int                 batchCount);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#         hipblasStatus_t hipblasDtrmmBatchedOutofplace(
+#                                             hipblasHandle_t     handle,
+#                                             hipblasSideMode_t   side,
+#                                             hipblasFillMode_t   uplo,
+#                                             hipblasOperation_t  transA,
+#                                             hipblasDiagType_t   diag,
+#                                             int                 m,
+#                                             int                 n,
+#                                             const double*       alpha,
+#                                             const double* const AP[],
+#                                             int                 lda,
+#                                             const double* const BP[],
+#                                             int                 ldb,
+#                                             double* const       CP[],
+#                                             int                 ldc,
+#                                             int                 batchCount);
+# 
+#     #endif
+# 
+#     #ifndef HIPBLAS_V1  //  deprecated
+# 
+#         hipblasStatus_t hipblasCtrmmBatched(hipblasHandle_t             handle,
+#                                             hipblasSideMode_t           side,
+#                                             hipblasFillMode_t           uplo,
+#                                             hipblasOperation_t          transA,
+#                                             hipblasDiagType_t           diag,
+#                                             int                         m,
+#                                             int                         n,
+#                                             const hipblasComplex*       alpha,
+#                                             const hipblasComplex* const AP[],
+#                                             int                         lda,
+#                                             hipblasComplex* const       BP[],
+#                                             int                         ldb,
+#                                             int                         batchCount);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#         hipblasStatus_t hipblasCtrmmBatchedOutofplace(
+#                                             hipblasHandle_t             handle,
+#                                             hipblasSideMode_t           side,
+#                                             hipblasFillMode_t           uplo,
+#                                             hipblasOperation_t          transA,
+#                                             hipblasDiagType_t           diag,
+#                                             int                         m,
+#                                             int                         n,
+#                                             const hipblasComplex*       alpha,
+#                                             const hipblasComplex* const AP[],
+#                                             int                         lda,
+#                                             const hipblasComplex* const BP[],
+#                                             int                         ldb,
+#                                             hipblasComplex* const       CP[],
+#                                             int                         ldc,
+#                                             int batchCount);
+# 
+#     #endif
+# 
+#     #ifndef HIPBLAS_V1  //  deprecated
+# 
+#         hipblasStatus_t hipblasZtrmmBatched(hipblasHandle_t                   handle,
+#                                             hipblasSideMode_t                 side,
+#                                             hipblasFillMode_t                 uplo,
+#                                             hipblasOperation_t                transA,
+#                                             hipblasDiagType_t                 diag,
+#                                             int                               m,
+#                                             int                               n,
+#                                             const hipblasDoubleComplex*       alpha,
+#                                             const hipblasDoubleComplex* const AP[],
+#                                             int                               lda,
+#                                             hipblasDoubleComplex* const       BP[],
+#                                             int                               ldb,
+#                                             int                               batchCount);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#         hipblasStatus_t hipblasZtrmmBatchedOutofplace(
+#                                             hipblasHandle_t                   handle,
+#                                             hipblasSideMode_t                 side,
+#                                             hipblasFillMode_t                 uplo,
+#                                             hipblasOperation_t                transA,
+#                                             hipblasDiagType_t                 diag,
+#                                             int                               m,
+#                                             int                               n,
+#                                             const hipblasDoubleComplex*       alpha,
+#                                             const hipblasDoubleComplex* const AP[],
+#                                             int                               lda,
+#                                             const hipblasDoubleComplex* const BP[],
+#                                             int                               ldb,
+#                                             hipblasDoubleComplex* const       CP[],
+#                                             int                               ldc,
+#                                             int                               batchCount);
+# 
+#     #endif
+# 
+# The deprecated Legacy BLAS in-place trmm_batched performs one of the batched matrix-matrix operations:
+# 
+#     B_i := alpha*op( A_i )*B_i,   or
+#     B_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batch_count -1,
+# 
+# The new trmm_batched performs one of the matrix-matrix operations:
+# 
+#     C_i := alpha*op( A_i )*B_i,   or
+#     C_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batch_count -1,
+# 
+# The in-place functionality is still available in the new trmmm_batched by setting pointer C equal to pointer B
+# and ldc equal to ldb.
+# 
+#     alpha  is a scalar,  B_i  is an m by n matrix, C_i  is an m by n matrix,  A_i  is a unit, or
+#     non-unit,  upper or lower triangular matrix  and  op( A_i )  is one  of
 # 
 #     op( A_i ) = A_i   or   op( A_i ) = A_i^T   or   op( A_i ) = A_i^H.
 # 
-# - Supported precisions in rocBLAS : s,d,c,z
+# 
+# - Supported precisions in hipBLAS : s,d,c,z
 # - Supported precisions in cuBLAS  : No support
 # 
 # @param[in]
@@ -11934,22 +12269,234 @@ cdef hipblasStatus_t hipblasZtrmmBatched(void * handle,hipblasSideMode_t side,hi
     return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *const*,int,int) nogil> _hipblasZtrmmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
 
 
+cdef void* _hipblasStrmmBatchedOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasStrmmBatchedOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float *const* AP,int lda,const float *const* BP,int ldb,float *const* CP,int ldc,int batchCount) nogil:
+    global _hipblasStrmmBatchedOutofplace__funptr
+    __init_symbol(&_hipblasStrmmBatchedOutofplace__funptr,"hipblasStrmmBatchedOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *const*,int,const float *const*,int,float *const*,int,int) nogil> _hipblasStrmmBatchedOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,CP,ldc,batchCount)
+
+
+cdef void* _hipblasDtrmmBatchedOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasDtrmmBatchedOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double *const* AP,int lda,const double *const* BP,int ldb,double *const* CP,int ldc,int batchCount) nogil:
+    global _hipblasDtrmmBatchedOutofplace__funptr
+    __init_symbol(&_hipblasDtrmmBatchedOutofplace__funptr,"hipblasDtrmmBatchedOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *const*,int,const double *const*,int,double *const*,int,int) nogil> _hipblasDtrmmBatchedOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,CP,ldc,batchCount)
+
+
+cdef void* _hipblasCtrmmBatchedOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasCtrmmBatchedOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* BP,int ldb,hipblasComplex *const* CP,int ldc,int batchCount) nogil:
+    global _hipblasCtrmmBatchedOutofplace__funptr
+    __init_symbol(&_hipblasCtrmmBatchedOutofplace__funptr,"hipblasCtrmmBatchedOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *const*,int,hipblasComplex *const*,int,hipblasComplex *const*,int,int) nogil> _hipblasCtrmmBatchedOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,CP,ldc,batchCount)
+
+
+cdef void* _hipblasZtrmmBatchedOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasZtrmmBatchedOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex *const* AP,int lda,hipblasDoubleComplex *const* BP,int ldb,hipblasDoubleComplex *const* CP,int ldc,int batchCount) nogil:
+    global _hipblasZtrmmBatchedOutofplace__funptr
+    __init_symbol(&_hipblasZtrmmBatchedOutofplace__funptr,"hipblasZtrmmBatchedOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *const*,int,int) nogil> _hipblasZtrmmBatchedOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,CP,ldc,batchCount)
+
+
 cdef void* _hipblasStrmmStridedBatched__funptr = NULL
 # @{
 # \brief BLAS Level 3 API
 # 
 # \details
+# The hipBLAS trmm_strided_batched API is from Legacy BLAS and it supports only in-place functionality.
+# It is deprecated and it will be replaced with an API that supports both in-place and
+# out-of-place functionality. The new API is available in hipBLAS versions 1.x.x and later.
+# To get the new API compile with the directive -DHIPBLAS_V1.
 # 
-# trmmStridedBatched performs one of the strided_batched matrix-matrix operations
+#     #ifndef HIPBLAS_V1  //  deprecated
+#            hipblasStatus_t hipblasStrmmStridedBatched(
+#                                hipblasHandle_t    handle,
+#                                hipblasSideMode_t  side,
+#                                hipblasFillMode_t  uplo,
+#                                hipblasOperation_t transA,
+#                                hipblasDiagType_t  diag,
+#                                int                m,
+#                                int                n,
+#                                const float*       alpha,
+#                                const float*       AP,
+#                                int                lda,
+#                                hipblasStride      strideA,
+#                                float*             BP,
+#                                int                ldb,
+#                                hipblasStride      strideB,
+#                                int                batchCount);
 # 
-# B_i := alpha*op( A_i )*B_i,   or   B_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batchCount -1
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
 # 
-# where  alpha  is a scalar,  B_i  is an m by n matrix,  A_i  is a unit, or
-# non-unit,  upper or lower triangular matrix  and  op( A_i )  is one  of
+#            hipblasStatus_t hipblasStrmmStridedBatchedOutofplace(
+#                                hipblasHandle_t    handle,
+#                                hipblasSideMode_t  side,
+#                                hipblasFillMode_t  uplo,
+#                                hipblasOperation_t transA,
+#                                hipblasDiagType_t  diag,
+#                                int                m,
+#                                int                n,
+#                                const float*       alpha,
+#                                const float*       AP,
+#                                int                lda,
+#                                hipblasStride      strideA,
+#                                const float*       BP,
+#                                int                ldb,
+#                                hipblasStride      strideB,
+#                                float*             CP,
+#                                int                ldc,
+#                                hipblasStride      strideC,
+#                                int                batchCount);
 # 
-#     op( A_i ) = A_i   or   op( A_i ) = A_i^T   or   op( A_i ) = A_i^H.
+#     #endif
 # 
-# - Supported precisions in rocBLAS : s,d,c,z
+#     #ifndef HIPBLAS_V1  //  deprecated
+#            hipblasStatus_t hipblasDtrmmStridedBatched(
+#                                hipblasHandle_t    handle,
+#                                hipblasSideMode_t  side,
+#                                hipblasFillMode_t  uplo,
+#                                hipblasOperation_t transA,
+#                                hipblasDiagType_t  diag,
+#                                int                m,
+#                                int                n,
+#                                const double*      alpha,
+#                                const double*      AP,
+#                                int                lda,
+#                                hipblasStride      strideA,
+#                                double*            BP,
+#                                int                ldb,
+#                                hipblasStride      strideB,
+#                                int                batchCount);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#            hipblasStatus_t hipblasDtrmmStridedBatchedOutofplace(
+#                                hipblasHandle_t    handle,
+#                                hipblasSideMode_t  side,
+#                                hipblasFillMode_t  uplo,
+#                                hipblasOperation_t transA,
+#                                hipblasDiagType_t  diag,
+#                                int                m,
+#                                int                n,
+#                                const double*      alpha,
+#                                const double*      AP,
+#                                int                lda,
+#                                hipblasStride      strideA,
+#                                const double*      BP,
+#                                int                ldb,
+#                                hipblasStride      strideB,
+#                                double*            CP,
+#                                int                ldc,
+#                                hipblasStride      strideC,
+#                                int                batchCount);
+# 
+#     #endif
+# 
+#     #ifndef HIPBLAS_V1  //  deprecated
+# 
+#            hipblasStatus_t hipblasCtrmmStridedBatched(
+#                                hipblasHandle_t       handle,
+#                                hipblasSideMode_t     side,
+#                                hipblasFillMode_t     uplo,
+#                                hipblasOperation_t    transA,
+#                                hipblasDiagType_t     diag,
+#                                int                   m,
+#                                int                   n,
+#                                const hipblasComplex* alpha,
+#                                const hipblasComplex* AP,
+#                                int                   lda,
+#                                hipblasStride         strideA,
+#                                hipblasComplex*       BP,
+#                                int                   ldb,
+#                                hipblasStride         strideB,
+#                                int                   batchCount);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#            hipblasStatus_t hipblasCtrmmStridedBatchedOutofplace(
+#                                hipblasHandle_t       handle,
+#                                hipblasSideMode_t     side,
+#                                hipblasFillMode_t     uplo,
+#                                hipblasOperation_t    transA,
+#                                hipblasDiagType_t     diag,
+#                                int                   m,
+#                                int                   n,
+#                                const hipblasComplex* alpha,
+#                                const hipblasComplex* AP,
+#                                int                   lda,
+#                                hipblasStride         strideA,
+#                                const hipblasComplex* BP,
+#                                int                   ldb,
+#                                hipblasStride         strideB,
+#                                hipblasComplex*       CP,
+#                                int                   ldc,
+#                                hipblasStride         strideC,
+#                                int batchCount);
+# 
+#     #endif
+# 
+#     #ifndef HIPBLAS_V1  //  deprecated
+# 
+#         hipblasStatus_t hipblasZtrmmStridedBatched(hipblasHandle_t             handle,
+#                                                    hipblasSideMode_t           side,
+#                                                    hipblasFillMode_t           uplo,
+#                                                    hipblasOperation_t          transA,
+#                                                    hipblasDiagType_t           diag,
+#                                                    int                         m,
+#                                                    int                         n,
+#                                                    const hipblasDoubleComplex* alpha,
+#                                                    const hipblasDoubleComplex* AP,
+#                                                    int                         lda,
+#                                                    hipblasStride               strideA,
+#                                                    hipblasDoubleComplex*       BP,
+#                                                    int                         ldb,
+#                                                    hipblasStride               strideB,
+#                                                    int                         batchCount);
+# 
+#     #else  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+# 
+#         hipblasStatus_t hipblasZtrmmStridedBatchedOutofplace(
+#                                                     hipblasHandle_t             handle,
+#                                                     hipblasSideMode_t           side,
+#                                                     hipblasFillMode_t           uplo,
+#                                                     hipblasOperation_t          transA,
+#                                                     hipblasDiagType_t           diag,
+#                                                     int                         m,
+#                                                     int                         n,
+#                                                     const hipblasDoubleComplex* alpha,
+#                                                     const hipblasDoubleComplex* AP,
+#                                                     int                         lda,
+#                                                     hipblasStride               strideA,
+#                                                     const hipblasDoubleComplex* BP,
+#                                                     int                         ldb,
+#                                                     hipblasStride               strideB,
+#                                                     hipblasDoubleComplex*       BC,
+#                                                     int                         ldc,
+#                                                     hipblasStride               strideC,
+#                                                     int                         batchCount);
+# 
+#     #endif
+# 
+# The deprecated Legacy BLAS in-place trmm_strided_batched performs one of the strided_batched matrix-matrix operations:
+# 
+#     B_i := alpha*op( A_i )*B_i,   or
+#     B_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batch_count -1,
+# 
+# The new trmm_batched performs one of the matrix-matrix operations:
+# 
+#     C_i := alpha*op( A_i )*B_i,   or
+#     C_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batch_count -1,
+# 
+# The in-place functionality is still available in the new trmmm_batched by setting pointer C equal to pointer B,
+# setting ldc equal to ldb, and setting stride_C equal to stride_B.
+# 
+#     alpha  is a scalar,  B_i  is an m by n matrix, C_i  is an m by n matrix,  A_i  is a unit, or
+#     non-unit,  upper or lower triangular matrix  and  op( A_i )  is one  of
+# 
+#     op( A_i ) = A_i   or
+#     op( A_i ) = A_i^T   or
+#     op( A_i ) = A_i^H.
+# 
+# - Supported precisions in hipBLAS : s,d,c,z
 # - Supported precisions in cuBLAS  : No support
 # 
 # @param[in]
@@ -12067,6 +12614,34 @@ cdef hipblasStatus_t hipblasZtrmmStridedBatched(void * handle,hipblasSideMode_t 
     return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,long,hipblasDoubleComplex *,int,long,int) nogil> _hipblasZtrmmStridedBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,batchCount)
 
 
+cdef void* _hipblasStrmmStridedBatchedOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasStrmmStridedBatchedOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,long strideA,const float * BP,int ldb,long strideB,float * CP,int ldc,long strideC,int batchCount) nogil:
+    global _hipblasStrmmStridedBatchedOutofplace__funptr
+    __init_symbol(&_hipblasStrmmStridedBatchedOutofplace__funptr,"hipblasStrmmStridedBatchedOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *,int,long,const float *,int,long,float *,int,long,int) nogil> _hipblasStrmmStridedBatchedOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,CP,ldc,strideC,batchCount)
+
+
+cdef void* _hipblasDtrmmStridedBatchedOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasDtrmmStridedBatchedOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double * AP,int lda,long strideA,const double * BP,int ldb,long strideB,double * CP,int ldc,long strideC,int batchCount) nogil:
+    global _hipblasDtrmmStridedBatchedOutofplace__funptr
+    __init_symbol(&_hipblasDtrmmStridedBatchedOutofplace__funptr,"hipblasDtrmmStridedBatchedOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *,int,long,const double *,int,long,double *,int,long,int) nogil> _hipblasDtrmmStridedBatchedOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,CP,ldc,strideC,batchCount)
+
+
+cdef void* _hipblasCtrmmStridedBatchedOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasCtrmmStridedBatchedOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,long strideA,hipblasComplex * BP,int ldb,long strideB,hipblasComplex * CP,int ldc,long strideC,int batchCount) nogil:
+    global _hipblasCtrmmStridedBatchedOutofplace__funptr
+    __init_symbol(&_hipblasCtrmmStridedBatchedOutofplace__funptr,"hipblasCtrmmStridedBatchedOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,long,hipblasComplex *,int,long,hipblasComplex *,int,long,int) nogil> _hipblasCtrmmStridedBatchedOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,CP,ldc,strideC,batchCount)
+
+
+cdef void* _hipblasZtrmmStridedBatchedOutofplace__funptr = NULL
+cdef hipblasStatus_t hipblasZtrmmStridedBatchedOutofplace(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,long strideA,hipblasDoubleComplex * BP,int ldb,long strideB,hipblasDoubleComplex * BC,int ldc,long strideC,int batchCount) nogil:
+    global _hipblasZtrmmStridedBatchedOutofplace__funptr
+    __init_symbol(&_hipblasZtrmmStridedBatchedOutofplace__funptr,"hipblasZtrmmStridedBatchedOutofplace")
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,long,hipblasDoubleComplex *,int,long,hipblasDoubleComplex *,int,long,int) nogil> _hipblasZtrmmStridedBatchedOutofplace__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,BC,ldc,strideC,batchCount)
+
+
 cdef void* _hipblasStrsm__funptr = NULL
 # @{
 # \brief BLAS Level 3 API
@@ -12157,17 +12732,17 @@ cdef void* _hipblasStrsm__funptr = NULL
 # ldb    [int]
 #        ldb specifies the first dimension of B. ldb >= max( 1, m ).
 #
-cdef hipblasStatus_t hipblasStrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float * AP,int lda,float * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasStrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,float * BP,int ldb) nogil:
     global _hipblasStrsm__funptr
     __init_symbol(&_hipblasStrsm__funptr,"hipblasStrsm")
-    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,float *,int,float *,int) nogil> _hipblasStrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *,int,float *,int) nogil> _hipblasStrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasDtrsm__funptr = NULL
-cdef hipblasStatus_t hipblasDtrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,double * AP,int lda,double * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasDtrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double * AP,int lda,double * BP,int ldb) nogil:
     global _hipblasDtrsm__funptr
     __init_symbol(&_hipblasDtrsm__funptr,"hipblasDtrsm")
-    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,double *,int,double *,int) nogil> _hipblasDtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *,int,double *,int) nogil> _hipblasDtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasCtrsm__funptr = NULL
@@ -12261,31 +12836,31 @@ cdef void* _hipblasStrsmBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of trsm operatons in the batch.
-cdef hipblasStatus_t hipblasStrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float *const* AP,int lda,float ** BP,int ldb,int batchCount) nogil:
+cdef hipblasStatus_t hipblasStrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float *const* AP,int lda,float *const* BP,int ldb,int batchCount) nogil:
     global _hipblasStrsmBatched__funptr
     __init_symbol(&_hipblasStrsmBatched__funptr,"hipblasStrsmBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,float *const*,int,float **,int,int) nogil> _hipblasStrsmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *const*,int,float *const*,int,int) nogil> _hipblasStrsmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
 
 
 cdef void* _hipblasDtrsmBatched__funptr = NULL
-cdef hipblasStatus_t hipblasDtrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,double *const* AP,int lda,double ** BP,int ldb,int batchCount) nogil:
+cdef hipblasStatus_t hipblasDtrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double *const* AP,int lda,double *const* BP,int ldb,int batchCount) nogil:
     global _hipblasDtrsmBatched__funptr
     __init_symbol(&_hipblasDtrsmBatched__funptr,"hipblasDtrsmBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,double *const*,int,double **,int,int) nogil> _hipblasDtrsmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *const*,int,double *const*,int,int) nogil> _hipblasDtrsmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
 
 
 cdef void* _hipblasCtrsmBatched__funptr = NULL
-cdef hipblasStatus_t hipblasCtrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex ** BP,int ldb,int batchCount) nogil:
+cdef hipblasStatus_t hipblasCtrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex *const* AP,int lda,hipblasComplex *const* BP,int ldb,int batchCount) nogil:
     global _hipblasCtrsmBatched__funptr
     __init_symbol(&_hipblasCtrsmBatched__funptr,"hipblasCtrsmBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *const*,int,hipblasComplex **,int,int) nogil> _hipblasCtrsmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *const*,int,hipblasComplex *const*,int,int) nogil> _hipblasCtrsmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
 
 
 cdef void* _hipblasZtrsmBatched__funptr = NULL
-cdef hipblasStatus_t hipblasZtrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex *const* AP,int lda,hipblasDoubleComplex ** BP,int ldb,int batchCount) nogil:
+cdef hipblasStatus_t hipblasZtrsmBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex *const* AP,int lda,hipblasDoubleComplex *const* BP,int ldb,int batchCount) nogil:
     global _hipblasZtrsmBatched__funptr
     __init_symbol(&_hipblasZtrsmBatched__funptr,"hipblasZtrsmBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *const*,int,hipblasDoubleComplex **,int,int) nogil> _hipblasZtrsmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *const*,int,hipblasDoubleComplex *const*,int,int) nogil> _hipblasZtrsmBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb,batchCount)
 
 
 cdef void* _hipblasStrsmStridedBatched__funptr = NULL
@@ -12372,17 +12947,17 @@ cdef void* _hipblasStrsmStridedBatched__funptr = NULL
 # @param[in]
 # batchCount [int]
 #             number of trsm operatons in the batch.
-cdef hipblasStatus_t hipblasStrsmStridedBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float * AP,int lda,long strideA,float * BP,int ldb,long strideB,int batchCount) nogil:
+cdef hipblasStatus_t hipblasStrsmStridedBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,long strideA,float * BP,int ldb,long strideB,int batchCount) nogil:
     global _hipblasStrsmStridedBatched__funptr
     __init_symbol(&_hipblasStrsmStridedBatched__funptr,"hipblasStrsmStridedBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,float *,int,long,float *,int,long,int) nogil> _hipblasStrsmStridedBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *,int,long,float *,int,long,int) nogil> _hipblasStrsmStridedBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,batchCount)
 
 
 cdef void* _hipblasDtrsmStridedBatched__funptr = NULL
-cdef hipblasStatus_t hipblasDtrsmStridedBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,double * AP,int lda,long strideA,double * BP,int ldb,long strideB,int batchCount) nogil:
+cdef hipblasStatus_t hipblasDtrsmStridedBatched(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double * AP,int lda,long strideA,double * BP,int ldb,long strideB,int batchCount) nogil:
     global _hipblasDtrsmStridedBatched__funptr
     __init_symbol(&_hipblasDtrsmStridedBatched__funptr,"hipblasDtrsmStridedBatched")
-    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,double *,int,long,double *,int,long,int) nogil> _hipblasDtrsmStridedBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,batchCount)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *,int,long,double *,int,long,int) nogil> _hipblasDtrsmStridedBatched__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,strideA,BP,ldb,strideB,batchCount)
 
 
 cdef void* _hipblasCtrsmStridedBatched__funptr = NULL
@@ -13160,7 +13735,7 @@ cdef void* _hipblasSgetrs__funptr = NULL
 # @param[out]
 # info      pointer to a int on the host.\n
 #           If info = 0, successful exit.
-#           If info = j < 0, the j-th argument is invalid.
+#           If info = j < 0, the argument at position -j is invalid.
 cdef hipblasStatus_t hipblasSgetrs(void * handle,hipblasOperation_t trans,const int n,const int nrhs,float * A,const int lda,const int * ipiv,float * B,const int ldb,int * info) nogil:
     global _hipblasSgetrs__funptr
     __init_symbol(&_hipblasSgetrs__funptr,"hipblasSgetrs")
@@ -13241,7 +13816,7 @@ cdef void* _hipblasSgetrsBatched__funptr = NULL
 # @param[out]
 # info      pointer to a int on the host.\n
 #           If info = 0, successful exit.
-#           If info = j < 0, the j-th argument is invalid.
+#           If info = j < 0, the argument at position -j is invalid.
 # @param[in]
 # batchCount int. batchCount >= 0.\n
 #             Number of instances (systems) in the batch.
@@ -13339,7 +13914,7 @@ cdef void* _hipblasSgetrsStridedBatched__funptr = NULL
 # @param[out]
 # info      pointer to a int on the host.\n
 #           If info = 0, successful exit.
-#           If info = j < 0, the j-th argument is invalid.
+#           If info = j < 0, the argument at position -j is invalid.
 # @param[in]
 # batchCount int. batchCount >= 0.\n
 #             Number of instances (systems) in the batch.
@@ -13507,7 +14082,7 @@ cdef void* _hipblasSgels__funptr = NULL
 # @param[out]
 # info        pointer to an int on the host.\n
 #             If info = 0, successful exit.
-#             If info = j < 0, the j-th argument is invalid.
+#             If info = j < 0, the argument at position -j is invalid.
 # @param[out]
 # deviceInfo  pointer to int on the GPU.\n
 #             If info = 0, successful exit.
@@ -13604,7 +14179,7 @@ cdef void* _hipblasSgelsBatched__funptr = NULL
 # @param[out]
 # info        pointer to an int on the host.\n
 #             If info = 0, successful exit.
-#             If info = j < 0, the j-th argument is invalid.
+#             If info = j < 0, the argument at position -j is invalid.
 # @param[out]
 # deviceInfo  pointer to int. Array of batchCount integers on the GPU.\n
 #             If deviceInfo[j] = 0, successful exit for solution of A_j.
@@ -13712,7 +14287,7 @@ cdef void* _hipblasSgelsStridedBatched__funptr = NULL
 # @param[out]
 # info        pointer to an int on the host.\n
 #             If info = 0, successful exit.
-#             If info = j < 0, the j-th argument is invalid.
+#             If info = j < 0, the argument at position -j is invalid.
 # @param[out]
 # deviceInfo  pointer to int. Array of batchCount integers on the GPU.\n
 #             If deviceInfo[j] = 0, successful exit for solution of A_j.
@@ -13805,7 +14380,7 @@ cdef void* _hipblasSgeqrf__funptr = NULL
 # @param[out]
 # info      pointer to a int on the host.\n
 #           If info = 0, successful exit.
-#           If info = j < 0, the j-th argument is invalid.
+#           If info = j < 0, the argument at position -j is invalid.
 #
 cdef hipblasStatus_t hipblasSgeqrf(void * handle,const int m,const int n,float * A,const int lda,float * ipiv,int * info) nogil:
     global _hipblasSgeqrf__funptr
@@ -13893,7 +14468,7 @@ cdef void* _hipblasSgeqrfBatched__funptr = NULL
 # @param[out]
 # info      pointer to a int on the host.\n
 #           If info = 0, successful exit.
-#           If info = k < 0, the k-th argument is invalid.
+#           If info = j < 0, the argument at position -j is invalid.
 # @param[in]
 # batchCount  int. batchCount >= 0.\n
 #              Number of matrices in the batch.
@@ -13991,7 +14566,7 @@ cdef void* _hipblasSgeqrfStridedBatched__funptr = NULL
 # @param[out]
 # info      pointer to a int on the host.\n
 #           If info = 0, successful exit.
-#           If info = k < 0, the k-th argument is invalid.
+#           If info = j < 0, the argument at position -j is invalid.
 # @param[in]
 # batchCount  int. batchCount >= 0.\n
 #              Number of matrices in the batch.
@@ -14040,10 +14615,6 @@ cdef void* _hipblasGemmEx__funptr = NULL
 # op( A ) an m by k matrix, op( B ) a k by n matrix and C is a m by n matrix.
 # 
 # - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
-# 
-# Note for int8 users - For rocBLAS backend, please read rocblas_gemm_ex documentation on int8
-# data layout requirements. hipBLAS makes the assumption that the data layout is in the preferred
-# format for a given device as documented in rocBLAS.
 # 
 # @param[in]
 # handle    [hipblasHandle_t]
@@ -14127,10 +14698,6 @@ cdef void* _hipblasGemmBatchedEx__funptr = NULL
 # The number of pointers to matrices is batchCount.
 # 
 # - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
-# 
-# Note for int8 users - For rocBLAS backend, please read rocblas_gemm_batched_ex documentation on int8
-# data layout requirements. hipBLAS makes the assumption that the data layout is in the preferred
-# format for a given device as documented in rocBLAS.
 # 
 # @param[in]
 # handle    [hipblasHandle_t]
@@ -14224,10 +14791,6 @@ cdef void* _hipblasGemmStridedBatchedEx__funptr = NULL
 # The number of matrices is batchCount.
 # 
 # - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
-# 
-# Note for int8 users - For rocBLAS backend, please read rocblas_gemm_strided_batched_ex documentation on int8
-# data layout requirements. hipBLAS makes the assumption that the data layout is in the preferred
-# format for a given device as documented in rocBLAS.
 # 
 # @param[in]
 # handle    [hipblasHandle_t]

@@ -23,9 +23,9 @@
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 from ._version import *
-HIP_VERSION = 50422804
-HIP_VERSION_NAME = hip_version_name = "5.4.22804-474e8620"
-HIP_VERSION_TUPLE = hip_version_tuple = (5,4,22804,"474e8620")
+HIP_VERSION = 50631061
+HIP_VERSION_NAME = hip_version_name = "5.6.31061-8c743ae5d"
+HIP_VERSION_TUPLE = hip_version_tuple = (5,6,31061,"8c743ae5d")
 
 
 from . import cuda

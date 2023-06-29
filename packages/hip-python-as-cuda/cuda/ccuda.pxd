@@ -701,6 +701,7 @@ from hip.chip cimport hipDeviceAttributeIsLargeBar
 from hip.chip cimport hipDeviceAttributeAsicRevision
 from hip.chip cimport hipDeviceAttributeCanUseStreamWaitValue
 from hip.chip cimport hipDeviceAttributeCanUseStreamWaitValue as CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR
+from hip.chip cimport hipDeviceAttributeCanUseStreamWaitValue as CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR_V1
 from hip.chip cimport hipDeviceAttributeCanUseStreamWaitValue as cudaDevAttrReserved94
 from hip.chip cimport hipDeviceAttributeImageSupport
 from hip.chip cimport hipDeviceAttributePhysicalMultiProcessorCount
@@ -1380,6 +1381,11 @@ ctypedef CUsharedconfig CUsharedconfig_enum
 ctypedef CUsharedconfig cudaSharedMemConfig
 from hip.chip cimport hipLaunchParams
 from hip.chip cimport hipLaunchParams as cudaLaunchParams
+from hip.chip cimport hipFunctionLaunchParams_t
+from hip.chip cimport hipFunctionLaunchParams_t as CUDA_LAUNCH_PARAMS_st
+from hip.chip cimport hipFunctionLaunchParams
+from hip.chip cimport hipFunctionLaunchParams as CUDA_LAUNCH_PARAMS
+from hip.chip cimport hipFunctionLaunchParams as CUDA_LAUNCH_PARAMS_v1
 from hip.chip cimport hipExternalMemoryHandleType_enum as CUexternalMemoryHandleType_enum
 from hip.chip cimport hipExternalMemoryHandleTypeOpaqueFd
 from hip.chip cimport hipExternalMemoryHandleTypeOpaqueFd as CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD
@@ -1542,6 +1548,12 @@ from hip.chip cimport hipGraphNodeTypeExtSemaphoreSignal as cudaGraphNodeTypeExt
 from hip.chip cimport hipGraphNodeTypeExtSemaphoreWait
 from hip.chip cimport hipGraphNodeTypeExtSemaphoreWait as CU_GRAPH_NODE_TYPE_EXT_SEMAS_WAIT
 from hip.chip cimport hipGraphNodeTypeExtSemaphoreWait as cudaGraphNodeTypeExtSemaphoreWait
+from hip.chip cimport hipGraphNodeTypeMemAlloc
+from hip.chip cimport hipGraphNodeTypeMemAlloc as CU_GRAPH_NODE_TYPE_MEM_ALLOC
+from hip.chip cimport hipGraphNodeTypeMemAlloc as cudaGraphNodeTypeMemAlloc
+from hip.chip cimport hipGraphNodeTypeMemFree
+from hip.chip cimport hipGraphNodeTypeMemFree as CU_GRAPH_NODE_TYPE_MEM_FREE
+from hip.chip cimport hipGraphNodeTypeMemFree as cudaGraphNodeTypeMemFree
 from hip.chip cimport hipGraphNodeTypeMemcpyFromSymbol
 from hip.chip cimport hipGraphNodeTypeMemcpyToSymbol
 from hip.chip cimport hipGraphNodeTypeCount
@@ -1567,6 +1579,10 @@ from hip.chip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS
 from hip.chip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS_st
 from hip.chip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS_v1
 from hip.chip cimport hipMemsetParams as cudaMemsetParams
+from hip.chip cimport hipMemAllocNodeParams
+from hip.chip cimport hipMemAllocNodeParams as CUDA_MEM_ALLOC_NODE_PARAMS
+from hip.chip cimport hipMemAllocNodeParams as CUDA_MEM_ALLOC_NODE_PARAMS_st
+from hip.chip cimport hipMemAllocNodeParams as cudaMemAllocNodeParams
 from hip.chip cimport hipKernelNodeAttrID as CUkernelNodeAttrID
 from hip.chip cimport hipKernelNodeAttributeAccessPolicyWindow
 from hip.chip cimport hipKernelNodeAttributeAccessPolicyWindow as CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW
@@ -1688,8 +1704,50 @@ from hip.chip cimport hipGraphInstantiateFlags as CUgraphInstantiate_flags
 from hip.chip cimport hipGraphInstantiateFlagAutoFreeOnLaunch
 from hip.chip cimport hipGraphInstantiateFlagAutoFreeOnLaunch as CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH
 from hip.chip cimport hipGraphInstantiateFlagAutoFreeOnLaunch as cudaGraphInstantiateFlagAutoFreeOnLaunch
+from hip.chip cimport hipGraphInstantiateFlagUpload
+from hip.chip cimport hipGraphInstantiateFlagUpload as CUDA_GRAPH_INSTANTIATE_FLAG_UPLOAD
+from hip.chip cimport hipGraphInstantiateFlagUpload as cudaGraphInstantiateFlagUpload
+from hip.chip cimport hipGraphInstantiateFlagDeviceLaunch
+from hip.chip cimport hipGraphInstantiateFlagDeviceLaunch as CUDA_GRAPH_INSTANTIATE_FLAG_DEVICE_LAUNCH
+from hip.chip cimport hipGraphInstantiateFlagDeviceLaunch as cudaGraphInstantiateFlagDeviceLaunch
+from hip.chip cimport hipGraphInstantiateFlagUseNodePriority
+from hip.chip cimport hipGraphInstantiateFlagUseNodePriority as CUDA_GRAPH_INSTANTIATE_FLAG_USE_NODE_PRIORITY
+from hip.chip cimport hipGraphInstantiateFlagUseNodePriority as cudaGraphInstantiateFlagUseNodePriority
 ctypedef CUgraphInstantiate_flags CUgraphInstantiate_flags_enum
 ctypedef CUgraphInstantiate_flags cudaGraphInstantiateFlags
+from hip.chip cimport hipGraphDebugDotFlags as CUgraphDebugDot_flags
+from hip.chip cimport hipGraphDebugDotFlagsVerbose
+from hip.chip cimport hipGraphDebugDotFlagsVerbose as CU_GRAPH_DEBUG_DOT_FLAGS_VERBOSE
+from hip.chip cimport hipGraphDebugDotFlagsVerbose as cudaGraphDebugDotFlagsVerbose
+from hip.chip cimport hipGraphDebugDotFlagsKernelNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsKernelNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_PARAMS
+from hip.chip cimport hipGraphDebugDotFlagsKernelNodeParams as cudaGraphDebugDotFlagsKernelNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsMemcpyNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsMemcpyNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_MEMCPY_NODE_PARAMS
+from hip.chip cimport hipGraphDebugDotFlagsMemcpyNodeParams as cudaGraphDebugDotFlagsMemcpyNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsMemsetNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsMemsetNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_MEMSET_NODE_PARAMS
+from hip.chip cimport hipGraphDebugDotFlagsMemsetNodeParams as cudaGraphDebugDotFlagsMemsetNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsHostNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsHostNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_HOST_NODE_PARAMS
+from hip.chip cimport hipGraphDebugDotFlagsHostNodeParams as cudaGraphDebugDotFlagsHostNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsEventNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsEventNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_EVENT_NODE_PARAMS
+from hip.chip cimport hipGraphDebugDotFlagsEventNodeParams as cudaGraphDebugDotFlagsEventNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsExtSemasSignalNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsExtSemasSignalNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_SIGNAL_NODE_PARAMS
+from hip.chip cimport hipGraphDebugDotFlagsExtSemasSignalNodeParams as cudaGraphDebugDotFlagsExtSemasSignalNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsExtSemasWaitNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsExtSemasWaitNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_WAIT_NODE_PARAMS
+from hip.chip cimport hipGraphDebugDotFlagsExtSemasWaitNodeParams as cudaGraphDebugDotFlagsExtSemasWaitNodeParams
+from hip.chip cimport hipGraphDebugDotFlagsKernelNodeAttributes
+from hip.chip cimport hipGraphDebugDotFlagsKernelNodeAttributes as CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_ATTRIBUTES
+from hip.chip cimport hipGraphDebugDotFlagsKernelNodeAttributes as cudaGraphDebugDotFlagsKernelNodeAttributes
+from hip.chip cimport hipGraphDebugDotFlagsHandles
+from hip.chip cimport hipGraphDebugDotFlagsHandles as CU_GRAPH_DEBUG_DOT_FLAGS_HANDLES
+from hip.chip cimport hipGraphDebugDotFlagsHandles as cudaGraphDebugDotFlagsHandles
+ctypedef CUgraphDebugDot_flags CUgraphDebugDot_flags_enum
+ctypedef CUgraphDebugDot_flags cudaGraphDebugDotFlags
 from hip.chip cimport hipMemAllocationProp
 from hip.chip cimport hipMemAllocationProp as CUmemAllocationProp
 from hip.chip cimport hipMemAllocationProp as CUmemAllocationProp_st
@@ -1902,6 +1960,8 @@ from hip.chip cimport hipEventElapsedTime as cudaEventElapsedTime
 from hip.chip cimport hipEventQuery
 from hip.chip cimport hipEventQuery as cuEventQuery
 from hip.chip cimport hipEventQuery as cudaEventQuery
+from hip.chip cimport hipPointerSetAttribute
+from hip.chip cimport hipPointerSetAttribute as cuPointerSetAttribute
 from hip.chip cimport hipPointerGetAttributes
 from hip.chip cimport hipPointerGetAttributes as cudaPointerGetAttributes
 from hip.chip cimport hipPointerGetAttribute
@@ -2117,6 +2177,14 @@ from hip.chip cimport hipMallocMipmappedArray
 from hip.chip cimport hipMallocMipmappedArray as cudaMallocMipmappedArray
 from hip.chip cimport hipGetMipmappedArrayLevel
 from hip.chip cimport hipGetMipmappedArrayLevel as cudaGetMipmappedArrayLevel
+from hip.chip cimport hipArrayGetInfo
+from hip.chip cimport hipArrayGetInfo as cudaArrayGetInfo
+from hip.chip cimport hipArrayGetDescriptor
+from hip.chip cimport hipArrayGetDescriptor as cuArrayGetDescriptor
+from hip.chip cimport hipArrayGetDescriptor as cuArrayGetDescriptor_v2
+from hip.chip cimport hipArray3DGetDescriptor
+from hip.chip cimport hipArray3DGetDescriptor as cuArray3DGetDescriptor
+from hip.chip cimport hipArray3DGetDescriptor as cuArray3DGetDescriptor_v2
 from hip.chip cimport hipMemcpy2D
 from hip.chip cimport hipMemcpy2D as cudaMemcpy2D
 from hip.chip cimport hipMemcpyParam2D
@@ -2236,6 +2304,10 @@ from hip.chip cimport hipModuleLoadDataEx
 from hip.chip cimport hipModuleLoadDataEx as cuModuleLoadDataEx
 from hip.chip cimport hipModuleLaunchKernel
 from hip.chip cimport hipModuleLaunchKernel as cuLaunchKernel
+from hip.chip cimport hipModuleLaunchCooperativeKernel
+from hip.chip cimport hipModuleLaunchCooperativeKernel as cuLaunchCooperativeKernel
+from hip.chip cimport hipModuleLaunchCooperativeKernelMultiDevice
+from hip.chip cimport hipModuleLaunchCooperativeKernelMultiDevice as cuLaunchCooperativeKernelMultiDevice
 from hip.chip cimport hipLaunchCooperativeKernel
 from hip.chip cimport hipLaunchCooperativeKernel as cudaLaunchCooperativeKernel
 from hip.chip cimport hipLaunchCooperativeKernelMultiDevice
@@ -2548,6 +2620,18 @@ from hip.chip cimport hipGraphEventWaitNodeSetEvent as cudaGraphEventWaitNodeSet
 from hip.chip cimport hipGraphExecEventWaitNodeSetEvent
 from hip.chip cimport hipGraphExecEventWaitNodeSetEvent as cuGraphExecEventWaitNodeSetEvent
 from hip.chip cimport hipGraphExecEventWaitNodeSetEvent as cudaGraphExecEventWaitNodeSetEvent
+from hip.chip cimport hipGraphAddMemAllocNode
+from hip.chip cimport hipGraphAddMemAllocNode as cuGraphAddMemAllocNode
+from hip.chip cimport hipGraphAddMemAllocNode as cudaGraphAddMemAllocNode
+from hip.chip cimport hipGraphMemAllocNodeGetParams
+from hip.chip cimport hipGraphMemAllocNodeGetParams as cuGraphMemAllocNodeGetParams
+from hip.chip cimport hipGraphMemAllocNodeGetParams as cudaGraphMemAllocNodeGetParams
+from hip.chip cimport hipGraphAddMemFreeNode
+from hip.chip cimport hipGraphAddMemFreeNode as cuGraphAddMemFreeNode
+from hip.chip cimport hipGraphAddMemFreeNode as cudaGraphAddMemFreeNode
+from hip.chip cimport hipGraphMemFreeNodeGetParams
+from hip.chip cimport hipGraphMemFreeNodeGetParams as cuGraphMemFreeNodeGetParams
+from hip.chip cimport hipGraphMemFreeNodeGetParams as cudaGraphMemFreeNodeGetParams
 from hip.chip cimport hipDeviceGetGraphMemAttribute
 from hip.chip cimport hipDeviceGetGraphMemAttribute as cuDeviceGetGraphMemAttribute
 from hip.chip cimport hipDeviceGetGraphMemAttribute as cudaDeviceGetGraphMemAttribute
@@ -2572,6 +2656,18 @@ from hip.chip cimport hipGraphRetainUserObject as cudaGraphRetainUserObject
 from hip.chip cimport hipGraphReleaseUserObject
 from hip.chip cimport hipGraphReleaseUserObject as cuGraphReleaseUserObject
 from hip.chip cimport hipGraphReleaseUserObject as cudaGraphReleaseUserObject
+from hip.chip cimport hipGraphDebugDotPrint
+from hip.chip cimport hipGraphDebugDotPrint as cuGraphDebugDotPrint
+from hip.chip cimport hipGraphDebugDotPrint as cudaGraphDebugDotPrint
+from hip.chip cimport hipGraphKernelNodeCopyAttributes
+from hip.chip cimport hipGraphKernelNodeCopyAttributes as cuGraphKernelNodeCopyAttributes
+from hip.chip cimport hipGraphKernelNodeCopyAttributes as cudaGraphKernelNodeCopyAttributes
+from hip.chip cimport hipGraphNodeSetEnabled
+from hip.chip cimport hipGraphNodeSetEnabled as cuGraphNodeSetEnabled
+from hip.chip cimport hipGraphNodeSetEnabled as cudaGraphNodeSetEnabled
+from hip.chip cimport hipGraphNodeGetEnabled
+from hip.chip cimport hipGraphNodeGetEnabled as cuGraphNodeGetEnabled
+from hip.chip cimport hipGraphNodeGetEnabled as cudaGraphNodeGetEnabled
 from hip.chip cimport hipMemAddressFree
 from hip.chip cimport hipMemAddressFree as cuMemAddressFree
 from hip.chip cimport hipMemAddressReserve

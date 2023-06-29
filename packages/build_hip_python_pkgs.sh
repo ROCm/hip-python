@@ -30,6 +30,10 @@ Usage: ./$(basename $0) [OPTIONS]
 
 Options:
   --rocm-path        Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+  --libs             HIP Python libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
+                     Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
+  --cuda-libs        HIP Python CUDA interop libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_CUDA_LIBS' if set or '*'.
+                     Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
   --no-hip           Do not build package 'hip-python'.
   --no-cuda          Do not build package 'hip-python-as-cuda'.
   --no-docs          Do not build the docs of package 'hip-python'.
@@ -56,6 +60,14 @@ while [[ $# -gt 0 ]]; do
     -n|--no-venv)
       NO_VENV=1
       shift
+      ;;
+    --libs)
+      HIP_PYTHON_LIBS=$2
+      shift; shift
+      ;;
+    --cuda-libs)
+      HIP_PYTHON_CUDA_LIBS=$2
+      shift; shift
       ;;
     -h|--help)
       echo "${HELP_MSG}"
@@ -100,18 +112,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-#echo "PRE_CLEAN=$PRE_CLEAN"
-#echo "POST_CLEAN=$POST_CLEAN"
-#echo "NO_VENV=$NO_VENV"
-#echo "NO_HIP=$NO_HIP"
-#echo "NO_CUDA=$NO_CUDA"
-#echo "NO_DOCS=$NO_DOCS"
-
-SAVED_ROCM_PATH=${ROCM_PATH}
-SAVED_HIP_PLATFORM=${HIP_PLATFORM}
-
-export ROCM_PATH=${ROCM_PATH:-"/opt/rocm"} # adjust accordingly
-export HIP_PLATFORM=${HIP_PLATFORM:-"amd"}
+declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
+declare -x HIP_PLATFORM=${HIP_PLATFORM:-amd}
+declare -x HIP_PYTHON_LIBS=${HIP_PYTHON_LIBS:-*}
+declare -x HIP_PYTHON_CUDA_LIBs=${HIP_PYTHON_CUDA_LIBs:-*}
 
 # note: [ -z {var+x} ] evaluates to true if `var` is unset!
 
@@ -172,8 +176,5 @@ if [ -z ${NO_DOCS+x} ]; then
      mv "./_python_api" "$DOCS_DIR/python_api"
   fi
 fi
-
-export ROCM_PATH="${SAVED_ROCM_PATH}"
-export HIP_PLATFORM="${SAVED_HIP_PLATFORM}"
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv
