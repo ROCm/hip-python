@@ -270,8 +270,13 @@ cdef extern from "hip/hip_runtime.h":
         hipMemoryTypeUnified
         hipMemoryTypeManaged
 
+cdef union hipPointerAttribute_t_union_0:
+    hipMemoryType memoryType
+    hipMemoryType type
+
+cdef extern from "hip/hip_runtime.h":
+
     cdef struct hipPointerAttribute_t:
-        hipMemoryType memoryType
         int device
         void * devicePointer
         void * hostPointer
@@ -529,6 +534,7 @@ cdef extern from "hip/hip_runtime.h":
         unsigned int NumChannels
         _Bool isDrv
         unsigned int textureType
+        unsigned int flags
 
     cdef struct hip_Memcpy2D:
         unsigned long srcXInBytes
@@ -1342,6 +1348,20 @@ cdef extern from "hip/hip_runtime.h":
 
     ctypedef hipLaunchParams_t hipLaunchParams
 
+    cdef struct hipFunctionLaunchParams_t:
+        hipFunction_t function
+        unsigned int gridDimX
+        unsigned int gridDimY
+        unsigned int gridDimZ
+        unsigned int blockDimX
+        unsigned int blockDimY
+        unsigned int blockDimZ
+        unsigned int sharedMemBytes
+        hipStream_t hStream
+        void ** kernelParams
+
+    ctypedef hipFunctionLaunchParams_t hipFunctionLaunchParams
+
     cdef enum hipExternalMemoryHandleType_enum:
         hipExternalMemoryHandleTypeOpaqueFd
         hipExternalMemoryHandleTypeOpaqueWin32
@@ -1498,6 +1518,8 @@ cdef extern from "hip/hip_runtime.h":
         hipGraphNodeTypeEventRecord
         hipGraphNodeTypeExtSemaphoreSignal
         hipGraphNodeTypeExtSemaphoreWait
+        hipGraphNodeTypeMemAlloc
+        hipGraphNodeTypeMemFree
         hipGraphNodeTypeMemcpyFromSymbol
         hipGraphNodeTypeMemcpyToSymbol
         hipGraphNodeTypeCount
@@ -1523,6 +1545,13 @@ cdef extern from "hip/hip_runtime.h":
         unsigned long pitch
         unsigned int value
         unsigned long width
+
+    cdef struct hipMemAllocNodeParams:
+        hipMemPoolProps poolProps
+        hipMemAccessDesc * accessDescs
+        unsigned long accessDescCount
+        unsigned long bytesize
+        void * dptr
 
     cdef enum hipKernelNodeAttrID:
         hipKernelNodeAttributeAccessPolicyWindow
@@ -1582,6 +1611,21 @@ cdef extern from "hip/hip_runtime.h":
 
     cdef enum hipGraphInstantiateFlags:
         hipGraphInstantiateFlagAutoFreeOnLaunch
+        hipGraphInstantiateFlagUpload
+        hipGraphInstantiateFlagDeviceLaunch
+        hipGraphInstantiateFlagUseNodePriority
+
+    cdef enum hipGraphDebugDotFlags:
+        hipGraphDebugDotFlagsVerbose
+        hipGraphDebugDotFlagsKernelNodeParams
+        hipGraphDebugDotFlagsMemcpyNodeParams
+        hipGraphDebugDotFlagsMemsetNodeParams
+        hipGraphDebugDotFlagsHostNodeParams
+        hipGraphDebugDotFlagsEventNodeParams
+        hipGraphDebugDotFlagsExtSemasSignalNodeParams
+        hipGraphDebugDotFlagsExtSemasWaitNodeParams
+        hipGraphDebugDotFlagsKernelNodeAttributes
+        hipGraphDebugDotFlagsHandles
 
 cdef struct hipMemAllocationProp_struct_0:
     unsigned char compressionType
@@ -1681,7 +1725,7 @@ cdef hipError_t hipInit(unsigned int flags) nogil
 # 
 # @brief Returns the approximate HIP driver version.
 # 
-# @param [out] driverVersion
+# @param [out] driverVersion driver version
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue
 # 
@@ -1698,7 +1742,7 @@ cdef hipError_t hipDriverGetVersion(int * driverVersion) nogil
 # 
 # @brief Returns the approximate HIP Runtime version.
 # 
-# @param [out] runtimeVersion
+# @param [out] runtimeVersion HIP runtime version
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue
 # 
@@ -1713,8 +1757,8 @@ cdef hipError_t hipRuntimeGetVersion(int * runtimeVersion) nogil
 
 # 
 # @brief Returns a handle to a compute device
-# @param [out] device
-# @param [in] ordinal
+# @param [out] device Handle of device
+# @param [in] ordinal Device ordinal
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice
 cdef hipError_t hipDeviceGet(int * device,int ordinal) nogil
@@ -1722,9 +1766,9 @@ cdef hipError_t hipDeviceGet(int * device,int ordinal) nogil
 
 # 
 # @brief Returns the compute capability of the device
-# @param [out] major
-# @param [out] minor
-# @param [in] device
+# @param [out] major Major compute capability version number
+# @param [out] minor Minor compute capability version number
+# @param [in] device Device ordinal
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice
 cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,int device) nogil
@@ -1732,9 +1776,9 @@ cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,int device) n
 
 # 
 # @brief Returns an identifer string for the device.
-# @param [out] name
-# @param [in] len
-# @param [in] device
+# @param [out] name String of the device name
+# @param [in] len Maximum length of string to store in device name
+# @param [in] device Device ordinal
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice
 cdef hipError_t hipDeviceGetName(char * name,int len,int device) nogil
@@ -1742,8 +1786,8 @@ cdef hipError_t hipDeviceGetName(char * name,int len,int device) nogil
 
 # 
 # @brief Returns an UUID for the device.[BETA]
-# @param [out] uuid
-# @param [in] device
+# @param [out] uuid UUID for the device
+# @param [in] device device ordinal
 # 
 # @beta This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
@@ -1754,11 +1798,11 @@ cdef hipError_t hipDeviceGetUuid(hipUUID_t * uuid,int device) nogil
 
 
 # 
-# @brief Returns a value for attr of link between two devices
-# @param [out] value
-# @param [in] attr
-# @param [in] srcDevice
-# @param [in] dstDevice
+# @brief Returns a value for attribute of link between two devices
+# @param [out] value Pointer of the value for the attrubute
+# @param [in] attr enum of hipDeviceP2PAttr to query
+# @param [in] srcDevice The source device of the link
+# @param [in] dstDevice The destination device of the link
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice
 cdef hipError_t hipDeviceGetP2PAttribute(int * value,hipDeviceP2PAttr attr,int srcDevice,int dstDevice) nogil
@@ -1766,9 +1810,9 @@ cdef hipError_t hipDeviceGetP2PAttribute(int * value,hipDeviceP2PAttr attr,int s
 
 # 
 # @brief Returns a PCI Bus Id string for the device, overloaded to take int device ID.
-# @param [out] pciBusId
-# @param [in] len
-# @param [in] device
+# @param [out] pciBusId The string of PCI Bus Id format for the device
+# @param [in] len Maximum length of string
+# @param [in] device The device ordinal
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice
 cdef hipError_t hipDeviceGetPCIBusId(char * pciBusId,int len,int device) nogil
@@ -1776,8 +1820,8 @@ cdef hipError_t hipDeviceGetPCIBusId(char * pciBusId,int len,int device) nogil
 
 # 
 # @brief Returns a handle to a compute device.
-# @param [out] device handle
-# @param [in] PCI Bus ID
+# @param [out] device The handle of the device
+# @param [in] pciBusId The string of PCI Bus Id for the device
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 cdef hipError_t hipDeviceGetByPCIBusId(int * device,const char * pciBusId) nogil
@@ -1785,8 +1829,8 @@ cdef hipError_t hipDeviceGetByPCIBusId(int * device,const char * pciBusId) nogil
 
 # 
 # @brief Returns the total amount of memory on the device.
-# @param [out] bytes
-# @param [in] device
+# @param [out] bytes The size of memory in bytes, on the device
+# @param [in] device The ordinal of the device
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice
 cdef hipError_t hipDeviceTotalMem(unsigned long * bytes,int device) nogil
@@ -1861,7 +1905,7 @@ cdef hipError_t hipSetDevice(int deviceId) nogil
 # 
 # @brief Return the default device id for the calling host thread.
 # 
-# @param [out] device *device is written with the default device
+# @param [out] deviceId *device is written with the default device
 # 
 # HIP maintains an default device for each thread using thread-local-storage.
 # This device is used implicitly for HIP runtime APIs called by this thread.
@@ -1876,7 +1920,7 @@ cdef hipError_t hipGetDevice(int * deviceId) nogil
 # 
 # @brief Return number of compute-capable devices.
 # 
-# @param [output] count Returns number of compute-capable devices.
+# @param [out] count Returns number of compute-capable devices.
 # 
 # @returns #hipSuccess, #hipErrorNoDevice
 # 
@@ -1904,7 +1948,7 @@ cdef hipError_t hipDeviceGetAttribute(int * pi,hipDeviceAttribute_t attr,int dev
 # @param [out] mem_pool Default memory pool to return
 # @param [in] device    Device index for query the default memory pool
 # 
-# @returns #chipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotSupported
+# @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotSupported
 # 
 # @see hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
 # hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
@@ -1976,11 +2020,12 @@ cdef hipError_t hipGetDeviceProperties(hipDeviceProp_t * prop,int deviceId) nogi
 # 
 # @brief Set L1/Shared cache partition.
 # 
-# @param [in] cacheConfig
+# @param [in] cacheConfig Cache configuration
 # 
-# @returns #hipSuccess, #hipErrorNotInitialized
-# Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
-# on those architectures.
+# @returns #hipSuccess, #hipErrorNotInitialized, #hipErrorNotSupported
+# 
+# Note: AMD devices do not support reconfigurable cache. This API is not implemented
+# on AMD platform. If the function is called, it will return hipErrorNotSupported.
 #
 cdef hipError_t hipDeviceSetCacheConfig(hipFuncCache_t cacheConfig) nogil
 
@@ -1988,32 +2033,36 @@ cdef hipError_t hipDeviceSetCacheConfig(hipFuncCache_t cacheConfig) nogil
 # 
 # @brief Get Cache configuration for a specific Device
 # 
-# @param [out] cacheConfig
+# @param [out] cacheConfig Pointer of cache configuration
 # 
 # @returns #hipSuccess, #hipErrorNotInitialized
-# Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
-# on those architectures.
+# Note: AMD devices do not support reconfigurable cache. This hint is ignored
+# on these architectures.
 #
 cdef hipError_t hipDeviceGetCacheConfig(hipFuncCache_t * cacheConfig) nogil
 
 
 # 
-# @brief Get Resource limits of current device
+# @brief Gets resource limits of current device
+# The funtion querys the size of limit value, as required input enum hipLimit_t, can be either
+# hipLimitStackSize, or hipLimitMallocHeapSize.
 # 
-# @param [out] pValue
-# @param [in]  limit
+# @param [out] pValue returns the size of the limit in bytes
+# @param [in]  limit the limit to query
 # 
 # @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
-# Note: Currently, only hipLimitMallocHeapSize is available
 #
 cdef hipError_t hipDeviceGetLimit(unsigned long * pValue,hipLimit_t limit) nogil
 
 
 # 
-# @brief Set Resource limits of current device
+# @brief Sets resource limits of current device
+# As the input enum limit, hipLimitStackSize sets the limit value of the stack size on current
+# GPU devie, hipLimitMallocHeapSize sets the limit value of the heap used by the malloc()/free()
+# calls.
 # 
-# @param [in] limit
-# @param [in] value
+# @param [in] limit enum of hipLimit_t to set
+# @param [in] value the size of limit value in bytes
 # 
 # @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
 #
@@ -2023,7 +2072,7 @@ cdef hipError_t hipDeviceSetLimit(hipLimit_t limit,unsigned long value) nogil
 # 
 # @brief Returns bank width of shared memory for current device
 # 
-# @param [out] pConfig
+# @param [out] pConfig The pointer of the bank width for shared memory
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 # 
@@ -2036,7 +2085,7 @@ cdef hipError_t hipDeviceGetSharedMemConfig(hipSharedMemConfig * pConfig) nogil
 # 
 # @brief Gets the flags set for current device
 # 
-# @param [out] flags
+# @param [out] flags Pointer of the flags
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 cdef hipError_t hipGetDeviceFlags(unsigned int * flags) nogil
@@ -2045,7 +2094,7 @@ cdef hipError_t hipGetDeviceFlags(unsigned int * flags) nogil
 # 
 # @brief The bank width of shared memory on current device is set
 # 
-# @param [in] config
+# @param [in] config Configuration for the bank width of shared memory
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 # 
@@ -2058,7 +2107,7 @@ cdef hipError_t hipDeviceSetSharedMemConfig(hipSharedMemConfig config) nogil
 # 
 # @brief The current device behavior is changed according the flags passed.
 # 
-# @param [in] flags
+# @param [in] flags Flag to set on the current device
 # 
 # The schedule flags impact how HIP waits for the completion of a command running on a device.
 # hipDeviceScheduleSpin         : HIP runtime will actively spin in the thread which submitted the
@@ -2084,8 +2133,8 @@ cdef hipError_t hipSetDeviceFlags(unsigned int flags) nogil
 # 
 # @brief Device which matches hipDeviceProp_t is returned
 # 
-# @param [out] device ID
-# @param [in]  device properties pointer
+# @param [out] device Pointer of the device
+# @param [in]  prop Pointer of the properties
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue
 cdef hipError_t hipChooseDevice(int * device,hipDeviceProp_t * prop) nogil
@@ -2124,10 +2173,12 @@ cdef hipError_t hipExtGetLinkTypeAndHopCount(int device1,int device2,unsigned in
 # @param devPtr - Base pointer to previously allocated device memory
 # 
 # @returns
-# hipSuccess,
-# hipErrorInvalidHandle,
-# hipErrorOutOfMemory,
-# hipErrorMapFailed,
+# #hipSuccess
+# #hipErrorInvalidHandle
+# #hipErrorOutOfMemory
+# #hipErrorMapFailed
+# 
+# @note This IPC memory related feature API on Windows may behave differently from Linux.
 #
 cdef hipError_t hipIpcGetMemHandle(hipIpcMemHandle_st * handle,void * devPtr) nogil
 
@@ -2159,14 +2210,15 @@ cdef hipError_t hipIpcGetMemHandle(hipIpcMemHandle_st * handle,void * devPtr) no
 # @param flags  - Flags for this operation. Must be specified as hipIpcMemLazyEnablePeerAccess
 # 
 # @returns
-# hipSuccess,
-# hipErrorMapFailed,
-# hipErrorInvalidHandle,
-# hipErrorTooManyPeers
+# #hipSuccess,
+# #hipErrorMapFailed,
+# #hipErrorInvalidHandle,
+# #hipErrorTooManyPeers
 # 
 # @note During multiple processes, using the same memory handle opened by the current context,
 # there is no guarantee that the same device poiter will be returned in @p *devPtr.
 # This is diffrent from CUDA.
+# @note This IPC memory related feature API on Windows may behave differently from Linux.
 #
 cdef hipError_t hipIpcOpenMemHandle(void ** devPtr,hipIpcMemHandle_st handle,unsigned int flags) nogil
 
@@ -2184,9 +2236,11 @@ cdef hipError_t hipIpcOpenMemHandle(void ** devPtr,hipIpcMemHandle_st handle,uns
 # @param devPtr - Device pointer returned by hipIpcOpenMemHandle
 # 
 # @returns
-# hipSuccess,
-# hipErrorMapFailed,
-# hipErrorInvalidHandle,
+# #hipSuccess,
+# #hipErrorMapFailed,
+# #hipErrorInvalidHandle
+# 
+# @note This IPC memory related feature API on Windows may behave differently from Linux.
 #
 cdef hipError_t hipIpcCloseMemHandle(void * devPtr) nogil
 
@@ -2203,6 +2257,8 @@ cdef hipError_t hipIpcCloseMemHandle(void * devPtr) nogil
 # @param[in]   event  Event allocated with hipEventInterprocess and hipEventDisableTiming flags
 # 
 # @returns #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
+# 
+# @note This IPC event related feature API is currently applicable on Linux.
 #
 cdef hipError_t hipIpcGetEventHandle(hipIpcEventHandle_st * handle,hipEvent_t event) nogil
 
@@ -2220,6 +2276,8 @@ cdef hipError_t hipIpcGetEventHandle(hipIpcEventHandle_st * handle,hipEvent_t ev
 # @param[in]   handle The opaque interprocess handle to open
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
+# 
+# @note This IPC event related feature API is currently applicable on Linux.
 #
 cdef hipError_t hipIpcOpenEventHandle(hipEvent_t* event,hipIpcEventHandle_st handle) nogil
 
@@ -2237,9 +2295,9 @@ cdef hipError_t hipIpcOpenEventHandle(hipEvent_t* event,hipIpcEventHandle_st han
 # 
 # @brief Set attribute for a specific function
 # 
-# @param [in] func;
-# @param [in] attr;
-# @param [in] value;
+# @param [in] func Pointer of the function
+# @param [in] attr Attribute to set
+# @param [in] value Value to set
 # 
 # @returns #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
 # 
@@ -2252,7 +2310,8 @@ cdef hipError_t hipFuncSetAttribute(const void * func,hipFuncAttribute attr,int 
 # 
 # @brief Set Cache configuration for a specific function
 # 
-# @param [in] config;
+# @param [in] func Pointer of the function.
+# @param [in] config Configuration to set.
 # 
 # @returns #hipSuccess, #hipErrorNotInitialized
 # Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
@@ -2264,8 +2323,8 @@ cdef hipError_t hipFuncSetCacheConfig(const void * func,hipFuncCache_t config) n
 # 
 # @brief Set shared memory configuation for a specific function
 # 
-# @param [in] func
-# @param [in] config
+# @param [in] func Pointer of the function
+# @param [in] config Configuration
 # 
 # @returns #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
 # 
@@ -2334,7 +2393,7 @@ cdef const char * hipGetErrorString(hipError_t hipError) nogil
 # @brief Return hip error as text string form.
 # 
 # @param [in] hipError Error code to convert to string.
-# @param [out] const char pointer to the NULL-terminated error string
+# @param [out] errorString char pointer to the NULL-terminated error string
 # @return #hipSuccess, #hipErrorInvalidValue
 # 
 # @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
@@ -2345,7 +2404,7 @@ cdef hipError_t hipDrvGetErrorName(hipError_t hipError,const char ** errorString
 # @brief Return handy text string message to explain the error which occurred
 # 
 # @param [in] hipError Error code to convert to string.
-# @param [out] const char pointer to the NULL-terminated error string
+# @param [out] errorString char pointer to the NULL-terminated error string
 # @return #hipSuccess, #hipErrorInvalidValue
 # 
 # @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
@@ -2425,8 +2484,7 @@ cdef hipError_t hipDeviceGetStreamPriorityRange(int * leastPriority,int * greate
 # 
 # @brief Destroys the specified stream.
 # 
-# @param[in, out] stream Valid pointer to hipStream_t.  This function writes the memory with the
-# newly created stream.
+# @param[in] stream stream identifier.
 # @return #hipSuccess #hipErrorInvalidHandle
 # 
 # Destroys the specified stream.
@@ -2529,6 +2587,18 @@ cdef hipError_t hipStreamGetFlags(hipStream_t stream,unsigned int * flags) nogil
 # 
 # @see hipStreamCreateWithFlags
 cdef hipError_t hipStreamGetPriority(hipStream_t stream,int * priority) nogil
+
+
+# 
+# @brief Get the device assocaited with the stream
+# 
+# @param[in] stream stream to be queried
+# @param[out] device device associated with the stream
+# @return #hipSuccess, #hipErrorInvalidValue, #hipErrorContextIsDestroyed, #hipErrorInvalidHandle,
+# #hipErrorNotInitialized, #hipErrorDeinitialized, #hipErrorInvalidContext
+# 
+# @see hipStreamCreate, hipStreamDestroy, hipDeviceGetStreamPriorityRange
+cdef hipError_t hipStreamGetDevice(hipStream_t stream,int * device) nogil
 
 
 # 
@@ -2733,6 +2803,9 @@ cdef hipError_t hipStreamWriteValue64(hipStream_t stream,void * ptr,unsigned lon
 # would not record profiling data and provide best performance if used for synchronization.
 #   #hipEventInterprocess : The event can be used as an interprocess event. hipEventDisableTiming
 # flag also must be set when hipEventInterprocess flag is set.
+#   #hipEventDisableSystemFence : Disable acquire and release system scope fence. This may
+# improve performance but device memory may not be visible to the host and other devices
+# if this flag is set.
 # 
 #   @returns #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
 # #hipErrorLaunchFailure, #hipErrorOutOfMemory
@@ -2843,30 +2916,32 @@ cdef hipError_t hipEventQuery(hipEvent_t event) nogil
 
 
 # 
-#  @}
+# @brief Sets information on the specified pointer.[BETA]
 # 
+# @param [in]      value     sets pointer attribute value
+# @param [in]      atribute attribute to set
+# @param [in]      ptr      pointer to set attributes for
 # 
-# -------------------------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------------------------
-#   @defgroup Memory Memory Management
-#   @{
-#   This section describes the memory management functions of HIP runtime API.
-#   The following CUDA APIs are not currently supported:
-#   - cudaMalloc3D
-#   - cudaMalloc3DArray
-#   - TODO - more 2D, 3D, array APIs here.
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
+# @beta This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+#
+cdef hipError_t hipPointerSetAttribute(const void * value,hipPointer_attribute attribute,void * ptr) nogil
+
+
 # 
+# @brief Return attributes for the specified pointer
 # 
+# @param [out]  attributes  attributes for the specified pointer
+# @param [in]   ptr         pointer to get attributes for
 # 
-#   @brief Return attributes for the specified pointer
+# Note: To get pointer's memory type, the parameter attributes has 'type' as member variable.
+# The 'type' indicates input pointer is allocated on device or host.
 # 
-#   @param [out]  attributes  attributes for the specified pointer
-#   @param [in]   ptr         pointer to get attributes for
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
-#   @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-# 
-#   @see hipPointerGetAttribute
+# @see hipPointerGetAttribute
 cdef hipError_t hipPointerGetAttributes(hipPointerAttribute_t * attributes,const void * ptr) nogil
 
 
@@ -2905,14 +2980,24 @@ cdef hipError_t hipDrvPointerGetAttributes(unsigned int numAttributes,hipPointer
 
 
 # 
-# @brief Imports an external semaphore.
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+#   @defgroup External External Resource Interoperability
+#   @{
+#   @ingroup API
 # 
-# @param[out] extSem_out  External semaphores to be waited on
-# @param[in] semHandleDesc Semaphore import handle descriptor
+#   This section describes the external resource interoperability functions of HIP runtime API.
 # 
-# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # 
-# @see
+# 
+#   @brief Imports an external semaphore.
+# 
+#   @param[out] extSem_out  External semaphores to be waited on
+#   @param[in] semHandleDesc Semaphore import handle descriptor
+# 
+#   @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+# 
+#   @see
 cdef hipError_t hipImportExternalSemaphore(void ** extSem_out,hipExternalSemaphoreHandleDesc_st * semHandleDesc) nogil
 
 
@@ -2992,6 +3077,9 @@ cdef hipError_t hipDestroyExternalMemory(void * extMem) nogil
 
 
 # 
+# @}
+# 
+# 
 #  @brief Allocate memory on the default accelerator
 # 
 #  @param[out] ptr Pointer to the allocated memory
@@ -3032,7 +3120,7 @@ cdef hipError_t hipExtMallocWithFlags(void ** ptr,unsigned long sizeBytes,unsign
 # 
 # @return #hipSuccess, #hipErrorOutOfMemory
 # 
-# @deprecated use hipHostMalloc() instead
+# @warning  This API is deprecated use hipHostMalloc() instead
 cdef hipError_t hipMallocHost(void ** ptr,unsigned long size) nogil
 
 
@@ -3046,18 +3134,36 @@ cdef hipError_t hipMallocHost(void ** ptr,unsigned long size) nogil
 # 
 # @return #hipSuccess, #hipErrorOutOfMemory
 # 
-# @deprecated use hipHostMalloc() instead
+# @warning  This API is deprecated, use hipHostMalloc() instead
 cdef hipError_t hipMemAllocHost(void ** ptr,unsigned long size) nogil
 
 
 # 
-# @brief Allocate device accessible page locked host memory
+# @brief Allocates device accessible page locked (pinned) host memory
+# 
+# This API allocates pinned host memory which is mapped into the address space of all GPUs
+# in the system, the memory can be accessed directly by the GPU device, and can be read or
+# written with much higher bandwidth than pageable memory obtained with functions such as
+# malloc().
+# 
+# Using the pinned host memory, applications can implement faster data transfers for HostToDevice
+# and DeviceToHost. The runtime tracks the hipHostMalloc allocations and can avoid some of the
+# setup required for regular unpinned memory.
+# 
+# When the memory accesses are infrequent, zero-copy memory can be a good choice, for coherent
+# allocation. GPU can directly access the host memory over the CPU/GPU interconnect, without need
+# to copy the data.
+# 
+# Currently the allocation granularity is 4KB for the API.
+# 
+# Developers need to choose proper allocation flag with consideration of synchronization.
 # 
 # @param[out] ptr Pointer to the allocated host pinned memory
-# @param[in]  size Requested memory size
+# @param[in]  size Requested memory size in bytes
+# If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @param[in]  flags Type of host memory allocation
 # 
-# If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+# If no input for flags, it will be the default pinned memory allocation on the host.
 # 
 # @return #hipSuccess, #hipErrorOutOfMemory
 # 
@@ -3068,21 +3174,34 @@ cdef hipError_t hipHostMalloc(void ** ptr,unsigned long size,unsigned int flags)
 # 
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
-#   @addtogroup MemoryM Managed Memory
-#   @{
+#   @defgroup MemoryM Managed Memory
+# 
 #   @ingroup Memory
+#  @{
 #   This section describes the managed memory management functions of HIP runtime API.
+# 
+#   @note  The managed memory management APIs are implemented on Linux, under developement
+#   on Windows.
 # 
 # 
 # 
 #  @brief Allocates memory that will be automatically managed by HIP.
 # 
+#  This API is used for managed memory, allows data be shared and accessible to both the CPU and
+#  GPU using a single pointer.
+# 
+#  The API returns the allocation pointer, managed by HMM, can be used further to execute kernels
+#  on device and fetch data between the host and device as needed.
+# 
+#  @note   It is recommend to do the capability check before call this API.
+# 
 #  @param [out] dev_ptr - pointer to allocated device memory
-#  @param [in]  size    - requested allocation size in bytes
+#  @param [in]  size    - requested allocation size in bytes, it should be granularity of 4KB
 #  @param [in]  flags   - must be either hipMemAttachGlobal or hipMemAttachHost
 #                         (defaults to hipMemAttachGlobal)
 # 
 #  @returns #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
+#
 cdef hipError_t hipMallocManaged(void ** dev_ptr,unsigned long size,unsigned int flags) nogil
 
 
@@ -3095,6 +3214,8 @@ cdef hipError_t hipMallocManaged(void ** dev_ptr,unsigned long size,unsigned int
 # @param [in] stream   stream to enqueue prefetch operation
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,unsigned long count,int device,hipStream_t stream) nogil
 
 
@@ -3102,11 +3223,13 @@ cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,unsigned long count,int
 # @brief Advise about the usage of a given memory range to HIP.
 # 
 # @param [in] dev_ptr  pointer to memory to set the advice for
-# @param [in] count    size in bytes of the memory range
+# @param [in] count    size in bytes of the memory range, it should be 4KB alligned.
 # @param [in] advice   advice to be applied for the specified memory range
 # @param [in] device   device to apply the advice for
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemAdvise(const void * dev_ptr,unsigned long count,hipMemoryAdvise advice,int device) nogil
 
 
@@ -3121,6 +3244,8 @@ cdef hipError_t hipMemAdvise(const void * dev_ptr,unsigned long count,hipMemoryA
 # @param [in] count      size of the range to query
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemRangeGetAttribute(void * data,unsigned long data_size,hipMemRangeAttribute attribute,const void * dev_ptr,unsigned long count) nogil
 
 
@@ -3137,6 +3262,8 @@ cdef hipError_t hipMemRangeGetAttribute(void * data,unsigned long data_size,hipM
 # @param [in] count        size of the range to query
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemRangeGetAttributes(void ** data,unsigned long * data_sizes,hipMemRangeAttribute * attributes,unsigned long num_attributes,const void * dev_ptr,unsigned long count) nogil
 
 
@@ -3151,6 +3278,8 @@ cdef hipError_t hipMemRangeGetAttributes(void ** data,unsigned long * data_sizes
 #                          hipMemAttachSingle (defaults to hipMemAttachSingle)
 # 
 # @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,unsigned long length,unsigned int flags) nogil
 
 
@@ -3163,12 +3292,12 @@ cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,unsign
 # The allocation comes from the memory pool associated with the stream's device.
 # 
 # @note The default memory pool of a device contains device memory from that device.
-# @note Basic stream ordering allows future work submitted into the same stream to use the allocation.
-# Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
-# operation completes before work submitted in a separate stream runs.
-# @note During stream capture, this function results in the creation of an allocation node. In this case,
-# the allocation is owned by the graph instead of the memory pool. The memory pool's properties
-# are used to set the node's creation parameters.
+# @note Basic stream ordering allows future work submitted into the same stream to use the
+#  allocation. Stream query, stream synchronize, and HIP events can be used to guarantee that
+#  the allocation operation completes before work submitted in a separate stream runs.
+# @note During stream capture, this function results in the creation of an allocation node.
+#  In this case, the allocation is owned by the graph instead of the memory pool. The memory
+#  pool's properties are used to set the node's creation parameters.
 # 
 # @param [out] dev_ptr  Returned device pointer of memory allocation
 # @param [in] size      Number of bytes to allocate
@@ -3182,6 +3311,8 @@ cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,unsign
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMallocAsync(void ** dev_ptr,unsigned long size,hipStream_t stream) nogil
 
 
@@ -3199,13 +3330,15 @@ cdef hipError_t hipMallocAsync(void ** dev_ptr,unsigned long size,hipStream_t st
 # @param [in] dev_ptr Pointer to device memory to free
 # @param [in] stream  The stream, where the destruciton will occur according to the execution order
 # 
-# @returns hipSuccess, hipErrorInvalidValue, hipErrorNotSupported
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # 
 # @see hipMallocFromPoolAsync, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
 # hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipFreeAsync(void * dev_ptr,hipStream_t stream) nogil
 
 
@@ -3233,6 +3366,8 @@ cdef hipError_t hipFreeAsync(void * dev_ptr,hipStream_t stream) nogil
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolTrimTo(hipMemPool_t mem_pool,unsigned long min_bytes_to_hold) nogil
 
 
@@ -3271,6 +3406,8 @@ cdef hipError_t hipMemPoolTrimTo(hipMemPool_t mem_pool,unsigned long min_bytes_t
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolSetAttribute(hipMemPool_t mem_pool,hipMemPoolAttr attr,void * value) nogil
 
 
@@ -3309,6 +3446,8 @@ cdef hipError_t hipMemPoolSetAttribute(hipMemPool_t mem_pool,hipMemPoolAttr attr
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolGetAttribute(hipMemPool_t mem_pool,hipMemPoolAttr attr,void * value) nogil
 
 
@@ -3326,6 +3465,8 @@ cdef hipError_t hipMemPoolGetAttribute(hipMemPool_t mem_pool,hipMemPoolAttr attr
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolSetAccess(hipMemPool_t mem_pool,hipMemAccessDesc * desc_list,unsigned long count) nogil
 
 
@@ -3345,6 +3486,8 @@ cdef hipError_t hipMemPoolSetAccess(hipMemPool_t mem_pool,hipMemAccessDesc * des
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolGetAccess(hipMemAccessFlags * flags,hipMemPool_t mem_pool,hipMemLocation * location) nogil
 
 
@@ -3368,6 +3511,8 @@ cdef hipError_t hipMemPoolGetAccess(hipMemAccessFlags * flags,hipMemPool_t mem_p
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolCreate(hipMemPool_t* mem_pool,hipMemPoolProps * pool_props) nogil
 
 
@@ -3394,6 +3539,8 @@ cdef hipError_t hipMemPoolCreate(hipMemPool_t* mem_pool,hipMemPoolProps * pool_p
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolDestroy(hipMemPool_t mem_pool) nogil
 
 
@@ -3427,6 +3574,8 @@ cdef hipError_t hipMemPoolDestroy(hipMemPool_t mem_pool) nogil
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMallocFromPoolAsync(void ** dev_ptr,unsigned long size,hipMemPool_t mem_pool,hipStream_t stream) nogil
 
 
@@ -3453,6 +3602,8 @@ cdef hipError_t hipMallocFromPoolAsync(void ** dev_ptr,unsigned long size,hipMem
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolExportToShareableHandle(void * shared_handle,hipMemPool_t mem_pool,hipMemAllocationHandleType handle_type,unsigned int flags) nogil
 
 
@@ -3476,6 +3627,8 @@ cdef hipError_t hipMemPoolExportToShareableHandle(void * shared_handle,hipMemPoo
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolImportFromShareableHandle(hipMemPool_t* mem_pool,void * shared_handle,hipMemAllocationHandleType handle_type,unsigned int flags) nogil
 
 
@@ -3495,6 +3648,8 @@ cdef hipError_t hipMemPoolImportFromShareableHandle(hipMemPool_t* mem_pool,void 
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolExportPointer(hipMemPoolPtrExportData * export_data,void * dev_ptr) nogil
 
 
@@ -3523,6 +3678,8 @@ cdef hipError_t hipMemPoolExportPointer(hipMemPoolPtrExportData * export_data,vo
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemPoolImportPointer(void ** dev_ptr,hipMemPool_t mem_pool,hipMemPoolPtrExportData * export_data) nogil
 
 
@@ -3530,14 +3687,14 @@ cdef hipError_t hipMemPoolImportPointer(void ** dev_ptr,hipMemPool_t mem_pool,hi
 # @brief Allocate device accessible page locked host memory [Deprecated]
 # 
 # @param[out] ptr Pointer to the allocated host pinned memory
-# @param[in]  size Requested memory size
+# @param[in]  size Requested memory size in bytes
 # @param[in]  flags Type of host memory allocation
 # 
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # 
 # @return #hipSuccess, #hipErrorOutOfMemory
 # 
-# @deprecated use hipHostMalloc() instead
+# @warning This API is deprecated, use hipHostMalloc() instead
 cdef hipError_t hipHostAlloc(void ** ptr,unsigned long size,unsigned int flags) nogil
 
 
@@ -3678,7 +3835,7 @@ cdef hipError_t hipFree(void * ptr) nogil
 #    @return #hipSuccess,
 #            #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
 # hipMalloc)
-#    @deprecated use hipHostFree() instead
+#    @warning  This API is deprecated, use hipHostFree() instead
 cdef hipError_t hipFreeHost(void * ptr) nogil
 
 
@@ -3717,7 +3874,7 @@ cdef hipError_t hipHostFree(void * ptr) nogil
 #  @param[in]  src Data being copy from
 #  @param[in]  sizeBytes Data size in bytes
 #  @param[in]  copyType Memory copy type
-#  @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknowni
+#  @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknown
 # 
 #  @see hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
 # hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
@@ -3728,7 +3885,19 @@ cdef hipError_t hipHostFree(void * ptr) nogil
 cdef hipError_t hipMemcpy(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind) nogil
 
 
-
+# 
+# @brief Memory copy on the stream.
+# It allows single or multiple devices to do memory copy on single or multiple streams.
+# 
+# @param[out]  dst Data being copy to
+# @param[in]  src Data being copy from
+# @param[in]  sizeBytes Data size in bytes
+# @param[in]  copyType Memory copy type
+# @param[in]  stream Valid stream
+# @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknown, #hipErrorContextIsDestroyed
+# 
+# @see hipMemcpy, hipStreamCreate, hipStreamSynchronize, hipStreamDestroy, hipSetDevice, hipLaunchKernelGGL
+#
 cdef hipError_t hipMemcpyWithStream(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
@@ -4060,7 +4229,7 @@ cdef hipError_t hipMemsetD32(void * dest,int value,unsigned long count) nogil
 #  @brief Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant
 # byte value value.
 # 
-#  hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the
+# hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the
 # memset is complete. The operation can optionally be associated to a stream by passing a non-zero
 # stream argument. If stream is non-zero, the operation may overlap with operations in other
 # streams.
@@ -4137,17 +4306,33 @@ cdef hipError_t hipMemset3DAsync(hipPitchedPtr pitchedDevPtr,int value,hipExtent
 
 
 # 
-#  @brief Query memory info.
-#  Return snapshot of free memory, and total allocatable memory on the device.
+# @brief Query memory info.
 # 
-#  Returns in *free a snapshot of the current free memory.
-#  @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-#  @warning On HCC, the free memory only accounts for memory allocated by this process and may be
-# optimistic.
+# On ROCM, this function gets the actual free memory left on the current device, so supports
+# the cases while running multi-workload (such as multiple processes, multiple threads, and
+# multiple GPUs).
+# 
+# @warning On Windows, the free memory only accounts for memory allocated by this process and may
+# be optimistic.
+# 
+# @param[out] free Returns free memory on the current device in bytes
+# @param[out] total Returns total allocatable memory on the current device in bytes
+# 
+# @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+#
 cdef hipError_t hipMemGetInfo(unsigned long * free,unsigned long * total) nogil
 
 
-
+# 
+# @brief Get allocated memory size via memory pointer.
+# 
+# This function gets the allocated shared virtual memory size from memory pointer.
+# 
+# @param[in] ptr Pointer to allocated memory
+# @param[out] size Returns the allocated memory size in bytes
+# 
+# @return #hipSuccess, #hipErrorInvalidValue
+#
 cdef hipError_t hipMemPtrGetInfo(void * ptr,unsigned long * size) nogil
 
 
@@ -4165,19 +4350,50 @@ cdef hipError_t hipMemPtrGetInfo(void * ptr,unsigned long * size) nogil
 cdef hipError_t hipMallocArray(hipArray ** array,hipChannelFormatDesc * desc,unsigned long width,unsigned long height,unsigned int flags) nogil
 
 
-
+# 
+# @brief Create an array memory pointer on the device.
+# 
+# @param[out]  pHandle  Pointer to the array memory
+# @param[in]   pAllocateArray   Requested array desciptor
+# 
+# @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+# 
+# @see hipMallocArray, hipArrayDestroy, hipFreeArray
 cdef hipError_t hipArrayCreate(hipArray ** pHandle,HIP_ARRAY_DESCRIPTOR * pAllocateArray) nogil
 
 
-
+# 
+# @brief Destroy an array memory pointer on the device.
+# 
+# @param[in]  array  Pointer to the array memory
+# 
+# @return      #hipSuccess, #hipErrorInvalidValue
+# 
+# @see hipArrayCreate, hipArrayDestroy, hipFreeArray
 cdef hipError_t hipArrayDestroy(hipArray * array) nogil
 
 
-
+# 
+# @brief Create a 3D array memory pointer on the device.
+# 
+# @param[out]  array  Pointer to the 3D array memory
+# @param[in]   pAllocateArray   Requested array desciptor
+# 
+# @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+# 
+# @see hipMallocArray, hipArrayDestroy, hipFreeArray
 cdef hipError_t hipArray3DCreate(hipArray ** array,HIP_ARRAY3D_DESCRIPTOR * pAllocateArray) nogil
 
 
-
+# 
+# @brief Create a 3D memory pointer on the device.
+# 
+# @param[out]  pitchedDevPtr  Pointer to the 3D memory
+# @param[in]   extent   Requested extent
+# 
+# @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+# 
+# @see hipMallocPitch, hipMemGetInfo, hipFree
 cdef hipError_t hipMalloc3D(hipPitchedPtr * pitchedDevPtr,hipExtent extent) nogil
 
 
@@ -4235,6 +4451,58 @@ cdef hipError_t hipMallocMipmappedArray(hipMipmappedArray_t* mipmappedArray,hipC
 # 
 # @return #hipSuccess, #hipErrorInvalidValue
 cdef hipError_t hipGetMipmappedArrayLevel(hipArray_t* levelArray,hipMipmappedArray_const_t mipmappedArray,unsigned int level) nogil
+
+
+# 
+# @brief Gets info about the specified array
+# 
+# @param[out] desc   - Returned array type
+# @param[out] extent - Returned array shape. 2D arrays will have depth of zero
+# @param[out] flags  - Returned array flags
+# @param[in]  array  - The HIP array to get info for
+# 
+# @return #hipSuccess, #hipErrorInvalidValue #hipErrorInvalidHandle
+# 
+# @see hipArrayGetDescriptor, hipArray3DGetDescriptor
+cdef hipError_t hipArrayGetInfo(hipChannelFormatDesc * desc,hipExtent * extent,unsigned int * flags,hipArray * array) nogil
+
+
+# 
+# @brief Gets a 1D or 2D array descriptor
+# 
+# @param[out] pArrayDescriptor - Returned array descriptor
+# @param[in]  array            - Array to get descriptor of
+# 
+# @return #hipSuccess, #hipErrorDeInitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+# #hipErrorInvalidValue #hipErrorInvalidHandle
+# 
+# @see hipArray3DCreate, hipArray3DGetDescriptor, hipArrayCreate, hipArrayDestroy, hipMemAlloc,
+# hipMemAllocHost, hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned,
+# hipMemcpy3D, hipMemcpy3DAsync, hipMemcpyAtoA, hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync,
+# hipMemcpyDtoA, hipMemcpyDtoD, hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync,
+# hipMemcpyHtoA, hipMemcpyHtoAAsync, hipMemcpyHtoD, hipMemcpyHtoDAsync, hipMemFree,
+# hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo, hipMemHostAlloc,
+# hipMemHostGetDevicePointer, hipMemsetD8, hipMemsetD16, hipMemsetD32, hipArrayGetInfo
+cdef hipError_t hipArrayGetDescriptor(HIP_ARRAY_DESCRIPTOR * pArrayDescriptor,hipArray * array) nogil
+
+
+# 
+# @brief Gets a 3D array descriptor
+# 
+# @param[out] pArrayDescriptor - Returned 3D array descriptor
+# @param[in]  array            - 3D array to get descriptor of
+# 
+# @return #hipSuccess, #hipErrorDeInitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+# #hipErrorInvalidValue #hipErrorInvalidHandle, #hipErrorContextIsDestroyed
+# 
+# @see hipArray3DCreate, hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc,
+# hipMemAllocHost, hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned,
+# hipMemcpy3D, hipMemcpy3DAsync, hipMemcpyAtoA, hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync,
+# hipMemcpyDtoA, hipMemcpyDtoD, hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync,
+# hipMemcpyHtoA, hipMemcpyHtoAAsync, hipMemcpyHtoD, hipMemcpyHtoDAsync, hipMemFree,
+# hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo, hipMemHostAlloc,
+# hipMemHostGetDevicePointer, hipMemsetD8, hipMemsetD16, hipMemsetD32, hipArrayGetInfo
+cdef hipError_t hipArray3DGetDescriptor(HIP_ARRAY3D_DESCRIPTOR * pArrayDescriptor,hipArray * array) nogil
 
 
 # 
@@ -4337,7 +4605,7 @@ cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,unsigned long wOffset,uns
 
 
 # 
-#  @brief Copies data between host and device.
+#  @brief Copies data between host and device. [Deprecated]
 # 
 #  @param[in]   dst     Destination memory address
 #  @param[in]   wOffset Destination starting X offset
@@ -4350,15 +4618,17 @@ cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,unsigned long wOffset,uns
 # 
 #  @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
+# 
+# @warning : This API is deprecated.
 cdef hipError_t hipMemcpyToArray(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long count,hipMemcpyKind kind) nogil
 
 
 # 
-#  @brief Copies data between host and device.
+#  @brief Copies data between host and device. [Deprecated]
 # 
 #  @param[in]   dst       Destination memory address
 #  @param[in]   srcArray  Source memory address
-#  @param[in]   woffset   Source starting X offset
+#  @param[in]   wOffset   Source starting X offset
 #  @param[in]   hOffset   Source starting Y offset
 #  @param[in]   count     Size in bytes to copy
 #  @param[in]   kind      Type of transfer
@@ -4367,6 +4637,8 @@ cdef hipError_t hipMemcpyToArray(hipArray * dst,unsigned long wOffset,unsigned l
 # 
 #  @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
+# 
+# @warning : This API is deprecated.
 cdef hipError_t hipMemcpyFromArray(void * dst,hipArray_const_t srcArray,unsigned long wOffset,unsigned long hOffset,unsigned long count,hipMemcpyKind kind) nogil
 
 
@@ -4608,21 +4880,23 @@ cdef hipError_t hipMemcpyPeerAsync(void * dst,int dstDeviceId,const void * src,i
 #   This section describes the deprecated context management functions of HIP runtime API.
 # 
 # 
-#  @brief Create a context and set it as current/ default context
+#  @brief Create a context and set it as current/default context [Deprecated]
 # 
-#  @param [out] ctx
-#  @param [in] flags
-#  @param [in] associated device handle
+#  @param [out] ctx  Context to create
+#  @param [in] flags  Context creation flags
+#  @param [in] device  device handle
 # 
 #  @return #hipSuccess
 # 
 #  @see hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
 #  hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+#  @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxCreate(hipCtx_t* ctx,unsigned int flags,int device) nogil
 
 
 # 
-# @brief Destroy a HIP context.
+# @brief Destroy a HIP context. [Deprecated]
 # 
 # @param [in] ctx Context to destroy
 # 
@@ -4630,11 +4904,13 @@ cdef hipError_t hipCtxCreate(hipCtx_t* ctx,unsigned int flags,int device) nogil
 # 
 # @see hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxDestroy(hipCtx_t ctx) nogil
 
 
 # 
-# @brief Pop the current/default context and return the popped context.
+# @brief Pop the current/default context and return the popped context. [Deprecated]
 # 
 # @param [out] ctx
 # 
@@ -4642,11 +4918,13 @@ cdef hipError_t hipCtxDestroy(hipCtx_t ctx) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxSetCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxPopCurrent(hipCtx_t* ctx) nogil
 
 
 # 
-# @brief Push the context to be set as current/ default context
+# @brief Push the context to be set as current/ default context. [Deprecated]
 # 
 # @param [in] ctx
 # 
@@ -4654,11 +4932,13 @@ cdef hipError_t hipCtxPopCurrent(hipCtx_t* ctx) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxPushCurrent(hipCtx_t ctx) nogil
 
 
 # 
-# @brief Set the passed context as current/default
+# @brief Set the passed context as current/default. [Deprecated]
 # 
 # @param [in] ctx
 # 
@@ -4666,11 +4946,13 @@ cdef hipError_t hipCtxPushCurrent(hipCtx_t ctx) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxSetCurrent(hipCtx_t ctx) nogil
 
 
 # 
-# @brief Get the handle of the current/ default context
+# @brief Get the handle of the current/ default context. [Deprecated]
 # 
 # @param [out] ctx
 # 
@@ -4678,11 +4960,13 @@ cdef hipError_t hipCtxSetCurrent(hipCtx_t ctx) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxGetCurrent(hipCtx_t* ctx) nogil
 
 
 # 
-# @brief Get the handle of the device associated with current/default context
+# @brief Get the handle of the device associated with current/default context. [Deprecated]
 # 
 # @param [out] device
 # 
@@ -4690,11 +4974,13 @@ cdef hipError_t hipCtxGetCurrent(hipCtx_t* ctx) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxGetDevice(int * device) nogil
 
 
 # 
-# @brief Returns the approximate HIP api version.
+# @brief Returns the approximate HIP api version. [Deprecated]
 # 
 # @param [in]  ctx Context to check
 # @param [out] apiVersion
@@ -4709,13 +4995,15 @@ cdef hipError_t hipCtxGetDevice(int * device) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxGetApiVersion(hipCtx_t ctx,int * apiVersion) nogil
 
 
 # 
-# @brief Set Cache configuration for a specific function
+# @brief Get Cache configuration for a specific function. [Deprecated]
 # 
-# @param [out] cacheConfiguration
+# @param [out] cacheConfig  Cache configuration
 # 
 # @return #hipSuccess
 # 
@@ -4724,13 +5012,15 @@ cdef hipError_t hipCtxGetApiVersion(hipCtx_t ctx,int * apiVersion) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxGetCacheConfig(hipFuncCache_t * cacheConfig) nogil
 
 
 # 
-# @brief Set L1/Shared cache partition.
+# @brief Set L1/Shared cache partition. [Deprecated]
 # 
-# @param [in] cacheConfiguration
+# @param [in] cacheConfig  Cache configuration to set
 # 
 # @return #hipSuccess
 # 
@@ -4739,13 +5029,15 @@ cdef hipError_t hipCtxGetCacheConfig(hipFuncCache_t * cacheConfig) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxSetCacheConfig(hipFuncCache_t cacheConfig) nogil
 
 
 # 
 # @brief Set Shared memory bank configuration.
 # 
-# @param [in] sharedMemoryConfiguration
+# @param [in] config  Shared memory configuration to set
 # 
 # @return #hipSuccess
 # 
@@ -4754,13 +5046,15 @@ cdef hipError_t hipCtxSetCacheConfig(hipFuncCache_t cacheConfig) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxSetSharedMemConfig(hipSharedMemConfig config) nogil
 
 
 # 
-# @brief Get Shared memory bank configuration.
+# @brief Get Shared memory bank configuration. [Deprecated]
 # 
-# @param [out] sharedMemoryConfiguration
+# @param [out] pConfig  Pointer of shared memory configuration
 # 
 # @return #hipSuccess
 # 
@@ -4769,11 +5063,13 @@ cdef hipError_t hipCtxSetSharedMemConfig(hipSharedMemConfig config) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxGetSharedMemConfig(hipSharedMemConfig * pConfig) nogil
 
 
 # 
-# @brief Blocks until the default context has completed all preceding requested tasks.
+# @brief Blocks until the default context has completed all preceding requested tasks. [Deprecated]
 # 
 # @return #hipSuccess
 # 
@@ -4782,23 +5078,27 @@ cdef hipError_t hipCtxGetSharedMemConfig(hipSharedMemConfig * pConfig) nogil
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxSynchronize() nogil
 
 
 # 
 # @brief Return flags used for creating default context.
 # 
-# @param [out] flags
+# @param [out] flags  Pointer of flags
 # 
 # @returns #hipSuccess
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxGetFlags(unsigned int * flags) nogil
 
 
 # 
-# @brief Enables direct access to memory allocations in a peer context.
+# @brief Enables direct access to memory allocations in a peer context. [Deprecated]
 # 
 # Memory which already allocated on peer device will be mapped into the address space of the
 # current device.  In addition, all future memory allocations on peerDeviceId will be mapped into
@@ -4806,8 +5106,8 @@ cdef hipError_t hipCtxGetFlags(unsigned int * flags) nogil
 # accessible from the current device until a call to hipDeviceDisablePeerAccess or hipDeviceReset.
 # 
 # 
-# @param [in] peerCtx
-# @param [in] flags
+# @param [in] peerCtx  Peer context
+# @param [in] flags  flags, need to set as 0
 # 
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
 # #hipErrorPeerAccessAlreadyEnabled
@@ -4815,24 +5115,28 @@ cdef hipError_t hipCtxGetFlags(unsigned int * flags) nogil
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 # @warning PeerToPeer support is experimental.
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxEnablePeerAccess(hipCtx_t peerCtx,unsigned int flags) nogil
 
 
 # 
 # @brief Disable direct access from current context's virtual address space to memory allocations
 # physically located on a peer context.Disables direct access to memory allocations in a peer
-# context and unregisters any registered allocations.
+# context and unregisters any registered allocations. [Deprecated]
 # 
-# Returns hipErrorPeerAccessNotEnabled if direct access to memory on peerDevice has not yet been
+# Returns #hipErrorPeerAccessNotEnabled if direct access to memory on peerDevice has not yet been
 # enabled from the current device.
 # 
-# @param [in] peerCtx
+# @param [in] peerCtx  Peer context to be disabled
 # 
 # @returns #hipSuccess, #hipErrorPeerAccessNotEnabled
 # 
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 # @warning PeerToPeer support is experimental.
+# 
+# @warning : This HIP API is deprecated.
 cdef hipError_t hipCtxDisablePeerAccess(hipCtx_t peerCtx) nogil
 
 
@@ -4842,9 +5146,9 @@ cdef hipError_t hipCtxDisablePeerAccess(hipCtx_t peerCtx) nogil
 # 
 # @brief Get the state of the primary context.
 # 
-# @param [in] Device to get primary context flags for
-# @param [out] Pointer to store flags
-# @param [out] Pointer to store context state; 0 = inactive, 1 = active
+# @param [in] dev  Device to get primary context flags for
+# @param [out] flags  Pointer to store flags
+# @param [out] active  Pointer to store context state; 0 = inactive, 1 = active
 # 
 # @returns #hipSuccess
 # 
@@ -4856,7 +5160,7 @@ cdef hipError_t hipDevicePrimaryCtxGetState(int dev,unsigned int * flags,int * a
 # 
 # @brief Release the primary context on the GPU.
 # 
-# @param [in] Device which primary context is released
+# @param [in] dev  Device which primary context is released
 # 
 # @returns #hipSuccess
 # 
@@ -4868,22 +5172,23 @@ cdef hipError_t hipDevicePrimaryCtxRelease(int dev) nogil
 
 
 # 
-# @brief Retain the primary context on the GPU.
+#    @brief Retain the primary context on the GPU.
 # 
-# @param [out] Returned context handle of the new context
-# @param [in] Device which primary context is released
+# hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx, hipDevice_t dev);
+#    @param [out] pctx  Returned context handle of the new context
+#    @param [in] dev  Device which primary context is released
 # 
-# @returns #hipSuccess
+#    @returns #hipSuccess
 # 
-# @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-# hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+#    @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+#    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx,int dev) nogil
 
 
 # 
 # @brief Resets the primary context on the GPU.
 # 
-# @param [in] Device which primary context is reset
+# @param [in] dev  Device which primary context is reset
 # 
 # @returns #hipSuccess
 # 
@@ -4895,8 +5200,8 @@ cdef hipError_t hipDevicePrimaryCtxReset(int dev) nogil
 # 
 # @brief Set flags for the primary context.
 # 
-# @param [in] Device for which the primary context flags are set
-# @param [in] New flags for the device
+# @param [in] dev  Device for which the primary context flags are set
+# @param [in] flags  New flags for the device
 # 
 # @returns #hipSuccess, #hipErrorContextAlreadyInUse
 # 
@@ -4906,26 +5211,29 @@ cdef hipError_t hipDevicePrimaryCtxSetFlags(int dev,unsigned int flags) nogil
 
 
 # 
-# @}
+#  @}
+# 
+# 
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+# 
+#   @defgroup Module Module Management
+#   @{
+#   @ingroup API
+#   This section describes the module management functions of HIP runtime API.
 # 
 # 
 # 
-#  @defgroup Module Module Management
-#  @{
-#  This section describes the module management functions of HIP runtime API.
+#  @brief Loads code object from file into a module the currrent context.
 # 
+#  @param [in] fname  Filename of code object to load
 # 
+#  @param [out] module  Module
 # 
-# @brief Loads code object from file into a hipModule_t
+#  @warning File/memory resources allocated in this function are released only in hipModuleUnload.
 # 
-# @param [in] fname
-# @param [out] module
-# 
-# @warning File/memory resources allocated in this function are released only in hipModuleUnload.
-# 
-# @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
-# hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
-# 
+#  @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext, #hipErrorFileNotFound,
+#  #hipErrorOutOfMemory, #hipErrorSharedObjectInitFailed, #hipErrorNotInitialized
 #
 cdef hipError_t hipModuleLoad(hipModule_t* module,const char * fname) nogil
 
@@ -4933,55 +5241,55 @@ cdef hipError_t hipModuleLoad(hipModule_t* module,const char * fname) nogil
 # 
 # @brief Frees the module
 # 
-# @param [in] module
+# @param [in] module  Module to free
 # 
-# @returns hipSuccess, hipInvalidValue
-# module is freed and the code objects associated with it are destroyed
-#
+# @returns #hipSuccess, #hipErrorInvalidResourceHandle
+# 
+# The module is freed, and the code objects associated with it are destroyed.
 cdef hipError_t hipModuleUnload(hipModule_t module) nogil
 
 
 # 
 # @brief Function with kname will be extracted if present in module
 # 
-# @param [in] module
-# @param [in] kname
-# @param [out] function
+# @param [in] module  Module to get function from
+# @param [in] kname  Pointer to the name of function
+# @param [out] function  Pointer to function handle
 # 
-# @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
-# hipErrorNotFound,
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext, #hipErrorNotInitialized,
+# #hipErrorNotFound,
 cdef hipError_t hipModuleGetFunction(hipFunction_t* function,hipModule_t module,const char * kname) nogil
 
 
 # 
 # @brief Find out attributes for a given function.
 # 
-# @param [out] attr
-# @param [in] func
+# @param [out] attr  Attributes of funtion
+# @param [in] func  Pointer to the function handle
 # 
-# @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
 cdef hipError_t hipFuncGetAttributes(hipFuncAttributes * attr,const void * func) nogil
 
 
 # 
 # @brief Find out a specific attribute for a given function.
 # 
-# @param [out] value
-# @param [in]  attrib
-# @param [in]  hfunc
+# @param [out] value  Pointer to the value
+# @param [in]  attrib  Attributes of the given funtion
+# @param [in]  hfunc  Function to get attributes from
 # 
-# @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
 cdef hipError_t hipFuncGetAttribute(int * value,hipFunction_attribute attrib,hipFunction_t hfunc) nogil
 
 
 # 
 # @brief returns the handle of the texture reference with the name from the module.
 # 
-# @param [in] hmod
-# @param [in] name
-# @param [out] texRef
+# @param [in] hmod  Module
+# @param [in] name  Pointer of name of texture reference
+# @param [out] texRef  Pointer of texture reference
 # 
-# @returns hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorNotInitialized, #hipErrorNotFound, #hipErrorInvalidValue
 cdef hipError_t hipModuleGetTexRef(textureReference ** texRef,hipModule_t hmod,const char * name) nogil
 
 
@@ -5042,6 +5350,49 @@ cdef hipError_t hipModuleLaunchKernel(hipFunction_t f,unsigned int gridDimX,unsi
 
 # 
 # @brief launches kernel f with launch parameters and shared memory on stream with arguments passed
+# to kernelParams, where thread blocks can cooperate and synchronize as they execute
+# 
+# @param [in] f              Kernel to launch.
+# @param [in] gridDimX       X grid dimension specified as multiple of blockDimX.
+# @param [in] gridDimY       Y grid dimension specified as multiple of blockDimY.
+# @param [in] gridDimZ       Z grid dimension specified as multiple of blockDimZ.
+# @param [in] blockDimX      X block dimension specified in work-items.
+# @param [in] blockDimY      Y block dimension specified in work-items.
+# @param [in] blockDimZ      Z block dimension specified in work-items.
+# @param [in] sharedMemBytes Amount of dynamic shared memory to allocate for this kernel. The
+# HIP-Clang compiler provides support for extern shared declarations.
+# @param [in] stream         Stream where the kernel should be dispatched. May be 0,
+# in which case the default stream is used with associated synchronization rules.
+# @param [in] kernelParams   A list of kernel arguments.
+# 
+# Please note, HIP does not support kernel launch with total work items defined in dimension with
+# size gridDim x blockDim >= 2^32.
+# 
+# @returns hipSuccess, hipErrorDeinitialized, hipErrorNotInitialized, hipErrorInvalidContext,
+# hipErrorInvalidHandle, hipErrorInvalidImage, hipErrorInvalidValue, hipInvalidDevice,
+# hipErrorInvalidConfiguration, hipErrorLaunchFailure, hipErrorLaunchOutOfResources,
+# hipErrorLaunchTimeOut, hipErrorCooperativeLaunchTooLarge, hipErrorSharedObjectInitFailed
+cdef hipError_t hipModuleLaunchCooperativeKernel(hipFunction_t f,unsigned int gridDimX,unsigned int gridDimY,unsigned int gridDimZ,unsigned int blockDimX,unsigned int blockDimY,unsigned int blockDimZ,unsigned int sharedMemBytes,hipStream_t stream,void ** kernelParams) nogil
+
+
+# 
+# @brief Launches kernels on multiple devices where thread blocks can cooperate and
+# synchronize as they execute.
+# 
+# @param [in] launchParamsList         List of launch parameters, one per device.
+# @param [in] numDevices               Size of the launchParamsList array.
+# @param [in] flags                    Flags to control launch behavior.
+# 
+# @returns hipSuccess, hipErrorDeinitialized, hipErrorNotInitialized, hipErrorInvalidContext,
+# hipErrorInvalidHandle, hipErrorInvalidImage, hipErrorInvalidValue, hipInvalidDevice,
+# hipErrorInvalidConfiguration, hipErrorInvalidResourceHandle, hipErrorLaunchFailure,
+# hipErrorLaunchOutOfResources, hipErrorLaunchTimeOut, hipErrorCooperativeLaunchTooLarge,
+# hipErrorSharedObjectInitFailed
+cdef hipError_t hipModuleLaunchCooperativeKernelMultiDevice(hipFunctionLaunchParams_t * launchParamsList,unsigned int numDevices,unsigned int flags) nogil
+
+
+# 
+# @brief launches kernel f with launch parameters and shared memory on stream with arguments passed
 # to kernelparams or extra, where thread blocks can cooperate and synchronize as they execute
 # 
 # @param [in] f         Kernel to launch.
@@ -5086,28 +5437,26 @@ cdef hipError_t hipExtLaunchMultiKernelMultiDevice(hipLaunchParams_t * launchPar
 
 
 # 
-# @}
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+#   @defgroup Occupancy Occupancy
+#   @{
+#   This section describes the occupancy functions of HIP runtime API.
 # 
 # 
 # 
-#  @defgroup Occupancy Occupancy
-#  @{
-#  This section describes the occupancy functions of HIP runtime API.
+#  @brief determine the grid and block sizes to achieves maximum occupancy for a kernel
 # 
+#  @param [out] gridSize           minimum grid size for maximum potential occupancy
+#  @param [out] blockSize          block size for maximum potential occupancy
+#  @param [in]  f                  kernel function for which occupancy is calulated
+#  @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
+#  @param [in]  blockSizeLimit     the maximum block size for the kernel, use 0 for no limit
 # 
+#  Please note, HIP does not support kernel launch with total work items defined in dimension with
+#  size gridDim x blockDim >= 2^32.
 # 
-# @brief determine the grid and block sizes to achieves maximum occupancy for a kernel
-# 
-# @param [out] gridSize           minimum grid size for maximum potential occupancy
-# @param [out] blockSize          block size for maximum potential occupancy
-# @param [in]  f                  kernel function for which occupancy is calulated
-# @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
-# @param [in]  blockSizeLimit     the maximum block size for the kernel, use 0 for no limit
-# 
-# Please note, HIP does not support kernel launch with total work items defined in dimension with
-# size gridDim x blockDim >= 2^32.
-# 
-# @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
+#  @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
 cdef hipError_t hipModuleOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,hipFunction_t f,unsigned long dynSharedMemPerBlk,int blockSizeLimit) nogil
 
 
@@ -5187,16 +5536,16 @@ cdef hipError_t hipOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize
 
 
 # 
-# @brief Start recording of profiling information
+# @brief Start recording of profiling information. [Deprecated]
 # When using this API, start the profiler with profiling disabled.  (--startdisabled)
-# @warning : hipProfilerStart API is under development.
+# @warning : THe hipProfilerStart API is deprecated, use roctracer/rocTX instead.
 cdef hipError_t hipProfilerStart() nogil
 
 
 # 
-# @brief Stop recording of profiling information.
+# @brief Stop recording of profiling information. [Deprecated]
 # When using this API, start the profiler with profiling disabled.  (--startdisabled)
-# @warning : hipProfilerStop API is under development.
+# @warning : hipProfilerStop API is deprecated, use roctracer/rocTX instead.
 cdef hipError_t hipProfilerStop() nogil
 
 
@@ -5299,11 +5648,11 @@ cdef hipError_t hipDrvMemcpy2DUnaligned(hip_Memcpy2D * pCopy) nogil
 # @param [in] sharedMemBytes  Amount of dynamic shared memory to allocate for this kernel.
 # HIP-Clang compiler provides support for extern shared declarations.
 # @param [in] stream  Stream where the kernel should be dispatched.
+# May be 0, in which case the default stream is used with associated synchronization rules.
 # @param [in] startEvent  If non-null, specified event will be updated to track the start time of
 # the kernel launch. The event must be created before calling this API.
 # @param [in] stopEvent  If non-null, specified event will be updated to track the stop time of
 # the kernel launch. The event must be created before calling this API.
-# May be 0, in which case the default stream is used with associated synchronization rules.
 # @param [in] flags. The value of hipExtAnyOrderLaunch, signifies if kernel can be
 # launched in any order.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
@@ -5318,7 +5667,7 @@ cdef hipError_t hipExtLaunchKernel(const void * function_address,dim3 numBlocks,
 # @param [in] mipmappedArray  memory mipmapped array on the device
 # @param [in] desc  opointer to the channel format
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
 #
 cdef hipError_t hipBindTextureToMipmappedArray(textureReference * tex,hipMipmappedArray_const_t mipmappedArray,hipChannelFormatDesc * desc) nogil
 
@@ -5331,7 +5680,7 @@ cdef hipError_t hipBindTextureToMipmappedArray(textureReference * tex,hipMipmapp
 # @param [in] pTexDesc  pointer to texture descriptor
 # @param [in] pResViewDesc  pointer to resource view descriptor
 # 
-# @returns hipSuccess, hipErrorInvalidValue, hipErrorNotSupported, hipErrorOutOfMemory
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
 # 
 # @note 3D liner filter isn't supported on GFX90A boards, on which the API @p hipCreateTextureObject will
 # return hipErrorNotSupported.
@@ -5344,7 +5693,7 @@ cdef hipError_t hipCreateTextureObject(hipTextureObject_t* pTexObject,hipResourc
 # 
 # @param [in] textureObject  texture object to destroy
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
 #
 cdef hipError_t hipDestroyTextureObject(hipTextureObject_t textureObject) nogil
 
@@ -5355,7 +5704,7 @@ cdef hipError_t hipDestroyTextureObject(hipTextureObject_t textureObject) nogil
 # @param [in] desc  pointer to channel format descriptor
 # @param [out] array  memory array on the device
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
 #
 cdef hipError_t hipGetChannelDesc(hipChannelFormatDesc * desc,hipArray_const_t array) nogil
 
@@ -5366,7 +5715,7 @@ cdef hipError_t hipGetChannelDesc(hipChannelFormatDesc * desc,hipArray_const_t a
 # @param [out] pResDesc  pointer to resource descriptor
 # @param [in] textureObject  texture object
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
 #
 cdef hipError_t hipGetTextureObjectResourceDesc(hipResourceDesc * pResDesc,hipTextureObject_t textureObject) nogil
 
@@ -5377,7 +5726,7 @@ cdef hipError_t hipGetTextureObjectResourceDesc(hipResourceDesc * pResDesc,hipTe
 # @param [out] pResViewDesc  pointer to resource view descriptor
 # @param [in] textureObject  texture object
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
 #
 cdef hipError_t hipGetTextureObjectResourceViewDesc(hipResourceViewDesc * pResViewDesc,hipTextureObject_t textureObject) nogil
 
@@ -5388,7 +5737,7 @@ cdef hipError_t hipGetTextureObjectResourceViewDesc(hipResourceViewDesc * pResVi
 # @param [out] pTexDesc  pointer to texture descriptor
 # @param [in] textureObject  texture object
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
 #
 cdef hipError_t hipGetTextureObjectTextureDesc(hipTextureDesc * pTexDesc,hipTextureObject_t textureObject) nogil
 
@@ -5401,7 +5750,7 @@ cdef hipError_t hipGetTextureObjectTextureDesc(hipTextureDesc * pTexDesc,hipText
 # @param [in] pTexDesc  pointer to texture descriptor
 # @param [in] pResViewDesc  pointer to resource view descriptor
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
 #
 cdef hipError_t hipTexObjectCreate(hipTextureObject_t* pTexObject,HIP_RESOURCE_DESC_st * pResDesc,HIP_TEXTURE_DESC_st * pTexDesc,HIP_RESOURCE_VIEW_DESC_st * pResViewDesc) nogil
 
@@ -5411,7 +5760,7 @@ cdef hipError_t hipTexObjectCreate(hipTextureObject_t* pTexObject,HIP_RESOURCE_D
 # 
 # @param [in] texObject  texture object to destroy
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
 #
 cdef hipError_t hipTexObjectDestroy(hipTextureObject_t texObject) nogil
 
@@ -5422,7 +5771,7 @@ cdef hipError_t hipTexObjectDestroy(hipTextureObject_t texObject) nogil
 # @param [out] pResDesc  pointer to resource descriptor
 # @param [in] texObject  texture object
 # 
-# @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorNotSupported, #hipErrorInvalidValue
 #
 cdef hipError_t hipTexObjectGetResourceDesc(HIP_RESOURCE_DESC_st * pResDesc,hipTextureObject_t texObject) nogil
 
@@ -5433,7 +5782,7 @@ cdef hipError_t hipTexObjectGetResourceDesc(HIP_RESOURCE_DESC_st * pResDesc,hipT
 # @param [out] pResViewDesc  pointer to resource view descriptor
 # @param [in] texObject  texture object
 # 
-# @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorNotSupported, #hipErrorInvalidValue
 #
 cdef hipError_t hipTexObjectGetResourceViewDesc(HIP_RESOURCE_VIEW_DESC_st * pResViewDesc,hipTextureObject_t texObject) nogil
 
@@ -5444,7 +5793,7 @@ cdef hipError_t hipTexObjectGetResourceViewDesc(HIP_RESOURCE_VIEW_DESC_st * pRes
 # @param [out] pTexDesc  pointer to texture descriptor
 # @param [in] texObject  texture object
 # 
-# @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorNotSupported, #hipErrorInvalidValue
 #
 cdef hipError_t hipTexObjectGetTextureDesc(HIP_TEXTURE_DESC_st * pTexDesc,hipTextureObject_t texObject) nogil
 
@@ -5462,157 +5811,427 @@ cdef hipError_t hipTexObjectGetTextureDesc(HIP_TEXTURE_DESC_st * pTexDesc,hipTex
 # @param [out] texref  texture reference
 # @param [in] symbol  pointer to the symbol related with the texture for the reference
 # 
-# @returns hipSuccess, hipErrorInvalidValue
+# @returns #hipSuccess, #hipErrorInvalidValue
+# @warning This API is deprecated.
 #
 cdef hipError_t hipGetTextureReference(textureReference ** texref,const void * symbol) nogil
 
 
-
+# 
+# @brief Sets address mode for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  texture reference.
+# @param [in] dim  Dimension of the texture.
+# @param [in] am  Value of the texture address mode.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetAddressMode(textureReference * texRef,int dim,hipTextureAddressMode am) nogil
 
 
-
+# 
+# @brief Binds an array as a texture reference. [Deprecated]
+# 
+# @param [in] tex  Pointer texture reference.
+# @param [in] array  Array to bind.
+# @param [in] flags  Flags should be set as HIP_TRSA_OVERRIDE_FORMAT, as a valid value.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetArray(textureReference * tex,hipArray_const_t array,unsigned int flags) nogil
 
 
-
+# 
+# @brief Set filter mode for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer texture reference.
+# @param [in] fm  Value of texture filter mode.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetFilterMode(textureReference * texRef,hipTextureFilterMode fm) nogil
 
 
-
+# 
+# @brief Set flags for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer texture reference.
+# @param [in] Flags  Value of flags.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetFlags(textureReference * texRef,unsigned int Flags) nogil
 
 
-
+# 
+# @brief Set format for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer texture reference.
+# @param [in] fmt  Value of format.
+# @param [in] NumPackedComponents  Number of components per array.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetFormat(textureReference * texRef,hipArray_Format fmt,int NumPackedComponents) nogil
 
 
-
+# 
+# @brief Binds a memory area to a texture. [Deprecated]
+# 
+# @param [in] offset  Offset in bytes.
+# @param [in] tex  Texture to bind.
+# @param [in] devPtr  Pointer of memory on the device.
+# @param [in] desc  Pointer of channel format descriptor.
+# @param [in] size  Size of memory in bites.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipBindTexture(unsigned long * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,unsigned long size) nogil
 
 
-
+# 
+# @brief Binds a 2D memory area to a texture. [Deprecated]
+# 
+# @param [in] offset  Offset in bytes.
+# @param [in] tex  Texture to bind.
+# @param [in] devPtr  Pointer of 2D memory area on the device.
+# @param [in] desc  Pointer of channel format descriptor.
+# @param [in] width  Width in texel units.
+# @param [in] height  Height in texel units.
+# @param [in] pitch  Pitch in bytes.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipBindTexture2D(unsigned long * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,unsigned long width,unsigned long height,unsigned long pitch) nogil
 
 
-
+# 
+# @brief Binds a memory area to a texture. [Deprecated]
+# 
+# @param [in] tex  Pointer of texture reference.
+# @param [in] array  Array to bind.
+# @param [in] desc  Pointer of channel format descriptor.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipBindTextureToArray(textureReference * tex,hipArray_const_t array,hipChannelFormatDesc * desc) nogil
 
 
-
+# 
+# @brief Get the offset of the alignment in a texture. [Deprecated]
+# 
+# @param [in] offset  Offset in bytes.
+# @param [in] texref  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipGetTextureAlignmentOffset(unsigned long * offset,textureReference * texref) nogil
 
 
-
+# 
+# @brief Unbinds a texture. [Deprecated]
+# 
+# @param [in] tex  Texture to unbind.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipUnbindTexture(textureReference * tex) nogil
 
 
-
+# 
+# @brief Gets the the address for a texture reference. [Deprecated]
+# 
+# @param [out] dev_ptr  Pointer of device address.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetAddress(void ** dev_ptr,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Gets the address mode for a texture reference. [Deprecated]
+# 
+# @param [out] pam  Pointer of address mode.
+# @param [in] texRef  Pointer of texture reference.
+# @param [in] dim  Dimension.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetAddressMode(hipTextureAddressMode * pam,textureReference * texRef,int dim) nogil
 
 
-
+# 
+# @brief Gets filter mode for a texture reference. [Deprecated]
+# 
+# @param [out] pfm  Pointer of filter mode.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetFilterMode(hipTextureFilterMode * pfm,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Gets flags for a texture reference. [Deprecated]
+# 
+# @param [out] pFlags  Pointer of flags.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetFlags(unsigned int * pFlags,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Gets texture format for a texture reference. [Deprecated]
+# 
+# @param [out] pFormat  Pointer of the format.
+# @param [out] pNumChannels  Pointer of number of channels.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetFormat(hipArray_Format * pFormat,int * pNumChannels,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Gets the maximum anisotropy for a texture reference. [Deprecated]
+# 
+# @param [out] pmaxAnsio  Pointer of the maximum anisotropy.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetMaxAnisotropy(int * pmaxAnsio,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Gets the mipmap filter mode for a texture reference. [Deprecated]
+# 
+# @param [out] pfm  Pointer of the mipmap filter mode.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetMipmapFilterMode(hipTextureFilterMode * pfm,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Gets the mipmap level bias for a texture reference. [Deprecated]
+# 
+# @param [out] pbias  Pointer of the mipmap level bias.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetMipmapLevelBias(float * pbias,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Gets the minimum and maximum mipmap level clamps for a texture reference. [Deprecated]
+# 
+# @param [out] pminMipmapLevelClamp  Pointer of the minimum mipmap level clamp.
+# @param [out] pmaxMipmapLevelClamp  Pointer of the maximum mipmap level clamp.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetMipmapLevelClamp(float * pminMipmapLevelClamp,float * pmaxMipmapLevelClamp,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Gets the mipmapped array bound to a texture reference. [Deprecated]
+# 
+# @param [out] pArray  Pointer of the mipmapped array.
+# @param [in] texRef  Pointer of texture reference.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefGetMipMappedArray(hipMipmappedArray_t* pArray,textureReference * texRef) nogil
 
 
-
+# 
+# @brief Sets an bound address for a texture reference. [Deprecated]
+# 
+# @param [out] ByteOffset  Pointer of the offset in bytes.
+# @param [in] texRef  Pointer of texture reference.
+# @param [in] dptr  Pointer of device address to bind.
+# @param [in] bytes  Size in bytes.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetAddress(unsigned long * ByteOffset,textureReference * texRef,void * dptr,unsigned long bytes) nogil
 
 
-
+# 
+# @brief Set a bind an address as a 2D texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer of texture reference.
+# @param [in] desc  Pointer of array descriptor.
+# @param [in] dptr  Pointer of device address to bind.
+# @param [in] Pitch  Pitch in bytes.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetAddress2D(textureReference * texRef,HIP_ARRAY_DESCRIPTOR * desc,void * dptr,unsigned long Pitch) nogil
 
 
-
+# 
+# @brief Sets the maximum anisotropy for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer of texture reference.
+# @param [out] maxAniso  Value of the maximum anisotropy.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetMaxAnisotropy(textureReference * texRef,unsigned int maxAniso) nogil
 
 
-
+# 
+# @brief Sets border color for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer of texture reference.
+# @param [in] pBorderColor  Pointer of border color.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetBorderColor(textureReference * texRef,float * pBorderColor) nogil
 
 
-
+# 
+# @brief Sets mipmap filter mode for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer of texture reference.
+# @param [in] fm  Value of filter mode.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetMipmapFilterMode(textureReference * texRef,hipTextureFilterMode fm) nogil
 
 
-
+# 
+# @brief Sets mipmap level bias for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer of texture reference.
+# @param [in] bias  Value of mipmap bias.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetMipmapLevelBias(textureReference * texRef,float bias) nogil
 
 
-
+# 
+# @brief Sets mipmap level clamp for a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer of texture reference.
+# @param [in] minMipMapLevelClamp  Value of minimum mipmap level clamp.
+# @param [in] maxMipMapLevelClamp  Value of maximum mipmap level clamp.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetMipmapLevelClamp(textureReference * texRef,float minMipMapLevelClamp,float maxMipMapLevelClamp) nogil
 
 
-
+# 
+# @brief Binds mipmapped array to a texture reference. [Deprecated]
+# 
+# @param [in] texRef  Pointer of texture reference to bind.
+# @param [in] mipmappedArray  Pointer of mipmapped array to bind.
+# @param [in] Flags  Flags should be set as HIP_TRSA_OVERRIDE_FORMAT, as a valid value.
+# 
+# @warning This API is deprecated.
+#
 cdef hipError_t hipTexRefSetMipmappedArray(textureReference * texRef,hipMipmappedArray * mipmappedArray,unsigned int Flags) nogil
 
 
 # 
+# @brief Create a mipmapped array.
 # 
-# @addtogroup TextureU Texture Management [Not supported]
-# @{
-# @ingroup Texture
-# This section describes the texture management functions currently unsupported in HIP runtime.
+# @param [out] pHandle  pointer to mipmapped array
+# @param [in] pMipmappedArrayDesc  mipmapped array descriptor
+# @param [in] numMipmapLevels  mipmap level
+# 
+# @returns #hipSuccess, #hipErrorNotSupported, #hipErrorInvalidValue
+#
 cdef hipError_t hipMipmappedArrayCreate(hipMipmappedArray_t* pHandle,HIP_ARRAY3D_DESCRIPTOR * pMipmappedArrayDesc,unsigned int numMipmapLevels) nogil
 
 
-
+# 
+# @brief Destroy a mipmapped array.
+# 
+# @param [out] hMipmappedArray  pointer to mipmapped array to destroy
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+#
 cdef hipError_t hipMipmappedArrayDestroy(hipMipmappedArray_t hMipmappedArray) nogil
 
 
-
+# 
+# @brief Get a mipmapped array on a mipmapped level.
+# 
+# @param [in] pLevelArray Pointer of array
+# @param [out] hMipMappedArray Pointer of mipmapped array on the requested mipmap level
+# @param [out] level  Mipmap level
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+#
 cdef hipError_t hipMipmappedArrayGetLevel(hipArray_t* pLevelArray,hipMipmappedArray_t hMipMappedArray,unsigned int level) nogil
 
 
 # 
 # 
-# @defgroup Callback Callback Activity APIs
-# @{
-# This section describes the callback/Activity of HIP runtime API.
+#  @defgroup Callback Callback Activity APIs
+#  @{
+#  This section describes the callback/Activity of HIP runtime API.
+# 
+# 
+# @brief Returns HIP API name by ID.
+# 
+# @param [in] id ID of HIP API
+# 
+# @returns hipSuccess, hipErrorInvalidValue
+#
 cdef const char * hipApiName(unsigned int id) nogil
 
 
-
+# 
+# @brief Returns kernel name reference by function name.
+# 
+# @param [in] f name of function
+# 
+# @returns hipSuccess, hipErrorInvalidValue
+#
 cdef const char * hipKernelNameRef(hipFunction_t f) nogil
 
 
-
+# 
+# @brief Retrives kernel for a given host pointer, unless stated otherwise.
+# 
+# @param [in] hostFunction Pointer of host function.
+# @param [in] stream stream the kernel is executed on.
+# 
+# @returns hipSuccess, hipErrorInvalidValue
+#
 cdef const char * hipKernelNameRefByPtr(const void * hostFunction,hipStream_t stream) nogil
 
 
-
+# 
+# @brief Returns device ID on the stream.
+# 
+# @param [in] stream stream of device executed on.
+# 
+# @returns hipSuccess, hipErrorInvalidValue
+#
 cdef int hipGetStreamDeviceId(hipStream_t stream) nogil
 
 
@@ -5946,8 +6565,8 @@ cdef hipError_t hipGraphInstantiate(hipGraphExec_t* pGraphExec,hipGraph_t graph,
 # @returns #hipSuccess, #hipErrorInvalidValue
 # 
 # @warning : This API is marked as beta, meaning, while this is feature complete,
-# it is still open to changes and may have outstanding issues.
-#
+# it is still open to changes and may have outstanding issues.It does not support
+# any of flag and is behaving as hipGraphInstantiate.
 cdef hipError_t hipGraphInstantiateWithFlags(hipGraphExec_t* pGraphExec,hipGraph_t graph,unsigned long long flags) nogil
 
 
@@ -5978,7 +6597,7 @@ cdef hipError_t hipGraphUpload(hipGraphExec_t graphExec,hipStream_t stream) nogi
 # 
 # @brief Destroys an executable graph
 # 
-# @param [in] pGraphExec - instance of executable graph to destry.
+# @param [in] graphExec - instance of executable graph to destry.
 # 
 # @returns #hipSuccess.
 # 
@@ -6511,6 +7130,56 @@ cdef hipError_t hipGraphExecEventWaitNodeSetEvent(hipGraphExec_t hGraphExec,hipG
 
 
 # 
+# @brief Creates a memory allocation node and adds it to a graph
+# 
+# @param [out] pGraphNode      - Pointer to the graph node to create and add to the graph
+# @param [in] graph            - Instane of the graph the node to be added
+# @param [in] pDependencies    - Const pointer to the node dependenties
+# @param [in] numDependencies  - The number of dependencies
+# @param [in] pNodeParams      - Node parameters for memory allocation
+# @returns #hipSuccess, #hipErrorInvalidValue
+# @warning : This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+cdef hipError_t hipGraphAddMemAllocNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipMemAllocNodeParams * pNodeParams) nogil
+
+
+# 
+# @brief Returns parameters for memory allocation node
+# 
+# @param [in] node         - Memory allocation node for a query
+# @param [out] pNodeParams - Parameters for the specified memory allocation node
+# @returns #hipSuccess, #hipErrorInvalidValue
+# @warning : This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+cdef hipError_t hipGraphMemAllocNodeGetParams(hipGraphNode_t node,hipMemAllocNodeParams * pNodeParams) nogil
+
+
+# 
+# @brief Creates a memory free node and adds it to a graph
+# 
+# @param [out] pGraphNode      - Pointer to the graph node to create and add to the graph
+# @param [in] graph            - Instane of the graph the node to be added
+# @param [in] pDependencies    - Const pointer to the node dependenties
+# @param [in] numDependencies  - The number of dependencies
+# @param [in] dev_ptr          - Pointer to the memory to be freed
+# @returns #hipSuccess, #hipErrorInvalidValue
+# @warning : This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+cdef hipError_t hipGraphAddMemFreeNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,void * dev_ptr) nogil
+
+
+# 
+# @brief Returns parameters for memory free node
+# 
+# @param [in] node     - Memory free node for a query
+# @param [out] dev_ptr - Device pointer for the specified memory free node
+# @returns #hipSuccess, #hipErrorInvalidValue
+# @warning : This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+cdef hipError_t hipGraphMemFreeNodeGetParams(hipGraphNode_t node,void * dev_ptr) nogil
+
+
+# 
 # @brief Get the mem attribute for graphs.
 # 
 # @param [in] device - device the attr is get for.
@@ -6605,6 +7274,80 @@ cdef hipError_t hipGraphReleaseUserObject(hipGraph_t graph,hipUserObject_t objec
 
 
 # 
+# @brief Write a DOT file describing graph structure.
+# 
+# @param [in] graph - graph object for which DOT file has to be generated.
+# @param [in] path - path to write the DOT file.
+# @param [in] flags - Flags from hipGraphDebugDotFlags to get additional node information.
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorOperatingSystem
+# @warning : This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+cdef hipError_t hipGraphDebugDotPrint(hipGraph_t graph,const char * path,unsigned int flags) nogil
+
+
+# 
+# @brief Copies attributes from source node to destination node.
+# 
+# Copies attributes from source node to destination node.
+# Both node must have the same context.
+# 
+# @param [out] hDst - Destination node.
+# @param [in] hSrc - Source node.
+# For list of attributes see ::hipKernelNodeAttrID.
+# 
+# @returns #hipSuccess, #hipErrorInvalidContext
+# @warning : This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+cdef hipError_t hipGraphKernelNodeCopyAttributes(hipGraphNode_t hSrc,hipGraphNode_t hDst) nogil
+
+
+# 
+# @brief Enables or disables the specified node in the given graphExec
+# 
+# Sets hNode to be either enabled or disabled. Disabled nodes are functionally equivalent
+# to empty nodes until they are reenabled. Existing node parameters are not affected by
+# disabling/enabling the node.
+# 
+# The node is identified by the corresponding hNode in the non-executable graph, from which the
+# executable graph was instantiated.
+# 
+# hNode must not have been removed from the original graph.
+# 
+# @note Currently only kernel, memset and memcpy nodes are supported.
+# 
+# @param [in] hGraphExec - The executable graph in which to set the specified node.
+# @param [in] hNode      - Node from the graph from which graphExec was instantiated.
+# @param [in] isEnabled  - Node is enabled if != 0, otherwise the node is disabled.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue,
+# @warning : This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+cdef hipError_t hipGraphNodeSetEnabled(hipGraphExec_t hGraphExec,hipGraphNode_t hNode,unsigned int isEnabled) nogil
+
+
+# 
+# @brief Query whether a node in the given graphExec is enabled
+# 
+# Sets isEnabled to 1 if hNode is enabled, or 0 if it is disabled.
+# 
+# The node is identified by the corresponding node in the non-executable graph, from which the
+# executable graph was instantiated.
+# 
+# hNode must not have been removed from the original graph.
+# 
+# @note Currently only kernel, memset and memcpy nodes are supported.
+# 
+# @param [in]  hGraphExec - The executable graph in which to set the specified node.
+# @param [in]  hNode      - Node from the graph from which graphExec was instantiated.
+# @param [out] isEnabled  - Location to return the enabled status of the node.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+# @warning : This API is marked as beta, meaning, while this is feature complete,
+# it is still open to changes and may have outstanding issues.
+cdef hipError_t hipGraphNodeGetEnabled(hipGraphExec_t hGraphExec,hipGraphNode_t hNode,unsigned int * isEnabled) nogil
+
+
+# 
 # @brief Frees an address range reservation made via hipMemAddressReserve
 # 
 # @param [in] devPtr - starting address of the range.
@@ -6612,6 +7355,8 @@ cdef hipError_t hipGraphReleaseUserObject(hipGraph_t graph,hipUserObject_t objec
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemAddressFree(void * devPtr,unsigned long size) nogil
 
 
@@ -6626,6 +7371,8 @@ cdef hipError_t hipMemAddressFree(void * devPtr,unsigned long size) nogil
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemAddressReserve(void ** ptr,unsigned long size,unsigned long alignment,void * addr,unsigned long long flags) nogil
 
 
@@ -6639,6 +7386,8 @@ cdef hipError_t hipMemAddressReserve(void ** ptr,unsigned long size,unsigned lon
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemCreate(hipMemGenericAllocationHandle_t* handle,unsigned long size,hipMemAllocationProp * prop,unsigned long long flags) nogil
 
 
@@ -6652,6 +7401,8 @@ cdef hipError_t hipMemCreate(hipMemGenericAllocationHandle_t* handle,unsigned lo
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemExportToShareableHandle(void * shareableHandle,hipMemGenericAllocationHandle_t handle,hipMemAllocationHandleType handleType,unsigned long long flags) nogil
 
 
@@ -6664,6 +7415,8 @@ cdef hipError_t hipMemExportToShareableHandle(void * shareableHandle,hipMemGener
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemGetAccess(unsigned long long * flags,hipMemLocation * location,void * ptr) nogil
 
 
@@ -6676,6 +7429,9 @@ cdef hipError_t hipMemGetAccess(unsigned long long * flags,hipMemLocation * loca
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
+#
 cdef hipError_t hipMemGetAllocationGranularity(unsigned long * granularity,hipMemAllocationProp * prop,hipMemAllocationGranularity_flags option) nogil
 
 
@@ -6687,6 +7443,8 @@ cdef hipError_t hipMemGetAllocationGranularity(unsigned long * granularity,hipMe
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux under development on Windows.
 cdef hipError_t hipMemGetAllocationPropertiesFromHandle(hipMemAllocationProp * prop,hipMemGenericAllocationHandle_t handle) nogil
 
 
@@ -6699,6 +7457,8 @@ cdef hipError_t hipMemGetAllocationPropertiesFromHandle(hipMemAllocationProp * p
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemImportFromShareableHandle(hipMemGenericAllocationHandle_t* handle,void * osHandle,hipMemAllocationHandleType shHandleType) nogil
 
 
@@ -6713,6 +7473,8 @@ cdef hipError_t hipMemImportFromShareableHandle(hipMemGenericAllocationHandle_t*
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemMap(void * ptr,unsigned long size,unsigned long offset,hipMemGenericAllocationHandle_t handle,unsigned long long flags) nogil
 
 
@@ -6725,6 +7487,8 @@ cdef hipError_t hipMemMap(void * ptr,unsigned long size,unsigned long offset,hip
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemMapArrayAsync(hipArrayMapInfo * mapInfoList,unsigned int count,hipStream_t stream) nogil
 
 
@@ -6735,6 +7499,8 @@ cdef hipError_t hipMemMapArrayAsync(hipArrayMapInfo * mapInfoList,unsigned int c
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemRelease(hipMemGenericAllocationHandle_t handle) nogil
 
 
@@ -6746,6 +7512,8 @@ cdef hipError_t hipMemRelease(hipMemGenericAllocationHandle_t handle) nogil
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemRetainAllocationHandle(hipMemGenericAllocationHandle_t* handle,void * addr) nogil
 
 
@@ -6759,6 +7527,8 @@ cdef hipError_t hipMemRetainAllocationHandle(hipMemGenericAllocationHandle_t* ha
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemSetAccess(void * ptr,unsigned long size,hipMemAccessDesc * desc,unsigned long count) nogil
 
 
@@ -6770,6 +7540,8 @@ cdef hipError_t hipMemSetAccess(void * ptr,unsigned long size,hipMemAccessDesc *
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
+# 
+# @note  This API is implemented on Linux, under development on Windows.
 cdef hipError_t hipMemUnmap(void * ptr,unsigned long size) nogil
 
 
@@ -6779,35 +7551,102 @@ cdef extern from "hip/hip_runtime.h":
 
     ctypedef unsigned int GLenum
 
-
+# 
+# @brief Queries devices associated with the current OpenGL context.
+# 
+# @param [out] pHipDeviceCount - Pointer of number of devices on the current GL context.
+# @param [out] pHipDevices - Pointer of devices on the current OpenGL context.
+# @param [in] hipDeviceCount - Size of device.
+# @param [in] deviceList - The setting of devices. It could be either hipGLDeviceListCurrentFrame
+# for the devices used to render the current frame, or hipGLDeviceListAll for all devices.
+# The default setting is Invalid deviceList value.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+#
 cdef hipError_t hipGLGetDevices(unsigned int * pHipDeviceCount,int * pHipDevices,unsigned int hipDeviceCount,hipGLDeviceList deviceList) nogil
 
 
-
+# 
+# @brief Registers a GL Buffer for interop and returns corresponding graphics resource.
+# 
+# @param [out] resource - Returns pointer of graphics resource.
+# @param [in] buffer - Buffer to be registered.
+# @param [in] flags - Register flags.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorUnknown, #hipErrorInvalidResourceHandle
+#
 cdef hipError_t hipGraphicsGLRegisterBuffer(_hipGraphicsResource ** resource,unsigned int buffer,unsigned int flags) nogil
 
 
-
+# 
+# @brief Register a GL Image for interop and returns the corresponding graphic resource.
+# 
+# @param [out] resource - Returns pointer of graphics resource.
+# @param [in] image - Image to be registered.
+# @param [in] target - Valid target value Id.
+# @param [in] flags - Register flags.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorUnknown, #hipErrorInvalidResourceHandle
+#
 cdef hipError_t hipGraphicsGLRegisterImage(_hipGraphicsResource ** resource,unsigned int image,unsigned int target,unsigned int flags) nogil
 
 
-
+# 
+# @brief Maps a graphics resource for access.
+# 
+# @param [in] count - Number of resources to map.
+# @param [in] resources - Pointer of resources to map.
+# @param [in] stream - Stream for synchronization.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorUnknown, #hipErrorInvalidResourceHandle
+#
 cdef hipError_t hipGraphicsMapResources(int count,hipGraphicsResource_t* resources,hipStream_t stream) nogil
 
 
-
+# 
+# @brief Get an array through which to access a subresource of a mapped graphics resource.
+# 
+# @param [out] array - Pointer of array through which a subresource of resource may be accessed.
+# @param [in] resource - Mapped resource to access.
+# @param [in] arrayIndex - Array index for the subresource to access.
+# @param [in] mipLevel - Mipmap level for the subresource to access.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+#
 cdef hipError_t hipGraphicsSubResourceGetMappedArray(hipArray_t* array,hipGraphicsResource_t resource,unsigned int arrayIndex,unsigned int mipLevel) nogil
 
 
-
+# 
+# @brief Gets device accessible address of a graphics resource.
+# 
+# @param [out] devPtr - Pointer of device through which graphic resource may be accessed.
+# @param [out] size - Size of the buffer accessible from devPtr.
+# @param [in] resource - Mapped resource to access.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue
+#
 cdef hipError_t hipGraphicsResourceGetMappedPointer(void ** devPtr,unsigned long * size,hipGraphicsResource_t resource) nogil
 
 
-
+# 
+# @brief Unmaps graphics resources.
+# 
+# @param [in] count - Number of resources to unmap.
+# @param [in] resources - Pointer of resources to unmap.
+# @param [in] stream - Stream for synchronization.
+# 
+# @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorUnknown, #hipErrorContextIsDestroyed
+#
 cdef hipError_t hipGraphicsUnmapResources(int count,hipGraphicsResource_t* resources,hipStream_t stream) nogil
 
 
-
+# 
+# @brief Unregisters a graphics resource.
+# 
+# @param [in] resource - Graphics resources to unregister.
+# 
+# @returns #hipSuccess
+#
 cdef hipError_t hipGraphicsUnregisterResource(hipGraphicsResource_t resource) nogil
 
 
@@ -6962,12 +7801,34 @@ cdef hipError_t hipLaunchHostFunc_spt(hipStream_t stream,hipHostFn_t fn,void * u
 cdef extern from "hip/hip_runtime.h":
 
     cdef enum hipDataType:
-        HIP_R_16F
         HIP_R_32F
         HIP_R_64F
-        HIP_C_16F
+        HIP_R_16F
+        HIP_R_8I
         HIP_C_32F
         HIP_C_64F
+        HIP_C_16F
+        HIP_C_8I
+        HIP_R_8U
+        HIP_C_8U
+        HIP_R_32I
+        HIP_C_32I
+        HIP_R_32U
+        HIP_C_32U
+        HIP_R_16BF
+        HIP_C_16BF
+        HIP_R_4I
+        HIP_C_4I
+        HIP_R_4U
+        HIP_C_4U
+        HIP_R_16I
+        HIP_C_16I
+        HIP_R_16U
+        HIP_C_16U
+        HIP_R_64I
+        HIP_C_64I
+        HIP_R_64U
+        HIP_C_64U
 
     cdef enum hipLibraryPropertyType:
         HIP_LIBRARY_MAJOR_VERSION

@@ -30,7 +30,7 @@ and further a CUDA&reg; Python Interoperability layer that aims to simplify
 the porting of CUDA Python Python and Cython programs.
 
 :::{note}
-This documentation has been generated based on HIP version 5.4.22804-474e8620.
+This documentation has been generated based on HIP version 5.6.31061-8c743ae5d.
 :::
 
 ## Spotlight

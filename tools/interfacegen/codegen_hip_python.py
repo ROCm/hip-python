@@ -134,7 +134,7 @@ def parse_options():
         type=str,
         required=False,
         dest="libs",
-        help="The ROCm libaries to generate interfaces for, as comma-separated list, e.g. 'hip,hiprtc'. Pass '*' to generate all, pass '' to generate none.",
+        help="The ROCm libaries to generate interfaces for, as comma-separated list, e.g. 'hip,hiprtc'. Pass '*' to generate all, pass '' to generate none. Add a prefix '^' to NOT generate code for the comma-separated list of libraries that follows but all other libraries.",
     )
     parser.add_argument(
         "--no-rt-linking",
@@ -511,13 +511,24 @@ if __name__ == "__main__":
         hipsparse=generate_hipsparse_package_files,
     )
 
-    if len(LIBS.strip()):
-        lib_names = AVAILABLE_GENERATORS.keys() if LIBS == "*" else LIBS.split(",")
+    # process and check user-provided library names
+    avail_lib_names = AVAILABLE_GENERATORS.keys()
+    processed_libs = LIBS.replace(" ","")
+    if processed_libs == "*":
+        lib_names = avail_lib_names
     else:
-        lib_names = []
+        if processed_libs.startswith("^"):
+            processed_libs = processed_libs[1:].split(",")
+            lib_names = [name for name in avail_lib_names if name not in processed_libs]
+        else:
+            processed_libs = processed_libs.split(",")
+            lib_names = processed_libs
+        for name in processed_libs:
+            if name not in avail_lib_names:
+                raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}")
 
     hip_output_dir = os.path.join("packages", "hip-python", "hip")
-    for entry in lib_names:
+    for entry in avail_lib_names:
         libname = entry.strip()
         if libname not in AVAILABLE_GENERATORS:
             available_libs = ", ".join([f"'{a}'" for a in AVAILABLE_GENERATORS.keys()])

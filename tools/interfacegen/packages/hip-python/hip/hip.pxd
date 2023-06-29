@@ -83,6 +83,24 @@ cdef class hipDeviceProp_t:
     cdef hipDeviceProp_t from_value(chip.hipDeviceProp_t other)
 
 
+cdef class hipPointerAttribute_t_union_0:
+    cdef chip.hipPointerAttribute_t_union_0* _ptr
+    cdef bint ptr_owner
+    cdef Py_buffer _py_buffer
+    cdef bint _py_buffer_acquired
+
+    @staticmethod
+    cdef hipPointerAttribute_t_union_0 from_ptr(chip.hipPointerAttribute_t_union_0* ptr, bint owner=*)
+    @staticmethod
+    cdef hipPointerAttribute_t_union_0 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.hipPointerAttribute_t_union_0** ptr)
+    @staticmethod
+    cdef hipPointerAttribute_t_union_0 new()
+    @staticmethod
+    cdef hipPointerAttribute_t_union_0 from_value(chip.hipPointerAttribute_t_union_0 other)
+
+
 cdef class hipPointerAttribute_t:
     cdef chip.hipPointerAttribute_t* _ptr
     cdef bint ptr_owner
@@ -1763,6 +1781,24 @@ cdef class hipLaunchParams_t:
     cdef hipLaunchParams_t from_value(chip.hipLaunchParams_t other)
 
 
+cdef class hipFunctionLaunchParams_t:
+    cdef chip.hipFunctionLaunchParams_t* _ptr
+    cdef bint ptr_owner
+    cdef Py_buffer _py_buffer
+    cdef bint _py_buffer_acquired
+
+    @staticmethod
+    cdef hipFunctionLaunchParams_t from_ptr(chip.hipFunctionLaunchParams_t* ptr, bint owner=*)
+    @staticmethod
+    cdef hipFunctionLaunchParams_t from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.hipFunctionLaunchParams_t** ptr)
+    @staticmethod
+    cdef hipFunctionLaunchParams_t new()
+    @staticmethod
+    cdef hipFunctionLaunchParams_t from_value(chip.hipFunctionLaunchParams_t other)
+
+
 cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0* _ptr
     cdef bint ptr_owner
@@ -2157,6 +2193,24 @@ cdef class hipMemsetParams:
     cdef hipMemsetParams new()
     @staticmethod
     cdef hipMemsetParams from_value(chip.hipMemsetParams other)
+
+
+cdef class hipMemAllocNodeParams:
+    cdef chip.hipMemAllocNodeParams* _ptr
+    cdef bint ptr_owner
+    cdef Py_buffer _py_buffer
+    cdef bint _py_buffer_acquired
+
+    @staticmethod
+    cdef hipMemAllocNodeParams from_ptr(chip.hipMemAllocNodeParams* ptr, bint owner=*)
+    @staticmethod
+    cdef hipMemAllocNodeParams from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.hipMemAllocNodeParams** ptr)
+    @staticmethod
+    cdef hipMemAllocNodeParams new()
+    @staticmethod
+    cdef hipMemAllocNodeParams from_value(chip.hipMemAllocNodeParams other)
 
 
 cdef class hipAccessPolicyWindow:
