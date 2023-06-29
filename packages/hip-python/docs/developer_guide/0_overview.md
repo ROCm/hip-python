@@ -101,7 +101,7 @@ to their needs.
   --
   --Most users will likely not want to get their hands on the code generation infrastructure.
   --Instead they will download and install prebuilt packages via `pip` or `conda`,
-  --or they download the pregenerated package sources for a specific ROCm&reg; release from the
+  --or they download the pregenerated package sources for a specific ROCm&trade;  release from the
   --corresponding branch of the HIP Python git repository.
   --We refer users interested in the second approach to chapter [Building and Packaging](2_packaging.md) 
   --If you want to further tailor the code generation 
@@ -123,7 +123,7 @@ The former script can be used as follows:
 Usage: ./generate_hip_python_pkgs.sh [OPTIONS]
 
 Options:
-  --rocm-path       Path to a ROCm&reg; installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+  --rocm-path       Path to a ROCm&trade;  installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
   -l, --libs        HIP Python modules to generate as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
   --pre-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
   --post-clean      Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
@@ -137,7 +137,7 @@ The latter can be used as shown below:
 Usage: ./build_hip_python_pkgs.sh [OPTIONS]
 
 Options:
-  --rocm-path        Path to a ROCm&reg; installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+  --rocm-path        Path to a ROCm&trade;  installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
   --no-hip           Do not build package 'hip-python'.
   --no-cuda          Do not build package 'hip-python-as-cuda'.
   --no-docs          Do not build the docs of package 'hip-python'.
@@ -154,7 +154,7 @@ By default, both scripts will create a virtual Python environment named `_venv` 
 respective parent folder when run. All Python dependencies are automatically installed 
 into these environments.
 
-On systems with an ROCm&reg; installation installed to the standard location, it suffices to run:
+On systems with an ROCm&trade;  installation installed to the standard location, it suffices to run:
 
 ```{eval-rst}
 .. code-block:: bash
@@ -181,10 +181,10 @@ the `--post-clean` flag as shown below:
 
 ### Code Generation Step
 
-In the code generation step, the header files in a ROCm&reg; installation are parsed
+In the code generation step, the header files in a ROCm&trade;  installation are parsed
 and the HIP Python's Cython modules are generated. Moreover, content of
 the `hipify-perl` script is combined with the HIP header file parse trees in order to generate
-the CUDA interoperability layer. Finally, package metadata and documentation files
+the CUDA&reg; interoperability layer. Finally, package metadata and documentation files
 per HIP and CUDA interoperability layer module are generated.
 
 The script `./generate_hip_python_pkgs.sh` abstracts all these tasks plus the dependency management.
@@ -210,7 +210,7 @@ All Python requirements mentioned here are also "baked into" the `requirements.t
 * The following `pip` packages are required for running the code generation script
   * [`libclang`](https://pypi.org/project/libclang/) (>= 14.0.1, != 15.0.3, != 15.0.6, <= 15.0.6.1)
     
-    Used for parsing the ROCm&reg; header files.
+    Used for parsing the ROCm&trade;  header files.
     
     We tested the following versions:
      * 9.0.1	-- fail
