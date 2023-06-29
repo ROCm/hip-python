@@ -40,6 +40,8 @@ cdef void __init_symbol(void** result, const char* name) nogil:
 
 cdef void* _hiprtcGetErrorString__funptr = NULL
 # 
+#  @ingroup Runtime
+# 
 # @brief Returns text string message to explain the error which occurred
 # 
 # @param [in] result  code to convert to string.
@@ -57,6 +59,7 @@ cdef const char * hiprtcGetErrorString(hiprtcResult result) nogil:
 
 cdef void* _hiprtcVersion__funptr = NULL
 # 
+# @ingroup Runtime
 # @brief Sets the parameters as major and minor version.
 # 
 # @param [out] major  HIP Runtime Compilation major version.
@@ -70,13 +73,14 @@ cdef hiprtcResult hiprtcVersion(int * major,int * minor) nogil:
 
 cdef void* _hiprtcAddNameExpression__funptr = NULL
 # 
+# @ingroup Runtime
 # @brief Adds the given name exprssion to the runtime compilation program.
 # 
 # @param [in] prog  runtime compilation program instance.
 # @param [in] name_expression  const char pointer to the name expression.
-# @return  HIPRTC_SUCCESS
+# @return  #HIPRTC_SUCCESS
 # 
-# If const char pointer is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
+# If const char pointer is NULL, it will return #HIPRTC_ERROR_INVALID_INPUT.
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcAddNameExpression(hiprtcProgram prog,const char * name_expression) nogil:
@@ -87,15 +91,16 @@ cdef hiprtcResult hiprtcAddNameExpression(hiprtcProgram prog,const char * name_e
 
 cdef void* _hiprtcCompileProgram__funptr = NULL
 # 
+# @ingroup Runtime
 # @brief Compiles the given runtime compilation program.
 # 
 # @param [in] prog  runtime compilation program instance.
 # @param [in] numOptions  number of compiler options.
 # @param [in] options  compiler options as const array of strins.
-# @return HIPRTC_SUCCESS
+# @return #HIPRTC_SUCCESS
 # 
 # If the compiler failed to build the runtime compilation program,
-# it will return HIPRTC_ERROR_COMPILATION.
+# it will return #HIPRTC_ERROR_COMPILATION.
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcCompileProgram(hiprtcProgram prog,int numOptions,const char ** options) nogil:
@@ -106,6 +111,7 @@ cdef hiprtcResult hiprtcCompileProgram(hiprtcProgram prog,int numOptions,const c
 
 cdef void* _hiprtcCreateProgram__funptr = NULL
 # 
+# @ingroup Runtime
 # @brief Creates an instance of hiprtcProgram with the given input parameters,
 # and sets the output hiprtcProgram prog with it.
 # 
@@ -115,12 +121,12 @@ cdef void* _hiprtcCreateProgram__funptr = NULL
 # @param [in] numHeaders  number of headers.
 # @param [in] headers  array of strings pointing to headers.
 # @param [in] includeNames  array of strings pointing to names included in program source.
-# @return HIPRTC_SUCCESS
+# @return #HIPRTC_SUCCESS
 # 
-# Any invalide input parameter, it will return HIPRTC_ERROR_INVALID_INPUT
-# or HIPRTC_ERROR_INVALID_PROGRAM.
+# Any invalide input parameter, it will return #HIPRTC_ERROR_INVALID_INPUT
+# or #HIPRTC_ERROR_INVALID_PROGRAM.
 # 
-# If failed to create the program, it will return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE.
+# If failed to create the program, it will return #HIPRTC_ERROR_PROGRAM_CREATION_FAILURE.
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcCreateProgram(hiprtcProgram* prog,const char * src,const char * name,int numHeaders,const char ** headers,const char ** includeNames) nogil:
@@ -132,11 +138,11 @@ cdef hiprtcResult hiprtcCreateProgram(hiprtcProgram* prog,const char * src,const
 cdef void* _hiprtcDestroyProgram__funptr = NULL
 # 
 # @brief Destroys an instance of given hiprtcProgram.
-# 
+# @ingroup Runtime
 # @param [in] prog  runtime compilation program instance.
-# @return HIPRTC_SUCCESS
+# @return #HIPRTC_SUCCESS
 # 
-# If prog is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
+# If prog is NULL, it will return #HIPRTC_ERROR_INVALID_INPUT.
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcDestroyProgram(hiprtcProgram* prog) nogil:
@@ -149,17 +155,17 @@ cdef void* _hiprtcGetLoweredName__funptr = NULL
 # 
 # @brief Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input parameters,
 # and sets the output lowered_name with it.
-# 
+# @ingroup Runtime
 # @param [in] prog  runtime compilation program instance.
 # @param [in] name_expression  const char pointer to the name expression.
 # @param [in, out] lowered_name  const char array to the lowered (mangled) name.
-# @return HIPRTC_SUCCESS
+# @return #HIPRTC_SUCCESS
 # 
-# If any invalide nullptr input parameters, it will return HIPRTC_ERROR_INVALID_INPUT
+# If any invalide nullptr input parameters, it will return #HIPRTC_ERROR_INVALID_INPUT
 # 
-# If name_expression is not found, it will return HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID
+# If name_expression is not found, it will return #HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID
 # 
-# If failed to get lowered_name from the program, it will return HIPRTC_ERROR_COMPILATION.
+# If failed to get lowered_name from the program, it will return #HIPRTC_ERROR_COMPILATION.
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetLoweredName(hiprtcProgram prog,const char * name_expression,const char ** lowered_name) nogil:
@@ -171,7 +177,7 @@ cdef hiprtcResult hiprtcGetLoweredName(hiprtcProgram prog,const char * name_expr
 cdef void* _hiprtcGetProgramLog__funptr = NULL
 # 
 # @brief Gets the log generated by the runtime compilation program instance.
-# 
+# @ingroup Runtime
 # @param [in] prog  runtime compilation program instance.
 # @param [out] log  memory pointer to the generated log.
 # @return HIPRTC_SUCCESS
@@ -201,7 +207,7 @@ cdef hiprtcResult hiprtcGetProgramLogSize(hiprtcProgram prog,unsigned long * log
 cdef void* _hiprtcGetCode__funptr = NULL
 # 
 # @brief Gets the pointer of compilation binary by the runtime compilation program instance.
-# 
+# @ingroup Runtime
 # @param [in] prog  runtime compilation program instance.
 # @param [out] code  char pointer to binary.
 # @return HIPRTC_SUCCESS
@@ -216,9 +222,9 @@ cdef hiprtcResult hiprtcGetCode(hiprtcProgram prog,char * code) nogil:
 cdef void* _hiprtcGetCodeSize__funptr = NULL
 # 
 # @brief Gets the size of compilation binary by the runtime compilation program instance.
-# 
+# @ingroup Runtime
 # @param [in] prog  runtime compilation program instance.
-# @param [out] code  the size of binary.
+# @param [out] codeSizeRet  the size of binary.
 # @return HIPRTC_SUCCESS
 # 
 # @see hiprtcResult
@@ -233,7 +239,7 @@ cdef void* _hiprtcGetBitcode__funptr = NULL
 # @brief Gets the pointer of compiled bitcode by the runtime compilation program instance.
 # 
 # @param [in] prog  runtime compilation program instance.
-# @param [out] code  char pointer to bitcode.
+# @param [out] bitcode  char pointer to bitcode.
 # @return HIPRTC_SUCCESS
 # 
 # @see hiprtcResult
@@ -246,11 +252,11 @@ cdef hiprtcResult hiprtcGetBitcode(hiprtcProgram prog,char * bitcode) nogil:
 cdef void* _hiprtcGetBitcodeSize__funptr = NULL
 # 
 # @brief Gets the size of compiled bitcode by the runtime compilation program instance.
-# 
+# @ingroup Runtime
 # 
 # @param [in] prog  runtime compilation program instance.
-# @param [out] code  the size of bitcode.
-# @return HIPRTC_SUCCESS
+# @param [out] bitcode_size  the size of bitcode.
+# @return #HIPRTC_SUCCESS
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetBitcodeSize(hiprtcProgram prog,unsigned long * bitcode_size) nogil:
@@ -262,10 +268,13 @@ cdef hiprtcResult hiprtcGetBitcodeSize(hiprtcProgram prog,unsigned long * bitcod
 cdef void* _hiprtcLinkCreate__funptr = NULL
 # 
 # @brief Creates the link instance via hiprtc APIs.
+# @ingroup Runtime
+# @param [in] num_options  Number of options
+# @param [in] option_ptr  Array of options
+# @param [in] option_vals_pptr  Array of option values cast to void*
+# @param [out] hip_link_state_ptr  hiprtc link state created upon success
 # 
-# @param [in] hip_jit_options
-# @param [out] hiprtc link state instance
-# @return HIPRTC_SUCCESS
+# @return #HIPRTC_SUCCESS, #HIPRTC_ERROR_INVALID_INPUT, #HIPRTC_ERROR_INVALID_OPTION
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkCreate(unsigned int num_options,hiprtcJIT_option * option_ptr,void ** option_vals_pptr,hiprtcLinkState* hip_link_state_ptr) nogil:
@@ -277,14 +286,18 @@ cdef hiprtcResult hiprtcLinkCreate(unsigned int num_options,hiprtcJIT_option * o
 cdef void* _hiprtcLinkAddFile__funptr = NULL
 # 
 # @brief Adds a file with bit code to be linked with options
+# @ingroup Runtime
+# @param [in] hip_link_state  hiprtc link state
+# @param [in] input_type  Type of the input data or bitcode
+# @param [in] file_path  Path to the input file where bitcode is present
+# @param [in] num_options  Size of the options
+# @param [in] options_ptr  Array of options applied to this input
+# @param [in] option_values  Array of option values cast to void*
 # 
-# @param [in] hiprtc link state, jit input type, file path,
-#        option reated parameters.
-# @param [out] None.
-# @return HIPRTC_SUCCESS
+# @return #HIPRTC_SUCCESS
 # 
 # If input values are invalid, it will
-# @return HIPRTC_ERROR_INVALID_INPUT
+# @return #HIPRTC_ERROR_INVALID_INPUT
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkAddFile(hiprtcLinkState hip_link_state,hiprtcJITInputType input_type,const char * file_path,unsigned int num_options,hiprtcJIT_option * options_ptr,void ** option_values) nogil:
@@ -296,14 +309,20 @@ cdef hiprtcResult hiprtcLinkAddFile(hiprtcLinkState hip_link_state,hiprtcJITInpu
 cdef void* _hiprtcLinkAddData__funptr = NULL
 # 
 # @brief Completes the linking of the given program.
+# @ingroup Runtime
+# @param [in] hip_link_state  hiprtc link state
+# @param [in] input_type  Type of the input data or bitcode
+# @param [in] image  Input data which is null terminated
+# @param [in] image_size  Size of the input data
+# @param [in] name  Optional name for this input
+# @param [in] num_options  Size of the options
+# @param [in] options_ptr  Array of options applied to this input
+# @param [in] option_values  Array of option values cast to void*
 # 
-# @param [in] hiprtc link state, jit input type, image_ptr ,
-#        option reated parameters.
-# @param [out] None.
-# @return HIPRTC_SUCCESS
+# @return #HIPRTC_SUCCESS, #HIPRTC_ERROR_INVALID_INPUT
 # 
 # If adding the file fails, it will
-# @return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
+# @return #HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkAddData(hiprtcLinkState hip_link_state,hiprtcJITInputType input_type,void * image,unsigned long image_size,const char * name,unsigned int num_options,hiprtcJIT_option * options_ptr,void ** option_values) nogil:
@@ -315,13 +334,15 @@ cdef hiprtcResult hiprtcLinkAddData(hiprtcLinkState hip_link_state,hiprtcJITInpu
 cdef void* _hiprtcLinkComplete__funptr = NULL
 # 
 # @brief Completes the linking of the given program.
+# @ingroup Runtime
+# @param [in]  hip_link_state  hiprtc link state
+# @param [out]  bin_out  Upon success, points to the output binary
+# @param [out]  size_out  Size of the binary is stored (optional)
 # 
-# @param [in] hiprtc link state instance
-# @param [out] linked_binary, linked_binary_size.
-# @return HIPRTC_SUCCESS
+# @return #HIPRTC_SUCCESS
 # 
 # If adding the data fails, it will
-# @return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
+# @return #HIPRTC_ERROR_LINKING
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkComplete(hiprtcLinkState hip_link_state,void ** bin_out,unsigned long * size_out) nogil:
@@ -333,13 +354,10 @@ cdef hiprtcResult hiprtcLinkComplete(hiprtcLinkState hip_link_state,void ** bin_
 cdef void* _hiprtcLinkDestroy__funptr = NULL
 # 
 # @brief Deletes the link instance via hiprtc APIs.
+# @ingroup Runtime
+# @param [in] hip_link_state link state instance
 # 
-# @param [in] hiprtc link state instance
-# @param [out] code  the size of binary.
-# @return HIPRTC_SUCCESS
-# 
-# If linking fails, it will
-# @return HIPRTC_ERROR_LINKING
+# @return #HIPRTC_SUCCESS
 # 
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkDestroy(hiprtcLinkState hip_link_state) nogil:

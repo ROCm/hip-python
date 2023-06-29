@@ -39,35 +39,35 @@ class _hiprtcResult__Base(enum.IntEnum):
     """
     pass
 class hiprtcResult(_hiprtcResult__Base):
-    """hiprtcResult
+    """@{
 
     Attributes:
         HIPRTC_SUCCESS:
-            (undocumented)
+            Success
         HIPRTC_ERROR_OUT_OF_MEMORY:
-            (undocumented)
+            Out of memory
         HIPRTC_ERROR_PROGRAM_CREATION_FAILURE:
-            (undocumented)
+            Failed to create program
         HIPRTC_ERROR_INVALID_INPUT:
-            (undocumented)
+            Invalid input
         HIPRTC_ERROR_INVALID_PROGRAM:
-            (undocumented)
+            Invalid program
         HIPRTC_ERROR_INVALID_OPTION:
-            (undocumented)
+            Invalid option
         HIPRTC_ERROR_COMPILATION:
-            (undocumented)
+            Compilation error
         HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE:
-            (undocumented)
+            Failed in builtin operation
         HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION:
-            (undocumented)
+            No name expression after compilation
         HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION:
-            (undocumented)
+            No lowered names before compilation
         HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID:
-            (undocumented)
+            Invalid name expression
         HIPRTC_ERROR_INTERNAL_ERROR:
-            (undocumented)
+            Internal error
         HIPRTC_ERROR_LINKING:
-            (undocumented)
+            Error in linking
     """
     HIPRTC_SUCCESS = chiprtc.HIPRTC_SUCCESS
     HIPRTC_ERROR_OUT_OF_MEMORY = chiprtc.HIPRTC_ERROR_OUT_OF_MEMORY
@@ -93,60 +93,64 @@ class _hiprtcJIT_option__Base(enum.IntEnum):
     """
     pass
 class hiprtcJIT_option(_hiprtcJIT_option__Base):
-    """hiprtcJIT_option
+    """hiprtc JIT option
 
     Attributes:
         HIPRTC_JIT_MAX_REGISTERS:
-            (undocumented)
+            Maximum registers
         HIPRTC_JIT_THREADS_PER_BLOCK:
-            (undocumented)
+            Thread per block
         HIPRTC_JIT_WALL_TIME:
-            (undocumented)
+            Time from aall clock
         HIPRTC_JIT_INFO_LOG_BUFFER:
-            (undocumented)
+            Log buffer info
         HIPRTC_JIT_INFO_LOG_BUFFER_SIZE_BYTES:
-            (undocumented)
+            Log buffer size in bytes
         HIPRTC_JIT_ERROR_LOG_BUFFER:
-            (undocumented)
+            Log buffer error
         HIPRTC_JIT_ERROR_LOG_BUFFER_SIZE_BYTES:
-            (undocumented)
+            Log buffer size in bytes
         HIPRTC_JIT_OPTIMIZATION_LEVEL:
-            (undocumented)
+            Optimization level
         HIPRTC_JIT_TARGET_FROM_HIPCONTEXT:
-            (undocumented)
+
         HIPRTC_JIT_TARGET:
-            (undocumented)
+            JIT target
         HIPRTC_JIT_FALLBACK_STRATEGY:
-            (undocumented)
+            Fallback strategy
         HIPRTC_JIT_GENERATE_DEBUG_INFO:
-            (undocumented)
+            Generate debug information
         HIPRTC_JIT_LOG_VERBOSE:
-            (undocumented)
+            Log verbose
         HIPRTC_JIT_GENERATE_LINE_INFO:
-            (undocumented)
+            Generate line information
         HIPRTC_JIT_CACHE_MODE:
-            (undocumented)
+            Cache mode
         HIPRTC_JIT_NEW_SM3X_OPT:
-            (undocumented)
+            New SM3X option
         HIPRTC_JIT_FAST_COMPILE:
-            (undocumented)
+            Fast compile
         HIPRTC_JIT_GLOBAL_SYMBOL_NAMES:
-            (undocumented)
+            Global symbol names
         HIPRTC_JIT_GLOBAL_SYMBOL_ADDRESS:
-            (undocumented)
+            Global symbol address
         HIPRTC_JIT_GLOBAL_SYMBOL_COUNT:
-            (undocumented)
+            Global symbol count
         HIPRTC_JIT_LTO:
-            (undocumented)
+            LTO
         HIPRTC_JIT_FTZ:
-            (undocumented)
+            FTZ
         HIPRTC_JIT_PREC_DIV:
-            (undocumented)
+            Prec_VIV
         HIPRTC_JIT_PREC_SQRT:
-            (undocumented)
+            PREC_SQRT
         HIPRTC_JIT_FMA:
-            (undocumented)
+            FMA
         HIPRTC_JIT_NUM_OPTIONS:
+            Number of options
+        HIPRTC_JIT_IR_TO_ISA_OPT_EXT:
+            (undocumented)
+        HIPRTC_JIT_IR_TO_ISA_OPT_COUNT_EXT:
             (undocumented)
     """
     HIPRTC_JIT_MAX_REGISTERS = chiprtc.HIPRTC_JIT_MAX_REGISTERS
@@ -175,6 +179,8 @@ class hiprtcJIT_option(_hiprtcJIT_option__Base):
     HIPRTC_JIT_PREC_SQRT = chiprtc.HIPRTC_JIT_PREC_SQRT
     HIPRTC_JIT_FMA = chiprtc.HIPRTC_JIT_FMA
     HIPRTC_JIT_NUM_OPTIONS = chiprtc.HIPRTC_JIT_NUM_OPTIONS
+    HIPRTC_JIT_IR_TO_ISA_OPT_EXT = chiprtc.HIPRTC_JIT_IR_TO_ISA_OPT_EXT
+    HIPRTC_JIT_IR_TO_ISA_OPT_COUNT_EXT = chiprtc.HIPRTC_JIT_IR_TO_ISA_OPT_COUNT_EXT
     @staticmethod
     def ctypes_type():
         """The type of the enum constants as ctypes type."""
@@ -186,29 +192,29 @@ class _hiprtcJITInputType__Base(enum.IntEnum):
     """
     pass
 class hiprtcJITInputType(_hiprtcJITInputType__Base):
-    """hiprtcJITInputType
+    """hiprtc JIT input type
 
     Attributes:
         HIPRTC_JIT_INPUT_CUBIN:
-            (undocumented)
+            Input cubin
         HIPRTC_JIT_INPUT_PTX:
-            (undocumented)
+            Input PTX
         HIPRTC_JIT_INPUT_FATBINARY:
-            (undocumented)
+            Input fat binary
         HIPRTC_JIT_INPUT_OBJECT:
-            (undocumented)
+            Input object
         HIPRTC_JIT_INPUT_LIBRARY:
-            (undocumented)
+            Input library
         HIPRTC_JIT_INPUT_NVVM:
-            (undocumented)
+            Input NVVM
         HIPRTC_JIT_NUM_LEGACY_INPUT_TYPES:
-            (undocumented)
+            Number of legacy input type
         HIPRTC_JIT_INPUT_LLVM_BITCODE:
-            (undocumented)
+            LLVM bitcode
         HIPRTC_JIT_INPUT_LLVM_BUNDLED_BITCODE:
-            (undocumented)
+            LLVM bundled bitcode
         HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE:
-            (undocumented)
+            LLVM archives of boundled bitcode
         HIPRTC_JIT_NUM_INPUT_TYPES:
             (undocumented)
     """
@@ -574,7 +580,7 @@ hiprtcProgram = _hiprtcProgram
 def hiprtcAddNameExpression(object prog, const char * name_expression):
     r"""Adds the given name exprssion to the runtime compilation program.
 
-    If const char pointer is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
+    If const char pointer is NULL, it will return `~.HIPRTC_ERROR_INVALID_INPUT`.
 
     See:
         `~.hiprtcResult`
@@ -589,7 +595,7 @@ def hiprtcAddNameExpression(object prog, const char * name_expression):
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
     """
     _hiprtcAddNameExpression__retval = hiprtcResult(chiprtc.hiprtcAddNameExpression(
         _hiprtcProgram.from_pyobj(prog)._ptr,name_expression))    # fully specified
@@ -601,7 +607,7 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
     r"""Compiles the given runtime compilation program.
 
     If the compiler failed to build the runtime compilation program,
-    it will return HIPRTC_ERROR_COMPILATION.
+    it will return `~.HIPRTC_ERROR_COMPILATION`.
 
     See:
         `~.hiprtcResult`
@@ -619,7 +625,7 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
     """
     _hiprtcCompileProgram__retval = hiprtcResult(chiprtc.hiprtcCompileProgram(
         _hiprtcProgram.from_pyobj(prog)._ptr,numOptions,
@@ -632,10 +638,10 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
     r"""Creates an instance of hiprtcProgram with the given input parameters,
     and sets the output hiprtcProgram prog with it.
 
-    Any invalide input parameter, it will return HIPRTC_ERROR_INVALID_INPUT
-    or HIPRTC_ERROR_INVALID_PROGRAM.
+    Any invalide input parameter, it will return `~.HIPRTC_ERROR_INVALID_INPUT`
+    or `~.HIPRTC_ERROR_INVALID_PROGRAM`.
 
-    If failed to create the program, it will return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE.
+    If failed to create the program, it will return `~.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE`.
 
     See:
         `~.hiprtcResult`
@@ -659,7 +665,7 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
         * `~._hiprtcProgram`:
                 runtime compilation program instance.
     """
@@ -674,7 +680,7 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
 def hiprtcDestroyProgram(object prog):
     r"""Destroys an instance of given hiprtcProgram.
 
-    If prog is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
+    If prog is NULL, it will return `~.HIPRTC_ERROR_INVALID_INPUT`.
 
     See:
         `~.hiprtcResult`
@@ -686,7 +692,7 @@ def hiprtcDestroyProgram(object prog):
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
     """
     _hiprtcDestroyProgram__retval = hiprtcResult(chiprtc.hiprtcDestroyProgram(
         <chiprtc.hiprtcProgram*>hip._util.types.Pointer.from_pyobj(prog)._ptr))    # fully specified
@@ -698,11 +704,11 @@ def hiprtcGetLoweredName(object prog, const char * name_expression):
     r"""Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input parameters,
     and sets the output lowered_name with it.
 
-    If any invalide nullptr input parameters, it will return HIPRTC_ERROR_INVALID_INPUT
+    If any invalide nullptr input parameters, it will return `~.HIPRTC_ERROR_INVALID_INPUT`
 
-    If name_expression is not found, it will return HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID
+    If name_expression is not found, it will return `~.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID`
 
-    If failed to get lowered_name from the program, it will return HIPRTC_ERROR_COMPILATION.
+    If failed to get lowered_name from the program, it will return `~.HIPRTC_ERROR_COMPILATION`.
 
     See:
         `~.hiprtcResult`
@@ -717,7 +723,7 @@ def hiprtcGetLoweredName(object prog, const char * name_expression):
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
         * `~.bytes`:
                 const char array to the lowered (mangled) name.
     """
@@ -813,9 +819,11 @@ def hiprtcGetCodeSize(object prog):
             runtime compilation program instance.
 
     Returns:
-        A `~.tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
         * `~.hiprtcResult`: HIPRTC_SUCCESS
+        * `~.int`:
+                the size of binary.
     """
     cdef unsigned long codeSizeRet
     _hiprtcGetCodeSize__retval = hiprtcResult(chiprtc.hiprtcGetCodeSize(
@@ -834,8 +842,8 @@ def hiprtcGetBitcode(object prog, object bitcode):
         prog (`~._hiprtcProgram`/`~.object`) -- *IN*:
             runtime compilation program instance.
 
-        bitcode (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
+        bitcode (`~.hip._util.types.Pointer`/`~.object`) -- *OUT*:
+            char pointer to bitcode.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -860,9 +868,11 @@ def hiprtcGetBitcodeSize(object prog):
             runtime compilation program instance.
 
     Returns:
-        A `~.tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
+        * `~.int`:
+                the size of bitcode.
     """
     cdef unsigned long bitcode_size
     _hiprtcGetBitcodeSize__retval = hiprtcResult(chiprtc.hiprtcGetBitcodeSize(
@@ -878,19 +888,21 @@ def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_
         `~.hiprtcResult`
 
     Args:
-        num_options (`~.int`):
-            (undocumented)
+        num_options (`~.int`) -- *IN*:
+            Number of options
 
-        option_ptr (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
+        option_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Array of options
 
-        option_vals_pptr (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
+        option_vals_pptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Array of option values cast to void*
 
     Returns:
-        A `~.tuple` of size 1 that contains (in that order):
+        A `~.tuple` of size 2 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`, `~.HIPRTC_ERROR_INVALID_INPUT`, `~.HIPRTC_ERROR_INVALID_OPTION`
+        * `~.ihiprtcLinkState`:
+                hiprtc link state created upon success
     """
     hip_link_state_ptr = ihiprtcLinkState.from_ptr(NULL)
     _hiprtcLinkCreate__retval = hiprtcResult(chiprtc.hiprtcLinkCreate(num_options,
@@ -909,29 +921,29 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
         `~.hiprtcResult`
 
     Args:
-        hip_link_state (`~.ihiprtcLinkState`/`~.object`):
-            (undocumented)
+        hip_link_state (`~.ihiprtcLinkState`/`~.object`) -- *IN*:
+            hiprtc link state
 
-        input_type (`~.hiprtcJITInputType`):
-            (undocumented)
+        input_type (`~.hiprtcJITInputType`) -- *IN*:
+            Type of the input data or bitcode
 
-        file_path (`~.bytes`):
-            (undocumented)
+        file_path (`~.bytes`) -- *IN*:
+            Path to the input file where bitcode is present
 
-        num_options (`~.int`):
-            (undocumented)
+        num_options (`~.int`) -- *IN*:
+            Size of the options
 
-        options_ptr (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
+        options_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Array of options applied to this input
 
-        option_values (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
+        option_values (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Array of option values cast to void*
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
-        * HIPRTC_ERROR_INVALID_INPUT
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
+        * `~.HIPRTC_ERROR_INVALID_INPUT`
     """
     if not isinstance(input_type,_hiprtcJITInputType__Base):
         raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
@@ -952,35 +964,35 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, un
         `~.hiprtcResult`
 
     Args:
-        hip_link_state (`~.ihiprtcLinkState`/`~.object`):
-            (undocumented)
+        hip_link_state (`~.ihiprtcLinkState`/`~.object`) -- *IN*:
+            hiprtc link state
 
-        input_type (`~.hiprtcJITInputType`):
-            (undocumented)
+        input_type (`~.hiprtcJITInputType`) -- *IN*:
+            Type of the input data or bitcode
 
-        image (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
+        image (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Input data which is null terminated
 
-        image_size (`~.int`):
-            (undocumented)
+        image_size (`~.int`) -- *IN*:
+            Size of the input data
 
-        name (`~.bytes`):
-            (undocumented)
+        name (`~.bytes`) -- *IN*:
+            Optional name for this input
 
-        num_options (`~.int`):
-            (undocumented)
+        num_options (`~.int`) -- *IN*:
+            Size of the options
 
-        options_ptr (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
+        options_ptr (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Array of options applied to this input
 
-        option_values (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
+        option_values (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
+            Array of option values cast to void*
 
     Returns:
         A `~.tuple` of size 2 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
-        * HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`, `~.HIPRTC_ERROR_INVALID_INPUT`
+        * `~.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE`
     """
     if not isinstance(input_type,_hiprtcJITInputType__Base):
         raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
@@ -1002,14 +1014,18 @@ def hiprtcLinkComplete(object hip_link_state):
         `~.hiprtcResult`
 
     Args:
-        hip_link_state (`~.ihiprtcLinkState`/`~.object`):
-            (undocumented)
+        hip_link_state (`~.ihiprtcLinkState`/`~.object`) -- *IN*:
+            hiprtc link state
 
     Returns:
-        A `~.tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 4 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
-        * HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
+        * `~.HIPRTC_ERROR_LINKING`
+        * `~.hip._util.types.Pointer`/`~.object`:
+                Upon success, points to the output binary
+        * `~.int`:
+                Size of the binary is stored (optional)
     """
     bin_out = hip._util.types.Pointer.from_ptr(NULL)
     cdef unsigned long size_out
@@ -1023,20 +1039,17 @@ def hiprtcLinkComplete(object hip_link_state):
 def hiprtcLinkDestroy(object hip_link_state):
     r"""Deletes the link instance via hiprtc APIs.
 
-    If linking fails, it will
-
     See:
         `~.hiprtcResult`
 
     Args:
-        hip_link_state (`~.ihiprtcLinkState`/`~.object`):
-            (undocumented)
+        hip_link_state (`~.ihiprtcLinkState`/`~.object`) -- *IN*:
+            link state instance
 
     Returns:
-        A `~.tuple` of size 2 that contains (in that order):
+        A `~.tuple` of size 1 that contains (in that order):
 
-        * `~.hiprtcResult`: HIPRTC_SUCCESS
-        * HIPRTC_ERROR_LINKING
+        * `~.hiprtcResult`: `~.HIPRTC_SUCCESS`
     """
     _hiprtcLinkDestroy__retval = hiprtcResult(chiprtc.hiprtcLinkDestroy(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr))    # fully specified

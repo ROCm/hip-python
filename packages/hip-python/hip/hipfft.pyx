@@ -532,7 +532,12 @@ def hipfftExtPlanScaleFactor(object plan, double scalefactor):
 
     This function must be called after the plan is allocated using
     `~.hipfftCreate`, but before the plan is initialized by any of the
-    "MakePlan" functions.
+    "MakePlan" functions.  Therefore, API functions that combine
+    creation and initialization (`~.hipfftPlan1d`, `~.hipfftPlan2d`,
+    `~.hipfftPlan3d`, and `~.hipfftPlanMany`) cannot set a scale factor.
+
+    Note that the scale factor applies to both forward and
+    backward transforms executed with the specified plan handle.
 
     Args:
         plan (`~.hipfftHandle_t`/`~.object`):
