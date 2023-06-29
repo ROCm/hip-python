@@ -20,11 +20,11 @@
   -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   -- SOFTWARE.
   -->
-# CUDA Python Interoperability
+# CUDA&reg; Python Interoperability
 
-This chapter discusses HIP Python's CUDA Python interoperability layer that is shipped
+This chapter discusses HIP Python's CUDA&reg; Python interoperability layer that is shipped
 in a separate package with the name `hip-python-as-cuda`.
-In particular, we discuss how to run existing CUDA Python code on AMD&reg; GPUs, and 
+In particular, we discuss how to run existing CUDA Python code on AMD GPUs, and 
 if localized modifications are required, how to detect HIP Python and how to fall
 back to the underlying HIP Python Python and Cython modules.
 Moreover, a technique named "enum constant hallucination" is presented
@@ -36,7 +36,7 @@ on-the-fly for enum error types.
 HIP Python's CUDA interoperability layer comes in a separate Python 3 package with the name `hip-python-as-cuda`.
 Its sole dependency is the `hip-python` package with the exact same version number.
 
-After having identified the correct package for your ROCm&reg; installation, type:
+After having identified the correct package for your ROCm&trade;  installation, type:
 
 ```shell
 python3 -m pip install hip-python-as-cuda-<hip_version>.<hip_python_version>
@@ -91,11 +91,11 @@ When writing this documentation, only Python and Cython modules for the librarie
 ## Python Example
 
 :::{admonition} What will I learn?
-How I can run simple CUDA Python applications directly on AMD&reg; GPUs via HIP Python.
+How I can run simple CUDA Python applications directly on AMD GPUs via HIP Python.
 :::
 
 After installing the HIP Python package `hip-python-as-cuda`, you can run the [below example](cuda_stream)
-directly on AMD&reg; GPUs. There is nothing else to do. 
+directly on AMD GPUs. There is nothing else to do. 
 This works because all CUDA Python functions, types and even enum constants are aliases
 of HIP objects. 
 
@@ -126,7 +126,7 @@ values for undefined enum constants (that do not conflict with the values of the
 :::
 
 We use [the example below](cuda_error_hallucinate_enums) to demonstrate how you can deal with scenarios where a CUDA Python program,
-which we want to run on AMD&reg; GPUs, performs an error check that involves enum constants that are not relevant for HIP programs and/or AMD&reg; GPUs.
+which we want to run on AMD GPUs, performs an error check that involves enum constants that are not relevant for HIP programs and/or AMD GPUs.
 As HIP Python's routines will never return these enum constants, it is safe to generate values for them on the fly.
 Such behavior can be enabled selectively for CUDA Python interoperability layer enums --- either via the
 respective environment variable `HIP_PYTHON_{myenumtype}_HALLUCINATE` and/or at runtime
@@ -204,11 +204,11 @@ as shown below:
 ## Cython Example
 
 :::{admonition} What will I learn?
-* That I can port CUDA Python Cython code to AMD&reg; GPUs with minor modifications.
+* That I can port CUDA Python Cython code to AMD GPUs with minor modifications.
 * How I can introduce different compilation paths for HIP Python's CUDA interoperability layer and CUDA Python.
 :::
 
-[The example below](ccuda_stream_pyx) shows a CUDA Python example that can be compiled for and run on AMD&reg; GPUs.
+[The example below](ccuda_stream_pyx) shows a CUDA Python example that can be compiled for and run on AMD GPUs.
 To do so, it is necessary to define the compiler flag `HIP_Python` from within the `setup.py` script.
 (We will discuss how to do so in short.)
 This will replace the qualified `C++`-like enum constant expression
@@ -234,7 +234,7 @@ respectively.
 See <project:#sec_hip_streams> for an explanation of a similar HIP Python program's steps.
 :::
 
-The example can be compiled for AMD&reg; GPUs via the following [setup.py script](cuda_cython_setup_py),
+The example can be compiled for AMD GPUs via the following [setup.py script](cuda_cython_setup_py),
 which specifies `compile_time_env=dict(HIP_PYTHON=True)` as keyword parameter
 of the {py:obj}`~.cythonize` call in line 
 
