@@ -400,6 +400,7 @@ cdef class {{name}}:
     @staticmethod
     cdef __allocate({{cptr_type}}* ptr):
         ptr[0] = <{{cptr_type}}>stdlib.malloc(sizeof({{cname}}))
+        string.memset(<void*>ptr[0], 0, sizeof({{cname}}))
 
         if ptr[0] is NULL:
             raise MemoryError

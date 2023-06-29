@@ -23,13 +23,13 @@
 # Basic Usage and Examples
 
 This chapter explains how to use HIP Python's main interfaces. 
-The usage of the CUDA interoperability layer is discussed in a separate chapter.
+The usage of the CUDA&reg; interoperability layer is discussed in a separate chapter.
 We first aim to give an introduction to the *Python* API of HIP Python 
 by means of basic examples before discussing the *Cython* API in the 
 last sections of this chapter.
 
 :::{note}
-All examples in this chapter have been tested with ROCm&reg; 5.4.3.
+All examples in this chapter have been tested with ROCm&trade;  5.4.3.
 :::
 
 ## Basic Usage (Python)
@@ -534,7 +534,7 @@ that shared object.
 
 :::{note}
 The lazy-loading of functions at runtime can, under some circumstances, allow to use a HIP Python version that 
-covers a superset or only a subset of the functions available within the respective library of a ROCm&reg; installation.
+covers a superset or only a subset of the functions available within the respective library of a ROCm&trade;  installation.
 :::
 
 ### Using the Cython API
