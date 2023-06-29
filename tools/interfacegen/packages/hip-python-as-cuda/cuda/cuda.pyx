@@ -850,6 +850,10 @@ Attributes:
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     cudaLaunchParams:
         alias of `.hipLaunchParams`
+    CUDA_LAUNCH_PARAMS:
+        alias of `.hipFunctionLaunchParams`
+    CUDA_LAUNCH_PARAMS_v1:
+        alias of `.hipFunctionLaunchParams`
     HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE:
         Make `.CUexternalMemoryHandleType_enum` hallucinate values for non-existing enum constants. Disabled by default
         if default is not modified via environment variable.
@@ -1268,6 +1272,30 @@ Attributes:
 
         * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
         * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphDebugDot_flags_HALLUCINATE:
+        Make `.CUgraphDebugDot_flags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphDebugDot_flags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_CUgraphDebugDot_flags_enum_HALLUCINATE:
+        Make `.CUgraphDebugDot_flags_enum` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_CUgraphDebugDot_flags_enum_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
+    HIP_PYTHON_cudaGraphDebugDotFlags_HALLUCINATE:
+        Make `.cudaGraphDebugDotFlags` hallucinate values for non-existing enum constants. Disabled by default
+        if default is not modified via environment variable.
+
+        Default value can be set/unset via environment variable ``HIP_PYTHON_cudaGraphDebugDotFlags_HALLUCINATE``.
+
+        * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+        * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
     CUmemGenericAllocationHandle:
         alias of `.hipMemGenericAllocationHandle_t`
     CUmemGenericAllocationHandle_v1:
@@ -1556,6 +1584,8 @@ Attributes:
         alias of `.hipEventQuery`
     cudaEventQuery:
         alias of `.hipEventQuery`
+    cuPointerSetAttribute:
+        alias of `.hipPointerSetAttribute`
     cudaPointerGetAttributes:
         alias of `.hipPointerGetAttributes`
     cuPointerGetAttribute:
@@ -1826,6 +1856,16 @@ Attributes:
         alias of `.hipMallocMipmappedArray`
     cudaGetMipmappedArrayLevel:
         alias of `.hipGetMipmappedArrayLevel`
+    cudaArrayGetInfo:
+        alias of `.hipArrayGetInfo`
+    cuArrayGetDescriptor:
+        alias of `.hipArrayGetDescriptor`
+    cuArrayGetDescriptor_v2:
+        alias of `.hipArrayGetDescriptor`
+    cuArray3DGetDescriptor:
+        alias of `.hipArray3DGetDescriptor`
+    cuArray3DGetDescriptor_v2:
+        alias of `.hipArray3DGetDescriptor`
     cudaMemcpy2D:
         alias of `.hipMemcpy2D`
     cuMemcpy2D:
@@ -1960,6 +2000,10 @@ Attributes:
         alias of `.hipModuleLoadDataEx`
     cuLaunchKernel:
         alias of `.hipModuleLaunchKernel`
+    cuLaunchCooperativeKernel:
+        alias of `.hipModuleLaunchCooperativeKernel`
+    cuLaunchCooperativeKernelMultiDevice:
+        alias of `.hipModuleLaunchCooperativeKernelMultiDevice`
     cudaLaunchCooperativeKernel:
         alias of `.hipLaunchCooperativeKernel`
     cudaLaunchCooperativeKernelMultiDevice:
@@ -2332,6 +2376,22 @@ Attributes:
         alias of `.hipGraphExecEventWaitNodeSetEvent`
     cudaGraphExecEventWaitNodeSetEvent:
         alias of `.hipGraphExecEventWaitNodeSetEvent`
+    cuGraphAddMemAllocNode:
+        alias of `.hipGraphAddMemAllocNode`
+    cudaGraphAddMemAllocNode:
+        alias of `.hipGraphAddMemAllocNode`
+    cuGraphMemAllocNodeGetParams:
+        alias of `.hipGraphMemAllocNodeGetParams`
+    cudaGraphMemAllocNodeGetParams:
+        alias of `.hipGraphMemAllocNodeGetParams`
+    cuGraphAddMemFreeNode:
+        alias of `.hipGraphAddMemFreeNode`
+    cudaGraphAddMemFreeNode:
+        alias of `.hipGraphAddMemFreeNode`
+    cuGraphMemFreeNodeGetParams:
+        alias of `.hipGraphMemFreeNodeGetParams`
+    cudaGraphMemFreeNodeGetParams:
+        alias of `.hipGraphMemFreeNodeGetParams`
     cuDeviceGetGraphMemAttribute:
         alias of `.hipDeviceGetGraphMemAttribute`
     cudaDeviceGetGraphMemAttribute:
@@ -2364,6 +2424,22 @@ Attributes:
         alias of `.hipGraphReleaseUserObject`
     cudaGraphReleaseUserObject:
         alias of `.hipGraphReleaseUserObject`
+    cuGraphDebugDotPrint:
+        alias of `.hipGraphDebugDotPrint`
+    cudaGraphDebugDotPrint:
+        alias of `.hipGraphDebugDotPrint`
+    cuGraphKernelNodeCopyAttributes:
+        alias of `.hipGraphKernelNodeCopyAttributes`
+    cudaGraphKernelNodeCopyAttributes:
+        alias of `.hipGraphKernelNodeCopyAttributes`
+    cuGraphNodeSetEnabled:
+        alias of `.hipGraphNodeSetEnabled`
+    cudaGraphNodeSetEnabled:
+        alias of `.hipGraphNodeSetEnabled`
+    cuGraphNodeGetEnabled:
+        alias of `.hipGraphNodeGetEnabled`
+    cudaGraphNodeGetEnabled:
+        alias of `.hipGraphNodeGetEnabled`
     cuMemAddressFree:
         alias of `.hipMemAddressFree`
     cuMemAddressReserve:
@@ -4234,6 +4310,7 @@ class CUdevice_attribute(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_att
     hipDeviceAttributeAsicRevision = hip.chip.hipDeviceAttributeAsicRevision
     hipDeviceAttributeCanUseStreamWaitValue = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
+    CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR_V1 = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     cudaDevAttrReserved94 = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     hipDeviceAttributeImageSupport = hip.chip.hipDeviceAttributeImageSupport
     hipDeviceAttributePhysicalMultiProcessorCount = hip.chip.hipDeviceAttributePhysicalMultiProcessorCount
@@ -4597,6 +4674,7 @@ class CUdevice_attribute_enum(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevic
     hipDeviceAttributeAsicRevision = hip.chip.hipDeviceAttributeAsicRevision
     hipDeviceAttributeCanUseStreamWaitValue = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
+    CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR_V1 = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     cudaDevAttrReserved94 = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     hipDeviceAttributeImageSupport = hip.chip.hipDeviceAttributeImageSupport
     hipDeviceAttributePhysicalMultiProcessorCount = hip.chip.hipDeviceAttributePhysicalMultiProcessorCount
@@ -4960,6 +5038,7 @@ class cudaDeviceAttr(hip._hipDeviceAttribute_t__Base,metaclass=_cudaDeviceAttr_E
     hipDeviceAttributeAsicRevision = hip.chip.hipDeviceAttributeAsicRevision
     hipDeviceAttributeCanUseStreamWaitValue = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
+    CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR_V1 = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     cudaDevAttrReserved94 = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
     hipDeviceAttributeImageSupport = hip.chip.hipDeviceAttributeImageSupport
     hipDeviceAttributePhysicalMultiProcessorCount = hip.chip.hipDeviceAttributePhysicalMultiProcessorCount
@@ -9967,6 +10046,10 @@ class cudaSharedMemConfig(hip._hipSharedMemConfig__Base,metaclass=_cudaSharedMem
     CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
 cudaLaunchParams = hip.hipLaunchParams
+cdef class CUDA_LAUNCH_PARAMS_st(hip.hip.hipFunctionLaunchParams_t):
+    pass
+CUDA_LAUNCH_PARAMS = hip.hipFunctionLaunchParams
+CUDA_LAUNCH_PARAMS_v1 = hip.hipFunctionLaunchParams
 HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE","false")
 
 class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
@@ -11047,6 +11130,12 @@ class CUgraphNodeType(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_Enu
     hipGraphNodeTypeExtSemaphoreWait = hip.chip.hipGraphNodeTypeExtSemaphoreWait
     CU_GRAPH_NODE_TYPE_EXT_SEMAS_WAIT = hip.chip.hipGraphNodeTypeExtSemaphoreWait
     cudaGraphNodeTypeExtSemaphoreWait = hip.chip.hipGraphNodeTypeExtSemaphoreWait
+    hipGraphNodeTypeMemAlloc = hip.chip.hipGraphNodeTypeMemAlloc
+    CU_GRAPH_NODE_TYPE_MEM_ALLOC = hip.chip.hipGraphNodeTypeMemAlloc
+    cudaGraphNodeTypeMemAlloc = hip.chip.hipGraphNodeTypeMemAlloc
+    hipGraphNodeTypeMemFree = hip.chip.hipGraphNodeTypeMemFree
+    CU_GRAPH_NODE_TYPE_MEM_FREE = hip.chip.hipGraphNodeTypeMemFree
+    cudaGraphNodeTypeMemFree = hip.chip.hipGraphNodeTypeMemFree
     hipGraphNodeTypeMemcpyFromSymbol = hip.chip.hipGraphNodeTypeMemcpyFromSymbol
     hipGraphNodeTypeMemcpyToSymbol = hip.chip.hipGraphNodeTypeMemcpyToSymbol
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
@@ -11146,6 +11235,12 @@ class CUgraphNodeType_enum(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeTyp
     hipGraphNodeTypeExtSemaphoreWait = hip.chip.hipGraphNodeTypeExtSemaphoreWait
     CU_GRAPH_NODE_TYPE_EXT_SEMAS_WAIT = hip.chip.hipGraphNodeTypeExtSemaphoreWait
     cudaGraphNodeTypeExtSemaphoreWait = hip.chip.hipGraphNodeTypeExtSemaphoreWait
+    hipGraphNodeTypeMemAlloc = hip.chip.hipGraphNodeTypeMemAlloc
+    CU_GRAPH_NODE_TYPE_MEM_ALLOC = hip.chip.hipGraphNodeTypeMemAlloc
+    cudaGraphNodeTypeMemAlloc = hip.chip.hipGraphNodeTypeMemAlloc
+    hipGraphNodeTypeMemFree = hip.chip.hipGraphNodeTypeMemFree
+    CU_GRAPH_NODE_TYPE_MEM_FREE = hip.chip.hipGraphNodeTypeMemFree
+    cudaGraphNodeTypeMemFree = hip.chip.hipGraphNodeTypeMemFree
     hipGraphNodeTypeMemcpyFromSymbol = hip.chip.hipGraphNodeTypeMemcpyFromSymbol
     hipGraphNodeTypeMemcpyToSymbol = hip.chip.hipGraphNodeTypeMemcpyToSymbol
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
@@ -11245,6 +11340,12 @@ class cudaGraphNodeType(hip._hipGraphNodeType__Base,metaclass=_cudaGraphNodeType
     hipGraphNodeTypeExtSemaphoreWait = hip.chip.hipGraphNodeTypeExtSemaphoreWait
     CU_GRAPH_NODE_TYPE_EXT_SEMAS_WAIT = hip.chip.hipGraphNodeTypeExtSemaphoreWait
     cudaGraphNodeTypeExtSemaphoreWait = hip.chip.hipGraphNodeTypeExtSemaphoreWait
+    hipGraphNodeTypeMemAlloc = hip.chip.hipGraphNodeTypeMemAlloc
+    CU_GRAPH_NODE_TYPE_MEM_ALLOC = hip.chip.hipGraphNodeTypeMemAlloc
+    cudaGraphNodeTypeMemAlloc = hip.chip.hipGraphNodeTypeMemAlloc
+    hipGraphNodeTypeMemFree = hip.chip.hipGraphNodeTypeMemFree
+    CU_GRAPH_NODE_TYPE_MEM_FREE = hip.chip.hipGraphNodeTypeMemFree
+    cudaGraphNodeTypeMemFree = hip.chip.hipGraphNodeTypeMemFree
     hipGraphNodeTypeMemcpyFromSymbol = hip.chip.hipGraphNodeTypeMemcpyFromSymbol
     hipGraphNodeTypeMemcpyToSymbol = hip.chip.hipGraphNodeTypeMemcpyToSymbol
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
@@ -11277,6 +11378,12 @@ cdef class CUDA_MEMSET_NODE_PARAMS_st(hip.hip.hipMemsetParams):
 cdef class CUDA_MEMSET_NODE_PARAMS_v1(hip.hip.hipMemsetParams):
     pass
 cdef class cudaMemsetParams(hip.hip.hipMemsetParams):
+    pass
+cdef class CUDA_MEM_ALLOC_NODE_PARAMS(hip.hip.hipMemAllocNodeParams):
+    pass
+cdef class CUDA_MEM_ALLOC_NODE_PARAMS_st(hip.hip.hipMemAllocNodeParams):
+    pass
+cdef class cudaMemAllocNodeParams(hip.hip.hipMemAllocNodeParams):
     pass
 HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE","false")
 
@@ -13330,6 +13437,15 @@ class CUgraphInstantiate_flags(hip._hipGraphInstantiateFlags__Base,metaclass=_CU
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
+    hipGraphInstantiateFlagUpload = hip.chip.hipGraphInstantiateFlagUpload
+    CUDA_GRAPH_INSTANTIATE_FLAG_UPLOAD = hip.chip.hipGraphInstantiateFlagUpload
+    cudaGraphInstantiateFlagUpload = hip.chip.hipGraphInstantiateFlagUpload
+    hipGraphInstantiateFlagDeviceLaunch = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    CUDA_GRAPH_INSTANTIATE_FLAG_DEVICE_LAUNCH = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    cudaGraphInstantiateFlagDeviceLaunch = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    hipGraphInstantiateFlagUseNodePriority = hip.chip.hipGraphInstantiateFlagUseNodePriority
+    CUDA_GRAPH_INSTANTIATE_FLAG_USE_NODE_PRIORITY = hip.chip.hipGraphInstantiateFlagUseNodePriority
+    cudaGraphInstantiateFlagUseNodePriority = hip.chip.hipGraphInstantiateFlagUseNodePriority
 HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE","false")
 
 class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
@@ -13397,6 +13513,15 @@ class CUgraphInstantiate_flags_enum(hip._hipGraphInstantiateFlags__Base,metaclas
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
+    hipGraphInstantiateFlagUpload = hip.chip.hipGraphInstantiateFlagUpload
+    CUDA_GRAPH_INSTANTIATE_FLAG_UPLOAD = hip.chip.hipGraphInstantiateFlagUpload
+    cudaGraphInstantiateFlagUpload = hip.chip.hipGraphInstantiateFlagUpload
+    hipGraphInstantiateFlagDeviceLaunch = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    CUDA_GRAPH_INSTANTIATE_FLAG_DEVICE_LAUNCH = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    cudaGraphInstantiateFlagDeviceLaunch = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    hipGraphInstantiateFlagUseNodePriority = hip.chip.hipGraphInstantiateFlagUseNodePriority
+    CUDA_GRAPH_INSTANTIATE_FLAG_USE_NODE_PRIORITY = hip.chip.hipGraphInstantiateFlagUseNodePriority
+    cudaGraphInstantiateFlagUseNodePriority = hip.chip.hipGraphInstantiateFlagUseNodePriority
 HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE","false")
 
 class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
@@ -13464,6 +13589,297 @@ class cudaGraphInstantiateFlags(hip._hipGraphInstantiateFlags__Base,metaclass=_c
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
+    hipGraphInstantiateFlagUpload = hip.chip.hipGraphInstantiateFlagUpload
+    CUDA_GRAPH_INSTANTIATE_FLAG_UPLOAD = hip.chip.hipGraphInstantiateFlagUpload
+    cudaGraphInstantiateFlagUpload = hip.chip.hipGraphInstantiateFlagUpload
+    hipGraphInstantiateFlagDeviceLaunch = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    CUDA_GRAPH_INSTANTIATE_FLAG_DEVICE_LAUNCH = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    cudaGraphInstantiateFlagDeviceLaunch = hip.chip.hipGraphInstantiateFlagDeviceLaunch
+    hipGraphInstantiateFlagUseNodePriority = hip.chip.hipGraphInstantiateFlagUseNodePriority
+    CUDA_GRAPH_INSTANTIATE_FLAG_USE_NODE_PRIORITY = hip.chip.hipGraphInstantiateFlagUseNodePriority
+    cudaGraphInstantiateFlagUseNodePriority = hip.chip.hipGraphInstantiateFlagUseNodePriority
+HIP_PYTHON_CUgraphDebugDot_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphDebugDot_flags_HALLUCINATE","false")
+
+class _CUgraphDebugDot_flags_EnumMeta(enum.EnumMeta):
+
+    def __getattribute__(cls,name):
+        global _get_hip_name
+        global HIP_PYTHON_CUgraphDebugDot_flags_HALLUCINATE
+        try:
+            result = super().__getattribute__(name)
+            return result
+        except AttributeError as ae:
+            if not HIP_PYTHON_CUgraphDebugDot_flags_HALLUCINATE:
+                raise ae
+            else:
+                used_vals = list(cls._value2member_map_.keys())
+                if not len(used_vals):
+                    raise ae
+                new_val = min(used_vals)
+                while new_val in used_vals: # find a free enum value
+                    new_val += 1
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphDebugDotFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphDebugDot_flags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
+
+
+class CUgraphDebugDot_flags(hip._hipGraphDebugDotFlags__Base,metaclass=_CUgraphDebugDot_flags_EnumMeta):                
+    hipGraphDebugDotFlagsVerbose = hip.chip.hipGraphDebugDotFlagsVerbose
+    CU_GRAPH_DEBUG_DOT_FLAGS_VERBOSE = hip.chip.hipGraphDebugDotFlagsVerbose
+    cudaGraphDebugDotFlagsVerbose = hip.chip.hipGraphDebugDotFlagsVerbose
+    hipGraphDebugDotFlagsKernelNodeParams = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    cudaGraphDebugDotFlagsKernelNodeParams = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    hipGraphDebugDotFlagsMemcpyNodeParams = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_MEMCPY_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    cudaGraphDebugDotFlagsMemcpyNodeParams = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    hipGraphDebugDotFlagsMemsetNodeParams = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_MEMSET_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    cudaGraphDebugDotFlagsMemsetNodeParams = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    hipGraphDebugDotFlagsHostNodeParams = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_HOST_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    cudaGraphDebugDotFlagsHostNodeParams = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    hipGraphDebugDotFlagsEventNodeParams = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EVENT_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    cudaGraphDebugDotFlagsEventNodeParams = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    hipGraphDebugDotFlagsExtSemasSignalNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_SIGNAL_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    cudaGraphDebugDotFlagsExtSemasSignalNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    hipGraphDebugDotFlagsExtSemasWaitNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_WAIT_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    cudaGraphDebugDotFlagsExtSemasWaitNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    hipGraphDebugDotFlagsKernelNodeAttributes = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_ATTRIBUTES = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    cudaGraphDebugDotFlagsKernelNodeAttributes = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    hipGraphDebugDotFlagsHandles = hip.chip.hipGraphDebugDotFlagsHandles
+    CU_GRAPH_DEBUG_DOT_FLAGS_HANDLES = hip.chip.hipGraphDebugDotFlagsHandles
+    cudaGraphDebugDotFlagsHandles = hip.chip.hipGraphDebugDotFlagsHandles
+HIP_PYTHON_CUgraphDebugDot_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphDebugDot_flags_enum_HALLUCINATE","false")
+
+class _CUgraphDebugDot_flags_enum_EnumMeta(enum.EnumMeta):
+
+    def __getattribute__(cls,name):
+        global _get_hip_name
+        global HIP_PYTHON_CUgraphDebugDot_flags_enum_HALLUCINATE
+        try:
+            result = super().__getattribute__(name)
+            return result
+        except AttributeError as ae:
+            if not HIP_PYTHON_CUgraphDebugDot_flags_enum_HALLUCINATE:
+                raise ae
+            else:
+                used_vals = list(cls._value2member_map_.keys())
+                if not len(used_vals):
+                    raise ae
+                new_val = min(used_vals)
+                while new_val in used_vals: # find a free enum value
+                    new_val += 1
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphDebugDotFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphDebugDot_flags_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
+
+
+class CUgraphDebugDot_flags_enum(hip._hipGraphDebugDotFlags__Base,metaclass=_CUgraphDebugDot_flags_enum_EnumMeta):                
+    hipGraphDebugDotFlagsVerbose = hip.chip.hipGraphDebugDotFlagsVerbose
+    CU_GRAPH_DEBUG_DOT_FLAGS_VERBOSE = hip.chip.hipGraphDebugDotFlagsVerbose
+    cudaGraphDebugDotFlagsVerbose = hip.chip.hipGraphDebugDotFlagsVerbose
+    hipGraphDebugDotFlagsKernelNodeParams = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    cudaGraphDebugDotFlagsKernelNodeParams = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    hipGraphDebugDotFlagsMemcpyNodeParams = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_MEMCPY_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    cudaGraphDebugDotFlagsMemcpyNodeParams = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    hipGraphDebugDotFlagsMemsetNodeParams = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_MEMSET_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    cudaGraphDebugDotFlagsMemsetNodeParams = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    hipGraphDebugDotFlagsHostNodeParams = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_HOST_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    cudaGraphDebugDotFlagsHostNodeParams = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    hipGraphDebugDotFlagsEventNodeParams = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EVENT_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    cudaGraphDebugDotFlagsEventNodeParams = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    hipGraphDebugDotFlagsExtSemasSignalNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_SIGNAL_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    cudaGraphDebugDotFlagsExtSemasSignalNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    hipGraphDebugDotFlagsExtSemasWaitNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_WAIT_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    cudaGraphDebugDotFlagsExtSemasWaitNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    hipGraphDebugDotFlagsKernelNodeAttributes = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_ATTRIBUTES = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    cudaGraphDebugDotFlagsKernelNodeAttributes = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    hipGraphDebugDotFlagsHandles = hip.chip.hipGraphDebugDotFlagsHandles
+    CU_GRAPH_DEBUG_DOT_FLAGS_HANDLES = hip.chip.hipGraphDebugDotFlagsHandles
+    cudaGraphDebugDotFlagsHandles = hip.chip.hipGraphDebugDotFlagsHandles
+HIP_PYTHON_cudaGraphDebugDotFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphDebugDotFlags_HALLUCINATE","false")
+
+class _cudaGraphDebugDotFlags_EnumMeta(enum.EnumMeta):
+
+    def __getattribute__(cls,name):
+        global _get_hip_name
+        global HIP_PYTHON_cudaGraphDebugDotFlags_HALLUCINATE
+        try:
+            result = super().__getattribute__(name)
+            return result
+        except AttributeError as ae:
+            if not HIP_PYTHON_cudaGraphDebugDotFlags_HALLUCINATE:
+                raise ae
+            else:
+                used_vals = list(cls._value2member_map_.keys())
+                if not len(used_vals):
+                    raise ae
+                new_val = min(used_vals)
+                while new_val in used_vals: # find a free enum value
+                    new_val += 1
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphDebugDotFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaGraphDebugDotFlags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
+
+
+class cudaGraphDebugDotFlags(hip._hipGraphDebugDotFlags__Base,metaclass=_cudaGraphDebugDotFlags_EnumMeta):                
+    hipGraphDebugDotFlagsVerbose = hip.chip.hipGraphDebugDotFlagsVerbose
+    CU_GRAPH_DEBUG_DOT_FLAGS_VERBOSE = hip.chip.hipGraphDebugDotFlagsVerbose
+    cudaGraphDebugDotFlagsVerbose = hip.chip.hipGraphDebugDotFlagsVerbose
+    hipGraphDebugDotFlagsKernelNodeParams = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    cudaGraphDebugDotFlagsKernelNodeParams = hip.chip.hipGraphDebugDotFlagsKernelNodeParams
+    hipGraphDebugDotFlagsMemcpyNodeParams = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_MEMCPY_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    cudaGraphDebugDotFlagsMemcpyNodeParams = hip.chip.hipGraphDebugDotFlagsMemcpyNodeParams
+    hipGraphDebugDotFlagsMemsetNodeParams = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_MEMSET_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    cudaGraphDebugDotFlagsMemsetNodeParams = hip.chip.hipGraphDebugDotFlagsMemsetNodeParams
+    hipGraphDebugDotFlagsHostNodeParams = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_HOST_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    cudaGraphDebugDotFlagsHostNodeParams = hip.chip.hipGraphDebugDotFlagsHostNodeParams
+    hipGraphDebugDotFlagsEventNodeParams = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EVENT_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    cudaGraphDebugDotFlagsEventNodeParams = hip.chip.hipGraphDebugDotFlagsEventNodeParams
+    hipGraphDebugDotFlagsExtSemasSignalNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_SIGNAL_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    cudaGraphDebugDotFlagsExtSemasSignalNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasSignalNodeParams
+    hipGraphDebugDotFlagsExtSemasWaitNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_WAIT_NODE_PARAMS = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    cudaGraphDebugDotFlagsExtSemasWaitNodeParams = hip.chip.hipGraphDebugDotFlagsExtSemasWaitNodeParams
+    hipGraphDebugDotFlagsKernelNodeAttributes = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_ATTRIBUTES = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    cudaGraphDebugDotFlagsKernelNodeAttributes = hip.chip.hipGraphDebugDotFlagsKernelNodeAttributes
+    hipGraphDebugDotFlagsHandles = hip.chip.hipGraphDebugDotFlagsHandles
+    CU_GRAPH_DEBUG_DOT_FLAGS_HANDLES = hip.chip.hipGraphDebugDotFlagsHandles
+    cudaGraphDebugDotFlagsHandles = hip.chip.hipGraphDebugDotFlagsHandles
 cdef class CUmemAllocationProp(hip.hip.hipMemAllocationProp):
     pass
 cdef class CUmemAllocationProp_st(hip.hip.hipMemAllocationProp):
@@ -14132,6 +14548,7 @@ cuEventElapsedTime = hip.hipEventElapsedTime
 cudaEventElapsedTime = hip.hipEventElapsedTime
 cuEventQuery = hip.hipEventQuery
 cudaEventQuery = hip.hipEventQuery
+cuPointerSetAttribute = hip.hipPointerSetAttribute
 cudaPointerGetAttributes = hip.hipPointerGetAttributes
 cuPointerGetAttribute = hip.hipPointerGetAttribute
 cuPointerGetAttributes = hip.hipDrvPointerGetAttributes
@@ -14267,6 +14684,11 @@ cudaFreeMipmappedArray = hip.hipFreeMipmappedArray
 cudaMalloc3DArray = hip.hipMalloc3DArray
 cudaMallocMipmappedArray = hip.hipMallocMipmappedArray
 cudaGetMipmappedArrayLevel = hip.hipGetMipmappedArrayLevel
+cudaArrayGetInfo = hip.hipArrayGetInfo
+cuArrayGetDescriptor = hip.hipArrayGetDescriptor
+cuArrayGetDescriptor_v2 = hip.hipArrayGetDescriptor
+cuArray3DGetDescriptor = hip.hipArray3DGetDescriptor
+cuArray3DGetDescriptor_v2 = hip.hipArray3DGetDescriptor
 cudaMemcpy2D = hip.hipMemcpy2D
 cuMemcpy2D = hip.hipMemcpyParam2D
 cuMemcpy2D_v2 = hip.hipMemcpyParam2D
@@ -14334,6 +14756,8 @@ cuModuleGetTexRef = hip.hipModuleGetTexRef
 cuModuleLoadData = hip.hipModuleLoadData
 cuModuleLoadDataEx = hip.hipModuleLoadDataEx
 cuLaunchKernel = hip.hipModuleLaunchKernel
+cuLaunchCooperativeKernel = hip.hipModuleLaunchCooperativeKernel
+cuLaunchCooperativeKernelMultiDevice = hip.hipModuleLaunchCooperativeKernelMultiDevice
 cudaLaunchCooperativeKernel = hip.hipLaunchCooperativeKernel
 cudaLaunchCooperativeKernelMultiDevice = hip.hipLaunchCooperativeKernelMultiDevice
 cuOccupancyMaxPotentialBlockSize = hip.hipModuleOccupancyMaxPotentialBlockSize
@@ -14520,6 +14944,14 @@ cuGraphEventWaitNodeSetEvent = hip.hipGraphEventWaitNodeSetEvent
 cudaGraphEventWaitNodeSetEvent = hip.hipGraphEventWaitNodeSetEvent
 cuGraphExecEventWaitNodeSetEvent = hip.hipGraphExecEventWaitNodeSetEvent
 cudaGraphExecEventWaitNodeSetEvent = hip.hipGraphExecEventWaitNodeSetEvent
+cuGraphAddMemAllocNode = hip.hipGraphAddMemAllocNode
+cudaGraphAddMemAllocNode = hip.hipGraphAddMemAllocNode
+cuGraphMemAllocNodeGetParams = hip.hipGraphMemAllocNodeGetParams
+cudaGraphMemAllocNodeGetParams = hip.hipGraphMemAllocNodeGetParams
+cuGraphAddMemFreeNode = hip.hipGraphAddMemFreeNode
+cudaGraphAddMemFreeNode = hip.hipGraphAddMemFreeNode
+cuGraphMemFreeNodeGetParams = hip.hipGraphMemFreeNodeGetParams
+cudaGraphMemFreeNodeGetParams = hip.hipGraphMemFreeNodeGetParams
 cuDeviceGetGraphMemAttribute = hip.hipDeviceGetGraphMemAttribute
 cudaDeviceGetGraphMemAttribute = hip.hipDeviceGetGraphMemAttribute
 cuDeviceSetGraphMemAttribute = hip.hipDeviceSetGraphMemAttribute
@@ -14536,6 +14968,14 @@ cuGraphRetainUserObject = hip.hipGraphRetainUserObject
 cudaGraphRetainUserObject = hip.hipGraphRetainUserObject
 cuGraphReleaseUserObject = hip.hipGraphReleaseUserObject
 cudaGraphReleaseUserObject = hip.hipGraphReleaseUserObject
+cuGraphDebugDotPrint = hip.hipGraphDebugDotPrint
+cudaGraphDebugDotPrint = hip.hipGraphDebugDotPrint
+cuGraphKernelNodeCopyAttributes = hip.hipGraphKernelNodeCopyAttributes
+cudaGraphKernelNodeCopyAttributes = hip.hipGraphKernelNodeCopyAttributes
+cuGraphNodeSetEnabled = hip.hipGraphNodeSetEnabled
+cudaGraphNodeSetEnabled = hip.hipGraphNodeSetEnabled
+cuGraphNodeGetEnabled = hip.hipGraphNodeGetEnabled
+cudaGraphNodeGetEnabled = hip.hipGraphNodeGetEnabled
 cuMemAddressFree = hip.hipMemAddressFree
 cuMemAddressReserve = hip.hipMemAddressReserve
 cuMemCreate = hip.hipMemCreate
@@ -14982,6 +15422,9 @@ __all__ = [
     "HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE",
     "cudaSharedMemConfig",
     "cudaLaunchParams",
+    "CUDA_LAUNCH_PARAMS_st",
+    "CUDA_LAUNCH_PARAMS",
+    "CUDA_LAUNCH_PARAMS_v1",
     "_CUexternalMemoryHandleType_enum_EnumMeta",
     "HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE",
     "CUexternalMemoryHandleType_enum",
@@ -15079,6 +15522,9 @@ __all__ = [
     "CUDA_MEMSET_NODE_PARAMS_st",
     "CUDA_MEMSET_NODE_PARAMS_v1",
     "cudaMemsetParams",
+    "CUDA_MEM_ALLOC_NODE_PARAMS",
+    "CUDA_MEM_ALLOC_NODE_PARAMS_st",
+    "cudaMemAllocNodeParams",
     "_CUkernelNodeAttrID_EnumMeta",
     "HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE",
     "CUkernelNodeAttrID",
@@ -15176,6 +15622,15 @@ __all__ = [
     "_cudaGraphInstantiateFlags_EnumMeta",
     "HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE",
     "cudaGraphInstantiateFlags",
+    "_CUgraphDebugDot_flags_EnumMeta",
+    "HIP_PYTHON_CUgraphDebugDot_flags_HALLUCINATE",
+    "CUgraphDebugDot_flags",
+    "_CUgraphDebugDot_flags_enum_EnumMeta",
+    "HIP_PYTHON_CUgraphDebugDot_flags_enum_HALLUCINATE",
+    "CUgraphDebugDot_flags_enum",
+    "_cudaGraphDebugDotFlags_EnumMeta",
+    "HIP_PYTHON_cudaGraphDebugDotFlags_HALLUCINATE",
+    "cudaGraphDebugDotFlags",
     "CUmemAllocationProp",
     "CUmemAllocationProp_st",
     "CUmemAllocationProp_v1",
@@ -15320,6 +15775,7 @@ __all__ = [
     "cudaEventElapsedTime",
     "cuEventQuery",
     "cudaEventQuery",
+    "cuPointerSetAttribute",
     "cudaPointerGetAttributes",
     "cuPointerGetAttribute",
     "cuPointerGetAttributes",
@@ -15455,6 +15911,11 @@ __all__ = [
     "cudaMalloc3DArray",
     "cudaMallocMipmappedArray",
     "cudaGetMipmappedArrayLevel",
+    "cudaArrayGetInfo",
+    "cuArrayGetDescriptor",
+    "cuArrayGetDescriptor_v2",
+    "cuArray3DGetDescriptor",
+    "cuArray3DGetDescriptor_v2",
     "cudaMemcpy2D",
     "cuMemcpy2D",
     "cuMemcpy2D_v2",
@@ -15522,6 +15983,8 @@ __all__ = [
     "cuModuleLoadData",
     "cuModuleLoadDataEx",
     "cuLaunchKernel",
+    "cuLaunchCooperativeKernel",
+    "cuLaunchCooperativeKernelMultiDevice",
     "cudaLaunchCooperativeKernel",
     "cudaLaunchCooperativeKernelMultiDevice",
     "cuOccupancyMaxPotentialBlockSize",
@@ -15708,6 +16171,14 @@ __all__ = [
     "cudaGraphEventWaitNodeSetEvent",
     "cuGraphExecEventWaitNodeSetEvent",
     "cudaGraphExecEventWaitNodeSetEvent",
+    "cuGraphAddMemAllocNode",
+    "cudaGraphAddMemAllocNode",
+    "cuGraphMemAllocNodeGetParams",
+    "cudaGraphMemAllocNodeGetParams",
+    "cuGraphAddMemFreeNode",
+    "cudaGraphAddMemFreeNode",
+    "cuGraphMemFreeNodeGetParams",
+    "cudaGraphMemFreeNodeGetParams",
     "cuDeviceGetGraphMemAttribute",
     "cudaDeviceGetGraphMemAttribute",
     "cuDeviceSetGraphMemAttribute",
@@ -15724,6 +16195,14 @@ __all__ = [
     "cudaGraphRetainUserObject",
     "cuGraphReleaseUserObject",
     "cudaGraphReleaseUserObject",
+    "cuGraphDebugDotPrint",
+    "cudaGraphDebugDotPrint",
+    "cuGraphKernelNodeCopyAttributes",
+    "cudaGraphKernelNodeCopyAttributes",
+    "cuGraphNodeSetEnabled",
+    "cudaGraphNodeSetEnabled",
+    "cuGraphNodeGetEnabled",
+    "cudaGraphNodeGetEnabled",
     "cuMemAddressFree",
     "cuMemAddressReserve",
     "cuMemCreate",

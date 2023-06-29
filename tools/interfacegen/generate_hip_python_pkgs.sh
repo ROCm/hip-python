@@ -30,7 +30,8 @@ Usage: ./$(basename $0) [OPTIONS]
 
 Options:
   --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
-  -l, --libs        HIP Python modules to generate as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
+  --libs        HIP Python libraries to generate as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
+                    Add a prefix '^' to NOT generate code for the comma-separated list of libraries that follows but all other libraries.
   --pre-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
   --post-clean      Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
   -n, --no-venv     Do not create and use a virtual Python environment.
@@ -51,7 +52,7 @@ while [[ $# -gt 0 ]]; do
       NO_VENV=1
       shift
       ;;
-    -l|--libs)
+    --libs)
       HIP_PYTHON_LIBS=$2
       shift; shift
       ;;
@@ -85,10 +86,11 @@ shopt -s expand_aliases
 
 PYTHON -m pip install -r requirements.txt
 
-HIP_PLATFORM=${HIP_PLATFORM:-amd} \
-HIP_PYTHON_LIBS=${HIP_PYTHON_LIBS:-*} \
-ROCM_PATH=${ROCM_PATH:-/opt/rocm} \
-HIP_PYTHON_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir) \
+declare -x HIP_PLATFORM=${HIP_PLATFORM:-amd}
+declare -x HIP_PYTHON_LIBS=${HIP_PYTHON_LIBS:-*}
+declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
+declare -x HIP_PYTHON_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
+
 PYTHON codegen_hip_python.py
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv

@@ -1707,29 +1707,29 @@ class hipsparseStatus_t(_hipsparseStatus_t__Base):
 
     Attributes:
         HIPSPARSE_STATUS_SUCCESS:
-            (undocumented)
+            Function succeeds
         HIPSPARSE_STATUS_NOT_INITIALIZED:
-            (undocumented)
+            hipSPARSE was not initialized
         HIPSPARSE_STATUS_ALLOC_FAILED:
-            (undocumented)
+            Resource allocation failed
         HIPSPARSE_STATUS_INVALID_VALUE:
-            (undocumented)
+            Unsupported value was passed to the function
         HIPSPARSE_STATUS_ARCH_MISMATCH:
-            (undocumented)
+            Device architecture not supported
         HIPSPARSE_STATUS_MAPPING_ERROR:
-            (undocumented)
+            Access to GPU memory space failed
         HIPSPARSE_STATUS_EXECUTION_FAILED:
-            (undocumented)
+            GPU program failed to execute
         HIPSPARSE_STATUS_INTERNAL_ERROR:
-            (undocumented)
+            An internal hipSPARSE operation failed
         HIPSPARSE_STATUS_MATRIX_TYPE_NOT_SUPPORTED:
-            (undocumented)
+            Matrix type not supported
         HIPSPARSE_STATUS_ZERO_PIVOT:
-            (undocumented)
+            Zero pivot was computed
         HIPSPARSE_STATUS_NOT_SUPPORTED:
-            (undocumented)
+            Operation is not supported
         HIPSPARSE_STATUS_INSUFFICIENT_RESOURCES:
-            (undocumented)
+            Resources are insufficient
     """
     HIPSPARSE_STATUS_SUCCESS = chipsparse.HIPSPARSE_STATUS_SUCCESS
     HIPSPARSE_STATUS_NOT_INITIALIZED = chipsparse.HIPSPARSE_STATUS_NOT_INITIALIZED
@@ -1758,9 +1758,9 @@ class hipsparsePointerMode_t(_hipsparsePointerMode_t__Base):
 
     Attributes:
         HIPSPARSE_POINTER_MODE_HOST:
-            (undocumented)
+            Scalar pointers are in host memory
         HIPSPARSE_POINTER_MODE_DEVICE:
-            (undocumented)
+            Scalar pointers are in device memory
     """
     HIPSPARSE_POINTER_MODE_HOST = chipsparse.HIPSPARSE_POINTER_MODE_HOST
     HIPSPARSE_POINTER_MODE_DEVICE = chipsparse.HIPSPARSE_POINTER_MODE_DEVICE
@@ -1779,9 +1779,9 @@ class hipsparseAction_t(_hipsparseAction_t__Base):
 
     Attributes:
         HIPSPARSE_ACTION_SYMBOLIC:
-            (undocumented)
+            Operate only on indices
         HIPSPARSE_ACTION_NUMERIC:
-            (undocumented)
+            Operate on data and indices
     """
     HIPSPARSE_ACTION_SYMBOLIC = chipsparse.HIPSPARSE_ACTION_SYMBOLIC
     HIPSPARSE_ACTION_NUMERIC = chipsparse.HIPSPARSE_ACTION_NUMERIC
@@ -1800,13 +1800,13 @@ class hipsparseMatrixType_t(_hipsparseMatrixType_t__Base):
 
     Attributes:
         HIPSPARSE_MATRIX_TYPE_GENERAL:
-            (undocumented)
+            General matrix type
         HIPSPARSE_MATRIX_TYPE_SYMMETRIC:
-            (undocumented)
+            Symmetric matrix type
         HIPSPARSE_MATRIX_TYPE_HERMITIAN:
-            (undocumented)
+            Hermitian matrix type
         HIPSPARSE_MATRIX_TYPE_TRIANGULAR:
-            (undocumented)
+            Triangular matrix type
     """
     HIPSPARSE_MATRIX_TYPE_GENERAL = chipsparse.HIPSPARSE_MATRIX_TYPE_GENERAL
     HIPSPARSE_MATRIX_TYPE_SYMMETRIC = chipsparse.HIPSPARSE_MATRIX_TYPE_SYMMETRIC
@@ -1827,9 +1827,9 @@ class hipsparseFillMode_t(_hipsparseFillMode_t__Base):
 
     Attributes:
         HIPSPARSE_FILL_MODE_LOWER:
-            (undocumented)
+            Lower triangular part is stored
         HIPSPARSE_FILL_MODE_UPPER:
-            (undocumented)
+            Upper triangular part is stored
     """
     HIPSPARSE_FILL_MODE_LOWER = chipsparse.HIPSPARSE_FILL_MODE_LOWER
     HIPSPARSE_FILL_MODE_UPPER = chipsparse.HIPSPARSE_FILL_MODE_UPPER
@@ -1848,9 +1848,9 @@ class hipsparseDiagType_t(_hipsparseDiagType_t__Base):
 
     Attributes:
         HIPSPARSE_DIAG_TYPE_NON_UNIT:
-            (undocumented)
+            Diagonal entries are non-unity
         HIPSPARSE_DIAG_TYPE_UNIT:
-            (undocumented)
+            Diagonal entries are unity
     """
     HIPSPARSE_DIAG_TYPE_NON_UNIT = chipsparse.HIPSPARSE_DIAG_TYPE_NON_UNIT
     HIPSPARSE_DIAG_TYPE_UNIT = chipsparse.HIPSPARSE_DIAG_TYPE_UNIT
@@ -1869,9 +1869,9 @@ class hipsparseIndexBase_t(_hipsparseIndexBase_t__Base):
 
     Attributes:
         HIPSPARSE_INDEX_BASE_ZERO:
-            (undocumented)
+            Zero based indexing
         HIPSPARSE_INDEX_BASE_ONE:
-            (undocumented)
+            One based indexing
     """
     HIPSPARSE_INDEX_BASE_ZERO = chipsparse.HIPSPARSE_INDEX_BASE_ZERO
     HIPSPARSE_INDEX_BASE_ONE = chipsparse.HIPSPARSE_INDEX_BASE_ONE
@@ -1890,11 +1890,11 @@ class hipsparseOperation_t(_hipsparseOperation_t__Base):
 
     Attributes:
         HIPSPARSE_OPERATION_NON_TRANSPOSE:
-            (undocumented)
+            Operate with matrix
         HIPSPARSE_OPERATION_TRANSPOSE:
-            (undocumented)
+            Operate with transpose
         HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE:
-            (undocumented)
+            Operate with conj. transpose
     """
     HIPSPARSE_OPERATION_NON_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_NON_TRANSPOSE
     HIPSPARSE_OPERATION_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_TRANSPOSE
@@ -1914,11 +1914,11 @@ class hipsparseHybPartition_t(_hipsparseHybPartition_t__Base):
 
     Attributes:
         HIPSPARSE_HYB_PARTITION_AUTO:
-            (undocumented)
+            Automatically decide on ELL nnz per row
         HIPSPARSE_HYB_PARTITION_USER:
-            (undocumented)
+            User given ELL nnz per row
         HIPSPARSE_HYB_PARTITION_MAX:
-            (undocumented)
+            Max ELL nnz per row, no COO part
     """
     HIPSPARSE_HYB_PARTITION_AUTO = chipsparse.HIPSPARSE_HYB_PARTITION_AUTO
     HIPSPARSE_HYB_PARTITION_USER = chipsparse.HIPSPARSE_HYB_PARTITION_USER
@@ -1938,9 +1938,9 @@ class hipsparseSolvePolicy_t(_hipsparseSolvePolicy_t__Base):
 
     Attributes:
         HIPSPARSE_SOLVE_POLICY_NO_LEVEL:
-            (undocumented)
+            No level information generated
         HIPSPARSE_SOLVE_POLICY_USE_LEVEL:
-            (undocumented)
+            Generate level information
     """
     HIPSPARSE_SOLVE_POLICY_NO_LEVEL = chipsparse.HIPSPARSE_SOLVE_POLICY_NO_LEVEL
     HIPSPARSE_SOLVE_POLICY_USE_LEVEL = chipsparse.HIPSPARSE_SOLVE_POLICY_USE_LEVEL
@@ -1980,9 +1980,9 @@ class hipsparseDirection_t(_hipsparseDirection_t__Base):
 
     Attributes:
         HIPSPARSE_DIRECTION_ROW:
-            (undocumented)
+            Parse the matrix by rows
         HIPSPARSE_DIRECTION_COLUMN:
-            (undocumented)
+            Parse the matrix by columns
     """
     HIPSPARSE_DIRECTION_ROW = chipsparse.HIPSPARSE_DIRECTION_ROW
     HIPSPARSE_DIRECTION_COLUMN = chipsparse.HIPSPARSE_DIRECTION_COLUMN
@@ -2140,7 +2140,7 @@ def hipsparseSetPointerMode(object handle, object mode):
     ``hipsparseSetPointerMode`` specifies the pointer mode to be used by the hipSPARSE
     library context and all subsequent function calls. By default, all values are passed
     by reference on the host. Valid pointer modes are ``HIPSPARSE_POINTER_MODE_HOST`` 
-    or ``HIPSPARSE_POINTER_MODE_DEVICE.``
+    or ``HIPSPARSE_POINTER_MODE_DEVICE`` .
 
     Args:
         handle (`~.hip._util.types.Pointer`/`~.object`):
@@ -12638,7 +12638,7 @@ def hipsparseXcsrgemmNnz(object handle, object transA, object transB, int m, int
         row, additional temporary storage buffer is allocated by the algorithm.
 
     Note:
-        Currently, only ``trans_A`` == ``trans_B`` == ``HIPSPARSE_OPERATION_NONE`` is
+        Currently, only ``trans_A`` == ``trans_B`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is
         supported.
 
     Note:
@@ -22253,11 +22253,14 @@ class hipsparseCsr2CscAlg_t(_hipsparseCsr2CscAlg_t__Base):
     """hipsparseCsr2CscAlg_t
 
     Attributes:
+        HIPSPARSE_CSR2CSC_ALG_DEFAULT:
+            (undocumented)
         HIPSPARSE_CSR2CSC_ALG1:
             (undocumented)
         HIPSPARSE_CSR2CSC_ALG2:
             (undocumented)
     """
+    HIPSPARSE_CSR2CSC_ALG_DEFAULT = chipsparse.HIPSPARSE_CSR2CSC_ALG_DEFAULT
     HIPSPARSE_CSR2CSC_ALG1 = chipsparse.HIPSPARSE_CSR2CSC_ALG1
     HIPSPARSE_CSR2CSC_ALG2 = chipsparse.HIPSPARSE_CSR2CSC_ALG2
     @staticmethod
@@ -28543,11 +28546,11 @@ class hipsparseOrder_t(_hipsparseOrder_t__Base):
 
     Attributes:
         HIPSPARSE_ORDER_ROW:
-            (undocumented)
+            Row major
         HIPSPARSE_ORDER_COLUMN:
             (undocumented)
         HIPSPARSE_ORDER_COL:
-            (undocumented)
+            Column major
     """
     HIPSPARSE_ORDER_ROW = chipsparse.HIPSPARSE_ORDER_ROW
     HIPSPARSE_ORDER_COLUMN = chipsparse.HIPSPARSE_ORDER_COLUMN
@@ -28567,11 +28570,11 @@ class hipsparseIndexType_t(_hipsparseIndexType_t__Base):
 
     Attributes:
         HIPSPARSE_INDEX_16U:
-            (undocumented)
+            16 bit unsigned integer indices
         HIPSPARSE_INDEX_32I:
-            (undocumented)
+            32 bit signed integer indices
         HIPSPARSE_INDEX_64I:
-            (undocumented)
+            64 bit signed integer indices
     """
     HIPSPARSE_INDEX_16U = chipsparse.HIPSPARSE_INDEX_16U
     HIPSPARSE_INDEX_32I = chipsparse.HIPSPARSE_INDEX_32I
@@ -28780,9 +28783,9 @@ class hipsparseSpMatAttribute_t(_hipsparseSpMatAttribute_t__Base):
 
     Attributes:
         HIPSPARSE_SPMAT_FILL_MODE:
-            (undocumented)
+            Fill mode attribute
         HIPSPARSE_SPMAT_DIAG_TYPE:
-            (undocumented)
+            Diag type attribute
     """
     HIPSPARSE_SPMAT_FILL_MODE = chipsparse.HIPSPARSE_SPMAT_FILL_MODE
     HIPSPARSE_SPMAT_DIAG_TYPE = chipsparse.HIPSPARSE_SPMAT_DIAG_TYPE
@@ -28806,10 +28809,19 @@ class hipsparseSpGEMMAlg_t(_hipsparseSpGEMMAlg_t__Base):
             (undocumented)
         HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC:
             (undocumented)
+        HIPSPARSE_SPGEMM_ALG1:
+            (undocumented)
+        HIPSPARSE_SPGEMM_ALG2:
+            (undocumented)
+        HIPSPARSE_SPGEMM_ALG3:
+            (undocumented)
     """
     HIPSPARSE_SPGEMM_DEFAULT = chipsparse.HIPSPARSE_SPGEMM_DEFAULT
     HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC = chipsparse.HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC
     HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC = chipsparse.HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC
+    HIPSPARSE_SPGEMM_ALG1 = chipsparse.HIPSPARSE_SPGEMM_ALG1
+    HIPSPARSE_SPGEMM_ALG2 = chipsparse.HIPSPARSE_SPGEMM_ALG2
+    HIPSPARSE_SPGEMM_ALG3 = chipsparse.HIPSPARSE_SPGEMM_ALG3
     @staticmethod
     def ctypes_type():
         """The type of the enum constants as ctypes type."""
@@ -31407,70 +31419,11 @@ def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA
 
 
 @cython.embedsignature(True)
-def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
-    r"""(No short description, might be part of a group)
-
-    Args:
-        handle (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-        opA (`~.hipsparseOperation_t`):
-            (undocumented)
-
-        opB (`~.hipsparseOperation_t`):
-            (undocumented)
-
-        alpha (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-        A (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-        B (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-        beta (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-        C (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-        computeType (`~.hipDataType`):
-            (undocumented)
-
-        alg (`~.hipsparseSDDMMAlg_t`):
-            (undocumented)
-
-        tempBuffer (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-    Returns:
-        A `~.tuple` of size 1 that contains (in that order):
-
-        * `~.hipsparseStatus_t`
-    """
-    if not isinstance(opA,_hipsparseOperation_t__Base):
-        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
-    if not isinstance(opB,_hipsparseOperation_t__Base):
-        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
-    if not isinstance(computeType,_hipDataType__Base):
-        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
-    if not isinstance(alg,_hipsparseSDDMMAlg_t__Base):
-        raise TypeError("argument 'alg' must be of type '_hipsparseSDDMMAlg_t__Base'")
-    _hipsparseSDDMM__retval = hipsparseStatus_t(chipsparse.hipsparseSDDMM(
-        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
-        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
-        <void *const>hip._util.types.Pointer.from_pyobj(A)._ptr,
-        <void *const>hip._util.types.Pointer.from_pyobj(B)._ptr,
-        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
-        <void *>hip._util.types.Pointer.from_pyobj(C)._ptr,computeType.value,alg.value,
-        <void *>hip._util.types.Pointer.from_pyobj(tempBuffer)._ptr))    # fully specified
-    return (_hipsparseSDDMM__retval,)
-
-
-@cython.embedsignature(True)
 def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object bufferSize):
-    r"""(No short description, might be part of a group)
+    r"""Description: Calculate the buffer size required for the sampled dense dense matrix multiplication
+
+    ``hipsparseSDDMM_bufferSize`` computes the required user allocated buffer size needed when computing the
+    sampled dense dense matrix multiplication
 
     Args:
         handle (`~.hip._util.types.Pointer`/`~.object`):
@@ -31532,7 +31485,10 @@ def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alph
 
 @cython.embedsignature(True)
 def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
-    r"""(No short description, might be part of a group)
+    r"""Description: Preprocess step of the sampled dense dense matrix multiplication.
+
+    ``hipsparseSDDMM_preprocess`` performs the required preprocessing used when computing the
+    sampled dense dense matrix multiplication
 
     Args:
         handle (`~.hip._util.types.Pointer`/`~.object`):
@@ -31590,6 +31546,110 @@ def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alph
         <void *>hip._util.types.Pointer.from_pyobj(C)._ptr,computeType.value,alg.value,
         <void *>hip._util.types.Pointer.from_pyobj(tempBuffer)._ptr))    # fully specified
     return (_hipsparseSDDMM_preprocess__retval,)
+
+
+@cython.embedsignature(True)
+def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
+    r"""Description: Sampled Dense-Dense Matrix Multiplication.
+
+    ``hipsparseSDDMM`` multiplies the scalar :math:`\alpha` with the dense
+    :math:`m \times k` matrix :math:`A`, the dense :math:`k \times n` matrix :math:`B`, filtered by the sparsity pattern of the :math:`m \times n` sparse matrix :math:`C` and
+    adds the result to :math:`C` scaled by
+    :math:`\beta`. The final result is stored in the sparse :math:`m \times n` matrix :math:`C`,
+    such that
+
+    .. math::
+
+       C := \alpha ( opA(A) \cdot opB(B) ) \cdot spy(C) + \beta C,
+
+    with
+
+    .. math::
+
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if opA == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T,   & \text{if opA == HIPSPARSE_OPERATION_TRANSPOSE} \\
+       \end{array}
+       \right.
+
+    ,
+
+    .. math::
+
+       op(B) = \left\{
+       \begin{array}{ll}
+           B,   & \text{if opB == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           B^T,   & \text{if opB == HIPSPARSE_OPERATION_TRANSPOSE} \\
+       \end{array}
+       \right.
+
+    and
+
+    .. math::
+
+       spy(C)_ij = \left\{
+       \begin{array}{ll}
+           1 \text{if i == j},   & 0 \text{if i != j} \\
+       \end{array}
+       \right.
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        opA (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        opB (`~.hipsparseOperation_t`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        A (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        B (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        beta (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        C (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        computeType (`~.hipDataType`):
+            (undocumented)
+
+        alg (`~.hipsparseSDDMMAlg_t`):
+            (undocumented)
+
+        tempBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipsparseStatus_t`
+    """
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSDDMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSDDMMAlg_t__Base'")
+    _hipsparseSDDMM__retval = hipsparseStatus_t(chipsparse.hipsparseSDDMM(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,opA.value,opB.value,
+        <const void *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(A)._ptr,
+        <void *const>hip._util.types.Pointer.from_pyobj(B)._ptr,
+        <const void *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(C)._ptr,computeType.value,alg.value,
+        <void *>hip._util.types.Pointer.from_pyobj(tempBuffer)._ptr))    # fully specified
+    return (_hipsparseSDDMM__retval,)
 
 
 @cython.embedsignature(True)
@@ -31741,7 +31801,7 @@ def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA,
 
 
 @cython.embedsignature(True)
-def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object externalBuffer):
+def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr):
     r"""(No short description, might be part of a group)
 
     Args:
@@ -31772,9 +31832,6 @@ def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, ob
         spsvDescr (`~.hipsparseSpSVDescr`/`~.object`):
             (undocumented)
 
-        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -31792,8 +31849,7 @@ def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, ob
         <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
         <void *const>hip._util.types.Pointer.from_pyobj(x)._ptr,
         <void *const>hip._util.types.Pointer.from_pyobj(y)._ptr,computeType.value,alg.value,
-        hipsparseSpSVDescr.from_pyobj(spsvDescr)._ptr,
-        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
+        hipsparseSpSVDescr.from_pyobj(spsvDescr)._ptr))    # fully specified
     return (_hipsparseSpSV_solve__retval,)
 
 
@@ -32607,9 +32663,9 @@ __all__ = [
     "hipsparseSpGEMMreuse_nnz",
     "hipsparseSpGEMMreuse_compute",
     "hipsparseSpGEMMreuse_copy",
-    "hipsparseSDDMM",
     "hipsparseSDDMM_bufferSize",
     "hipsparseSDDMM_preprocess",
+    "hipsparseSDDMM",
     "hipsparseSpSV_createDescr",
     "hipsparseSpSV_destroyDescr",
     "hipsparseSpSV_bufferSize",

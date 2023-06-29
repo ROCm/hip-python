@@ -60,6 +60,7 @@ def parse_options():
     global ROCM_INC
     global ROCM_LIB
     global EXTRA_COMPILE_ARGS
+    global HIP_PYTHON_LIBS
 
     def get_bool_environ_var(env_var, default):
         yes_vals = ("true", "1", "t", "y", "yes")
@@ -78,6 +79,7 @@ def parse_options():
     rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME",None))
     platform=os.environ.get("HIP_PLATFORM","amd")
     verbose=os.environ.get("HIP_PYTHON_VERBOSE","amd")
+    HIP_PYTHON_LIBS=os.environ.get("HIP_PYTHON_LIBS", "*")
 
     if not rocm_path:
         raise RuntimeError("ROCm path is not set")
@@ -125,6 +127,7 @@ class Module:
 def gather_ext_modules():
     global CYTHON_EXT_MODULES
     global HIP_MODULES
+    global HIP_PYTHON_LIBS
     CYTHON_EXT_MODULES.append(("hip._util.types", ["./hip/_util/types.pyx"]))
     CYTHON_EXT_MODULES.append(
         ("hip._util.posixloader", ["./hip/_util/posixloader.pyx"])
@@ -142,13 +145,32 @@ def gather_ext_modules():
         Module("hipfft"),
         Module("hipsparse"),
     ]
+
+    # process and check user-provided library names
+    module_names = [mod.name for mod in HIP_MODULES]
+    if HIP_PYTHON_LIBS == "*":
+        selected_libs = module_names
+    else:
+        processed_libs = HIP_PYTHON_LIBS.replace(" ","")
+        if processed_libs.startswith("^"):
+            processed_libs = processed_libs[1:].split(",")
+            selected_libs = [name for name in module_names if name not in processed_libs]
+        else:
+            processed_libs = processed_libs.split(",")
+            selected_libs = processed_libs
+        for name in processed_libs:
+            if name not in module_names:
+                raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(module_names)}")
+            
     for mod in HIP_MODULES:
-        CYTHON_EXT_MODULES += mod.ext_modules
+        if mod.name in selected_libs:
+            CYTHON_EXT_MODULES += mod.ext_modules
 
 ns = {}
 exec(open(os.path.join(Module.PKG_NAME,"_version.py"),"r").read(), ns)
 
 if __name__ == "__main__":
+    HIP_PYTHON_LIBS=None
     ROCM_INC = None
     ROCM_LIB = None
     EXTRA_COMPILE_ARGS = None
