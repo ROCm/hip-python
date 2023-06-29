@@ -963,6 +963,8 @@ class hipblasDatatype_t(_hipblasDatatype_t__Base):
             16 bit bfloat, real
         HIPBLAS_C_16B:
             16 bit bfloat, complex
+        HIPBLAS_DATATYPE_INVALID:
+            Invalid datatype value, do not use
     """
     HIPBLAS_R_16F = chipblas.HIPBLAS_R_16F
     HIPBLAS_R_32F = chipblas.HIPBLAS_R_32F
@@ -980,6 +982,7 @@ class hipblasDatatype_t(_hipblasDatatype_t__Base):
     HIPBLAS_C_32U = chipblas.HIPBLAS_C_32U
     HIPBLAS_R_16B = chipblas.HIPBLAS_R_16B
     HIPBLAS_C_16B = chipblas.HIPBLAS_C_16B
+    HIPBLAS_DATATYPE_INVALID = chipblas.HIPBLAS_DATATYPE_INVALID
     @staticmethod
     def ctypes_type():
         """The type of the enum constants as ctypes type."""
@@ -1019,30 +1022,6 @@ class hipblasAtomicsMode_t(_hipblasAtomicsMode_t__Base):
     """
     HIPBLAS_ATOMICS_NOT_ALLOWED = chipblas.HIPBLAS_ATOMICS_NOT_ALLOWED
     HIPBLAS_ATOMICS_ALLOWED = chipblas.HIPBLAS_ATOMICS_ALLOWED
-    @staticmethod
-    def ctypes_type():
-        """The type of the enum constants as ctypes type."""
-        return ctypes.c_uint 
-
-
-class _hipblasInt8Datatype_t__Base(enum.IntEnum):
-    """Empty enum base class that allows subclassing.
-    """
-    pass
-class hipblasInt8Datatype_t(_hipblasInt8Datatype_t__Base):
-    """hipblasInt8Datatype_t
-
-    Attributes:
-        HIPBLAS_INT8_DATATYPE_DEFAULT:
-            (undocumented)
-        HIPBLAS_INT8_DATATYPE_INT8:
-            (undocumented)
-        HIPBLAS_INT8_DATATYPE_PACK_INT8x4:
-            (undocumented)
-    """
-    HIPBLAS_INT8_DATATYPE_DEFAULT = chipblas.HIPBLAS_INT8_DATATYPE_DEFAULT
-    HIPBLAS_INT8_DATATYPE_INT8 = chipblas.HIPBLAS_INT8_DATATYPE_INT8
-    HIPBLAS_INT8_DATATYPE_PACK_INT8x4 = chipblas.HIPBLAS_INT8_DATATYPE_PACK_INT8x4
     @staticmethod
     def ctypes_type():
         """The type of the enum constants as ctypes type."""
@@ -1171,51 +1150,6 @@ def hipblasGetPointerMode(object handle, object mode):
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
         <chipblas.hipblasPointerMode_t *>hip._util.types.Pointer.from_pyobj(mode)._ptr))    # fully specified
     return (_hipblasGetPointerMode__retval,)
-
-
-@cython.embedsignature(True)
-def hipblasSetInt8Datatype(object handle, object int8Type):
-    r"""Set hipblas int8 Datatype */
-
-    Args:
-        handle (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-        int8Type (`~.hipblasInt8Datatype_t`):
-            (undocumented)
-
-    Returns:
-        A `~.tuple` of size 1 that contains (in that order):
-
-        * `~.hipblasStatus_t`
-    """
-    if not isinstance(int8Type,_hipblasInt8Datatype_t__Base):
-        raise TypeError("argument 'int8Type' must be of type '_hipblasInt8Datatype_t__Base'")
-    _hipblasSetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasSetInt8Datatype(
-        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,int8Type.value))    # fully specified
-    return (_hipblasSetInt8Datatype__retval,)
-
-
-@cython.embedsignature(True)
-def hipblasGetInt8Datatype(object handle, object int8Type):
-    r"""Get hipblas int8 Datatype*/
-
-    Args:
-        handle (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-        int8Type (`~.hip._util.types.Pointer`/`~.object`):
-            (undocumented)
-
-    Returns:
-        A `~.tuple` of size 1 that contains (in that order):
-
-        * `~.hipblasStatus_t`
-    """
-    _hipblasGetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasGetInt8Datatype(
-        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,
-        <chipblas.hipblasInt8Datatype_t *>hip._util.types.Pointer.from_pyobj(int8Type)._ptr))    # fully specified
-    return (_hipblasGetInt8Datatype__retval,)
 
 
 @cython.embedsignature(True)
@@ -8640,8 +8574,8 @@ def hipblasSswapBatched(object handle, int n, object x, int incx, object y, int 
     """
     _hipblasSswapBatched__retval = hipblasStatus_t(chipblas.hipblasSswapBatched(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
-        <float **>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
-        <float **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSswapBatched__retval,)
 
 
@@ -8678,8 +8612,8 @@ def hipblasDswapBatched(object handle, int n, object x, int incx, object y, int 
     """
     _hipblasDswapBatched__retval = hipblasStatus_t(chipblas.hipblasDswapBatched(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
-        <double **>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
-        <double **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDswapBatched__retval,)
 
 
@@ -8716,8 +8650,8 @@ def hipblasCswapBatched(object handle, int n, object x, int incx, object y, int 
     """
     _hipblasCswapBatched__retval = hipblasStatus_t(chipblas.hipblasCswapBatched(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasCswapBatched__retval,)
 
 
@@ -8754,8 +8688,8 @@ def hipblasZswapBatched(object handle, int n, object x, int incx, object y, int 
     """
     _hipblasZswapBatched__retval = hipblasStatus_t(chipblas.hipblasZswapBatched(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZswapBatched__retval,)
 
 
@@ -15052,7 +14986,7 @@ def hipblasSsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
         <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
         <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
-        <float **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSsbmvBatched__retval,)
 
 
@@ -15113,7 +15047,7 @@ def hipblasDsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
         <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
         <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
-        <double **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDsbmvBatched__retval,)
 
 
@@ -15479,7 +15413,7 @@ def hipblasSspmvBatched(object handle, object uplo, int n, object alpha, object 
         <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
         <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
         <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
-        <float **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSspmvBatched__retval,)
 
 
@@ -15534,7 +15468,7 @@ def hipblasDspmvBatched(object handle, object uplo, int n, object alpha, object 
         <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,
         <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
         <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
-        <double **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDspmvBatched__retval,)
 
 
@@ -17124,7 +17058,7 @@ def hipblasSsymvBatched(object handle, object uplo, int n, object alpha, object 
         <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         <const float *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
         <const float *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
-        <float **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <float *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasSsymvBatched__retval,)
 
 
@@ -17182,7 +17116,7 @@ def hipblasDsymvBatched(object handle, object uplo, int n, object alpha, object 
         <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         <const double *const*>hip._util.types.ListOfPointer.from_pyobj(x)._ptr,incx,
         <const double *>hip._util.types.Pointer.from_pyobj(beta)._ptr,
-        <double **>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <double *const*>hip._util.types.ListOfPointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasDsymvBatched__retval,)
 
 
@@ -17240,7 +17174,7 @@ def hipblasCsymvBatched(object handle, object uplo, int n, object alpha, object 
         <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasCsymvBatched__retval,)
 
 
@@ -17298,7 +17232,7 @@ def hipblasZsymvBatched(object handle, object uplo, int n, object alpha, object 
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(y)._ptr,incy,batchCount))    # fully specified
     return (_hipblasZsymvBatched__retval,)
 
 
@@ -30996,16 +30930,178 @@ def hipblasZhemmStridedBatched(object handle, object side, object uplo, int n, i
 def hipblasStrmm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     r"""BLAS Level 3 API
 
-    trmm performs one of the matrix-matrix operations
+    `~.ifndef` HIPBLAS_V1  //  deprecated
 
-    B := alpha*op( A )*B,   or   B := alpha*B*op( A )
+               hipblasStatus_t hipblasStrmm(hipblasHandle_t    handle,
+                                            hipblasSideMode_t  side,
+                                            hipblasFillMode_t  uplo,
+                                            hipblasOperation_t transA,
+                                            hipblasDiagType_t  diag,
+                                            int                m,
+                                            int                n,
+                                            const float*       alpha,
+                                            const float*       AP,
+                                            int                lda,
+                                            float*             BP,
+                                            int                ldb);
 
-    where  alpha  is a scalar,  B  is an m by n matrix,  A  is a unit, or
-    non-unit,  upper or lower triangular matrix  and  op( A )  is one  of
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
 
-        op( A ) = A   or   op( A ) = A^T   or   op( A ) = A^H.
+               hipblasStatus_t hipblasStrmmOutofplace(hipblasHandle_t    handle,
+                                                      hipblasSideMode_t  side,
+                                                      hipblasFillMode_t  uplo,
+                                                      hipblasOperation_t transA,
+                                                      hipblasDiagType_t  diag,
+                                                      int                m,
+                                                      int                n,
+                                                      const float*       alpha,
+                                                      const float*       AP,
+                                                      int                lda,
+                                                      const float*       BP,
+                                                      int                ldb,
+                                                      float*             CP,
+                                                      int                ldc);
 
-    - Supported precisions in rocBLAS : s,d,c,z
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+
+               hipblasStatus_t hipblasDtrmm(hipblasHandle_t    handle,
+                                            hipblasSideMode_t  side,
+                                            hipblasFillMode_t  uplo,
+                                            hipblasOperation_t transA,
+                                            hipblasDiagType_t  diag,
+                                            int                m,
+                                            int                n,
+                                            const double*      alpha,
+                                            const double*      AP,
+                                            int                lda,
+                                            double*            BP,
+                                            int                ldb);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+               hipblasStatus_t hipblasDtrmmOutofplace(hipblasHandle_t    handle,
+                                                      hipblasSideMode_t  side,
+                                                      hipblasFillMode_t  uplo,
+                                                      hipblasOperation_t transA,
+                                                      hipblasDiagType_t  diag,
+                                                      int                m,
+                                                      int                n,
+                                                      const double*      alpha,
+                                                      const double*      AP,
+                                                      int                lda,
+                                                      const double*      BP,
+                                                      int                ldb,
+                                                      double*            CP,
+                                                      int                ldc);
+
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+
+               hipblasStatus_t hipblasCtrmm(hipblasHandle_t       handle,
+                                            hipblasSideMode_t     side,
+                                            hipblasFillMode_t     uplo,
+                                            hipblasOperation_t    transA,
+                                            hipblasDiagType_t     diag,
+                                            int                   m,
+                                            int                   n,
+                                            const hipblasComplex* alpha,
+                                            const hipblasComplex* AP,
+                                            int                   lda,
+                                            hipblasComplex*       BP,
+                                            int                   ldb);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+               hipblasStatus_t hipblasCtrmmOutofplace(hipblasHandle_t       handle,
+                                                      hipblasSideMode_t     side,
+                                                      hipblasFillMode_t     uplo,
+                                                      hipblasOperation_t    transA,
+                                                      hipblasDiagType_t     diag,
+                                                      int                   m,
+                                                      int                   n,
+                                                      const hipblasComplex* alpha,
+                                                      const hipblasComplex* AP,
+                                                      int                   lda,
+                                                      const hipblasComplex* BP,
+                                                      int                   ldb,
+                                                      hipblasComplex*       CP,
+                                                      int                   ldc);
+
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+
+               hipblasStatus_t hipblasZtrmm(hipblasHandle_t             handle,
+                                            hipblasSideMode_t           side,
+                                            hipblasFillMode_t           uplo,
+                                            hipblasOperation_t          transA,
+                                            hipblasDiagType_t           diag,
+                                            int                         m,
+                                            int                         n,
+                                            const hipblasDoubleComplex* alpha,
+                                            const hipblasDoubleComplex* AP,
+                                            int                         lda,
+                                            hipblasDoubleComplex*       BP,
+                                            int                         ldb);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+               hipblasStatus_t hipblasZtrmmOutofplace(hipblasHandle_t             handle,
+                                                      hipblasSideMode_t           side,
+                                                      hipblasFillMode_t           uplo,
+                                                      hipblasOperation_t          transA,
+                                                      hipblasDiagType_t           diag,
+                                                      int                         m,
+                                                      int                         n,
+                                                      const hipblasDoubleComplex* alpha,
+                                                      const hipblasDoubleComplex* AP,
+                                                      int                         lda,
+                                                      const hipblasDoubleComplex* BP,
+                                                      int                         ldb,
+                                                      hipblasDoubleComplex*       CP,
+                                                      int                         ldc);
+
+        `~.endif`
+
+    The deprecated Legacy BLAS in-place trmm performs one of the matrix-matrix operations:
+
+        B := alpha*op( A )*B,   or
+        B := alpha*B*op( A ),
+
+    The new trmm performs one of the matrix-matrix operations:
+
+        C := alpha*op( A )*B,   or
+        C := alpha*B*op( A ),
+
+    The in-place functionality is still available in the new trmmm by setting pointer C equal to pointer B,
+    and ldc equal to ldb.
+
+        alpha  is a scalar,  B  is an m by n matrix, C  is an m by n matrix,  A  is a unit, or
+        non-unit,  upper or lower triangular matrix  and  op( A )  is one  of
+
+        op( A ) = A     or
+        op( A ) = A^T   or
+        op( A ) = A^H.
+
+        When uplo == rocblas_fill_upper the  leading  k by k
+        upper triangular part of the array  A must contain the upper
+        triangular matrix and the strictly lower triangular part of
+        A is not referenced. Here k is m when side == rocblas_side_left
+        and is n when side == rocblas_side_right.
+
+        When uplo == rocblas_fill_lower the  leading  k by k
+        lower triangular part of the array  A must contain the lower
+        triangular matrix  and the strictly upper triangular part of
+        A is not referenced. Here k is m when  side == rocblas_side_left
+        and is n when side == rocblas_side_right.
+
+        Note that when  diag == rocblas_diagonal_unit  the diagonal elements of
+        A  are not referenced either,  but are assumed to be  unity.
+
+    - Supported precisions in hipBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : s,d,c,z
 
     When uplo == HIPBLAS_FILL_MODE_UPPER the  leading  k by k
@@ -31294,19 +31390,457 @@ def hipblasZtrmm(object handle, object side, object uplo, object transA, object 
 
 
 @cython.embedsignature(True)
+def hipblasStrmmOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object CP, int ldc):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        AP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        BP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        CP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasStrmmOutofplace__retval = hipblasStatus_t(chipblas.hipblasStrmmOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return (_hipblasStrmmOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasDtrmmOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object CP, int ldc):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        AP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        BP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        CP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasDtrmmOutofplace__retval = hipblasStatus_t(chipblas.hipblasDtrmmOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return (_hipblasDtrmmOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasCtrmmOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object CP, int ldc):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        AP (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        BP (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        CP (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasCtrmmOutofplace__retval = hipblasStatus_t(chipblas.hipblasCtrmmOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return (_hipblasCtrmmOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasZtrmmOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object CP, int ldc):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        AP (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        BP (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        CP (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasZtrmmOutofplace__retval = hipblasStatus_t(chipblas.hipblasZtrmmOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return (_hipblasZtrmmOutofplace__retval,)
+
+
+@cython.embedsignature(True)
 def hipblasStrmmBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, int batchCount):
     r"""BLAS Level 3 API
 
-    trmmBatched performs one of the batched matrix-matrix operations
+    The hipBLAS trmm_batched API is from Legacy BLAS and it supports only in-place functionality.
+    It is deprecated and it will be replaced with an API that supports both in-place and
+    out-of-place functionality. The new API is available in hipBLAS versions 1.x.x and later.
+    To get the new API compile with the directive -DHIPBLAS_V1.
 
-    B_i := alpha*op( A_i )*B_i,   or   B_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batchCount -1
+    `~.ifndef` HIPBLAS_V1  //  deprecated
 
-    where  alpha  is a scalar,  B_i  is an m by n matrix,  A_i  is a unit, or
-    non-unit,  upper or lower triangular matrix  and  op( A_i )  is one  of
+            hipblasStatus_t hipblasStrmmBatched(hipblasHandle_t    handle,
+                                                hipblasSideMode_t  side,
+                                                hipblasFillMode_t  uplo,
+                                                hipblasOperation_t transA,
+                                                hipblasDiagType_t  diag,
+                                                int                m,
+                                                int                n,
+                                                const float*       alpha,
+                                                const float* const AP[],
+                                                int                lda,
+                                                float* const       BP[],
+                                                int                ldb,
+                                                int                batchCount);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+            hipblasStatus_t hipblasStrmmBatchedOutofplace(
+                                                hipblasHandle_t    handle,
+                                                hipblasSideMode_t  side,
+                                                hipblasFillMode_t  uplo,
+                                                hipblasOperation_t transA,
+                                                hipblasDiagType_t  diag,
+                                                int                m,
+                                                int                n,
+                                                const float*       alpha,
+                                                const float* const AP[],
+                                                int                lda,
+                                                const float* const BP[],
+                                                int                ldb,
+                                                float* const       CP[],
+                                                int                ldc,
+                                                int                batchCount);
+
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+
+            hipblasStatus_t hipblasDtrmmBatched(hipblasHandle_t     handle,
+                                                hipblasSideMode_t   side,
+                                                hipblasFillMode_t   uplo,
+                                                hipblasOperation_t  transA,
+                                                hipblasDiagType_t   diag,
+                                                int                 m,
+                                                int                 n,
+                                                const double*       alpha,
+                                                const double* const AP[],
+                                                int                 lda,
+                                                double* const       BP[],
+                                                int                 ldb,
+                                                int                 batchCount);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+            hipblasStatus_t hipblasDtrmmBatchedOutofplace(
+                                                hipblasHandle_t     handle,
+                                                hipblasSideMode_t   side,
+                                                hipblasFillMode_t   uplo,
+                                                hipblasOperation_t  transA,
+                                                hipblasDiagType_t   diag,
+                                                int                 m,
+                                                int                 n,
+                                                const double*       alpha,
+                                                const double* const AP[],
+                                                int                 lda,
+                                                const double* const BP[],
+                                                int                 ldb,
+                                                double* const       CP[],
+                                                int                 ldc,
+                                                int                 batchCount);
+
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+
+            hipblasStatus_t hipblasCtrmmBatched(hipblasHandle_t             handle,
+                                                hipblasSideMode_t           side,
+                                                hipblasFillMode_t           uplo,
+                                                hipblasOperation_t          transA,
+                                                hipblasDiagType_t           diag,
+                                                int                         m,
+                                                int                         n,
+                                                const hipblasComplex*       alpha,
+                                                const hipblasComplex* const AP[],
+                                                int                         lda,
+                                                hipblasComplex* const       BP[],
+                                                int                         ldb,
+                                                int                         batchCount);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+            hipblasStatus_t hipblasCtrmmBatchedOutofplace(
+                                                hipblasHandle_t             handle,
+                                                hipblasSideMode_t           side,
+                                                hipblasFillMode_t           uplo,
+                                                hipblasOperation_t          transA,
+                                                hipblasDiagType_t           diag,
+                                                int                         m,
+                                                int                         n,
+                                                const hipblasComplex*       alpha,
+                                                const hipblasComplex* const AP[],
+                                                int                         lda,
+                                                const hipblasComplex* const BP[],
+                                                int                         ldb,
+                                                hipblasComplex* const       CP[],
+                                                int                         ldc,
+                                                int batchCount);
+
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+
+            hipblasStatus_t hipblasZtrmmBatched(hipblasHandle_t                   handle,
+                                                hipblasSideMode_t                 side,
+                                                hipblasFillMode_t                 uplo,
+                                                hipblasOperation_t                transA,
+                                                hipblasDiagType_t                 diag,
+                                                int                               m,
+                                                int                               n,
+                                                const hipblasDoubleComplex*       alpha,
+                                                const hipblasDoubleComplex* const AP[],
+                                                int                               lda,
+                                                hipblasDoubleComplex* const       BP[],
+                                                int                               ldb,
+                                                int                               batchCount);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+            hipblasStatus_t hipblasZtrmmBatchedOutofplace(
+                                                hipblasHandle_t                   handle,
+                                                hipblasSideMode_t                 side,
+                                                hipblasFillMode_t                 uplo,
+                                                hipblasOperation_t                transA,
+                                                hipblasDiagType_t                 diag,
+                                                int                               m,
+                                                int                               n,
+                                                const hipblasDoubleComplex*       alpha,
+                                                const hipblasDoubleComplex* const AP[],
+                                                int                               lda,
+                                                const hipblasDoubleComplex* const BP[],
+                                                int                               ldb,
+                                                hipblasDoubleComplex* const       CP[],
+                                                int                               ldc,
+                                                int                               batchCount);
+
+        `~.endif`
+
+    The deprecated Legacy BLAS in-place trmm_batched performs one of the batched matrix-matrix operations:
+
+        B_i := alpha*op( A_i )*B_i,   or
+        B_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batch_count -1,
+
+    The new trmm_batched performs one of the matrix-matrix operations:
+
+        C_i := alpha*op( A_i )*B_i,   or
+        C_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batch_count -1,
+
+    The in-place functionality is still available in the new trmmm_batched by setting pointer C equal to pointer B
+    and ldc equal to ldb.
+
+        alpha  is a scalar,  B_i  is an m by n matrix, C_i  is an m by n matrix,  A_i  is a unit, or
+        non-unit,  upper or lower triangular matrix  and  op( A_i )  is one  of
 
         op( A_i ) = A_i   or   op( A_i ) = A_i^T   or   op( A_i ) = A_i^H.
 
-    - Supported precisions in rocBLAS : s,d,c,z
+    - Supported precisions in hipBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
     When uplo == HIPBLAS_FILL_MODE_UPPER the  leading  k by k
@@ -31608,19 +32142,492 @@ def hipblasZtrmmBatched(object handle, object side, object uplo, object transA, 
 
 
 @cython.embedsignature(True)
+def hipblasStrmmBatchedOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object CP, int ldc, int batchCount):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        AP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        BP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        CP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasStrmmBatchedOutofplace__retval = hipblasStatus_t(chipblas.hipblasStrmmBatchedOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <float *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+    return (_hipblasStrmmBatchedOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasDtrmmBatchedOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object CP, int ldc, int batchCount):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        AP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        BP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        CP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasDtrmmBatchedOutofplace__retval = hipblasStatus_t(chipblas.hipblasDtrmmBatchedOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <double *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+    return (_hipblasDtrmmBatchedOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasCtrmmBatchedOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object CP, int ldc, int batchCount):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        AP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        BP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        CP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasCtrmmBatchedOutofplace__retval = hipblasStatus_t(chipblas.hipblasCtrmmBatchedOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+    return (_hipblasCtrmmBatchedOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasZtrmmBatchedOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object CP, int ldc, int batchCount):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        AP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        BP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        CP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasZtrmmBatchedOutofplace__retval = hipblasStatus_t(chipblas.hipblasZtrmmBatchedOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,batchCount))    # fully specified
+    return (_hipblasZtrmmBatchedOutofplace__retval,)
+
+
+@cython.embedsignature(True)
 def hipblasStrmmStridedBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, int batchCount):
     r"""BLAS Level 3 API
 
-    trmmStridedBatched performs one of the strided_batched matrix-matrix operations
+    The hipBLAS trmm_strided_batched API is from Legacy BLAS and it supports only in-place functionality.
+    It is deprecated and it will be replaced with an API that supports both in-place and
+    out-of-place functionality. The new API is available in hipBLAS versions 1.x.x and later.
+    To get the new API compile with the directive -DHIPBLAS_V1.
 
-    B_i := alpha*op( A_i )*B_i,   or   B_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batchCount -1
+    `~.ifndef` HIPBLAS_V1  //  deprecated
+               hipblasStatus_t hipblasStrmmStridedBatched(
+                                   hipblasHandle_t    handle,
+                                   hipblasSideMode_t  side,
+                                   hipblasFillMode_t  uplo,
+                                   hipblasOperation_t transA,
+                                   hipblasDiagType_t  diag,
+                                   int                m,
+                                   int                n,
+                                   const float*       alpha,
+                                   const float*       AP,
+                                   int                lda,
+                                   hipblasStride      strideA,
+                                   float*             BP,
+                                   int                ldb,
+                                   hipblasStride      strideB,
+                                   int                batchCount);
 
-    where  alpha  is a scalar,  B_i  is an m by n matrix,  A_i  is a unit, or
-    non-unit,  upper or lower triangular matrix  and  op( A_i )  is one  of
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
 
-        op( A_i ) = A_i   or   op( A_i ) = A_i^T   or   op( A_i ) = A_i^H.
+               hipblasStatus_t hipblasStrmmStridedBatchedOutofplace(
+                                   hipblasHandle_t    handle,
+                                   hipblasSideMode_t  side,
+                                   hipblasFillMode_t  uplo,
+                                   hipblasOperation_t transA,
+                                   hipblasDiagType_t  diag,
+                                   int                m,
+                                   int                n,
+                                   const float*       alpha,
+                                   const float*       AP,
+                                   int                lda,
+                                   hipblasStride      strideA,
+                                   const float*       BP,
+                                   int                ldb,
+                                   hipblasStride      strideB,
+                                   float*             CP,
+                                   int                ldc,
+                                   hipblasStride      strideC,
+                                   int                batchCount);
 
-    - Supported precisions in rocBLAS : s,d,c,z
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+               hipblasStatus_t hipblasDtrmmStridedBatched(
+                                   hipblasHandle_t    handle,
+                                   hipblasSideMode_t  side,
+                                   hipblasFillMode_t  uplo,
+                                   hipblasOperation_t transA,
+                                   hipblasDiagType_t  diag,
+                                   int                m,
+                                   int                n,
+                                   const double*      alpha,
+                                   const double*      AP,
+                                   int                lda,
+                                   hipblasStride      strideA,
+                                   double*            BP,
+                                   int                ldb,
+                                   hipblasStride      strideB,
+                                   int                batchCount);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+               hipblasStatus_t hipblasDtrmmStridedBatchedOutofplace(
+                                   hipblasHandle_t    handle,
+                                   hipblasSideMode_t  side,
+                                   hipblasFillMode_t  uplo,
+                                   hipblasOperation_t transA,
+                                   hipblasDiagType_t  diag,
+                                   int                m,
+                                   int                n,
+                                   const double*      alpha,
+                                   const double*      AP,
+                                   int                lda,
+                                   hipblasStride      strideA,
+                                   const double*      BP,
+                                   int                ldb,
+                                   hipblasStride      strideB,
+                                   double*            CP,
+                                   int                ldc,
+                                   hipblasStride      strideC,
+                                   int                batchCount);
+
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+
+               hipblasStatus_t hipblasCtrmmStridedBatched(
+                                   hipblasHandle_t       handle,
+                                   hipblasSideMode_t     side,
+                                   hipblasFillMode_t     uplo,
+                                   hipblasOperation_t    transA,
+                                   hipblasDiagType_t     diag,
+                                   int                   m,
+                                   int                   n,
+                                   const hipblasComplex* alpha,
+                                   const hipblasComplex* AP,
+                                   int                   lda,
+                                   hipblasStride         strideA,
+                                   hipblasComplex*       BP,
+                                   int                   ldb,
+                                   hipblasStride         strideB,
+                                   int                   batchCount);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+               hipblasStatus_t hipblasCtrmmStridedBatchedOutofplace(
+                                   hipblasHandle_t       handle,
+                                   hipblasSideMode_t     side,
+                                   hipblasFillMode_t     uplo,
+                                   hipblasOperation_t    transA,
+                                   hipblasDiagType_t     diag,
+                                   int                   m,
+                                   int                   n,
+                                   const hipblasComplex* alpha,
+                                   const hipblasComplex* AP,
+                                   int                   lda,
+                                   hipblasStride         strideA,
+                                   const hipblasComplex* BP,
+                                   int                   ldb,
+                                   hipblasStride         strideB,
+                                   hipblasComplex*       CP,
+                                   int                   ldc,
+                                   hipblasStride         strideC,
+                                   int batchCount);
+
+        `~.endif`
+
+        `~.ifndef` HIPBLAS_V1  //  deprecated
+
+            hipblasStatus_t hipblasZtrmmStridedBatched(hipblasHandle_t             handle,
+                                                       hipblasSideMode_t           side,
+                                                       hipblasFillMode_t           uplo,
+                                                       hipblasOperation_t          transA,
+                                                       hipblasDiagType_t           diag,
+                                                       int                         m,
+                                                       int                         n,
+                                                       const hipblasDoubleComplex* alpha,
+                                                       const hipblasDoubleComplex* AP,
+                                                       int                         lda,
+                                                       hipblasStride               strideA,
+                                                       hipblasDoubleComplex*       BP,
+                                                       int                         ldb,
+                                                       hipblasStride               strideB,
+                                                       int                         batchCount);
+
+        `~.else`  //  available in hipBLAS version 1.x.x and later with -DHIPBLAS_V1
+
+            hipblasStatus_t hipblasZtrmmStridedBatchedOutofplace(
+                                                        hipblasHandle_t             handle,
+                                                        hipblasSideMode_t           side,
+                                                        hipblasFillMode_t           uplo,
+                                                        hipblasOperation_t          transA,
+                                                        hipblasDiagType_t           diag,
+                                                        int                         m,
+                                                        int                         n,
+                                                        const hipblasDoubleComplex* alpha,
+                                                        const hipblasDoubleComplex* AP,
+                                                        int                         lda,
+                                                        hipblasStride               strideA,
+                                                        const hipblasDoubleComplex* BP,
+                                                        int                         ldb,
+                                                        hipblasStride               strideB,
+                                                        hipblasDoubleComplex*       BC,
+                                                        int                         ldc,
+                                                        hipblasStride               strideC,
+                                                        int                         batchCount);
+
+        `~.endif`
+
+    The deprecated Legacy BLAS in-place trmm_strided_batched performs one of the strided_batched matrix-matrix operations:
+
+        B_i := alpha*op( A_i )*B_i,   or
+        B_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batch_count -1,
+
+    The new trmm_batched performs one of the matrix-matrix operations:
+
+        C_i := alpha*op( A_i )*B_i,   or
+        C_i := alpha*B_i*op( A_i )  for i = 0, 1, ... batch_count -1,
+
+    The in-place functionality is still available in the new trmmm_batched by setting pointer C equal to pointer B,
+    setting ldc equal to ldb, and setting stride_C equal to stride_B.
+
+        alpha  is a scalar,  B_i  is an m by n matrix, C_i  is an m by n matrix,  A_i  is a unit, or
+        non-unit,  upper or lower triangular matrix  and  op( A_i )  is one  of
+
+        op( A_i ) = A_i   or
+        op( A_i ) = A_i^T   or
+        op( A_i ) = A_i^H.
+
+    - Supported precisions in hipBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
     When uplo == HIPBLAS_FILL_MODE_UPPER the  leading  k by k
@@ -31948,6 +32955,330 @@ def hipblasZtrmmStridedBatched(object handle, object side, object uplo, object t
 
 
 @cython.embedsignature(True)
+def hipblasStrmmStridedBatchedOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object CP, int ldc, long strideC, int batchCount):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        AP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        strideA (`~.int`):
+            (undocumented)
+
+        BP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        strideB (`~.int`):
+            (undocumented)
+
+        CP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+        strideC (`~.int`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasStrmmStridedBatchedOutofplace__retval = hipblasStatus_t(chipblas.hipblasStrmmStridedBatchedOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <float *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+    return (_hipblasStrmmStridedBatchedOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasDtrmmStridedBatchedOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object CP, int ldc, long strideC, int batchCount):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        AP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        strideA (`~.int`):
+            (undocumented)
+
+        BP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        strideB (`~.int`):
+            (undocumented)
+
+        CP (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+        strideC (`~.int`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasDtrmmStridedBatchedOutofplace__retval = hipblasStatus_t(chipblas.hipblasDtrmmStridedBatchedOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,
+        <double *>hip._util.types.Pointer.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+    return (_hipblasDtrmmStridedBatchedOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasCtrmmStridedBatchedOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object CP, int ldc, long strideC, int batchCount):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        AP (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        strideA (`~.int`):
+            (undocumented)
+
+        BP (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        strideB (`~.int`):
+            (undocumented)
+
+        CP (`~.hipblasComplex`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+        strideC (`~.int`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasCtrmmStridedBatchedOutofplace__retval = hipblasStatus_t(chipblas.hipblasCtrmmStridedBatchedOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,strideB,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc,strideC,batchCount))    # fully specified
+    return (_hipblasCtrmmStridedBatchedOutofplace__retval,)
+
+
+@cython.embedsignature(True)
+def hipblasZtrmmStridedBatchedOutofplace(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object BC, int ldc, long strideC, int batchCount):
+    r"""(No short description, might be part of a group)
+
+    Args:
+        handle (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
+        side (`~.hipblasSideMode_t`):
+            (undocumented)
+
+        uplo (`~.hipblasFillMode_t`):
+            (undocumented)
+
+        transA (`~.hipblasOperation_t`):
+            (undocumented)
+
+        diag (`~.hipblasDiagType_t`):
+            (undocumented)
+
+        m (`~.int`):
+            (undocumented)
+
+        n (`~.int`):
+            (undocumented)
+
+        alpha (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        AP (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        lda (`~.int`):
+            (undocumented)
+
+        strideA (`~.int`):
+            (undocumented)
+
+        BP (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        ldb (`~.int`):
+            (undocumented)
+
+        strideB (`~.int`):
+            (undocumented)
+
+        BC (`~.hipblasDoubleComplex`/`~.object`):
+            (undocumented)
+
+        ldc (`~.int`):
+            (undocumented)
+
+        strideC (`~.int`):
+            (undocumented)
+
+        batchCount (`~.int`):
+            (undocumented)
+
+    Returns:
+        A `~.tuple` of size 1 that contains (in that order):
+
+        * `~.hipblasStatus_t`
+    """
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
+    _hipblasZtrmmStridedBatchedOutofplace__retval = hipblasStatus_t(chipblas.hipblasZtrmmStridedBatchedOutofplace(
+        <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,strideB,
+        hipblasDoubleComplex.from_pyobj(BC)._ptr,ldc,strideC,batchCount))    # fully specified
+    return (_hipblasZtrmmStridedBatchedOutofplace__retval,)
+
+
+@cython.embedsignature(True)
 def hipblasStrsm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     r"""BLAS Level 3 API
 
@@ -32051,7 +33382,7 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
     _hipblasStrsm__retval = hipblasStatus_t(chipblas.hipblasStrsm(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
-        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         <float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb))    # fully specified
     return (_hipblasStrsm__retval,)
 
@@ -32113,7 +33444,7 @@ def hipblasDtrsm(object handle, object side, object uplo, object transA, object 
     _hipblasDtrsm__retval = hipblasStatus_t(chipblas.hipblasDtrsm(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
-        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
         <double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb))    # fully specified
     return (_hipblasDtrsm__retval,)
 
@@ -32348,8 +33679,8 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
     _hipblasStrsmBatched__retval = hipblasStatus_t(chipblas.hipblasStrsmBatched(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
-        <float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
-        <float **>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <const float *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <float *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasStrsmBatched__retval,)
 
 
@@ -32413,8 +33744,8 @@ def hipblasDtrsmBatched(object handle, object side, object uplo, object transA, 
     _hipblasDtrsmBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsmBatched(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
-        <double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
-        <double **>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <const double *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
+        <double *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasDtrsmBatched__retval,)
 
 
@@ -32479,7 +33810,7 @@ def hipblasCtrsmBatched(object handle, object side, object uplo, object transA, 
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasComplex **>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <chipblas.hipblasComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasCtrsmBatched__retval,)
 
 
@@ -32544,7 +33875,7 @@ def hipblasZtrsmBatched(object handle, object side, object uplo, object transA, 
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasDoubleComplex **>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
+        <chipblas.hipblasDoubleComplex *const*>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,batchCount))    # fully specified
     return (_hipblasZtrsmBatched__retval,)
 
 
@@ -32663,7 +33994,7 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
     _hipblasStrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrsmStridedBatched(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
-        <float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const float *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
         <float *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
     return (_hipblasStrsmStridedBatched__retval,)
 
@@ -32734,7 +34065,7 @@ def hipblasDtrsmStridedBatched(object handle, object side, object uplo, object t
     _hipblasDtrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsmStridedBatched(
         <void *>hip._util.types.Pointer.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.Pointer.from_pyobj(alpha)._ptr,
-        <double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
+        <const double *>hip._util.types.Pointer.from_pyobj(AP)._ptr,lda,strideA,
         <double *>hip._util.types.Pointer.from_pyobj(BP)._ptr,ldb,strideB,batchCount))    # fully specified
     return (_hipblasDtrsmStridedBatched__retval,)
 
@@ -34930,7 +36261,7 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
             pointer to a int on the host.
 
             If info = 0, successful exit.
-            If info = j < 0, the j-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -35168,7 +36499,7 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
             pointer to a int on the host.
 
             If info = 0, successful exit.
-            If info = j < 0, the j-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
         batchCount (`~.int`) -- *IN*:
             int. batchCount >= 0.
@@ -35438,7 +36769,7 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
             pointer to a int on the host.
 
             If info = 0, successful exit.
-            If info = j < 0, the j-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
         batchCount (`~.int`) -- *IN*:
             int. batchCount >= 0.
@@ -35934,7 +37265,7 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
             pointer to an int on the host.
 
             If info = 0, successful exit.
-            If info = j < 0, the j-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
         deviceInfo (`~.hip._util.types.ListOfInt`/`~.object`) -- *OUT*:
             pointer to int on the GPU.
@@ -36196,7 +37527,7 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
             pointer to an int on the host.
 
             If info = 0, successful exit.
-            If info = j < 0, the j-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
         deviceInfo (`~.hip._util.types.ListOfInt`/`~.object`) -- *OUT*:
             pointer to int. Array of batchCount integers on the GPU.
@@ -36485,7 +37816,7 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
             pointer to an int on the host.
 
             If info = 0, successful exit.
-            If info = j < 0, the j-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
         deviceInfo (`~.hip._util.types.ListOfInt`/`~.object`) -- *OUT*:
             pointer to int. Array of batchCount integers on the GPU.
@@ -36766,7 +38097,7 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
             pointer to a int on the host.
 
             If info = 0, successful exit.
-            If info = j < 0, the j-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
@@ -36964,7 +38295,7 @@ def hipblasSgeqrfBatched(object handle, const int m, const int n, object A, cons
             pointer to a int on the host.
 
             If info = 0, successful exit.
-            If info = k < 0, the k-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
         batchCount (`~.int`) -- *IN*:
             int. batchCount >= 0.
@@ -37188,7 +38519,7 @@ def hipblasSgeqrfStridedBatched(object handle, const int m, const int n, object 
             pointer to a int on the host.
 
             If info = 0, successful exit.
-            If info = k < 0, the k-th argument is invalid.
+            If info = j < 0, the argument at position -j is invalid.
 
         batchCount (`~.int`) -- *IN*:
             int. batchCount >= 0.
@@ -37371,10 +38702,6 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
 
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
-    Note for int8 users - For rocBLAS backend, please read rocblas_gemm_ex documentation on int8
-    data layout requirements. hipBLAS makes the assumption that the data layout is in the preferred
-    format for a given device as documented in rocBLAS.
-
     Args:
         handle (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
             [hipblasHandle_t]
@@ -37499,10 +38826,6 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
     The number of pointers to matrices is batchCount.
 
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
-
-    Note for int8 users - For rocBLAS backend, please read rocblas_gemm_batched_ex documentation on int8
-    data layout requirements. hipBLAS makes the assumption that the data layout is in the preferred
-    format for a given device as documented in rocBLAS.
 
     Args:
         handle (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
@@ -37637,10 +38960,6 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
     The number of matrices is batchCount.
 
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
-
-    Note for int8 users - For rocBLAS backend, please read rocblas_gemm_strided_batched_ex documentation on int8
-    data layout requirements. hipBLAS makes the assumption that the data layout is in the preferred
-    format for a given device as documented in rocBLAS.
 
     Args:
         handle (`~.hip._util.types.Pointer`/`~.object`) -- *IN*:
@@ -39629,16 +40948,12 @@ __all__ = [
     "hipblasGemmAlgo_t",
     "_hipblasAtomicsMode_t__Base",
     "hipblasAtomicsMode_t",
-    "_hipblasInt8Datatype_t__Base",
-    "hipblasInt8Datatype_t",
     "hipblasCreate",
     "hipblasDestroy",
     "hipblasSetStream",
     "hipblasGetStream",
     "hipblasSetPointerMode",
     "hipblasGetPointerMode",
-    "hipblasSetInt8Datatype",
-    "hipblasGetInt8Datatype",
     "hipblasSetVector",
     "hipblasGetVector",
     "hipblasSetMatrix",
@@ -40145,14 +41460,26 @@ __all__ = [
     "hipblasDtrmm",
     "hipblasCtrmm",
     "hipblasZtrmm",
+    "hipblasStrmmOutofplace",
+    "hipblasDtrmmOutofplace",
+    "hipblasCtrmmOutofplace",
+    "hipblasZtrmmOutofplace",
     "hipblasStrmmBatched",
     "hipblasDtrmmBatched",
     "hipblasCtrmmBatched",
     "hipblasZtrmmBatched",
+    "hipblasStrmmBatchedOutofplace",
+    "hipblasDtrmmBatchedOutofplace",
+    "hipblasCtrmmBatchedOutofplace",
+    "hipblasZtrmmBatchedOutofplace",
     "hipblasStrmmStridedBatched",
     "hipblasDtrmmStridedBatched",
     "hipblasCtrmmStridedBatched",
     "hipblasZtrmmStridedBatched",
+    "hipblasStrmmStridedBatchedOutofplace",
+    "hipblasDtrmmStridedBatchedOutofplace",
+    "hipblasCtrmmStridedBatchedOutofplace",
+    "hipblasZtrmmStridedBatchedOutofplace",
     "hipblasStrsm",
     "hipblasDtrsm",
     "hipblasCtrsm",
