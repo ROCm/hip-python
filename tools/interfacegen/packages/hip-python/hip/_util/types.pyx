@@ -26,6 +26,7 @@ cimport cpython.long
 cimport cpython.int
 cimport cpython.buffer
 cimport libc.stdlib
+cimport libc.string
 cimport libc.stdint
 
 import ctypes
@@ -882,6 +883,7 @@ cdef class ListOfBytes(Pointer):
         elif isinstance(pyobj,(tuple,list)):
             self._owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(const char*))
+            libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(const char*))
             for i,entry in enumerate(pyobj):
                 if not isinstance(entry,bytes):
                     raise ValueError("elements of list/tuple input must be of type 'bytes'")
@@ -998,6 +1000,7 @@ cdef class ListOfPointer(Pointer):
         elif isinstance(pyobj,(tuple,list)):
             self._owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void *))
+            libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(void *))
             for i,entry in enumerate(pyobj):
                 (<void**>self._ptr)[i] = cpython.long.PyLong_AsVoidPtr(int(Pointer.from_pyobj(entry)))
         else:
@@ -1114,6 +1117,7 @@ cdef class ListOfInt(Pointer):
         elif isinstance(pyobj,(tuple,list)):
             self._owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(int))
+            libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(int))
             for i,entry in enumerate(pyobj):
                 if isinstance(entry,int):
                     (<int*>self._ptr)[i] = <int>cpython.long.PyLong_AsLongLong(pyobj)
@@ -1247,6 +1251,7 @@ cdef class ListOfUnsigned(Pointer):
         elif isinstance(pyobj,(tuple,list)):
             self._owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned int))
+            libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(unsigned int))
             for i,entry in enumerate(pyobj):
                 if isinstance(entry,int):
                     (<unsigned int*>self._ptr)[i] = <unsigned int>cpython.long.PyLong_AsUnsignedLongLong(pyobj)
@@ -1380,6 +1385,7 @@ cdef class ListOfUnsignedLong(Pointer):
         elif isinstance(pyobj,(tuple,list)):
             self._owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned long))
+            libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(unsigned long))
             for i,entry in enumerate(pyobj):
                 if isinstance(entry,int):
                     (<unsigned long*>self._ptr)[i] = <unsigned long>cpython.long.PyLong_AsUnsignedLongLong(pyobj)
