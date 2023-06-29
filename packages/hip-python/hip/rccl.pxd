@@ -58,3 +58,21 @@ cdef class ncclUniqueId:
     cdef ncclUniqueId new()
     @staticmethod
     cdef ncclUniqueId from_value(crccl.ncclUniqueId other)
+
+
+cdef class ncclConfig_v21400:
+    cdef crccl.ncclConfig_v21400* _ptr
+    cdef bint ptr_owner
+    cdef Py_buffer _py_buffer
+    cdef bint _py_buffer_acquired
+
+    @staticmethod
+    cdef ncclConfig_v21400 from_ptr(crccl.ncclConfig_v21400* ptr, bint owner=*)
+    @staticmethod
+    cdef ncclConfig_v21400 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(crccl.ncclConfig_v21400** ptr)
+    @staticmethod
+    cdef ncclConfig_v21400 new()
+    @staticmethod
+    cdef ncclConfig_v21400 from_value(crccl.ncclConfig_v21400 other)

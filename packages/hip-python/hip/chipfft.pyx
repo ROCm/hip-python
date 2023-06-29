@@ -148,8 +148,12 @@ cdef void* _hipfftExtPlanScaleFactor__funptr = NULL
 # 
 # This function must be called after the plan is allocated using
 # ::hipfftCreate, but before the plan is initialized by any of the
-# "MakePlan" functions.
-#
+# "MakePlan" functions.  Therefore, API functions that combine
+# creation and initialization (::hipfftPlan1d, ::hipfftPlan2d,
+# ::hipfftPlan3d, and ::hipfftPlanMany) cannot set a scale factor.
+# 
+# Note that the scale factor applies to both forward and
+# backward transforms executed with the specified plan handle.
 cdef hipfftResult_t hipfftExtPlanScaleFactor(hipfftHandle plan,double scalefactor) nogil:
     global _hipfftExtPlanScaleFactor__funptr
     __init_symbol(&_hipfftExtPlanScaleFactor__funptr,"hipfftExtPlanScaleFactor")
