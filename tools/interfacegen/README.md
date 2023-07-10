@@ -94,8 +94,12 @@ cd packages
 
   Options:
     --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+<<<<<<< Updated upstream
     --libs            HIP Python libraries to generate as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
                       Add a prefix '^' to NOT generate code for the comma-separated list of libraries that follows but all other libraries.
+=======
+    -l, --libs        HIP Python modules to generate as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
+>>>>>>> Stashed changes
     --pre-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
     --post-clean      Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
     -n, --no-venv     Do not create and use a virtual Python environment.
@@ -109,10 +113,13 @@ cd packages
 
   Options:
     --rocm-path        Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+<<<<<<< Updated upstream
     --libs             HIP Python libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
                        Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
     --cuda-libs        HIP Python CUDA interop libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_CUDA_LIBS' if set or '*'.
                        Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
+=======
+>>>>>>> Stashed changes
     --no-hip           Do not build package 'hip-python'.
     --no-cuda          Do not build package 'hip-python-as-cuda'.
     --no-docs          Do not build the docs of package 'hip-python'.
