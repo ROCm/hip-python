@@ -24,7 +24,7 @@
 
 **Welcome to the documentation pages for HIP Python!**
 
-HIP Python provides low-level Cython and Python&reg; bindings for the HIP runtime, HIPRTC,
+HIP Python provides low-level Cython and Python bindings for the HIP runtime, HIPRTC,
 multiple math libraries and the communication library RCCL,
 and further a CUDA&reg; Python Interoperability layer that aims to simplify
 the porting of CUDA Python Python and Cython programs.
