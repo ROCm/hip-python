@@ -9,10 +9,10 @@ build:
     python: "3.8"
 
 sphinx:
-  configuration: docs/conf.py
+  configuration: hip-python/docs/conf.py
 
 formats: [htmlzip, pdf, epub]
 
 python:
   install:
-  - requirements: docs/.sphinx/requirements.txt
+  - requirements: hip-python/docs/.sphinx/requirements.txt
