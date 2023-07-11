@@ -37,7 +37,7 @@ autodoc_default_options = {
 
 # Rocm-docs-core
 external_projects_remote_repository = ""
-external_projects_current_project = project
+external_projects_current_project = "hip"
 
 article_pages = [
     {
