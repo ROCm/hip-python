@@ -1,0 +1,4 @@
+*.c
+*.so
+__pycache__
+hip-python/docs/_build
