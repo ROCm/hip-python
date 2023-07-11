@@ -192,6 +192,9 @@ cdef class CUmemPoolPtrExportData_v1(hip.hip.hipMemPoolPtrExportData):
     pass
 cdef class cudaMemPoolPtrExportData(hip.hip.hipMemPoolPtrExportData):
     pass
+from hip.hip cimport hipFunctionLaunchParams_t
+cdef class CUDA_LAUNCH_PARAMS_st(hip.hip.hipFunctionLaunchParams_t):
+    pass
 from hip.hip cimport hipExternalMemoryHandleDesc_st
 cdef class CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st(hip.hip.hipExternalMemoryHandleDesc_st):
     pass
@@ -250,6 +253,13 @@ cdef class CUDA_MEMSET_NODE_PARAMS_st(hip.hip.hipMemsetParams):
 cdef class CUDA_MEMSET_NODE_PARAMS_v1(hip.hip.hipMemsetParams):
     pass
 cdef class cudaMemsetParams(hip.hip.hipMemsetParams):
+    pass
+from hip.hip cimport hipMemAllocNodeParams
+cdef class CUDA_MEM_ALLOC_NODE_PARAMS(hip.hip.hipMemAllocNodeParams):
+    pass
+cdef class CUDA_MEM_ALLOC_NODE_PARAMS_st(hip.hip.hipMemAllocNodeParams):
+    pass
+cdef class cudaMemAllocNodeParams(hip.hip.hipMemAllocNodeParams):
     pass
 from hip.hip cimport hipAccessPolicyWindow
 cdef class CUaccessPolicyWindow(hip.hip.hipAccessPolicyWindow):
