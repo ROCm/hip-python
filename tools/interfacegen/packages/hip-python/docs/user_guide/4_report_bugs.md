@@ -31,7 +31,7 @@ In particular, we are interested to learn:
 
 ## Reporting Issues
 
-We use [GitHub Issues](https://github.com/AMD-AI/hip-python/issues) to track public **bugs** and **enhancement requests**.
+We use [GitHub Issues](https://github.com/ROCmSoftwarePlatform/hip-python/issues) to track public **bugs** and **enhancement requests**.
 
 If you have found an issue, please check the [HIP Python documentation](https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html) 
 to see if it hasn't already been resolved in the latest version of HIP Python.
