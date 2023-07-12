@@ -21,11 +21,13 @@
 # SOFTWARE.
 
 # [literalinclude-begin]
-.PHONY: build run
+PYTHON ?= python3
+
+.PHONY: build run clean
 
 build:
-	python3 setup.py build_ext --inplace
+	$(PYTHON) setup.py build_ext --inplace
 run: build
-	python3 -c "import ccuda_stream"
+	$(PYTHON) -c "import ccuda_stream"
 clean:
 	rm -rf *.so *.c build/

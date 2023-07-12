@@ -79,3 +79,4 @@ for i in range(1,imax):
     n *= 10
     estimate = calculate_pi(n)
     print(f"{n:12}\t{estimate:1.9f}\t{abs(estimate-math.pi)/math.pi:1.9f}")
+print("ok")

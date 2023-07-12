@@ -39,6 +39,7 @@ Options:
   --no-docs          Do not build the docs of package 'hip-python'.
   --no-api-docs      Temporarily move the 'hip-python/docs/python_api' subfolder so that sphinx does not see it.
   --no-clean-docs    Do not generate docs from scratch, i.e. don't run sphinx with -E switch.
+  --run-tests        Run the tests.
   -j,--num-jobs      Number of build jobs to use (currently only applied for building docs). Defaults to 1.
   --pre-clean        Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
   --post-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
@@ -89,6 +90,10 @@ while [[ $# -gt 0 ]]; do
       NO_DOCS=1
       shift
       ;;
+    --run-tests)
+      RUN_TESTS=1
+      shift
+      ;;
     --no-clean-docs)
       NO_CLEAN_DOCS=1
       shift
@@ -122,9 +127,11 @@ declare -x HIP_PYTHON_CUDA_LIBs=${HIP_PYTHON_CUDA_LIBs:-*}
 [ -z ${PRE_CLEAN+x} ] || rm -rf venv
 
 alias PYTHON="python3"
+PYTHON_PATH="python3"
 if [ -z ${NO_ENV+x} ]; then
   [ ! -d "venv" ] && python3 -m venv _venv
-  alias PYTHON="_venv/bin/python3"
+  alias PYTHON="$(pwd)/_venv/bin/python3"
+  PYTHON_PATH="$(pwd)/_venv/bin/python3"
 fi
 shopt -s expand_aliases
 
@@ -134,8 +141,8 @@ if [ -z ${NO_HIP+x} ]; then
   PKG="hip-python"
   mkdir -p ${PKG}/dist/
   mkdir -p ${PKG}/dist/archive
-  mv ${PKG}/dist/*.whl ${PKG}/dist/archive/
-  mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/
+  mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
+  mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
   PYTHON -m pip install -r ${PKG}/requirements.txt
   PYTHON -m build ${PKG} -n
 fi
@@ -146,8 +153,8 @@ if [ -z ${NO_CUDA+x} ]; then
   PKG="hip-python-as-cuda"
   mkdir -p ${PKG}/dist/
   mkdir -p ${PKG}/dist/archive
-  mv ${PKG}/dist/*.whl ${PKG}/dist/archive/
-  mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/
+  mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
+  mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
   PYTHON -m pip install --force-reinstall hip-python/dist/hip*whl
   PYTHON -m pip install -r ${PKG}/requirements.txt
   PYTHON -m build ${PKG} -n
@@ -175,6 +182,30 @@ if [ -z ${NO_DOCS+x} ]; then
   if [ ! -z ${NO_API_DOCS+x} ]; then
      mv "./_python_api" "$DOCS_DIR/python_api"
   fi
+fi
+
+if [ ! -z ${RUN_TESTS+x} ]; then
+  PYTHON -m pip install --force-reinstall hip-python/dist/hip*whl \
+                                          hip-python-as-cuda/dist/hip*whl
+  cd hip-python/examples/0_*
+  PYTHON -m pip install -r requirements.txt
+  PYTHON hip_deviceattributes.py
+  PYTHON hip_deviceproperties.py
+  PYTHON hip_python_device_array.py
+  PYTHON hip_stream.py
+  PYTHON hipblas_with_numpy.py
+  PYTHON hipfft.py
+  PYTHON hiprand_monte_carlo_pi.py
+  PYTHON hiprtc_launch_kernel_args.py
+  PYTHON hiprtc_launch_kernel_no_args.py
+  PYTHON rccl_comminitall_bcast.py
+  # 10x ok
+
+  cd ../1_*
+  PYTHON -m pip install -r requirements.txt
+  PYTHON cuda_stream.py
+  PYTHON=${PYTHON_PATH} make clean run
+  # 2x ok
 fi
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv
