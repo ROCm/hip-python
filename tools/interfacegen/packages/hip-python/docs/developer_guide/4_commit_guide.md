@@ -83,11 +83,6 @@ specification linked above.
 Commitizen contains a utility to walk through making a commit following the
 rules above.
 
-### Installation
-
-Commitizen is marked as a "development" dependency of `rocm-docs-core,`
-installable via `pip install .[development]` from the root of the repository.
-
 ### Usage
 
 Run `cz commit` or `cz c` to start making a commit after staging the files to

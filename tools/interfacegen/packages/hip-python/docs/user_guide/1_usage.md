@@ -69,8 +69,8 @@ is important for many applications.
 ### Via {py:obj}`~.hipGetDeviceProperties`
 
 A number of device properties can be obtained via the 
-{py:obj}`~.hipDeviceProp_t` object. After creation (line 16) this object must
-be passed to the {py:obj}`~.hipGetDeviceProperties` routine (line 17).
+{py:obj}`~.hipDeviceProp_t` object. After creation (line 12) this object must
+be passed to the {py:obj}`~.hipGetDeviceProperties` routine (line 13).
 The second argument (`0`) is the device number.
 
 Running the {ref}`example below <hip_deviceproperties>` will print out the values of all queried device properties 
@@ -94,7 +94,7 @@ and finally returns the rest of the tuple -- either as single value or tuple san
 ### Via {py:obj}`~.hipDeviceGetAttribute`
 
 You can also obtain some of the properties that appeared in the 
-{ref}`previous example <hip_deviceproperties>` plus a number of additional properties via the {py:obj}`~.hipDeviceGetAttribute` routine as shown in the {ref}`example below <hip_deviceattributes>` (line 130).
+{ref}`previous example <hip_deviceproperties>` plus a number of additional properties via the {py:obj}`~.hipDeviceGetAttribute` routine as shown in the {ref}`example below <hip_deviceattributes>` (line 26).
 In the example below, we query integer-type device attributes/properties.
 Therefore, we supply the address of a {py:obj}`ctypes.c_int` variable
 as first argument. The respective property, the second argument, is passed
@@ -107,7 +107,7 @@ attributes before the program prints `"ok"` and quits.
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_deviceattributes.py
    :language: python
    :start-after: [literalinclude-begin]
-   :emphasize-lines: 125-126
+   :emphasize-lines: 25-26
    :linenos:
    :name: hip_deviceattributes
    :caption: Obtaining Device Properties via hipDeviceGetAttribute
@@ -130,7 +130,7 @@ with data movement to or from that same device.
 The {ref}`below example <hip_stream>` showcases how to use HIP Python's {py:obj}`~.hipStream_t` objects and the associated HIP Python routines.
 The example further demonstrates that you can pass Python 3 {py:obj}`array.array` types
 directly to HIP Python interfaces that expect an host buffer. One example of such
-interfaces is {py:obj}`~.hipMemcpyAsync` (lines 27 and 28).
+interfaces is {py:obj}`~.hipMemcpyAsync` (lines 23 and 25).
 
 ```{eval-rst}
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_stream.py
@@ -148,7 +148,7 @@ it is asynchronously copied to the device (line 23), where a asynchronous {py:ob
 1. An asynchronous memcpy (same stream) is then issued to copy the device data back to the host (line 25).
 All operations within the stream are executed in order.
 1. As the `~Async` operations are non-blocking, the host waits via {py:obj}`~.hipStreamSynchronize`
-until operations in the stream have been completed (line 26) before deleting
+until operations in the stream have been completed (line 26) before destroying
 the stream (line 27). 
 1. Eventually the program deallocates device data via
 {py:obj}`~.hipFree` and checks if all bytes in the host buffer are now set to `0`.
@@ -227,7 +227,7 @@ or one of the {py:obj}`ctypes` types.
 
 The former are typically the result of a {py:obj}`~.hipMalloc` call (or similar memory allocation routines).
 Please also see <project:#ch_datatypes> for details on what other types can be converted to {py:obj}`~.DeviceArray`.
-The latter are typically used to convert a scalar of the python {py:obj}`bool`, {py:obj}`int`, and {py:obj}`float` scalar types 
+The {py:obj}`ctypes` types are typically used to convert a scalar of the python {py:obj}`bool`, {py:obj}`int`, and {py:obj}`float` scalar types 
 to a fixed precision.
 
 The [below example](hiprtc_launch_kernel_args) demonstrates the usage of {py:obj}`~.hipModuleLaunchKernel`

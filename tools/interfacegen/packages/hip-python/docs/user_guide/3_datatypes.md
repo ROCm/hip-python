@@ -68,7 +68,7 @@ Type checks are performed in the above order.
 
 The type is typically used as argument in the following scenarios:
 
-* When modeling generic first-degree pointers of basic --- however, typically not for (`const`) `char *` --- or generic first-degree 
+* When modeling generic first-degree pointers of basic type --- however, typically not for (`const`) `char *` --- or generic first-degree 
   pointers of type ``void`` type.
 * When modeling in-out scalar arguments, where the user supplies `ctypes.addressof(myscalar)` as argument.
 * As place-holder whenever a complicated type expression of pointer type has not been analyzed yet.
@@ -84,14 +84,14 @@ that you can pass instead of it:
 
 * {py:obj}`None`:
 
-  This will set the type's pointer attribute to `{py:obj}`NULL`.
+  This will set the type's pointer attribute to {py:obj}`NULL`.
   No shape and type information is available in this case!
 
 * {py:obj}`object` that is accepted as input by the `__init__` routine of {py:obj}`~.Pointer`:
 
-  In this case, init code from `~.Pointer` is used.
-  `~.Py_buffer` object ownership is not transferred
-  See `~.Pointer.__init__` for more information.
+  In this case, init code from {py:obj}`~.Pointer` is used.
+  {py:obj}`~.Py_buffer` object ownership is not transferred
+  See {py:obj}`~.Pointer.__init__` for more information.
   No shape and type information is available in this case!
 
 * {py:obj}`int`:
@@ -114,7 +114,7 @@ Type checks are performed in the above order.
 
 :::{note}
 
-Shape and type information and other metadata can be modified or overwritten after creation via the `~.DeviceArray.configure`
+Shape and type information and other metadata can be modified or overwritten after creation via the {py:obj}`~.DeviceArray.configure`
 member function. be aware that you might need to pass the ``_force=True`` keyword argument --- 
 in particular if your instance was created from a type that does not implement the 
 [CUDA Array Interface](https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html) protocol
@@ -142,7 +142,7 @@ you can pass it as copy destination or copy source in {py:obj}`~.hip.hipMemcpy`.
 
 The example <project:#sec_example_hip_python_device_arrays>
 showcases how to use `~.DeviceArray.configure` to change the shape and type
-of a `~.DeviceArray` instance and how use the `[]` operator
+of a {py:obj}`~.DeviceArray` instance and how use the `[]` operator
 to retrieve a subarray.
 :::
 
@@ -166,13 +166,13 @@ The types can be initialized from the following Python objects:
 * {py:obj}`list` / {py:obj}`tuple` of the respective element type:
 
   In this case, adapter type allocates an array of C values wherein it stores the addresses/values 
-  obtained from the `list`/`tuple` entries.
+  obtained from the {py:obj}`list`/{py:obj}`tuple` entries.
   Furthermore, the instance's owner flag is set in this case.
 
 * {py:obj}`object` that is accepted as input by the `__init__` routine of {py:obj}`~.Pointer`:
 
-  In this case, init code from `~.Pointer` is used and the C owner flag remains unset.
-  See `~.Pointer` for more information.
+  In this case, init code from {py:obj}`~.Pointer` is used and the C owner flag remains unset.
+  See {py:obj}`~.Pointer` for more information.
 
 ### Usage in HIP Python
 
@@ -182,9 +182,9 @@ and the {py:obj}`~.types.ListOfPointer` type where a list of C pointer types is 
 
 The type {py:obj}`~.types.ListOfBytes` is for example used to convert input Python types in the following routines:
 
-* {py:obj}`hiprtcCompileProgram` for argument `options`,
-* {py:obj}`hiprtcCreateProgram`for argument `headers`, and
-* {py:obj}`hiprtcCreateProgram` for argument `includeNames`.
+* {py:obj}`~.hiprtcCompileProgram` for argument `options`,
+* {py:obj}`~.hiprtcCreateProgram`for argument `headers`, and
+* {py:obj}`~.hiprtcCreateProgram` for argument `includeNames`.
 
 HIP Python functions that expect a C array of C `int`, C `unsigned`, or C `unsigned long` element type (`int *`, ...)
 use {py:obj}`~.types.ListOfInt`, {py:obj}`~.types.ListOfUnsigned`, or {py:obj}`~.types.ListOfUnsignedLong`,

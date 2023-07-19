@@ -137,12 +137,17 @@ The latter can be used as shown below:
 Usage: ./build_hip_python_pkgs.sh [OPTIONS]
 
 Options:
-  --rocm-path        Path to a ROCm&trade;  installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+  --rocm-path        Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+  --libs             HIP Python libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
+                     Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
+  --cuda-libs        HIP Python CUDA interop libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_CUDA_LIBS' if set or '*'.
+                     Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
   --no-hip           Do not build package 'hip-python'.
   --no-cuda          Do not build package 'hip-python-as-cuda'.
   --no-docs          Do not build the docs of package 'hip-python'.
   --no-api-docs      Temporarily move the 'hip-python/docs/python_api' subfolder so that sphinx does not see it.
   --no-clean-docs    Do not generate docs from scratch, i.e. don't run sphinx with -E switch.
+  --run-tests        Run the tests.
   -j,--num-jobs      Number of build jobs to use (currently only applied for building docs). Defaults to 1.
   --pre-clean        Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
   --post-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
@@ -154,7 +159,7 @@ By default, both scripts will create a virtual Python environment named `_venv` 
 respective parent folder when run. All Python dependencies are automatically installed 
 into these environments.
 
-On systems with an ROCm&trade;  installation installed to the standard location, it suffices to run:
+On systems with an ROCm&trade; installation installed to the standard location, it suffices to run:
 
 ```{eval-rst}
 .. code-block:: bash
@@ -181,7 +186,7 @@ the `--post-clean` flag as shown below:
 
 ### Code Generation Step
 
-In the code generation step, the header files in a ROCm&trade;  installation are parsed
+In the code generation step, the header files in a ROCm&trade; installation are parsed
 and the HIP Python's Cython modules are generated. Moreover, content of
 the `hipify-perl` script is combined with the HIP header file parse trees in order to generate
 the CUDA&reg; interoperability layer. Finally, package metadata and documentation files
