@@ -31,14 +31,14 @@ HIP_VERSION_TUPLE = hip_version_tuple = (5,6,31061,"8c743ae5d")
 
 
 try:
-   from . import cuda
+    from . import cuda
 except ImportError:
-   pass # may have been excluded from build
+    pass # may have been excluded from build
 try:
-   from . import cudart
+    from . import cudart
 except ImportError:
-   pass # may have been excluded from build
+    pass # may have been excluded from build
 try:
-   from . import nvrtc
+    from . import nvrtc
 except ImportError:
-   pass # may have been excluded from build
+    pass # may have been excluded from build
