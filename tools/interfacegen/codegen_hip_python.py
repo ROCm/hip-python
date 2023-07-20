@@ -595,10 +595,18 @@ if __name__ == "__main__":
             if output_dir == hip_output_dir:
                 init_content += "\nfrom . import _util"
                 for pkg_name in HIP_PYTHON_LIB_NAMES:
-                    init_content += f"\nfrom . import {pkg_name}"
+                    init_content += textwrap.dedent(f"""
+                    try:
+                       from . import {pkg_name}
+                    except ImportError:
+                       pass # may have been excluded from build""")
             else:
                 for pkg_name in ("cuda", "cudart", "nvrtc"):
-                    init_content += f"\nfrom . import {pkg_name}"
+                    init_content += textwrap.dedent(f"""
+                    try:
+                       from . import {pkg_name}
+                    except ImportError:
+                       pass # may have been excluded from build""")
             f.write(init_content)
     # hip-python-as-cuda/requirements.txt
     requirements_file = os.path.join(
