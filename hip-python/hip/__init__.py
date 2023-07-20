@@ -31,10 +31,31 @@ HIP_VERSION_TUPLE = hip_version_tuple = (5,6,31061,"8c743ae5d")
 
 
 from . import _util
-from . import hip
-from . import hiprtc
-from . import hipblas
-from . import rccl
-from . import hiprand
-from . import hipfft
-from . import hipsparse
+try:
+   from . import hip
+except ImportError:
+   pass # may have been excluded from build
+try:
+   from . import hiprtc
+except ImportError:
+   pass # may have been excluded from build
+try:
+   from . import hipblas
+except ImportError:
+   pass # may have been excluded from build
+try:
+   from . import rccl
+except ImportError:
+   pass # may have been excluded from build
+try:
+   from . import hiprand
+except ImportError:
+   pass # may have been excluded from build
+try:
+   from . import hipfft
+except ImportError:
+   pass # may have been excluded from build
+try:
+   from . import hipsparse
+except ImportError:
+   pass # may have been excluded from build

@@ -30,6 +30,15 @@ HIP_VERSION_NAME = hip_version_name = "5.6.31061-8c743ae5d"
 HIP_VERSION_TUPLE = hip_version_tuple = (5,6,31061,"8c743ae5d")
 
 
-from . import cuda
-from . import cudart
-from . import nvrtc
+try:
+   from . import cuda
+except ImportError:
+   pass # may have been excluded from build
+try:
+   from . import cudart
+except ImportError:
+   pass # may have been excluded from build
+try:
+   from . import nvrtc
+except ImportError:
+   pass # may have been excluded from build
