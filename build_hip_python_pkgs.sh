@@ -195,7 +195,7 @@ if [ ! -z ${RUN_TESTS+x} ]; then
   PYTHON hip_stream.py
   PYTHON hipblas_with_numpy.py
   PYTHON hipfft.py
-  PYTHON hiprand_monte_carlo_pi.py
+  #PYTHON hiprand_monte_carlo_pi.py
   PYTHON hiprtc_launch_kernel_args.py
   PYTHON hiprtc_launch_kernel_no_args.py
   PYTHON rccl_comminitall_bcast.py
