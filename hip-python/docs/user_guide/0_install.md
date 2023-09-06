@@ -76,6 +76,16 @@ Therefore, you will likely "get away" with using "incompatible" HIP-HIP Python p
 
 ### Installation Commands
 
+:::{important}
+
+Especially on older operating systems, ensure that your `pip` is upgraded to
+the latest version. You can upgrade it, e.g., as follows:
+
+```shell
+python3 -m pip install --upgrade pip
+```
+:::
+
 After having identified the correct package for your ROCm&trade; installation, type:
 
 ```shell
