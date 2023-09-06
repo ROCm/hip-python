@@ -74,6 +74,7 @@ from _codegen.tree import (
 from _parse_hipify_perl import parse_hipify_perl
 
 def parse_options():
+    global OUTPUT_DIR
     global ROCM_INC
     global RUNTIME_LINKING
     global GENERATOR_ARGS
@@ -108,6 +109,17 @@ def parse_options():
         """
         ),
         formatter_class=argparse.RawTextHelpFormatter,
+    )
+
+    def dir_path(arg):
+        if not os.path.isdir(arg):
+            raise NotADirectoryError(arg)
+        return arg
+
+    parser.add_argument(
+        "output_dir",
+        type=dir_path,
+        help="The output directory to which the files should be written to. Must contain `hip-python` and `hip-python-as-cuda` subfolders.",
     )
     parser.add_argument(
         "--rocm-path",
@@ -162,6 +174,7 @@ def parse_options():
     )
     args = parser.parse_args()
 
+    OUTPUT_DIR = args.output_dir
     RUNTIME_LINKING = args.runtime_linking
     LIBS = args.libs
 
@@ -488,6 +501,8 @@ def generate_hipsparse_package_files():
 
 
 if __name__ == "__main__":
+    OUTPUT_DIR = None
+
     ROCM_INC = None
     RUNTIME_LINKING = None
     GENERATOR_ARGS = None
@@ -527,7 +542,7 @@ if __name__ == "__main__":
             if name not in avail_lib_names:
                 raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}")
 
-    hip_output_dir = os.path.join("packages", "hip-python", "hip")
+    hip_output_dir = os.path.join(OUTPUT_DIR, "hip-python", "hip")
     for entry in avail_lib_names:
         libname = entry.strip()
         if libname not in AVAILABLE_GENERATORS:
@@ -549,7 +564,7 @@ if __name__ == "__main__":
     
     with open("LICENSE","r") as licensefile:
         LICENSE_TEXT = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
-    cuda_output_dir = os.path.join("packages", "hip-python-as-cuda", "cuda")
+    cuda_output_dir = os.path.join(OUTPUT_DIR, "hip-python-as-cuda", "cuda")
     for output_dir in (hip_output_dir, cuda_output_dir):
         # hip|cuda/_version.py
         with open(os.path.join(output_dir, "_version.py"), "w") as f:
@@ -610,7 +625,7 @@ if __name__ == "__main__":
             f.write(init_content)
     # hip-python-as-cuda/requirements.txt
     requirements_file = os.path.join(
-        "packages", "hip-python-as-cuda", "requirements.txt"
+        OUTPUT_DIR, "hip-python-as-cuda", "requirements.txt"
     )
     with open(requirements_file, "w") as outfile:
         outfile.write(
@@ -647,7 +662,7 @@ if __name__ == "__main__":
                 ```"""
             ))
 
-    HIP_PYTHON_DOCS = os.path.join("packages","hip-python","docs")
+    HIP_PYTHON_DOCS = os.path.join(OUTPUT_DIR,"hip-python","docs")
     for lib in HIP_PYTHON_LIB_NAMES:
         write_pkg_markdown_file_("hip",lib)
     CUDA_PYTHON_LIB_NAMES = ["cuda","cudart","nvrtc"]

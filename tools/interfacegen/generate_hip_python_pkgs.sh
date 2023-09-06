@@ -26,7 +26,7 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
 fi
 
 HELP_MSG="
-Usage: ./$(basename $0) [OPTIONS]
+Usage: ./$(basename $0) output_dir [OPTIONS]
 
 Options:
   --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
@@ -37,6 +37,9 @@ Options:
   -n, --no-venv     Do not create and use a virtual Python environment.
   -h, --help        Show this help message.
 "
+
+OUTPUT_DIR=$1
+shift
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -91,6 +94,6 @@ declare -x HIP_PYTHON_LIBS=${HIP_PYTHON_LIBS:-*}
 declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 declare -x HIP_PYTHON_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
 
-PYTHON codegen_hip_python.py
+PYTHON codegen_hip_python.py ${OUTPUT_DIR}
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv
