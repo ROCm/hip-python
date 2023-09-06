@@ -25,9 +25,9 @@
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 from ._version import *
-HIP_VERSION = 50631061
-HIP_VERSION_NAME = hip_version_name = "5.6.31061-8c743ae5d"
-HIP_VERSION_TUPLE = hip_version_tuple = (5,6,31061,"8c743ae5d")
+HIP_VERSION = 50631062
+HIP_VERSION_NAME = hip_version_name = "5.6.31062-73ed8adfd"
+HIP_VERSION_TUPLE = hip_version_tuple = (5,6,31062,"73ed8adfd")
 
 
 from . import _util
