@@ -31803,7 +31803,7 @@ def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA,
 
 
 @cython.embedsignature(True)
-def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr):
+def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object externalBuffer):
     r"""(No short description, might be part of a group)
 
     Args:
@@ -31834,6 +31834,9 @@ def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, ob
         spsvDescr (`~.hipsparseSpSVDescr`/`~.object`):
             (undocumented)
 
+        externalBuffer (`~.hip._util.types.Pointer`/`~.object`):
+            (undocumented)
+
     Returns:
         A `~.tuple` of size 1 that contains (in that order):
 
@@ -31851,7 +31854,8 @@ def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, ob
         <void *const>hip._util.types.Pointer.from_pyobj(matA)._ptr,
         <void *const>hip._util.types.Pointer.from_pyobj(x)._ptr,
         <void *const>hip._util.types.Pointer.from_pyobj(y)._ptr,computeType.value,alg.value,
-        hipsparseSpSVDescr.from_pyobj(spsvDescr)._ptr))    # fully specified
+        hipsparseSpSVDescr.from_pyobj(spsvDescr)._ptr,
+        <void *>hip._util.types.Pointer.from_pyobj(externalBuffer)._ptr))    # fully specified
     return (_hipsparseSpSV_solve__retval,)
 
 

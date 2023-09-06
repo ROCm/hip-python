@@ -4478,7 +4478,7 @@ cdef hipsparseStatus_t hipsparseSpSV_analysis(void * handle,hipsparseOperation_t
 
 
 
-cdef hipsparseStatus_t hipsparseSpSV_solve(void * handle,hipsparseOperation_t opA,const void * alpha,void *const matA,void *const x,void *const y,hipDataType computeType,hipsparseSpSVAlg_t alg,hipsparseSpSVDescr_t spsvDescr) nogil
+cdef hipsparseStatus_t hipsparseSpSV_solve(void * handle,hipsparseOperation_t opA,const void * alpha,void *const matA,void *const x,void *const y,hipDataType computeType,hipsparseSpSVAlg_t alg,hipsparseSpSVDescr_t spsvDescr,void * externalBuffer) nogil
 
 
 
