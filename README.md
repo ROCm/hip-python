@@ -93,22 +93,24 @@ python3 -m pip install <path/to/hip_python_as_cuda>.whl
 Usage: ./build_hip_python_pkgs.sh [OPTIONS]
 
 Options:
-  --rocm-path        Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
-  --libs             HIP Python libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
-                     Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
-  --cuda-libs        HIP Python CUDA interop libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_CUDA_LIBS' if set or '*'.
-                     Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
-  --no-hip           Do not build package 'hip-python'.
-  --no-cuda          Do not build package 'hip-python-as-cuda'.
-  --no-docs          Do not build the docs of package 'hip-python'.
-  --no-api-docs      Temporarily move the 'hip-python/docs/python_api' subfolder so that sphinx does not see it.
-  --no-clean-docs    Do not generate docs from scratch, i.e. don't run sphinx with -E switch.
-  --run-tests        Run the tests.
-  -j,--num-jobs      Number of build jobs to use (currently only applied for building docs). Defaults to 1.
-  --pre-clean        Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
-  --post-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
-  -n, --no-venv      Do not create and use a virtual Python environment.
-  -h, --help         Show this help message.
+  --rocm-path            Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+  --libs                 HIP Python libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
+                         Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
+  --cuda-libs            HIP Python CUDA interop libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_CUDA_LIBS' if set or '*'.
+                         Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
+  --no-hip               Do not build package 'hip-python'.
+  --no-cuda              Do not build package 'hip-python-as-cuda'.
+  --no-docs              Do not build the docs of package 'hip-python'.
+  --no-api-docs          Temporarily move the 'hip-python/docs/python_api' subfolder so that sphinx does not see it.
+  --no-clean-docs        Do not generate docs from scratch, i.e. don't run sphinx with -E switch.
+  --docs-use-testpypi    Get the HIP Python packages for building the docs from Test PyPI.
+  --docs-use-pypi        Get the HIP Python packages for building the docs from PyPI.
+  --run-tests            Run the tests.
+  -j,--num-jobs          Number of build jobs to use (currently only applied for building docs). Defaults to 1.
+  --pre-clean            Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
+  --post-clean           Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
+  -n, --no-venv          Do not create and use a virtual Python environment.
+  -h, --help             Show this help message.
 ```
 
 > **NOTE**: See the HIP Python developer guide for more details:
