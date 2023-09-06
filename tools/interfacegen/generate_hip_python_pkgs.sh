@@ -28,6 +28,9 @@ fi
 HELP_MSG="
 Usage: ./$(basename $0) output_dir [OPTIONS]
 
+Required:
+   output_dir       The output directory to which the files should be written to. Must contain 'hip-python' and 'hip-python-as-cuda' subfolders.
+
 Options:
   --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
   --libs            HIP Python libraries to generate as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
@@ -37,6 +40,13 @@ Options:
   -n, --no-venv     Do not create and use a virtual Python environment.
   -h, --help        Show this help message.
 "
+
+case $1 in
+  -h|--help)
+    echo "${HELP_MSG}"
+    exit 0
+    ;;
+esac
 
 OUTPUT_DIR=$1
 shift
