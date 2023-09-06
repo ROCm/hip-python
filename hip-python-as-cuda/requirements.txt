@@ -27,4 +27,4 @@ setuptools>=42
 cython
 wheel
 build
-hip-python==5.6.31061.216
+hip-python==5.6.31061.225
