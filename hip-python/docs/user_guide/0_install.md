@@ -26,34 +26,33 @@
 
 Currently, only AMD GPUs are supported.
 
-* See the ROCm&trade;   [Hardware_and_Software_Support](https://docs.amd.com/bundle/Hardware_and_Software_Reference_Guide/page/Hardware_and_Software_Support.html) page for a list of supported AMD GPUs.
+* See the ROCm&trade; [Hardware_and_Software_Support](https://docs.amd.com/bundle/Hardware_and_Software_Reference_Guide/page/Hardware_and_Software_Support.html) page for a list of supported AMD GPUs.
 
 ## Supported Operation Systems
 
 Currently, only Linux is supported by the HIP Python interfaces's library loader.
-The next section lists additional constraints with respect to the required ROCm&trade;  installation.
+The next section lists additional constraints with respect to the required ROCm&trade; installation.
 
 ## Software Requirements
 
-You must install a HIP Python version that is compatible with your  ROCm&trade;  installation, or vice versa -- i
-n particular, if you want to use the Cython interfaces.
-See the [ROCm&trade;  installation guide](https://docs.amd.com/bundle/ROCm&trade; -Installation-Guide-v5.3/page/Introduction_to_ROCm_Installation_Guide_for_Linux.html)
-for more details on how to install ROCm&trade; .
+You must install a HIP Python version that is compatible with your  ROCm&trade; installation, or vice versa -- in particular, if you want to use the Cython interfaces. See the [ROCm&trade; documentation](https://rocm.docs.amd.com/en/latest/index.html) for more details on how to install the ROCm&trade; HIP SDK.
 
 :::{important}
-Identifying matching ROCm&trade;  and `HIP Python` pairs must be done via
-the HIP (runtime) version! On a system with installed ROCm&trade; , you can, e.g., run
+Identifying matching ROCm&trade; and `HIP Python` pairs must be done via
+the HIP (runtime) version! 
+
+On a system with installed ROCm&trade; , you can, e.g., run
 `hipconfig` to read out the HIP version.
 :::
 
 (subsec_hip_python_versioning)=
 ### HIP Python Versioning
 
-While, the HIP runtime is versioned according to the below scheme
+The HIP runtime is versioned according to the below scheme:
 
-``HIP_VERSION_MAJOR.HIP_VERSION_MINOR.HIP_VERSION_PATCH[...]``
+``HIP_VERSION_MAJOR.HIP_VERSION_MINOR.HIP_VERSION_PATCH[...]``:
 
-HIP Python packages are versioned as follows:
+While HIP Python packages are versioned according to:
 
 ``HIP_VERSION_MAJOR.HIP_VERSION_MINOR.HIP_VERSION_PATCH.HIP_PYTHON_VERSION``
 
@@ -64,22 +63,20 @@ if the HIP Python packages have been built via a code generator on a development
 
 :::{admonition} Example
 
-``ROCm&trade;  5.4.3`` comes with HIP runtime version `5.4.22804-474e8620`, 
-which can, e.g., be obtained via `hipconfig`. 
-Hence, any HIP Python package `>= 5.4.22804.0` can be used.
+ROCm&trade; 5.4.3 comes with HIP runtime version `5.4.22804-474e8620`, 
+which can, for example, be obtained via `hipconfig`. 
+Hence, any HIP Python package `5.4.22804.X` can be used.
 :::
 
 :::{note}
 
-HIP Python package builts load HIP functions in a lazy manner.
-Therefore, you will likely "get away" with using "incompatible" HIP-HIP Python pairs if you are only using Python code, 
-if the definitions of the types that you use have not changed between ROCm&trade;  releases,
-and you are using a subset of functions that is present in both ROCm&trade;  releases.
+The HIP Python Python packages load HIP functions in a lazy manner.
+Therefore, you will likely "get away" with using "incompatible" HIP-HIP Python pairs if you are only using Python code, if the definitions of the types that you use have not changed between ROCm&trade; releases, and you are using a subset of functions that is present in both ROCm&trade; releases. Both assumptions often apply.
 :::
 
 ### Installation Commands
 
-After having identified the correct package for your ROCm&trade;  installation, type:
+After having identified the correct package for your ROCm&trade; installation, type:
 
 ```shell
 python3 -m pip install hip-python-<hip_version>.<hip_python_version>

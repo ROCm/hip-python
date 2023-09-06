@@ -41,7 +41,7 @@ This documentation has been generated based on HIP version 5.6.31061-8c743ae5d.
 :::{grid-item-card} How to Install HIP Python
 
 Learn how to identify the correct HIP Python packages 
-to install for your ROCm&trade;  installation, 
+to install for your ROCm&trade; installation, 
 where to retrieve the packages and what options
 you have to install them.
 

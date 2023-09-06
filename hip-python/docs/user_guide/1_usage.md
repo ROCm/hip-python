@@ -29,7 +29,8 @@ by means of basic examples before discussing the *Cython* API in the
 last sections of this chapter.
 
 :::{note}
-All examples in this chapter have been tested with ROCm&trade;  5.4.3.
+All examples in this chapter have been tested with ROCm&trade; 5.4.3 on Ubuntu 22.
+The <project:#ch_license> applies to all examples in this chapter.
 :::
 
 ## Basic Usage (Python)
@@ -534,7 +535,7 @@ that shared object.
 
 :::{note}
 The lazy-loading of functions at runtime can, under some circumstances, allow to use a HIP Python version that 
-covers a superset or only a subset of the functions available within the respective library of a ROCm&trade;  installation.
+covers a superset or only a subset of the functions available within the respective library of a ROCm&trade; installation.
 :::
 
 ### Using the Cython API

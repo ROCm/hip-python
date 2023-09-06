@@ -31,12 +31,17 @@ Moreover, a technique named "enum constant hallucination" is presented
 that allows HIP Python "invent" enum constants and their non-conflicting value
 on-the-fly for enum error types.
 
+:::{note}
+All examples in this chapter have been tested with ROCm&trade; 5.4.3 on Ubuntu 22.
+The <project:#ch_license> applies to all examples in this chapter.
+:::
+
 ## Installation
 
 HIP Python's CUDA interoperability layer comes in a separate Python 3 package with the name `hip-python-as-cuda`.
 Its sole dependency is the `hip-python` package with the exact same version number.
 
-After having identified the correct package for your ROCm&trade;  installation, type:
+After having identified the correct package for your ROCm&trade; installation, type:
 
 ```shell
 python3 -m pip install hip-python-as-cuda-<hip_version>.<hip_python_version>
