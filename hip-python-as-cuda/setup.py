@@ -105,7 +105,7 @@ def create_extension(name, sources):
         sources=sources,
         include_dirs=[ROCM_INC],
         library_dirs=[ROCM_LIB],
-        libraries=[mod.lib for mod in HIP_MODULES],
+        #libraries=[mod.lib for mod in HIP_MODULES],
         language="c",
         extra_compile_args=EXTRA_COMPILE_ARGS + ["-D", "__half=uint16_t"],
     )

@@ -61,6 +61,7 @@ def parse_options():
     global ROCM_LIB
     global EXTRA_COMPILE_ARGS
     global HIP_PYTHON_LIBS
+    global HIP_PYTHON_RUNTIME_LINKING
 
     def get_bool_environ_var(env_var, default):
         yes_vals = ("true", "1", "t", "y", "yes")
@@ -80,6 +81,7 @@ def parse_options():
     platform=os.environ.get("HIP_PLATFORM","amd")
     verbose=os.environ.get("HIP_PYTHON_VERBOSE","amd")
     HIP_PYTHON_LIBS=os.environ.get("HIP_PYTHON_LIBS", "*")
+    HIP_PYTHON_RUNTIME_LINKING=get_bool_environ_var("HIP_PYTHON_RUNTIME_LINKING", "yes")
 
     if not rocm_path:
         raise RuntimeError("ROCm path is not set")
@@ -95,12 +97,13 @@ def create_extension(name, sources):
     global ROCM_INC
     global ROCM_LIB
     global HIP_MODULES
+    global HIP_PYTHON_RUNTIME_LINKING
     return Extension(
         name,
         sources=sources,
         include_dirs=[ROCM_INC],
         library_dirs=[ROCM_LIB],
-        libraries=[mod.lib for mod in HIP_MODULES],
+        libraries=[] if HIP_PYTHON_RUNTIME_LINKING else [mod.lib for mod in HIP_MODULES],
         language="c",
         extra_compile_args=EXTRA_COMPILE_ARGS + ["-D","__half=uint16_t"],
     )
@@ -171,6 +174,7 @@ exec(open(os.path.join(Module.PKG_NAME,"_version.py"),"r").read(), ns)
 
 if __name__ == "__main__":
     HIP_PYTHON_LIBS=None
+    HIP_PYTHON_RUNTIME_LINKING=True
     ROCM_INC = None
     ROCM_LIB = None
     EXTRA_COMPILE_ARGS = None
