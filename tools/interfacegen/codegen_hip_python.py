@@ -235,6 +235,7 @@ def parse_options():
 
 # hip
 def generate_hip_package_files():
+    global OUTPUT_DIR
     global ROCM_INC
     global RUNTIME_LINKING
     global GENERATOR_ARGS
@@ -301,16 +302,17 @@ def generate_hip_package_files():
             elif node.name == "HIP_VERSION_GITHASH":
                 HIP_VERSION_GITHASH = last_token.strip('"')
     _cuda_interop_layer_gen.generate_cuda_interop_package_files(
-        "cuda", generator, HIP_2_CUDA
+        OUTPUT_DIR, "cuda", generator, HIP_2_CUDA
     )
     _cuda_interop_layer_gen.generate_cuda_interop_package_files(
-        "cudart", generator, HIP_2_CUDA, warn=False
+        OUTPUT_DIR, "cudart", generator, HIP_2_CUDA, warn=False
     )  # already warned before, regenerate to have correctly named pxd/pyx files too. Could be done via symlinks & __init__.py mod too.
     return generator
 
 
 # hiprtc
 def generate_hiprtc_package_files():
+    global OUTPUT_DIR
     global ROCM_INC
     global GENERATOR_ARGS
     global RUNTIME_LINKING
@@ -338,7 +340,7 @@ def generate_hiprtc_package_files():
         cflags=GENERATOR_ARGS,
     )
     _cuda_interop_layer_gen.generate_cuda_interop_package_files(
-        "nvrtc", generator, HIP_2_CUDA
+        OUTPUT_DIR,"nvrtc", generator, HIP_2_CUDA
     )
     return generator
 

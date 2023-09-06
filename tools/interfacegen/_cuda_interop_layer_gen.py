@@ -49,6 +49,7 @@ except ImportError:
     HAVE_LEVENSHTEIN = False
 
 def generate_cuda_interop_package_files(
+    output_dir,
     cuda_pkg_name: str, 
     generator: CythonPackageGenerator,
     hip2cuda: dict,
@@ -56,7 +57,7 @@ def generate_cuda_interop_package_files(
 ):
     global HAVE_LEVENSHTEIN
     pkg_dir = "cuda"
-    output_dir = os.path.join("packages","hip-python-as-cuda",pkg_dir)
+    output_dir = os.path.join(output_dir,"hip-python-as-cuda",pkg_dir)
     indent = " " * 4
     pkg_name = generator.pkg_name
     cpkg_name = f"hip.c{pkg_name}"
