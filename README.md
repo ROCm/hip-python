@@ -261,7 +261,7 @@ On systems with ROCm&trade; HIP SDK 5.5.0 or 5.5.1, the examples
 abort with errors.
 
 An upgrade to version HIP SDK 5.6 or later (or a downgrade to version 5.4) is advised if 
-such functionality is needed.
+the showcased functionality is needed.
 
 ### Unspecific
 

@@ -55,6 +55,27 @@ becomes
 typedef struct rocrand_generator_base_type hiprandGenerator_st;
 ```
 
+### ROCm&trade; 5.5.0 and ROCm&trade; 5.5.1
+
+On systems with ROCm&trade; HIP SDK 5.5.0 or 5.5.1, the examples
+
+* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
+* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_no_args.py
+
+abort with errors.
+
+An upgrade to version HIP SDK 5.6 or later (or a downgrade to version 5.4) is advised if 
+the showcased functionality is needed.
+
+### Unspecific
+
+On certain Ubuntu 20 systems, we encountered issues when running the examples:
+
+* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
+* hip-python/examples/0_Basic_Usage/rccl_comminitall_bcast.py
+
+We could not identify the cause yet.
+
 ## Documentation
 
 For examples, guides and API reference, please take a
