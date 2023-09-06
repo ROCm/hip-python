@@ -28,7 +28,7 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 
 ## Requirements
 
-Requires that ROCm&trade;  is installed on your system.
+Requires that ROCm&trade; is installed on your system.
 
 All Python requirements are taking care of by installation scripts. 
 If you decide not to use these scripts, take a look into the `requirements.txt` file 
@@ -40,7 +40,7 @@ in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
 ### Via PyPI
 
 First identify the first three digits of the version number of the HIP runtime that is part 
-of your ROCm&trade;  installation, e.g. via:
+of your ROCm&trade; installation, e.g. via:
 
 ```shell
 # extract it visually
@@ -74,11 +74,15 @@ python3 -m pip install <path/to/hip_python_as_cuda>.whl
 ## Build From Source
 
 1. Install ROCM
-2. Then run:
-
-```bash
-./build_hip_python_pkgs.sh --post-clean
-```
+1. Install `pip`, virtual environment and development headers for Python 3:
+   ```bash
+   # Ubuntu:
+   sudo apt install python3-pip python3-venv python3-dev
+   ```
+1. Then run:
+   ```bash
+   ./build_hip_python_pkgs.sh --post-clean
+   ```
 
 > **NOTE**: See the HIP Python developer guide for more details:
 > https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html
@@ -110,7 +114,73 @@ Options:
 > **NOTE**: See the HIP Python developer guide for more details:
 > https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html
 
-## Known Issues
+## Publish to PyPI
+
+After building, the created Python wheels have a generic `linux_x86_64` tag that PyPI (and Test PyPI) will not accept. 
+Hence, before publishing to PyPI one needs to first run `auditwheel` and check the 
+suggested `manylinux_<GLIBC_VERSION_MAJOR>_<GLIBC_VERSION_MINOR>_x86_64` tag.
+
+```bash
+python3 -m auditwheel show hip-python/dist/<pkg>-linux_x86_64.whl
+```
+
+The `linux_x86_64` in the filename must then be replaced by 
+the `manylinux_<GLIBC_VERSION_MAJOR>_<GLIBC_VERSION_MINOR>_x86_64`,
+and the renamed packaged can be published to PyPI (and Test PyPI).
+
+The `manylinux` should be at maximum `manylinux_2_17_x86_64`.
+
+```{note}
+The `GLIBC` should be as low as possible to support as many other Linux operating
+systems as possible. Of course, it makes sense to focus on Linux operating
+systems that are officially supported by ROCm.
+```
+
+```{note}
+For more details on `auditwheel` and how to install it, see: https://pypi.org/project/auditwheel/
+```
+
+### Auditwheel: Example Output
+
+On Ubuntu 20.04.6 LTS, we obtained for `hip-python`:
+
+```
+$ python3 -m auditwheel show hip-python/dist/hip_python-5.6.31061.216-cp38-cp38-linux_x86_64.whl
+
+hip_python-5.6.31061.216-cp38-cp38-linux_x86_64.whl is consistent with
+the following platform tag: "manylinux_2_17_x86_64".
+
+The wheel references external versioned symbols in these
+system-provided shared libraries: libc.so.6 with versions
+{'GLIBC_2.2.5', 'GLIBC_2.14', 'GLIBC_2.4'}
+
+This constrains the platform tag to "manylinux_2_17_x86_64". In order
+to achieve a more compatible tag, you would need to recompile a new
+wheel from source on a system with earlier versions of these
+libraries, such as a recent manylinux image.
+```
+
+And we obtained for `hip-python-as-cuda`:
+
+```
+$ python3 -m auditwheel show hip-python-as-cuda/dist/hip_python_as_cuda-5.6.31061.216-cp38-cp38-linux_x86_64.whl
+
+hip_python_as_cuda-5.6.31061.216-cp38-cp38-linux_x86_64.whl is
+consistent with the following platform tag: "manylinux_2_17_x86_64".
+
+The wheel references external versioned symbols in these
+system-provided shared libraries: libc.so.6 with versions
+{'GLIBC_2.14', 'GLIBC_2.2.5', 'GLIBC_2.4'}
+
+This constrains the platform tag to "manylinux_2_17_x86_64". In order
+to achieve a more compatible tag, you would need to recompile a new
+wheel from source on a system with earlier versions of these
+libraries, such as a recent manylinux image.
+```
+
+Therefore, we can use the `manylinux_2_17_x86_64` tag for both packages.
+
+## Known Compilation Issues
 
 ### The `hipsparse` module won't compile with older GCC version
 
@@ -176,6 +246,29 @@ typedef struct rocrand_generator_base_type hiprandGenerator_st;
 
 Note that Cython users will experience the same issue if they use one
 of the Cython modules in their code and use `c` as compilation language.
+
+## Other Known Issues
+
+### ROCm&trade; 5.5.0 and ROCm&trade; 5.5.1
+
+On systems with ROCm&trade; HIP SDK 5.5.0 or 5.5.1, the examples
+
+* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
+* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_no_args.py
+
+abort with errors.
+
+An upgrade to version HIP SDK 5.6 or later (or a downgrade to version 5.4) is advised if 
+such functionality is needed.
+
+### Unspecific
+
+On certain Ubuntu 20 systems, we encountered issues when running the examples:
+
+* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
+* hip-python/examples/0_Basic_Usage/rccl_comminitall_bcast.py
+
+We could not identify the cause yet.
 
 ## Documentation
 
