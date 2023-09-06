@@ -28,13 +28,13 @@ Codegenerator for generating low-level Python and Cython Bindings for HIP.
 
 Requires that ROCm&trade; is installed on your system.
 
-All Python requirements are taking care of by the main script.
-If you decide not to use these scripts, take a look into the `requirements.txt` file 
+All Python requirements are taking care of by the `generate_hip_python_pkgs.sh` script. 
+If you decide not to use it, take a look into the `requirements.txt` file 
 in the top-level folder of the this repository.
 
 ## Run Codegenerator
 
-1. Install ROCm&trade;
+1. Install ROCm&trade;.
 2. Clone a branch of `https://github.com/ROCmSoftwarePlatform/hip-python` into `<path/to/rocm_software_platform_hip_python>`
    that you want to base your work on.
 3. Generate Cython code from ROCm&trade; header files, specify `<path/to/rocm_software_platform_hip_python>` as output directory:
