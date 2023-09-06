@@ -23,8 +23,8 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-VERSION = __version__ = "5.6.31061.216"
-FULL_VERSION = __full_version__ = "5.6.31061-8c743ae5d.216"
+VERSION = __version__ = "5.6.31062.221"
+FULL_VERSION = __full_version__ = "5.6.31062-73ed8adfd.221+d20230906"
 HIP_PYTHON_CODEGEN_BRANCH = "main"
-HIP_PYTHON_CODEGEN_VERSION = "216"
-HIP_PYTHON_CODEGEN_REV = "28bbdbf"
+HIP_PYTHON_CODEGEN_VERSION = "221+d20230906"
+HIP_PYTHON_CODEGEN_REV = "8097d31"

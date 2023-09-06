@@ -5996,10 +5996,10 @@ cdef hipsparseStatus_t hipsparseSpSV_analysis(void * handle,hipsparseOperation_t
 
 
 cdef void* _hipsparseSpSV_solve__funptr = NULL
-cdef hipsparseStatus_t hipsparseSpSV_solve(void * handle,hipsparseOperation_t opA,const void * alpha,void *const matA,void *const x,void *const y,hipDataType computeType,hipsparseSpSVAlg_t alg,hipsparseSpSVDescr_t spsvDescr) nogil:
+cdef hipsparseStatus_t hipsparseSpSV_solve(void * handle,hipsparseOperation_t opA,const void * alpha,void *const matA,void *const x,void *const y,hipDataType computeType,hipsparseSpSVAlg_t alg,hipsparseSpSVDescr_t spsvDescr,void * externalBuffer) nogil:
     global _hipsparseSpSV_solve__funptr
     __init_symbol(&_hipsparseSpSV_solve__funptr,"hipsparseSpSV_solve")
-    return (<hipsparseStatus_t (*)(void *,hipsparseOperation_t,const void *,void *const,void *const,void *const,hipDataType,hipsparseSpSVAlg_t,hipsparseSpSVDescr_t) nogil> _hipsparseSpSV_solve__funptr)(handle,opA,alpha,matA,x,y,computeType,alg,spsvDescr)
+    return (<hipsparseStatus_t (*)(void *,hipsparseOperation_t,const void *,void *const,void *const,void *const,hipDataType,hipsparseSpSVAlg_t,hipsparseSpSVDescr_t,void *) nogil> _hipsparseSpSV_solve__funptr)(handle,opA,alpha,matA,x,y,computeType,alg,spsvDescr,externalBuffer)
 
 
 cdef void* _hipsparseSpSM_createDescr__funptr = NULL
