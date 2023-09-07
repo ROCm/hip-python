@@ -134,12 +134,12 @@ declare -x HIP_PYTHON_CUDA_LIBs=${HIP_PYTHON_CUDA_LIBs:-*}
 
 # note: [ -z {var+x} ] evaluates to true if `var` is unset!
 
-[ -z ${PRE_CLEAN+x} ] || rm -rf venv
+[ -z ${PRE_CLEAN+x} ] || rm -rf _venv
 
 alias PYTHON="python3"
 PYTHON_PATH="python3"
-if [ -z ${NO_ENV+x} ]; then
-  [ ! -d "venv" ] && python3 -m venv _venv
+if [ -z ${NO_VENV+x} ]; then
+  [ ! -d "_venv" ] && python3 -m venv _venv
   alias PYTHON="$(pwd)/_venv/bin/python3"
   PYTHON_PATH="$(pwd)/_venv/bin/python3"
 fi
@@ -226,4 +226,4 @@ if [ ! -z ${RUN_TESTS+x} ]; then
   # 2x ok
 fi
 
-[ -z ${POST_CLEAN+x} ] || rm -rf venv
+[ -z ${POST_CLEAN+x} ] || rm -rf _venv
