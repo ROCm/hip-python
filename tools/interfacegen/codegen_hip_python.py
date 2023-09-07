@@ -560,7 +560,7 @@ if __name__ == "__main__":
     )
 
     VERSION = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}.{_gitversion.version()}"
-    FULL_VERSION = (
+    LONG_VERSION = (
         f"{HIP_VERSION_NAME}.{_gitversion.version(append_hash=True,append_date=True)}"
     )
     
@@ -580,7 +580,7 @@ if __name__ == "__main__":
                 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
                 VERSION = __version__ = "{VERSION}.{{HIP_PYTHON_VERSION_SHORT}}"
-                FULL_VERSION = __full_version__ = "{FULL_VERSION}.{{HIP_PYTHON_VERSION}}"
+                LONG_VERSION = __long_version__ = "{LONG_VERSION}.{{HIP_PYTHON_VERSION}}"
                 HIP_PYTHON_CODEGEN_BRANCH = "{_gitversion.git_current_branch()}"
                 HIP_PYTHON_CODEGEN_VERSION = "{_gitversion.version(append_hash=True,append_date=True)}"
                 HIP_PYTHON_CODEGEN_REV = "{_gitversion.git_rev()}"
