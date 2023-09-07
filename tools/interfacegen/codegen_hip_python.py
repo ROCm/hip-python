@@ -630,7 +630,7 @@ if __name__ == "__main__":
             f.write(init_content)
     # hip-python-as-cuda/requirements.txt
     requirements_file = os.path.join(
-        OUTPUT_DIR, "hip-python-as-cuda", "requirements.txt"
+        OUTPUT_DIR, "hip-python-as-cuda", "requirements.txt.in"
     )
     with open(requirements_file, "w") as outfile:
         outfile.write(
@@ -645,7 +645,7 @@ if __name__ == "__main__":
                 cython
                 wheel
                 build
-                hip-python=={VERSION}"""
+                hip-python=={VERSION}.{{HIP_PYTHON_VERSION_SHORT}}"""
             )
         )
     # hip-python docs
