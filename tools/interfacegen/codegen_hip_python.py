@@ -569,7 +569,7 @@ if __name__ == "__main__":
     cuda_output_dir = os.path.join(OUTPUT_DIR, "hip-python-as-cuda", "cuda")
     for output_dir in (hip_output_dir, cuda_output_dir):
         # hip|cuda/_version.py
-        with open(os.path.join(output_dir, "_version.py"), "w") as f:
+        with open(os.path.join(output_dir, "_version.py.in"), "w") as f:
             f.write(
                 LICENSE_TEXT
                 + textwrap.dedent(
@@ -579,11 +579,14 @@ if __name__ == "__main__":
                 
                 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-                VERSION = __version__ = "{VERSION}"
-                FULL_VERSION = __full_version__ = "{FULL_VERSION}"
+                VERSION = __version__ = "{VERSION}.{{HIP_PYTHON_VERSION_SHORT}}"
+                FULL_VERSION = __full_version__ = "{FULL_VERSION}.{{HIP_PYTHON_VERSION}}"
                 HIP_PYTHON_CODEGEN_BRANCH = "{_gitversion.git_current_branch()}"
                 HIP_PYTHON_CODEGEN_VERSION = "{_gitversion.version(append_hash=True,append_date=True)}"
-                HIP_PYTHON_CODEGEN_REV = "{_gitversion.git_rev()}"\
+                HIP_PYTHON_CODEGEN_REV = "{_gitversion.git_rev()}"
+                HIP_PYTHON_BRANCH = "{{HIP_PYTHON_BRANCH}}"
+                HIP_PYTHON_VERSION = "{{HIP_PYTHON_VERSION}}"
+                HIP_PYTHON_REV = "{{HIP_PYTHON_REV}}"\
                 """
                 ).strip()
             )
