@@ -154,6 +154,7 @@ if [ -z ${NO_HIP+x} ]; then
   mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
   mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
   PYTHON -m pip install -r ${PKG}/requirements.txt
+  PYTHON _render_update_version.py
   PYTHON -m build ${PKG} -n
 fi
   
@@ -167,6 +168,7 @@ if [ -z ${NO_CUDA+x} ]; then
   mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
   PYTHON -m pip install --force-reinstall hip-python/dist/hip*whl
   PYTHON -m pip install -r ${PKG}/requirements.txt
+  PYTHON _render_update_version.py
   PYTHON -m build ${PKG} -n
 fi
 
