@@ -41,6 +41,7 @@ Options:
   --no-clean-docs        Do not generate docs from scratch, i.e. don't run sphinx with -E switch.
   --docs-use-testpypi    Get the HIP Python packages for building the docs from Test PyPI.
   --docs-use-pypi        Get the HIP Python packages for building the docs from PyPI.
+  --no-archive           Do not put previously created packages into the archive folder.
   --run-tests            Run the tests.
   -j,--num-jobs          Number of build jobs to use (currently only applied for building docs). Defaults to 1.
   --pre-clean            Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
@@ -112,6 +113,10 @@ while [[ $# -gt 0 ]]; do
       DOCS_USE_TESTPYPI=1
       shift
       ;;
+    --no-archive)
+      NO_ARCHIVE_OLD_PACKAGES=1
+      shift
+      ;;
     -j|--num-jobs)
       NUM_JOBS=$2
       shift; shift
@@ -151,8 +156,10 @@ if [ -z ${NO_HIP+x} ]; then
   PKG="hip-python"
   mkdir -p ${PKG}/dist/
   mkdir -p ${PKG}/dist/archive
-  mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
-  mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
+  if [ -z ${NO_ARCHIVE_OLD_PACKAGES+x} ]; then
+    mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
+    mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
+  fi
   PYTHON -m pip install -r ${PKG}/requirements.txt
   PYTHON _render_update_version.py
   PYTHON -m build ${PKG} -n
@@ -164,8 +171,10 @@ if [ -z ${NO_CUDA+x} ]; then
   PKG="hip-python-as-cuda"
   mkdir -p ${PKG}/dist/
   mkdir -p ${PKG}/dist/archive
-  mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
-  mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
+  if [ -z ${NO_ARCHIVE_OLD_PACKAGES+x} ]; then
+    mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
+    mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
+  fi
   PYTHON -m pip install --force-reinstall hip-python/dist/hip*whl
   PYTHON -m pip install -r ${PKG}/requirements.txt
   PYTHON _render_update_version.py
