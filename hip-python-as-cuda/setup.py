@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""This is the packages's setup script.
+"""This is the package's setup script.
 
 It cythonizes and compiles the Cython
 files in the `cuda` subfolder.
@@ -167,10 +167,6 @@ def gather_ext_modules():
         if mod.name in selected_libs:
             CYTHON_EXT_MODULES += mod.ext_modules
 
-
-ns = {}
-exec(open(os.path.join(Module.PKG_NAME, "_version.py"), "r").read(), ns)
-
 if __name__ == "__main__":
     HIP_PYTHON_CUDA_LIBS=None
     ROCM_INC = None
@@ -193,6 +189,10 @@ if __name__ == "__main__":
                 language_level=3,
             ),
         )
+
+    # load _version.py
+    ns = {}
+    exec(open(os.path.join(Module.PKG_NAME,"_version.py"),"r").read(), ns)
 
     matching_hip_python = f"hip-python=={ns['__version__']}"
     setup(

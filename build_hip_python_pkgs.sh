@@ -134,12 +134,12 @@ declare -x HIP_PYTHON_CUDA_LIBs=${HIP_PYTHON_CUDA_LIBs:-*}
 
 # note: [ -z {var+x} ] evaluates to true if `var` is unset!
 
-[ -z ${PRE_CLEAN+x} ] || rm -rf venv
+[ -z ${PRE_CLEAN+x} ] || rm -rf _venv
 
 alias PYTHON="python3"
 PYTHON_PATH="python3"
-if [ -z ${NO_ENV+x} ]; then
-  [ ! -d "venv" ] && python3 -m venv _venv
+if [ -z ${NO_VENV+x} ]; then
+  [ ! -d "_venv" ] && python3 -m venv _venv
   alias PYTHON="$(pwd)/_venv/bin/python3"
   PYTHON_PATH="$(pwd)/_venv/bin/python3"
 fi
@@ -154,6 +154,7 @@ if [ -z ${NO_HIP+x} ]; then
   mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
   mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
   PYTHON -m pip install -r ${PKG}/requirements.txt
+  PYTHON _render_update_version.py
   PYTHON -m build ${PKG} -n
 fi
   
@@ -167,6 +168,7 @@ if [ -z ${NO_CUDA+x} ]; then
   mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
   PYTHON -m pip install --force-reinstall hip-python/dist/hip*whl
   PYTHON -m pip install -r ${PKG}/requirements.txt
+  PYTHON _render_update_version.py
   PYTHON -m build ${PKG} -n
 fi
 
@@ -226,4 +228,4 @@ if [ ! -z ${RUN_TESTS+x} ]; then
   # 2x ok
 fi
 
-[ -z ${POST_CLEAN+x} ] || rm -rf venv
+[ -z ${POST_CLEAN+x} ] || rm -rf _venv
