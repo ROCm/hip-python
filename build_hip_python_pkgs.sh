@@ -175,7 +175,9 @@ if [ -z ${NO_CUDA+x} ]; then
     mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null
     mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null
   fi
-  PYTHON -m pip install --force-reinstall hip-python/dist/hip*whl
+  for f in $(find hip-python/dist -name "*.whl"); do
+    PYTHON -m pip install --force-reinstall $f
+  done
   PYTHON -m pip install -r ${PKG}/requirements.txt
   PYTHON _render_update_version.py
   PYTHON -m build ${PKG} -n
@@ -192,9 +194,9 @@ if [ -z ${NO_DOCS+x} ]; then
     PYTHON -m pip install -i https://test.pypi.org/simple --force-reinstall hip-python hip-python-as-cuda
   else
     PYTHON -m pip install --force-reinstall hip-python/dist/hip*whl \
-                                                    hip-python-as-cuda/dist/hip*whl
-    PYTHON -m pip install -r hip-python/docs/requirements.txt
+                                            hip-python-as-cuda/dist/hip*whl
   fi
+  PYTHON -m pip install -r hip-python/docs/requirements.txt
   DOCS_DIR="hip-python/docs"
   
   if [ ! -z ${NO_API_DOCS+x} ]; then
