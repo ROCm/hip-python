@@ -35,43 +35,38 @@ The next section lists additional constraints with respect to the required ROCm&
 
 ## Software Requirements
 
-You must install a HIP Python version that is compatible with your  ROCm&trade; installation, or vice versa -- in particular, if you want to use the Cython interfaces. See the [ROCm&trade; documentation](https://rocm.docs.amd.com/en/latest/index.html) for more details on how to install the ROCm&trade; HIP SDK.
-
-:::{important}
-Identifying matching ROCm&trade; and `HIP Python` pairs must be done via
-the HIP (runtime) version! 
-
-On a system with installed ROCm&trade; , you can, e.g., run
-`hipconfig` to read out the HIP version.
-:::
+You must install a HIP Python version that is compatible with your  ROCm&trade; HIP SDK installation, or vice versa -- in particular, if you want to use the Cython interfaces. See the [ROCm&trade; documentation](https://rocm.docs.amd.com/en/latest/index.html) for more details on how to install the ROCm&trade; HIP SDK.
 
 (subsec_hip_python_versioning)=
 ### HIP Python Versioning
 
-The HIP runtime is versioned according to the below scheme:
+The ROCm&trade; HIP SDK is versioned according to the below scheme:
 
-``HIP_VERSION_MAJOR.HIP_VERSION_MINOR.HIP_VERSION_PATCH[...]``:
+``ROCM_VERSION_MAJOR.ROCM_VERSION_MINOR.ROCM_VERSION_PATCH[...]``:
 
 While HIP Python packages are versioned according to:
 
-``HIP_VERSION_MAJOR.HIP_VERSION_MINOR.HIP_VERSION_PATCH.HIP_PYTHON_VERSION``
+``ROCM_VERSION_MAJOR.ROCM_VERSION_MINOR.ROCM_VERSION_PATCH.HIP_PYTHON_CODEGEN_VERSION.HIP_PYTHON_RELEASE_VERSION``
 
-The HIP Python version ``HIP_PYTHON_VERSION`` consists of the revision count on
-the ``main`` branch plus an optional ``dev<number>`` that indicates
-the deviation from the ``main`` branch. Such a suffix is typically appended
-if the HIP Python packages have been built via a code generator on a development branch.
+Any version of HIP Python that matches the first three numbers is suitable for your ROCm&trade; HIP SDK installation.
 
 :::{admonition} Example
 
-ROCm&trade; 5.4.3 comes with HIP runtime version `5.4.22804-474e8620`, 
-which can, for example, be obtained via `hipconfig`. 
-Hence, any HIP Python package `5.4.22804.X` can be used.
+If you have the ROCm&trade; HIP SDK 5.6.0 installed, any
+HIP Python package with version `5.6.0.X.Y` can be used.
 :::
 
 :::{note}
 
-The HIP Python Python packages load HIP functions in a lazy manner.
-Therefore, you will likely "get away" with using "incompatible" HIP-HIP Python pairs if you are only using Python code, if the definitions of the types that you use have not changed between ROCm&trade; releases, and you are using a subset of functions that is present in both ROCm&trade; releases. Both assumptions often apply.
+The HIP Python Python packages load HIP SDK functions in a lazy manner.
+Therefore, you will likely "get away" with using "incompatible" ROCm&trade; and HIP Python pairs if the
+following assumptions apply: 
+
+* You are only using Python code, 
+* the definitions of the types that you use have not changed between the respective ROCm&trade; releases, and 
+* you are using a subset of functions that is present in both ROCm&trade; releases. 
+
+Both assumptions often apply.
 :::
 
 ### Installation Commands
