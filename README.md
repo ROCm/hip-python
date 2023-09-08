@@ -39,23 +39,13 @@ in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
 
 ### Via PyPI
 
-First identify the first three digits of the version number of the HIP runtime that is part 
-of your ROCm&trade; installation, e.g. via:
+First identify the first three digits of the version number of your ROCm&trade; installation.
+Then install the HIP Python package(s) as follows:
 
 ```shell
-# extract it visually
-hipconfig  | head -n1 # example output: 'HIP version  : 5.4.22804-474e8620'
-# or programmatically
-hip_version=$(hipconfig  | head -n1 | grep -o "\([0-9]\+\.\)\{2\}[0-9]\+" 
-echo $hip_version # example output: '5.4.22804')
-```
-
-Then install the HIP Python package(s):
-
-```shell
-python3 -m pip install hip-python-$hip_version
+python3 -m pip install hip-python>=$rocm_version
 # if you want to install the CUDA Python interoperability package too, run:
-python3 -m pip install hip-python-as-cuda-$hip_version
+python3 -m pip install hip-python-as-cuda>=$rocm_version
 ```
 
 ### Via Wheel in Local Filesystem

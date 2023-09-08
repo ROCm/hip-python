@@ -1,2 +1,3 @@
+sphinx
 rocm-docs-core
 myst-parser[linkify]
