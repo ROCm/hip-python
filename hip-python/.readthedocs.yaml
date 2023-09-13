@@ -11,7 +11,7 @@ build:
 sphinx:
   configuration: hip-python/docs/conf.py
 
-formats: [htmlzip, pdf, epub]
+formats: [htmlzip]
 
 python:
   install:
