@@ -28,14 +28,27 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 
 ## Requirements
 
-Requires that ROCm&trade; is installed on your system.
+* Currently, only Linux is supported (prebuilt packages and code).
+  * Prebuilt packages distributed via PyPI (or Test PyPI) are only provided for Linux systems that agree with the `manylinux_2_17_x86_64` tag.
+* Requires that a compatible ROCm&trade; HIP SDK is installed on your system.
+  * Source code is provided only for particular ROCm versions.
+    * See the git branches tagged with `release/rocm-rel-X.Y[.Z]`
+  * Prebuilt packages are built only for particular ROCm versions. 
 
-All Python requirements are taking care of by installation scripts. 
+> **NOTE**: You may find that packages for one ROCm&trade; release might be compatible with the ROCm&trade; HIP SDK of another release as the HIP Python functions load HIP C functions in a lazy manner.
+
+### Build requirements
+
+* All Python requirements are taking care of by installation scripts. 
 If you decide not to use these scripts, take a look into the `requirements.txt` file 
 in the top-level folder of the this repository and those 
 in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
 
 ## Install Prebuilt Package(s)
+
+> **NOTE**: The prebuilt packages might not be available on PyPI directly after a ROCm release as this project is not an official part of the ROCm HIP SDK yet and thus is not fully integrated into the global ROCm HIP SDK build process. Check the `simple` lists to see if your operating system and Python version is supported: [hip-python](https://test.pypi.org/simple/hip-python/), [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
+
+> **NOTE**: Prebuilt packages for some ROCm releases are published to Test PyPI first. Check the `simple` lists to see if your operating system and Python version is supported: [hip-python](https://test.pypi.org/simple/hip-python/), [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
 
 ### Via PyPI
 
@@ -46,6 +59,15 @@ Then install the HIP Python package(s) as follows:
 python3 -m pip install hip-python>=$rocm_version
 # if you want to install the CUDA Python interoperability package too, run:
 python3 -m pip install hip-python-as-cuda>=$rocm_version
+```
+
+#### Via TestPyPI
+
+Packages can be installed via the TestPyPI index by prefixing the
+the PIP install commands as follows:
+
+```shell
+python3 -m pip install -i https://test.pypi.org/simple ...
 ```
 
 ### Via Wheel in Local Filesystem
@@ -69,6 +91,7 @@ python3 -m pip install <path/to/hip_python_as_cuda>.whl
    # Ubuntu:
    sudo apt install python3-pip python3-venv python3-dev
    ```
+1. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular ROCm&trade; installation:
 1. Then run:
    ```bash
    ./build_hip_python_pkgs.sh --post-clean
@@ -134,7 +157,7 @@ For more details on `auditwheel` and how to install it, see: https://pypi.org/pr
 
 ### Auditwheel: Example Output
 
-On Ubuntu 20.04.6 LTS, we obtained for `hip-python`:
+On Ubuntu 20.04.6 LTS, we obtained for `hip-python` using Python 3.8:
 
 ```
 $ python3 -m auditwheel show hip-python/dist/hip_python-5.6.31061.216-cp38-cp38-linux_x86_64.whl
@@ -174,7 +197,7 @@ Therefore, we can use the `manylinux_2_17_x86_64` tag for both packages.
 
 ## Known Compilation Issues
 
-### The `hipsparse` module won't compile with older GCC version
+### The `hipsparse` Module won't Compile with Older GCC Release
 
 With all ROCm&trade; versions before version 5.6.0 (exclusive) and older GCC versions, 
 compiling HIP Python's `hipsparse` module results in a compiler error caused by lines such as:
@@ -183,7 +206,7 @@ compiling HIP Python's `hipsparse` module results in a compiler error caused by 
 HIPSPARSE_ORDER_COLUMN [[deprecated("Please use HIPSPARSE_ORDER_COL instead")]] = 1,
 ```
 
-#### Workaround 1: Disable Build of Hiprand Module
+#### Workaround 1: Disable Build of 'hipsparse' Module
 
 Disabling the build of the `hipsparse` HIP python module can, e.g., 
 be achieved by supplying `--libs "^hipsparse"` to `build_hip_python_pkgs.sh`.
