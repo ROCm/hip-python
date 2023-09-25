@@ -52,7 +52,7 @@ in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
 
 > **NOTE**: Prebuilt packages for some ROCm releases are published to Test PyPI first. Check the `simple` lists to see if your operating system and Python version is supported: [hip-python](https://test.pypi.org/simple/hip-python/), [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
 
-> **Warning**: Currently, we have not uploaded any HIP Python packages to PyPI yet. So far we have only uploaded packages to TestPyPI, mainly intended for internal testing purposes. If you find similar named packages on PyPI they may been provided by others, possibly with malicious intent.
+> **WARNING**: Currently, we have not uploaded any HIP Python packages to PyPI yet. So far we have only uploaded packages to TestPyPI, mainly intended for internal testing purposes. If you find similar named packages on PyPI they may been provided by others, possibly with malicious intent.
 
 ### Via TestPyPI
 
