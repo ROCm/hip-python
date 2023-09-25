@@ -46,29 +46,35 @@ in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
 
 ## Install Prebuilt Package(s)
 
+<!--
 > **NOTE**: The prebuilt packages might not be available on PyPI directly after a ROCm release as this project is not an official part of the ROCm HIP SDK yet and thus is not fully integrated into the global ROCm HIP SDK build process. Check the `simple` lists to see if your operating system and Python version is supported: [hip-python](https://test.pypi.org/simple/hip-python/), [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
+-->
 
 > **NOTE**: Prebuilt packages for some ROCm releases are published to Test PyPI first. Check the `simple` lists to see if your operating system and Python version is supported: [hip-python](https://test.pypi.org/simple/hip-python/), [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
 
-### Via PyPI
+> **Warning**: Currently, we have not uploaded any HIP Python packages to PyPI yet. So far we have only uploaded packages to TestPyPI, mainly intended for internal testing purposes. If you find similar named packages on PyPI they may been provided by others, possibly with malicious intent.
+
+### Via TestPyPI
 
 First identify the first three digits of the version number of your ROCm&trade; installation.
 Then install the HIP Python package(s) as follows:
 
 ```shell
-python3 -m pip install hip-python>=$rocm_version
+python3 -m pip install -i https://test.pypi.org/simple hip-python>=$rocm_version
 # if you want to install the CUDA Python interoperability package too, run:
-python3 -m pip install hip-python-as-cuda>=$rocm_version
+python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda>=$rocm_version
 ```
 
-#### Via TestPyPI
-
-Packages can be installed via the TestPyPI index by prefixing the
-the PIP install commands as follows:
-
-```shell
-python3 -m pip install -i https://test.pypi.org/simple ...
-```
+<!--
+-- #### Via TestPyPI
+-- 
+-- Packages can be installed via the TestPyPI index by prefixing the
+-- the PIP install commands as follows:
+-- 
+-- ```shell
+-- python3 -m pip install -i https://test.pypi.org/simple ...
+-- ```
+-->
 
 ### Via Wheel in Local Filesystem
 
