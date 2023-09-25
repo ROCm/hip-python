@@ -85,6 +85,8 @@ python3 -m pip install <path/to/hip_python_as_cuda>.whl
 
 ## Build From Source
 
+> **NOTE**: Main is typically based on the latest `release/rocm-rel-X.Y[.Z]` release branch. However, it is recommended to use the release branches directly when building from source.
+
 1. Install ROCM
 1. Install `pip`, virtual environment and development headers for Python 3:
    ```bash
