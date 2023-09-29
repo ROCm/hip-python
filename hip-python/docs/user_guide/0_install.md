@@ -71,6 +71,7 @@ Both assumptions often apply.
 
 ### Installation Commands
 
+
 :::{important}
 
 Especially on older operating systems, ensure that your `pip` is upgraded to
@@ -84,7 +85,7 @@ python3 -m pip install --upgrade pip
 After having identified the correct package for your ROCm&trade; installation, type:
 
 ```shell
-python3 -m pip install hip-python-<hip_version>.<hip_python_version>
+python3 -m pip install -i https://test.pypi.org/simple hip-python>=<rocm_version>.<hip_python_version>
 ```
 
 or if you have a HIP Python wheel somewhere in your filesystem:
@@ -92,6 +93,14 @@ or if you have a HIP Python wheel somewhere in your filesystem:
 ```shell
 python3 -m pip install <path/to/hip_python>.whl
 ```
+:::{warning}
+
+Currently, we have not uploaded any HIP Python packages to PyPI yet.
+So far we have only uploaded packages to TestPyPI, mainly intended for internal
+testing purposes. If you find similar named packages
+on PyPI they may been provided by others, possibly with
+malicious intent.
+:::
 
 :::{note}
 
