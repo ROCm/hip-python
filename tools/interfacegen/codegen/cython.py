@@ -1662,7 +1662,7 @@ cdef void* {funptr_name} = NULL
 
         fully_specified = len(list(self.parms)) == len(c_interface_call_args)
         if not fully_specified:
-            warnings.warn("_codegen.cython: not all parameters could be classified for function {self.name}")
+            warnings.warn("codegen.cython: not all parameters could be classified for function {self.name}")
         setattr(self, "is_python_code_complete", fully_specified)
         assert len(parm_python_types) == len(c_interface_call_args), f"{self.name=} {str(parm_python_types)=}"
 
@@ -1703,7 +1703,7 @@ cdef void* {funptr_name} = NULL
             out_args.insert(0, retvalname)
             return f"{retvalname} = {typename}.from_value({c_interface_call})"
         else:
-            warnings.warn(f"_codegen.cython: return value of function {self.name} could not be classified")
+            warnings.warn(f"codegen.cython: return value of function {self.name} could not be classified")
             return ""
 
     def render_python_interface_impl(self, cprefix: str) -> str:

@@ -26,11 +26,11 @@ import warnings
 
 python_interface_pyobj_role_template = r":py:obj:`~.{name}`"
 
-from _codegen.cython import (
+from codegen.cython import (
     CythonPackageGenerator,
 )
 
-from _codegen.tree import (
+from codegen.tree import (
     MacroDefinition,
     Function,
     Typedef,

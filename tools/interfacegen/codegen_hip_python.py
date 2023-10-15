@@ -49,23 +49,23 @@ warnings.formatwarning = custom_formatwarning
 import _controls
 import _cuda_interop_layer_gen
 import _gitversion
-import _codegen.cython
+import codegen.cython
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
-_codegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
+codegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
 _cuda_interop_layer_gen.python_interface_pyobj_role_template = r"`.{name}`" # note: here we want to keep the qualifier
 
-from _codegen.cython import (
+from codegen.cython import (
     CythonPackageGenerator,
     DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
 )
 
-from _codegen.cparser import TypeHandler
+from codegen.cparser import TypeHandler
 
 TypeCategory = TypeHandler.TypeCategory
 
-from _codegen.tree import (
+from codegen.tree import (
     Node,
     MacroDefinition,
     Parm,
