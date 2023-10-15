@@ -48,24 +48,24 @@ warnings.formatwarning = custom_formatwarning
 
 import _controls
 import _cuda_interop_layer_gen
-import _gitversion
-import codegen.cython
+import interfacegen.gitversion
+import interfacegen.cython
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
-codegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
+interfacegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
 _cuda_interop_layer_gen.python_interface_pyobj_role_template = r"`.{name}`" # note: here we want to keep the qualifier
 
-from codegen.cython import (
+from interfacegen.cython import (
     CythonPackageGenerator,
     DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
 )
 
-from codegen.cparser import TypeHandler
+from interfacegen.cparser import TypeHandler
 
 TypeCategory = TypeHandler.TypeCategory
 
-from codegen.tree import (
+from interfacegen.tree import (
     Node,
     MacroDefinition,
     Parm,
@@ -559,9 +559,9 @@ if __name__ == "__main__":
         HIP_VERSION_MAJOR * 10000000 + HIP_VERSION_MINOR * 100000 + HIP_VERSION_PATCH
     )
 
-    VERSION = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}.{_gitversion.version()}"
+    VERSION = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}.{interfacegen.gitversion.version()}"
     LONG_VERSION = (
-        f"{HIP_VERSION_NAME}.{_gitversion.version(append_hash=True,append_date=True)}"
+        f"{HIP_VERSION_NAME}.{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
     )
     
     with open("LICENSE","r") as licensefile:
@@ -581,9 +581,9 @@ if __name__ == "__main__":
 
                 VERSION = __version__ = "{VERSION}.{{HIP_PYTHON_VERSION_SHORT}}"
                 LONG_VERSION = __long_version__ = "{LONG_VERSION}.{{HIP_PYTHON_VERSION}}"
-                HIP_PYTHON_CODEGEN_BRANCH = "{_gitversion.git_current_branch()}"
-                HIP_PYTHON_CODEGEN_VERSION = "{_gitversion.version(append_hash=True,append_date=True)}"
-                HIP_PYTHON_CODEGEN_REV = "{_gitversion.git_rev()}"
+                HIP_PYTHON_CODEGEN_BRANCH = "{interfacegen.gitversion.git_current_branch()}"
+                HIP_PYTHON_CODEGEN_VERSION = "{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
+                HIP_PYTHON_CODEGEN_REV = "{interfacegen.gitversion.git_rev()}"
                 HIP_PYTHON_BRANCH = "{{HIP_PYTHON_BRANCH}}"
                 HIP_PYTHON_VERSION = "{{HIP_PYTHON_VERSION}}"
                 HIP_PYTHON_REV = "{{HIP_PYTHON_REV}}"\

@@ -20,11 +20,37 @@
   -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   -- SOFTWARE.
   -->
-# Codegenerator for HIP Python
+# InterfaceGen: Codegenerator for HIP Python and other projects
 
-Codegenerator for generating low-level Python and Cython Bindings for HIP.
+This repository provides a Python package `interfacegen` that
+allows to generate interfaces for other languages from C APIs.
+It is based on the Python interfaces for the LLVM `clang` runtime.
 
-## Requirements
+Contains recipe for generating low-level Python and Cython Bindings for HIP.
+
+## Goals
+
+General:
+
+* Add support for different frameworks aside from HIP. 
+  * In particular, `HSA` and `ROCm LLVM` to broaden our support for Python developers and 
+    frameworks such as Numba.
+* Add support for other other languages aside from Python. In particular, we want to generate JAVA interfaces.
+  We further might rewrite the HIPFORT code generator with this framework.
+* Add support for different kinds of Python interfaces (Cython, CTypes, pybind11?)
+
+HIP Python:
+
+* Gradually add support more and more ROCm math libraries (hipsolver, roctx, ROCm ...)
+
+## Discussions
+
+### Namespaces
+
+* Move `hip` into `rocm.hip` or keep current structure mirrored from CUDA Python?
+* 
+
+#### Requirements
 
 Requires that ROCm&trade; is installed on your system.
 
@@ -32,7 +58,11 @@ All Python requirements are taking care of by the `generate_hip_python_pkgs.sh` 
 If you decide not to use it, take a look into the `requirements.txt` file 
 in the top-level folder of the this repository.
 
-## Run Codegenerator
+## Recipes
+
+### HIP Python
+
+#### Run Codegenerator
 
 1. Install ROCm&trade;.
 2. Clone a branch of `https://github.com/ROCmSoftwarePlatform/hip-python` into `<path/to/rocm_software_platform_hip_python>`
