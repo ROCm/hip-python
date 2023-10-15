@@ -26,14 +26,15 @@ This repository provides a Python package `interfacegen` that
 allows to generate interfaces for other languages from C APIs.
 It is based on the Python interfaces for the LLVM `clang` runtime.
 
-Contains recipe for generating low-level Python and Cython Bindings for HIP.
+Most prominently, this repository contains a recipe for generating the low-level 
+Python and Cython Bindings for HIP, i.e. the `HIP Python` package.
 
 ## Goals
 
 General:
 
 * Add support for different frameworks aside from HIP. 
-  * In particular, `HSA` and `ROCm LLVM` to broaden our support for Python developers and 
+  * In particular, `HSA`, `OpenCL`, `OpenMP` and `ROCm LLVM` to broaden our support for Python developers and 
     frameworks such as Numba.
 * Add support for other other languages aside from Python. In particular, we want to generate JAVA interfaces.
   We further might rewrite the HIPFORT code generator with this framework.
@@ -41,24 +42,43 @@ General:
 
 HIP Python:
 
-* Gradually add support more and more ROCm math libraries (hipsolver, roctx, ROCm ...)
+* Gradually add support more and more ROCm math libraries (hipsolver, roctx, rocblas, rocsparse, ...)
 
 ## Discussions
 
 ### Namespaces
 
-* Move `hip` into `rocm.hip` or keep current structure mirrored from CUDA Python?
-* 
+Namespaces should be sorted out before releasing this project to the public.
+The following questions arised:
+
+1. Move `hip` into `rocm.hip` or keep current structure mirrored from CUDA Python?
+1. Provide `hsa` as  `rocm.hsa` (because of the AMD specific extensions)  or `hsa`?
+1. Provide `opencl` as  `rocm.opencl` / `rocm.ocl` (because of the AMD specific extensions)  or `opencl` / omp?
+1. Provide `openmp` as  `rocm.openmp` / `rocm.omp` (because of the AMD specific extensions)  or `openmp` / ocl?
+1. Provide LLVM-C as  `rocm.llvmc` or `llvmc`? 
+   * Contribute interfaces back to LLVM project?
+
+We currently lean towards using the prefix `rocm.` for all projects except `hip` as the latter should
+be used similarly to the CUDA Python interfaces.
 
 #### Requirements
 
-Requires that ROCm&trade; is installed on your system.
+Requires that ROCm&trade; HIP SDK is installed on your system.
 
 All Python requirements are taking care of by the `generate_hip_python_pkgs.sh` script. 
 If you decide not to use it, take a look into the `requirements.txt` file 
 in the top-level folder of the this repository.
 
 ## Recipes
+
+Add the project to the `PYTHON_PATH`, e.g. via:
+
+```shell
+export PYTHON_PATH=<path/to/this/repository>
+# or:
+cd <path/to/this/repository>
+export PYTHON_PATH=$(pwd)
+```
 
 ### HIP Python
 
