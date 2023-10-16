@@ -23,11 +23,10 @@
 # InterfaceGen: Codegenerator for HIP Python and other projects
 
 This repository provides a Python package `interfacegen` that
-allows to generate interfaces for other languages from C APIs.
-It is based on the Python interfaces for the LLVM `clang` runtime.
-
+allows to generate C language bindings from C APIs.
 Most prominently, this repository contains a recipe for generating the low-level 
-Python and Cython Bindings for HIP, i.e. the `HIP Python` package.
+Python and Cython Bindings for HIP, i.e., the `HIP Python` package.
+It utilizes the Python interfaces for the LLVM `clang` runtime, `libclang`.
 
 ## Goals
 
@@ -36,6 +35,8 @@ General:
 * Add support for different frameworks aside from HIP. 
   * In particular, `HSA`, `OpenCL`, `OpenMP` and `ROCm LLVM` to broaden our support for Python developers and 
     frameworks such as Numba.
+  * Experimental recipes for ROCm LLVM and HSA have been created already but
+    the code generation is incomplete / fails at a certain stage.
 * Add support for other other languages aside from Python. In particular, we want to generate JAVA interfaces.
   We further might rewrite the HIPFORT code generator with this framework.
 * Add support for different kinds of Python interfaces (Cython, CTypes, pybind11?)
@@ -49,6 +50,7 @@ HIP Python:
 Python / Cython:
 
 * [ ] Make runtime-linked library's path configurable via Python (and Cython)
+* [ ] Adopt a CMake-based code generation process (cross platform, standardized).
 
 ## Discussions
 
