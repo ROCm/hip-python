@@ -44,6 +44,12 @@ HIP Python:
 
 * Gradually add support more and more ROCm math libraries (hipsolver, roctx, rocblas, rocsparse, ...)
 
+## TODOs
+
+Python / Cython:
+
+* [ ] Make runtime-linked library's path configurable via Python (and Cython)
+
 ## Discussions
 
 ### Namespaces
@@ -71,13 +77,13 @@ in the top-level folder of the this repository.
 
 ## Recipes
 
-Add the project to the `PYTHON_PATH`, e.g. via:
+Add the project to the `PYTHONPATH`, e.g. via:
 
 ```shell
-export PYTHON_PATH=<path/to/this/repository>
+export PYTHONPATH=<path/to/this/repository>
 # or:
 cd <path/to/this/repository>
-export PYTHON_PATH=$(pwd)
+export PYTHONPATH=$(pwd)
 ```
 
 ### HIP Python
