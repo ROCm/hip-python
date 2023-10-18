@@ -83,6 +83,8 @@ def CYTHON_AUTOCONV_FROM_PYTHON_TYPES(canonical_ctype: str):
         ["char"],["short"],["int"],["long"],["long","long"]
     ):
         return ("int",) # no long in Python 3 anymore
+    elif tokens[0] == "_Bool": # C version of 'bool', 'bool' is a C++ type
+        return ("bint",)
     elif tokens in [
         ["float"],["double"],["long","double"],
     ]:
