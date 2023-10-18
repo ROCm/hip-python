@@ -26,7 +26,8 @@ import textwrap
 
 import pyparsing as pyp
 
-import warnings
+import logging
+_log = logging.getLogger("interfacegen")
 
 # TODO implement: https://www.doxygen.nl/manual/htmlcmds.html
 

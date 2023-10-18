@@ -26,3 +26,28 @@ from . import control
 from . import tree
 from . import cparser
 from . import cython
+from . import gitversion
+
+# configure logging
+def enable_logging(level = None):
+    """Enables the logger for this package.
+
+    Args:
+        level:
+            The log level. Log output is filtered accordingly.
+            Defaults to None which implies logging.INFO.
+
+    Note:
+        This configured logger can be retrieved via
+        `logging.getLogger("interfacegen")` anywhere.
+    """
+
+    import sys
+    import logging
+    logger = logging.getLogger("interfacegen") # other packages will js
+    logger.setLevel(logging.INFO if level == None else level)
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(logging.Formatter("%(levelname)s:%(module)s:%(message)s"))
+    logger.addHandler(handler)
+
+

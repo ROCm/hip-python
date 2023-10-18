@@ -27,7 +27,9 @@ import sys
 import os
 import keyword
 import textwrap
-import warnings
+
+import logging
+_log = logging.getLogger("interfacegen")
 
 import clang.cindex
 
@@ -1375,7 +1377,7 @@ cdef void* {funptr_name} = NULL
             # clip other sections before the brief, TODO make option
             sections = sections[sections.index(doxygen_brief)+1:]
             if len(doxygen_brief[0]) > 1:
-                warnings.warn(f"function {self.name}: doxygen: more than one text/verbatim/math block in section 'brief'. Ignore others.")
+                _log.warn(f"function {self.name}: doxygen: more than one text/verbatim/math block in section 'brief'. Ignore others.")
             if not isinstance(doxygen_brief.first_block,doxyparser.TextBlock):
                 raise RuntimeError(f"function {self.name}: doxygen: expected single text block in section 'brief'")
             docstring_body = doxygen_brief.first_block.transformed_text.strip() +"\n\n"
@@ -1410,14 +1412,14 @@ cdef void* {funptr_name} = NULL
                 dir = (f" -- *{section.tokens[1][1:-1].replace(' ','').upper()}*") if section.tokens[1] != None else ""
                 for name in names:
                     if not len(descr.strip()):
-                        warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' has empty documentation")
+                        _log.warn(f"function {self.name}: doxygen: doxygen param '{name}' has empty documentation")
                     
                     if name in parms_still_to_be_documented:
                         type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
                         parms_still_to_be_documented.remove(name)
                     else:
                         type_info = ""
-                        warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' is not part of function signature")
+                        _log.warn(f"function {self.name}: doxygen: doxygen param '{name}' is not part of function signature")
                     
                     if name in out_arg_names:
                         docstring_out_arg_returns.append(f"{single_level_indent}{type_info}:\n{descr}")
@@ -1444,7 +1446,7 @@ cdef void* {funptr_name} = NULL
         # append undocumented arguments too but warn
         if len(parms_still_to_be_documented):
             for name in parms_still_to_be_documented:
-                warnings.warn(f"function {self.name}: doxygen: function arg '{name}' is not documented")
+                _log.warn(f"function {self.name}: doxygen: function arg '{name}' is not documented")
                 type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
                 type_info = f" ({type_info})"
                 docstring_args[name] = (name+type_info,"",f"\n{single_level_indent*2}(undocumented)\n")
@@ -1459,7 +1461,7 @@ cdef void* {funptr_name} = NULL
         # Return values
         retval_typename = self._python_interface_retval_typename()
         if not len(docstring_returns) and not self.is_void:
-            warnings.warn(f"function {self.name}: doxygen: undocumented return value")
+            _log.warn(f"function {self.name}: doxygen: undocumented return value")
             if retval_typename != None:
                 docstring_returns.append(
                     CythonMixin.to_sphinx_pyobj(retval_typename)
@@ -1616,7 +1618,6 @@ cdef void* {funptr_name} = NULL
             if parm.is_autoconverted_by_cython:
                 c_interface_call_args.append(f"{parm_name}")
                 sig_args.append(parm.cython_repr)
-                # TODO do the autoconversion
                 parm_python_types[parm.name] = "/".join(CYTHON_AUTOCONV_FROM_PYTHON_TYPES(parm.cython_global_typename)) # use original name as key
             elif (
                 parm.is_enum
@@ -1662,7 +1663,7 @@ cdef void* {funptr_name} = NULL
 
         fully_specified = len(list(self.parms)) == len(c_interface_call_args)
         if not fully_specified:
-            warnings.warn("interfacegen.cython: not all parameters could be classified for function {self.name}")
+            _log.warn("interfacegen.cython: not all parameters could be classified for function {self.name}")
         setattr(self, "is_python_code_complete", fully_specified)
         assert len(parm_python_types) == len(c_interface_call_args), f"{self.name=} {str(parm_python_types)=}"
 
@@ -1703,7 +1704,7 @@ cdef void* {funptr_name} = NULL
             out_args.insert(0, retvalname)
             return f"{retvalname} = {typename}.from_value({c_interface_call})"
         else:
-            warnings.warn(f"interfacegen.cython: return value of function {self.name} could not be classified")
+            _log.warn(f"interfacegen.cython: return value of function {self.name} could not be classified")
             return ""
 
     def render_python_interface_impl(self, cprefix: str) -> str:
@@ -1848,6 +1849,7 @@ class CythonBackend:
                 # yield relevant nodes
                 if not isinstance(node, (FieldMixin, ParmMixin)):
                     if self.node_filter(node):
+                        _log.info(f" touch {node.__class__.__name__} {node.name} from {node.cursor.kind} {node.cursor.spelling} ({node.cursor.location.file}:{node.cursor.location.line}:{node.cursor.location.column})")
                         yield node
 
     def create_c_interface_decl_part(self, runtime_linking: bool = False):

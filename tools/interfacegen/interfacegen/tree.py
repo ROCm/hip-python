@@ -26,6 +26,10 @@ import collections
 import re
 import sys
 import warnings
+
+import logging
+_log = logging.getLogger("interfacegen")
+
 import clang.cindex
 
 from . import control
@@ -56,6 +60,7 @@ class Node:
         self.cursor = cursor
         self.parent = parent
         self.child_nodes = []
+        _log.info(f"{self.cursor.location.file}:{self.cursor.location.line}:{self.cursor.location.column}: + {self.__class__.__name__} from {self.cursor.kind} {self.cursor.spelling}")
 
     def append(self, node):
         assert isinstance(node, Node)
