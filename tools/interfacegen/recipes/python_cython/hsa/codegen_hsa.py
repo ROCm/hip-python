@@ -36,16 +36,6 @@ import enum
 import textwrap
 import argparse
 
-# configure warnings
-original_formatwarning = warnings.formatwarning
-def custom_formatwarning(warnobj,*args,**kwargs):
-    global original_formatwarning
-    if isinstance(warnobj,UserWarning):
-        return f"Warning: {str(warnobj)}\n"
-    else:
-        return original_formatwarning(warnobj,*args,**kwargs)
-warnings.formatwarning = custom_formatwarning
-
 import interfacegen.gitversion
 import interfacegen.cython
 
