@@ -29,6 +29,14 @@ from . import cython
 from . import gitversion
 
 # configure logging
+def disable_logging():
+    """Disables the logger. Initializes it if it doesn't exist.
+    """
+    import logging
+    logging.getLogger("interfacegen").disabled = True
+
+disable_logging() # init and disable per default
+
 def enable_logging(level = None):
     """Enables the logger for this package.
 
@@ -40,14 +48,17 @@ def enable_logging(level = None):
     Note:
         This configured logger can be retrieved via
         `logging.getLogger("interfacegen")` anywhere.
+
+    Returns:
+        The logger used by the application.
     """
 
     import sys
     import logging
-    logger = logging.getLogger("interfacegen") # other packages will js
+    logger = logging.getLogger("interfacegen")
+    logger.disabled = False
     logger.setLevel(logging.INFO if level == None else level)
     handler = logging.StreamHandler(sys.stderr)
     handler.setFormatter(logging.Formatter("%(levelname)s:%(module)s:%(message)s"))
     logger.addHandler(handler)
-
-
+    return logger
