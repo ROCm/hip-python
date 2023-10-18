@@ -126,6 +126,16 @@ class CParser:
 
 
 class TypeHandler:
+
+    _INSTANCE = None
+
+    @classmethod
+    def get(cls,clang_type: clang.cindex.Type):
+        if cls._INSTANCE == None:
+            cls._INSTANCE = TypeHandler(None)
+        cls._INSTANCE.clang_type = clang_type
+        return cls._INSTANCE
+
     class TypeCategory(enum.IntEnum):
         INVALID = -2
         UNCATEGORIZED = -1

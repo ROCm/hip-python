@@ -959,6 +959,41 @@ class Typedef(Type, Typed, *__TypedefMixins):
         for mixin in globals()["__TypedefMixins"]:
             mixin.__init__(self)
 
+    @staticmethod
+    def match_typedefed_enum(clang_type: clang.cindex.Type):
+        """If the type is a typedef of an enum.
+        """
+        return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == [
+            clang.cindex.TypeKind.TYPEDEF,
+            clang.cindex.TypeKind.ENUM
+        ]
+    
+    @staticmethod
+    def match_typedefed_record(clang_type: clang.cindex.Type):
+        """If the type is a typedef of an record (struct or union).
+        """
+        return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == [
+            clang.cindex.TypeKind.TYPEDEF,
+            clang.cindex.TypeKind.RECORD
+        ]
+    
+    @staticmethod
+    def match_typedefed_basic_type(clang_type: clang.cindex.Type):
+        """If the type is a typedef of a basic type.
+        """
+        return ( 
+            next(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == clang.cindex.TypeKind.TYPEDEF
+            and next(cparser.TypeHandler.get(clang_type).categorized_type_layer_kinds()) == cparser.TypeHandler.TypeCategory.BASIC
+        )
+    
+    @staticmethod
+    def match_typedefed_pointer(clang_type: clang.cindex.Type):
+        """If the type is a typedef of a pointer type of arbitrary degree.
+        """
+        return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds())[:2] == [
+            clang.cindex.TypeKind.TYPEDEF,
+            clang.cindex.TypeKind.POINTER
+        ]
 
 class FunctionPointer(Type):  # TODO handle result type
     def __init__(
@@ -1175,46 +1210,43 @@ def from_libclang_translation_unit(
         In this case, no Typedef node but a `TypedefedFunctionPointer` is inserted.
         """
         node = Typedef(cursor, root)
-        type_decl_cursor = first_child_cursors_of_kinds_(
-            cursor,
-            (
-                clang.cindex.CursorKind.STRUCT_DECL,
-                clang.cindex.CursorKind.UNION_DECL,
-                clang.cindex.CursorKind.ENUM_DECL,
-            ),
-        )
-        if type_decl_cursor is None:
-            typeref_cursor = first_child_cursors_of_kinds_(
-                cursor, (clang.cindex.CursorKind.TYPE_REF,)
+        if TypedefedFunctionPointer.match(cursor.type):
+            node = TypedefedFunctionPointer(
+                cursor, root
             )
-            node.typeref = root.lookup_type_from_cursor(typeref_cursor)
-            if node.typeref == None:
-                if TypedefedFunctionPointer.match(cursor.type):
-                    node = TypedefedFunctionPointer(
-                        cursor, root
-                    )  # note that var `node`` is reassigned here
             descend_into_child_cursors_(node)  # post-order walk,
             root.append(node)
-        elif not len(
-            type_decl_cursor.spelling
-        ):  # found anonymous struct/union/enum child
-            # in case of anon enum
-            # replace the original node with the given one
-            anon_type_decl = root.lookup_type_from_cursor(type_decl_cursor)
-            assert anon_type_decl != None and isinstance(anon_type_decl, (Enum, Record))
-            type_decl = handle_anon_typedef_child_cursor_(type_decl_cursor, node)
-            descend_into_child_cursors_(type_decl)  # post-order walk
-            root.insert(anon_type_decl.index, type_decl)
-            root.remove(anon_type_decl)
-            # do not append typedef node
-        elif type_decl_cursor.spelling != cursor.spelling:  # child with different name
-            # update, append typedef node
-            node.typeref = root.lookup_type_from_cursor(type_decl_cursor)
-            descend_into_child_cursors_(node)  # post-order walk
+        elif Typedef.match_typedefed_basic_type(cursor.type):
+            node = Typedef(cursor, root)
             root.append(node)
-        else:  # child with same name
-            descend_into_child_cursors_(node)  # post-order walk
-            pass  # do not append typedef node
+        elif Typedef.match_typedefed_pointer(cursor.type):
+            node = Typedef(cursor, root)
+            typeref_cursor = first_child_cursors_of_kinds_( # 
+                cursor, (clang.cindex.CursorKind.TYPE_REF,)
+            ) # FIXME see if looking up the TYPE_REF cursor can be done via clang.cindex methods
+              # we could also check if this is an arbitrary pointer to a basic type?
+            if typeref_cursor != None:
+                node.typeref = root.lookup_type_from_cursor(typeref_cursor)
+            root.append(node)
+        else:
+            type_decl_cursor = cursor.underlying_typedef_type.get_declaration()
+            if not len(type_decl_cursor.spelling):  # found anonymous struct/union/enum child
+                # in case of anon enum, replace the original node with the given one
+                anon_type_decl = root.lookup_type_from_cursor(type_decl_cursor)
+                assert anon_type_decl != None and isinstance(anon_type_decl, (Enum, Record))
+                type_decl = handle_anon_typedef_child_cursor_(type_decl_cursor, node)
+                descend_into_child_cursors_(type_decl)  # post-order walk
+                root.insert(anon_type_decl.index, type_decl)
+                root.remove(anon_type_decl)
+                pass # do not append typedef node
+            elif type_decl_cursor.spelling != cursor.spelling:  # child with different name
+                # update, append typedef node
+                node.typeref = root.lookup_type_from_cursor(type_decl_cursor)
+                descend_into_child_cursors_(node)  # post-order walk
+                root.append(node)
+            else:  # child with same name
+                descend_into_child_cursors_(node)  # post-order walk
+                pass # do not append typedef node
 
     def handle_anon_typedef_child_cursor_(cursor: clang.cindex.Cursor, parent: Typedef):
         """Handle a TYPEDEF_DECL cursors' anonymous STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor."""
