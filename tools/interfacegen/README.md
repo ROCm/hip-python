@@ -47,6 +47,8 @@ HIP Python:
 
 ## TODOs
 
+* [ ] Add logging to all stages to more easily identify parsing and code generation errors.
+
 Python / Cython:
 
 * [ ] Make runtime-linked library's path configurable via Python (and Cython)
