@@ -49,6 +49,8 @@ warnings.formatwarning = custom_formatwarning
 import interfacegen.gitversion
 import interfacegen.cython
 
+interfacegen.enable_logging()
+
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
 interfacegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
