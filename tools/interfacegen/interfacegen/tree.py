@@ -1130,10 +1130,10 @@ def from_libclang_translation_unit(
 ) -> Root:
     """Create a tree from a libclang translation unit."""
 
-    def first_child_cursors_of_kinds_(
+    def first_child_cursor_of_kinds_(
         cursor: clang.cindex.Cursor, kinds: tuple
     ):
-        """Returns the first typeref child or None."""
+        """Returns the first typeref child or None. Not recursive."""
         return next(
             (
                 child_cursor
@@ -1176,7 +1176,7 @@ def from_libclang_translation_unit(
         elif cursor.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
             root.append(MacroDefinition(cursor, root))
         elif cursor.kind == clang.cindex.CursorKind.FUNCTION_DECL:
-            typeref_cursor = first_child_cursors_of_kinds_(
+            typeref_cursor = first_child_cursor_of_kinds_(
                 cursor, (clang.cindex.CursorKind.TYPE_REF,)
             )
             typeref = root.lookup_type_from_cursor(typeref_cursor)
@@ -1221,7 +1221,7 @@ def from_libclang_translation_unit(
             root.append(node)
         elif Typedef.match_typedefed_pointer(cursor.type):
             node = Typedef(cursor, root)
-            typeref_cursor = first_child_cursors_of_kinds_( # 
+            typeref_cursor = first_child_cursor_of_kinds_( # 
                 cursor, (clang.cindex.CursorKind.TYPE_REF,)
             ) # FIXME see if looking up the TYPE_REF cursor can be done via clang.cindex methods
               # we could also check if this is an arbitrary pointer to a basic type?
@@ -1311,7 +1311,7 @@ def from_libclang_translation_unit(
             descend_into_child_cursors_(typeref)  # post-order walk
             parent.append(typeref)
         else:
-            typeref_cursor = first_child_cursors_of_kinds_(
+            typeref_cursor = first_child_cursor_of_kinds_(
                 cursor,
                 (
                     clang.cindex.CursorKind.TYPE_REF,
