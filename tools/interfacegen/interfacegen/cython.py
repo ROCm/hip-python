@@ -1057,7 +1057,7 @@ class EnumMixin(CythonMixin):
 
         Note:
             Does not create an enum.IntEnum class but only exposes the enum constants
-            from the Cython package corresponding to the cprefix if the
+            from the Cython module corresponding to the cprefix if the
             Enum is anonymous.
         """
         from . import tree
@@ -2011,17 +2011,17 @@ class CythonBackend:
         return (result, docstring_attributes)
 
 
-class CythonPackageGenerator:
-    """Generate Python/Cython packages for a HIP C interface.
+class CythonModuleGenerator:
+    """Generate Cython extension modules for a HIP C interface.
 
-    Generates Python/Cython packages for a HIP C interface
+    Generates Cython extension modules for a HIP C interface
     based on a list of header file names and the name of
     a library to link.
     """
 
     def __init__(
         self,
-        pkg_name: str,
+        module_name: str,
         include_dir: str,
         header: str,
         runtime_linking=False,
@@ -2040,7 +2040,7 @@ class CythonPackageGenerator:
         """Constructor.
 
         Args:
-            pkg_name (str): Name of the package that should be generated. Influences filesnames.
+            module_name (str): Name of the module that should be generated. Influences filesnames.
             include_dir (str): Name of the main include dir.
             header (str|tuple): Name of the header file. Absolute paths or w.r.t. to include dir.
             runtime_linking (bool, optional): If runtime-linking code should be generated, defaults to False.
@@ -2056,7 +2056,7 @@ class CythonPackageGenerator:
         """
         global default_c_interface_decl_preamble
         global default_python_interface_decl_preamble
-        self.pkg_name = pkg_name
+        self.module_name = module_name
         self.include_dir = include_dir
         self.header = header
         self.runtime_linking = runtime_linking
@@ -2100,38 +2100,38 @@ class CythonPackageGenerator:
             warn_mode,
         )
 
-    def write_package_files(self, output_dir: str = None):
-        """Write all files required to build this Cython/Python package.
+    def write_module_files(self, output_dir: str = None):
+        """Write all files required to build this Cython/Python module.
 
         Args:
-            pkg_name (str): Name of the package that should be generated. Influences filesnames.
+            module_name (str): Name of the module that should be generated. Influences filesnames.
         """
         python_interface_decl_preamble = (
-            self.python_interface_decl_preamble + f"\nfrom . cimport c{self.pkg_name}\n"
+            self.python_interface_decl_preamble + f"\nfrom . cimport c{self.module_name}\n"
         )
 
-        with open(f"{output_dir}/c{self.pkg_name}.pxd", "w") as outfile:
+        with open(f"{output_dir}/c{self.module_name}.pxd", "w") as outfile:
             outfile.write(self.c_interface_decl_preamble)
             outfile.write(
                 self.backend.render_c_interface_decl_part(
                     runtime_linking=self.runtime_linking
                 )
             )
-        with open(f"{output_dir}/c{self.pkg_name}.pyx", "w") as outfile:
+        with open(f"{output_dir}/c{self.module_name}.pyx", "w") as outfile:
             outfile.write(self.c_interface_impl_preamble)
             outfile.write(
                 self.backend.render_c_interface_impl_part(
                     runtime_linking=self.runtime_linking, dll=self.dll
                 )
             )
-        with open(f"{output_dir}/{self.pkg_name}.pxd", "w") as outfile:
+        with open(f"{output_dir}/{self.module_name}.pxd", "w") as outfile:
             outfile.write(python_interface_decl_preamble)
             outfile.write(
-                self.backend.render_python_interface_decl_part(f"c{self.pkg_name}")
+                self.backend.render_python_interface_decl_part(f"c{self.module_name}")
             )
 
-        with open(f"{output_dir}/{self.pkg_name}.pyx", "w") as outfile:
-            content, docstring_attributes = self.backend.render_python_interface_impl_part(f"c{self.pkg_name}")
+        with open(f"{output_dir}/{self.module_name}.pyx", "w") as outfile:
+            content, docstring_attributes = self.backend.render_python_interface_impl_part(f"c{self.module_name}")
             if len(docstring_attributes):
                 DOCSTRING_ATTRIBS = "Attributes:\n" + textwrap.indent("\n".join(docstring_attributes)," "*4)
             outfile.write(self.python_interface_impl_preamble.replace("[ATTRIBUTES]",DOCSTRING_ATTRIBS))

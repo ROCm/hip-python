@@ -57,7 +57,7 @@ interfacegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: re
 _cuda_interop_layer_gen.python_interface_pyobj_role_template = r"`.{name}`" # note: here we want to keep the qualifier
 
 from interfacegen.cython import (
-    CythonPackageGenerator,
+    CythonModuleGenerator,
     DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
 )
 
@@ -234,7 +234,7 @@ def parse_options():
 
 
 # hip
-def generate_hip_package_files():
+def generate_hip_module_files():
     global OUTPUT_DIR
     global ROCM_INC
     global RUNTIME_LINKING
@@ -268,7 +268,7 @@ def generate_hip_package_files():
             return "hip._util.types.DeviceArray"
         return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
-    generator = CythonPackageGenerator(
+    generator = CythonModuleGenerator(
         "hip",
         ROCM_INC,
         "hip/hip_runtime.h",
@@ -301,17 +301,17 @@ def generate_hip_package_files():
                 HIP_VERSION_PATCH = int(last_token)
             elif node.name == "HIP_VERSION_GITHASH":
                 HIP_VERSION_GITHASH = last_token.strip('"')
-    _cuda_interop_layer_gen.generate_cuda_interop_package_files(
+    _cuda_interop_layer_gen.generate_cuda_interop_module_files(
         OUTPUT_DIR, "cuda", generator, HIP_2_CUDA
     )
-    _cuda_interop_layer_gen.generate_cuda_interop_package_files(
+    _cuda_interop_layer_gen.generate_cuda_interop_module_files(
         OUTPUT_DIR, "cudart", generator, HIP_2_CUDA, warn=False
     )  # already warned before, regenerate to have correctly named pxd/pyx files too. Could be done via symlinks & __init__.py mod too.
     return generator
 
 
 # hiprtc
-def generate_hiprtc_package_files():
+def generate_hiprtc_module_files():
     global OUTPUT_DIR
     global ROCM_INC
     global GENERATOR_ARGS
@@ -327,7 +327,7 @@ def generate_hiprtc_package_files():
             return "hip._util.types.ListOfBytes"
         return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
-    generator = CythonPackageGenerator(
+    generator = CythonModuleGenerator(
         "hiprtc",
         ROCM_INC,
         "hip/hiprtc.h",
@@ -339,19 +339,19 @@ def generate_hiprtc_package_files():
         ptr_complicated_type_handler=hiprtc_ptr_complicated_type_handler,
         cflags=GENERATOR_ARGS,
     )
-    _cuda_interop_layer_gen.generate_cuda_interop_package_files(
+    _cuda_interop_layer_gen.generate_cuda_interop_module_files(
         OUTPUT_DIR,"nvrtc", generator, HIP_2_CUDA
     )
     return generator
 
 
 # hipblas
-def generate_hipblas_package_files():
+def generate_hipblas_module_files():
     global ROCM_INC
     global GENERATOR_ARGS
     global RUNTIME_LINKING
 
-    generator = CythonPackageGenerator(
+    generator = CythonModuleGenerator(
         "hipblas",
         ROCM_INC,
         "hipblas/hipblas.h",
@@ -377,12 +377,12 @@ def generate_hipblas_package_files():
 
 
 # rccl
-def generate_rccl_package_files():
+def generate_rccl_module_files():
     global ROCM_INC
     global GENERATOR_ARGS
     global RUNTIME_LINKING
 
-    generator = CythonPackageGenerator(
+    generator = CythonModuleGenerator(
         "rccl",
         ROCM_INC,
         "rccl/rccl.h",
@@ -408,12 +408,12 @@ def generate_rccl_package_files():
 
 
 # hiprand
-def generate_hiprand_package_files():
+def generate_hiprand_module_files():
     global ROCM_INC
     global GENERATOR_ARGS
     global RUNTIME_LINKING
 
-    generator = CythonPackageGenerator(
+    generator = CythonModuleGenerator(
         "hiprand",
         ROCM_INC,
         "hiprand/hiprand.h",
@@ -439,12 +439,12 @@ def generate_hiprand_package_files():
 
 
 # hipfft
-def generate_hipfft_package_files():
+def generate_hipfft_module_files():
     global ROCM_INC
     global GENERATOR_ARGS
     global RUNTIME_LINKING
 
-    generator = CythonPackageGenerator(
+    generator = CythonModuleGenerator(
         "hipfft",
         ROCM_INC,
         "hipfft/hipfft.h",
@@ -470,12 +470,12 @@ def generate_hipfft_package_files():
 
 
 # hipsparse
-def generate_hipsparse_package_files():
+def generate_hipsparse_module_files():
     global ROCM_INC
     global GENERATOR_ARGS
     global RUNTIME_LINKING
 
-    generator = CythonPackageGenerator(
+    generator = CythonModuleGenerator(
         "hipsparse",
         ROCM_INC,
         "hipsparse/hipsparse.h",
@@ -519,13 +519,13 @@ if __name__ == "__main__":
     parse_options()
 
     AVAILABLE_GENERATORS = dict(
-        hip=generate_hip_package_files,
-        hiprtc=generate_hiprtc_package_files,
-        hipblas=generate_hipblas_package_files,
-        rccl=generate_rccl_package_files,
-        hiprand=generate_hiprand_package_files,
-        hipfft=generate_hipfft_package_files,
-        hipsparse=generate_hipsparse_package_files,
+        hip=generate_hip_module_files,
+        hiprtc=generate_hiprtc_module_files,
+        hipblas=generate_hipblas_module_files,
+        rccl=generate_rccl_module_files,
+        hiprand=generate_hiprand_module_files,
+        hipfft=generate_hipfft_module_files,
+        hipsparse=generate_hipsparse_module_files,
     )
 
     # process and check user-provided library names
@@ -552,7 +552,7 @@ if __name__ == "__main__":
             msg = f"no codegenerator found for library '{libname}'; please choose from: {available_libs}, or '*', which implies that all code generators will be used."
             raise KeyError(msg)
         generator = AVAILABLE_GENERATORS[libname]()
-        generator.write_package_files(output_dir=hip_output_dir)
+        generator.write_module_files(output_dir=hip_output_dir)
 
     HIP_VERSION_NAME = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
     HIP_VERSION = (
@@ -614,17 +614,17 @@ if __name__ == "__main__":
             )
             if output_dir == hip_output_dir:
                 init_content += "\nfrom . import _util"
-                for pkg_name in HIP_PYTHON_LIB_NAMES:
+                for module_name in HIP_PYTHON_LIB_NAMES:
                     init_content += textwrap.dedent(f"""
                     try:
-                        from . import {pkg_name}
+                        from . import {module_name}
                     except ImportError:
                         pass # may have been excluded from build""")
             else:
-                for pkg_name in ("cuda", "cudart", "nvrtc"):
+                for module_name in ("cuda", "cudart", "nvrtc"):
                     init_content += textwrap.dedent(f"""
                     try:
-                        from . import {pkg_name}
+                        from . import {module_name}
                     except ImportError:
                         pass # may have been excluded from build""")
             f.write(init_content)
@@ -651,17 +651,17 @@ if __name__ == "__main__":
     # hip-python docs
     # files per api
 
-    def write_pkg_markdown_file_(pkg,lib,extra=""):
+    def write_module_markdown_file_(module,lib,extra=""):
         with open(os.path.join(HIP_PYTHON_DOCS, "python_api", f"{lib}.md"),"w") as outfile:
             outfile.write(textwrap.dedent(
                 f"""\
-                # {pkg}.{lib}
+                # {module}.{lib}
                 
                 <!-- This file has been autogenerated, do not modify. -->
 
                 <!-- global automodule options are set in conf.py -->
                 ```{{eval-rst}}
-                .. automodule:: {pkg}.{lib}
+                .. automodule:: {module}.{lib}
                 {extra}
 
                 ```"""
@@ -669,10 +669,10 @@ if __name__ == "__main__":
 
     HIP_PYTHON_DOCS = os.path.join(OUTPUT_DIR,"hip-python","docs")
     for lib in HIP_PYTHON_LIB_NAMES:
-        write_pkg_markdown_file_("hip",lib)
+        write_module_markdown_file_("hip",lib)
     CUDA_PYTHON_LIB_NAMES = ["cuda","cudart","nvrtc"]
     for lib in CUDA_PYTHON_LIB_NAMES:
-        write_pkg_markdown_file_("cuda",lib,extra="   :noindex:") # noindex, prevents ambiguity issues with enum constants
+        write_module_markdown_file_("cuda",lib,extra="   :noindex:") # noindex, prevents ambiguity issues with enum constants
     # index.md from index.md.in
     index_md = os.path.join(
         HIP_PYTHON_DOCS, "index.md"
