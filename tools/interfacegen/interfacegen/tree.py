@@ -791,8 +791,8 @@ class Type(Node):
         cursor: clang.cindex.Cursor,
         parent,
     ):
-        Node.__init__(self, cursor, parent)
         self._name = None
+        Node.__init__(self, cursor, parent)
 
     def overwrite_name(self, name):
         self._name = name
