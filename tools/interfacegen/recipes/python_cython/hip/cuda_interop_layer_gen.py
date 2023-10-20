@@ -53,8 +53,27 @@ def generate_cuda_interop_module_files(
     cuda_module_name: str, 
     generator: CythonModuleGenerator,
     hip2cuda: dict,
-    warn: bool = True
+    warn: bool = True,
+    extra_cimports = "",
+    extra_imports = "",
 ):
+    """Renders the Cython and Python module files that delegate CUDA Python
+    API expressions to HIP Python.
+
+    Args:
+        output_dir (str): Root output directory. Subfolders 'hip-python-as-cuda/cuda` must exist in the that directory.
+        cuda_module_name (str): The name of the CUDA module whose files are generated.
+        generator (CythonModuleGenerator): A module that allows us to access the the parse tree of a HIP translation unit.
+        hip2cuda (dict): A dictionary that maps HIP names to CUDA names.
+        warn (bool, optional): _description_. Defaults to True.
+        extra_cimports (str, optional): Additional Cython cimport statements.
+            Use it if HIP and CUDA do declare certain types and functions in different header files.
+            To give an example: CUjitINput
+            Defaults to "".
+        extra_imports (str, optional): _description_. Defaults to "".
+            Additional Python import statements.
+            Use it if HIP and CUDA do declare certain types and functions in different header files.
+    """    
     global HAVE_LEVENSHTEIN
     module_dir = "cuda"
     output_dir = os.path.join(output_dir,"hip-python-as-cuda",module_dir)
@@ -72,7 +91,8 @@ def generate_cuda_interop_module_files(
         textwrap.dedent(
             f"""\
             
-            cimport {cpkg_name}
+            cimport {cmodule_name}
+            {extra_cimports}
             """
         ),
     ]
