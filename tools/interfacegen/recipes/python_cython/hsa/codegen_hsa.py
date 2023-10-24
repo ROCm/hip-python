@@ -47,7 +47,7 @@ interfacegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: re
 
 from interfacegen.cython import (
     CythonModuleGenerator,
-    DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
 )
 
 from interfacegen.cparser import TypeHandler
@@ -86,7 +86,7 @@ def parse_options():
     parser = argparse.ArgumentParser(
         description=textwrap.dedent(
             """\
-        Generator for ROCm HSA Python packages 'rocm-hsa'.
+        Generator for ROCm HSA Python package 'rocm-hsa'.
     
         NOTE:
             You can also use the environment variables 'ROCM_PATH' (or 'ROCM_HOME'),
@@ -197,7 +197,7 @@ def generate_hsa_module_files():
         return name[0].upper() + name[1:]
 
     def hsa_ptr_complicated_type_handler(parm: Node):
-        return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
+        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     generator = CythonModuleGenerator(
         "hsa",

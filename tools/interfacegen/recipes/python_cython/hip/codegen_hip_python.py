@@ -58,8 +58,10 @@ _cuda_interop_layer_gen.python_interface_pyobj_role_template = r"`.{name}`" # no
 
 from interfacegen.cython import (
     CythonModuleGenerator,
-    DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
 )
+
+HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER("hip._util")
 
 from interfacegen.cparser import TypeHandler
 
@@ -71,7 +73,7 @@ from interfacegen.tree import (
     Parm,
 )
 
-from _parse_hipify_perl import parse_hipify_perl
+from parse_hipify_perl import parse_hipify_perl
 
 def parse_options():
     global OUTPUT_DIR
@@ -266,7 +268,8 @@ def generate_hip_module_files():
                 f"{parm.name}.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong({size}),))"
             )
             return "hip._util.types.DeviceArray"
-        return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
+        
+        return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     generator = CythonModuleGenerator(
         "hip",
@@ -281,6 +284,7 @@ def generate_hip_module_files():
         macro_type=_controls.hip.macro_type,
         cflags=GENERATOR_ARGS,
     )
+    generator.python_interface_decl_preamble += "cimport hip._util.types\n"
     generator.python_interface_impl_preamble += textwrap.dedent(
         """\
     cimport hip._hip_helpers
@@ -325,7 +329,7 @@ def generate_hiprtc_module_files():
         )
         if (parm.parent.name, parm.name) in list_of_str_parms:
             return "hip._util.types.ListOfBytes"
-        return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
+        return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     generator = CythonModuleGenerator(
         "hiprtc",
@@ -360,6 +364,7 @@ def generate_hipblas_module_files():
         node_filter=_controls.hipblas.node_filter,
         ptr_parm_intent=_controls.hipblas.ptr_parm_intent,
         ptr_rank=_controls.hipblas.ptr_rank,
+        ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         raw_comment_cleaner=_controls.hipblas.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
@@ -370,6 +375,7 @@ def generate_hipblas_module_files():
     )
     generator.python_interface_decl_preamble += textwrap.dedent(
         """\
+    cimport hip._util.types
     from .hip cimport ihipStream_t
     """
     )
@@ -392,6 +398,7 @@ def generate_rccl_module_files():
         macro_type=_controls.rccl.macro_type,
         ptr_parm_intent=_controls.rccl.ptr_parm_intent,
         ptr_rank=_controls.rccl.ptr_rank,
+        ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         cflags=GENERATOR_ARGS,
     )
     generator.c_interface_decl_preamble += textwrap.dedent(
@@ -401,6 +408,7 @@ def generate_rccl_module_files():
     )
     generator.python_interface_decl_preamble += textwrap.dedent(
         """\
+    cimport hip._util.types
     from .hip cimport ihipStream_t
     """
     )
@@ -423,6 +431,7 @@ def generate_hiprand_module_files():
         macro_type=_controls.hiprand.macro_type,
         ptr_parm_intent=_controls.hiprand.ptr_parm_intent,
         ptr_rank=_controls.hiprand.ptr_rank,
+        ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         cflags=GENERATOR_ARGS,
     )
     generator.c_interface_decl_preamble += textwrap.dedent(
@@ -432,6 +441,7 @@ def generate_hiprand_module_files():
     )
     generator.python_interface_decl_preamble += textwrap.dedent(
         """\
+    cimport hip._util.types
     from .hip cimport ihipStream_t
     """
     )
@@ -454,6 +464,7 @@ def generate_hipfft_module_files():
         macro_type=_controls.hipfft.macro_type,
         ptr_parm_intent=_controls.hipfft.ptr_parm_intent,
         ptr_rank=_controls.hipfft.ptr_rank,
+        ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         cflags=GENERATOR_ARGS,
     )
     generator.c_interface_decl_preamble += textwrap.dedent(
@@ -463,6 +474,7 @@ def generate_hipfft_module_files():
     )
     generator.python_interface_decl_preamble += textwrap.dedent(
         """\
+    cimport hip._util.types
     from .hip cimport ihipStream_t, float2, double2
     """
     )
@@ -486,18 +498,20 @@ def generate_hipsparse_module_files():
         ptr_parm_intent=_controls.hipsparse.ptr_parm_intent,
         ptr_rank=_controls.hipsparse.ptr_rank,
         raw_comment_cleaner=_controls.hipsparse.raw_comment_cleaner,
+        ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         cflags=GENERATOR_ARGS,
     )
     generator.c_interface_decl_preamble += textwrap.dedent(
         """\
-    from .chip cimport *
-    """
+        from .chip cimport *
+        """
     )
     generator.python_interface_decl_preamble += textwrap.dedent(
         """\
-    from .hip import hipError_t, _hipDataType__Base # PY import enums
-    from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
-    """
+        cimport hip._util.types
+        from .hip import hipError_t, _hipDataType__Base # PY import enums
+        from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
+        """
     )
     return generator
 

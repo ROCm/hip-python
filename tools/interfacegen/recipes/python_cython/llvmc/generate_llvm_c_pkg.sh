@@ -104,6 +104,6 @@ declare -x ROCM_LLVM_LIBS=${ROCM_LLVM_LIBS:-*}
 declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 declare -x ROCM_LLVM_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
 
-PYTHON codegen_llvmc.py ${OUTPUT_DIR}
+PYTHON codegen_llvm_c.py ${OUTPUT_DIR}
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv
