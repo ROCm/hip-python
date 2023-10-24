@@ -1088,6 +1088,8 @@ class AnonymousFunctionPointer(
 
 
 class Parm(Node, Typed, *__ParmMixins):
+    unnamed_parm_template = "arg{parm_index}"
+    
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -1105,6 +1107,15 @@ class Parm(Node, Typed, *__ParmMixins):
         assert self.parent != None
         return self._index(cls=Parm)
 
+    @property
+    def name(self):
+        """Returns a generic name in case the parameter
+        has not been given a name.
+        """
+        given_name = Node.name.fget(self)
+        if not len(given_name):
+            return Parm.unnamed_parm_template.format(parm_index=self.parm_index)
+        return given_name
 
 class Function(Node, Typed, *__FunctionMixin):
     def __init__(
