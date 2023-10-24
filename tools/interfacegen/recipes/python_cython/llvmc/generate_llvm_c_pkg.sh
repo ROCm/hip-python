@@ -30,10 +30,11 @@ Usage: ./$(basename $0) output_dir [OPTIONS]
 
 Required:
    output_dir       The output directory to which the files should be written to.
+  --rocm-version    The ROCm version, e.g. '5.6.0'. Can also be specified via the 'ROCM_VERSION' environment variable.
 
 Options:
   --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
-  --libs            HIP Python libraries to generate as comma separated list without whitespaces, defaults to variable 'ROCM_LLVM_LIBS' if set or '*'.
+  --libs            HIP Python libraries to generate as comma separated list without whitespaces, defaults to variable 'ROCM_LLVM_PYTHON_LIBS' if set or '*'.
                     Add a prefix '^' to NOT generate code for the comma-separated list of libraries that follows but all other libraries.
   --pre-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
   --post-clean      Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
@@ -66,11 +67,15 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --libs)
-      ROCM_LLVM_LIBS=$2
+      ROCM_LLVM_PYTHON_LIBS=$2
       shift; shift
       ;;
     --rocm-path)
       ROCM_PATH=$2
+      shift; shift
+      ;;
+    --rocm-version)
+      ROCM_VERSION=$2
       shift; shift
       ;;
     -h|--help)
@@ -100,10 +105,10 @@ shopt -s expand_aliases
 PYTHON -m pip install -r requirements.txt
 
 declare -x HIP_PLATFORM=${HIP_PLATFORM:-amd}
-declare -x ROCM_LLVM_LIBS=${ROCM_LLVM_LIBS:-*}
+declare -x ROCM_LLVM_PYTHON_LIBS=${ROCM_LLVM_PYTHON_LIBS:-*}
 declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
-declare -x ROCM_LLVM_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
+declare -x ROCM_LLVM_PYTHON_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
 
-PYTHON codegen_llvm_c.py ${OUTPUT_DIR}
+PYTHON codegen_llvm_c.py ${OUTPUT_DIR} --rocm-version ${ROCM_VERSION}
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv
