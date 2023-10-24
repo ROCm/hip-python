@@ -1477,7 +1477,7 @@ cdef void* {funptr_name} = NULL
             return "None"
         elif ( self.is_basic_type or self.is_pointer_to_char(degree=1) ):
             return CYTHON_AUTOCONV_TO_PYTHON_TYPES(typename)
-        elif self.is_enum or self.is_record or self.is_union:
+        elif self.is_enum or self.is_record:
             return typename
         else:
             return None
@@ -1798,11 +1798,11 @@ cdef void* {funptr_name} = NULL
         elif self.is_enum:
             out_args.insert(0, retvalname)
             return f"{retvalname} = {typename}({c_interface_call})"
-        elif self.is_record or self.is_union:
+        elif self.is_record or self.is_pointer_to_record:
             out_args.insert(0, retvalname)
             return f"{retvalname} = {typename}.from_value({c_interface_call})"
         else:
-            _log.warn(f"interfacegen.cython: return value of function {self.name} could not be classified")
+            _log.warn(f"<{self.render_location()}> function {self.name}: return value type could not be classified.")
             return ""
 
     def render_python_docstring(self, cprefix: str) -> str:
@@ -1957,9 +1957,9 @@ class CythonBackend:
                         self.ptr_complicated_type_handler,
                     )
                 # yield relevant nodes
-                if not isinstance(node, (FieldMixin, ParmMixin)):
+                if not isinstance(node, (FieldMixin, ParmMixin, RootMixin)):
                     if self.node_filter(node):
-                        _log.info(f" touch {node.__class__.__name__} {node.name} from {node.cursor.kind} {node.cursor.spelling} ({node.cursor.location.file}:{node.cursor.location.line}:{node.cursor.location.column})")
+                        _log.debug(f" touch {node.__class__.__name__} {node.name} from {node.cursor.kind} {node.cursor.spelling} ({node.render_location()})")
                         yield node
 
     def create_c_interface_decl_part(self, runtime_linking: bool = False):
@@ -2183,7 +2183,7 @@ class CythonModuleGenerator:
             unsaved_files = [header]
         else:
             raise ValueError("type of 'headers' must be str or tuple")
-        print(filename, file=sys.stderr)  # TODO logging
+        _log.info(" "+filename)
         if include_dir != None:
             abspath = os.path.join(include_dir, filename)
         else:
