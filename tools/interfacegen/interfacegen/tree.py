@@ -60,7 +60,10 @@ class Node:
         self.cursor = cursor
         self.parent = parent
         self.child_nodes = []
-        _log.info(f"{self.cursor.location.file}:{self.cursor.location.line}:{self.cursor.location.column}: + {self.__class__.__name__} from {self.cursor.kind} {self.cursor.spelling}")
+        _log.debug(f"<{self.render_location()}>: NEW {self.__class__.__name__} from {self.cursor.kind} '{self.cursor.spelling}'")
+
+    def render_location(self):
+        return f"{self.cursor.location.file}:{self.cursor.location.line}:{self.cursor.location.column}"
 
     def append(self, node):
         assert isinstance(node, Node)
@@ -91,7 +94,7 @@ class Node:
             sep (`str`):  A separator to use for joining the individual names. If None is passed, the list is returned.
                           Defaults to None.
         """
-        assert isinstance(self, (Node))
+        assert isinstance(self, Node)
         curr = self
         name_parts = []
         while not isinstance(curr, Root):
@@ -242,12 +245,14 @@ class Root(Node):
         canonical_typename = self._canonical_typename(node)
         if not canonical_typename in self.types:
             self.types[canonical_typename] = []
+        _log.debug(f" append_type: {type(node)} for canonical typename '{self._canonical_typename(node)}' from {node.cursor.kind} '{node.cursor.spelling}' ({node.render_location()})")
         self.types[canonical_typename].append(node)
 
     def remove_type(self, node):
         canonical_typename = self._canonical_typename(node)
         if canonical_typename in self.types:
             assert node in self.types[canonical_typename]
+            _log.debug(f" remove_type: {type(node)} for canonical typename '{self._canonical_typename(node)}' from {node.cursor.kind} '{node.cursor.spelling}' ({node.render_location()})")
             self.types[canonical_typename].remove(node)
 
 
@@ -825,6 +830,7 @@ class Record(Type):
     @property
     def fields(self):
         """Fields specified for this type."""
+        _log.debug(f" walk fields of {self.__class__.__name__} {self.global_name('_')},{self.cursor.kind=},{self.cursor.spelling=},<{self.render_location()}>")
         for child in self.child_nodes:
             if isinstance(child, Field):
                 yield child
@@ -1211,15 +1217,18 @@ def from_libclang_translation_unit(
         """
         node = Typedef(cursor, root)
         if TypedefedFunctionPointer.match(cursor.type):
+            _log.debug(f"handle_typedef_cursor_: typedefed function pointer: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
             node = TypedefedFunctionPointer(
                 cursor, root
             )
             descend_into_child_cursors_(node)  # post-order walk,
             root.append(node)
         elif Typedef.match_typedefed_basic_type(cursor.type):
+            _log.debug(f"handle_typedef_cursor_: typedefed basic type: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
             node = Typedef(cursor, root)
             root.append(node)
         elif Typedef.match_typedefed_pointer(cursor.type):
+            _log.debug(f"handle_typedef_cursor_: typedefed pointer type: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
             node = Typedef(cursor, root)
             typeref_cursor = first_child_cursor_of_kinds_( # 
                 cursor, (clang.cindex.CursorKind.TYPE_REF,)
@@ -1231,6 +1240,7 @@ def from_libclang_translation_unit(
         else:
             type_decl_cursor = cursor.underlying_typedef_type.get_declaration()
             if not len(type_decl_cursor.spelling):  # found anonymous struct/union/enum child
+                _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found anonymous {type_decl_cursor.type.kind} cursor with typedef name '{cursor.spelling}'")
                 # in case of anon enum, replace the original node with the given one
                 anon_type_decl = root.lookup_type_from_cursor(type_decl_cursor)
                 assert anon_type_decl != None and isinstance(anon_type_decl, (Enum, Record))
@@ -1240,6 +1250,7 @@ def from_libclang_translation_unit(
                 root.remove(anon_type_decl)
                 pass # do not append typedef node
             elif type_decl_cursor.spelling != cursor.spelling:  # child with different name
+                _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found {type_decl_cursor.type.kind} with name '{type_decl_cursor.spelling}' and typedef name '{cursor.spelling}'")
                 # update, append typedef node
                 node.typeref = root.lookup_type_from_cursor(type_decl_cursor)
                 descend_into_child_cursors_(node)  # post-order walk
