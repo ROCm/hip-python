@@ -92,12 +92,17 @@ def CYTHON_AUTOCONV_FROM_PYTHON_TYPES(canonical_ctype: str):
     elif len(tokens) == 2 and tokens[0] in ("union","struct","enum"):
         raise KeyError("Cython cannot autoconvert to C structs, unions, and enums from Python types.")
     else:
+        # const unsigned char[32]
+        if "char" in tokens:
+            return "bytes"
+        else:
+            return "list" # FIXME make configurable
         # C array and struct union are not handled yet
         # requires
-        raise NotImplementedError(f"not implemented for type '{canonical_ctype}'")
+        # raise NotImplementedError(f"not implemented for type '{canonical_ctype}'")
 
 def CYTHON_AUTOCONV_TO_PYTHON_TYPES(canonical_ctype: str):
-    """Convert a canonical C type to the Python type to which
+    """Convert a canonical C/Cython C type to the Python type to which
     it is converted automatically by Cython.
 
     Returns:
@@ -121,12 +126,14 @@ def CYTHON_AUTOCONV_TO_PYTHON_TYPES(canonical_ctype: str):
         ["float"],["double"],["long","double"],
     ]:
         return "float"
+    elif tokens in [
+        ["bint"],
+    ]:
+        return "bool"
     elif len(tokens) == 2 and tokens[0] in ("union","struct","enum"):
         raise NotImplementedError("struct, union, enum types are not handled")
     else:
-        # C array and struct union are not handled yet
-        # requires
-        raise NotImplementedError(f"not implemented for type '{canonical_ctype}'")
+        return "list"
 
 
 def DEFAULT_RENAMER(name):  # backend-specific
