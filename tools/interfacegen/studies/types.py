@@ -48,6 +48,7 @@ struct outer {
 """
 
 typedefs = """
+// records: unions, structs
 typedef struct {
   int a;
 } anon_inner_t; // no inner type name, legal
@@ -76,6 +77,16 @@ typedef struct mytype7 { int a; }*  mytype7;
 // enums
 typedef enum Value { a = 0 } Value_t;
 typedef union Union { int a[2]; double f; } Union_t;
+
+typedef union
+{
+  unsigned long long int __value64;
+  struct
+  {
+    unsigned int __low;
+    unsigned int __high;
+  } __value32;
+} __atomic_wide_counter;
 
 typedef const int cint;
 cint a;
