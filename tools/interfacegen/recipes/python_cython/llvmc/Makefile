@@ -9,5 +9,5 @@ llvm-c.h: $(C_HEADERS)
 	printf "" > $@
 	for f in $(C_HEADERS); do echo "#include \"$$f\"" >> $@; done
 
-libLLVM.so: $(STATIC_LIBS)
+librocmllvm.so: $(STATIC_LIBS)
 	gcc -shared -Wl,--whole-archive $^ -Wl,--no-whole-archive -o $@
