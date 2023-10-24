@@ -244,6 +244,10 @@ class Root(Node, *__RootMixins):
     def _canonical_typename(self, node: Node):
         return node.cursor.type.get_canonical().spelling
 
+    def has_record_for_type(self,node):
+        canonical_typename = self._canonical_typename(node)
+        return node in self.types.get(canonical_typename,[])
+
     def append_type(self, node):
         canonical_typename = self._canonical_typename(node)
         if not canonical_typename in self.types:
@@ -252,6 +256,30 @@ class Root(Node, *__RootMixins):
         self.types[canonical_typename].append(node)
 
     def remove_type(self, node):
+        """Removes a type from the registry.
+        
+        If the type is a parent of other types, removes those types too.
+        
+        Example 1:
+
+        `typedef union {  } mytype;`
+
+        will have clang produce an anoymous top-level union cursor plus a top-level 
+        typedef cursor with spelling `mytype`, even though there
+        is no way to access the union cursor.
+
+        For languages such as Cython, the union thus must be removed or renamed.
+        This routine therefore allows to remove such types.
+
+        `typedef union { struct { ... } field; } mytype;`
+
+        will have clang produce an anoymous top-level union cursor plus a top-level 
+        typedef cursor with spelling `mytype`.
+        Additionally clang 
+        
+        Args:
+            node (_type_)
+        """
         canonical_typename = self._canonical_typename(node)
         if canonical_typename in self.types:
             assert node in self.types[canonical_typename]
@@ -280,19 +308,16 @@ class Typed:
     ):
         """Returns a Cython-compatible typename for the given Clang type.
 
-        If `record_enum_name` is provided, replaces elaborated C type names, e.g. `struct Foo`,
-        and anonymous types by `record_enum_name`.
+        If `repl_typename` is provided, replaces elaborated C type names, e.g. `struct Foo`,
+        and anonymous types by `repl_typename`.
         Otherwise, simply returns the spelling of `clang_type.get_canonical()`.
 
         Args:
-            forced_record_enum_name (str): A forced typename for the struct, union, or enum part of the
-                                           canonical Clang typename.
+            repl_typename (str): A forced typename for the struct, union, or enum part of the
+                                 canonical Clang typename.
         """
 
-        # TODO Revise this method, 
-        # not robust as "name" in "name_" would be regarded das match, 
-        # better do regex search with word boundaries
-
+        # FIXME(interfacegen.cython.tree.canonical_typename,0,docharri) Revise method; may not be robust as "name" in "name_" would be regarded das match, better do regex search with word boundaries
         canonical_type_to_modify = typehandler.clang_type.get_canonical().spelling
         if repl_typename == None:
             return canonical_type_to_modify
@@ -312,6 +337,7 @@ class Typed:
                 ) or layer_canonical_type_spelling.endswith(  
                     searched_canonical_typename  # other (canonical!) type with optional preceding modifiers
                 ): 
+                    assert layer_canonical_type_spelling in canonical_type_to_modify, f"Types (searched typename, canonical type, canonical type of layer): '{searched_canonical_typename}', '{canonical_type_to_modify}', '{layer_canonical_type_spelling}'"
                     start_incl = canonical_type_to_modify.index(
                         layer_canonical_type_spelling
                     )
@@ -326,25 +352,29 @@ class Typed:
             )
 
     def global_typename(self, sep: str, renamer: callable = lambda name: name, prefer_canonical:bool = False):
-        """_summary_
+        """Returns a global typename based on types in the Root nodes type registry and
+        a backend-specific renaming function provided by the user.
 
         Args:
-            sep (str): _description_
-            renamer (_type_, optional): _description_. Defaults to lambdaname:name.
+            sep (str): A separator for connecting a nested types name with its parent name and it ancestors' name in order to 
+                       derive a global name.
+            renamer (_type_, optional): A renaming function. Defaults to identity.
             use_canonical (bool, optional): If the canonical name should be preferred.
 
         Raises:
-            ValueError: _description_
+            ValueError: If the separator is not a string.
 
         Returns:
-            _type_: _description_
+            str: A global typename for this type.
         """
         use_canonical = prefer_canonical and self.is_innermost_canonical_type_layer_of_basic_type_or_void
-        if sep == None:
-            raise ValueError("sep may not be None")
+        if not isinstance(sep,str):
+            raise ValueError("argument 'sep' must be a string.")
         if self.typeref is not None and not use_canonical:
+            # print(f"[pre] {type(self.typeref)} <{self.typeref.render_location()}>")
             searched_typename = self.typeref.cursor.type.get_canonical().spelling
             repl_typename = renamer(self.typeref.global_name(sep))
+            # print(f"[post] {type(self.typeref)} <{self.typeref.render_location()}>")
         else:
             searched_typename = None
             repl_typename = None
@@ -833,9 +863,10 @@ class Record(Type):
     @property
     def fields(self):
         """Fields specified for this type."""
-        _log.debug(f" walk fields of {self.__class__.__name__} {self.global_name('_')},{self.cursor.kind=},{self.cursor.spelling=},<{self.render_location()}>")
+        _log.debug(f"<{self.render_location()}> walk fields of {self.__class__.__name__} {self.global_name('_')},{self.cursor.kind=},{self.cursor.spelling=}")
         for child in self.child_nodes:
             if isinstance(child, Field):
+                assert child.cursor.kind == clang.cindex.CursorKind.FIELD_DECL
                 yield child
 
     @property
@@ -1180,7 +1211,7 @@ def from_libclang_translation_unit(
         nonlocal warn_mode
 
         if cursor.kind in structure_types.keys():
-            handle_nested_record_or_enum_cursor_(cursor, root)
+            handle_top_level_record_or_enum_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
             handle_typedef_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
@@ -1204,6 +1235,27 @@ def from_libclang_translation_unit(
             descend_into_child_cursors_(node)
             root.append(node)
 
+    def handle_top_level_record_or_enum_cursor_(cursor: clang.cindex.Cursor, root: Root):
+        """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
+        Other cursors are ignored.
+
+        Note:
+            In contrast to the `handle_nested_record_or_enum_cursor_`,
+            this routine never creates `AnonymousStruct`, `AnonymousUnion`, `AnonymousEnum`
+            instances, instead it sets a flag indicating that the node
+            is from a typedef with anoymous inner node. This is mainly
+            for debugging purposes. It is assumes that the name of the node
+            gets overwritten when the respetive typedef is handled.
+        """
+        nonlocal structure_types
+
+        if cursor.kind in structure_types:
+            cls = structure_types[cursor.kind]
+            node = cls(cursor, root, 
+                       from_typedef_with_anon_child = (cursor.spelling == ""))
+            descend_into_child_cursors_(node)
+            root.append(node)
+
     def handle_typedef_cursor_(cursor: clang.cindex.Cursor, root: Root):
         """Handle typedef cursors with respect to their children and type.
 
@@ -1214,22 +1266,26 @@ def from_libclang_translation_unit(
         In case of the former three, three different cases have to be handled:
 
         1. The inner type is anonymous.
-            * In this case, a previously inserted anonymous Struct/-Union/-Enum node has to
-            be replaced by Struct/Union/Enum node that uses a `ctypedef struct <name>`/...
-            instead of `cdef struct <name>`/...  when rendering Cython code,
-            where `<name>` is the spelling of the `TYPEDEF_DECL` cursor.
+           
+           In this case, the previously inserted (anonymous) Struct/-Union/-Enum node has to
+           be given a name that uses a `ctypedef struct <name>`/... 
+           instead of `cdef struct <name>`/...  when rendering Cython code,
+           where `<name>` is the spelling of the `TYPEDEF_DECL` cursor. (FIXME Cython backend specific text)
+        
         2. Inner type and typedef name are the same.
-            * In this case, no Typedef node is inserted as only `cdef struct <name>`/...  needs to be specified
-              in the rendered Cython code.
+        
+            In this case, no Typedef node is inserted as only `cdef struct <name>`/...  needs to be specified
+            in the rendered Cython code.
+
         3. Inner type and typedef name differ.
-            * In this case a Typedef case is inserted that specifies a previously added
-                Struct/Union/Enum as typeref argument.
+            
+            In this case a Typedef case is inserted that specifies a previously added
+            Struct/Union/Enum as typeref argument.
 
         In case none of the listed four child cursors could be found,
         the routine checks if the cursor's type might be a typedefed function pointer.
         In this case, no Typedef node but a `TypedefedFunctionPointer` is inserted.
         """
-        node = Typedef(cursor, root)
         if TypedefedFunctionPointer.match(cursor.type):
             _log.debug(f"handle_typedef_cursor_: typedefed function pointer: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
             node = TypedefedFunctionPointer(
@@ -1246,57 +1302,30 @@ def from_libclang_translation_unit(
             node = Typedef(cursor, root)
             typeref_cursor = first_child_cursor_of_kinds_( # 
                 cursor, (clang.cindex.CursorKind.TYPE_REF,)
-            ) # FIXME see if looking up the TYPE_REF cursor can be done via clang.cindex methods
-              # we could also check if this is an arbitrary pointer to a basic type?
-            if typeref_cursor != None:
+            ) # FIXME see if looking up the TYPE_REF cursor can be done via clang.cindex.
+            if typeref_cursor is not None:
                 node.typeref = root.lookup_type_from_cursor(typeref_cursor)
             root.append(node)
         else:
-            type_decl_cursor = cursor.underlying_typedef_type.get_declaration()
+            type_decl_cursor = cursor.underlying_typedef_type.get_declaration() # FIX
             if not len(type_decl_cursor.spelling):  # found anonymous struct/union/enum child
                 _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found anonymous {type_decl_cursor.type.kind} cursor with typedef name '{cursor.spelling}'")
                 # in case of anon enum, replace the original node with the given one
-                anon_type_decl = root.lookup_type_from_cursor(type_decl_cursor)
-                assert anon_type_decl != None and isinstance(anon_type_decl, (Enum, Record))
-                type_decl = handle_anon_typedef_child_cursor_(type_decl_cursor, node)
-                descend_into_child_cursors_(type_decl)  # post-order walk
-                root.insert(anon_type_decl.index, type_decl)
-                root.remove(anon_type_decl)
+                type_decl = root.lookup_type_from_cursor(type_decl_cursor)
+                assert type_decl != None 
+                assert isinstance(type_decl, (Enum, Record))
+                assert type_decl._from_typedef_with_anon_child
+                type_decl.overwrite_name(cursor.spelling)
                 pass # do not append typedef node
             elif type_decl_cursor.spelling != cursor.spelling:  # child with different name
                 _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found {type_decl_cursor.type.kind} with name '{type_decl_cursor.spelling}' and typedef name '{cursor.spelling}'")
                 # update, append typedef node
+                node = Typedef(cursor, root) # quiet/silent creation depending on case
                 node.typeref = root.lookup_type_from_cursor(type_decl_cursor)
-                descend_into_child_cursors_(node)  # post-order walk
                 root.append(node)
             else:  # child with same name
-                descend_into_child_cursors_(node)  # post-order walk
+                _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found {type_decl_cursor.type.kind} with name and typedef name '{type_decl_cursor.spelling}'")
                 pass # do not append typedef node
-
-    def handle_anon_typedef_child_cursor_(cursor: clang.cindex.Cursor, parent: Typedef):
-        """Handle a TYPEDEF_DECL cursors' anonymous STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor."""
-        nonlocal structure_types
-
-        root = parent.get_root()
-        parent_cursor = parent.cursor
-        assert (
-            cursor.type.get_canonical().spelling
-            == parent_cursor.type.get_canonical().spelling
-        )
-        assert (
-            cursor.spelling == ""
-            and cursor.type.spelling == parent_cursor.type.spelling
-        )
-        if cursor.kind in structure_types:
-            cls = structure_types[cursor.kind]
-            node = cls(cursor, root, from_typedef_with_anon_child=True)
-            node.overwrite_name(parent_cursor.spelling)
-        else:
-            raise RuntimeError(
-                "expected cursor of kind 'STRUCT_DECL', 'UNION_DECL', or 'ENUM_DECL'"
-            )
-
-        return node
 
     def handle_nested_record_or_enum_cursor_(cursor: clang.cindex.Cursor, parent: Node):
         """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
@@ -1336,6 +1365,7 @@ def from_libclang_translation_unit(
             descend_into_child_cursors_(typeref)  # post-order walk
             parent.append(typeref)
         else:
+            # FIXME prove robustness
             typeref_cursor = first_child_cursor_of_kinds_(
                 cursor,
                 (
