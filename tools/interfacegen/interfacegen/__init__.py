@@ -59,6 +59,6 @@ def enable_logging(level = None):
     logger.disabled = False
     logger.setLevel(logging.INFO if level == None else level)
     handler = logging.StreamHandler(sys.stderr)
-    handler.setFormatter(logging.Formatter("%(levelname)s:%(module)s:%(message)s"))
+    handler.setFormatter(logging.Formatter("[%(levelname)s][%(pathname)s:%(lineno)s]%(message)s"))
     logger.addHandler(handler)
     return logger
