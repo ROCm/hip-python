@@ -155,23 +155,33 @@ def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
 
-def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
-    from . import tree
+# HIP Python "hip._util.types."
 
-    assert isinstance(parm_or_field,tree.Typed)
-    if parm_or_field.actual_rank == 1:
-        innermost_type_kind = next(parm_or_field.clang_type_layer_kinds(postorder=-1,canonical=True))
-        if innermost_type_kind == clang.cindex.TypeKind.INT:
-            return "hip._util.types.ListOfInt"
-        elif innermost_type_kind == clang.cindex.TypeKind.UINT:
-            return "hip._util.types.ListOfUnsigned"
-        elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
-            return "hip._util.types.ListOfUnsignedLong"
-    if parm_or_field.actual_rank == 2:
-        return "hip._util.types.ListOfPointer"
-    return "hip._util.types.Pointer"
+def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_pkg_prefix: str=""):
+    """Creates the default type handler routine.
 
-# TODO move this out
+    Args:
+        util_pkg (str, optional): Prefix to the `types` from the types utility module.
+        Defaults to "".
+    """
+    def inner(parm_or_field):
+        from . import tree
+
+        assert isinstance(parm_or_field,tree.Typed)
+        if parm_or_field.actual_rank == 1:
+            innermost_type_kind = next(parm_or_field.clang_type_layer_kinds(postorder=-1,canonical=True))
+            if innermost_type_kind == clang.cindex.TypeKind.INT:
+                return f"{util_pkg_prefix}ListOfInt"
+            elif innermost_type_kind == clang.cindex.TypeKind.UINT:
+                return f"{util_pkg_prefix}ListOfUnsigned"
+            elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
+                return f"{util_pkg_prefix}ListOfUnsignedLong"
+        if parm_or_field.actual_rank == 2:
+            return f"{util_pkg_prefix}ListOfPointer"
+        return f"{util_pkg_prefix}Pointer"
+
+    return inner
+
 LICENSE_TEXT = """\
 # MIT License
 # 
@@ -215,7 +225,6 @@ from libc cimport string
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
-cimport hip._util.types
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
@@ -824,11 +833,35 @@ class MacroDefinitionMixin(CythonMixin):
         CythonMixin.__init__(self)
         self.macro_type = DEFAULT_MACRO_TYPE
 
+    @property
+    def no_right_hand_side(self):
+        """If the `macro_type` user callback returns a Python bool 'True', this indicates a `#define <NAME>` without RHS.
+        """
+        return type(self.macro_type(self)) == bool
+
     def render_c_interface(self):
+        """
+        Note:
+            Relies on the `macro_type callback` to infer
+            a type for the macro definition's RHS.
+            If the macro expression is just a, `#define <name>`,
+            the callback should return `True`.
+            Otherwise, the callback should return a string
+            If the callback returns `None`, an error is logged.
+        """
         from . import tree
 
         assert isinstance(self, tree.MacroDefinition)
-        return f"cdef {self.macro_type(self)} {self._cython_and_c_name(self.name)}"
+        typename = self.macro_type(self)
+        if typename == None:
+            _log.error(f"no type specified for macro defintion {self.name}.")
+            # FIXME: Introduce error modes: fail on error, ignore on error, ...
+            return None
+        elif isinstance(typename,bool):
+            return f"cdef bint {self._cython_and_c_name(self.name)} = {int(typename)}"    
+        else:
+            assert isinstance(typename,str)
+            return f"cdef {typename} {self._cython_and_c_name(self.name)}"
 
     def render_python_interface_impl(self, cprefix: str):
         """Returns '{self.name} = {prefix}{self.name}'."""
@@ -836,14 +869,18 @@ class MacroDefinitionMixin(CythonMixin):
 
         assert isinstance(self, tree.MacroDefinition)
         name = self.renamer(self.name)
+        if self.no_right_hand_side:
+            python_type = "bool"
+        else:
+            python_type = CYTHON_AUTOCONV_TO_PYTHON_TYPES(self.macro_type(self))
         self.docstring_attributes.append(
-                textwrap.dedent(
-                        f"""\
-                        {name} ({self.to_sphinx_pyobj(CYTHON_AUTOCONV_TO_PYTHON_TYPES(self.macro_type(self)))}):
-                            Macro constant.
-                        """
-                )
+            textwrap.dedent(
+                    f"""\
+                    {name} ({self.to_sphinx_pyobj(python_type)}):
+                        Macro constant.
+                    """
             )
+        )
         self.all.append(self.cython_global_name)
         return f"{name} = {cprefix}{name}"
 
@@ -939,15 +976,17 @@ class FieldMixin(CythonMixin, Typed):
     def __init__(self):
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
-        self.ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
+        self.ptr_complicated_type_handler = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER()
 
     @property
     def cython_repr(self):
         from . import tree
 
+        _log.debug(f"<{self.render_location()}>[pre] render Cython repr. of {self.__class__.__name__},{self.cursor.kind=},{self.cursor.spelling=},type: {self.cursor.type.kind=}")
         assert isinstance(self, tree.Field)
         typename = self.global_typename(self.sep, self.renamer, prefer_canonical=True)
         name = self._cython_and_c_name(self.name)
+        _log.debug(f"<{self.render_location()}>[post] render Cython repr. of {self.__class__.__name__},{self.cursor.kind=},{self.cursor.spelling=},type: {self.cursor.type.kind=}")
         return f"{typename} {name}"
 
     def render_python_property(self, cprefix: str):
@@ -1344,11 +1383,11 @@ class AnonymousFunctionPointerMixin(FunctionPointerMixin):
 
 class ParmMixin(CythonMixin, Typed):
     def __init__(self):
-        global DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
+        global CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
         self.ptr_intent = control.DEFAULT_PTR_PARM_INTENT
-        self.ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
+        self.ptr_complicated_type_handler = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER()
 
     @property
     def cython_repr(self):
@@ -1831,7 +1870,7 @@ class CythonBackend:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
-        ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+        ptr_complicated_type_handler=CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(),
         renamer: callable = DEFAULT_RENAMER,
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
@@ -1861,7 +1900,7 @@ class CythonBackend:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
-        ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+        ptr_complicated_type_handler=CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(),
         renamer: callable = DEFAULT_RENAMER,
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
@@ -1956,6 +1995,10 @@ class CythonBackend:
                         node, (tree.AnonymousEnum, tree.AnonymousStruct, tree.AnonymousUnion)
                     )
                     and node.is_cursor_anonymous
+                )
+                or (
+                    isinstance(node, MacroDefinitionMixin)
+                    and node.no_right_hand_side
                 )
             ):
                 if isinstance(node, FunctionMixin):
