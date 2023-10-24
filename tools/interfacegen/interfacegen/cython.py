@@ -1962,6 +1962,57 @@ class CythonBackend:
                         _log.debug(f" touch {node.__class__.__name__} {node.name} from {node.cursor.kind} {node.cursor.spelling} ({node.render_location()})")
                         yield node
 
+    def walk_entities_to_import(self,cmodule: bool):
+        """Yields the entities that need to imported in the c-prefixed Cython module 
+        or the Python module.
+
+        For the Python module, yields all top-level nodes aside from FunctionPointer and Record nodes (structs and unions) as those are modelled
+        as Cython extension classes ("cdef class"). Yields nothing for the c-prefixed Cython module.
+
+        Note:
+            Utilizes `walk_filtered_nodes(self)`, i.e. the result depends on the
+            supplied node filter.
+        
+        Args:
+            cmodule (bool):
+                If we perform this operation for the c-prefixed Cython module.
+                In this case nothing is yielded at all.
+        """
+        from . import tree
+
+        if cmodule:
+            yield from ()
+        else:
+            for node in self.walk_filtered_nodes():
+                if not isinstance(node,(tree.FunctionPointer,tree.Record)):
+                    yield node
+
+    def walk_entities_to_cimport(self,cmodule: bool) -> CythonMixin:
+        """Yields the entities that need to c-imported in the c-prefixed Cython module 
+        or the Python module.
+
+        For the Python module, yields only FunctionPointer and Record nodes (structs and unions) as those are modelled
+        as Cython extension classes ("cdef class").
+        Yields all top-level nodes for the c-prefixed Cython module.
+
+        Note:
+            Utilizes `walk_filtered_nodes(self)`, i.e. the result depends on the
+            supplied node filter.
+
+        Args:
+            cmodule (bool):
+                If we perform this operation for the c-prefixed Cython module.
+                In this case all top-level nodes are yielded.
+        """
+        from . import tree
+
+        if cmodule:
+            yield from self.walk_filtered_nodes()
+        else:
+            for node in self.walk_filtered_nodes():
+                if isinstance(node,(tree.FunctionPointer,tree.Record)):
+                    yield node
+
     def create_c_interface_decl_part(self, runtime_linking: bool = False):
         """Returns the content of a Cython bindings file.
 
@@ -2134,16 +2185,8 @@ class CythonModuleGenerator:
         header: str,
         runtime_linking=False,
         dll: str = None,
-        node_filter: callable = control.DEFAULT_NODE_FILTER,
-        macro_type: callable = DEFAULT_MACRO_TYPE,
-        ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
-        ptr_rank: callable = control.DEFAULT_PTR_RANK,
-        ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
-        renamer: callable = DEFAULT_RENAMER,
-        raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
-        docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
-        warn_mode=control.Warnings.WARN,
         cflags=[],
+        **opts,
     ):
         """Constructor.
 
@@ -2197,15 +2240,7 @@ class CythonModuleGenerator:
         self.backend = CythonBackend.from_libclang_translation_unit(
             parser.translation_unit,
             header,
-            node_filter,
-            macro_type,
-            ptr_parm_intent,
-            ptr_rank,
-            ptr_complicated_type_handler,
-            renamer,
-            raw_comment_cleaner,
-            docstring_cleaner,
-            warn_mode,
+            **opts
         )
 
     def write_module_files(self, output_dir: str = None):
