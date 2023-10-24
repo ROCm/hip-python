@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
+__author__ = "Advanced Micro Devices, Inc."
 
 from . import control
 from . import tree
