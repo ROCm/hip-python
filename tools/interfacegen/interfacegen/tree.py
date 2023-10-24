@@ -38,6 +38,7 @@ from . import cython
 
 indent = " " * 4
 
+__RootMixins = (cython.RootMixin,)
 __MacroDefinitionMixins = (cython.MacroDefinitionMixin,)
 __FieldMixins = (cython.FieldMixin,)
 __StructMixins = (cython.StructMixin,)
@@ -175,13 +176,15 @@ class Node:
                 yield from child.walk()
 
 
-class Root(Node):
+class Root(Node, *__RootMixins):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
     ):
         Node.__init__(self, cursor, None)
         self.types = collections.OrderedDict()
+        for mixin in globals()["__RootMixins"]:
+            mixin.__init__(self)
 
     def lookup_all_types(self, canonical_typename: str) -> list:
         return self.types.get(canonical_typename, [])
