@@ -157,7 +157,7 @@ def DEFAULT_MACRO_TYPE(node):  # backend-specific
 
 # Utility types
 
-def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_pkg_prefix: str=""):
+def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str=""):
     """Creates the default type handler routine.
 
     Args:
@@ -171,14 +171,14 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_pkg_prefix: str=""):
         if parm_or_field.actual_rank == 1:
             innermost_type_kind = next(parm_or_field.clang_type_layer_kinds(postorder=-1,canonical=True))
             if innermost_type_kind == clang.cindex.TypeKind.INT:
-                return f"{util_pkg_prefix}ListOfInt"
+                return f"{util_types_prefix}ListOfInt"
             elif innermost_type_kind == clang.cindex.TypeKind.UINT:
-                return f"{util_pkg_prefix}ListOfUnsigned"
+                return f"{util_types_prefix}ListOfUnsigned"
             elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
-                return f"{util_pkg_prefix}ListOfUnsignedLong"
+                return f"{util_types_prefix}ListOfUnsignedLong"
         if parm_or_field.actual_rank == 2:
-            return f"{util_pkg_prefix}ListOfPointer"
-        return f"{util_pkg_prefix}Pointer"
+            return f"{util_types_prefix}ListOfPointer"
+        return f"{util_types_prefix}Pointer"
 
     return inner
 
@@ -975,6 +975,7 @@ class Typed:
 class FieldMixin(CythonMixin, Typed):
     def __init__(self):
         CythonMixin.__init__(self)
+        self.util_types_prefix = ""
         self.ptr_rank = control.DEFAULT_PTR_RANK
         self.ptr_complicated_type_handler = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER()
 
@@ -1866,11 +1867,12 @@ class CythonBackend:
     def from_libclang_translation_unit(
         translation_unit: clang.cindex.TranslationUnit,
         filename: str,
+        util_pkg: str,
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
-        ptr_complicated_type_handler=CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(),
+        ptr_complicated_type_handler=None,
         renamer: callable = DEFAULT_RENAMER,
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
@@ -1882,6 +1884,7 @@ class CythonBackend:
         return CythonBackend(
             root,
             filename,
+            util_pkg,
             node_filter,
             macro_type,
             ptr_parm_intent,
@@ -1896,16 +1899,27 @@ class CythonBackend:
         self,
         root,
         filename: str,
+        util_pkg: str = "",
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
-        ptr_complicated_type_handler=CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(),
+        ptr_complicated_type_handler=None,
         renamer: callable = DEFAULT_RENAMER,
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
     ):
-        """
+        """Constructor.
+
+        Args:
+            node_filter (callable, optional): 
+                Filter for selecting the nodes to include in generated output. Defaults to `lambda x: True`.
+            macro_type (callable, optional):
+                Assigns a type to a macro node. Defaults to `lambda x: "int"`.
+            ptr_parm_intent (callable, optional):
+                Assigns the intent (in,out,inout,create) to a pointer-type function parameter/struct field node..
+            ptr_rank (callable, optional): 
+                Assigns the "rank" (scalar,buffer) to a function parameter node.
         Note:
             Argument 'root' has no type hint in order to prevent a circular inclusion error.
             Instead an assertion is used in the body that checks if the type is `tree.Root`.
@@ -1915,11 +1929,15 @@ class CythonBackend:
         assert isinstance(root, tree.Root)
         self.root = root
         self.filename = filename
+        self.util_pkg = util_pkg
         self.node_filter = node_filter
         self.macro_type = macro_type
         self.ptr_parm_intent = ptr_parm_intent
         self.ptr_rank = ptr_rank
-        self.ptr_complicated_type_handler = ptr_complicated_type_handler
+        if ptr_complicated_type_handler == None:
+            self.ptr_complicated_type_handler = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_pkg)
+        else:
+            self.ptr_complicated_type_handler = ptr_complicated_type_handler
         self.renamer = renamer
         self.raw_comment_cleaner = raw_comment_cleaner
         self.docstring_cleaner = docstring_cleaner
@@ -1934,6 +1952,7 @@ class CythonBackend:
         for node in self.root.walk(postorder=True):
             if isinstance(node, CythonMixin):
                 # set defaults
+                setattr(node,"util_types_prefix",self.util_pkg+".types.")
                 setattr(node, "sep", "_")
                 # set user callbacks
                 setattr(node, "renamer", self.renamer)
@@ -2247,6 +2266,7 @@ class CythonModuleGenerator:
         self.backend = CythonBackend.from_libclang_translation_unit(
             parser.translation_unit,
             header,
+            util_pkg,
             **opts
         )
 
