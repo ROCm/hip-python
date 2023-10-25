@@ -1334,17 +1334,31 @@ class TypedefMixin(CythonMixin, Typed):
         return f"ctypedef {underlying_type_name} {name}"
 
     def render_python_interface_decl(self, cprefix: str) -> str:
+        """Always returns None.
+
+        No Cython extension types are introdued by any typedef.
+        """
         from . import tree
 
         assert isinstance(self, tree.Typedef)
         return None
+
+    def emits_python_alias(self):
+        """If this typedef emits a Python alias type
+        when the Python interface is rendered.
+
+        This is only the case if the typedef aliases
+        a record or enum or a pointer to a record or enum.
+        Other typedefs are not considered at all.
+        """
+        return self.is_pointer_to_record(degree=(0,-1)) or self.is_pointer_to_enum(degree=(0,-1))
 
     def render_python_interface_impl(self, cprefix: str) -> str:
         from . import tree
 
         assert isinstance(self, tree.Typedef)
         name = self.cython_global_name
-        if self.is_pointer_to_record(degree=(0,-1)) or self.is_pointer_to_enum(degree=(0,-1)):
+        if self.emits_python_alias():
             aliased = self.renamer(self.typeref.global_name(self.sep))
             self.docstring_attributes.append(
                 textwrap.dedent(
@@ -2046,8 +2060,12 @@ class CythonBackend:
             yield from ()
         else:
             for node in self.walk_filtered_nodes():
-                if not isinstance(node,(tree.FunctionPointer,tree.Record)):
-                    yield node
+                if isinstance(node,(tree.FunctionPointer,tree.Record)):
+                    continue
+                if isinstance(node,TypedefMixin):
+                    if not node.emits_python_alias():
+                        continue
+                yield node
 
     def walk_entities_to_cimport(self,cmodule: bool) -> CythonMixin:
         """Yields the entities that need to c-imported in the c-prefixed Cython module 
