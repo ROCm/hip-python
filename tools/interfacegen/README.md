@@ -111,11 +111,19 @@ Required:
    output_dir       The output directory to which the files should be written to. Must contain 'hip-python' and 'hip-python-as-cuda' subfolders.
 
 Options:
-  --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
-  --libs            HIP Python libraries to generate as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
-                    Add a prefix '^' to NOT generate code for the comma-separated list of libraries that follows but all other libraries.
-  --pre-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
-  --post-clean      Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
-  -n, --no-venv     Do not create and use a virtual Python environment.
-  -h, --help        Show this help message.
+Options:
+  --rocm-path            Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
+  --libs                 Libraries to build as comma separated list without whitespaces, defaults to variable 'ROCM_LLVM_PYTHON_LIBS' if set or '*'.
+                         Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
+  --no-build             Do not build package 'rocm-llvm-python'.
+  --no-docs              Do not build the docs of package 'rocm-llvm-python'.
+  --no-build-librocmllvm Do not build the librocmllvm shared object.
+  --no-api-docs          Temporarily move the 'rocm-llvm-python/docs/python_api' subfolder so that sphinx does not see it.
+  --no-clean-docs        Do not generate docs from scratch, i.e. don't run sphinx with -E switch.
+  --run-tests            Run the tests.
+  -j,--num-jobs          Number of build jobs to use (currently only applied for building docs). Defaults to 1.
+  --pre-clean            Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
+  --post-clean           Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
+  -n, --no-venv          Do not create and use a virtual Python environment.
+  -h, --help             Show this help message.
 ```
