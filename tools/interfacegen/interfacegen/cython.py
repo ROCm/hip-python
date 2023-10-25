@@ -1689,7 +1689,7 @@ cdef void* {funptr_name} = NULL
             elif parm.is_pointer_to_record(
                 degree=2
             ) or parm.is_pointer_to_function_proto(degree=2):
-                parm_typename = parm.lookup_innermost_type().cython_name
+                parm_typename = parm.lookup_innermost_type().cython_global_name
                 prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
                 c_interface_call_args.append(f"&{parm_name}._ptr")
                 out_args.append(parm_name)
@@ -1722,7 +1722,7 @@ cdef void* {funptr_name} = NULL
             if parm.is_pointer_to_record(
                 degree=1, incomplete_array=True
             ) or parm.is_pointer_to_function_proto(degree=1, incomplete_array=True):
-                parm_typename = parm.lookup_innermost_type().cython_name
+                parm_typename = parm.lookup_innermost_type().cython_global_name
                 sig_args.append(f"object {parm_name}")
                 parm_python_types[parm.name] = f"{parm_typename}/object" # use original name as key
                 c_interface_call_args.append(
