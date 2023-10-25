@@ -1465,7 +1465,7 @@ cdef void* {funptr_name} = NULL
 {self.render_cython_lazy_loader_decl().strip()}:
     global {funptr_name}
     __init_symbol(&{funptr_name},"{self.name}")
-    return (<{typename} (*)({parm_types}){modifiers}> {funptr_name})({parm_names})
+    {'' if self.is_void else 'return '}(<{typename} (*)({parm_types}){modifiers}> {funptr_name})({parm_names})
 """
 
     def _python_interface_retval_typename(self):
