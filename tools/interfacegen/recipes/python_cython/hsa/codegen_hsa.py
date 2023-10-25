@@ -197,7 +197,7 @@ def generate_hsa_module_files():
         return name[0].upper() + name[1:]
 
     def hsa_ptr_complicated_type_handler(parm: Node):
-        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
+        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm) # FIXME outdated
 
     generator = CythonModuleGenerator(
         "hsa",
