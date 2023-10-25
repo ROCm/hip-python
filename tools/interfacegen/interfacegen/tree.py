@@ -873,6 +873,11 @@ class Record(Type):
     def is_incomplete(self):
         """If the type does not have any fields."""
         return next(self.fields, None) == None
+    
+    @property
+    def is_opague(self):
+        """Same as 'is_incomplete'."""
+        return self.is_incomplete
 
 
 class Struct(Record, *__StructMixins):

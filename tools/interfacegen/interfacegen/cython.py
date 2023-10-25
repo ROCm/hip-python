@@ -1799,11 +1799,25 @@ cdef void* {funptr_name} = NULL
         elif self.is_enum:
             out_args.insert(0, retvalname)
             return f"{retvalname} = {typename}({c_interface_call})"
-        elif self.is_record or self.is_pointer_to_record:
+        elif self.is_record:
             out_args.insert(0, retvalname)
-            return f"{retvalname} = {typename}.from_value({c_interface_call})"
+            innermost_typename = self.lookup_innermost_type().cython_global_name
+            # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
+            # that was inserted because of a typedef.
+            return f"{retvalname} = {innermost_typename}.from_value({c_interface_call})"
+        elif self.is_pointer_to_record():
+            out_args.insert(0, retvalname)
+            innermost_typename = self.lookup_innermost_type().cython_global_name
+            # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
+            # that was inserted because of a typedef.     
+            return f"{retvalname} = {innermost_typename}.from_ptr({c_interface_call})"
+        elif self.is_any_pointer:
+            out_args.insert(0, retvalname)
+            return f"{retvalname} = {self.util_types_prefix}Pointer.from_ptr({c_interface_call})"
         else:
-            _log.warn(f"<{self.render_location()}> function {self.name}: return value type could not be classified.")
+            msg = "<{self.render_location()}> function {self.name}: return value type could not be classified."
+            _log.warn(msg)
+            raise RuntimeError(msg)
             return ""
 
     def render_python_docstring(self, cprefix: str) -> str:
