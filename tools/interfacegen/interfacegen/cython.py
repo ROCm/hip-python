@@ -838,27 +838,56 @@ class MacroDefinitionMixin(CythonMixin):
         """If the `macro_type` user callback returns a Python bool 'True', this indicates a `#define <NAME>` without RHS.
         """
         return type(self.macro_type(self)) == bool
+    
+    @property
+    def interpret_right_hand_side_as_str(self):
+        """If the `macro_type` user callback returns a Python bool 'True', this indicates a `#define <NAME>` without RHS.
+        """
+        return self.macro_type(self) == str
 
     def render_c_interface(self):
         """
         Note:
             Relies on the `macro_type callback` to infer
             a type for the macro definition's RHS.
-            If the macro expression is just a, `#define <name>`,
-            the callback should return `True`.
-            Otherwise, the callback should return a string
-            If the callback returns `None`, an error is logged.
+            
+            * If the macro expression is just a, `#define <name>`,
+            the callback should return `True`. Similarly, if
+            it is `#undef <name>` and that is important, the callback must 
+            return `False`.
+            * If the macro right-hand side should be interpreted
+            as string literal even though it is not, the callback
+            must return the type `str`.
+            * If the callback returns `None`, an error is logged.
+            * Otherwise, the callback should return a string (instance)
+
         """
         from . import tree
 
         assert isinstance(self, tree.MacroDefinition)
         typename = self.macro_type(self)
         if typename == None:
-            _log.error(f"no type specified for macro defintion {self.name}.")
+            _log.error(f"no type specified for macro definition {self.name}.")
             # FIXME: Introduce error modes: fail on error, ignore on error, ...
             return None
         elif isinstance(typename,bool):
             return f"cdef bint {self._cython_and_c_name(self.name)} = {int(typename)}"    
+        elif typename == str:
+            rhs_tokens = []
+            in_arg_list = False
+            for i,token in enumerate(self.cursor.get_tokens()):
+                tk = token.spelling
+                if i == 0:
+                    continue
+                if i == 1 and tk == "(":
+                    in_arg_list = True
+                if in_arg_list:
+                    if tk == ")":
+                        in_arg_list = False
+                    continue
+                rhs_tokens.append(tk)
+            rhs = " ".join(rhs_tokens)
+            return f"cdef const char * {self._cython_and_c_name(self.name)} = \"{rhs}\""    
         else:
             assert isinstance(typename,str)
             return f"cdef {typename} {self._cython_and_c_name(self.name)}"
@@ -2082,7 +2111,8 @@ class CythonBackend:
                 )
                 or (
                     isinstance(node, MacroDefinitionMixin)
-                    and node.no_right_hand_side
+                    and ( node.no_right_hand_side
+                          or node.interpret_right_hand_side_as_str )
                 )
             ):
                 if isinstance(node, FunctionMixin):

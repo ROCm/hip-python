@@ -443,8 +443,6 @@ def create_generators():
             def macro_type(node: Node):
                 name = node.cursor.spelling
                 if name in (
-                    "LLVM_DEFAULT_TARGET_TRIPLE",
-                    "LLVM_HOST_TRIPLE",
                     "LLVM_NATIVE_ARCH",
                     "LLVM_NATIVE_ASMPARSER",
                     "LLVM_NATIVE_ASMPRINTER",
@@ -452,9 +450,14 @@ def create_generators():
                     "LLVM_NATIVE_TARGET",
                     "LLVM_NATIVE_TARGETINFO",
                     "LLVM_NATIVE_TARGETMC",
+                ):
+                    return str # means: interpret RHS tokens as str
+                elif name in (
+                    "LLVM_DEFAULT_TARGET_TRIPLE",
+                    "LLVM_HOST_TRIPLE",
                     "LLVM_VERSION_STRING",
                 ):
-                    return "char *"
+                    return "const char *"
                 elif name in (
                     "LLVM_VERSION_MAJOR",
                     "LLVM_VERSION_MINOR",
