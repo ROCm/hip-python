@@ -123,7 +123,7 @@ def parse_options():
     def rocm_version(arg):
         if not re.match(r"[0-9]+\.[0-9]+\.[0-9]+",arg):
             raise ValueError("Value of required argument `--rocm-version` must be a dot-separated number triple.")
-        return arg
+        return [int(p) for p in arg.split(".")]
 
     parser.add_argument(
         "--rocm-version",
@@ -175,7 +175,7 @@ def parse_options():
     LIBS = args.libs
 
     ( ROCM_LLVM_PYTHON_VERSION_MAJOR, ROCM_LLVM_PYTHON_VERSION_MINOR, 
-     ROCM_LLVM_PYTHON_VERSION_PATCH ) = args.rocm_version.split(".")
+     ROCM_LLVM_PYTHON_VERSION_PATCH ) = args.rocm_version
 
     if not args.rocm_path:
         raise RuntimeError("ROCm path is not set")
@@ -430,7 +430,7 @@ def create_generators():
     global LLVM_C_INCLUDES
     generators = dict()
     for h, _ in LLVM_C_INCLUDES.items():
-        output_dir, _, module_name = header_file_to_module_name(h)    
+        output_dir, global_module_name, module_name = header_file_to_module_name(h)    
         opts = dict()
         if h == "llvm-c/DataTypes.h":
             def node_filter(node: Node):
@@ -614,18 +614,26 @@ if __name__ == "__main__":
                 from ._version import *
                 ROCM_LLVM_PYTHON_VERSION = {ROCM_LLVM_PYTHON_VERSION}
                 ROCM_LLVM_PYTHON_VERSION_NAME = rocm_llvm_version_name = "{ROCM_LLVM_PYTHON_VERSION_NAME}"
-                ROCM_LLVM_PYTHON_VERSION_TUPLE = rocm_llvm_version_tuple = ({ROCM_LLVM_PYTHON_VERSION_MAJOR},{ROCM_LLVM_PYTHON_VERSION_MINOR},{ROCM_LLVM_PYTHON_VERSION_PATCH}")
+                ROCM_LLVM_PYTHON_VERSION_TUPLE = rocm_llvm_version_tuple = ({ROCM_LLVM_PYTHON_VERSION_MAJOR},{ROCM_LLVM_PYTHON_VERSION_MINOR},{ROCM_LLVM_PYTHON_VERSION_PATCH})
 
+                from . import _util
+                from . import c
+                from . import config
+                
+                # update the LD_LIBRARY_PATH for this process so that we find `librocmllvm.so`
+                import os
+                os.environ["LD_LIBRARY_PATH"] = ":".join(os.environ["LD_LIBRARY_PATH"].split(":") + [os.path.dirname(__file__)]
+                del os
                 """
             )
         )
-        init_content += "\nfrom . import _util"
-        for module_name in ROCM_LLVM_PYTHON_LIB_NAMES:
-            init_content += textwrap.dedent(f"""
-            try:
-                from . import {module_name}
-            except ImportError:
-                pass # may have been excluded from build""")
+        # init_content += "\nfrom . import _util"
+        # for module_name in ROCM_LLVM_PYTHON_LIB_NAMES:
+        #     init_content += textwrap.dedent(f"""
+        #     try:
+        #         from . import {module_name}
+        #     except ImportError:
+        #         pass # may have been excluded from build""")
         f.write(init_content)
     # rocm-llvm docs
     # files per api
