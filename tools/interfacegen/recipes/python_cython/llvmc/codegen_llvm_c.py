@@ -392,6 +392,7 @@ def create_llvm_c_default_generator(
         ROCM_LLVM_PYTHON_INC,
         header_file,
         runtime_linking=RUNTIME_LINKING,
+        util_pkg="rocm.llvm._util",
         dll="librocmllvm.so",
         cflags=GENERATOR_ARGS,
         ptr_complicated_type_handler=CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER("rocm.llvm._util."),

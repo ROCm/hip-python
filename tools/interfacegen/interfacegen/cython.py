@@ -155,7 +155,7 @@ def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
 
-# HIP Python "hip._util.types."
+# Utility types
 
 def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_pkg_prefix: str=""):
     """Creates the default type handler routine.
@@ -2074,13 +2074,13 @@ class CythonBackend:
                 result.append(node.render_cython_lazy_loader_decl(self.renamer))
         return result
 
-    def create_cython_lazy_loader_defs(self, dll: str):
+    def create_cython_lazy_loader_defs(self, dll: str, util_pkg: str):
         result = []
         lib_handle = "_lib_handle"
         result.append(
             textwrap.dedent(
                 f"""\
-            cimport hip._util.posixloader as loader
+            cimport {util_pkg}.posixloader as loader
             cdef void* {lib_handle} = NULL
             
             cdef void __init() nogil:
@@ -2110,7 +2110,7 @@ class CythonBackend:
         return nl.join(self.create_c_interface_decl_part(runtime_linking))
 
     def render_c_interface_impl_part(
-        self, runtime_linking: bool = False, dll: str = None
+        self, util_pkg: str, runtime_linking: bool = False, dll: str = None
     ):
         """Returns the Cython bindings file content for the given headers."""
         nl = "\n"
@@ -2119,7 +2119,7 @@ class CythonBackend:
                 raise ValueError(
                     "argument 'dll' must not be 'None' if 'runtime_linking' is set to 'True'"
                 )
-            return nl.join(self.create_cython_lazy_loader_defs(dll))
+            return nl.join(self.create_cython_lazy_loader_defs(dll,util_pkg))
         else:
             return ""
 
@@ -2183,33 +2183,40 @@ class CythonModuleGenerator:
         module_name: str,
         include_dir: str,
         header: str,
+        util_pkg: str,
         runtime_linking=False,
         dll: str = None,
         cflags=[],
         **opts,
     ):
-        """Constructor.
+        r"""Constructor.
 
         Args:
-            module_name (str): Name of the module that should be generated. Influences filesnames.
-            include_dir (str): Name of the main include dir.
-            header (str|tuple): Name of the header file. Absolute paths or w.r.t. to include dir.
-            runtime_linking (bool, optional): If runtime-linking code should be generated, defaults to False.
-            dll (str): Name of the DLL/shared object to link. Must not be none if
-                       `runtime_linking` is specified. Defaults to None.
-            node_filter (callable, optional): Filter for selecting the nodes to include in generated output. Defaults to `lambda x: True`.
-            macro_type (callable, optional): Assigns a type to a macro node. Defaults to `lambda x: "int"`.
-            ptr_parm_intent (callable, optional): Assigns the intent (in,out,inout,create) to a pointer-type function parameter/struct field node.
-                                                  Defaults to `lambda node: cython.Intent.IN`.
-            ptr_rank (callable, optional): Assigns the "rank" (scalar,buffer) to a function parameter node.
-                                            Defaults to `lambda parm: cython.Intent.ANY`.
-            cflags (list(str), optional): Flags to pass to the C parser.
+            module_name (str): 
+                Name of the module that should be generated. Influences filesnames.
+            include_dir (str): 
+                Name of the main include dir.
+            header (str|tuple): 
+                Name of the header file. Absolute paths or w.r.t. to include dir.
+            runtime_linking (bool, optional): 
+                If runtime-linking code should be generated, defaults to False.
+            util_pkg (str): 
+                Utility package that contains helper types and DLL loader routines.
+            dll (str): 
+                Name of the DLL/shared object to link. Must not be none if
+                `runtime_linking` is specified. Defaults to None.
+            cflags (list(str), optional): 
+                Flags to pass to the C parser.
+            \*\*opts:
+                Further optional keyword arguments.
+                See `CythonBackend` for further details.
         """
         global default_c_interface_decl_preamble
         global default_python_interface_decl_preamble
         self.module_name = module_name
         self.include_dir = include_dir
         self.header = header
+        self.util_pkg = util_pkg
         self.runtime_linking = runtime_linking
         self.dll = dll
         self.cflags = cflags
@@ -2265,7 +2272,9 @@ class CythonModuleGenerator:
             outfile.write(self.c_interface_impl_preamble)
             outfile.write(
                 self.backend.render_c_interface_impl_part(
-                    runtime_linking=self.runtime_linking, dll=self.dll
+                    util_pkg=self.util_pkg,
+                    runtime_linking=self.runtime_linking, 
+                    dll=self.dll
                 )
             )
         with open(f"{output_dir}/{self.module_name}.pxd", "w") as outfile:

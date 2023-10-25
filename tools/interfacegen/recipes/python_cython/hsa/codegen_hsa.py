@@ -204,6 +204,7 @@ def generate_hsa_module_files():
         ROCM_HSA_INC,
         "hsa/hsa_ext_amd.h",
         runtime_linking=RUNTIME_LINKING,
+        util_pkg="rocm.hsa._util",
         dll="libhsa-runtime64.so",
         #node_filter=_controls.hip.node_filter,
         #ptr_parm_intent=_controls.hip.ptr_parm_intent,
