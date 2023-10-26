@@ -410,14 +410,14 @@ def create_llvm_c_default_generator(
 def resolve_internal_dependencies(generators):
     for h,incs in LLVM_C_INCLUDES.items():
         _, _, module_name = header_file_to_module_name(h)
-        (generator, _) = generators[module_name]
+        (generator, _, _) = generators[module_name]
         assert isinstance(generator,CythonModuleGenerator)
         for inc in incs:
             if inc.startswith("llvm"):
                 _, dep_global_name, dep_name = header_file_to_module_name(inc)
                 dep_pkg_prefix=".".join(dep_global_name.split(".")[:-1])
                 logging.getLogger("interfacegen").info(f" {h}: handle dep: {inc} ({dep_global_name})")
-                (dep_generator, _) = generators[dep_name]
+                (dep_generator, _, _) = generators[dep_name]
                 assert isinstance(dep_generator,CythonModuleGenerator)
                 generator.c_interface_decl_preamble += f"from {dep_pkg_prefix}.c{dep_name} cimport *\n"
                 generator.python_interface_decl_preamble += "\n"
@@ -433,7 +433,7 @@ def create_generators():
     global LLVM_C_INCLUDES
     generators = dict()
     for h, _ in LLVM_C_INCLUDES.items():
-        output_dir, _, module_name = header_file_to_module_name(h)
+        output_dir, global_module_name, module_name = header_file_to_module_name(h)
         opts = dict()
         if h == "llvm-c/DataTypes.h":
             def node_filter(node: Node):
@@ -532,7 +532,8 @@ def create_generators():
 
         generators[module_name] = (
             generator,
-            output_dir 
+            output_dir,
+            global_module_name, 
         )
 
     resolve_internal_dependencies(generators)
@@ -576,13 +577,15 @@ if __name__ == "__main__":
     rocm_llvm_output_dir = os.path.join(OUTPUT_DIR, "rocm", "llvm")
     Path(rocm_llvm_output_dir).mkdir(parents=False, exist_ok=True) # throw error if it does not exist
     # FIXME catch error
+    global_module_names = []
     for entry in avail_lib_names:
         libname = entry.strip()
         if libname not in AVAILABLE_GENERATORS:
             available_libs = ", ".join([f"'{a}'" for a in AVAILABLE_GENERATORS.keys()])
             msg = f"no codegenerator found for library '{libname}'; please choose from: {available_libs}, or '*', which implies that all code generators will be used."
             raise KeyError(msg)
-        generator, output_dir = AVAILABLE_GENERATORS[libname]
+        generator, output_dir, global_module_name = AVAILABLE_GENERATORS[libname]
+        global_module_names.append(global_module_name)
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         generator.write_module_files(output_dir=output_dir)
 
@@ -597,8 +600,9 @@ if __name__ == "__main__":
     )
     with open(os.path.join("..","LICENSE"),"r") as licensefile:
         LICENSE_TEXT = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
-    
+
     # rocm/llvm/c/_version.py
+    module_list_as_str = "\n".join(f'\t"{n}",'for n in global_module_names)
     with open(os.path.join(rocm_llvm_output_dir, "_version.py.in"), "w") as f:
         f.write(lstrip_all_lines(
             f"""\
@@ -615,9 +619,13 @@ if __name__ == "__main__":
             ROCM_LLVM_PYTHON_CODEGEN_REV = "{interfacegen.gitversion.git_rev()}"
             ROCM_LLVM_PYTHON_BRANCH = "{{ROCM_LLVM_PYTHON_BRANCH}}"
             ROCM_LLVM_PYTHON_VERSION = "{{ROCM_LLVM_PYTHON_VERSION}}"
-            ROCM_LLVM_PYTHON_REV = "{{ROCM_LLVM_PYTHON_REV}}"\
+            ROCM_LLVM_PYTHON_REV = "{{ROCM_LLVM_PYTHON_REV}}"
+
+            ROCM_LLVM_PYTHON_MODULE_LIST = [
+            {module_list_as_str}
+            ]
             """
-            )
+            ).replace("\t","  ")
         )
     # rocm/llvm/c/__init__.py
     # TODO make option to use all generators or only specified ones
@@ -665,13 +673,21 @@ if __name__ == "__main__":
 
                 __author__ = "Advanced Micro Devices, Inc. <rocm-llvm-python.maintainer@amd.com>"
                 
+                import os
                 """))
             for h in LLVM_C_INCLUDES.keys():
                 _, global_module_name, module_name = header_file_to_module_name(h)
-                if f"rocm.llvm.{'.'.join(subpkg)}." in global_module_name:
-                    f.write(f"from . import {module_name}\n")
+                if f"rocm.llvm.{'.'.join(subpkg)}.{module_name}" == global_module_name:
+                    f.write(textwrap.dedent(f"""\
+                        try:
+                            from . import {module_name}
+                        except ImportError:
+                            pass # may have been excluded from build
+                        """)
+                    )
             if subpkg == ("c",):
-                f.write(f"from . import transforms\n")
+                f.write("from . import transforms\n")
+            
 
     # rocm-llvm docs
     # files per api
