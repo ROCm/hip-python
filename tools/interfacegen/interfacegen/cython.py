@@ -1506,7 +1506,7 @@ class FunctionMixin(CythonMixin, Typed):
         typename = self.cython_global_typename
         name = self.cython_name
         parm_decls = ",".join([parm.cython_repr for parm in self.parms])
-        modifiers = "" if self._has_funptr_parm else " nogil"
+        modifiers = ""
         return f"""\
 {self._raw_comment_as_python_comment().rstrip()}
 {modifiers_front}{typename} {name}({parm_decls}){modifiers}
@@ -1529,13 +1529,13 @@ class FunctionMixin(CythonMixin, Typed):
         parm_types = ",".join([parm.cython_global_typename for parm in self.parms])
         parm_names = ",".join(self.parm_names(self.renamer))
         typename = self.global_typename(self.sep, self.renamer, prefer_canonical=True)
-        modifiers = "" if self._has_funptr_parm else " nogil"
         return f"""\
 cdef void* {funptr_name} = NULL
 {self.render_cython_lazy_loader_decl().strip()}:
     global {funptr_name}
     __init_symbol(&{funptr_name},"{self.name}")
-    {'' if self.is_void else 'return '}(<{typename} (*)({parm_types}){modifiers}> {funptr_name})({parm_names})
+    with nogil:
+        {'' if self.is_void else 'return '}(<{typename} (*)({parm_types}) noexcept nogil> {funptr_name})({parm_names})
 """
 
     def _python_interface_retval_typename(self):
@@ -2191,20 +2191,23 @@ class CythonBackend:
                 f"""\
             cimport {util_pkg}.posixloader as loader
             cdef void* {lib_handle} = NULL
-            
-            cdef void __init() nogil:
-                global {lib_handle}
-                if {lib_handle} == NULL:
-                    with gil:
-                        {lib_handle} = loader.open_library(\"{dll}\")
 
-            cdef void __init_symbol(void** result, const char* name) nogil:
+            DLL = "{dll}"
+            
+            cdef void __init():
+                global DLL
+                global {lib_handle}
+                if not isinstance(DLL,str):
+                    raise RuntimeError(f"'DLL' must be of type `str`")
+                if {lib_handle} == NULL:
+                    {lib_handle} = loader.open_library(DLL.encode("utf-8"))
+
+            cdef void __init_symbol(void** result, const char* name):
                 global {lib_handle}
                 if {lib_handle} == NULL:
                     __init()
                 if result[0] == NULL:
-                    with gil:
-                        result[0] = loader.load_symbol({lib_handle}, name) 
+                    result[0] = loader.load_symbol({lib_handle}, name)
             """
             )
         )
