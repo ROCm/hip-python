@@ -62,6 +62,8 @@ from interfacegen.tree import (
     Parm,
 )
 
+from interfacegen.control import ParmIntent
+
 def parse_options():
     global OUTPUT_DIR
     global ROCM_LLVM_PYTHON_INC
@@ -506,6 +508,21 @@ def create_generators():
             opts.update(
                 node_filter = create_node_filter(h)
             )
+
+        def ptr_rank(node: Parm):
+            return 0
+        
+        def ptr_parm_intent(node: Parm):
+            if node.parent.cursor.spelling in (
+                "LLVMGetVersion",
+            ):
+                return ParmIntent.OUT
+            return ParmIntent.IN
+        
+        opts.update(
+            ptr_rank = ptr_rank,
+            ptr_parm_intent = ptr_parm_intent,
+        )
 
         generator: CythonModuleGenerator = create_llvm_c_default_generator(
             module_name, h, **opts
