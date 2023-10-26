@@ -398,6 +398,7 @@ def create_llvm_c_default_generator(
         dll="librocmllvm.so",
         cflags=GENERATOR_ARGS,
         ptr_complicated_type_handler=CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER("rocm.llvm._util.types."),
+        record_can_wrap_device_data=lambda _: False,
         **opts,
     )
     # generator.c_interface_decl_preamble += cython_c_preamble

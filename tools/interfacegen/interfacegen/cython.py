@@ -154,6 +154,8 @@ def DEFAULT_DOCSTRING_CLEANER(docstring: str):
 def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
+def DEFAULT_CAN_WRAP_DEVICE_DATA(node):
+    return True
 
 # Utility types
 
@@ -275,6 +277,7 @@ wrapper_class_impl_base_template = """
 {{default is_union = False}}
 {{default has_new = True}}
 {{default has_from_pyobj = True}}
+{{default can_wrap_device_data = True}}
 {{default defaults = dict()}}
 {{default properties_name = None}}
 {{default all_properties_rendered = False}}
@@ -304,6 +307,7 @@ cdef class {{name}}:
 
     {{if is_funptr}}
     {{else}}
+    {{if can_wrap_device_data}}
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
       
       Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
@@ -315,6 +319,7 @@ cdef class {{name}}:
       writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
       sets the `self._py_buffer_acquired` flag to `True`, and
       writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+    {{endif}}
     {{endif}}
     
     Type checks are performed in the above order.
@@ -385,11 +390,13 @@ cdef class {{name}}:
         elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
             wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ctypes.cast(pyobj, ctypes.c_void_p).value)
         {{else}}
+        {{if can_wrap_device_data}}
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
             ptr_as_int = cuda_array_interface["data"][0]
             wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
+        {{endif}}
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 pyobj,
@@ -1051,6 +1058,11 @@ class FieldMixin(CythonMixin, Typed):
 
 
 class RecordMixin(CythonMixin):
+    
+    def __init__(self):
+        CythonMixin.__init__(self)
+        self.can_wrap_device_data = DEFAULT_CAN_WRAP_DEVICE_DATA
+
     @property
     def c_record_kind(self) -> str:
         if self.cursor.kind == clang.cindex.CursorKind.STRUCT_DECL:
@@ -1120,6 +1132,7 @@ class RecordMixin(CythonMixin):
             properties_name=python_interface_record_properties_name,
             all_properties_rendered=all_propertys_rendered,
             is_union=self.c_record_kind == "union",
+            can_wrap_device_data = self.can_wrap_device_data(self),
         )
 
     def set_defaults(self, **kwargs):
@@ -1921,20 +1934,16 @@ cdef void* {funptr_name} = NULL
 
 
 class CythonBackend:
+
     def from_libclang_translation_unit(
         translation_unit: clang.cindex.TranslationUnit,
         filename: str,
         util_pkg: str,
-        node_filter: callable = control.DEFAULT_NODE_FILTER,
-        macro_type: callable = DEFAULT_MACRO_TYPE,
-        ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
-        ptr_rank: callable = control.DEFAULT_PTR_RANK,
-        ptr_complicated_type_handler=None,
-        renamer: callable = DEFAULT_RENAMER,
-        raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
-        docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
         warn_mode: control.Warnings = control.Warnings.IGNORE,
+        **opts,
     ):
+        """See `CythonBackend.__init__` for further details.
+        """
         from . import tree
 
         root = tree.from_libclang_translation_unit(translation_unit, warn_mode)
@@ -1942,14 +1951,7 @@ class CythonBackend:
             root,
             filename,
             util_pkg,
-            node_filter,
-            macro_type,
-            ptr_parm_intent,
-            ptr_rank,
-            ptr_complicated_type_handler,
-            renamer,
-            raw_comment_cleaner,
-            docstring_cleaner,
+            **opts,
         )
 
     def __init__(
@@ -1965,6 +1967,7 @@ class CythonBackend:
         renamer: callable = DEFAULT_RENAMER,
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
+        record_can_wrap_device_data: callable = DEFAULT_CAN_WRAP_DEVICE_DATA,
     ):
         """Constructor.
 
@@ -1977,6 +1980,14 @@ class CythonBackend:
                 Assigns the intent (in,out,inout,create) to a pointer-type function parameter/struct field node..
             ptr_rank (callable, optional): 
                 Assigns the "rank" (scalar,buffer) to a function parameter node.
+            ptr_complicated_type_handler (callable, optional):
+                A handler that infers a type for complicated pointer types.
+                Selects `CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(f"{util_pkg}.types.")`
+                if the default value `None` is not overwritten with a user callback.
+            record_can_wrap_device_data (callable, optional):
+                If a record (struct, union) can be wrap device data, i.e.
+                device data handled by a type that implements the CUDA Array Interface.
+                Defaults to `DEFAULT_CAN_WRAP_DEVICE_DATA`, which returns `True` for all.
         Note:
             Argument 'root' has no type hint in order to prevent a circular inclusion error.
             Instead an assertion is used in the body that checks if the type is `tree.Root`.
@@ -1992,12 +2003,13 @@ class CythonBackend:
         self.ptr_parm_intent = ptr_parm_intent
         self.ptr_rank = ptr_rank
         if ptr_complicated_type_handler == None:
-            self.ptr_complicated_type_handler = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_pkg)
+            self.ptr_complicated_type_handler = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(f"{util_pkg}.types.")
         else:
             self.ptr_complicated_type_handler = ptr_complicated_type_handler
         self.renamer = renamer
         self.raw_comment_cleaner = raw_comment_cleaner
         self.docstring_cleaner = docstring_cleaner
+        self.record_can_wrap_device_data = record_can_wrap_device_data
 
     def walk_filtered_nodes(self):
         """Walks the filtered nodes in post-order and sets the renamer of each node.
@@ -2017,6 +2029,8 @@ class CythonBackend:
                 setattr(node,"docstring_cleaner",self.docstring_cleaner)
                 if isinstance(node, MacroDefinitionMixin):
                     setattr(node, "macro_type", self.macro_type)
+                if isinstance(node, RecordMixin):
+                    setattr(node, "can_wrap_device_data", self.record_can_wrap_device_data)
                 elif isinstance(node, (FieldMixin)):
                     setattr(node, "ptr_rank", self.ptr_rank)
                     setattr(
@@ -2101,7 +2115,7 @@ class CythonBackend:
         plus helper types that have been introduced for nested enum/struct/union types.
 
         Note:
-            Anonymous anonymous types for which we have a tree node with
+            Anonymous types for which we have a tree node with
             autogenerated name must be excluded from the `extern from "<header_name.h>`
             block as entities listed within the body of the construct,
             are assumed by Cython to be present in C code whenever
