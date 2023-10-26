@@ -454,7 +454,8 @@ def create_generators():
                     "LLVM_NATIVE_TARGETINFO",
                     "LLVM_NATIVE_TARGETMC",
                 ):
-                    return str # means: interpret RHS tokens as str
+                    return None # these are target/platform specific, don't want to hardcode them.
+                    # return str # means: interpret RHS tokens as str
                 elif name in (
                     "LLVM_DEFAULT_TARGET_TRIPLE",
                     "LLVM_HOST_TRIPLE",
@@ -498,14 +499,14 @@ def create_generators():
                 node_filter = node_filter
             )
         else:
-            def create_node_filter(header: str):
+            def create_node_filter(header: str): # we need to value-capture 'header'
                 def inner(node: Node):
                     #print(f"{header}")
                     if not isinstance(node, MacroDefinition):
                         return header in node.render_location()
                     return False
                 return inner
-        
+
             opts.update(
                 node_filter = create_node_filter(h)
             )

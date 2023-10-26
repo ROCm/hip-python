@@ -854,32 +854,67 @@ class MacroDefinitionMixin(CythonMixin):
 
     def render_c_interface(self):
         """
-        Note:
-            Relies on the `macro_type callback` to infer
-            a type for the macro definition's RHS.
-            
-            * If the macro expression is just a, `#define <name>`,
-            the callback should return `True`. Similarly, if
-            it is `#undef <name>` and that is important, the callback must 
-            return `False`.
-            * If the macro right-hand side should be interpreted
-            as string literal even though it is not, the callback
-            must return the type `str`.
-            * If the callback returns `None`, an error is logged.
-            * Otherwise, the callback should return a string (instance)
+        Relies on the `macro_type callback` to infer
+        a type for the macro definition's RHS.
+        
+        * If the macro expression is just a, `#define <name>`, 
+          the callback should return `True`. Similarly, if it is 
+          `#undef <name>` and that is important,
+          the callback must return `False`.
+        * If the macro right-hand side should be interpreted as string
+          literal even though it is not, the callback must return the type `str`. 
+          In this case only a Python `str` object is created and no Cython
+          cdef type. Individual tokens are joined via a single " ".
+          
+          Note that the result will be hardcoded, so this should not be used
+          for platform dependent types!
 
+        * If the callback returns `None`, an error is logged.
+        * In any other case, the callback should return a Python str instance
+          that indicates a Cython cdef type such as 'int', 'bint', 'char *', ...
         """
         from . import tree
 
         assert isinstance(self, tree.MacroDefinition)
-        typename = self.macro_type(self)
-        if typename == None:
+        type_or_typename = self.macro_type(self)
+        if type_or_typename == None:
             _log.error(f"no type specified for macro definition {self.name}.")
             # FIXME: Introduce error modes: fail on error, ignore on error, ...
             return None
-        elif isinstance(typename,bool):
-            return f"cdef bint {self._cython_and_c_name(self.name)} = {int(typename)}"    
-        elif typename == str:
+        elif isinstance(type_or_typename,bool):
+            return f"cdef bint {self._cython_and_c_name(self.name)} = {int(type_or_typename)}"    
+        elif type_or_typename == str:
+            return None
+        else:
+            assert isinstance(type_or_typename,str)
+            return f"cdef {type_or_typename} {self._cython_and_c_name(self.name)}"
+
+    def render_python_interface_impl(self, cprefix: str):
+        """Returns '{self.name} = {prefix}{self.name}'."""
+        from . import tree
+
+        assert isinstance(self, tree.MacroDefinition)
+        name = self.renamer(self.name)
+        type_or_typename = self.macro_type(self)
+        # docs entry:
+        if type_or_typename == str:
+            python_type = "str"
+        elif self.no_right_hand_side:
+            python_type = "bool"
+        else:
+            python_type = CYTHON_AUTOCONV_TO_PYTHON_TYPES(type_or_typename)
+        self.docstring_attributes.append(
+            textwrap.dedent(
+                    f"""\
+                    {name} ({self.to_sphinx_pyobj(python_type)}):
+                        Macro constant.
+                    """
+            )
+        )
+        self.all.append(self.cython_global_name)
+        
+        # variable
+        if type_or_typename == str:
             rhs_tokens = []
             in_arg_list = False
             for i,token in enumerate(self.cursor.get_tokens()):
@@ -893,32 +928,10 @@ class MacroDefinitionMixin(CythonMixin):
                         in_arg_list = False
                     continue
                 rhs_tokens.append(tk)
-            rhs = " ".join(rhs_tokens)
-            return f"cdef const char * {self._cython_and_c_name(self.name)} = \"{rhs}\""    
+            rhs = "\""+" ".join(rhs_tokens)+"\""
         else:
-            assert isinstance(typename,str)
-            return f"cdef {typename} {self._cython_and_c_name(self.name)}"
-
-    def render_python_interface_impl(self, cprefix: str):
-        """Returns '{self.name} = {prefix}{self.name}'."""
-        from . import tree
-
-        assert isinstance(self, tree.MacroDefinition)
-        name = self.renamer(self.name)
-        if self.no_right_hand_side:
-            python_type = "bool"
-        else:
-            python_type = CYTHON_AUTOCONV_TO_PYTHON_TYPES(self.macro_type(self))
-        self.docstring_attributes.append(
-            textwrap.dedent(
-                    f"""\
-                    {name} ({self.to_sphinx_pyobj(python_type)}):
-                        Macro constant.
-                    """
-            )
-        )
-        self.all.append(self.cython_global_name)
-        return f"{name} = {cprefix}{name}"
+            rhs = f"{cprefix}{name}"
+        return f"{name} = {rhs}"
 
 
 class Typed:
@@ -2159,7 +2172,8 @@ class CythonBackend:
                 curr_indent = indent
                 contrib = node.render_c_interface()
                 last_was_extern = True
-            result.append(textwrap.indent(contrib, curr_indent))
+            if contrib != None:
+                result.append(textwrap.indent(contrib, curr_indent))
         return result
 
     def create_cython_lazy_loader_decls(self):
