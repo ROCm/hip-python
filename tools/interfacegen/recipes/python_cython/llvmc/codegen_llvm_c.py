@@ -648,13 +648,19 @@ if __name__ == "__main__":
                 from . import _util
                 from . import c
                 from . import config
+
                 
-                # update the LD_LIBRARY_PATH for this process so that we find `librocmllvm.so`
+                import sys
                 import os
-                os.environ["LD_LIBRARY_PATH"] = ":".join(os.environ["LD_LIBRARY_PATH"].split(":") + [os.path.dirname(__file__)]
+            
+                for module_name, module in sys.modules.items():
+                \t\tif module_name.startswith("rocm.llvm.c."):
+                \t\t\t\tif "DLL" in vars(module):
+                \t\t\t\t\t\tmodule.DLL = os.path.join(os.path.dirname(__file__),module.DLL)
+                del sys
                 del os
                 """
-            )
+            ).replace("\t"," "*2)
         )
         f.write(init_content)
     
