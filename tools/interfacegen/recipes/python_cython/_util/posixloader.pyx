@@ -30,19 +30,25 @@ cdef void* open_library(const char* path):
         Uses gil because of `bytes`, `RuntimeError`.
     """
     cdef void* handle = posix.dlfcn.dlopen(path, posix.dlfcn.RTLD_NOW)
+    cdef char* reason = NULL
     if handle == NULL:
-        raise RuntimeError(f"failed to dlopen {path}")
+        reason = posix.dlfcn.dlerror()
+        raise RuntimeError(f"failed to dlopen '{path}': {reason}")
     return handle
 
-cdef void* close_library(void* handle) nogil:
+cdef void close_library(void* handle):
     if handle == NULL:
-        with gil:
-            raise RuntimeError(f"handle is NULL")
+        raise RuntimeError(f"handle is NULL")
     cdef int rtype = posix.dlfcn.dlclose(handle)
+    cdef char* reason = NULL
     if rtype != 0:
-        with gil:
-            raise RuntimeError(f"Failed to dclose given handle")
-    return handle
+        reason = posix.dlfcn.dlerror() 
+        raise RuntimeError(f"failed to dclose given handle: {reason}")
 
-cdef void* load_symbol(void* handle, const char* name) nogil:
-    return posix.dlfcn.dlsym(handle, name)
+cdef void* load_symbol(void* lib_handle, const char* name):
+    cdef void* handle = posix.dlfcn.dlsym(lib_handle, name)
+    cdef char* reason = NULL
+    if handle == NULL:
+        reason = posix.dlfcn.dlerror()
+        raise RuntimeError(f"failed to dlsym '{name}': {reason}")
+    return handle
