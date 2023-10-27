@@ -33,7 +33,7 @@ cdef void* open_library(const char* path):
     cdef char* reason = NULL
     if handle == NULL:
         reason = posix.dlfcn.dlerror()
-        raise RuntimeError(f"failed to dlopen '{path}': {reason}")
+        raise RuntimeError(f"failed to dlopen '{str(path)}': {str(reason)}")
     return handle
 
 cdef void close_library(void* handle):
