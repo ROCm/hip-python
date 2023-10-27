@@ -27,6 +27,8 @@ cdef class Pointer:
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
 
+    cdef void* get_ptr(self)
+
     @staticmethod
     cdef Pointer from_ptr(void* ptr)
     

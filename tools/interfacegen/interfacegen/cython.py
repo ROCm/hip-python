@@ -246,27 +246,28 @@ wrapper_class_decl_template = """
 {{default cptr_type = cname + "*"}}
 {{default has_new = True}}
 {{default has_from_pyobj = True}}
-cdef class {{name}}:
-    cdef {{cptr_type}} _ptr
+cdef class {{name}}({{util_types_prefix}}Pointer):
     cdef bint ptr_owner
-    cdef Py_buffer _py_buffer
-    cdef bint _py_buffer_acquired
 
+    cdef {{cptr_type}} get_element_ptr(self)
+    
     @staticmethod
-    cdef {{name}} from_ptr({{cptr_type}} ptr, bint owner=*)
+    cdef {{name}} from_ptr(void* ptr, bint owner=*)
     {{if has_from_pyobj}}
     @staticmethod
     cdef {{name}} from_pyobj(object pyobj)
     {{endif}}
     {{if has_new}}
     @staticmethod
-    cdef __allocate({{cptr_type}}* ptr)
+    cdef __allocate(void* ptr)
     @staticmethod
     cdef {{name}} new()
     @staticmethod
     cdef {{name}} from_value({{cname}} other)
     {{endif}}
 """
+
+# FIXME hide the pointer and metadata members better to prevent collisions with C type attributes
 
 wrapper_class_impl_base_template = """
 {{default cptr_type = cname + "*"}}
@@ -278,10 +279,10 @@ wrapper_class_impl_base_template = """
 {{default defaults = dict()}}
 {{default properties_name = None}}
 {{default all_properties_rendered = False}}
-cdef class {{name}}:
-    \"""Python wrapper for C type {{cname}}.
+cdef class {{name}}({{util_types_prefix}}Pointer):
+    \"""Python wrapper for cdef class {{cname}}.
     
-    Python wrapper for C type {{cname}}.
+    Python wrapper for cdef class {{cname}}.
 
     If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
     destroys it again if the wrapper type is deallocted.
@@ -297,11 +298,13 @@ cdef class {{name}}:
     * `int`:
       
       Interprets the integer value as pointer address and writes it to ``self._ptr``.
+      No ownership is transferred.
       
     * `ctypes.c_void_p`:
       
       Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
-
+      No ownership is transferred.
+    
     {{if is_funptr}}
     {{else}}
     {{if can_wrap_device_data}}
@@ -316,6 +319,12 @@ cdef class {{name}}:
       writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
       sets the `self._py_buffer_acquired` flag to `True`, and
       writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+
+    * `{{util_types_prefix}}Pointer`:
+
+      Takes the pointer address ``pyobj._ptr`` and writes it to ``self._ptr``.
+      No ownership is transferred.
+
     {{endif}}
     {{endif}}
     
@@ -338,8 +347,11 @@ cdef class {{name}}:
         self.ptr_owner = False
         self._py_buffer_acquired = False
 
+    cdef {{cptr_type}} get_element_ptr(self):
+        return <{{cptr_type}}>self._ptr
+        
     @staticmethod
-    cdef {{name}} from_ptr({{cptr_type}} ptr, bint owner=False):
+    cdef {{name}} from_ptr(void* ptr, bint owner=False):
         \"""Factory function to create ``{{name}}`` objects from
         given ``{{cname}}`` pointer.
         {{if has_new}}
@@ -365,8 +377,8 @@ cdef class {{name}}:
         returns it directly. No new ``{{name}}`` is created in this case.
 
         Args:
-            pyobj (object): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
-                            or of type `{{name}}`, `int`, or `ctypes.c_void_p`
+            pyobj (object): Must be either `None`; a `{{util_types_prefix}}Pointer`; a simple, contiguous buffer according to the buffer protocol;
+                            or of type `{{name}}`; `int`; or `ctypes.c_void_p`.
 
         Note:
             This routine does not perform a copy but returns the original ``pyobj``
@@ -380,19 +392,19 @@ cdef class {{name}}:
         elif isinstance(pyobj,{{name}}):
             return pyobj
         elif isinstance(pyobj,int):
-            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj)
+            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
+            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         {{if is_funptr}}
         elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
-            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ctypes.cast(pyobj, ctypes.c_void_p).value)
+            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(ctypes.cast(pyobj, ctypes.c_void_p).value)
         {{else}}
         {{if can_wrap_device_data}}
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
             ptr_as_int = cuda_array_interface["data"][0]
-            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
+            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         {{endif}}
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
@@ -403,8 +415,10 @@ cdef class {{name}}:
             if err == -1:
                 raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
             wrapper._py_buffer_acquired = True
-            wrapper._ptr = <{{cptr_type}}>wrapper._py_buffer.buf
+            wrapper._ptr = wrapper._py_buffer.buf
         {{endif}}
+        elif isinstance(pyobj,{{util_types_prefix}}Pointer):
+            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(int(pyobj))
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
@@ -424,8 +438,8 @@ cdef class {{name}}:
     {{if has_new}}
 
     @staticmethod
-    cdef __allocate({{cptr_type}}* ptr):
-        ptr[0] = <{{cptr_type}}>stdlib.malloc(sizeof({{cname}}))
+    cdef __allocate(void** ptr):
+        ptr[0] = stdlib.malloc(sizeof({{cname}}))
         string.memset(<void*>ptr[0], 0, sizeof({{cname}}))
 
         if ptr[0] is NULL:
@@ -435,7 +449,7 @@ cdef class {{name}}:
     cdef {{name}} new():
         \"""Factory function to create {{name}} objects with
         newly allocated {{cname}}\"""
-        cdef {{cptr_type}} ptr
+        cdef void* ptr
         {{name}}.__allocate(&ptr)
         return {{name}}.from_ptr(ptr, owner=True)
 
@@ -504,7 +518,7 @@ cdef class {{name}}:
     def as_c_void_p(self):
         \"""Returns the data's address as `ctypes.c_void_p`
         Note:
-            Implements as function to not collide with 
+            Implemented as function to not collide with 
             autogenerated property names.
         \"""
         return ctypes.c_void_p(int(self))
@@ -512,23 +526,27 @@ cdef class {{name}}:
     def c_sizeof(self):
         \"""Returns the size of the underlying C type in bytes.
         Note:
-            Implements as function to not collide with 
+            Implemented as function to not collide with
             autogenerated property names.
         \"""
         return sizeof({{cname}})
     {{endif}}
 """
 
+# NOTE: This template is only used by RecordMixin not by FunctionPointerMixin
+# Hence, cptr_type is not specified as {{default cptr_type = ...}}.
 wrapper_class_property_template = """\
+{{py: cptr_type = record_cname + "*"}}
+{{py: element_ptr = "(<"+cptr_type+">self._ptr)"}}
 {{if is_basic_type}}
 def get_{{attr}}(self, i):
-    \"""Get value ``{{attr}}`` of ``self._ptr[i]``.
+    \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
-    return self._ptr[i].{{attr}}
+    return {{element_ptr}}[i].{{attr}}
 def set_{{attr}}(self, i, {{typename}} value):
-    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
-    self._ptr[i].{{attr}} = value
+    {{element_ptr}}[i].{{attr}} = value
 @property
 def {{attr}}(self):
     \"""{{brief_comment}}\"""
@@ -538,17 +556,17 @@ def {{attr}}(self, {{typename}} value):
     self.set_{{attr}}(0,value)
 {{elif is_pointer_to_basic_type_or_void}}
 def get_{{attr}}(self, i):
-    \"""Get value ``{{attr}}`` of ``self._ptr[i]``.
+    \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
-    return {{handler}}.from_ptr(self._ptr[i].{{attr}})
+    return {{handler}}.from_ptr({{element_ptr}}[i].{{attr}})
 def set_{{attr}}(self, i, object value):
-    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
 
     Note:
         This can be dangerous if the pointer is from a python object
         that is later on garbage collected.
     \"""
-    self._ptr[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
+    {{element_ptr}}[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
 @property
 def {{attr}}(self):
     \"""{{brief_comment}}
@@ -562,14 +580,14 @@ def {{attr}}(self, object value):
     self.set_{{attr}}(0,value)
 {{elif is_basic_type_constantarray}}
 def get_{{attr}}(self, i):
-    \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
+    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
-    return self._ptr[i].{{attr}}
+    return {{element_ptr}}[i].{{attr}}
 # TODO add setters
 #def set_{{attr}}(self, i, {{typename}} value):
-#    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+#    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
 #    \"""
-#    self._ptr[i].{{attr}} = value
+#    {{element_ptr}}[i].{{attr}} = value
 @property
 def {{attr}}(self):
     \"""{{brief_comment}}\"""
@@ -580,15 +598,15 @@ def {{attr}}(self):
 #    self.set_{{attr}}(0,value)
 {{elif is_enum}}
 def get_{{attr}}(self, i):
-    \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
+    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
-    return {{typename}}(self._ptr[i].{{attr}})
+    return {{typename}}({{element_ptr}}[i].{{attr}})
 def set_{{attr}}(self, i, value):
-    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
     if not isinstance(value, {{typename}}):
         raise TypeError("'value' must be of type '{{typename}}'")
-    self._ptr[i].{{attr}} = value.value
+    {{element_ptr}}[i].{{attr}} = value.value
 @property
 def {{attr}}(self):
     \"""{{brief_comment}}\"""
@@ -598,9 +616,9 @@ def {{attr}}(self, value):
     self.set_{{attr}}(0,value)
 {{elif is_record}}
 def get_{{attr}}(self, i):
-    \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
+    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
-    return {{typename}}.from_ptr(&self._ptr[i].{{attr}})
+    return {{typename}}.from_ptr(&{{element_ptr}}[i].{{attr}})
 @property
 def {{attr}}(self):
     \"""{{brief_comment}}\"""
@@ -726,6 +744,7 @@ class CythonMixin(DoxygenMixin):
         global DOXYGEN_CONV 
         self.renamer = DEFAULT_RENAMER
         self.sep = "_"        
+        self.util_types_prefix = ""
         # doxygen parser
         DoxygenMixin.__init__(self,DOXYGEN_CONV)
 
@@ -1021,7 +1040,6 @@ class Typed:
 class FieldMixin(CythonMixin, Typed):
     def __init__(self):
         CythonMixin.__init__(self)
-        self.util_types_prefix = ""
         self.ptr_rank = control.DEFAULT_PTR_RANK
         self.ptr_complicated_type_handler = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER()
 
@@ -1036,13 +1054,14 @@ class FieldMixin(CythonMixin, Typed):
         _log.debug(f"<{self.render_location()}>[post] render Cython repr. of {self.__class__.__name__},{self.cursor.kind=},{self.cursor.spelling=},type: {self.cursor.type.kind=}")
         return f"{typename} {name}"
 
-    def render_python_property(self, cprefix: str):
+    def render_python_property(self, record_cname: str):
         from . import tree
         assert isinstance(self, tree.Field)
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
-
+        
         return template.substitute(
+            record_cname=record_cname,
             handler=self.ptr_complicated_type_handler(self),
             typename=self.global_typename(
                 self.sep, self.renamer, prefer_canonical=True
@@ -1111,6 +1130,11 @@ class RecordMixin(CythonMixin):
             result += f"{indent}pass"
         return result
 
+    def cname(self,cprefix: str):
+        """Wrapped Cython C binding type.
+        """
+        return cprefix + self.renamer(self.global_name(self.sep))
+
     def render_python_interface_decl(self, cprefix: str) -> str:
         from . import tree
 
@@ -1120,8 +1144,9 @@ class RecordMixin(CythonMixin):
         template = Cython.Tempita.Template(wrapper_class_decl_template)
         return template.substitute(
             name=name,
-            cname=cprefix + name,
+            cname=self.cname(cprefix),
             has_new=not self.is_incomplete,
+            util_types_prefix=self.util_types_prefix,
         )
 
     def _render_python_interface_head(
@@ -1136,13 +1161,14 @@ class RecordMixin(CythonMixin):
         template = Cython.Tempita.Template(wrapper_class_impl_base_template)
         return template.substitute(
             name=name,
-            cname=cprefix + name,
+            cname=self.cname(cprefix),
             has_new=not self.is_incomplete,
             defaults=self._defaults if self.has_defaults else {},
             properties_name=python_interface_record_properties_name,
             all_properties_rendered=all_propertys_rendered,
             is_union=self.c_record_kind == "union",
             can_wrap_device_data = self.can_wrap_device_data(self),
+            util_types_prefix=self.util_types_prefix,
         )
 
     def set_defaults(self, **kwargs):
@@ -1177,7 +1203,7 @@ class RecordMixin(CythonMixin):
         rendered_property_names = []
         all_properties_rendered = True
         for field in self.fields:
-            prop = field.render_python_property(cprefix)
+            prop = field.render_python_property(self.cname(cprefix))
             if len(prop.strip()):
                 rendered_property_names.append(field.cython_name)
                 self.append_to_python_body(prop)
@@ -1420,6 +1446,7 @@ class FunctionPointerMixin(CythonMixin):
             cname=cname,
             cptr_type=cname,  # type is already a pointer
             has_new=False,
+            util_types_prefix=self.util_types_prefix,
         )
 
     def render_python_interface_impl(self, cprefix: str) -> str:
@@ -1437,6 +1464,7 @@ class FunctionPointerMixin(CythonMixin):
             cptr_type=cname,  # type is already a pointer
             is_funptr=True,
             has_new=False,
+            util_types_prefix=self.util_types_prefix,
         )
 
 
@@ -1680,7 +1708,7 @@ cdef void* {funptr_name} = NULL
             parm_name = parm.cython_name
             handler_name = parm.ptr_complicated_type_handler(parm)
             sig_args.append(f"object {parm_name}")
-            c_interface_call_args.append(
+            c_interface_call_args.append( # note: typecasts to expected type
                 f"\n{indent*2}<{cprefix}{parm_typename}>{handler_name}.from_pyobj({parm_name})._ptr"
             )
             parm_python_types[parm.name] = f"{handler_name}/object"
@@ -1731,7 +1759,7 @@ cdef void* {funptr_name} = NULL
             ) or parm.is_pointer_to_function_proto(degree=2):
                 parm_typename = parm.lookup_innermost_type().cython_global_name
                 prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
-                c_interface_call_args.append(f"&{parm_name}._ptr")
+                c_interface_call_args.append(f"<{cprefix}{parm_typename}**>&{parm_name}._ptr") # must be lvalue expression
                 out_args.append(parm_name)
                 parm_python_types[parm.name] = parm_typename
             elif parm.is_pointer_to_basic_type(degree=-2) or parm.is_pointer_to_void(
@@ -1740,8 +1768,8 @@ cdef void* {funptr_name} = NULL
                 parm_typename = parm.cursor.type.get_canonical().spelling
                 handler_name = parm.ptr_complicated_type_handler(parm)
                 prolog.append(f"{parm_name} = {handler_name}.from_ptr(NULL)")
-                c_interface_call_args.append(
-                    f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr"
+                c_interface_call_args.append( # note: typecasts to expected type
+                    f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr" # must be lvalue expression
                 )
                 parm_python_types[parm.name] = f"{handler_name}/object"
                 out_args.append(parm_name)
@@ -1766,7 +1794,7 @@ cdef void* {funptr_name} = NULL
                 sig_args.append(f"object {parm_name}")
                 parm_python_types[parm.name] = f"{parm_typename}/object" # use original name as key
                 c_interface_call_args.append(
-                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr"
+                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).get_element_ptr()"
                 )
             elif parm.is_pointer_to_record(
                 degree=-2, incomplete_array=True
@@ -1806,7 +1834,7 @@ cdef void* {funptr_name} = NULL
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
                 c_interface_call_args.append(
-                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr[0]"
+                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).get_element_ptr()[0]"
                 )
                 parm_python_types[parm.name] = parm_typename
 

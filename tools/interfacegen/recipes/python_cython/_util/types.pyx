@@ -106,6 +106,9 @@ cdef class Pointer:
         self._ptr = NULL
         self._py_buffer_acquired = False
 
+    cdef void* get_ptr(self):
+        return self._ptr
+
     @staticmethod
     cdef Pointer from_ptr(void* ptr):
         cdef Pointer wrapper = Pointer.__new__(Pointer)
