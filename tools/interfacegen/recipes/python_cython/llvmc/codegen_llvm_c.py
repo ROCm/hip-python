@@ -145,7 +145,7 @@ def parse_options():
         type=str,
         required=False,
         dest="libs",
-        help="The ROCm libaries to generate interfaces for, as comma-separated list, e.g. 'hip,hiprtc'. Pass '*' to generate all, pass '' to generate none. Add a prefix '^' to NOT generate code for the comma-separated list of libraries that follows but all other libraries.",
+        help="The libaries to generate interfaces for, as comma-separated list, e.g. 'core,types'. Pass '*' to generate all, pass '' to generate none. Add a prefix '^' to NOT generate code for the comma-separated list of libraries that follows but all other libraries.",
     )
     parser.add_argument(
         "--no-rt-linking",
@@ -389,20 +389,79 @@ def create_llvm_c_default_generator(
     global RUNTIME_LINKING
     global GENERATOR_ARGS
 
+    util_pkg = "rocm.llvm._util"
+    util_types_prefix = util_pkg + ".types."
+
+    def ptr_rank(node: Node):
+        # TODO: LLVMGetParamTypes(FunctionTy, Dest/**out**/)
+        # LLVMFunctionType(ReturnType, ParamTypes, unsigned int ParamCount, int IsVarArg)
+        if (node.parent.cursor.spelling, node.cursor.spelling) in (
+            ("LLVMFunctionType","ParamTypes"),
+            ("LLVMGetParams","Params"),
+            ("LLVMGetParamTypes","Dest"),
+        ):
+            return 1
+        return 0
+    
+    def ptr_parm_intent(node: Parm):
+        fn_name: str = node.parent.cursor.spelling
+        parm_name: str = node.cursor.spelling
+        # order is important
+        if (fn_name, parm_name) in (
+            ("LLVMGetParams","Params"),
+            ("LLVMGetParamTypes","Dest"),
+            ("LLVMTargetMachineEmitToMemoryBuffer","OutMemBuf"),
+            ("LLVMDisasmInstruction","OutString"),
+        ) or parm_name in (
+            "OutError",
+            "OutMessage",
+        ):
+            return ParmIntent.INOUT
+        if fn_name in (
+            "LLVMGetVersion",
+        ) or parm_name in (
+            "OutEE",
+            #"OutError",
+            "OutFn",
+            "OutInterp",
+            "OutJIT",
+            "OutM",
+            "OutMemBuf",
+            #"OutMessage",
+            "OutMod",
+            "OutModule",
+            # "OutString", INOUT buffer
+            # "OutStringSize", IN
+        ):
+            return ParmIntent.OUT
+        return ParmIntent.IN
+
+    def ptr_complicated_type_handler(node: Node):
+        if (node.parent.cursor.spelling, node.cursor.spelling) in (
+            ("LLVMFunctionType","ParamTypes"),
+            ("LLVMGetParams","Params"),
+            ("LLVMGetParamTypes","Dest"),
+            ("LLVMRunFunction","Args"),
+        ):
+            return f"{util_types_prefix}ListOfPointer"
+        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix)(node)
+
     generator = CythonModuleGenerator(
         module_name,
         ROCM_LLVM_PYTHON_INC,
         header_file,
         runtime_linking=RUNTIME_LINKING,
-        util_pkg="rocm.llvm._util",
+        util_pkg=util_pkg,
         dll="librocmllvm.so",
         cflags=GENERATOR_ARGS,
-        ptr_complicated_type_handler=CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER("rocm.llvm._util.types."),
         record_can_wrap_device_data=lambda _: False,
+        ptr_rank = ptr_rank,
+        ptr_parm_intent = ptr_parm_intent,
+        ptr_complicated_type_handler = ptr_complicated_type_handler,
         **opts,
     )
     # generator.c_interface_decl_preamble += cython_c_preamble
-    generator.python_interface_decl_preamble += "cimport rocm.llvm._util.types\n"
+    generator.python_interface_decl_preamble += f"cimport {util_pkg}.types\n"
 
     return generator
 
@@ -511,21 +570,6 @@ def create_generators():
                 node_filter = create_node_filter(h)
             )
 
-        def ptr_rank(node: Parm):
-            return 0
-        
-        def ptr_parm_intent(node: Parm):
-            if node.parent.cursor.spelling in (
-                "LLVMGetVersion",
-            ):
-                return ParmIntent.OUT
-            return ParmIntent.IN
-        
-        opts.update(
-            ptr_rank = ptr_rank,
-            ptr_parm_intent = ptr_parm_intent,
-        )
-
         generator: CythonModuleGenerator = create_llvm_c_default_generator(
             module_name, h, **opts
         )
@@ -553,6 +597,7 @@ if __name__ == "__main__":
         0, 0, 0)
 
     parse_options()
+    interfacegen.cython.FunctionMixin.python_interface_always_return_tuple = False # same for all modules, unlike callbacks
     AVAILABLE_GENERATORS = create_generators()
 
     # print(AVAILABLE_GENERATORS)
