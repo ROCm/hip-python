@@ -55,9 +55,6 @@ python_interface_int_enum_base_class = "enum.IntEnum"
 
 python_interface_int_enum_base_class_name_template = "_{name}__Base"
 
-# Always return a tuple if there is at least one return value
-python_interface_always_return_tuple = True
-
 python_interface_record_properties_name = "PROPERTIES"
 
 python_interface_pyobj_role_template = r":py:obj:`.{name}`"
@@ -1470,6 +1467,9 @@ class ParmMixin(CythonMixin, Typed):
 
 class FunctionMixin(CythonMixin, Typed):
 
+    # Always return a tuple if there is at least one return value
+    python_interface_always_return_tuple = True
+
     @property
     def has_python_body_prolog(self):
         return hasattr(self, "_python_body_prolog")
@@ -1641,7 +1641,7 @@ cdef void* {funptr_name} = NULL
        
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"
-            if len(docstring_returns) > 1 or python_interface_always_return_tuple:
+            if len(docstring_returns) > 1 or self.python_interface_always_return_tuple:
                 docstring_body += f"{single_level_indent}A {self.to_sphinx_pyobj('tuple')} of size {len(docstring_returns)} that contains (in that order):\n\n"
                 prefix = "* "
             else:
@@ -1911,9 +1911,6 @@ cdef void* {funptr_name} = NULL
             prolog,
             parm_python_types,
         ) = self._analyze_parms(cprefix)
-
-        global python_interface_always_return_tuple
-
         result = "@cython.embedsignature(True)\n"
         result += (
             f"def {self.cython_name}({', '.join(sig_args)}):\n"
@@ -1936,7 +1933,7 @@ cdef void* {funptr_name} = NULL
                 comma = ","
                 result += f"{indent}return ({comma.join(out_args)})\n"
             elif len(out_args):
-                if python_interface_always_return_tuple:
+                if self.python_interface_always_return_tuple:
                     result += f"{indent}return ({out_args[0]},)\n"
                 else:
                     result += f"{indent}return {out_args[0]}\n"
