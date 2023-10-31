@@ -401,6 +401,8 @@ def create_llvm_c_default_generator(
             ("LLVMGetParamTypes","Dest"),
         ):
             return 1
+        elif node.is_pointer_to_char(degree=-1):
+            return 1
         return 0
     
     def ptr_parm_intent(node: Parm):
@@ -412,22 +414,19 @@ def create_llvm_c_default_generator(
             ("LLVMGetParamTypes","Dest"),
             ("LLVMTargetMachineEmitToMemoryBuffer","OutMemBuf"),
             ("LLVMDisasmInstruction","OutString"),
-        ) or parm_name in (
-            "OutError",
-            "OutMessage",
         ):
             return ParmIntent.INOUT
         if fn_name in (
             "LLVMGetVersion",
         ) or parm_name in (
             "OutEE",
-            #"OutError",
+            "OutError",
             "OutFn",
             "OutInterp",
             "OutJIT",
             "OutM",
             "OutMemBuf",
-            #"OutMessage",
+            "OutMessage",
             "OutMod",
             "OutModule",
             # "OutString", INOUT buffer

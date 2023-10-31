@@ -175,6 +175,9 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str=""):
                 return f"{util_types_prefix}ListOfUnsigned"
             elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
                 return f"{util_types_prefix}ListOfUnsignedLong"
+            elif innermost_type_kind == clang.cindex.TypeKind.CHAR_S:
+                return f"{util_types_prefix}CStr"
+            # TODO consider other char types?
         if parm_or_field.actual_rank == 2:
             return f"{util_types_prefix}ListOfPointer"
         return f"{util_types_prefix}Pointer"
@@ -1702,6 +1705,57 @@ cdef void* {funptr_name} = NULL
         c_interface_call_args = []  # arguments that are passed to the C interface
         prolog = []  # additional code before the C interface call
 
+        def handle_out_ptr_parm(parm: tree.Parm):
+            nonlocal out_args
+            nonlocal out_parms
+            nonlocal c_interface_call_args
+            nonlocal prolog
+            nonlocal cprefix
+
+            parm_name = parm.cython_name
+            out_parms.append(parm) # append original name as we need to compare vs the documentation
+            
+            if parm.is_pointer_to_basic_type(degree=1):
+                typehandler = parm._type_handler.create_from_layer(1, canonical=True)
+                parm_typename = typehandler.clang_type.spelling
+                prolog.append(f"cdef {parm_typename} {parm_name}")
+                out_args.append(parm_name) # TODO modify for char* pointer
+                c_interface_call_args.append(f"&{parm_name}")
+                parm_python_types[parm.name] = CYTHON_AUTOCONV_TO_PYTHON_TYPES(parm_typename)
+            elif parm.is_pointer_to_enum(degree=1):
+                parm_typename = parm.lookup_innermost_type().cython_name
+                prolog.append(f"cdef {cprefix}{parm_typename} {parm_name}")
+                c_interface_call_args.append(f"&{parm_name}")
+                out_args.append(
+                    f"{parm_typename}({parm_name})"
+                )  # conversion from c... type required
+                parm_python_types[parm.name] = parm_typename
+            elif parm.is_pointer_to_record(
+                degree=2
+            ) or parm.is_pointer_to_function_proto(degree=2):
+                parm_typename = parm.lookup_innermost_type().cython_global_name
+                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
+                c_interface_call_args.append(f"<{cprefix}{parm_typename}**>&{parm_name}._ptr") # must be lvalue expression
+                parm_python_types[parm.name] = parm_typename
+                out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
+            elif parm.is_pointer_to_basic_type(degree=-2) or parm.is_pointer_to_void(
+                degree=-2
+            ):
+                parm_typename = parm.cursor.type.get_canonical().spelling
+                handler_name = parm.ptr_complicated_type_handler(parm)
+                prolog.append(f"{parm_name} = {handler_name}.from_ptr(NULL)")
+                c_interface_call_args.append( # note: typecasts to expected type
+                    f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr" # must be lvalue expression
+                )
+                parm_python_types[parm.name] = f"{handler_name}/object"
+                out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
+            else:
+                # If the argument was not removed from the parameter list,
+                # we did not add an additional return value.
+                # Hence, we remove the previously added original 
+                # name (see top of routine) from the out_arg_names list.
+                out_parms.pop(-1)
+
         def emit_datahandle_(parm_typename: str, parm: tree.Parm, cprefix: str = ""):
             global indent
             nonlocal sig_args
@@ -1722,6 +1776,7 @@ cdef void* {funptr_name} = NULL
                 if parm.has_typeref
                 else parm.renamer(parm.cursor.type.get_canonical().spelling)  # TODO verify might be no Python/Cython keyword
             )
+            # TODO modify for char* pointer
             emit_datahandle_(
                 parm_typename,
                 parm,
@@ -1729,59 +1784,6 @@ cdef void* {funptr_name} = NULL
                 if not parm.is_innermost_canonical_type_layer_of_basic_type_or_void
                 else "",
             )
-
-        def handle_out_ptr_parm(parm: tree.Parm):
-            nonlocal out_args
-            nonlocal out_parms
-            nonlocal c_interface_call_args
-            nonlocal prolog
-            nonlocal cprefix
-
-            parm_name = parm.cython_name
-            out_parms.append(parm) # append original name as we need to compare vs the documentation
-            
-            if parm.is_pointer_to_basic_type(degree=1) or parm.is_pointer_to_char(
-                degree=2
-            ):
-                typehandler = parm._type_handler.create_from_layer(1, canonical=True)
-                parm_typename = typehandler.clang_type.spelling
-                prolog.append(f"cdef {parm_typename} {parm_name}")
-                out_args.append(parm_name)
-                c_interface_call_args.append(f"&{parm_name}")
-                parm_python_types[parm.name] = CYTHON_AUTOCONV_TO_PYTHON_TYPES(parm_typename)
-            elif parm.is_pointer_to_enum(degree=1):
-                parm_typename = parm.lookup_innermost_type().cython_name
-                prolog.append(f"cdef {cprefix}{parm_typename} {parm_name}")
-                c_interface_call_args.append(f"&{parm_name}")
-                out_args.append(
-                    f"{parm_typename}({parm_name})"
-                )  # conversion from c... type required
-                parm_python_types[parm.name] = parm_typename
-            elif parm.is_pointer_to_record(
-                degree=2
-            ) or parm.is_pointer_to_function_proto(degree=2):
-                parm_typename = parm.lookup_innermost_type().cython_global_name
-                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
-                c_interface_call_args.append(f"<{cprefix}{parm_typename}**>&{parm_name}._ptr") # must be lvalue expression
-                out_args.append(parm_name)
-                parm_python_types[parm.name] = parm_typename
-            elif parm.is_pointer_to_basic_type(degree=-2) or parm.is_pointer_to_void(
-                degree=-2
-            ):
-                parm_typename = parm.cursor.type.get_canonical().spelling
-                handler_name = parm.ptr_complicated_type_handler(parm)
-                prolog.append(f"{parm_name} = {handler_name}.from_ptr(NULL)")
-                c_interface_call_args.append( # note: typecasts to expected type
-                    f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr" # must be lvalue expression
-                )
-                parm_python_types[parm.name] = f"{handler_name}/object"
-                out_args.append(parm_name)
-            else:
-                # If the argument was not removed from the parameter list,
-                # we did not add an additional return value.
-                # Hence, we remove the previously added original 
-                # name (see top of routine) from the out_arg_names list.
-                out_parms.pop(-1)
 
         def handle_in_inout_ptr_(parm: tree.Parm):
             global indent
@@ -1848,15 +1850,8 @@ cdef void* {funptr_name} = NULL
                 if parm.is_out_ptr:
                     assert parm.is_indirection  # make exception
                     handle_out_ptr_parm(parm)
-                elif parm.is_inout_ptr:
-                    handle_in_inout_ptr_(parm)
                 else:  # in ptr
-                    if parm.is_pointer_to_char(degree=1):  # autoconverted by Cython
-                        c_interface_call_args.append(parm_name)
-                        sig_args.append(parm.cython_repr)
-                        parm_python_types[parm.name] = "bytes"
-                    else:
-                        handle_in_inout_ptr_(parm)
+                    handle_in_inout_ptr_(parm)
             else:  # no ptr
                 handle_value_parm_(parm)
 
@@ -1893,7 +1888,7 @@ cdef void* {funptr_name} = NULL
         assert isinstance(self, tree.Function)
         if self.is_void:
             return c_interface_call
-        elif (self.is_basic_type or self.is_pointer_to_char(degree=1)):
+        elif self.is_basic_type:
             out_args.insert(0, retvalname)
             return f"cdef {typename} {retvalname} = {c_interface_call}"
         elif self.is_enum:
@@ -1911,9 +1906,12 @@ cdef void* {funptr_name} = NULL
             # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
             # that was inserted because of a typedef.     
             return f"{retvalname} = {innermost_typename}.from_ptr({c_interface_call})"
+        elif self.is_pointer_to_char(degree=1):
+            out_args.insert(0, retvalname)
+            return f"{retvalname} = {self.util_types_prefix}CStr.from_ptr(<void*>{c_interface_call})"
         elif self.is_any_pointer:
             out_args.insert(0, retvalname)
-            return f"{retvalname} = {self.util_types_prefix}Pointer.from_ptr({c_interface_call})"
+            return f"{retvalname} = {self.util_types_prefix}Pointer.from_ptr(<void*>{c_interface_call})"
         else:
             msg = "<{self.render_location()}> function {self.name}: return value type could not be classified."
             _log.warn(msg)
