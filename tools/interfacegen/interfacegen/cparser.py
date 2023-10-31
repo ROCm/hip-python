@@ -204,6 +204,15 @@ class TypeHandler:
         )
 
     @staticmethod
+    def is_char8_type(type_kind: clang.cindex.TypeKind):
+        return type_kind in (
+            clang.cindex.TypeKind.CHAR_U,
+            clang.cindex.TypeKind.UCHAR,
+            clang.cindex.TypeKind.CHAR_S,
+            clang.cindex.TypeKind.SCHAR,
+        )
+
+    @staticmethod
     def is_int_type(type_kind: clang.cindex.TypeKind):
         return type_kind in (
             clang.cindex.TypeKind.USHORT,
