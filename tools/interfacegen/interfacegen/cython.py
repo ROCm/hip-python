@@ -1649,7 +1649,7 @@ cdef void* {funptr_name} = NULL
                 type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
                 type_info = f" ({type_info})"
                 if name in out_arg_names:
-                    docstring_out_arg_returns.append(f"{single_level_indent}{type_info}:\n{single_level_indent}(undocumented)")
+                    docstring_out_arg_returns.append(f"{single_level_indent}{name+type_info}:\n{single_level_indent}(undocumented)")
                 else:
                     docstring_args[name] = (name+type_info,"",f"\n{single_level_indent*2}(undocumented)\n")
         # now generate the arguments
