@@ -317,6 +317,7 @@ cdef class CStr(Pointer):
         """
         cdef CStr wrapper = CStr.__new__(CStr)
         wrapper._ptr = ptr
+        wrapper.get_or_determine_len()
         return wrapper
 
     cdef void init_from_pyobj(self, object pyobj):
@@ -422,7 +423,7 @@ cdef class CStr(Pointer):
     def __nonzero__(self):
         """Implements Python `str` like behavior.
         """
-        return self._ptr != NULL and self._shape[0] > 0
+        return self.get_or_determine_len() > 0
 
     def __repr__(self):
         return self.__str__()
