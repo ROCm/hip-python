@@ -51,7 +51,7 @@ cdef class CStr(Pointer):
     @staticmethod
     cdef CStr from_pyobj(object pyobj)
 
-    cdef get_or_determine_len(self)
+    cdef Py_ssize_t get_or_determine_len(self)
 
     cdef const char* get_element_ptr(self)
 
