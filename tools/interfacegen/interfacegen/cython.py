@@ -1883,6 +1883,7 @@ cdef void* {funptr_name} = NULL
 
         typename = self.cython_global_typename
         retvalname = self._python_interface_retval
+        retvalname_or_none = f"None if {retvalname}._ptr == NULL else {retvalname}"
         comma = ","
         c_interface_call = f"{cprefix}{self.cython_name}({comma.join(call_args)})"
         assert isinstance(self, tree.Function)
@@ -1901,22 +1902,21 @@ cdef void* {funptr_name} = NULL
             # that was inserted because of a typedef.
             return f"{retvalname} = {innermost_typename}.from_value({c_interface_call})"
         elif self.is_pointer_to_record():
-            out_args.insert(0, retvalname)
+            out_args.insert(0, retvalname_or_none)
             innermost_typename = self.lookup_innermost_type().cython_global_name
             # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
             # that was inserted because of a typedef.     
             return f"{retvalname} = {innermost_typename}.from_ptr({c_interface_call})"
         elif self.is_pointer_to_char(degree=1):
-            out_args.insert(0, retvalname)
+            out_args.insert(0, retvalname_or_none)
             return f"{retvalname} = {self.util_types_prefix}CStr.from_ptr(<void*>{c_interface_call})"
         elif self.is_any_pointer:
-            out_args.insert(0, retvalname)
+            out_args.insert(0, retvalname_or_none)
             return f"{retvalname} = {self.util_types_prefix}Pointer.from_ptr(<void*>{c_interface_call})"
         else:
             msg = "<{self.render_location()}> function {self.name}: return value type could not be classified."
             _log.warn(msg)
             raise RuntimeError(msg)
-            return ""
 
     def render_python_docstring(self, cprefix: str) -> str:
         (
@@ -1954,8 +1954,7 @@ cdef void* {funptr_name} = NULL
         if len(prolog):
             result += textwrap.indent("\n".join(prolog), indent).rstrip() + "\n"
         if fully_specified:
-            result += f"{indent}{self._render_python_interface_c_interface_call(cprefix,call_args,out_args)}"
-            result += f"{indent}# fully specified\n"
+            result += f"{indent}{self._render_python_interface_c_interface_call(cprefix,call_args,out_args)}\n"
             if len(epilog):
                 result += textwrap.indent("\n".join(epilog), indent).rstrip() + "\n"
             if len(out_args) > 1:
@@ -1967,6 +1966,7 @@ cdef void* {funptr_name} = NULL
                 else:
                     result += f"{indent}return {out_args[0]}\n"
         else:
+            _log.warn(f" function {self.cython_global_name}: not all parameters could be mapped")
             result += f"{indent}pass"
         self.all.append(self.cython_global_name)
         return result
