@@ -1034,7 +1034,16 @@ class Typedef(Type, Typed, *__TypedefMixins):
             next(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == clang.cindex.TypeKind.TYPEDEF
             and next(cparser.TypeHandler.get(clang_type).categorized_type_layer_kinds()) == cparser.TypeHandler.TypeCategory.BASIC
         )
-    
+
+    @staticmethod
+    def match_typedefed_void(clang_type: clang.cindex.Type):
+        """If the type is a typedef of a basic type.
+        """
+        return (
+            next(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == clang.cindex.TypeKind.TYPEDEF
+            and next(cparser.TypeHandler.get(clang_type).categorized_type_layer_kinds()) == cparser.TypeHandler.TypeCategory.VOID
+        )
+
     @staticmethod
     def match_typedefed_pointer(clang_type: clang.cindex.Type):
         """If the type is a typedef of a pointer type of arbitrary degree.
@@ -1304,6 +1313,10 @@ def from_libclang_translation_unit(
             root.append(node)
         elif Typedef.match_typedefed_basic_type(cursor.type):
             _log.debug(f"handle_typedef_cursor_: typedefed basic type: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
+            node = Typedef(cursor, root)
+            root.append(node)
+        elif Typedef.match_typedefed_void(cursor.type):
+            _log.debug(f"handle_typedef_cursor_: typedefed void: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
             node = Typedef(cursor, root)
             root.append(node)
         elif Typedef.match_typedefed_pointer(cursor.type):
