@@ -56,24 +56,38 @@ def generate_cuda_interop_module_files(
     warn: bool = True,
     extra_cimports = "",
     extra_imports = "",
+    extra_cmodule_cimports = "",
 ):
     """Renders the Cython and Python module files that delegate CUDA Python
     API expressions to HIP Python.
 
     Args:
-        output_dir (str): Root output directory. Subfolders 'hip-python-as-cuda/cuda` must exist in the that directory.
-        cuda_module_name (str): The name of the CUDA module whose files are generated.
-        generator (CythonModuleGenerator): A module that allows us to access the the parse tree of a HIP translation unit.
-        hip2cuda (dict): A dictionary that maps HIP names to CUDA names.
-        warn (bool, optional): _description_. Defaults to True.
-        extra_cimports (str, optional): Additional Cython cimport statements.
+        output_dir (str):
+            Root output directory. Subfolders 'hip-python-as-cuda/cuda` must exist in the that directory.
+        cuda_module_name (str):
+            The name of the CUDA module whose files are generated.
+        generator (CythonModuleGenerator):
+            A module that allows us to access the the parse tree of a HIP translation unit.
+        hip2cuda (dict):
+            A dictionary that maps HIP names to CUDA names.
+        warn (bool, optional):
+            _description_. Defaults to True.
+        extra_cimports (str, optional):
+            Additional Cython cimport statements.
             Use it if HIP and CUDA do declare certain types and functions in different header files.
-            To give an example: CUjitINput
+            To give an example: CUjitInputType, which is linked to HIPRTC, is not part of NVRTC but of CUDART.
             Defaults to "".
-        extra_imports (str, optional): _description_. Defaults to "".
+        extra_imports (str, optional):
             Additional Python import statements.
             Use it if HIP and CUDA do declare certain types and functions in different header files.
-    """    
+            To give an example: CUjitInputType, which is linked to HIPRTC, is not part of NVRTC but of CUDART.
+            Defaults to "".
+        extra_cmodule_cimports (str, optional):
+            Additional Cython cimport statements for the c-prefixed C module.
+            Use it if HIP and CUDA do declare certain types and functions in different header files.
+            To give an example: CUjitInputType, which is linked to HIPRTC, is not part of NVRTC but of CUDART.
+            Defaults to "".
+    """
     global HAVE_LEVENSHTEIN
     module_dir = "cuda"
     output_dir = os.path.join(output_dir,"hip-python-as-cuda",module_dir)
@@ -92,7 +106,7 @@ def generate_cuda_interop_module_files(
             f"""\
             
             cimport {cmodule_name}
-            {extra_cimports}
+            {extra_cmodule_cimports}
             """
         ),
     ]
@@ -105,6 +119,7 @@ def generate_cuda_interop_module_files(
 
             cimport {cmodule_name}
             cimport {module_cimport_name}
+            {extra_cimports}
             """
         ),
         f"cimport {module_dir}.c{cuda_module_name}",  # for checking compiler errors
