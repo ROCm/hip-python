@@ -196,6 +196,11 @@ def generate_hsa_module_files():
     def toclassname(name: str):
         return name[0].upper() + name[1:]
 
+    def node_filter(node: Node):
+        if not isinstance(node, MacroDefinition):
+            return "hsa/hsa" in node.render_location()
+        return False
+
     def hsa_ptr_complicated_type_handler(parm: Node):
         return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm) # FIXME outdated
 
@@ -206,7 +211,7 @@ def generate_hsa_module_files():
         runtime_linking=RUNTIME_LINKING,
         util_pkg="rocm.hsa._util",
         dll="libhsa-runtime64.so",
-        #node_filter=_controls.hip.node_filter,
+        node_filter=node_filter,
         #ptr_parm_intent=_controls.hip.ptr_parm_intent,
         #ptr_rank=_controls.hip.ptr_rank,
         #ptr_complicated_type_handler=hsa_ptr_complicated_type_handler,
