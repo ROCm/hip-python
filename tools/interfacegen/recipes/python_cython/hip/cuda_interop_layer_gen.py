@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2023 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -50,7 +50,7 @@ except ImportError:
 
 def generate_cuda_interop_module_files(
     output_dir: str,
-    cuda_module_name: str, 
+    cuda_module_name: str,
     generator: CythonModuleGenerator,
     hip2cuda: dict,
     warn: bool = True,
@@ -94,7 +94,7 @@ def generate_cuda_interop_module_files(
     indent = " " * 4
     module_name = generator.module_name
     cmodule_name = f"hip.c{module_name}"
-    module_cimport_name = f"hip.{module_name}" 
+    module_cimport_name = f"hip.{module_name}"
     backend = generator.backend
 
     with open("LICENSE","r") as licensefile:
@@ -104,7 +104,7 @@ def generate_cuda_interop_module_files(
         LICENSE_TEXT,
         textwrap.dedent(
             f"""\
-            
+
             cimport {cmodule_name}
             {extra_cmodule_cimports}
             """
@@ -247,8 +247,8 @@ def generate_cuda_interop_module_files(
                      if default is not modified via environment variable.
 
                      Default value can be set/unset via environment variable ``{python_enum_hallucinate_var_name}``.
-                   
-                     * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true`` 
+
+                     * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true``
                      * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
                  """)
             all.append(python_enum_hallucinate_var_name)
@@ -259,7 +259,7 @@ def generate_cuda_interop_module_files(
                 {python_enum_hallucinate_var_name} = _hip_python_get_bool_environ_var("{python_enum_hallucinate_var_name}","false")
 
                 class {python_enum_metaclass_name}(enum.EnumMeta):
-                
+
                     def __getattribute__(cls,name):
                         global _get_hip_name
                         global {python_enum_hallucinate_var_name}
@@ -276,17 +276,17 @@ def generate_cuda_interop_module_files(
                                 new_val = min(used_vals)
                                 while new_val in used_vals: # find a free enum value
                                     new_val += 1
-                                
+
                                 class HallucinatedEnumConstant():
                                     \"""Mimicks the orginal enum type this is derived from.
                                     \"""
                                     def __init__(self):
                                         pass
-                                    
+
                                     @property
                                     def name(self):
                                         return self._name_
-                                    
+
                                     @property
                                     def value(self):
                                         return self._value_
@@ -300,7 +300,7 @@ def generate_cuda_interop_module_files(
                                         \"""Mimicks enum.Enum.__repr__\"""
                                         return "<%s.%s: %r>" % (
                                                 self.__class__._name_, self._name_, self._value_)
-                                                
+
                                     def __str__(self):
                                         \"""Mimicks enum.Enum.__str__\"""
                                         return "%s.%s" % (self.__class__._name_, self._name_)
@@ -310,7 +310,7 @@ def generate_cuda_interop_module_files(
 
                                     @property
                                     def __class__(self):
-                                        \"""Make this type appear as a constant of the actual 
+                                        \"""Make this type appear as a constant of the actual
                                         CUDA enum type in isinstance checks.
                                         \"""
                                         return {cuda_name}
@@ -321,7 +321,7 @@ def generate_cuda_interop_module_files(
             )
             python_enum_class = textwrap.dedent(
                 f"""
-                class {cuda_name}({module_name}.{enum.python_base_class_name},metaclass={python_enum_metaclass_name}):                
+                class {cuda_name}({module_name}.{enum.python_base_class_name},metaclass={python_enum_metaclass_name}):
                 """
             )
             all.append(cuda_name)
@@ -411,7 +411,7 @@ def generate_cuda_interop_module_files(
                     if i == 0 and hip_name not in cuda_names:
                         python_interface_decl_part.append(
                             f"from {module_cimport_name} cimport {hip_name}"
-                        ) 
+                        )
                     cdef_subclass = f"cdef class {cuda_name}({module_cimport_name}.{hip_name}):\n{indent}pass"
                     python_interface_decl_part.append(cdef_subclass)
                     python_interface_impl_part.append(cdef_subclass)
@@ -440,7 +440,7 @@ def generate_cuda_interop_module_files(
             else: # raw string
                 docstring_attrib = attribute
             DOCSTRING_ATTRIBS += textwrap.indent(docstring_attrib," "*4)
-                
+
         python_interface_impl_part.insert(
             0,
             python_interface_impl_part_preamble.replace("[ATTRIBUTES]",DOCSTRING_ATTRIBS)
