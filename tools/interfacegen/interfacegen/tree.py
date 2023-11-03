@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2023 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -63,7 +63,7 @@ class Node:
         self.child_nodes = []
         _log.debug(f"<{self.render_location()}>: NEW {self.__class__.__name__} from {self.cursor.kind} '{self.cursor.spelling}'")
 
-    @staticmethod 
+    @staticmethod
     def render_cursor_location(cursor):
         return f"{cursor.location.file}:{cursor.location.line}:{cursor.location.column}"
 
@@ -261,14 +261,14 @@ class Root(Node, *__RootMixins):
 
     def remove_type(self, node):
         """Removes a type from the registry.
-        
+
         If the type is a parent of other types, removes those types too.
-        
+
         Example 1:
 
         `typedef union {  } mytype;`
 
-        will have clang produce an anoymous top-level union cursor plus a top-level 
+        will have clang produce an anoymous top-level union cursor plus a top-level
         typedef cursor with spelling `mytype`, even though there
         is no way to access the union cursor.
 
@@ -277,10 +277,10 @@ class Root(Node, *__RootMixins):
 
         `typedef union { struct { ... } field; } mytype;`
 
-        will have clang produce an anoymous top-level union cursor plus a top-level 
+        will have clang produce an anoymous top-level union cursor plus a top-level
         typedef cursor with spelling `mytype`.
-        Additionally clang 
-        
+        Additionally clang
+
         Args:
             node (_type_)
         """
@@ -336,11 +336,11 @@ class Typed:
                 layer_canonical_type_spelling = (
                     clang_type_layer.get_canonical().spelling
                 )
-                if layer_canonical_type_spelling.startswith( 
+                if layer_canonical_type_spelling.startswith(
                     searched_canonical_typename # pointer with optional trailing modifiers
-                ) or layer_canonical_type_spelling.endswith(  
+                ) or layer_canonical_type_spelling.endswith(
                     searched_canonical_typename  # other (canonical!) type with optional preceding modifiers
-                ): 
+                ):
                     assert layer_canonical_type_spelling in canonical_type_to_modify, f"Types (searched typename, canonical type, canonical type of layer): '{searched_canonical_typename}', '{canonical_type_to_modify}', '{layer_canonical_type_spelling}'"
                     start_incl = canonical_type_to_modify.index(
                         layer_canonical_type_spelling
@@ -360,7 +360,7 @@ class Typed:
         a backend-specific renaming function provided by the user.
 
         Args:
-            sep (str): A separator for connecting a nested types name with its parent name and it ancestors' name in order to 
+            sep (str): A separator for connecting a nested types name with its parent name and it ancestors' name in order to
                        derive a global name.
             renamer (_type_, optional): A renaming function. Defaults to identity.
             use_canonical (bool, optional): If the canonical name should be preferred.
@@ -413,7 +413,7 @@ class Typed:
         )
 
     def const_qualifiers(self,postorder=False,canonical=False):
-        """Yields a flag per type layer that constitute this type if 
+        """Yields a flag per type layer that constitute this type if
         the layer is const qualified.
 
         Args:
@@ -450,7 +450,7 @@ class Typed:
         pointer: bool = True,
     ):
         """Array rank of the type.
-        
+
         Counts layers of the type that can be interpreted as array dimension.
         By default constant arrays, incomplete arrays or pointers are counted
         as array dimension. Stops counting as soon as it finds anything else.
@@ -485,7 +485,7 @@ class Typed:
         pointer: bool = True,
     ):
         """If the type has the given rank.
-        
+
         See:
             get_rank
 
@@ -493,7 +493,7 @@ class Typed:
             bool: If the rank matches the input.
         """
         return self.get_rank(constant_array,incomplete_array,pointer) == rank
-            
+
     def get_pointer_degree(self,incomplete_array=False) -> int:
         """Returns number of outer type layers which are of TypeKind.POINTER.
         Args:
@@ -508,7 +508,7 @@ class Typed:
                             degree = 1,
                             incomplete_array: bool=False):
         """If this is a pointerof the given ``degree`` to the given type kind.
-        
+
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
             incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
@@ -539,7 +539,7 @@ class Typed:
                     if found_pointer_degree >= abs(d):
                         return True
         return False
-        
+
     def _is_pointer_to_category(self,
                                type_category,
                                degree = 1,
@@ -569,7 +569,7 @@ class Typed:
                 degrees = degree
             else:
                 raise RuntimeError("degree: expected int or tuple of int")
-            
+
             found_pointer_degree = self.get_pointer_degree(incomplete_array)
             for d in degrees:
                 if d >= 0:
@@ -593,7 +593,7 @@ class Typed:
     def is_pointer_to_void(self,degree: int = 1,
                            incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
-        
+
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
             incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
@@ -605,7 +605,7 @@ class Typed:
 
         return self._is_pointer_to_kind(TypeKind.VOID,degree,
                                         incomplete_array=incomplete_array)
-    
+
     def is_pointer_to_char(self,degree: int = 1,
                            incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
@@ -621,7 +621,7 @@ class Typed:
 
         return self._is_pointer_to_kind(TypeKind.CHAR_S,degree,
                                         incomplete_array=incomplete_array)
-    
+
     def is_pointer_to_basic_type(self,degree: int = 1,
                                  incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
@@ -637,7 +637,7 @@ class Typed:
 
         return self._is_pointer_to_category(TypeCategory.BASIC,degree,
                                             incomplete_array=incomplete_array)
-    
+
     def is_pointer_to_record(self,degree: int = 1,
                                  incomplete_array: bool=False,):
         """If this is a void pointer of the given degree.
@@ -653,7 +653,7 @@ class Typed:
 
         return self._is_pointer_to_kind(TypeKind.RECORD,degree,
                                         incomplete_array=incomplete_array)
-    
+
     def is_pointer_to_enum(self,degree: int = 1,
                                 incomplete_array: bool=False,):
         """If this is a enum pointer of the given degree.
@@ -751,7 +751,7 @@ class Typed:
         return list(self._type_handler.categorized_type_layer_kinds()) in [
             [TypeCategory.BASIC],
         ]
-    
+
     @property
     def is_basic_type_constarray(self):
         """If this is a constant array of basic datatype."""
@@ -805,12 +805,12 @@ class Typed:
             TypeCategory.RECORD,
             TypeCategory.ENUM,
         )
-    
+
     @property
     def is_innermost_canonical_type_layer_of_basic_type_or_void(self):
         """If the innermost type layer is of basic type or void type.
         """
-        return self._type_handler.is_innermost_canonical_type_layer_of_basic_type_or_void() 
+        return self._type_handler.is_innermost_canonical_type_layer_of_basic_type_or_void()
 
 class Field(Node, Typed, *__FieldMixins):
     def __init__(
@@ -877,7 +877,7 @@ class Record(Type):
     def is_incomplete(self):
         """If the type does not have any fields."""
         return next(self.fields, None) == None
-    
+
     @property
     def is_opague(self):
         """Same as 'is_incomplete'."""
@@ -885,7 +885,7 @@ class Record(Type):
 
 
 class Struct(Record, *__StructMixins):
-    
+
     def __init__(self,*args,**kwargs):
         Record.__init__(self,*args,**kwargs)
         for mixin in globals()["__StructMixins"]:
@@ -893,7 +893,7 @@ class Struct(Record, *__StructMixins):
 
 
 class Union(Record, *__UnionMixins):
-    
+
     def __init__(self,*args,**kwargs):
         Record.__init__(self,*args,**kwargs)
         for mixin in globals()["__UnionMixins"]:
@@ -1016,7 +1016,7 @@ class Typedef(Type, Typed, *__TypedefMixins):
             clang.cindex.TypeKind.TYPEDEF,
             clang.cindex.TypeKind.ENUM
         ]
-    
+
     @staticmethod
     def match_typedefed_record(clang_type: clang.cindex.Type):
         """If the type is a typedef of an record (struct or union).
@@ -1025,12 +1025,12 @@ class Typedef(Type, Typed, *__TypedefMixins):
             clang.cindex.TypeKind.TYPEDEF,
             clang.cindex.TypeKind.RECORD
         ]
-    
+
     @staticmethod
     def match_typedefed_basic_type(clang_type: clang.cindex.Type):
         """If the type is a typedef of a basic type.
         """
-        return ( 
+        return (
             next(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == clang.cindex.TypeKind.TYPEDEF
             and next(cparser.TypeHandler.get(clang_type).categorized_type_layer_kinds()) == cparser.TypeHandler.TypeCategory.BASIC
         )
@@ -1129,7 +1129,7 @@ class AnonymousFunctionPointer(
 
 class Parm(Node, Typed, *__ParmMixins):
     unnamed_parm_template = "arg{parm_index}"
-    
+
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -1260,7 +1260,7 @@ def from_libclang_translation_unit(
 
         if cursor.kind in structure_types:
             cls = structure_types[cursor.kind]
-            node = cls(cursor, root, 
+            node = cls(cursor, root,
                        from_typedef_with_anon_child = (cursor.spelling == ""))
             descend_into_child_cursors_(node)
             root.append(node)
@@ -1275,19 +1275,19 @@ def from_libclang_translation_unit(
         In case of the former three, three different cases have to be handled:
 
         1. The inner type is anonymous.
-           
+
            In this case, the previously inserted (anonymous) Struct/-Union/-Enum node has to
-           be given a name that uses a `ctypedef struct <name>`/... 
+           be given a name that uses a `ctypedef struct <name>`/...
            instead of `cdef struct <name>`/...  when rendering Cython code,
            where `<name>` is the spelling of the `TYPEDEF_DECL` cursor. (FIXME Cython backend specific text)
-        
+
         2. Inner type and typedef name are the same.
-        
+
             In this case, no Typedef node is inserted as only `cdef struct <name>`/...  needs to be specified
             in the rendered Cython code.
 
         3. Inner type and typedef name differ.
-            
+
             In this case a Typedef case is inserted that specifies a previously added
             Struct/Union/Enum as typeref argument.
 
@@ -1309,9 +1309,9 @@ def from_libclang_translation_unit(
         elif Typedef.match_typedefed_pointer(cursor.type):
             _log.debug(f"handle_typedef_cursor_: typedefed pointer type: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
             node = Typedef(cursor, root)
-            typeref_cursor = first_child_cursor_of_kinds_( # 
+            typeref_cursor = first_child_cursor_of_kinds_( #
                 cursor, (clang.cindex.CursorKind.TYPE_REF,)
-            ) # FIXME see if looking up the TYPE_REF cursor can be done via clang.cindex.
+            ) # TODO see if looking up the TYPE_REF cursor can be done via clang.cindex.
             if typeref_cursor is not None:
                 node.typeref = root.lookup_type_from_cursor(typeref_cursor)
             root.append(node)
