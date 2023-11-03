@@ -839,7 +839,8 @@ class CythonMixin(DoxygenMixin):
             #   "returns",
             #   "param"
             # ):
-            docstring_body += self._render_doxygen_simple_section(section, single_level_indent)
+            if section.kind != "brief":
+                docstring_body += self._render_doxygen_simple_section(section, single_level_indent)
         
         # Clean result
         docstring_body = self.docstring_cleaner(docstring_body)
@@ -1639,7 +1640,7 @@ cdef void* {funptr_name} = NULL
                         if len(type_info):
                             type_info = f" ({type_info})"
                         docstring_args[name] = (name+type_info,dir,"\n"+descr)
-            else:
+            elif section.kind != "brief":
                 docstring_body += self._render_doxygen_simple_section(section, single_level_indent)
         # Args
         # append undocumented arguments too but warn
