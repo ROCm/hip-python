@@ -63,8 +63,12 @@ class Node:
         self.child_nodes = []
         _log.debug(f"<{self.render_location()}>: NEW {self.__class__.__name__} from {self.cursor.kind} '{self.cursor.spelling}'")
 
+    @staticmethod 
+    def render_cursor_location(cursor):
+        return f"{cursor.location.file}:{cursor.location.line}:{cursor.location.column}"
+
     def render_location(self):
-        return f"{self.cursor.location.file}:{self.cursor.location.line}:{self.cursor.location.column}"
+        return self.render_cursor_location(self.cursor)
 
     def append(self, node):
         assert isinstance(node, Node)
@@ -1317,7 +1321,7 @@ def from_libclang_translation_unit(
                 _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found anonymous {type_decl_cursor.type.kind} cursor with typedef name '{cursor.spelling}'")
                 # in case of anon enum, replace the original node with the given one
                 type_decl = root.lookup_type_from_cursor(type_decl_cursor)
-                assert type_decl != None 
+                assert type_decl != None, Node.render_cursor_location(cursor)
                 assert isinstance(type_decl, (Enum, Record))
                 assert type_decl._from_typedef_with_anon_child
                 type_decl.overwrite_name(cursor.spelling)
