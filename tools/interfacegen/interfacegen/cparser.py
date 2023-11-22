@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
+__author__ = "Advanced Micro Devices, Inc."
 
 import enum
 
@@ -126,6 +126,16 @@ class CParser:
 
 
 class TypeHandler:
+
+    _INSTANCE = None
+
+    @classmethod
+    def get(cls,clang_type: clang.cindex.Type):
+        if cls._INSTANCE == None:
+            cls._INSTANCE = TypeHandler(None)
+        cls._INSTANCE.clang_type = clang_type
+        return cls._INSTANCE
+
     class TypeCategory(enum.IntEnum):
         INVALID = -2
         UNCATEGORIZED = -1
@@ -191,6 +201,15 @@ class TypeHandler:
             clang.cindex.TypeKind.CHAR_S,
             clang.cindex.TypeKind.SCHAR,
             clang.cindex.TypeKind.WCHAR,
+        )
+
+    @staticmethod
+    def is_char8_type(type_kind: clang.cindex.TypeKind):
+        return type_kind in (
+            clang.cindex.TypeKind.CHAR_U,
+            clang.cindex.TypeKind.UCHAR,
+            clang.cindex.TypeKind.CHAR_S,
+            clang.cindex.TypeKind.SCHAR,
         )
 
     @staticmethod

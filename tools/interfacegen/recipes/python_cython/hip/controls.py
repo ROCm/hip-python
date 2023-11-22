@@ -22,11 +22,11 @@
 
 import pyparsing as pyp
 
-from _codegen.cparser import TypeHandler
+from interfacegen.cparser import TypeHandler
 
 TypeCategory = TypeHandler.TypeCategory
 
-from _codegen.tree import (
+from interfacegen.tree import (
     Node,
     MacroDefinition,
     Function,
@@ -35,7 +35,7 @@ from _codegen.tree import (
     Record,
 )
 
-from _codegen.control import ParmIntent
+from interfacegen.control import ParmIntent
 
 # HIP
 

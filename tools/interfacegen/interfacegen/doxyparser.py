@@ -20,13 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
+__author__ = "Advanced Micro Devices, Inc."
 
 import textwrap
 
 import pyparsing as pyp
 
-import warnings
+import logging
+_log = logging.getLogger("interfacegen")
 
 # TODO implement: https://www.doxygen.nl/manual/htmlcmds.html
 
