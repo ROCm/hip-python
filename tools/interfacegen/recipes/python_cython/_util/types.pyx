@@ -417,6 +417,10 @@ cdef class CStr(Pointer):
 
         Decodes the bytes representation of this C string as UTF-8 string.
         Returns None if the underlying pointer is None.
+
+        Note:
+            See the decode routine for representing this object's
+            data in different formats.
         """
         return bytes(self).decode("utf-8")
 
@@ -431,6 +435,9 @@ cdef class CStr(Pointer):
     def __getbuffer__(self, Py_buffer *buffer, int flags):
         """Buffer protocol routine for acquiring a view on this `CStr`'s data.
 
+        Note:
+            `__getbuffer__` and `__releasebuffer__` allow to convert this
+            object to bytes.
         Note:
             `buffer.len` and `buffer.shape` are computed on-the-fly (if not set already)
             via `CStr.get_or_determine_len(self)`.
@@ -453,6 +460,24 @@ cdef class CStr(Pointer):
         """Buffer protocol routine for releasing a view on this `CStr`'s data.
         """
         pass
+
+    def encode(self, /, encoding="utf-8", errors="strict"):
+        """Return a `bytes` object with respect to the encoding.
+
+        See:
+            `str.encode`
+        """
+        return self.decode(encoding=encoding,errors=errors).encode(
+            encoding=encoding,errors=errors)
+
+    def decode(self, /, encoding="utf-8", errors="strict"):
+        """Return a `str` object with respect to the enconding.
+
+        See:
+            `bytes.decode`
+        """
+        return bytes(self).decode(encoding=encoding,errors=errors)
+
 
 cdef class ImmortalCStr(CStr):
     """Immortal version of `CStr` that sets
