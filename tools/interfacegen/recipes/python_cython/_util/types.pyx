@@ -1218,23 +1218,22 @@ cdef class ListOfBytes(Pointer):
 
         self._py_buffer_acquired = False
         self._owner = False
-        if isinstance(pyobj,ListOfBytes):
-            self._ptr = (<ListOfBytes>pyobj)._ptr
-        elif isinstance(pyobj,(tuple,list)):
+        if isinstance(pyobj,(tuple,list)):
             self._owner = True
-            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(const char*))
-            libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(const char*))
+            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void*))
+            libc.string.memset(self._ptr, 0, len(pyobj)*sizeof(void*))
             for i,entry in enumerate(pyobj):
                 if isinstance(entry,bytes):
                     entry_as_cstr = entry # assumes pyobj/pyobj's entries won't be garbage collected
                     # More details: https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
-                    (<const char**>self._ptr)[i] = entry_as_cstr
+                    (<void**>self._ptr)[i] = <void*>entry_as_cstr
                 elif isinstance(entry,CStr):
-                    self._ptr[i] = entry._ptr
+                    (<void**>self._ptr)[i] = (<CStr>entry)._ptr
                 else:
                     raise ValueError("elements of list/tuple input must be of type 'bytes'")
+        if isinstance(pyobj,ListOfBytes):
+            self._ptr = (<ListOfBytes>pyobj)._ptr
         else:
-            self._owner = False
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
