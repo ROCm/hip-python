@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2023 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -67,7 +67,7 @@ def CYTHON_AUTOCONV_FROM_PYTHON_TYPES(canonical_ctype: str):
         tuple(str): The Python types that Cython autoconverts to the C type.
 
     Note:
-        For implementation details, see 
+        For implementation details, see
         https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#automatic-type-conversions
     """
     tokens = [tk for tk in canonical_ctype.split(" ") if tk not in ("const","unsigned")]
@@ -106,7 +106,7 @@ def CYTHON_AUTOCONV_TO_PYTHON_TYPES(canonical_ctype: str):
         str: The Python type that Cython autoconverts to from the C type.
 
     Note:
-        For implementation details, see 
+        For implementation details, see
         https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#automatic-type-conversions
     """
     tokens = [tk for tk in canonical_ctype.split(" ") if tk not in ("const","unsigned")]
@@ -163,12 +163,12 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str=""):
         util_pkg (str, optional): Prefix to the `types` from the types utility module.
         Defaults to "".
     """
-    def inner(parm_or_field):
+    def inner(node):
         from . import tree
 
-        assert isinstance(parm_or_field,tree.Typed)
-        if parm_or_field.actual_rank == 1:
-            innermost_type_kind = next(parm_or_field.clang_type_layer_kinds(postorder=-1,canonical=True))
+        assert isinstance(node,tree.Typed)
+        if node.actual_rank == 1:
+            innermost_type_kind = next(node.clang_type_layer_kinds(postorder=-1,canonical=True))
             if innermost_type_kind == clang.cindex.TypeKind.INT:
                 return f"{util_types_prefix}ListOfInt"
             elif innermost_type_kind == clang.cindex.TypeKind.UINT:
@@ -178,7 +178,7 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str=""):
             elif innermost_type_kind == clang.cindex.TypeKind.CHAR_S:
                 return f"{util_types_prefix}CStr"
             # TODO consider other char types?
-        if parm_or_field.actual_rank == 2:
+        if node.actual_rank == 2:
             return f"{util_types_prefix}ListOfPointer"
         return f"{util_types_prefix}Pointer"
 
@@ -186,19 +186,19 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str=""):
 
 LICENSE_TEXT = """\
 # MIT License
-# 
+#
 # Copyright (c) 2023 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -284,7 +284,7 @@ wrapper_class_impl_base_template = """
 {{default all_properties_rendered = False}}
 cdef class {{name}}({{util_types_prefix}}Pointer):
     \"""Python wrapper for cdef class {{cname}}.
-    
+
     Python wrapper for cdef class {{cname}}.
 
     If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
@@ -293,31 +293,31 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
     This type also serves as adapter when appearing as argument type in a function signature.
     In this case, the type can further be initialized from the following Python objects
     that you can pass as argument instead:
-    
+
     * `None`:
 
       This will set the ``self._ptr`` attribute to ``NULL``.
 
     * `int`:
-      
+
       Interprets the integer value as pointer address and writes it to ``self._ptr``.
       No ownership is transferred.
-      
+
     * `ctypes.c_void_p`:
-      
+
       Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
       No ownership is transferred.
-    
+
     {{if is_funptr}}
     {{else}}
     {{if can_wrap_device_data}}
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
-      
-      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple 
+
+      Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
       from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
 
     * `object` that implements the Python buffer protocol:
-      
+
       If the object represents a simple contiguous array,
       writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
       sets the `self._py_buffer_acquired` flag to `True`, and
@@ -330,7 +330,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
 
     {{endif}}
     {{endif}}
-    
+
     Type checks are performed in the above order.
 
     C Attributes:
@@ -352,7 +352,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
 
     cdef {{cptr_type}} get_element_ptr(self):
         return <{{cptr_type}}>self._ptr
-        
+
     @staticmethod
     cdef {{name}} from_ptr(void* ptr, bint owner=False):
         \"""Factory function to create ``{{name}}`` objects from
@@ -410,9 +410,9 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
             wrapper._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         {{endif}}
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
-            err = cpython.buffer.PyObject_GetBuffer( 
+            err = cpython.buffer.PyObject_GetBuffer(
                 pyobj,
-                &wrapper._py_buffer, 
+                &wrapper._py_buffer,
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
             if err == -1:
@@ -463,7 +463,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         wrapper = {{name}}.new()
         string.memcpy(wrapper._ptr, &other, sizeof({{cname}}))
         return wrapper
-   
+
     {{py: all_properties_and_is_no_union = all_properties_rendered and not is_union}}
     {{if all_properties_and_is_no_union}}
     def __init__(self,*args,**kwargs):
@@ -480,7 +480,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
                 Positional arguments. Initialize all or a subset of the member variables
                 according to their order of declaration.
             {{endif}}
-            **kwargs: 
+            **kwargs:
                 Can be used to initialize member variables at construction,
                 Just pass an argument expression of the form <member>=<value>
                 per member that you want to initialize.
@@ -511,7 +511,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     {{endif}}
-    
+
     def __int__(self):
         \"""Returns the data's address as long integer.
         \"""
@@ -521,7 +521,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
     def as_c_void_p(self):
         \"""Returns the data's address as `ctypes.c_void_p`
         Note:
-            Implemented as function to not collide with 
+            Implemented as function to not collide with
             autogenerated property names.
         \"""
         return ctypes.c_void_p(int(self))
@@ -663,7 +663,7 @@ class DoxygenMixin:
         if len(lines) > 1:
             result += "".join(lines[1:])
         return result
-    
+
     @staticmethod
     def _render_doxygen_brief(sections,log_prefix: str = "", missing_text: str="(No short description)") -> str:
         doxygen_brief: doxyparser.Section = next((sec for sec in sections if sec.kind in ("brief","short")),None)
@@ -725,7 +725,7 @@ class DoxygenMixin:
                     result += rf"{inner_indent}\end{{{block.env}}}\n"
                 result += "\n"
         return result
-    
+
     def _render_doxygen_simple_section(self,section: doxyparser.Section,single_level_indent: str) -> str:
         docstring_addition = "\n"
         if section.kind in ("details","details*"):
@@ -744,9 +744,9 @@ class DoxygenMixin:
 class CythonMixin(DoxygenMixin):
 
     def __init__(self):
-        global DOXYGEN_CONV 
+        global DOXYGEN_CONV
         self.renamer = DEFAULT_RENAMER
-        self.sep = "_"        
+        self.sep = "_"
         self.util_types_prefix = ""
         # doxygen parser
         DoxygenMixin.__init__(self,DOXYGEN_CONV)
@@ -771,7 +771,7 @@ class CythonMixin(DoxygenMixin):
         else:
             return f'{renamed} "{orig_name}"'
 
-        
+
     def _raw_comment_cleaned(self):
         from . import tree
 
@@ -781,7 +781,7 @@ class CythonMixin(DoxygenMixin):
             return doxyparser.remove_doxygen_comment_chars(cleaned_raw_comment)
         else:
             return ""
-        
+
     def _remove_doxygen_comment_chars(self,text: str):
         return doxyparser.remove_doxygen_comment_chars(text)
 
@@ -812,7 +812,7 @@ class CythonMixin(DoxygenMixin):
     def render_python_interface_impl(self, cprefix: str):
         """Render the implementation part for the Python interface."""
         return None
-    
+
     def render_python_docstring(self, cprefix: str):
         """Converts doxygen comment to a Python docstring using the doxyparser API.
 
@@ -828,7 +828,7 @@ class CythonMixin(DoxygenMixin):
         sections = list(doxyparsetree.children)
         # brief
         docstring_body = self._render_doxygen_brief(sections,log_prefix=f"<{self.render_location()}> ")
-        
+
         # other sections
         single_level_indent = " "*4
         for section in sections:
@@ -841,7 +841,7 @@ class CythonMixin(DoxygenMixin):
             # ):
             if section.kind != "brief":
                 docstring_body += self._render_doxygen_simple_section(section, single_level_indent)
-        
+
         # Clean result
         docstring_body = self.docstring_cleaner(docstring_body)
         # remove multiple blank lines
@@ -865,7 +865,7 @@ class MacroDefinitionMixin(CythonMixin):
         """If the `macro_type` user callback returns a Python bool 'True', this indicates a `#define <NAME>` without RHS.
         """
         return type(self.macro_type(self)) == bool
-    
+
     @property
     def interpret_right_hand_side_as_str(self):
         """If the `macro_type` user callback returns a Python bool 'True', this indicates a `#define <NAME>` without RHS.
@@ -876,16 +876,16 @@ class MacroDefinitionMixin(CythonMixin):
         """
         Relies on the `macro_type callback` to infer
         a type for the macro definition's RHS.
-        
-        * If the macro expression is just a, `#define <name>`, 
-          the callback should return `True`. Similarly, if it is 
+
+        * If the macro expression is just a, `#define <name>`,
+          the callback should return `True`. Similarly, if it is
           `#undef <name>` and that is important,
           the callback must return `False`.
         * If the macro right-hand side should be interpreted as string
-          literal even though it is not, the callback must return the type `str`. 
+          literal even though it is not, the callback must return the type `str`.
           In this case only a Python `str` object is created and no Cython
           cdef type. Individual tokens are joined via a single " ".
-          
+
           Note that the result will be hardcoded, so this should not be used
           for platform dependent types!
 
@@ -902,7 +902,7 @@ class MacroDefinitionMixin(CythonMixin):
             # FIXME: Introduce error modes: fail on error, ignore on error, ...
             return None
         elif isinstance(type_or_typename,bool):
-            return f"cdef bint {self._cython_and_c_name(self.name)} = {int(type_or_typename)}"    
+            return f"cdef bint {self._cython_and_c_name(self.name)} = {int(type_or_typename)}"
         elif type_or_typename == str:
             return None
         else:
@@ -932,7 +932,7 @@ class MacroDefinitionMixin(CythonMixin):
             )
         )
         self.all.append(self.cython_global_name)
-        
+
         # variable
         if type_or_typename == str:
             rhs_tokens = []
@@ -982,7 +982,7 @@ class Typed:
             return True
         else:
             return self.actual_rank(self)
-    
+
     @property
     def is_ptr(self):
         from . import tree
@@ -1063,7 +1063,7 @@ class FieldMixin(CythonMixin, Typed):
         assert isinstance(self, tree.Field)
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
-        
+
         return template.substitute(
             record_cname=record_cname,
             handler=self.ptr_complicated_type_handler(self),
@@ -1091,7 +1091,7 @@ class FieldMixin(CythonMixin, Typed):
 
 
 class RecordMixin(CythonMixin):
-    
+
     def __init__(self):
         CythonMixin.__init__(self)
         self.can_wrap_device_data = DEFAULT_CAN_WRAP_DEVICE_DATA
@@ -1229,7 +1229,7 @@ class RecordMixin(CythonMixin):
             def __contains__(self,item):
                 properties = self.{python_interface_record_properties_name}()
                 return item in properties
-                
+
             def __getitem__(self,item):
                 properties = self.{python_interface_record_properties_name}()
                 if isinstance(item,int):
@@ -1331,7 +1331,7 @@ class EnumMixin(CythonMixin):
         else: # named enum
             name = self.cython_global_name
             base_class_name = self.python_base_class_name
-            
+
             result = textwrap.dedent(f"""\
                 class {base_class_name}({python_interface_int_enum_base_class}):
                     \"""Empty enum base class that allows subclassing.
@@ -1360,11 +1360,11 @@ class EnumMixin(CythonMixin):
             result += textwrap.indent(
                 textwrap.dedent(
                     f"""\
-                
+
                 @staticmethod
                 def ctypes_type():
                     \"""The type of the enum constants as ctypes type.\"""
-                    return {ctypes_map[enum_type]} 
+                    return {ctypes_map[enum_type]}
                 """
                 ),
                 indent,
@@ -1375,6 +1375,14 @@ class EnumMixin(CythonMixin):
 
 
 class TypedefMixin(CythonMixin, Typed):
+
+    # override
+    def actual_rank(self):
+        from . import tree
+
+        assert isinstance(self, tree.Typedef)
+        return self.get_pointer_degree()
+
     def render_c_interface(self):
         from . import tree
 
@@ -1387,24 +1395,52 @@ class TypedefMixin(CythonMixin, Typed):
         return f"ctypedef {underlying_type_name} {name}"
 
     def render_python_interface_decl(self, cprefix: str) -> str:
-        """Always returns None.
+        """cdef classes are introduced for pointers to basic types and void.
 
-        No Cython extension types are introdued by any typedef.
+        If a type hierarchy is detected, i.e. `typedef void* A; typedef A B;`
+        this will be recreated.
+
+        Note:
+            Uses the `~.cython.Typedef`'s `ptr_complicated_type_handler` callback.
+
+        Note:
+            For these types of pointers, the `~.cython.FunctionMixin`
+            relies on the `ptr_complicated_type_handler` callback of `~.cython.Parm` as pointers
+            typically need different treatmeent.
         """
         from . import tree
 
         assert isinstance(self, tree.Typedef)
+
+        name = self.cython_global_name
+        if ( self.is_pointer_to_void(degree=-2)
+             or self.is_pointer_to_basic_type(degree=-2) ):
+            if self.typeref != None:
+                aliased = self.renamer(self.typeref.global_name(self.sep))
+            else:
+                aliased = self.ptr_complicated_type_handler(self)
+            return f"cdef class {name}({aliased}): pass"
+        elif ( self.is_pointer_to_void(degree=-1)
+             or self.is_pointer_to_basic_type(degree=-1) ):
+            aliased = self.ptr_complicated_type_handler(self)
+            return f"cdef class {name}({aliased}): pass"
         return None
 
     def emits_python_alias(self):
         """If this typedef emits a Python alias type
         when the Python interface is rendered.
 
-        This is only the case if the typedef aliases
-        a record or enum or a pointer to a record or enum.
-        Other typedefs are not considered at all.
+        This is the case if the typedef aliases
+
+        * a record or enum, or
+        * a pointer to a record or enum (any degree).
+
+        Other typedefs are not considered.
         """
-        return self.is_pointer_to_record(degree=(0,-1)) or self.is_pointer_to_enum(degree=(0,-1))
+        return (
+            self.is_pointer_to_record(degree=(0,-1))
+            or self.is_pointer_to_enum(degree=(0,-1))
+        )
 
     def render_python_interface_impl(self, cprefix: str) -> str:
         from . import tree
@@ -1412,6 +1448,7 @@ class TypedefMixin(CythonMixin, Typed):
         assert isinstance(self, tree.Typedef)
         name = self.cython_global_name
         if self.emits_python_alias():
+
             aliased = self.renamer(self.typeref.global_name(self.sep))
             self.docstring_attributes.append(
                 textwrap.dedent(
@@ -1573,7 +1610,7 @@ cdef void* {funptr_name} = NULL
     def _python_interface_retval_typename(self):
         """Returns a docstring expression for the return value type.
         """
-        
+
         typename = self.cython_global_typename
         if self.is_void:
             return "None"
@@ -1626,14 +1663,14 @@ cdef void* {funptr_name} = NULL
                 for name in names:
                     if not len(descr.strip()):
                         _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: doxygen param '{name}' has empty documentation.")
-                    
+
                     if name in parms_still_to_be_documented:
                         type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
                         parms_still_to_be_documented.remove(name)
                     else:
                         type_info = ""
                         _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: doxygen param '{name}' is not part of function signature.")
-                    
+
                     if name in out_arg_names:
                         docstring_out_arg_returns.append(f"{single_level_indent}{type_info}:\n{descr}")
                     else:
@@ -1906,7 +1943,7 @@ cdef void* {funptr_name} = NULL
             out_args.insert(0, retvalname_or_none)
             innermost_typename = self.lookup_innermost_type().cython_global_name
             # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
-            # that was inserted because of a typedef.     
+            # that was inserted because of a typedef.
             return f"{retvalname} = {innermost_typename}.from_ptr({c_interface_call})"
         elif self.is_pointer_to_char(degree=1):
             out_args.insert(0, retvalname_or_none)
@@ -2013,7 +2050,7 @@ class CythonBackend:
         """Constructor.
 
         Args:
-            node_filter (callable, optional): 
+            node_filter (callable, optional):
                 Filter for selecting the nodes to include in generated output. Defaults to ``lambda x: True``.
                 Note that other callbacks are applied to non-filtered nodes also.
             node_init (callable, optional):
@@ -2024,7 +2061,7 @@ class CythonBackend:
                 Assigns a type to a macro node. Defaults to ``lambda x: "int"``.
             ptr_parm_intent (callable, optional):
                 Assigns the intent (in,out,inout,create) to a pointer-type function parameter/struct field node..
-            ptr_rank (callable, optional): 
+            ptr_rank (callable, optional):
                 Assigns the "rank" (scalar,buffer) to a function parameter node.
             ptr_complicated_type_handler (callable, optional):
                 A handler that infers a type for complicated pointer types.
@@ -2118,7 +2155,7 @@ class CythonBackend:
                         yield node
 
     def walk_entities_to_import(self,cmodule: bool):
-        """Yields the entities that need to imported in the c-prefixed Cython module 
+        """Yields the entities that need to imported in the c-prefixed Cython module
         or the Python module.
 
         For the Python module, yields all top-level nodes aside from FunctionPointer and Record nodes (structs and unions) as those are modelled
@@ -2127,7 +2164,7 @@ class CythonBackend:
         Note:
             Utilizes `walk_filtered_nodes(self)`, i.e. the result depends on the
             supplied node filter.
-        
+
         Args:
             cmodule (bool):
                 If we perform this operation for the c-prefixed Cython module.
@@ -2147,7 +2184,7 @@ class CythonBackend:
                 yield node
 
     def walk_entities_to_cimport(self,cmodule: bool) -> CythonMixin:
-        """Yields the entities that need to c-imported in the c-prefixed Cython module 
+        """Yields the entities that need to c-imported in the c-prefixed Cython module
         or the Python module.
 
         For the Python module, yields only FunctionPointer and Record nodes (structs and unions) as those are modelled
@@ -2245,7 +2282,7 @@ class CythonBackend:
             cdef void* {lib_handle} = NULL
 
             DLL = "{dll}"
-            
+
             cdef void __init():
                 global DLL
                 global {lib_handle}
@@ -2356,20 +2393,20 @@ class CythonModuleGenerator:
         r"""Constructor.
 
         Args:
-            module_name (str): 
+            module_name (str):
                 Name of the module that should be generated. Influences filesnames.
-            include_dir (str): 
+            include_dir (str):
                 Name of the main include dir.
-            header (str|tuple): 
+            header (str|tuple):
                 Name of the header file. Absolute paths or w.r.t. to include dir.
-            runtime_linking (bool, optional): 
+            runtime_linking (bool, optional):
                 If runtime-linking code should be generated, defaults to False.
-            util_pkg (str): 
+            util_pkg (str):
                 Utility package that contains helper types and DLL loader routines.
-            dll (str): 
+            dll (str):
                 Name of the DLL/shared object to link. Must not be none if
                 `runtime_linking` is specified. Defaults to None.
-            cflags (list(str), optional): 
+            cflags (list(str), optional):
                 Flags to pass to the C parser.
             \*\*opts:
                 Further optional keyword arguments.
