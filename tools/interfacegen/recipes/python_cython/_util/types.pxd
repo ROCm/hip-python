@@ -56,7 +56,7 @@ cdef class CStr(Pointer):
 
     cdef Py_ssize_t get_or_determine_len(self)
 
-    cdef const char* get_element_ptr(self)
+    cdef const char* getElementPtr(self)
 
     cpdef void malloc(self,Py_ssize_t size_bytes)
 

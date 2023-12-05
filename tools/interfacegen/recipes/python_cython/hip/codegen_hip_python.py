@@ -39,6 +39,7 @@ import logging
 
 import interfacegen
 interfacegen.enable_logging(logging.INFO)
+_log = logging.getLogger("interfacegen")
 
 import controls
 import cuda_interop_layer_gen
@@ -235,6 +236,7 @@ def generate_hip_module_files():
     global ROCM_INC
     global RUNTIME_LINKING
     global GENERATOR_ARGS
+    global HIP_GENERATOR
 
     global HIP_VERSION_MAJOR
     global HIP_VERSION_MINOR
@@ -323,18 +325,7 @@ def generate_hip_module_files():
                 HIP_VERSION_PATCH = int(last_token)
             elif node.name == "HIP_VERSION_GITHASH":
                 HIP_VERSION_GITHASH = last_token.strip('"')
-    cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR, "cuda", generator, HIP_2_CUDA, 
-        extra_imports="from cuda.nvrtc import *",
-        extra_cimports="from cuda.nvrtc cimport *",
-        extra_cmodule_cimports="from cuda.cnvrtc cimport *",
-    )
-    cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR, "cudart", generator, HIP_2_CUDA, warn=False,
-        extra_imports="from cuda.nvrtc import *",
-        extra_cimports="from cuda.nvrtc cimport *",
-        extra_cmodule_cimports="from cuda.cnvrtc cimport *",
-    )  # already warned before, regenerate to have correctly named pxd/pyx files too. Could be done via symlinks & __init__.py mod too.
+    HIP_GENERATOR = generator
     return generator
 
 
@@ -344,6 +335,7 @@ def generate_hiprtc_module_files():
     global ROCM_INC
     global GENERATOR_ARGS
     global RUNTIME_LINKING
+    global HIPRTC_GENERATOR
 
     def hiprtc_ptr_complicated_type_handler(parm: Parm):
         list_of_str_parms = (
@@ -368,9 +360,7 @@ def generate_hiprtc_module_files():
         ptr_complicated_type_handler=hiprtc_ptr_complicated_type_handler,
         cflags=GENERATOR_ARGS,
     )
-    cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR,"nvrtc", generator, HIP_2_CUDA
-    )
+    HIPRTC_GENERATOR = generator
     return generator
 
 
@@ -695,6 +685,48 @@ def render_toc_yml_in(
         rendered = rendered.replace("{PYTHON_API_FILE_NAMES_CUDA}","\n".join(python_api_file_names_cuda))
         outfile.write(rendered)
 
+def generate_cuda_interop_layer_files():
+    """Generate the CUDA interoperability layer.
+
+    Note:
+        Some CUDA Driver and Runtime routines, namely cuLink*, have been mapped to HIPRTC instead of the HIP runtime.
+    """
+    global HIPRTC_GENERATOR
+    global HIP_GENERATOR
+
+    if HIPRTC_GENERATOR==None or HIP_GENERATOR==None:
+        _log.warn("No CUDA runtime layer generated as 'hip' and/or 'hiprtc' have not been specified as libraries to parse.")
+        return
+
+    cuda_interop_layer_gen.generate_cuda_interop_module_files(
+        OUTPUT_DIR,"nvrtc", HIPRTC_GENERATOR, HIP_2_CUDA
+    )
+
+    def collect_imports_(import_stmt: str,py_generator):
+        contribs = ""
+        for node in py_generator:
+            hip_name = node.cython_global_name
+            if hip_name in HIP_2_CUDA:
+                for cuda_name in HIP_2_CUDA[hip_name]:
+                    contribs += f"{import_stmt} {cuda_name}\n"
+        return contribs
+    extra_imports = collect_imports_("from cuda.nvrtc import",HIPRTC_GENERATOR.backend.walk_entities_to_import(False))
+    extra_cimports = collect_imports_("from cuda.nvrtc cimport",HIPRTC_GENERATOR.backend.walk_entities_to_cimport(False))
+    extra_cmodule_cimports = collect_imports_("from cuda.cnvrtc cimport",HIPRTC_GENERATOR.backend.walk_entities_to_cimport(True))
+
+    cuda_interop_layer_gen.generate_cuda_interop_module_files(
+        OUTPUT_DIR, "cuda", HIP_GENERATOR, HIP_2_CUDA,
+        extra_imports=extra_imports,
+        extra_cimports=extra_cimports,
+        extra_cmodule_cimports=extra_cmodule_cimports,
+    )
+    cuda_interop_layer_gen.generate_cuda_interop_module_files(
+        OUTPUT_DIR, "cudart", HIP_GENERATOR, HIP_2_CUDA, warn=False,
+        extra_imports=extra_imports,
+        extra_cimports=extra_cimports,
+        extra_cmodule_cimports=extra_cmodule_cimports,
+    )  # NOTE: cudart is the same as cuda, but we generate it to have also the corresponding pxd/pyx files. Could be solved via symlinks & __init__.py mod too.
+
 if __name__ == "__main__":
     OUTPUT_DIR = None
 
@@ -751,6 +783,7 @@ if __name__ == "__main__":
             raise KeyError(msg)
         generator = AVAILABLE_GENERATORS[libname]()
         generator.write_module_files(output_dir=hip_output_dir)
+    generate_cuda_interop_layer_files()
 
     hip_version_name = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
     hip_version = (

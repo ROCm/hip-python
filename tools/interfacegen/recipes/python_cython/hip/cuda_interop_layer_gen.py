@@ -108,9 +108,8 @@ def generate_cuda_interop_module_files(
             f"""\
 
             cimport {cmodule_name}
-            {extra_cmodule_cimports}
             """
-        ),
+        ) + extra_cmodule_cimports,
     ]
     python_interface_decl_part = [
         LICENSE_TEXT,
@@ -121,9 +120,8 @@ def generate_cuda_interop_module_files(
 
             cimport {cmodule_name}
             cimport {module_cimport_name}
-            {extra_cimports}
             """
-        ),
+        ) + extra_cimports,
         f"cimport {module_dir}.c{cuda_module_name}",  # for checking compiler errors
     ]
 
@@ -148,9 +146,8 @@ def generate_cuda_interop_module_files(
 
             hip_python_mod = {module_name}
             globals()["HIP_PYTHON"] = True
-            {extra_imports}
             """
-        )
+        ) + extra_imports
     )
     python_interface_impl_part = [
         textwrap.dedent(
@@ -205,7 +202,7 @@ def generate_cuda_interop_module_files(
         """
     ))
 
-    def handle_enum_(node, hip_name, cuda_name):
+    def handle_enum_(node, hip_name, cuda_name, cuda_idx):
         nonlocal indent
         nonlocal all
         nonlocal docstring_attributes
@@ -332,10 +329,11 @@ def generate_cuda_interop_module_files(
             python_interface_impl_part.append(python_enum_metaclass)
             python_interface_impl_part.append(python_enum_class)
 
-        if isinstance(node, Enum) and i == 0:
+        if isinstance(node, Enum) and cuda_idx == 0:
             if not isinstance(node,AnonymousEnum):
-                cython_enum = f"from {cmodule_name} cimport {hip_name} as {cuda_name}"
-                c_interface_decl_part.append(cython_enum)
+                c_interface_decl_part.append(
+                    f"from {cmodule_name} cimport {hip_name} as {cuda_name}"
+                )
             c_interface_decl_part += c_constants
         else:  # if it is a typedef or there are multiple CUDA names
             hip_underlying_type_name = enum.name
@@ -356,14 +354,14 @@ def generate_cuda_interop_module_files(
             handle_enum_(node, hip_name, hip_name)  # hip_name is auto_generated in this case
         if hip_name in hip2cuda:
             cuda_names = hip2cuda[hip_name]
-            for i, cuda_name in enumerate(cuda_names):
+            for cuda_idx, cuda_name in enumerate(cuda_names):
                 if isinstance(node, Enum) or (
                     isinstance(node, Typedef)
                     and node.is_pointer_to_enum(degree=(0, -1))
                 ):
                     # enums require special care as they are modelled as "class <type>"
                     # and not as "cdef class" in the Python interface, just like in CUDA Python.
-                    handle_enum_(node, hip_name, cuda_name)
+                    handle_enum_(node, hip_name, cuda_name, cuda_idx)
                 elif (
                     isinstance(
                         node,
@@ -380,10 +378,6 @@ def generate_cuda_interop_module_files(
                     )
                 ):
                     # These are Python objects/functions in the Python interface
-                    if i == 0:
-                        c_interface_decl_part.append(
-                            f"from {cmodule_name} cimport {hip_name}"
-                        )
                     c_interface_decl_part.append(
                         f"from {cmodule_name} cimport {hip_name} as {cuda_name}"
                     )
@@ -406,18 +400,10 @@ def generate_cuda_interop_module_files(
                     # These are cdef classes ("extension types").
                     # So Python interface declaration must be cimported.
                     # and a subclass needs to be created to define a Python object. (TODO other options?)
-                    if i == 0:
-                        c_interface_decl_part.append(
-                            f"from {cmodule_name} cimport {hip_name}"
-                        )
                     c_interface_decl_part.append(
                         f"from {cmodule_name} cimport {hip_name} as {cuda_name}"
                     )
                     #
-                    if i == 0 and hip_name not in cuda_names:
-                        python_interface_decl_part.append(
-                            f"from {module_cimport_name} cimport {hip_name}"
-                        )
                     cdef_subclass = f"cdef class {cuda_name}({module_cimport_name}.{hip_name}):\n{indent}pass"
                     python_interface_decl_part.append(cdef_subclass)
                     python_interface_impl_part.append(cdef_subclass)

@@ -291,7 +291,7 @@ cdef class CStr(Pointer):
         self._shape[0] = 0 # must be zero
         self.strides[0] = 1
 
-    cdef const char* get_element_ptr(self):
+    cdef const char* getElementPtr(self):
         return <const char*>self._ptr
 
     cdef Py_ssize_t get_or_determine_len(self):
