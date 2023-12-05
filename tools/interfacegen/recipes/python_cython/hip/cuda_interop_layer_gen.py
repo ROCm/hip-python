@@ -22,7 +22,9 @@
 
 import os
 import textwrap
-import warnings
+
+import logging
+_log = logging.getLogger("interfacegen")
 
 python_interface_pyobj_role_template = r":py:obj:`~.{name}`"
 
@@ -188,7 +190,7 @@ def generate_cuda_interop_module_files(
                     candidates.append(other_hip_name)
             candidates_formatted = ", ".join(["'" + c + "'" for c in candidates])
             msg += f"; most similar hipify-perl HIP symbols (Levenshtein ratio > {cutoff}): [{candidates_formatted}]"
-        warnings.warn(msg)
+        _log.warn(msg)
 
     all = ["HIP_PYTHON","hip_python_mod",module_name]
     docstring_attributes = []
@@ -371,7 +373,11 @@ def generate_cuda_interop_module_files(
                         ),
                     )
                     or isinstance(node, Typedef)
-                    and node.is_pointer_to_record(degree=(0, -1))
+                    and ( 
+                        node.is_pointer_to_record(degree=(0, -1)) or 
+                        node.is_pointer_to_basic_type(degree=-1) or
+                        node.is_pointer_to_void(degree=-1)
+                    )
                 ):
                     # These are Python objects/functions in the Python interface
                     if i == 0:
