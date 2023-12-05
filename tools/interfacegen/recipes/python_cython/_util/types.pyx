@@ -1231,7 +1231,7 @@ cdef class ListOfBytes(Pointer):
                     (<void**>self._ptr)[i] = (<CStr>entry)._ptr
                 else:
                     raise ValueError("elements of list/tuple input must be of type 'bytes'")
-        if isinstance(pyobj,ListOfBytes):
+        elif isinstance(pyobj,ListOfBytes):
             self._ptr = (<ListOfBytes>pyobj)._ptr
         else:
             Pointer.init_from_pyobj(self,pyobj)
