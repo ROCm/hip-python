@@ -265,6 +265,27 @@ def generate_hip_module_files():
         
         return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
+    def hip_node_init(node: Node):
+        # node modifications
+        if isinstance(node,interfacegen.tree.Function):
+            if not node.is_enum and node.name.startswith("hip"):
+                node.prepend_python_return_value(
+                    "hipError_t.hipSuccess",
+                    "hipError_t",
+                    "Always returns `~.hipError_t.hipSuccess`.")
+        elif isinstance(node,interfacegen.tree.Parm):
+            func_name, parm_idx = node.parent.name, node.parm_index
+            if (func_name, parm_idx) in (
+                ("hipDeviceGetName", 0),
+                ("hipDeviceGetPCIBusId", 0),
+            ):
+                func = node.parent
+                assert isinstance(func,interfacegen.cython.FunctionMixin)
+                len_param: interfacegen.tree.Parm = func.get_parm(1)
+                func.python_body_prepend_before_c_interface_call(
+                    f"{node.name}.malloc({len_param.name})"
+                )
+
     generator = CythonModuleGenerator(
         "hip",
         ROCM_INC,
@@ -272,19 +293,21 @@ def generate_hip_module_files():
         runtime_linking=RUNTIME_LINKING,
         util_pkg="hip._util",
         dll="libamdhip64.so",
+        node_init = hip_node_init,
         node_filter=controls.hip.node_filter,
         ptr_parm_intent=controls.hip.ptr_parm_intent,
         ptr_rank=controls.hip.ptr_rank,
         ptr_complicated_type_handler=hip_ptr_complicated_type_handler,
         macro_type=controls.hip.macro_type,
+        raw_comment_cleaner=controls.hip.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
-    generator.python_interface_decl_preamble += "cimport hip._util.types\n"
-    generator.python_interface_impl_preamble += textwrap.dedent(
+    generator.python_interface_impl_prolog += textwrap.dedent(
         """\
     cimport hip._hip_helpers
     """
     )
+
     HIP_VERSION_MAJOR = 0
     HIP_VERSION_MINOR = 0
     HIP_VERSION_PATCH = 0
@@ -371,12 +394,12 @@ def generate_hipblas_module_files():
         raw_comment_cleaner=controls.hipblas.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_decl_preamble += textwrap.dedent(
+    generator.c_interface_decl_prolog += textwrap.dedent(
         """\
     from .chip cimport hipStream_t
     """
     )
-    generator.python_interface_decl_preamble += textwrap.dedent(
+    generator.python_interface_decl_prolog += textwrap.dedent(
         """\
     cimport hip._util.types
     from .hip cimport ihipStream_t
@@ -405,12 +428,12 @@ def generate_rccl_module_files():
         ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_decl_preamble += textwrap.dedent(
+    generator.c_interface_decl_prolog += textwrap.dedent(
         """\
     from .chip cimport hipStream_t
     """
     )
-    generator.python_interface_decl_preamble += textwrap.dedent(
+    generator.python_interface_decl_prolog += textwrap.dedent(
         """\
     cimport hip._util.types
     from .hip cimport ihipStream_t
@@ -439,12 +462,12 @@ def generate_hiprand_module_files():
         ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_decl_preamble += textwrap.dedent(
+    generator.c_interface_decl_prolog += textwrap.dedent(
         """\
     from .chip cimport hipStream_t
     """
     )
-    generator.python_interface_decl_preamble += textwrap.dedent(
+    generator.python_interface_decl_prolog += textwrap.dedent(
         """\
     cimport hip._util.types
     from .hip cimport ihipStream_t
@@ -473,12 +496,12 @@ def generate_hipfft_module_files():
         ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_decl_preamble += textwrap.dedent(
+    generator.c_interface_decl_prolog += textwrap.dedent(
         """\
     from .chip cimport hipStream_t, float2, double2
     """
     )
-    generator.python_interface_decl_preamble += textwrap.dedent(
+    generator.python_interface_decl_prolog += textwrap.dedent(
         """\
     cimport hip._util.types
     from .hip cimport ihipStream_t, float2, double2
@@ -508,12 +531,12 @@ def generate_hipsparse_module_files():
         ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_decl_preamble += textwrap.dedent(
+    generator.c_interface_decl_prolog += textwrap.dedent(
         """\
         from .chip cimport *
         """
     )
-    generator.python_interface_decl_preamble += textwrap.dedent(
+    generator.python_interface_decl_prolog += textwrap.dedent(
         """\
         cimport hip._util.types
         from .hip import hipError_t, _hipDataType__Base # PY import enums

@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import re
+
 import pyparsing as pyp
 
 from interfacegen.cparser import TypeHandler
@@ -178,6 +180,9 @@ class hip:
         2. All ``void``, ``struct``, ``union``, ``enum`` double (``**``) pointers are
         return values that are created internally by the respective function.
         """
+        func_name, parm_name, parm_idx = (
+            parm.parent.name, parm.name, parm.parm_index
+        )
         if (
             parm.is_pointer_to_record(degree=2)
             or parm.is_pointer_to_enum(degree=1)
@@ -186,17 +191,21 @@ class hip:
                 and not parm.is_pointer_to_char(degree=1)
             )
         ):
-            if (parm.parent.name, parm.name) == ("hipDeviceGetAttribute", "pi"):
-                return ParmIntent.INOUT
             return ParmIntent.OUT
         if parm.is_pointer_to_void(degree=2):
             if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
                 return ParmIntent.OUT
-        if (parm.parent.name, parm.name) in (
-            ("hipDeviceGetName", "name"),
-            ("hipDeviceGetPCIBusId","pciBusId"),
+        if (func_name, parm_idx) in (
+            ("hipDeviceGetName", 0),
+            ("hipPointerGetAttribute", 0),
+            ("hipIpcGetMemHandle", 0),
+            ("hipMemGetAddressRange", 0),
+            ("hipDeviceGetUuid", 0),
+            ("hipDeviceGetPCIBusId", 0),
+            ("hipDrvGetErrorName",1),
+            ("hipDrvGetErrorString",1),
         ):
-            return ParmIntent.INOUT
+            return ParmIntent.OUT
         return ParmIntent.IN
 
     @staticmethod
@@ -204,7 +213,7 @@ class hip:
         """Actual rank of the variables underlying pointer indirections."""
         if isinstance(node, Parm):
             if (
-                node.is_pointer_to_basic_type(degree=1)
+                (node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1))
                 or node.is_pointer_to_enum(degree=1)
                 or node.is_pointer_to_record(degree=1)
                 or node.is_pointer_to_record(degree=2)
@@ -213,6 +222,17 @@ class hip:
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
+
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans HIP doxygen documentation strings.
+
+        * Removes '@}', '@{', and dash sequences of more than three dashes.
+        * Removes other strings associated with groups.
+        """
+        result = re.sub(r"@{|@}|----+","",raw_comment)
+        result = result.replace("This section describes the event management functions of HIP runtime API.","")
+        return result
 
 # HIPRTC
 

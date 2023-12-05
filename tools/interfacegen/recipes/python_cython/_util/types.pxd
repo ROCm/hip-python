@@ -27,7 +27,9 @@ cdef class Pointer:
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
 
-    cdef void* get_ptr(self)
+    # Camel-case used by intent to make this orthogonal to array get_<property>(self,i)
+    # of auto-generated subclasses.
+    cdef void* getPtr(self)
 
     @staticmethod
     cdef Pointer from_ptr(void* ptr)
@@ -38,6 +40,7 @@ cdef class Pointer:
     cdef Pointer from_pyobj(object pyobj)
 
 cdef class CStr(Pointer):
+    cdef bint _owner
     # These buffer protocol related arrays
     # have to stay alive as long
     # as any buffer views the data,
@@ -54,6 +57,10 @@ cdef class CStr(Pointer):
     cdef Py_ssize_t get_or_determine_len(self)
 
     cdef const char* get_element_ptr(self)
+
+    cpdef void malloc(self,Py_ssize_t size_bytes)
+
+    cpdef void free(self)
 
 cdef class ImmortalCStr(CStr):
 

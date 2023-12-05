@@ -464,8 +464,8 @@ def create_llvm_c_default_generator(
         ptr_complicated_type_handler = ptr_complicated_type_handler,
         **opts,
     )
-    # generator.c_interface_decl_preamble += cython_c_preamble
-    generator.python_interface_decl_preamble += f"cimport {util_pkg}.types\n"
+    # generator.c_interface_decl_prolog += cython_c_preamble
+    generator.python_interface_decl_prolog += f"cimport {util_pkg}.types\n"
 
     return generator
 
@@ -482,15 +482,15 @@ def resolve_internal_dependencies(generators):
                 logging.getLogger("interfacegen").info(f" {h}: handle dep: {inc} ({dep_global_name})")
                 (dep_generator, _, _) = generators[dep_name]
                 assert isinstance(dep_generator,CythonModuleGenerator)
-                generator.c_interface_decl_preamble += f"from {dep_pkg_prefix}.c{dep_name} cimport *\n"
-                generator.python_interface_decl_preamble += "\n"
-                generator.python_interface_impl_preamble += "\n"
+                generator.c_interface_decl_prolog += f"from {dep_pkg_prefix}.c{dep_name} cimport *\n"
+                generator.python_interface_decl_prolog += "\n"
+                generator.python_interface_impl_prolog += "\n"
                 for node in dep_generator.backend.walk_entities_to_cimport(False):
-                    generator.python_interface_decl_preamble += f"from {dep_global_name} cimport {node.cython_global_name}\n"
+                    generator.python_interface_decl_prolog += f"from {dep_global_name} cimport {node.cython_global_name}\n"
                 for node in dep_generator.backend.walk_entities_to_import(False):
-                    generator.python_interface_impl_preamble += f"from {dep_global_name} import {node.cython_global_name}\n"
-                generator.python_interface_decl_preamble += "\n"
-                generator.python_interface_impl_preamble += "\n"
+                    generator.python_interface_impl_prolog += f"from {dep_global_name} import {node.cython_global_name}\n"
+                generator.python_interface_decl_prolog += "\n"
+                generator.python_interface_impl_prolog += "\n"
 
 def create_generators():
     global LLVM_C_INCLUDES

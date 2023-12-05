@@ -107,7 +107,7 @@ cdef class Pointer:
         self._ptr = NULL
         self._py_buffer_acquired = False
 
-    cdef void* get_ptr(self):
+    cdef void* getPtr(self):
         return self._ptr
 
     @staticmethod
@@ -287,6 +287,7 @@ cdef class CStr(Pointer):
     # C members declared in declaration part ``types.pxd``
 
     def __cinit__(self):
+        self._owner = False
         self._shape[0] = 0 # must be zero
         self.strides[0] = 1
 
@@ -379,9 +380,45 @@ cdef class CStr(Pointer):
             wrapper.init_from_pyobj(pyobj)
             return wrapper
 
+    cpdef void malloc(self,Py_ssize_t size_bytes):
+        """Dynamically allocate a buffer of bytes for this CStr.
+
+        Args:
+            size_bytes (`Py_ssize_t`): The number of bytes to allocate.
+        Note:
+            Throws `~.RuntimeError` if the data pointer is not NULL as this
+            indicates that this instance handles external data.
+        Note:
+            Sets the owner flag.
+        """
+        if self._ptr != NULL:
+            raise RuntimeError("Data pointer must be NULL.")
+        self._ptr = libc.stdlib.malloc(size_bytes)
+        libc.string.memset(<void*>self._ptr, 0, size_bytes)
+        self._owner = True
+
+    cpdef void free(self):
+        """Free dynamically allocated data.
+
+        Note:
+            Simply returns if the data pointer is NULL.
+        Note:
+            Throws `~.RuntimeError` if this instance does not own the data that ought to be freed.
+        Note:
+            Unsets the owner flag.
+        """
+        if self._owner == False:
+            raise RuntimeError("Attempt to free that is not owned by this instance.")
+        if self._ptr == NULL:
+            return # do nothing
+        libc.stdlib.free(self._ptr)
+        self._owner = False
+
     def __dealloc__(self):
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        if self._owner:
+            self.free()
 
     def __init__(self,object pyobj):
         """Constructor.
@@ -417,6 +454,10 @@ cdef class CStr(Pointer):
 
         Decodes the bytes representation of this C string as UTF-8 string.
         Returns None if the underlying pointer is None.
+
+        Note:
+            See the decode routine for representing this object's
+            data in different formats.
         """
         return bytes(self).decode("utf-8")
 
@@ -431,6 +472,9 @@ cdef class CStr(Pointer):
     def __getbuffer__(self, Py_buffer *buffer, int flags):
         """Buffer protocol routine for acquiring a view on this `CStr`'s data.
 
+        Note:
+            `__getbuffer__` and `__releasebuffer__` allow to convert this
+            object to bytes.
         Note:
             `buffer.len` and `buffer.shape` are computed on-the-fly (if not set already)
             via `CStr.get_or_determine_len(self)`.
@@ -453,6 +497,24 @@ cdef class CStr(Pointer):
         """Buffer protocol routine for releasing a view on this `CStr`'s data.
         """
         pass
+
+    def encode(self, /, encoding="utf-8", errors="strict"):
+        """Return a `bytes` object with respect to the encoding.
+
+        See:
+            `str.encode`
+        """
+        return self.decode(encoding=encoding,errors=errors).encode(
+            encoding=encoding,errors=errors)
+
+    def decode(self, /, encoding="utf-8", errors="strict"):
+        """Return a `str` object with respect to the enconding.
+
+        See:
+            `bytes.decode`
+        """
+        return bytes(self).decode(encoding=encoding,errors=errors)
+
 
 cdef class ImmortalCStr(CStr):
     """Immortal version of `CStr` that sets
@@ -1100,17 +1162,17 @@ cdef class DeviceArray(Pointer):
         DeviceArray.init_from_pyobj(self,pyobj)
 
 cdef class ListOfBytes(Pointer):
-    """Datatype for handling Python `list` or `tuple` objects with entries of type `bytes`.
+    """Datatype for handling Python `list` or `tuple` objects with entries of type `bytes` or `~.CStr`.
 
     Datatype for handling Python `list` and `tuple` objects with entries of type `bytes`
     that need to be converted to a pointer type when passed to the underlying C function.
 
     The type can be initialized from the following Python objects:
 
-    * `list` / `tuple` of `bytes:
+    * `list` / `tuple` of `bytes / `~.CStr`:
 
-        A `list` or `tuple` of `bytes` objects.
-        In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses from the `list`/`tuple` entries.
+        A `list` or `tuple` of `bytes` or `~.CStr` objects.
+        In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses from the `list`/ `tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
@@ -1156,20 +1218,22 @@ cdef class ListOfBytes(Pointer):
 
         self._py_buffer_acquired = False
         self._owner = False
-        if isinstance(pyobj,ListOfBytes):
-            self._ptr = (<ListOfBytes>pyobj)._ptr
-        elif isinstance(pyobj,(tuple,list)):
+        if isinstance(pyobj,(tuple,list)):
             self._owner = True
-            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(const char*))
-            libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(const char*))
+            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void*))
+            libc.string.memset(self._ptr, 0, len(pyobj)*sizeof(void*))
             for i,entry in enumerate(pyobj):
-                if not isinstance(entry,bytes):
+                if isinstance(entry,bytes):
+                    entry_as_cstr = entry # assumes pyobj/pyobj's entries won't be garbage collected
+                    # More details: https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
+                    (<void**>self._ptr)[i] = <void*>entry_as_cstr
+                elif isinstance(entry,CStr):
+                    (<void**>self._ptr)[i] = (<CStr>entry)._ptr
+                else:
                     raise ValueError("elements of list/tuple input must be of type 'bytes'")
-                entry_as_cstr = entry # assumes pyobj/pyobj's entries won't be garbage collected
-                # More details: https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
-                (<const char**>self._ptr)[i] = entry_as_cstr
+        elif isinstance(pyobj,ListOfBytes):
+            self._ptr = (<ListOfBytes>pyobj)._ptr
         else:
-            self._owner = False
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod

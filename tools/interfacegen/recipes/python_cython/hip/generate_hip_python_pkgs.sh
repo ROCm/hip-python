@@ -25,6 +25,8 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
    return 1
 fi
 
+set -e
+
 HELP_MSG="
 Usage: ./$(basename $0) output_dir [OPTIONS]
 
@@ -105,5 +107,6 @@ declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 declare -x HIP_PYTHON_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
 
 PYTHON codegen_hip_python.py ${OUTPUT_DIR}
+cp -v -f -R ../_util ${OUTPUT_DIR}/hip-python/hip
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv
