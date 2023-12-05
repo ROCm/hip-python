@@ -1184,6 +1184,17 @@ class Function(Node, Typed, *__FunctionMixin):
             if isinstance(child, Parm):
                 yield child
 
+    def get_parm(self,index: int):
+        """Return the parameter at the given index.
+        """
+        if index >= 0:
+            cur = 0
+            for parm in self.parms:
+                if cur == index:
+                    return parm
+                cur += 1
+        raise IndexError(f"Index {index} is out of bounds.")
+
     def parm_names(self, renamer: callable = lambda name: name):
         for parm in self.parms:
             assert isinstance(parm, Parm)
