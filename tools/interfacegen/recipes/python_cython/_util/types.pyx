@@ -1161,18 +1161,18 @@ cdef class DeviceArray(Pointer):
         """
         DeviceArray.init_from_pyobj(self,pyobj)
 
-cdef class ListOfBytes(Pointer):
-    """Datatype for handling Python `list` or `tuple` objects with entries of type `bytes`.
+cdef class ListOfBytes(Pointer): # TODO make ListOfCStr
+    """Datatype for handling Python `list` or `tuple` objects with entries of type `bytes` or `~.CStr`.
 
     Datatype for handling Python `list` and `tuple` objects with entries of type `bytes`
     that need to be converted to a pointer type when passed to the underlying C function.
 
     The type can be initialized from the following Python objects:
 
-    * `list` / `tuple` of `bytes:
+    * `list` / `tuple` of `bytes / `~.CStr`:
 
-        A `list` or `tuple` of `bytes` objects.
-        In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses from the `list`/`tuple` entries.
+        A `list` or `tuple` of `bytes` or `~.CStr` objects.
+        In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses from the `list`/ `tuple` entries.
         Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
@@ -1225,11 +1225,14 @@ cdef class ListOfBytes(Pointer):
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(const char*))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(const char*))
             for i,entry in enumerate(pyobj):
-                if not isinstance(entry,bytes):
+                if isinstance(entry,bytes):
+                    entry_as_cstr = entry # assumes pyobj/pyobj's entries won't be garbage collected
+                    # More details: https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
+                    (<const char**>self._ptr)[i] = entry_as_cstr
+                elif isinstance(entry,CStr):
+                    self._ptr[i] = entry._ptr
+                else:
                     raise ValueError("elements of list/tuple input must be of type 'bytes'")
-                entry_as_cstr = entry # assumes pyobj/pyobj's entries won't be garbage collected
-                # More details: https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
-                (<const char**>self._ptr)[i] = entry_as_cstr
         else:
             self._owner = False
             Pointer.init_from_pyobj(self,pyobj)
