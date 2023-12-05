@@ -287,6 +287,7 @@ cdef class CStr(Pointer):
     # C members declared in declaration part ``types.pxd``
 
     def __cinit__(self):
+        self._owner = False
         self._shape[0] = 0 # must be zero
         self.strides[0] = 1
 
@@ -379,9 +380,45 @@ cdef class CStr(Pointer):
             wrapper.init_from_pyobj(pyobj)
             return wrapper
 
+    cpdef void malloc(self,Py_ssize_t size_bytes):
+        """Dynamically allocate a buffer of bytes for this CStr.
+
+        Args:
+            size_bytes (`Py_ssize_t`): The number of bytes to allocate.
+        Note:
+            Throws `~.RuntimeError` if the data pointer is not NULL as this
+            indicates that this instance handles external data.
+        Note:
+            Sets the owner flag.
+        """
+        if self._ptr != NULL:
+            raise RuntimeError("Data pointer must be NULL.")
+        self._ptr = libc.stdlib.malloc(size_bytes)
+        libc.string.memset(<void*>self._ptr, 0, size_bytes)
+        self._owner = True
+
+    cpdef void free(self):
+        """Free dynamically allocated data.
+
+        Note:
+            Simply returns if the data pointer is NULL.
+        Note:
+            Throws `~.RuntimeError` if this instance does not own the data that ought to be freed.
+        Note:
+            Unsets the owner flag.
+        """
+        if self._owner == False:
+            raise RuntimeError("Attempt to free that is not owned by this instance.")
+        if self._ptr == NULL:
+            return # do nothing
+        libc.stdlib.free(self._ptr)
+        self._owner = False
+
     def __dealloc__(self):
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        if self._owner:
+            self.free()
 
     def __init__(self,object pyobj):
         """Constructor.
