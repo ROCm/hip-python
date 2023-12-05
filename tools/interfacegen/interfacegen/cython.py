@@ -1536,23 +1536,63 @@ class ParmMixin(CythonMixin, Typed):
 
 class FunctionMixin(CythonMixin, Typed):
 
+    class SignatureMember:
+        def __init__(self,value: str,typename: str,description: str):
+            self.value: str = value
+            self.typename: str = typename
+            self.description: str = description
+
+    def __init__(self):
+        CythonMixin.__init__(self)
+        Typed.__init__(self)
+        self._python_return_values_to_prepend = []
+
+    def prepend_python_return_value(self, value: str, typename: str, description: str):
+        """Prepend a return value when rendering the Python interface of this node.
+
+        Args:
+            value (`str`):
+                The value expression to prepend, typically a constant like 0 or an enum constant.
+            typename (`str`):
+                The typename of the return value that should appear in the docstring.
+            description (`str`):
+                The description of the return value that should appear in the docstring.
+                Not implemented yet!
+        """
+        _log.warn(f"<{self.render_location()}> function {self.name}: prepend parm: {(value, typename, description)}")
+        self._python_return_values_to_prepend.append(FunctionMixin.SignatureMember(value, typename, description))
+
     # Always return a tuple if there is at least one return value
     python_interface_always_return_tuple = True
 
     @property
     def has_python_body_prolog(self):
+        """If any code has been prepended before the C interface call.
+        """
         return hasattr(self, "_python_body_prolog")
-    
+
     @property
     def has_python_body_epilog(self):
+        """If any code has been prepended before the return statement.
+        """
         return hasattr(self, "_python_body_epilog")
 
     def python_body_prepend_before_c_interface_call(self,code: str):
+        """Prepend code right before the C interface call.
+
+        Note:
+            Additional call inserts code below the previously prepended code.
+        """
         if not self.has_python_body_prolog:
             setattr(self, "_python_body_prolog", [])
         self._python_body_prolog.append(code)
 
     def python_body_prepend_before_return(self,code: str):
+        """Prepend code right before the return statement.
+
+        Note:
+            Additional call inserts code below the previously prepended code.
+        """
         if not self.has_python_body_epilog:
             setattr(self, "_python_body_epilog", [])
         self._python_body_epilog.append(code)
@@ -1633,14 +1673,15 @@ cdef void* {funptr_name} = NULL
         # brief
         docstring_body = self._render_doxygen_brief(sections,log_prefix=f"<{self.render_location()}> function {self.name}: ",
                                                     missing_text="(No short description, might be part of a group.)")
-        
-        # other sections
+
+        # other sections, return values and parameters
         single_level_indent = " "*4
         docstring_returns = []
         docstring_args = {}
         docstring_out_arg_returns = []
         parms_still_to_be_documented = [parm.name for parm in self.parms]
         in_inout_parm_names = [name for name in parms_still_to_be_documented if name not in out_arg_names]
+
         for section in sections:
             if section.kind in (
               "result",
@@ -1679,6 +1720,28 @@ cdef void* {funptr_name} = NULL
                         docstring_args[name] = (name+type_info,dir,"\n"+descr)
             elif section.kind != "brief":
                 docstring_body += self._render_doxygen_simple_section(section, single_level_indent)
+
+        # Combine multiple return statements
+        if not len(docstring_returns) and not self.is_void:
+            _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: undocumented return value.")
+        if len(docstring_returns) and self.is_void:
+            _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: has return section but is void.")
+        combined_docstring_return = None
+        if len(docstring_returns):
+             retval_typename = self._python_interface_retval_typename()
+             combined_docstring_return = f"{CythonMixin.to_sphinx_pyobj(retval_typename)}"
+             if len(docstring_returns) > 1:
+                 combined_docstring_return += f": One of:\n{single_level_indent*2}-" + textwrap.indent("\n- ".join([textwrap.dedent(e) for e in docstring_returns]),single_level_indent*2)
+             elif len(docstring_returns) == 1:
+                 combined_docstring_return += ": "+docstring_returns[0]
+             docstring_returns.clear()
+
+        # Prepend user-prescribed return values
+        for retval in self._python_return_values_to_prepend:
+            docstring_returns.append(f"{single_level_indent}{self.to_sphinx_pyobj(retval.typename)}:\n{textwrap.indent(retval.description,single_level_indent*2)}")
+        if combined_docstring_return != None:
+            docstring_returns.append(combined_docstring_return)
+
         # Args
         # append undocumented arguments too but warn
         if len(parms_still_to_be_documented):
@@ -1693,24 +1756,14 @@ cdef void* {funptr_name} = NULL
         # now generate the arguments
         if len(docstring_args):
             docstring_body += "\nArgs:\n"
-            
+
             for name in in_inout_parm_names:
                 (head, dir, descr) = docstring_args[name]
                 docstring_body += f"{single_level_indent}{head}{dir}:{descr}\n"
-        
-        # Return values
-        retval_typename = self._python_interface_retval_typename()
-        if not len(docstring_returns) and not self.is_void:
-            _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: undocumented return value.")
-            if retval_typename != None:
-                docstring_returns.append(
-                    CythonMixin.to_sphinx_pyobj(retval_typename)
-                )
-        elif len(docstring_returns):
-            first_entry = docstring_returns[0].lstrip(" \t\n*-")
-            docstring_returns[0] = f"{CythonMixin.to_sphinx_pyobj(retval_typename)}: {first_entry}"
-        docstring_returns += docstring_out_arg_returns # add the additional return parameters
-       
+
+        # Add the additional out parameters as returns
+        docstring_returns += docstring_out_arg_returns
+
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"
             if len(docstring_returns) > 1 or self.python_interface_always_return_tuple:
@@ -1752,8 +1805,8 @@ cdef void* {funptr_name} = NULL
 
             parm_name = parm.cython_name
             out_parms.append(parm) # append original name as we need to compare vs the documentation
-            
-            if parm.is_pointer_to_basic_type(degree=1):
+
+            if parm.is_pointer_to_basic_type(degree=1) and parm.actual_rank == 0:
                 typehandler = parm._type_handler.create_from_layer(1, canonical=True)
                 parm_typename = typehandler.clang_type.spelling
                 prolog.append(f"cdef {parm_typename} {parm_name}")
@@ -1776,6 +1829,14 @@ cdef void* {funptr_name} = NULL
                 c_interface_call_args.append(f"<{cprefix}{parm_typename}**>&{parm_name}._ptr") # must be lvalue expression
                 parm_python_types[parm.name] = parm_typename
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
+            elif parm.is_pointer_to_record(
+                degree=1
+            ):
+                parm_typename = parm.lookup_innermost_type().cython_global_name
+                prolog.append(f"{parm_name} = {parm_typename}.new()")
+                c_interface_call_args.append(f"<{cprefix}{parm_typename}*>{parm_name}._ptr") # must be lvalue expression
+                parm_python_types[parm.name] = parm_typename
+                out_args.append(f"{parm_name}")
             elif parm.is_pointer_to_basic_type(degree=-2) or parm.is_pointer_to_void(
                 degree=-2
             ):
@@ -1787,12 +1848,24 @@ cdef void* {funptr_name} = NULL
                 )
                 parm_python_types[parm.name] = f"{handler_name}/object"
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
+            elif parm.is_pointer_to_basic_type(degree=-1) or parm.is_pointer_to_void(
+                degree=-1
+            ):
+                parm_typename = parm.cursor.type.get_canonical().spelling
+                handler_name = parm.ptr_complicated_type_handler(parm)
+                prolog.append(f"{parm_name} = {handler_name}.from_ptr(NULL)")
+                c_interface_call_args.append( # note: typecasts to expected type
+                    f"\n{indent*2}<{parm_typename}>{parm_name}._ptr" # must be lvalue expression
+                )
+                parm_python_types[parm.name] = f"{handler_name}/object"
+                out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
             else:
                 # If the argument was not removed from the parameter list,
                 # we did not add an additional return value.
-                # Hence, we remove the previously added original 
+                # Hence, we remove the previously added original
                 # name (see top of routine) from the out_arg_names list.
-                out_parms.pop(-1)
+                _log.error(f"<{self.render_location()}> function {self.name}: parm {parm_name}: not handled, canonical C type: '{parm.cursor.type.get_canonical().spelling}'")
+                sys.exit(1)
 
         def emit_datahandle_(parm_typename: str, parm: tree.Parm, cprefix: str = ""):
             global indent
@@ -1886,11 +1959,14 @@ cdef void* {funptr_name} = NULL
             assert isinstance(parm, ParmMixin)
             if parm.is_ptr:
                 if parm.is_out_ptr:
-                    assert parm.is_indirection  # make exception
+                    # assert parm.is_indirection  # make exception
+                    _log.debug(f"<{self.render_location()}> function {self.name}: parm {parm.name}: classified as OUT-PTR")
                     handle_out_ptr_parm(parm)
                 else:  # in ptr
+                    _log.debug(f"<{self.render_location()}> function {self.name}: parm {parm.name}: classified as INOUT-PTR")
                     handle_in_inout_ptr_(parm)
             else:  # no ptr
+                _log.debug(f"<{self.render_location()}> function {self.name}: parm {parm.name}: classified as IN-VALUE")
                 handle_value_parm_(parm)
 
         fully_specified = len(list(self.parms)) == len(c_interface_call_args)
@@ -1957,6 +2033,8 @@ cdef void* {funptr_name} = NULL
             raise RuntimeError(msg)
 
     def render_python_docstring(self, cprefix: str) -> str:
+        """Public API for generating only the docstring.
+        """
         (
             __fully_specified,
             __sig_args,
@@ -1966,9 +2044,12 @@ cdef void* {funptr_name} = NULL
             __prolog,
             parm_python_types,
         ) = self._analyze_parms(cprefix)
+        # TODO insert additional args here
         return self._render_python_docstring([p.name for p in out_parms],parm_python_types), indent
 
     def render_python_interface_impl(self, cprefix: str) -> str:
+        """Public API for generating the full Python interface.
+        """
         (
             fully_specified,
             sig_args,
@@ -1995,6 +2076,8 @@ cdef void* {funptr_name} = NULL
             result += f"{indent}{self._render_python_interface_c_interface_call(cprefix,call_args,out_args)}\n"
             if len(epilog):
                 result += textwrap.indent("\n".join(epilog), indent).rstrip() + "\n"
+            # prepend user-prescribed values
+            out_args = [m.value for m in self._python_return_values_to_prepend] + out_args
             if len(out_args) > 1:
                 comma = ","
                 result += f"{indent}return ({comma.join(out_args)})\n"
