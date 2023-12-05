@@ -252,7 +252,7 @@ wrapper_class_decl_template = """
 cdef class {{name}}({{util_types_prefix}}Pointer):
     cdef bint ptr_owner
 
-    cdef {{cptr_type}} get_element_ptr(self)
+    cdef {{cptr_type}} getElementPtr(self)
 
     @staticmethod
     cdef {{name}} from_ptr(void* ptr, bint owner=*)
@@ -350,7 +350,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         self.ptr_owner = False
         self._py_buffer_acquired = False
 
-    cdef {{cptr_type}} get_element_ptr(self):
+    cdef {{cptr_type}} getElementPtr(self):
         return <{{cptr_type}}>self._ptr
 
     @staticmethod
@@ -1910,7 +1910,7 @@ cdef void* {funptr_name} = NULL
                 sig_args.append(f"object {parm_name}")
                 parm_python_types[parm.name] = f"{parm_typename}/object" # use original name as key
                 c_interface_call_args.append(
-                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).get_element_ptr()"
+                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).getElementPtr()"
                 )
             elif parm.is_pointer_to_record(
                 degree=-2, incomplete_array=True
@@ -1950,7 +1950,7 @@ cdef void* {funptr_name} = NULL
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
                 c_interface_call_args.append(
-                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).get_element_ptr()[0]"
+                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).getElementPtr()[0]"
                 )
                 parm_python_types[parm.name] = parm_typename
 
