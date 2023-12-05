@@ -2008,14 +2008,20 @@ class CythonBackend:
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
         record_can_wrap_device_data: callable = DEFAULT_CAN_WRAP_DEVICE_DATA,
+        node_init: callable = lambda node: None,
     ):
         """Constructor.
 
         Args:
             node_filter (callable, optional): 
-                Filter for selecting the nodes to include in generated output. Defaults to `lambda x: True`.
+                Filter for selecting the nodes to include in generated output. Defaults to ``lambda x: True``.
+                Note that other callbacks are applied to non-filtered nodes also.
+            node_init (callable, optional):
+                Callback that can be used to modify certain nodes arbitrarily.
+                Note that this callback is applied after all other callbacks (excluding ``node_filter``).
+                Defaults to no-operation.
             macro_type (callable, optional):
-                Assigns a type to a macro node. Defaults to `lambda x: "int"`.
+                Assigns a type to a macro node. Defaults to ``lambda x: "int"``.
             ptr_parm_intent (callable, optional):
                 Assigns the intent (in,out,inout,create) to a pointer-type function parameter/struct field node..
             ptr_rank (callable, optional): 
@@ -2050,12 +2056,15 @@ class CythonBackend:
         self.raw_comment_cleaner = raw_comment_cleaner
         self.docstring_cleaner = docstring_cleaner
         self.record_can_wrap_device_data = record_can_wrap_device_data
+        self.node_init = node_init
 
-    def walk_filtered_nodes(self):
-        """Walks the filtered nodes in post-order and sets the renamer of each node.
+        self.initialize_nodes()
+
+    def initialize_nodes(self):
+        """Initializes all nodes.
 
         Note:
-            Post-order yields nested struct/union/enum declarations before their
+            Post-order walk, touches nested struct/union/enum declarations before their
             parent.
         """
         for node in self.root.walk(postorder=True):
@@ -2086,7 +2095,23 @@ class CythonBackend:
                         "ptr_complicated_type_handler",
                         self.ptr_complicated_type_handler,
                     )
-                # yield relevant nodes
+                elif isinstance(node, (TypedefMixin)):
+                    setattr(
+                        node,
+                        "ptr_complicated_type_handler",
+                        self.ptr_complicated_type_handler,
+                    )
+                self.node_init(node)
+
+    def walk_filtered_nodes(self):
+        """Walks the filtered nodes in post-order and sets the renamer of each node.
+
+        Note:
+            Post-order walk, touches nested struct/union/enum declarations before their
+            parent.
+        """
+        for node in self.root.walk(postorder=True):
+            if isinstance(node, CythonMixin):
                 if not isinstance(node, (FieldMixin, ParmMixin, RootMixin)):
                     if self.node_filter(node):
                         _log.debug(f" touch {node.__class__.__name__} {node.name} from {node.cursor.kind} {node.cursor.spelling} ({node.render_location()})")
