@@ -60,7 +60,7 @@ cdef class CStr(Pointer):
 
     cpdef void malloc(self,Py_ssize_t size_bytes)
 
-    cpdef void free(self):
+    cpdef void free(self)
 
 cdef class ImmortalCStr(CStr):
 
