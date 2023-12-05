@@ -299,6 +299,7 @@ def generate_hip_module_files():
         ptr_rank=controls.hip.ptr_rank,
         ptr_complicated_type_handler=hip_ptr_complicated_type_handler,
         macro_type=controls.hip.macro_type,
+        raw_comment_cleaner=controls.hip.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
     generator.python_interface_decl_prolog += "cimport hip._util.types\n"

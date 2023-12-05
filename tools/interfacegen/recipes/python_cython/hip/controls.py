@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import re
+
 import pyparsing as pyp
 
 from interfacegen.cparser import TypeHandler
@@ -220,6 +222,17 @@ class hip:
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
+
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans HIP doxygen documentation strings.
+
+        * Removes '@}', '@{', and dash sequences of more than three dashes.
+        * Removes other strings associated with groups.
+        """
+        result = re.sub(r"@{|@}|----+","",raw_comment)
+        result = result.replace("This section describes the event management functions of HIP runtime API.","")
+        return result
 
 # HIPRTC
 
