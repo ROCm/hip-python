@@ -107,7 +107,7 @@ cdef class Pointer:
         self._ptr = NULL
         self._py_buffer_acquired = False
 
-    cdef void* get_ptr(self):
+    cdef void* getPtr(self):
         return self._ptr
 
     @staticmethod
@@ -1161,7 +1161,7 @@ cdef class DeviceArray(Pointer):
         """
         DeviceArray.init_from_pyobj(self,pyobj)
 
-cdef class ListOfBytes(Pointer): # TODO make ListOfCStr
+cdef class ListOfBytes(Pointer):
     """Datatype for handling Python `list` or `tuple` objects with entries of type `bytes` or `~.CStr`.
 
     Datatype for handling Python `list` and `tuple` objects with entries of type `bytes`

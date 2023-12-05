@@ -302,7 +302,6 @@ def generate_hip_module_files():
         raw_comment_cleaner=controls.hip.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
-    generator.python_interface_decl_prolog += "cimport hip._util.types\n"
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
     cimport hip._hip_helpers

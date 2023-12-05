@@ -27,7 +27,9 @@ cdef class Pointer:
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
 
-    cdef void* get_ptr(self)
+    # Camel-case used by intent to make this orthogonal to array get_<property>(self,i)
+    # of auto-generated subclasses.
+    cdef void* getPtr(self)
 
     @staticmethod
     cdef Pointer from_ptr(void* ptr)
