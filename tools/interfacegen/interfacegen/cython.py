@@ -2547,7 +2547,9 @@ class CythonModuleGenerator:
         """
         cmodule_name = f"c{self.module_name}"
         python_interface_decl_prolog = (
-            self.python_interface_decl_prolog + f"\nfrom . cimport {cmodule_name}\n"
+            self.python_interface_decl_prolog 
+            + f"\ncimport {self.util_pkg}.types"
+            + f"\nfrom . cimport {cmodule_name}\n\n"
         )
 
         with open(f"{output_dir}/{cmodule_name}.pxd", "w") as outfile:
