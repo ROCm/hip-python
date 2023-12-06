@@ -224,13 +224,14 @@ cdef class Pointer:
             return Pointer.from_ptr(<void*>(<unsigned long>self._ptr + cpython.long.PyLong_AsUnsignedLong(offset)))
         raise NotImplementedError("'__getitem__': not implemented for other 'offset' types than 'int'")
 
-    def __init__(self,object pyobj):
+    def __init__(self,object pyobj = None):
         """Constructor.
 
         Args:
             pyobj (`object`):
                 See the class description `~.Pointer` for information
                 about accepted types for ``pyobj``.
+                Defaults to None.
 
         Raises:
             `TypeError`: If the input object ``pyobj`` is not of the right type.
