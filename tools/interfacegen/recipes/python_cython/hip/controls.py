@@ -180,9 +180,7 @@ class hip:
         2. All ``void``, ``struct``, ``union``, ``enum`` double (``**``) pointers are
         return values that are created internally by the respective function.
         """
-        func_name, parm_name, parm_idx = (
-            parm.parent.name, parm.name, parm.parm_index
-        )
+        func_name, parm_idx = parm.parent.name, parm.parm_index
         if (
             parm.is_pointer_to_record(degree=2)
             or parm.is_pointer_to_enum(degree=1)
@@ -197,7 +195,6 @@ class hip:
                 return ParmIntent.OUT
         if (func_name, parm_idx) in (
             ("hipDeviceGetName", 0),
-            ("hipPointerGetAttribute", 0),
             ("hipIpcGetMemHandle", 0),
             ("hipMemGetAddressRange", 0),
             ("hipDeviceGetUuid", 0),
@@ -206,6 +203,8 @@ class hip:
             ("hipDrvGetErrorString",1),
         ):
             return ParmIntent.OUT
+        if (func_name, parm_idx) in ("hipPointerGetAttribute", 0):
+            return ParmIntent.INOUT
         return ParmIntent.IN
 
     @staticmethod
