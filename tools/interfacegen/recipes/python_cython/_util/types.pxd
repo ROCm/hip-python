@@ -31,6 +31,8 @@ cdef class Pointer:
     # of auto-generated subclasses.
     cdef void* getPtr(self)
 
+    cpdef Pointer createRef(self)
+
     @staticmethod
     cdef Pointer from_ptr(void* ptr)
 

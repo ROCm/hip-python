@@ -116,6 +116,16 @@ cdef class Pointer:
         wrapper._ptr = ptr
         return wrapper
 
+    cpdef Pointer createRef(self):
+        """Creates are reference to this pointer.
+
+        Returns a `~.Pointer` that stores the address of this `~.Pointer's data pointer.
+
+        Note:
+            No ownership information is transferred.
+        """
+        return Pointer.from_ptr(<void*>&self._ptr)
+
     cdef void init_from_pyobj(self, object pyobj):
         """
         Note:
