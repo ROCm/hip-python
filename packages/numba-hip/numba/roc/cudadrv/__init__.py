@@ -23,77 +23,6 @@ mr = _modulerepl.ModuleReplicator(
     base_context=globals(),
     preprocess_all=lambda content: re.sub(r"\bnumba.cuda\b","numba.roc",content),
 )
-
-def _preprocess_driver(content: str):
-    """Applied after `preprocess_all`.
-    """
-
-    import ast
-    class Transformer(ast.NodeTransformer):
-        def visit_Assign(self, node: ast.Assign):
-            # print(ast.dump(node))
-            for lhs in node.targets:
-                # USE_NV_BINDING = True always
-                if isinstance(lhs,ast.Name):
-                    if lhs.id == "USE_NV_BINDING":
-                        node.value = mr.to_ast_node("True")
-                    # TODO(workaround,remove after hip-python-as-cuda fixes it):
-                    elif lhs.id == "jitty":
-                        # 'jitty = binding.CUjitInputType' -> 'jitty = binding2.CUjitInputType'
-                        node.value = mr.to_ast_node("binding2.CUjitInputType",lineno=node.lineno)
-            return node
-
-        def visit_FunctionDef(self, node: ast.FunctionDef):
-            if node.name in (
-                "_stream_callback",
-            ):
-                return None # kick that one out, not used with USE_NV_BINDING
-            return node # keep the others
-
-        def visit_ImportFrom(self, node: ast.AST):
-            """AST dump of typical nodes that we handle:
-            ImportFrom(
-                module='dep',
-                names=[
-                    alias(name='var1', asname='aliased_var1'),
-                    alias(name='var2')],
-                level=0),
-
-            Assign(
-                targets=[
-                    Name(id='orig_var1', ctx=Store())],
-                value=Constant(value='orig_var1')),
-            """
-            #  print(ast.dump(node))
-            if node.module != None: 
-                loc = mr.get_loc(node)
-                if node.module == "cuda":
-                    return mr.to_ast_node("from cuda import cuda as binding, nvrtc as binding2",**loc)
-                elif node.module.endswith("drvapi"):
-                    # 'from .drvapi import <VARS>' -> constants <VARS> 
-                    result = []
-                    for alias in node.names:
-                        if alias.asname != None:
-                            local_name = alias.asname
-                        else:
-                            local_name = alias.name
-                        result.append(
-                            ast.Assign(
-                                targets=[
-                                    ast.Name(id=local_name,ctx=ast.Store(),**loc),
-                                ],
-                                value=ast.Constant(value=None,**loc),
-                                **loc
-                            )
-                        )
-                    return result
-            return node
-
-    result = Transformer().visit(
-        compile(content, "<string>", "exec", ast.PyCF_ONLY_AST)
-    )
-    #print(ast.unparse(result))
-    return result
  
 # order is important here!
 
@@ -137,9 +66,7 @@ nvrtc = mr.create_and_register_derived_module(
     "nvrtc",
 )  # make this a submodule of the package
 
-driver = mr.create_and_register_derived_module(
-    "driver", preprocess=_preprocess_driver
-)  # make this a submodule of the package
+from . import driver
 
 devices = mr.create_and_register_derived_module(
     "devices"
@@ -156,7 +83,6 @@ ndarray = mr.create_and_register_derived_module(
 from . import nvvm
 
 # clean up
-del _preprocess_driver
 del mr
 del _modulerepl
 del os
