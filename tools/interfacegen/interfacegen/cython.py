@@ -1559,7 +1559,7 @@ class FunctionMixin(CythonMixin, Typed):
                 The description of the return value that should appear in the docstring.
                 Not implemented yet!
         """
-        _log.warn(f"<{self.render_location()}> function {self.name}: prepend parm: {(value, typename, description)}")
+        _log.debug(f"<{self.render_location()}> function {self.name}: prepend parm: {(value, typename, description)}")
         self._python_return_values_to_prepend.append(FunctionMixin.SignatureMember(value, typename, description))
 
     # Always return a tuple if there is at least one return value
