@@ -439,6 +439,37 @@ def generate_hipblas_module_files():
     )
     return generator
 
+# hipsolver
+def generate_hipsolver_module_files():
+    global ROCM_INC
+    global GENERATOR_ARGS
+    global RUNTIME_LINKING
+
+    generator = CythonModuleGenerator(
+        "hip.hipsolver",
+        ROCM_INC,
+        "hipsolver/hipsolver.h",
+        runtime_linking=RUNTIME_LINKING,
+        util_pkg="hip._util",
+        dll="libhipsolver.so",
+        node_filter=controls.hipsolver.node_filter,
+        ptr_parm_intent=controls.hipsolver.ptr_parm_intent,
+        ptr_rank=controls.hipsolver.ptr_rank,
+        ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+        raw_comment_cleaner=controls.hipsolver.raw_comment_cleaner,
+        cflags=GENERATOR_ARGS,
+    )
+    generator.c_interface_decl_prolog += textwrap.dedent(
+        """\
+    from .chip cimport hipStream_t, float2, double2
+    """
+    )
+    generator.python_interface_decl_prolog += textwrap.dedent(
+        """\
+    from .hip cimport ihipStream_t, float2, double2
+    """
+    )
+    return generator
 
 # rccl
 def generate_rccl_module_files():
@@ -570,6 +601,28 @@ def generate_hipsparse_module_files():
         from .hip import hipError_t, _hipDataType__Base # PY import enums
         from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
         """
+    )
+    return generator
+
+# roctx
+def generate_roctx_module_files():
+    global ROCM_INC
+    global GENERATOR_ARGS
+    global RUNTIME_LINKING
+
+    generator = CythonModuleGenerator(
+        "hip.roctx",
+        ROCM_INC,
+        "roctracer/roctx.h",
+        runtime_linking=RUNTIME_LINKING,
+        util_pkg="hip._util",
+        dll="libroctx64.so",
+        node_filter=controls.roctx.node_filter,
+        macro_type=controls.roctx.macro_type,
+        ptr_parm_intent=controls.roctx.ptr_parm_intent,
+        ptr_rank=controls.roctx.ptr_rank,
+        ptr_complicated_type_handler=HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+        cflags=GENERATOR_ARGS,
     )
     return generator
 
@@ -833,6 +886,8 @@ if __name__ == "__main__":
         hiprand=generate_hiprand_module_files,
         hipfft=generate_hipfft_module_files,
         hipsparse=generate_hipsparse_module_files,
+        roctx=generate_roctx_module_files,
+        hipsolver=generate_hipsolver_module_files,
     )
 
     # process and check user-provided library names
