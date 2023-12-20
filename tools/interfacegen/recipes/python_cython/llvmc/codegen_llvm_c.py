@@ -40,6 +40,8 @@ from pathlib import Path
 import interfacegen.gitversion
 import interfacegen.cython
 
+from _include_graph import build_include_graph
+
 import logging
 interfacegen.enable_logging(logging.INFO)
 
@@ -204,169 +206,6 @@ def parse_options():
         )
     GENERATOR_ARGS += ["-resource-dir", args.clang_resource_dir]
 
-LLVM_C_INCLUDES = {
-    "llvm/Config/llvm-config.h": [],
-    "llvm-c/Analysis.h": [
-        #"llvm-c/ExternC.h",
-        "llvm-c/Types.h",
-    ],
-    "llvm-c/BitReader.h": [
-        #"llvm-c/ExternC.h",
-        "llvm-c/Types.h",
-    ],
-    "llvm-c/BitWriter.h": [
-        #"llvm-c/ExternC.h",
-        "llvm-c/Types.h",
-    ],
-    "llvm-c/blake3.h": [
-        "stddef.h",
-        "stdint.h",
-    ],
-    "llvm-c/Comdat.h": [
-        #"llvm-c/ExternC.h",
-        "llvm-c/Types.h",
-    ],
-    "llvm-c/Core.h": [
-        #"llvm-c/Deprecated.h",
-        "llvm-c/ErrorHandling.h",
-        #"llvm-c/ExternC.h",
-        "llvm-c/Types.h",
-    ],
-    "llvm-c/DataTypes.h": [
-        "inttypes.h",
-        "stdint.h",
-        "sys/types.h",
-        "cstddef",
-        "cstdlib",
-        "stddef.h",
-        "stdlib.h",
-    ],
-    "llvm-c/DebugInfo.h": [
-        #"llvm-c/ExternC.h",
-        "llvm-c/Types.h",
-    ],
-    #"llvm-c/Deprecated.h": [],
-    "llvm-c/Disassembler.h": [
-        "llvm-c/DisassemblerTypes.h",
-        #"llvm-c/ExternC.h",
-    ],
-    "llvm-c/DisassemblerTypes.h": [
-        "llvm-c/DataTypes.h",
-        "cstddef",
-        "stddef.h",
-    ],
-    "llvm-c/Error.h": [
-        #"llvm-c/ExternC.h",
-    ],
-    "llvm-c/ErrorHandling.h": [
-        #"llvm-c/ExternC.h",
-    ],
-    "llvm-c/ExecutionEngine.h": [
-        #"llvm-c/ExternC.h",
-        "llvm-c/Target.h",
-        "llvm-c/TargetMachine.h",
-        "llvm-c/Types.h",
-    ],
-    # "llvm-c/ExternC.h": [
-    # ],
-    "llvm-c/Initialization.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/IRReader.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Linker.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/LLJIT.h": [
-    "llvm-c/Error.h",
-    "llvm-c/Orc.h",
-    "llvm-c/TargetMachine.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/lto.h": [
-    #"llvm-c/ExternC.h",
-    "cstddef",
-    "stddef.h",
-    "sys/types.h",
-    "stdbool.h",
-    ],
-    "llvm-c/Object.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    "llvm/Config/llvm-config.h",
-    ],
-    "llvm-c/Orc.h": [
-    "llvm-c/Error.h",
-    "llvm-c/TargetMachine.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/OrcEE.h": [
-    "llvm-c/Error.h",
-    "llvm-c/ExecutionEngine.h",
-    "llvm-c/Orc.h",
-    "llvm-c/TargetMachine.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Remarks.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    "cstddef",
-    "stddef.h",
-    ],
-    "llvm-c/Support.h": [
-    "llvm-c/DataTypes.h",
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Target.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    "llvm/Config/llvm-config.h",
-    ],
-    "llvm-c/TargetMachine.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Target.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Transforms/InstCombine.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Transforms/IPO.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Transforms/PassBuilder.h": [
-    "llvm-c/Error.h",
-    "llvm-c/TargetMachine.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Transforms/PassManagerBuilder.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Transforms/Scalar.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Transforms/Utils.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Transforms/Vectorize.h": [
-    #"llvm-c/ExternC.h",
-    "llvm-c/Types.h",
-    ],
-    "llvm-c/Types.h": [
-    "llvm-c/DataTypes.h",
-    #"llvm-c/ExternC.h",
-    ],
-}
-
 def header_file_to_module_name(header_file: str):
     """Given a header file, returns output directory plus global and local module name.
     """
@@ -476,21 +315,20 @@ def resolve_internal_dependencies(generators):
         (generator, _, _) = generators[module_name]
         assert isinstance(generator,CythonModuleGenerator)
         for inc in incs:
-            if inc.startswith("llvm"):
-                _, dep_global_name, dep_name = header_file_to_module_name(inc)
-                dep_pkg_prefix=".".join(dep_global_name.split(".")[:-1])
-                logging.getLogger("interfacegen").info(f" {h}: handle dep: {inc} ({dep_global_name})")
-                (dep_generator, _, _) = generators[dep_name]
-                assert isinstance(dep_generator,CythonModuleGenerator)
-                generator.c_interface_decl_prolog += f"from {dep_pkg_prefix}.c{dep_name} cimport *\n"
-                generator.python_interface_decl_prolog += "\n"
-                generator.python_interface_impl_prolog += "\n"
-                for node in dep_generator.backend.walk_entities_to_cimport(False):
-                    generator.python_interface_decl_prolog += f"from {dep_global_name} cimport {node.cython_global_name}\n"
-                for node in dep_generator.backend.walk_entities_to_import(False):
-                    generator.python_interface_impl_prolog += f"from {dep_global_name} import {node.cython_global_name}\n"
-                generator.python_interface_decl_prolog += "\n"
-                generator.python_interface_impl_prolog += "\n"
+            _, dep_global_name, dep_name = header_file_to_module_name(inc)
+            dep_pkg_prefix=parent_pkg_name(dep_global_name)
+            logging.getLogger("interfacegen").info(f" {h}: handle dep: {inc} ({dep_global_name})")
+            (dep_generator, _, _) = generators[dep_name]
+            assert isinstance(dep_generator,CythonModuleGenerator)
+            generator.c_interface_decl_prolog += f"from {dep_pkg_prefix}.c{dep_name} cimport *\n"
+            generator.python_interface_decl_prolog += "\n"
+            generator.python_interface_impl_prolog += "\n"
+            for node in dep_generator.backend.walk_entities_to_cimport(False):
+                generator.python_interface_decl_prolog += f"from {dep_global_name} cimport {node.cython_global_name}\n"
+            for node in dep_generator.backend.walk_entities_to_import(False):
+                generator.python_interface_impl_prolog += f"from {dep_global_name} import {node.cython_global_name}\n"
+            generator.python_interface_decl_prolog += "\n"
+            generator.python_interface_impl_prolog += "\n"
 
 def create_generators():
     global LLVM_C_INCLUDES
@@ -599,8 +437,8 @@ if __name__ == "__main__":
     LIBS = None
     ROCM_LLVM_PYTHON_VERSION_MAJOR, ROCM_LLVM_PYTHON_VERSION_MINOR, ROCM_LLVM_PYTHON_VERSION_PATCH = (
         0, 0, 0)
-
-    parse_options()
+    parse_options() # sets the globals
+    LLVM_C_INCLUDES = build_include_graph(ROCM_LLVM_INC)
     interfacegen.cython.FunctionMixin.python_interface_always_return_tuple = False # same for all modules, unlike callbacks
     AVAILABLE_GENERATORS = create_generators()
 
