@@ -69,13 +69,13 @@ from interfacegen.control import ParmIntent
 
 def parse_options():
     global OUTPUT_DIR
-    global ROCM_LLVM_PYTHON_INC
+    global ROCM_LLVM_INC
     global RUNTIME_LINKING
     global GENERATOR_ARGS
     global LIBS
-    global ROCM_LLVM_PYTHON_VERSION_MAJOR
-    global ROCM_LLVM_PYTHON_VERSION_MINOR
-    global ROCM_LLVM_PYTHON_VERSION_PATCH
+    global ROCM_VERSION_MAJOR
+    global ROCM_VERSION_MINOR
+    global ROCM_VERSION_PATCH
 
     def get_bool_environ_var(env_var, default):
         yes_vals = ("true", "1", "t", "y", "yes")
@@ -179,14 +179,14 @@ def parse_options():
     RUNTIME_LINKING = args.runtime_linking
     LIBS = args.libs
 
-    ( ROCM_LLVM_PYTHON_VERSION_MAJOR, ROCM_LLVM_PYTHON_VERSION_MINOR, 
-     ROCM_LLVM_PYTHON_VERSION_PATCH ) = args.rocm_version
+    ( ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR, 
+     ROCM_VERSION_PATCH ) = args.rocm_version
 
     if not args.rocm_path:
         raise RuntimeError("ROCm path is not set")
-    ROCM_LLVM_PYTHON_INC = os.path.join(args.rocm_path,"llvm","include")
+    ROCM_LLVM_INC = os.path.join(args.rocm_path,"llvm","include")
 
-    GENERATOR_ARGS = [f"-I{ROCM_LLVM_PYTHON_INC}"]
+    GENERATOR_ARGS = [f"-I{ROCM_LLVM_INC}"]
     if not args.clang_resource_dir:
         raise RuntimeError(
             textwrap.dedent(
@@ -221,11 +221,11 @@ def header_file_to_module_name(header_file: str):
     return (os.path.join(OUTPUT_DIR,*package), (".".join(package)+"."+module_name), module_name)
 
 def create_llvm_c_default_generator(
-    module_name: str, 
+    global_module_name: str,
     header_file: str,
     **opts
 ) -> CythonModuleGenerator:
-    global ROCM_LLVM_PYTHON_INC
+    global ROCM_LLVM_INC
     global RUNTIME_LINKING
     global GENERATOR_ARGS
 
@@ -291,8 +291,8 @@ def create_llvm_c_default_generator(
         return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix)(node)
 
     generator = CythonModuleGenerator(
-        module_name,
-        ROCM_LLVM_PYTHON_INC,
+        global_module_name,
+        ROCM_LLVM_INC,
         header_file,
         runtime_linking=RUNTIME_LINKING,
         util_pkg=util_pkg,
@@ -309,6 +309,8 @@ def create_llvm_c_default_generator(
 
     return generator
 
+def parent_pkg_name(global_module_name: str):
+    return ".".join(global_module_name.split(".")[:-1])
 
 def resolve_internal_dependencies(generators):
     for h,incs in LLVM_C_INCLUDES.items():
@@ -414,7 +416,7 @@ def create_generators():
             )
 
         generator: CythonModuleGenerator = create_llvm_c_default_generator(
-            module_name, h, **opts
+            global_module_name, h, **opts
         )
 
         generators[module_name] = (
@@ -432,11 +434,11 @@ def lstrip_all_lines(text: str,lstrip_chars: str=" "):
 if __name__ == "__main__":
     OUTPUT_DIR = None
 
-    ROCM_LLVM_PYTHON_INC = None
+    ROCM_LLVM_INC = None
     RUNTIME_LINKING = None
     GENERATOR_ARGS = None
     LIBS = None
-    ROCM_LLVM_PYTHON_VERSION_MAJOR, ROCM_LLVM_PYTHON_VERSION_MINOR, ROCM_LLVM_PYTHON_VERSION_PATCH = (
+    ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR, ROCM_VERSION_PATCH = (
         0, 0, 0)
     parse_options() # sets the globals
     LLVM_C_INCLUDES = build_include_graph(ROCM_LLVM_INC)
@@ -477,14 +479,14 @@ if __name__ == "__main__":
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         generator.write_module_files(output_dir=output_dir)
 
-    ROCM_LLVM_PYTHON_VERSION_NAME = f"{ROCM_LLVM_PYTHON_VERSION_MAJOR}.{ROCM_LLVM_PYTHON_VERSION_MINOR}.{ROCM_LLVM_PYTHON_VERSION_PATCH}"
-    ROCM_LLVM_PYTHON_VERSION = (
-        ROCM_LLVM_PYTHON_VERSION_MAJOR * 10000000 + ROCM_LLVM_PYTHON_VERSION_MINOR * 100000 + ROCM_LLVM_PYTHON_VERSION_PATCH
+    ROCM_VERSION_NAME = f"{ROCM_VERSION_MAJOR}.{ROCM_VERSION_MINOR}.{ROCM_VERSION_PATCH}"
+    ROCM_VERSION = (
+        ROCM_VERSION_MAJOR * 10000000 + ROCM_VERSION_MINOR * 100000 + ROCM_VERSION_PATCH
     )
 
-    VERSION = f"{ROCM_LLVM_PYTHON_VERSION_MAJOR}.{ROCM_LLVM_PYTHON_VERSION_MINOR}.{ROCM_LLVM_PYTHON_VERSION_PATCH}.{interfacegen.gitversion.version()}"
+    VERSION = f"{ROCM_VERSION_MAJOR}.{ROCM_VERSION_MINOR}.{ROCM_VERSION_PATCH}.{interfacegen.gitversion.version()}"
     LONG_VERSION = (
-        f"{ROCM_LLVM_PYTHON_VERSION_NAME}.{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
+        f"{ROCM_VERSION_NAME}.{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
     )
     with open(os.path.join("..","LICENSE"),"r") as licensefile:
         LICENSE_TEXT = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
@@ -500,13 +502,13 @@ if __name__ == "__main__":
             
             __author__ = "Advanced Micro Devices, Inc. <rocm-llvm-python.maintainer@amd.com>"
 
-            VERSION = __version__ = "{VERSION}.{{ROCM_LLVM_PYTHON_VERSION_SHORT}}"
-            LONG_VERSION = __long_version__ = "{LONG_VERSION}.{{ROCM_LLVM_PYTHON_VERSION}}"
+            VERSION = __version__ = "{VERSION}.{{ROCM_VERSION_SHORT}}"
+            LONG_VERSION = __long_version__ = "{LONG_VERSION}.{{ROCM_VERSION}}"
             ROCM_LLVM_PYTHON_CODEGEN_BRANCH = "{interfacegen.gitversion.git_current_branch()}"
             ROCM_LLVM_PYTHON_CODEGEN_VERSION = "{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
             ROCM_LLVM_PYTHON_CODEGEN_REV = "{interfacegen.gitversion.git_rev()}"
             ROCM_LLVM_PYTHON_BRANCH = "{{ROCM_LLVM_PYTHON_BRANCH}}"
-            ROCM_LLVM_PYTHON_VERSION = "{{ROCM_LLVM_PYTHON_VERSION}}"
+            ROCM_VERSION = "{{ROCM_VERSION}}"
             ROCM_LLVM_PYTHON_REV = "{{ROCM_LLVM_PYTHON_REV}}"
 
             ROCM_LLVM_PYTHON_MODULE_LIST = [
@@ -529,22 +531,21 @@ if __name__ == "__main__":
                 __author__ = "Advanced Micro Devices, Inc. <rocm-llvm-python.maintainer@amd.com>"
 
                 from ._version import *
-                ROCM_VERSION = {ROCM_LLVM_PYTHON_VERSION}
-                ROCM_VERSION_NAME = rocm_llvm_version_name = "{ROCM_LLVM_PYTHON_VERSION_NAME}"
-                ROCM_VERSION_TUPLE = rocm_llvm_version_tuple = ({ROCM_LLVM_PYTHON_VERSION_MAJOR},{ROCM_LLVM_PYTHON_VERSION_MINOR},{ROCM_LLVM_PYTHON_VERSION_PATCH})
+                ROCM_VERSION = {ROCM_VERSION}
+                ROCM_VERSION_NAME = rocm_llvm_version_name = "{ROCM_VERSION_NAME}"
+                ROCM_VERSION_TUPLE = rocm_llvm_version_tuple = ({ROCM_VERSION_MAJOR},{ROCM_VERSION_MINOR},{ROCM_VERSION_PATCH})
 
                 from . import _util
                 from . import c
                 from . import config
 
-                
                 import sys
                 import os
             
                 for module_name, module in sys.modules.items():
                 \t\tif module_name.startswith("rocm.llvm.c."):
                 \t\t\t\tif "DLL" in vars(module):
-                \t\t\t\t\t\tmodule.DLL = os.path.join(os.path.dirname(__file__),module.DLL)
+                \t\t\t\t\t\tmodule.DLL = os.path.join(os.path.dirname(__file__),module.DLL.decode("utf-8")).encode("utf-8")
                 del sys
                 del os
                 """
