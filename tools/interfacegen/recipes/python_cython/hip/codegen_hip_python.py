@@ -434,7 +434,6 @@ def generate_hipblas_module_files():
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    cimport hip._util.types
     from .hip cimport ihipStream_t
     """
     )
@@ -468,7 +467,6 @@ def generate_rccl_module_files():
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    cimport hip._util.types
     from .hip cimport ihipStream_t
     """
     )
@@ -502,7 +500,6 @@ def generate_hiprand_module_files():
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    cimport hip._util.types
     from .hip cimport ihipStream_t
     """
     )
@@ -536,7 +533,6 @@ def generate_hipfft_module_files():
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    cimport hip._util.types
     from .hip cimport ihipStream_t, float2, double2
     """
     )
@@ -571,7 +567,6 @@ def generate_hipsparse_module_files():
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-        cimport hip._util.types
         from .hip import hipError_t, _hipDataType__Base # PY import enums
         from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
         """
