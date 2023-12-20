@@ -369,8 +369,8 @@ def generate_cuda_interop_module_files(
                         ),
                     )
                     or isinstance(node, Typedef)
-                    and ( 
-                        node.is_pointer_to_record(degree=(0, -1)) or 
+                    and (
+                        node.is_pointer_to_record(degree=(0, -1)) or
                         node.is_pointer_to_basic_type(degree=-1) or
                         node.is_pointer_to_void(degree=-1)
                     )
