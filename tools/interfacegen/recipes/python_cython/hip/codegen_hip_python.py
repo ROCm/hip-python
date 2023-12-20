@@ -447,7 +447,7 @@ def generate_rccl_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "rccl",
+        "hip.rccl",
         ROCM_INC,
         "rccl/rccl.h",
         runtime_linking=RUNTIME_LINKING,
