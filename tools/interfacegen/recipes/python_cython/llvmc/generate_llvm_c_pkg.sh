@@ -25,6 +25,8 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
    return 1
 fi
 
+set -e
+
 HELP_MSG="
 Usage: ./$(basename $0) output_dir [OPTIONS]
 
