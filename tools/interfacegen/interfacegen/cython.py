@@ -2463,7 +2463,7 @@ class CythonModuleGenerator:
 
     def __init__(
         self,
-        module_name: str,
+        global_module_name: str,
         include_dir: str,
         header: str,
         util_pkg: str,
@@ -2475,8 +2475,8 @@ class CythonModuleGenerator:
         r"""Constructor.
 
         Args:
-            module_name (str):
-                Name of the module that should be generated. Influences filesnames.
+            global_module_name (str):
+                Global name of the module, parent packages are prepended and separated with ".".
             include_dir (str):
                 Name of the main include dir.
             header (str|tuple):
@@ -2496,7 +2496,15 @@ class CythonModuleGenerator:
         """
         global default_c_interface_decl_prolog
         global default_python_interface_decl_prolog
-        self.module_name = module_name
+        self.global_module_name = global_module_name
+
+        parts = global_module_name.split(".")
+        self.module_name = parts[-1]
+        if len(parts) == 1:
+            self.pkg_name = "."
+        else:
+            self.pkg_name = ".".join(global_module_name.split(".")[:-1])
+
         self.include_dir = include_dir
         self.header = header
         self.util_pkg = util_pkg
@@ -2545,10 +2553,11 @@ class CythonModuleGenerator:
             module_name (str): Name of the module that should be generated. Influences filesnames.
         """
         cmodule_name = f"c{self.module_name}"
+
         python_interface_decl_prolog = (
-            self.python_interface_decl_prolog 
+            self.python_interface_decl_prolog
             + f"\ncimport {self.util_pkg}.types"
-            + f"\nfrom . cimport {cmodule_name}\n\n"
+            + f"\nfrom {self.pkg_name} cimport {cmodule_name}\n\n"
         )
 
         with open(f"{output_dir}/{cmodule_name}.pxd", "w") as outfile:
