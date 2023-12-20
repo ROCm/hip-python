@@ -583,7 +583,10 @@ class hipsparse:
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
+        func_name = node.parent.name
         if node.is_pointer_to_record(degree=2):
+            return ParmIntent.OUT
+        if func_name == "hipsparseCreate":
             return ParmIntent.OUT
         return ParmIntent.IN
 
