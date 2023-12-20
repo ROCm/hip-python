@@ -55,6 +55,7 @@ def generate_cuda_interop_module_files(
     cuda_module_name: str,
     generator: CythonModuleGenerator,
     hip2cuda: dict,
+    license_text: str,
     warn: bool = True,
     extra_cimports = "",
     extra_imports = "",
@@ -99,11 +100,8 @@ def generate_cuda_interop_module_files(
     module_cimport_name = f"hip.{module_name}"
     backend = generator.backend
 
-    with open("LICENSE","r") as licensefile:
-        LICENSE_TEXT = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
-
     c_interface_decl_part = [
-        LICENSE_TEXT,
+        license_text,
         textwrap.dedent(
             f"""\
 
@@ -112,7 +110,7 @@ def generate_cuda_interop_module_files(
         ) + extra_cmodule_cimports,
     ]
     python_interface_decl_part = [
-        LICENSE_TEXT,
+        license_text,
         textwrap.dedent(
             f"""\
 
@@ -126,7 +124,7 @@ def generate_cuda_interop_module_files(
     ]
 
     python_interface_impl_part_preamble = (
-        LICENSE_TEXT
+        license_text
         + textwrap.dedent(
             f"""\
 

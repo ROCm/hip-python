@@ -760,13 +760,13 @@ def render_toc_yml_in(
     python_api_file_names_cuda = [f"      - file: python_api/{lib}" for lib in cuda_python_lib_names]
     with open(toc_yml_in + ".in","r"
          ) as infile, open(toc_yml_in, "w") as outfile:
-        
+
         rendered = infile.read()
         rendered = rendered.replace("{PYTHON_API_FILE_NAMES}","\n".join(python_api_file_names))
         rendered = rendered.replace("{PYTHON_API_FILE_NAMES_CUDA}","\n".join(python_api_file_names_cuda))
         outfile.write(rendered)
 
-def generate_cuda_interop_layer_files():
+def generate_cuda_interop_layer_files(license_text: str):
     """Generate the CUDA interoperability layer.
 
     Note:
@@ -780,7 +780,8 @@ def generate_cuda_interop_layer_files():
         return
 
     cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR,"nvrtc", HIPRTC_GENERATOR, HIP_2_CUDA
+        OUTPUT_DIR,"nvrtc", HIPRTC_GENERATOR, HIP_2_CUDA,
+        license_text
     )
 
     def collect_imports_(import_stmt: str,py_generator):
@@ -797,12 +798,15 @@ def generate_cuda_interop_layer_files():
 
     cuda_interop_layer_gen.generate_cuda_interop_module_files(
         OUTPUT_DIR, "cuda", HIP_GENERATOR, HIP_2_CUDA,
+        license_text,
         extra_imports=extra_imports,
         extra_cimports=extra_cimports,
         extra_cmodule_cimports=extra_cmodule_cimports,
     )
     cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR, "cudart", HIP_GENERATOR, HIP_2_CUDA, warn=False,
+        OUTPUT_DIR, "cudart", HIP_GENERATOR, HIP_2_CUDA,
+        license_text,
+        warn=False,
         extra_imports=extra_imports,
         extra_cimports=extra_cimports,
         extra_cmodule_cimports=extra_cmodule_cimports,
@@ -865,7 +869,6 @@ if __name__ == "__main__":
             raise KeyError(msg)
         generator = AVAILABLE_GENERATORS[libname]()
         generator.write_module_files(output_dir=hip_output_dir)
-    generate_cuda_interop_layer_files()
 
     with open("../LICENSE","r") as licensefile:
         license_text = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
@@ -886,8 +889,6 @@ if __name__ == "__main__":
     hip_python_lib_names = AVAILABLE_GENERATORS.keys()
     cuda_python_lib_names = ["cuda","cudart","nvrtc"]
 
-    with open("LICENSE","r") as licensefile:
-        license_text = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
     for output_dir in (hip_output_dir, cuda_output_dir):
         # hip|cuda/_version.py
         write_version_file(output_dir,license_text,version,long_version)
