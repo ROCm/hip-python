@@ -28,6 +28,8 @@ import os
 import keyword
 import textwrap
 
+from datetime import datetime
+
 import logging
 _log = logging.getLogger("interfacegen")
 
@@ -184,10 +186,10 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str=""):
 
     return inner
 
-LICENSE_TEXT = """\
+LICENSE_TEXT = f"""\
 # MIT License
 #
-# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# Copyright (c) {datetime.today().year} Advanced Micro Devices, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
