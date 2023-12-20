@@ -31,7 +31,8 @@ HELP_MSG="
 Usage: ./$(basename $0) output_dir [OPTIONS]
 
 Required:
-   output_dir       The output directory to which the files should be written to. Must contain 'hip-python' and 'hip-python-as-cuda' subfolders.
+  output_dir        The output directory to which the files should be written to. Must contain 'hip-python' and 'hip-python-as-cuda' subfolders.
+  --rocm-version    The ROCm version, e.g. '5.6.0'. Can also be specified via the 'ROCM_VERSION' environment variable.
 
 Options:
   --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
@@ -75,6 +76,10 @@ while [[ $# -gt 0 ]]; do
       ROCM_PATH=$2
       shift; shift
       ;;
+    --rocm-version)
+      ROCM_VERSION=$2
+      shift; shift
+      ;;
     -h|--help)
       echo "${HELP_MSG}"
       exit 0
@@ -106,7 +111,7 @@ declare -x HIP_PYTHON_LIBS=${HIP_PYTHON_LIBS:-*}
 declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 declare -x HIP_PYTHON_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
 
-PYTHON codegen_hip_python.py ${OUTPUT_DIR}
+PYTHON codegen_hip_python.py ${OUTPUT_DIR} --rocm-version ${ROCM_VERSION}
 cp -v -f -R ../_util ${OUTPUT_DIR}/hip-python/hip
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv
