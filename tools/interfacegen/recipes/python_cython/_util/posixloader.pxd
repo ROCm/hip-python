@@ -22,8 +22,6 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-cimport posix.dlfcn
-
-cdef void* open_library(const char* path)
-cdef void close_library(void* handle)
-cdef void* load_symbol(void* lib_handle, const char* name)
+cdef int open_library(void** lib_handle, const char* path) except 1 nogil
+cdef int close_library(void* lib_handle) except 1 nogil
+cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1 nogil
