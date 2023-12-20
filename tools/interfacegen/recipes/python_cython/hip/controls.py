@@ -662,3 +662,44 @@ class hipsparse:
                     print(tokens[0])
                 
         return "\n".join(parts)
+    
+# ROCTX
+    
+class roctx:
+
+    @staticmethod
+    def node_filter(node: Node):
+        if isinstance(node, MacroDefinition):
+            return node.name in (
+                "ROCTX_VERSION_MAJOR",
+                "ROCTX_VERSION_MINOR",
+            )
+        elif node.name.startswith("roctx"):
+            return True
+        return False
+
+    @staticmethod
+    def macro_type(node: MacroDefinition):
+        return "int"
+
+    @staticmethod
+    def ptr_parm_intent(node: Parm):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        """
+        return ParmIntent.IN
+
+    @staticmethod
+    def ptr_rank(node: Node):
+        """Actual rank of the variables underlying pointer indirections.
+
+        In roctx, all pointers are `const char *`, i.e. char sequences.
+        """
+        return 1
+    
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans roctx doxygen documentation strings.
+        """
+        return raw_comment
+    
