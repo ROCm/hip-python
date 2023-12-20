@@ -31,7 +31,7 @@ HELP_MSG="
 Usage: ./$(basename $0) output_dir [OPTIONS]
 
 Required:
-   output_dir       The output directory to which the files should be written to.
+  output_dir        The output directory to which the files should be written to.
   --rocm-version    The ROCm version, e.g. '5.6.0'. Can also be specified via the 'ROCM_VERSION' environment variable.
 
 Options:
