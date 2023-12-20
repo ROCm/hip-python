@@ -728,7 +728,7 @@ def render_index_md(
     hip_python_docs_dir: str,
     hip_python_lib_names,
     cuda_python_lib_names,
-    hip_version_name
+    rocm_version_name
 ):
     index_md = os.path.join(
         hip_python_docs_dir, "index.md"
@@ -741,7 +741,7 @@ def render_index_md(
         rendered = infile.read()
         rendered = rendered.replace("{PYTHON_API_DOC_NAMES}","\n".join(python_api_doc_names))
         rendered = rendered.replace("{PYTHON_API_DOC_NAMES_CUDA}","\n".join(python_api_doc_names_cuda))
-        rendered = rendered.replace("{HIP_VERSION_NAME}", hip_version_name)
+        rendered = rendered.replace("{ROCM_VERSION_NAME}", rocm_version_name)
         outfile.write(rendered)
 
 def render_toc_yml_in(
