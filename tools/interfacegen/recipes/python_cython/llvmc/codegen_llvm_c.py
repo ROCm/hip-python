@@ -44,6 +44,7 @@ from _include_graph import build_include_graph
 
 import logging
 interfacegen.enable_logging(logging.INFO)
+_log = logging.getLogger("interfacegen")
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
