@@ -313,7 +313,7 @@ def generate_hip_module_files():
                 )
 
     generator = CythonModuleGenerator(
-        "hip",
+        "hip.hip",
         ROCM_INC,
         "hip/hip_runtime.h",
         runtime_linking=RUNTIME_LINKING,
@@ -385,7 +385,7 @@ def generate_hiprtc_module_files():
                 node.modifiers_lazy_loader = " noexcept nogil"
 
     generator = CythonModuleGenerator(
-        "hiprtc",
+        "hip.hiprtc",
         ROCM_INC,
         "hip/hiprtc.h",
         runtime_linking=RUNTIME_LINKING,
@@ -413,7 +413,7 @@ def generate_hipblas_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipblas",
+        "hip.hipblas",
         ROCM_INC,
         "hipblas/hipblas.h",
         runtime_linking=RUNTIME_LINKING,
@@ -481,7 +481,7 @@ def generate_hiprand_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hiprand",
+        "hip.hiprand",
         ROCM_INC,
         "hiprand/hiprand.h",
         runtime_linking=RUNTIME_LINKING,
@@ -515,7 +515,7 @@ def generate_hipfft_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipfft",
+        "hip.hipfft",
         ROCM_INC,
         "hipfft/hipfft.h",
         runtime_linking=RUNTIME_LINKING,
@@ -549,7 +549,7 @@ def generate_hipsparse_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipsparse",
+        "hip.hipsparse",
         ROCM_INC,
         "hipsparse/hipsparse.h",
         runtime_linking=RUNTIME_LINKING,
