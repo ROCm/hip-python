@@ -2357,22 +2357,28 @@ class CythonBackend:
             cimport {util_pkg}.posixloader as loader
             cdef void* {lib_handle} = NULL
 
-            DLL = "{dll}"
+            DLL = b"{dll}"
 
-            cdef void __init():
+            cdef int __init() except 1 nogil:
                 global DLL
                 global {lib_handle}
-                if not isinstance(DLL,str):
-                    raise RuntimeError(f"'DLL' must be of type `str`")
+                cdef char* dll = NULL
                 if {lib_handle} == NULL:
-                    {lib_handle} = loader.open_library(DLL.encode("utf-8"))
+                    with gil:
+                        dll = DLL
+                    return loader.open_library(&{lib_handle},dll)
+                return 0
 
-            cdef void __init_symbol(void** result, const char* name):
+            cdef int __init_symbol(void** result, const char* name) except 1 nogil:
                 global {lib_handle}
+                cdef int init_result = 0
                 if {lib_handle} == NULL:
-                    __init()
+                    init_result = __init()
+                    if init_result > 0:
+                        return init_result
                 if result[0] == NULL:
-                    result[0] = loader.load_symbol({lib_handle}, name)
+                    return loader.load_symbol(result,{lib_handle}, name)
+                return 0
             """
             )
         )
