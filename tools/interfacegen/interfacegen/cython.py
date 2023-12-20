@@ -2200,14 +2200,14 @@ class CythonBackend:
                     setattr(node, "macro_type", self.macro_type)
                 if isinstance(node, RecordMixin):
                     setattr(node, "can_wrap_device_data", self.record_can_wrap_device_data)
-                elif isinstance(node, (FieldMixin)):
+                elif isinstance(node, FieldMixin):
                     setattr(node, "ptr_rank", self.ptr_rank)
                     setattr(
                         node,
                         "ptr_complicated_type_handler",
                         self.ptr_complicated_type_handler,
                     )
-                elif isinstance(node, (ParmMixin)):
+                elif isinstance(node, ParmMixin):
                     setattr(node, "ptr_rank", self.ptr_rank)
                     setattr(node, "ptr_intent", self.ptr_parm_intent)
                     setattr(
@@ -2215,7 +2215,7 @@ class CythonBackend:
                         "ptr_complicated_type_handler",
                         self.ptr_complicated_type_handler,
                     )
-                elif isinstance(node, (TypedefMixin)):
+                elif isinstance(node, TypedefMixin):
                     setattr(
                         node,
                         "ptr_complicated_type_handler",
@@ -2348,13 +2348,6 @@ class CythonBackend:
                 result.append(textwrap.indent(contrib, curr_indent))
         return result
 
-    def create_cython_lazy_loader_decls(self):
-        result = []
-        for node in self.walk_filtered_nodes():
-            if isinstance(node, FunctionMixin):
-                result.append(node.render_cython_lazy_loader_decl(self.renamer))
-        return result
-
     def create_cython_lazy_loader_defs(self, dll: str, util_pkg: str):
         result = []
         lib_handle = "_lib_handle"
@@ -2468,7 +2461,7 @@ class CythonModuleGenerator:
         include_dir: str,
         header: str,
         util_pkg: str,
-        runtime_linking=False,
+        runtime_linking: bool=False,
         dll: str = None,
         cflags=[],
         **opts,
