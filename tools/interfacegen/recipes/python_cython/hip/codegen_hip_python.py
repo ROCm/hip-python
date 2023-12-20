@@ -290,6 +290,11 @@ def generate_hip_module_files():
         # node modifications
         if isinstance(node,interfacegen.tree.Function):
             if not node.is_enum and node.name.startswith("hip"):
+                # hip routines without hipError_t return status
+                # we force them to not throw exceptions
+                node.error_return_value_lazy_loader = None
+                node.modifiers_lazy_loader = " noexcept nogil"
+                # we force them to have always return hipSuccess as first return value
                 node.prepend_python_return_value(
                     "hipError_t.hipSuccess",
                     "hipError_t",
@@ -314,6 +319,10 @@ def generate_hip_module_files():
         runtime_linking=RUNTIME_LINKING,
         util_pkg="hip._util",
         dll="libamdhip64.so",
+        modifiers_lazy_loader = " except? hipErrorInitializationError nogil",
+        error_return_value_lazy_loader = "hipErrorInitializationError",
+          # we hijack hipError_t constant hipErrorInitializationError for propagating exceptions
+          # more details: https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
         node_init = hip_node_init,
         node_filter=controls.hip.node_filter,
         ptr_parm_intent=controls.hip.ptr_parm_intent,
@@ -366,6 +375,15 @@ def generate_hiprtc_module_files():
             return "hip._util.types.ListOfBytes"
         return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
+    def hiprtc_node_init(node: Node):
+        # node modifications
+        if isinstance(node,interfacegen.tree.Function):
+            if not node.is_enum and node.name.startswith("hiprtc"):
+                # hip routines without hipError_t return status
+                # we force them to not throw exceptions
+                node.error_return_value_lazy_loader = None
+                node.modifiers_lazy_loader = " noexcept nogil"
+
     generator = CythonModuleGenerator(
         "hiprtc",
         ROCM_INC,
@@ -373,6 +391,11 @@ def generate_hiprtc_module_files():
         runtime_linking=RUNTIME_LINKING,
         util_pkg="hip._util",
         dll="libhiprtc.so",
+          # we hijack hiprtcResult constant HIPRTC_ERROR_INTERNAL_ERROR for propagating exceptions
+          # more details: https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
+        modifiers_lazy_loader = " except? HIPRTC_ERROR_INTERNAL_ERROR nogil",
+        error_return_value_lazy_loader = "HIPRTC_ERROR_INTERNAL_ERROR",
+        node_init = hiprtc_node_init,
         node_filter=controls.hiprtc.node_filter,
         ptr_parm_intent=controls.hiprtc.ptr_parm_intent,
         ptr_rank=controls.hiprtc.ptr_rank,
