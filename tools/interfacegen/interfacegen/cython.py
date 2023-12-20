@@ -1545,6 +1545,8 @@ class FunctionMixin(CythonMixin, Typed):
     def __init__(self):
         CythonMixin.__init__(self)
         Typed.__init__(self)
+        self.modifiers_lazy_loader = ""
+        self.error_return_value_lazy_loader = None
         self._python_return_values_to_prepend = []
 
     def prepend_python_return_value(self, value: str, typename: str, description: str):
@@ -1608,21 +1610,20 @@ class FunctionMixin(CythonMixin, Typed):
                     return True
         return False
 
-    def render_c_interface(self, modifiers_front=""):
+    def render_c_interface(self, modifiers_front="",modifiers=""):
         from . import tree
 
         assert isinstance(self, tree.Function)
         typename = self.cython_global_typename
         name = self.cython_name
         parm_decls = ",".join([parm.cython_repr for parm in self.parms])
-        modifiers = ""
         return f"""\
 {self._raw_comment_as_python_comment().rstrip()}
 {modifiers_front}{typename} {name}({parm_decls}){modifiers}
 """
 
     def render_cython_lazy_loader_decl(self):
-        return self.render_c_interface(modifiers_front="cdef ")
+        return self.render_c_interface(modifiers_front="cdef ",modifiers=self.modifiers_lazy_loader)
 
     @property
     def cython_funptr_name(self):
@@ -1642,9 +1643,9 @@ class FunctionMixin(CythonMixin, Typed):
 cdef void* {funptr_name} = NULL
 {self.render_cython_lazy_loader_decl().strip()}:
     global {funptr_name}
-    __init_symbol(&{funptr_name},"{self.name}")
-    with nogil:
-        {'' if self.is_void else 'return '}(<{typename} (*)({parm_types}) noexcept nogil> {funptr_name})({parm_names})
+    if __init_symbol(&{funptr_name},"{self.name}") > 0:
+        {'return ' + self.error_return_value_lazy_loader if self.error_return_value_lazy_loader else 'pass'}
+    {'' if self.is_void else 'return '}(<{typename} (*)({parm_types}) noexcept nogil> {funptr_name})({parm_names})
 """
 
     def _python_interface_retval_typename(self):
@@ -2119,6 +2120,8 @@ class CythonBackend:
         root,
         filename: str,
         util_pkg: str = "",
+        modifiers_lazy_loader: str = "",
+        error_return_value_lazy_loader: str = None,
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
@@ -2140,6 +2143,18 @@ class CythonBackend:
                 Callback that can be used to modify certain nodes arbitrarily.
                 Note that this callback is applied after all other callbacks (excluding ``node_filter``).
                 Defaults to no-operation.
+            modifiers_lazy_loader (str, optional):
+                Modifiers for the lazy loader function. Defaults to " except *", i.e.
+                there is always a check for exceptions performed.
+                This argument must be specified together with `error_return_value_lazy_loader`.
+                More details on Cython exception handling:
+                https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
+            error_return_value_lazy_loader (str, optional):
+                Designated error return value for the lazy loader interface.
+                Empty string and 'None' indicate no return value is used to return errors. Defaults to None.
+                This argument must be specified together with `modifiers_lazy_loader`.
+                More details on Cython exception handling:
+                https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
             macro_type (callable, optional):
                 Assigns a type to a macro node. Defaults to ``lambda x: "int"``.
             ptr_parm_intent (callable, optional):
@@ -2164,6 +2179,8 @@ class CythonBackend:
         self.root = root
         self.filename = filename
         self.util_pkg = util_pkg
+        self.modifiers_lazy_loader = modifiers_lazy_loader
+        self.error_return_value_lazy_loader = error_return_value_lazy_loader
         self.node_filter = node_filter
         self.macro_type = macro_type
         self.ptr_parm_intent = ptr_parm_intent
@@ -2221,6 +2238,9 @@ class CythonBackend:
                         "ptr_complicated_type_handler",
                         self.ptr_complicated_type_handler,
                     )
+                elif isinstance(node, FunctionMixin):
+                    node.modifiers_lazy_loader = self.modifiers_lazy_loader
+                    node.error_return_value_lazy_loader = self.error_return_value_lazy_loader
                 self.node_init(node)
 
     def walk_filtered_nodes(self):
