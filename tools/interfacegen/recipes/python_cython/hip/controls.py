@@ -381,6 +381,48 @@ class hipblas:
         """
         return raw_comment.replace("******************************************************************","")
 
+class hipsolver:
+
+    @staticmethod
+    def node_filter(node: Node):
+        if node.name in ("__int16_t", "__uint16_t"):
+            return True
+        if not isinstance(node, MacroDefinition):
+            if node.name[0:9] in ("hipsolver,HIPSOLVER"):
+                # if "Batched" in node.name:
+                #    return False
+                return True
+        elif node.name in (
+            "hipsolverVersionMajor",
+            "hipsolverVersionMinor",
+            "hipsolverVersionMinor",
+            "hipsolverVersionPatch",
+            # "hipblasVersionTweak", # double?
+        ):
+            return True
+        return False
+
+    @staticmethod
+    def ptr_parm_intent(node: Parm):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        """
+        if node.is_pointer_to_void(degree=2) and node.name == "handle":
+            return ParmIntent.OUT
+        return ParmIntent.IN
+
+    @staticmethod
+    def ptr_rank(node: Node):
+        """Actual rank of the variables underlying pointer indirections.
+
+        Most of the parameter names follow LAPACK convention.
+        """
+        return hipblas.ptr_rank(node)
+    
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        return raw_comment
+
 # RCCL
 
 class rccl:
