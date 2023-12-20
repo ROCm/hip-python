@@ -112,5 +112,6 @@ declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 declare -x ROCM_LLVM_PYTHON_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
 
 PYTHON codegen_llvm_c.py ${OUTPUT_DIR} --rocm-version ${ROCM_VERSION}
+cp -v -f -R ../_util ${OUTPUT_DIR}/rocm/llvm
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv
