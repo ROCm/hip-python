@@ -31,6 +31,7 @@ by Cython users of this project.
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import os
+import re
 from pathlib import Path
 import enum
 import textwrap
