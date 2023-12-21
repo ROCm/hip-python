@@ -1,0 +1,8 @@
+name: py310
+channels:
+  - conda-forge
+dependencies:
+  - python==3.10.12
+  - virtualenv
+  - twine
+  - git

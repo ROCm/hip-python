@@ -1,0 +1,8 @@
+name: py39
+channels:
+  - conda-forge
+dependencies:
+  - python==3.9.1
+  - virtualenv
+  - twine
+  - git
