@@ -967,7 +967,7 @@ if __name__ == "__main__":
     write_cuda_python_requirements_file(requirements_file,license_text,version)
 
     # hip-python docs
-    hip_python_docs_dir = os.path.join(OUTPUT_DIR,"hip-python","docs")
+    hip_python_docs_dir = os.path.join(OUTPUT_DIR,"docs")
     Path(hip_python_docs_dir).mkdir(parents=False, exist_ok=True)
     # files per api
     Path(os.path.join(hip_python_docs_dir, "python_api")).mkdir(parents=False, exist_ok=True)
