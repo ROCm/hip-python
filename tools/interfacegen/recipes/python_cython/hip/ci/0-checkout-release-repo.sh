@@ -54,8 +54,4 @@ git checkout ${NEW_BRANCH} || git branch ${NEW_BRANCH}
 git checkout ${NEW_BRANCH}
 
 # checkout all necessary tools
-git checkout main -- ci
-git checkout main -- docs
-git checkout main -- examples
-git checkout main -- build_hip_python_pkgs.sh
-git checkout main -- _render_update_version.py
+bash init.sh
