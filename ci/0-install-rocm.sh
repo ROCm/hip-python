@@ -23,9 +23,9 @@
 
 # env var ROCM_VER - The ROCm version to consider.
 
-if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-   echo "ERROR: script must not be sourced";
-   return
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+   echo "ERROR: script must be sourced";
+   exit 1
 fi
 
 set -e
@@ -34,7 +34,7 @@ set -o xtrace
 echo ${ROCM_VER+x}
 if [ -z ${ROCM_VER+x} ]; then
   echo "ERROR: environment variable 'ROCM_VER' not set."
-  exit 1
+  return
 fi
 
 # preinstall tzdata without install recommendations
