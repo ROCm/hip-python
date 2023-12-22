@@ -38,11 +38,16 @@ if [ -z ${ROCM_VER+x} ]; then
 fi
 
 # preinstall tzdata without install recommendations
+if [ ! -z ${SET_TIMEZONE+x} ]; then
+  TZ=Etc/UTC
+  sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+fi
 export DEBIAN_FRONTEND=noninteractive
-sudo apt-get install -y --no-install-recommends tzdata
+sudo apt install -y --no-install-recommends tzdata
 
 # install latest rocm installation tool
 sudo apt update
+sudo apt install wget
 wget -np -r -nH --cut-dirs=4 -A "amdgpu-install*deb" https://repo.radeon.com/amdgpu-install/latest/ubuntu/focal/
 sudo apt install -y --no-install-recommends ./amdgpu-install_*.deb
 rm ./amdgpu-install_*.deb
