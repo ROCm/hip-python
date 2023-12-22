@@ -1,0 +1,29 @@
+pipeline {
+    agent {
+        docker { image 'ubuntu:20.04' }
+    }
+    stages {
+        stage('clean-ws') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('get-code-generator') {
+            steps {
+                git branch: 'main', credentialsId: 'GITHUB_TOKEN_BLAD', url: 'https://github.com/AMD-AI/hip-python'
+            }
+        }
+        stage('get-release-repo') {
+            options {
+                timeout(time: 3, unit: "SECONDS")
+            }
+            steps {
+                dir('recipes/python_cython/hip') {
+                    sh 'ls .'
+                }
+                //  bash ci/0-checkout-release-repo.sh
+                //  '''
+            }
+        }
+    }
+}
