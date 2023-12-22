@@ -23,4 +23,5 @@
 
 # env var ROCM_VER - The ROCm version to consider.
 
+RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-hip-python-release-repo}
 bash ${RELEASE_REPO_DIR}/ci/0-install-rocm.sh

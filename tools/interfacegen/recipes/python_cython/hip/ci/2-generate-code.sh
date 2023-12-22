@@ -36,9 +36,8 @@ if [ -z ${ROCM_VER+x} ]; then
   return 1
 fi
 
-RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-hip-python-release-repo}
-
 # install rocm
+RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-hip-python-release-repo}
 bash ${RELEASE_REPO_DIR}/ci/0-install-rocm.sh
 
 # generate code
