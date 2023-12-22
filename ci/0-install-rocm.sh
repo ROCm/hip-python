@@ -38,7 +38,7 @@ if [ -z ${ROCM_VER+x} ]; then
 fi
 
 # preinstall tzdata without install recommendations
-declare -x DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive
 sudo apt-get install -y --no-install-recommends tzdata
 
 # install latest rocm installation tool
