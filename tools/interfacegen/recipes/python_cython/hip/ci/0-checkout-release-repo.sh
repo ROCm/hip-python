@@ -42,6 +42,7 @@ if [ -z ${BASE_BRANCH+x} ]; then
   return 1
 fi
 
+sudo apt update
 sudo apt install -y git
 
 NEW_BRANCH=develop/rocm-rel-${ROCM_VER}
