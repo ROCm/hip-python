@@ -98,6 +98,10 @@ typedef enum {
 // function pointers
 typedef int (*foo)(const int* event, void* data);
 typedef hsa_status_t (*hsa_amd_system_event_callback_t)(const hsa_status_t* event, void* data);
+
+typdef int test[16];
+typdef int test[16][5];
+typdef int* test[32];
 """
 
 functions = """\
