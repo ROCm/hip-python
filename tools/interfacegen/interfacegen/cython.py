@@ -153,9 +153,6 @@ def DEFAULT_DOCSTRING_CLEANER(docstring: str):
 def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
-def DEFAULT_CAN_WRAP_DEVICE_DATA(node):
-    return True
-
 # Utility types
 
 def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str=""):
@@ -709,7 +706,6 @@ class RecordMixin(CythonMixin):
 
     def __init__(self):
         CythonMixin.__init__(self)
-        self.can_wrap_device_data = DEFAULT_CAN_WRAP_DEVICE_DATA
 
     @property
     def c_record_kind(self) -> str:
@@ -787,7 +783,6 @@ class RecordMixin(CythonMixin):
             properties_name=python_interface_record_properties_name,
             all_properties_rendered=all_propertys_rendered,
             is_union=self.c_record_kind == "union",
-            can_wrap_device_data = self.can_wrap_device_data(self),
             util_types_prefix=self.util_types_prefix,
         )
 
@@ -1744,7 +1739,6 @@ class CythonBackend:
         renamer: callable = DEFAULT_RENAMER,
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
-        record_can_wrap_device_data: callable = DEFAULT_CAN_WRAP_DEVICE_DATA,
         node_init: callable = lambda node: None,
     ):
         """Constructor.
@@ -1779,10 +1773,6 @@ class CythonBackend:
                 A handler that infers a type for complicated pointer types.
                 Selects `CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(f"{util_pkg}.types.")`
                 if the default value `None` is not overwritten with a user callback.
-            record_can_wrap_device_data (callable, optional):
-                If a record (struct, union) can be wrap device data, i.e.
-                device data handled by a type that implements the CUDA Array Interface.
-                Defaults to `DEFAULT_CAN_WRAP_DEVICE_DATA`, which returns `True` for all.
         Note:
             Argument 'root' has no type hint in order to prevent a circular inclusion error.
             Instead an assertion is used in the body that checks if the type is `tree.Root`.
@@ -1806,7 +1796,6 @@ class CythonBackend:
         self.renamer = renamer
         self.raw_comment_cleaner = raw_comment_cleaner
         self.docstring_cleaner = docstring_cleaner
-        self.record_can_wrap_device_data = record_can_wrap_device_data
         self.node_init = node_init
 
         self.initialize_nodes()
@@ -1829,8 +1818,6 @@ class CythonBackend:
                 setattr(node,"docstring_cleaner",self.docstring_cleaner)
                 if isinstance(node, MacroDefinitionMixin):
                     setattr(node, "macro_type", self.macro_type)
-                if isinstance(node, RecordMixin):
-                    setattr(node, "can_wrap_device_data", self.record_can_wrap_device_data)
                 elif isinstance(node, FieldMixin):
                     setattr(node, "ptr_rank", self.ptr_rank)
                     setattr(

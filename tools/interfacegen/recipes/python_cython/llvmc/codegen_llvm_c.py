@@ -298,7 +298,6 @@ def create_llvm_c_default_generator(
         util_pkg=util_pkg,
         dll="librocmllvm.so",
         cflags=GENERATOR_ARGS,
-        record_can_wrap_device_data=lambda _: False,
         ptr_rank = ptr_rank,
         ptr_parm_intent = ptr_parm_intent,
         ptr_complicated_type_handler = ptr_complicated_type_handler,
