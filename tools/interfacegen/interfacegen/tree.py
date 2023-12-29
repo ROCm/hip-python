@@ -23,9 +23,7 @@
 __author__ = "Advanced Micro Devices, Inc."
 
 import collections
-import re
 import sys
-import warnings
 
 import logging
 _log = logging.getLogger("interfacegen")
@@ -48,8 +46,8 @@ __TypedefMixins = (cython.TypedefMixin,)
 __TypedefedFunctionPointerMixins = (cython.TypedefedFunctionPointerMixin,)
 __AnonymousFunctionPointerMixins = (cython.AnonymousFunctionPointerMixin,)
 __ParmMixins = (cython.ParmMixin,)
-__FunctionMixin = (cython.FunctionMixin,)
-
+__FunctionMixins = (cython.FunctionMixin,)
+__ConstantArrayMixins = (cython.ConstantArrayMixin,)
 
 class Node:
     def __init__(
@@ -462,7 +460,7 @@ class Typed:
 
     def is_pointer_to_void(self,degree: int = 1,
                            incomplete_array: bool=False,):
-        """If this is a record (struct, union) pointer of the given degree.
+        """If this is a void pointer of the given degree.
 
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
@@ -473,12 +471,12 @@ class Typed:
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.VOID,degree,
+        return self.typehandler.is_pointer_to_kind(TypeKind.VOID,degree,
                                         incomplete_array=incomplete_array)
 
     def is_pointer_to_char(self,degree: int = 1,
                            incomplete_array: bool=False,):
-        """If this is a record (struct, union) pointer of the given degree.
+        """If this is a char pointer of the given degree.
 
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
@@ -489,12 +487,12 @@ class Typed:
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.CHAR_S,degree,
+        return self.typehandler.is_pointer_to_kind(TypeKind.CHAR_S,degree,
                                         incomplete_array=incomplete_array)
 
     def is_pointer_to_basic_type(self,degree: int = 1,
                                  incomplete_array: bool=False,):
-        """If this is a record (struct, union) pointer of the given degree.
+        """If this is a pointer to a basic datatype of the given degree.
 
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
@@ -507,6 +505,28 @@ class Typed:
 
         return self.typehandler.is_pointer_to_category(TypeCategory.BASIC,degree,
                                             incomplete_array=incomplete_array)
+
+    def is_pointer_to_constantarray_of_basic_type(self,degree: int = 1,
+                                                  incomplete_array: bool=False,):
+        """If this is a pointer to a constant array of basic type of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
+        Note:
+            Does not check for any const modifiers.
+        """
+        TypeCategory = cparser.TypeHandler.TypeCategory
+
+        pointer_degree = self.get_pointer_degree(incomplete_array)
+        if self.typehandler.compare_pointer_degree(pointer_degree,degree):
+            (success, _) = self.typehandler.create_from_layer(pointer_degree,canonical=True).is_constantarray_of_kind_or_category(
+                type_category=TypeCategory.BASIC
+            )
+            return success
+        return False
+
 
     def is_pointer_to_record(self,degree: int = 1,
                                  incomplete_array: bool=False,):
@@ -642,7 +662,7 @@ class Typed:
         """If this is a constant array of a basic datatype.
 
         Args:
-            rank (int, optional): 
+            rank (int, optional):
                 Check for a specific rank by providing a positive value.
                 Check for all ranks greater than or equal to``abs(rank)`` by providing
                 a negative value Defaults to -1.
@@ -713,7 +733,11 @@ class Field(Node, Typed, *__FieldMixins):
 
 
 class Type(Node):
-    """Indicates that this node represents a type."""
+    """Indicates that this node represents a type.
+
+    Note:
+        'Type' is not the same as 'Typed'.
+    """
 
     def __init__(
         self,
@@ -884,16 +908,6 @@ class AnonymousEnum(Enum, Anonymous):
 
 
 class Typedef(Type, Typed, *__TypedefMixins):
-    def __init__(
-        self,
-        cursor: clang.cindex.Cursor,
-        parent: Node,
-        typeref=None,
-    ):
-        Type.__init__(self, cursor, parent)
-        Typed.__init__(self, self.cursor.type, typeref)
-        for mixin in globals()["__TypedefMixins"]:
-            mixin.__init__(self)
 
     @staticmethod
     def match_typedefed_enum(clang_type: clang.cindex.Type):
@@ -941,6 +955,54 @@ class Typedef(Type, Typed, *__TypedefMixins):
             clang.cindex.TypeKind.TYPEDEF,
             clang.cindex.TypeKind.POINTER
         ]
+
+    def __init__(
+        self,
+        cursor: clang.cindex.Cursor,
+        parent: Node,
+        typeref=None,
+    ):
+        Type.__init__(self, cursor, parent)
+        Typed.__init__(self, self.cursor.type, typeref)
+        for mixin in globals()["__TypedefMixins"]:
+            mixin.__init__(self)
+
+class ConstantArray(Type, Typed, *__ConstantArrayMixins):
+
+    @staticmethod
+    def match_typedefed_constantarray_of_basic_type(clang_type: clang.cindex.Type):
+        """If the type is a typedef of a basic type.
+        """
+        typehandler = cparser.TypeHandler.get(clang_type)
+        if next(typehandler.clang_type_layer_kinds()) == clang.cindex.TypeKind.TYPEDEF:
+            (success, _) = typehandler.is_constantarray_of_kind_or_category(
+                type_category=cparser.TypeHandler.TypeCategory.BASIC)
+            return success
+        return False
+
+    def __init__(
+        self,
+        cursor: clang.cindex.Cursor,
+        parent: Node,
+        typeref=None,
+    ):
+        Type.__init__(self, cursor, parent)
+        Typed.__init__(self, self.cursor.type, typeref)
+        self.element_type, self.shape = self._get_element_type_and_shape()
+        self.dim = len(self.shape)
+        for mixin in globals()["__ConstantArrayMixins"]:
+            mixin.__init__(self)
+
+    def _get_element_type_and_shape(self):
+        """Returns element type and the array shape. Uses canonical type.
+        """
+        array_shape = []
+        for layer_type in self.typehandler.walk_clang_type_layers(postorder=True, canonical=True):
+            if layer_type.kind == clang.cindex.TypeKind.CONSTANTARRAY:
+                array_shape.append(layer_type.get_array_size())
+            else:
+                element_type = layer_type
+        return (element_type, array_shape)
 
 class FunctionPointer(Type):  # TODO handle result type
     def __init__(
@@ -996,7 +1058,6 @@ class TypedefedFunctionPointer(FunctionPointer, *__TypedefedFunctionPointerMixin
         FunctionPointer.__init__(self, cursor, parent, result_type)
         for mixin in globals()["__TypedefedFunctionPointerMixins"]:
             mixin.__init__(self)
-
 
 class AnonymousFunctionPointer(
     FunctionPointer, Anonymous, *__AnonymousFunctionPointerMixins
@@ -1055,7 +1116,7 @@ class Parm(Node, Typed, *__ParmMixins):
             return Parm.unnamed_parm_template.format(parm_index=self.parm_index)
         return given_name
 
-class Function(Node, Typed, *__FunctionMixin):
+class Function(Node, Typed, *__FunctionMixins):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -1064,7 +1125,7 @@ class Function(Node, Typed, *__FunctionMixin):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.result_type, typeref)
-        for mixin in globals()["__FunctionMixin"]:
+        for mixin in globals()["__FunctionMixins"]:
             mixin.__init__(self)
 
     @property
@@ -1138,9 +1199,9 @@ def from_libclang_translation_unit(
                     f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
                 )
                 if warn_mode == control.Warnings.WARN:
-                    warnings.warn(msg)
+                    _log.warn(msg)
                 else:
-                    print(f"ERROR: {msg}'", file=sys.stderr)
+                    _log.error(f"ERROR: {msg}'")
                     sys.exit(2)
         elif cursor.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
             root.append(MacroDefinition(cursor, root))
@@ -1211,6 +1272,12 @@ def from_libclang_translation_unit(
             )
             descend_into_child_cursors_(node)  # post-order walk,
             root.append(node)
+        elif ConstantArray.match_typedefed_constantarray_of_basic_type(cursor.type):
+            _log.debug(f"handle_typedef_cursor_: typedefed constant array of basic type elements found: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
+            node = ConstantArray(
+                cursor, root,
+            )
+            root.append(node)
         elif Typedef.match_typedefed_basic_type(cursor.type):
             _log.debug(f"handle_typedef_cursor_: typedefed basic type: found {cursor.type.kind} with typedef name '{cursor.spelling}'")
             node = Typedef(cursor, root)
@@ -1228,7 +1295,7 @@ def from_libclang_translation_unit(
             if typeref_cursor is not None:
                 node.typeref = root.lookup_type_from_cursor(typeref_cursor)
             root.append(node)
-        else:
+        elif Typedef.match_typedefed_record(cursor.type): # typedef of struct or union
             type_decl_cursor = cursor.underlying_typedef_type.get_declaration() # FIX
             if not len(type_decl_cursor.spelling):  # found anonymous struct/union/enum child
                 _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found anonymous {type_decl_cursor.type.kind} cursor with typedef name '{cursor.spelling}'")
@@ -1248,6 +1315,8 @@ def from_libclang_translation_unit(
             else:  # child with same name
                 _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found {type_decl_cursor.type.kind} with name and typedef name '{type_decl_cursor.spelling}'")
                 pass # do not append typedef node
+        else:
+            _log.warn(f"<{Node.render_cursor_location(cursor)}> Did not handle {cursor.type.kind} with typedef name '{cursor.spelling}'")
 
     def handle_nested_record_or_enum_cursor_(cursor: clang.cindex.Cursor, parent: Node):
         """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
