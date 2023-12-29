@@ -1569,7 +1569,7 @@ cdef void* {funptr_name} = NULL
             )
             parm_python_types[parm.name] = f"{handler_name}/object"
 
-        def emit_data_handle_for_ptr_to_void_basic_enum_type_(parm: tree.Parm, cprefix: str):
+        def emit_data_handle_for_ptr_to_void_basic_enum_(parm: tree.Parm, cprefix: str):
             parm_typename = (
                 parm.cython_global_typename
                 if parm.has_typeref
@@ -1578,9 +1578,9 @@ cdef void* {funptr_name} = NULL
             emit_datahandle_(
                 parm_typename,
                 parm,
-                cprefix=cprefix
-                if not parm.is_innermost_canonical_type_layer_of_basic_type_or_void
-                else "",
+                cprefix=""
+                if parm.is_innermost_canonical_type_layer_of_basic_type_or_void
+                else cprefix,
             )
 
         def handle_in_inout_ptr_(parm: tree.Parm):
@@ -1629,7 +1629,7 @@ cdef void* {funptr_name} = NULL
                 or parm.is_pointer_to_basic_type(degree=-1, incomplete_array=True)
                 or parm.is_pointer_to_enum(degree=-1, incomplete_array=True)
             ):
-                emit_data_handle_for_ptr_to_void_basic_enum_type_(parm, cprefix)
+                emit_data_handle_for_ptr_to_void_basic_enum_(parm, cprefix)
             else:
                 assert False, "should not be entered"
 
