@@ -536,7 +536,7 @@ class TypeHandler:
     def is_innermost_canonical_type_layer_of_basic_type_or_void(self):
         """If the innermost type layer is of basic type or void type.
         """
-        return list(self.categorized_type_layer_kinds())[-1] in (
+        return next(self.categorized_type_layer_kinds(postorder=True)) in (
             TypeHandler.TypeCategory.BASIC,
             TypeHandler.TypeCategory.VOID,
         )
