@@ -39,5 +39,6 @@ fi
 sudo apt install -y python3 python3-venv
 
 # generate code
+RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-hip-python-release-repo}
 export PYTHONPATH=$(git rev-parse --show-toplevel)
 bash ./generate_hip_python_pkgs.sh ${RELEASE_REPO_DIR} --rocm-version ${ROCM_VER}
