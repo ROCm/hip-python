@@ -2,5 +2,12 @@
 docs/* @saadrahim @LisaDelaney
 *.md  @saadrahim @LisaDelaney
 *.rst  @saadrahim @LisaDelaney
-# Header directory
-library/include/*  @saadrahim @LisaDelaney
+# Code
+*.py @domcharrier
+*.pyx @domcharrier
+*.pxd @domcharrier
+*.sh @domcharrier
+*.cfg @domcharrier
+*.toml @domcharrier
+Jenkinsfile @domcharrier
+
