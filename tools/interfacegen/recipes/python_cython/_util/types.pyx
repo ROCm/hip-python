@@ -382,7 +382,7 @@ cdef class CStr(Pointer):
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
         """
-        cdef CStr wrapper = CStr.__new__(CStr)
+        cdef CStr wrapper
 
         if isinstance(pyobj,CStr):
             return pyobj
