@@ -1,3 +1,24 @@
+# MIT License
+#
+# Copyright (c) 2023 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 # Note: wrapper_class_decl_template must declare all ``@staticmethod`` ``cdef`` functions
 # Note: Syntax ``bint owner=*`` is necessary to specify default value in implementation part
@@ -27,29 +48,24 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
     {{endif}}
 """
 
-# FIXME hide the pointer and metadata members better to prevent collisions with C type attributes
-
 wrapper_class_impl_base_template = """
 {{default cptr_type = cname + "*"}}
 {{default is_funptr = False}}
-{{default is_union = False}}
 {{default has_new = True}}
 {{default has_from_pyobj = True}}
-{{default can_wrap_device_data = True}}
-{{default defaults = dict()}}
 {{default properties_name = None}}
-{{default all_properties_rendered = False}}
 cdef class {{name}}({{util_types_prefix}}Pointer):
     \"""Python wrapper for cdef class {{cname}}.
 
     Python wrapper for cdef class {{cname}}.
 
-    If this type is initialized via its `__init__` method, it allocates a member of the underlying C type and
-    destroys it again if the wrapper type is deallocted.
+    If this type is initialized via its `__init__` method, it allocates a
+    member of the underlying C type and destroys it again if the wrapper
+    type is deallocated.
 
-    This type also serves as adapter when appearing as argument type in a function signature.
-    In this case, the type can further be initialized from the following Python objects
-    that you can pass as argument instead:
+    This type also serves as adapter when appearing as argument type in a
+    function signature. In this case, the type can further be initialized
+    from a number of Python objects:
 
     * `None`:
 
@@ -65,9 +81,6 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
       Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
       No ownership is transferred.
 
-    {{if is_funptr}}
-    {{else}}
-    {{if can_wrap_device_data}}
     * `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol:
 
       Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
@@ -85,9 +98,6 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
       Takes the pointer address ``pyobj._ptr`` and writes it to ``self._ptr``.
       No ownership is transferred.
 
-    {{endif}}
-    {{endif}}
-
     Type checks are performed in the above order.
 
     C Attributes:
@@ -100,7 +110,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         _py_buffer_acquired (C type ``bint``, protected):
             Stores a pointer to the data of the original Python object.
     \"""
-    # members declared in pxd file
+    # C members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
@@ -144,44 +154,14 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
             This routine does not perform a copy but returns the original ``pyobj``
             if ``pyobj`` is an instance of {{name}}!
         \"""
-        cdef {{name}} wrapper = {{name}}.__new__({{name}})
-        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+        cdef {{name}} wrapper
 
-        if pyobj is None:
-            wrapper._ptr = NULL
-        elif isinstance(pyobj,{{name}}):
+        if isinstance(pyobj,{{name}}):
             return pyobj
-        elif isinstance(pyobj,int):
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
-        elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
-        {{if is_funptr}}
-        elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(ctypes.cast(pyobj, ctypes.c_void_p).value)
-        {{else}}
-        {{if can_wrap_device_data}}
-        elif cuda_array_interface != None:
-            if not "data" in cuda_array_interface:
-                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
-            ptr_as_int = cuda_array_interface["data"][0]
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
-        {{endif}}
-        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
-            err = cpython.buffer.PyObject_GetBuffer(
-                pyobj,
-                &wrapper._py_buffer,
-                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
-            )
-            if err == -1:
-                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
-            wrapper._py_buffer_acquired = True
-            wrapper._ptr = wrapper._py_buffer.buf
-        {{endif}}
-        elif isinstance(pyobj,{{util_types_prefix}}Pointer):
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(int(pyobj))
         else:
-            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
-        return wrapper
+            wrapper = {{name}}.__new__({{name}})
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
     {{endif}}
     def __dealloc__(self):
         # Release the buffer handle
@@ -221,6 +201,36 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         string.memcpy(wrapper._ptr, &other, sizeof({{cname}}))
         return wrapper
 
+    def c_sizeof(self):
+        \"""Returns the size of the underlying C type in bytes.
+        Note:
+            Implemented as function to not collide with
+            autogenerated property names.
+        \"""
+        return sizeof({{cname}})
+    {{endif}}
+
+    def __int__(self):
+        \"""Returns the data's address as long integer.
+        \"""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+
+    def __repr__(self):
+        return f"<{{name}} object, self.ptr={int(self)}>"
+
+    def as_c_void_p(self):
+        \"""Returns the data's address as `ctypes.c_void_p`
+        Note:
+            Implemented as function to not collide with
+            autogenerated property names.
+        \"""
+        return ctypes.c_void_p(int(self))
+"""
+
+wrapper_class_record_init_template = """\
+    {{default defaults = dict()}}
+    {{default all_properties_rendered = False}}
+    {{default is_union = False}}
     {{py: all_properties_and_is_no_union = all_properties_rendered and not is_union}}
     {{if all_properties_and_is_no_union}}
     def __init__(self,*args,**kwargs):
@@ -267,121 +277,123 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
             elif k not in attribs:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
-    {{endif}}
+"""
 
-    def __int__(self):
-        \"""Returns the data's address as long integer.
+wrapper_class_record_property_template = """\
+    {{py: cptr_type = record_cname + "*"}}
+    {{py: element_ptr = "(<"+cptr_type+">self._ptr)"}}
+    {{if is_basic_type}}
+    def get_{{attr}}(self, i):
+        \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
         \"""
-        return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __repr__(self):
-        return f"<{{name}} object, self.ptr={int(self)}>"
-    def as_c_void_p(self):
-        \"""Returns the data's address as `ctypes.c_void_p`
+        return {{element_ptr}}[i].{{attr}}
+    def set_{{attr}}(self, i, {{typename}} value):
+        \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+        \"""
+        {{element_ptr}}[i].{{attr}} = value
+    @property
+    def {{attr}}(self):
+        \"""{{brief_comment}}\"""
+        return self.get_{{attr}}(0)
+    @{{attr}}.setter
+    def {{attr}}(self, {{typename}} value):
+        self.set_{{attr}}(0,value)
+    {{elif is_pointer_to_basic_type_or_void}}
+    def get_{{attr}}(self, i):
+        \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+        \"""
+        return {{handler}}.from_ptr({{element_ptr}}[i].{{attr}})
+    def set_{{attr}}(self, i, object value):
+        \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+
         Note:
-            Implemented as function to not collide with
-            autogenerated property names.
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
         \"""
-        return ctypes.c_void_p(int(self))
-    {{if has_new}}
-    def c_sizeof(self):
-        \"""Returns the size of the underlying C type in bytes.
+        {{element_ptr}}[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
+    @property
+    def {{attr}}(self):
+        \"""{{brief_comment}}
         Note:
-            Implemented as function to not collide with
-            autogenerated property names.
+            Setting this {{attr}} can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
         \"""
-        return sizeof({{cname}})
+        return self.get_{{attr}}(0)
+    @{{attr}}.setter
+    def {{attr}}(self, object value):
+        self.set_{{attr}}(0,value)
+    {{elif is_basic_type_constantarray}}
+    def get_{{attr}}(self, i):
+        \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
+        \"""
+        return {{element_ptr}}[i].{{attr}}
+    # TODO add setters
+    #def set_{{attr}}(self, i, {{typename}} value):
+    #    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    #    \"""
+    #    {{element_ptr}}[i].{{attr}} = value
+    @property
+    def {{attr}}(self):
+        \"""{{brief_comment}}\"""
+        return self.get_{{attr}}(0)
+    # TODO add setters
+    #@{{attr}}.setter
+    #def {{attr}}(self, {{typename}} value):
+    #    self.set_{{attr}}(0,value)
+    {{elif is_enum}}
+    def get_{{attr}}(self, i):
+        \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
+        \"""
+        return {{typename}}({{element_ptr}}[i].{{attr}})
+    def set_{{attr}}(self, i, value):
+        \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+        \"""
+        if not isinstance(value, {{typename}}):
+            raise TypeError("'value' must be of type '{{typename}}'")
+        {{element_ptr}}[i].{{attr}} = value.value
+    @property
+    def {{attr}}(self):
+        \"""{{brief_comment}}\"""
+        return self.get_{{attr}}(0)
+    @{{attr}}.setter
+    def {{attr}}(self, value):
+        self.set_{{attr}}(0,value)
+    {{elif is_record}}
+    def get_{{attr}}(self, i):
+        \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
+        \"""
+        return {{typename}}.from_ptr(&{{element_ptr}}[i].{{attr}})
+    @property
+    def {{attr}}(self):
+        \"""{{brief_comment}}\"""
+        return self.get_{{attr}}(0)
     {{endif}}
 """
 
-# NOTE: This template is only used by RecordMixin not by FunctionPointerMixin
-# Hence, cptr_type is not specified as {{default cptr_type = ...}}.
-wrapper_class_property_template = """\
-{{py: cptr_type = record_cname + "*"}}
-{{py: element_ptr = "(<"+cptr_type+">self._ptr)"}}
-{{if is_basic_type}}
-def get_{{attr}}(self, i):
-    \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-    \"""
-    return {{element_ptr}}[i].{{attr}}
-def set_{{attr}}(self, i, {{typename}} value):
-    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-    \"""
-    {{element_ptr}}[i].{{attr}} = value
-@property
-def {{attr}}(self):
-    \"""{{brief_comment}}\"""
-    return self.get_{{attr}}(0)
-@{{attr}}.setter
-def {{attr}}(self, {{typename}} value):
-    self.set_{{attr}}(0,value)
-{{elif is_pointer_to_basic_type_or_void}}
-def get_{{attr}}(self, i):
-    \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-    \"""
-    return {{handler}}.from_ptr({{element_ptr}}[i].{{attr}})
-def set_{{attr}}(self, i, object value):
-    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-
-    Note:
-        This can be dangerous if the pointer is from a python object
-        that is later on garbage collected.
-    \"""
-    {{element_ptr}}[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
-@property
-def {{attr}}(self):
-    \"""{{brief_comment}}
-    Note:
-        Setting this {{attr}} can be dangerous if the underlying pointer is from a python object that
-        is later on garbage collected.
-    \"""
-    return self.get_{{attr}}(0)
-@{{attr}}.setter
-def {{attr}}(self, object value):
-    self.set_{{attr}}(0,value)
-{{elif is_basic_type_constantarray}}
-def get_{{attr}}(self, i):
-    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
-    \"""
-    return {{element_ptr}}[i].{{attr}}
-# TODO add setters
-#def set_{{attr}}(self, i, {{typename}} value):
-#    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-#    \"""
-#    {{element_ptr}}[i].{{attr}} = value
-@property
-def {{attr}}(self):
-    \"""{{brief_comment}}\"""
-    return self.get_{{attr}}(0)
-# TODO add setters
-#@{{attr}}.setter
-#def {{attr}}(self, {{typename}} value):
-#    self.set_{{attr}}(0,value)
-{{elif is_enum}}
-def get_{{attr}}(self, i):
-    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
-    \"""
-    return {{typename}}({{element_ptr}}[i].{{attr}})
-def set_{{attr}}(self, i, value):
-    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-    \"""
-    if not isinstance(value, {{typename}}):
-        raise TypeError("'value' must be of type '{{typename}}'")
-    {{element_ptr}}[i].{{attr}} = value.value
-@property
-def {{attr}}(self):
-    \"""{{brief_comment}}\"""
-    return self.get_{{attr}}(0)
-@{{attr}}.setter
-def {{attr}}(self, value):
-    self.set_{{attr}}(0,value)
-{{elif is_record}}
-def get_{{attr}}(self, i):
-    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
-    \"""
-    return {{typename}}.from_ptr(&{{element_ptr}}[i].{{attr}})
-@property
-def {{attr}}(self):
-    \"""{{brief_comment}}\"""
-    return self.get_{{attr}}(0)
-{{endif}}
-"""
+wrapper_class_constantarray_get_element_template = """\
+    {{# var cname}}
+    {{default is_basic_type = True}}
+    {{default dim = 1}}
+    {{default shape = (1,)}}
+    {{py: cptr_type = cname + "*"}}
+    {{py: is_dim_1 = (int(dim) == 1)}}
+    {{py: cptr_type = cname + "*"}}
+    {{py: element_ptr = "(<"+cptr_type+">self._ptr)"}}
+    {{if is_basic_type}}
+    def __getitem__(self,subscript):
+        {{if is_dim_1}}
+        cdef size_t index
+        if isinstance(subscript,int):
+            if subscript < 0 or subscript >= shape[0]:
+                raise IndexError(f"Index must be in range 0 .. {shape[0]}")
+            index = cpython.long.PyLong_AsSize_t(subscript)
+            return {{element_ptr}}[0][index]
+        elif isinstance(subscript,slice):
+            raise NotImplementedError(f"subscript of type 'slice' is not supported yet")
+        else:
+            raise IndexError(f"only a single index must be specified")
+        {{else}}
+        raise NotImplementedError(f"accessing values of multi-dimensional arrays not supported yet")
+        {{endif}}
+    {{endif}}
+    """

@@ -775,7 +775,10 @@ class RecordMixin(CythonMixin):
         assert isinstance(self, tree.Record)
         global python_interface_record_properties_name
         name = self.cython_global_name
-        template = Cython.Tempita.Template(cythontemplates.wrapper_class_impl_base_template)
+        template = Cython.Tempita.Template(
+            cythontemplates.wrapper_class_impl_base_template.rstrip("\n") + "\n\n"
+            + cythontemplates.wrapper_class_record_init_template
+        )
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
