@@ -1,8 +1,7 @@
 *.c
 *.so
 __pycache__
-hip-python/docs/_build
 _venv
 _build
-hip-python/build
-hip-python-as-cuda/build
+hip-python
+hip-python-as-cuda
