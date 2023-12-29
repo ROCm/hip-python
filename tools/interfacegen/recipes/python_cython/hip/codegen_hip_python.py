@@ -876,6 +876,9 @@ if __name__ == "__main__":
         0, 0, 0)
     HIP_VERSION_GITHASH = ""
 
+    HIPRTC_GENERATOR = None
+    HIP_GENERATOR = None
+
     parse_options()
 
     AVAILABLE_GENERATORS = dict(
