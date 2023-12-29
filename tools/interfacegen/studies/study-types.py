@@ -120,11 +120,13 @@ struct mystruct {
   void (*c)(void *);
   void (*d) (void (*d1)(int,int));
 };
+
+void foo(float* const d1[]);
 """
 
-file_content = functions
 file_content = types
 file_content = typedefs
+file_content = functions
 
 parser = CParser("input.h",unsaved_files=[("input.h",file_content)])
 parser.parse()
