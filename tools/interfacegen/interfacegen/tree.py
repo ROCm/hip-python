@@ -915,7 +915,8 @@ class Typedef(Type, Typed, *__TypedefMixins):
         """
         return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == [
             clang.cindex.TypeKind.TYPEDEF,
-            clang.cindex.TypeKind.ENUM
+            clang.cindex.TypeKind.ELABORATED,
+            clang.cindex.TypeKind.ENUM,
         ]
 
     @staticmethod
@@ -926,6 +927,15 @@ class Typedef(Type, Typed, *__TypedefMixins):
             clang.cindex.TypeKind.TYPEDEF,
             clang.cindex.TypeKind.ELABORATED,
             clang.cindex.TypeKind.RECORD,
+        ]
+
+    @staticmethod
+    def match_typedefed_record_or_enum(clang_type: clang.cindex.Type):
+        """If the type is a typedef of an record (struct or union).
+        """
+        return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds())[:2] == [
+            clang.cindex.TypeKind.TYPEDEF,
+            clang.cindex.TypeKind.ELABORATED,
         ]
 
     @staticmethod
@@ -1295,7 +1305,7 @@ def from_libclang_translation_unit(
             if typeref_cursor is not None:
                 node.typeref = root.lookup_type_from_cursor(typeref_cursor)
             root.append(node)
-        elif Typedef.match_typedefed_record(cursor.type): # typedef of struct or union
+        elif Typedef.match_typedefed_record_or_enum(cursor.type): # typedef of struct or union
             type_decl_cursor = cursor.underlying_typedef_type.get_declaration() # FIX
             if not len(type_decl_cursor.spelling):  # found anonymous struct/union/enum child
                 _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found anonymous {type_decl_cursor.type.kind} cursor with typedef name '{cursor.spelling}'")
