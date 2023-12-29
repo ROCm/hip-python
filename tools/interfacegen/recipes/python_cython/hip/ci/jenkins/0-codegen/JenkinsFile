@@ -12,13 +12,11 @@ pipeline {
                 '5.5.1',
                 '5.5.0',
                 '5.4.3',
-            ]
-            description: 'The ROCm version to target with the code generator.' 
-            name: 'ROCM_VER',
+            ],
+            description: 'The ROCm version to target with the code generator.',
+            name: 'ROCM_VER'
         )
-        parameters {
-            string defaultValue: 'develop/rocm-rel-5.7.1', description: 'The base branch from which to derive the new development branch.', name: 'BASE_BRANCH'
-        }
+        string defaultValue: 'develop/rocm-rel-5.7.1', description: 'The base branch from which to derive the new development branch.', name: 'BASE_BRANCH'
     }
     stages {
         stage('clean-ws') {
@@ -28,16 +26,28 @@ pipeline {
         }
         stage('get-code-generator') {
             steps {
-                git branch: 'main', credentialsId: 'GITHUB_TOKEN_BLAD', url: 'https://github.com/AMD-AI/hip-python'
+                git branch: 'main', credentialsId: '697c0516-4da1-4d20-85d8-9999a2ae99f4', url: 'https://github.com/AMD-AI/hip-python'
             }
         }
         stage('get-release-repo') {
-            options {
-                timeout(time: 3, unit: "SECONDS")
+            steps {
+                sh 'apt-get update && apt-get -y install sudo'
+                dir('recipes/python_cython/hip') {
+                    sh 'bash ci/0-checkout-release-repo.sh'
+                }
             }
+        }
+        stage('install-rocm') {
             steps {
                 dir('recipes/python_cython/hip') {
-                    bash ci/0-checkout-release-repo.sh
+                     sh 'SET_TIMEZONE=1 bash ci/1-install-rocm.sh'
+                }
+            }
+        }
+        stage('generate-code') {
+            steps {
+                dir('recipes/python_cython/hip') {
+                     sh 'bash ci/2-generate-code.sh'
                 }
             }
         }
