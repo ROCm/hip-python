@@ -32,7 +32,7 @@ HELP_MSG="
 Usage: ./build_hip_python_pkgs.sh [OPTIONS]
 
 Options:   
-  -c,--checkout        The `release/rocm-rel-X.Y.Z` branch to checkout out the package source files from. If this option is not used,
+  -c,--checkout        The 'release/rocm-rel-X.Y.Z' branch to checkout out the package source files from. If this option is not used,
                        the user is assumed to checkout the files by himself beforehand.
   --rocm-path          Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
   --libs               HIP Python libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
@@ -146,7 +146,7 @@ declare -x HIP_PLATFORM=${HIP_PLATFORM:-amd}
 declare -x HIP_PYTHON_LIBS=${HIP_PYTHON_LIBS:-*}
 declare -x HIP_PYTHON_CUDA_LIBs=${HIP_PYTHON_CUDA_LIBs:-*}
 
-# note: [ -z {var+x} ] evaluates to true if `var` is unset!
+# note: [ -z {var+x} ] evaluates to true if 'var' is unset!
 
 [ -z ${PRE_CLEAN+x} ] || rm -rf _venv
 
