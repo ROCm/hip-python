@@ -31,6 +31,7 @@ fi
 set -e
 set -o xtrace
 
+source ~/miniconda3/etc/profile.d/conda.sh
 for pyver in "38" "39" "310" "311";
 do
   conda activate py${pyver}
