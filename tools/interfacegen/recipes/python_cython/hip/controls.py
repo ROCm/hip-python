@@ -531,6 +531,8 @@ class hiprand:
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
+        if node.is_pointer_to_constantarray_of_basic_type(degree=2):
+            return ParmIntent.OUT
         if node.is_pointer_to_record(degree=2):
             return ParmIntent.OUT
         if node.is_pointer_to_basic_type(degree=1):
@@ -542,8 +544,6 @@ class hiprand:
     @staticmethod
     def ptr_rank(node: Node):
         """Actual rank of the variables underlying pointer indirections.
-
-        Most of the parameter names follow LAPACK convention.
         """
         if isinstance(node, Parm):
             if node.is_pointer_to_record(degree=1):
