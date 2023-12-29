@@ -32,17 +32,21 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
   * Prebuilt packages distributed via PyPI (or Test PyPI) are only provided for Linux systems that agree with the `manylinux_2_17_x86_64` tag.
 * Requires that a compatible ROCm&trade; HIP SDK is installed on your system.
   * Source code is provided only for particular ROCm versions.
-    * See the git branches tagged with `release/rocm-rel-X.Y[.Z]`
+    * See the `git` branches tagged with `release/rocm-rel-X.Y[.Z]`
   * Prebuilt packages are built only for particular ROCm versions. 
 
 > **NOTE**: You may find that packages for one ROCm&trade; release might be compatible with the ROCm&trade; HIP SDK of another release as the HIP Python functions load HIP C functions in a lazy manner.
 
 ### Build requirements
 
-* All Python requirements are taking care of by installation scripts. 
-If you decide not to use these scripts, take a look into the `requirements.txt` file 
-in the top-level folder of the this repository and those 
-in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
+* A Linux operating system
+* A C compiler
+* `bash`, `python3` + `venv`
+* The ROCm&trade; HIP SDK
+* All other Python build requirements are taken care of by installation scripts.
+  If you decide not to use these scripts, take a look into the `requirements.txt` file 
+  in the top-level folder of the this repository and those 
+  in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
 
 ## Install Prebuilt Package(s)
 
@@ -60,9 +64,9 @@ First identify the first three digits of the version number of your ROCm&trade; 
 Then install the HIP Python package(s) as follows:
 
 ```shell
-python3 -m pip install -i https://test.pypi.org/simple hip-python>=$rocm_version
+python3 -m pip install -i https://test.pypi.org/simple hip-python~=$rocm_version
 # if you want to install the CUDA Python interoperability package too, run:
-python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda>=$rocm_version
+python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda~=$rocm_version
 ```
 
 <!--
@@ -78,7 +82,7 @@ python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda>=$rocm
 
 ### Via Wheel in Local Filesystem
 
-If you have HIP Python package wheels somewhere in your filesystem, you can also run:
+If you have HIP Python package wheels n your filesystem, you can run:
 
 ```shell
 python3 -m pip install <path/to/hip_python>.whl
@@ -91,7 +95,8 @@ python3 -m pip install <path/to/hip_python_as_cuda>.whl
 
 ## Build From Source
 
-> **NOTE**: Main is typically based on the latest `release/rocm-rel-X.Y[.Z]` release branch. However, it is recommended to use the release branches directly when building from source.
+> **NOTE**: The `main` branch is used for tracking updates to the docs, examples and CI scripts. 
+> The source code can be found on the release branches `relaese/rocm-rel-X.Y[.Z]`.
 
 1. Install ROCM
 1. Install `pip`, virtual environment and development headers for Python 3:
@@ -100,10 +105,18 @@ python3 -m pip install <path/to/hip_python_as_cuda>.whl
    sudo apt install python3-pip python3-venv python3-dev
    ```
 1. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular ROCm&trade; installation:
-1. Then run:
+1. Initialize the branch:
    ```bash
-   ./build_hip_python_pkgs.sh --post-clean
+   ./init.sh
    ```
+1. Finally run:
+   ```bash
+   ./build_hip_python_pkgs.sh --hip --cuda --post-clean
+   ```
+
+The build process will produce Python binary wheels in the subdirectories
+`hip-python/dist/` and `hip-python-as-cuda/dist`, which can be installed
+as discussed in the previous section.
 
 > **NOTE**: See the HIP Python developer guide for more details:
 > https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html
@@ -208,8 +221,8 @@ of the Cython modules in their code and use `c` as compilation language.
 
 On systems with ROCm&trade; HIP SDK 5.5.0 or 5.5.1, the examples
 
-* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
-* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_no_args.py
+* hip-python/examples/0\_Basic\_Usage/hiprtc\_launch\_kernel\_args.py
+* hip-python/examples/0\_Basic\_Usage/hiprtc\_launch\_kernel\_no\_args.py
 
 abort with errors.
 
@@ -220,8 +233,8 @@ the showcased functionality is needed.
 
 On certain Ubuntu 20 systems, we encountered issues when running the examples:
 
-* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
-* hip-python/examples/0_Basic_Usage/rccl_comminitall_bcast.py
+* hip-python/examples/0\_Basic\_Usage/hiprtc\_launch\_kernel\_args.py
+* hip-python/examples/0\_Basic\_Usage/rccl\_comminitall\_bcast.py
 
 We could not identify the cause yet.
 
