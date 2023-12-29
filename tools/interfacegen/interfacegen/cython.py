@@ -166,7 +166,9 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str=""):
         from . import tree
 
         assert isinstance(node,tree.Typed)
-        if node.actual_rank == 1:
+        if node.is_pointer_to_constantarray_of_basic_type(degree=-1):
+            return f"{util_types_prefix}Pointer"
+        elif node.actual_rank == 1:
             innermost_type_kind = next(node.clang_type_layer_kinds(postorder=-1,canonical=True))
             if innermost_type_kind == clang.cindex.TypeKind.INT:
                 return f"{util_types_prefix}ListOfInt"
@@ -639,7 +641,6 @@ class Typed:
         assert self.is_ptr
         return self.ptr_intent(self) == control.ParmIntent.IN
 
-
     @property
     def is_autoconverted_by_cython(self):
         from . import tree
@@ -648,7 +649,7 @@ class Typed:
 
         return (
             self.is_basic_type
-            or self.is_basic_type_constarray
+            or self.is_basic_type_constantarray(rank=1)
             or self.is_pointer_to_char(incomplete_array=True)
         )
 
@@ -674,7 +675,7 @@ class FieldMixin(CythonMixin, Typed):
         from . import tree
         assert isinstance(self, tree.Field)
         attr = self.renamer(self.name)
-        template = Cython.Tempita.Template(cythontemplates.wrapper_class_property_template)
+        template = Cython.Tempita.Template(cythontemplates.wrapper_class_record_property_template)
 
         return template.substitute(
             record_cname=record_cname,
@@ -688,7 +689,7 @@ class FieldMixin(CythonMixin, Typed):
                 or self.is_pointer_to_char()  # TODO user should be consulted if char pointer is a string
             ),
             brief_comment = self.doxygen_conv.transform_text_block(self.brief_comment if self.brief_comment != None else "(undocumented)"),
-            is_basic_type_constantarray=self.is_basic_type_constarray,
+            is_basic_type_constantarray=self.is_basic_type_constantarray(rank=1),
             is_record=self.is_record,
             is_enum=self.is_enum,
             is_enum_constantarray=self.is_enum_constantarray,
@@ -1073,6 +1074,62 @@ class TypedefMixin(CythonMixin, Typed):
             return f"{name} = {aliased}"
         return None
 
+class ConstantArrayMixin(CythonMixin):
+
+    def __init__(self):
+        CythonMixin.__init__(self)
+
+    @property
+    def cython_element_global_typename(self):
+        from . import tree
+        assert isinstance(self,tree.ConstantArray)
+        if self.typehandler.match_basic_datatype(self.element_type.kind):
+            return self.element_type.get_canonical().spelling
+        else:
+            raise NotImplementedError("Record, pointer, and enum members not supported yet.")
+
+    def render_c_interface(self) -> str:
+        """Render Cython binding for this constant array declaration.
+        """
+        name = self._cython_and_c_name(self.global_name(self.sep))
+        shape = f"[{']['.join([str(i) for i in self.shape])}]"
+        return f"ctypedef {self.cython_element_global_typename}{shape} {name}"
+
+    def cname(self,cprefix: str):
+        """Wrapped Cython C binding type.
+        """
+        return cprefix + self.renamer(self.global_name(self.sep))
+
+    def render_python_interface_decl(self, cprefix: str) -> str:
+        from . import tree
+
+        name = self.cython_global_name
+        template = Cython.Tempita.Template(cythontemplates.wrapper_class_decl_template)
+        return template.substitute(
+            name=name,
+            cname=self.cname(cprefix),
+            has_new=True,
+            util_types_prefix=self.util_types_prefix,
+        )
+
+    def render_python_interface_impl(self, cprefix: str) -> str:
+        global indent
+        name = self.cython_global_name
+        template = Cython.Tempita.Template(
+            cythontemplates.wrapper_class_impl_base_template.rstrip("\n")
+            + "\n\n"
+            + cythontemplates.wrapper_class_constantarray_get_element_template
+        )
+        self.all.append(self.cython_global_name)
+        return template.substitute(
+            name=name,
+            cname=self.cname(cprefix),
+            has_new=True,
+            util_types_prefix=self.util_types_prefix,
+            is_basic_type = True,
+            dim = self.dim,
+            shape = self.shape,
+        )
 
 class FunctionPointerMixin(CythonMixin):
     def render_c_interface(self):
@@ -1414,10 +1471,11 @@ cdef void* {funptr_name} = NULL
             nonlocal cprefix
 
             parm_name = parm.cython_name
+            parm_innermost_type = parm.lookup_innermost_type()
             out_parms.append(parm) # append original name as we need to compare vs the documentation
 
             if parm.is_pointer_to_basic_type(degree=1) and parm.actual_rank == 0:
-                typehandler = parm._type_handler.create_from_layer(1, canonical=True)
+                typehandler = parm.typehandler.create_from_layer(1, canonical=True)
                 parm_typename = typehandler.clang_type.spelling
                 prolog.append(f"cdef {parm_typename} {parm_name}")
                 out_args.append(parm_name) # TODO modify for char* pointer
@@ -1434,40 +1492,60 @@ cdef void* {funptr_name} = NULL
             elif parm.is_pointer_to_record(
                 degree=2
             ) or parm.is_pointer_to_function_proto(degree=2):
-                parm_typename = parm.lookup_innermost_type().cython_global_name
+                parm_typename = parm_innermost_type.cython_global_name
                 prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
-                c_interface_call_args.append(f"<{cprefix}{parm_typename}**>&{parm_name}._ptr") # must be lvalue expression
+                c_interface_call_args.append(f"<{cprefix}{parm_typename}**>&{parm_name}._ptr") # ! must be lvalue expression, can't use getElementPtr
                 parm_python_types[parm.name] = parm_typename
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
-            elif parm.is_pointer_to_record(
-                degree=1
-            ):
-                parm_typename = parm.lookup_innermost_type().cython_global_name
+            elif parm.is_pointer_to_record(degree=1):
+                parm_typename = parm_innermost_type.cython_global_name
                 prolog.append(f"{parm_name} = {parm_typename}.new()")
-                c_interface_call_args.append(f"<{cprefix}{parm_typename}*>{parm_name}._ptr") # must be lvalue expression
+                c_interface_call_args.append(f"<{cprefix}{parm_typename}*>{parm_name}._ptr") # ! must be lvalue expression, can't use getElementPtr
+                parm_python_types[parm.name] = parm_typename
+                out_args.append(f"{parm_name}")
+            elif parm.is_pointer_to_constantarray_of_basic_type(degree=2):
+                if isinstance(parm_innermost_type,tree.ConstantArray): # type has a wrapper class
+                    parm_typename = parm_innermost_type.cython_name
+                    cparm_typename = f"{cprefix}{parm_typename}**"
+                else:
+                    parm_typename = parm.ptr_complicated_type_handler(parm)
+                    cparm_typename = parm.cursor.type.get_canonical().spelling
+                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
+                c_interface_call_args.append(f"<{cparm_typename}>&{parm_name}._ptr") # ! must be lvalue expression, can't use getElementPtr
+                parm_python_types[parm.name] = parm_typename
+                out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
+            elif parm.is_pointer_to_constantarray_of_basic_type(degree=1):
+                if isinstance(parm_innermost_type,tree.ConstantArray): # type has a wrapper class
+                    parm_typename = parm_innermost_type.cython_name
+                    cparm_typename = f"{cprefix}{parm_typename}*"
+                else:
+                    parm_typename = parm.ptr_complicated_type_handler(parm)
+                    cparm_typename = parm.cursor.type.get_canonical().spelling
+                prolog.append(f"{parm_name} = {parm_typename}.new()")
+                c_interface_call_args.append(f"<{cparm_typename}*>{parm_name}._ptr") # ! must be lvalue expression, can't use getElementPtr
                 parm_python_types[parm.name] = parm_typename
                 out_args.append(f"{parm_name}")
             elif parm.is_pointer_to_basic_type(degree=-2) or parm.is_pointer_to_void(
                 degree=-2
             ):
                 parm_typename = parm.cursor.type.get_canonical().spelling
-                handler_name = parm.ptr_complicated_type_handler(parm)
-                prolog.append(f"{parm_name} = {handler_name}.from_ptr(NULL)")
+                parm_typename = parm.ptr_complicated_type_handler(parm)
+                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
                 c_interface_call_args.append( # note: typecasts to expected type
                     f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr" # must be lvalue expression
                 )
-                parm_python_types[parm.name] = f"{handler_name}/object"
+                parm_python_types[parm.name] = f"{parm_typename}/object"
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
             elif parm.is_pointer_to_basic_type(degree=-1) or parm.is_pointer_to_void(
                 degree=-1
             ):
                 parm_typename = parm.cursor.type.get_canonical().spelling
-                handler_name = parm.ptr_complicated_type_handler(parm)
-                prolog.append(f"{parm_name} = {handler_name}.from_ptr(NULL)")
+                parm_typename = parm.ptr_complicated_type_handler(parm)
+                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
                 c_interface_call_args.append( # note: typecasts to expected type
                     f"\n{indent*2}<{parm_typename}>{parm_name}._ptr" # must be lvalue expression
                 )
-                parm_python_types[parm.name] = f"{handler_name}/object"
+                parm_python_types[parm.name] = f"{parm_typename}/object"
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
             else:
                 # If the argument was not removed from the parameter list,
@@ -1495,9 +1573,8 @@ cdef void* {funptr_name} = NULL
             parm_typename = (
                 parm.cython_global_typename
                 if parm.has_typeref
-                else parm.renamer(parm.cursor.type.get_canonical().spelling)  # TODO verify might be no Python/Cython keyword
+                else parm.renamer(parm.cursor.type.get_canonical().spelling)
             )
-            # TODO modify for char* pointer
             emit_datahandle_(
                 parm_typename,
                 parm,
@@ -1513,20 +1590,40 @@ cdef void* {funptr_name} = NULL
             nonlocal cprefix
 
             parm_name = parm.cython_name
+            parm_innermost_type = parm.lookup_innermost_type()
             if parm.is_pointer_to_record(
                 degree=1, incomplete_array=True
             ) or parm.is_pointer_to_function_proto(degree=1, incomplete_array=True):
-                parm_typename = parm.lookup_innermost_type().cython_global_name
+                parm_typename = parm_innermost_type.cython_global_name
                 sig_args.append(f"object {parm_name}")
                 parm_python_types[parm.name] = f"{parm_typename}/object" # use original name as key
                 c_interface_call_args.append(
                     f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).getElementPtr()"
                 )
+            elif parm.is_pointer_to_constantarray_of_basic_type(degree=1, incomplete_array=True):
+                if isinstance(parm_innermost_type,tree.ConstantArray): # type has a wrapper class
+                    parm_typename = parm_innermost_type.cython_name # use cython name to get typedef name
+                    sig_args.append(f"object {parm_name}")
+                    parm_python_types[parm.name] = f"{parm_typename}/object" # use original name as key
+                    c_interface_call_args.append(
+                        f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).getElementPtr()"
+                    )
+                else: # type has no wrapper class, emit default handler
+                    parm_typename = parm.cython_global_typename
+                    emit_datahandle_(parm_typename, parm, "")
             elif parm.is_pointer_to_record(
                 degree=-2, incomplete_array=True
             ) or parm.is_pointer_to_function_proto(degree=-2, incomplete_array=True):
                 parm_typename = parm.cython_global_typename
                 emit_datahandle_(parm_typename, parm, cprefix)
+            elif parm.is_pointer_to_constantarray_of_basic_type(degree=-2, incomplete_array=True):
+                if isinstance(parm_innermost_type,tree.ConstantArray): # type has a wrapper class
+                    degree = parm.get_pointer_degree(incomplete_array=True)
+                    parm_typename = parm_innermost_type.cython_name # use cython name to get typedef name
+                    emit_datahandle_(parm_typename+"*"*degree, parm, cprefix)
+                else: # type has no wrapper class, emit default handler
+                    parm_typename = parm.cython_global_typename
+                    emit_datahandle_(parm_typename, parm, "")
             elif (
                 parm.is_pointer_to_void(degree=-1, incomplete_array=True)
                 or parm.is_pointer_to_basic_type(degree=-1, incomplete_array=True)
@@ -1556,13 +1653,15 @@ cdef void* {funptr_name} = NULL
                 )
                 c_interface_call_args.append(f"{parm_name}.value")
                 parm_python_types[parm.name] = parm.cython_global_typename
-            elif parm.is_record:
+            elif ( parm.is_record or parm.is_basic_type_constantarray() ):
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
                 c_interface_call_args.append(
                     f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).getElementPtr()[0]"
                 )
                 parm_python_types[parm.name] = parm_typename
+            else:
+                assert False, "should not be entered"
 
         for parm in self.parms:
             parm_name = parm.cython_name
