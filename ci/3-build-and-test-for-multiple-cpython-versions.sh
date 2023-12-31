@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # MIT License
 #
 # Copyright (c) 2023 Advanced Micro Devices, Inc.
