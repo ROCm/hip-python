@@ -45,7 +45,7 @@ fi
 sudo apt update
 sudo apt install -y git
 
-NEW_BRANCH=develop/rocm-rel-${ROCM_VER}
+NEW_BRANCH=${NEW_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
 
 RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-hip-python-release-repo}
 git clone https://github.com/ROCmSoftwarePlatform/hip-python.git ${RELEASE_REPO_DIR}
