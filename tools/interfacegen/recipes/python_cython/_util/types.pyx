@@ -111,7 +111,7 @@ cdef class Pointer:
         return self._ptr
 
     @staticmethod
-    cdef Pointer from_ptr(void* ptr):
+    cdef Pointer fromPtr(void* ptr):
         cdef Pointer wrapper = Pointer.__new__(Pointer)
         wrapper._ptr = ptr
         return wrapper
@@ -124,7 +124,7 @@ cdef class Pointer:
         Note:
             No ownership information is transferred.
         """
-        return Pointer.from_ptr(<void*>&self._ptr)
+        return Pointer.fromPtr(<void*>&self._ptr)
 
     cdef void init_from_pyobj(self, object pyobj):
         """
@@ -162,7 +162,11 @@ cdef class Pointer:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
 
     @staticmethod
-    cdef Pointer from_pyobj(object pyobj):
+    def fromObject(object):
+        return Pointer.fromPyobj(object)
+
+    @staticmethod
+    cdef Pointer fromPyobj(object pyobj):
         """Derives a Pointer from the given object.
 
         In case ``pyobj`` is itself an ``Pointer`` instance, this method
@@ -221,7 +225,7 @@ cdef class Pointer:
         if isinstance(offset,int):
             if offset < 0:
                 raise ValueError("offset='{offset}' must be non-negative")
-            return Pointer.from_ptr(<void*>(<unsigned long>self._ptr + cpython.long.PyLong_AsUnsignedLong(offset)))
+            return Pointer.fromPtr(<void*>(<unsigned long>self._ptr + cpython.long.PyLong_AsUnsignedLong(offset)))
         raise NotImplementedError("'__getitem__': not implemented for other 'offset' types than 'int'")
 
     def __init__(self,object pyobj = None):
@@ -298,7 +302,7 @@ cdef class CStr(Pointer):
     # C members declared in declaration part ``types.pxd``
 
     def __cinit__(self):
-        self._owner = False
+        self._is_ptr_owner = False
         self._shape[0] = 0 # must be zero
         self.strides[0] = 1
 
@@ -317,7 +321,7 @@ cdef class CStr(Pointer):
         return self._shape[0]
 
     @staticmethod
-    cdef CStr from_ptr(void* ptr):
+    cdef CStr fromPtr(void* ptr):
         """Initialize a new CStr instance from a pointer.
 
         Note:
@@ -365,7 +369,11 @@ cdef class CStr(Pointer):
             self.get_or_determine_len()
 
     @staticmethod
-    cdef CStr from_pyobj(object pyobj):
+    def fromObject(object):
+        return CStr.fromPyobj(object)
+
+    @staticmethod
+    cdef CStr fromPyobj(object pyobj):
         """Derives a CStr from the given object.
 
         In case ``pyobj`` is itself an `CStr` instance, this method
@@ -400,13 +408,13 @@ cdef class CStr(Pointer):
             Throws `~.RuntimeError` if the data pointer is not NULL as this
             indicates that this instance handles external data.
         Note:
-            Sets the owner flag.
+            Sets the _is_ptr_owner flag.
         """
         if self._ptr != NULL:
             raise RuntimeError("Data pointer must be NULL.")
         self._ptr = libc.stdlib.malloc(size_bytes)
         libc.string.memset(<void*>self._ptr, 0, size_bytes)
-        self._owner = True
+        self._is_ptr_owner = True
 
     cpdef void free(self):
         """Free dynamically allocated data.
@@ -416,19 +424,19 @@ cdef class CStr(Pointer):
         Note:
             Throws `~.RuntimeError` if this instance does not own the data that ought to be freed.
         Note:
-            Unsets the owner flag.
+            Unsets the _is_ptr_owner flag.
         """
-        if self._owner == False:
+        if self._is_ptr_owner == False:
             raise RuntimeError("Attempt to free that is not owned by this instance.")
         if self._ptr == NULL:
             return # do nothing
         libc.stdlib.free(self._ptr)
-        self._owner = False
+        self._is_ptr_owner = False
 
     def __dealloc__(self):
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
-        if self._owner:
+        if self._is_ptr_owner:
             self.free()
 
     def __init__(self,object pyobj):
@@ -548,13 +556,17 @@ cdef class ImmortalCStr(CStr):
         cpython.ref.Py_INCREF(pyobj)
 
     @staticmethod
-    cdef ImmortalCStr from_ptr(void* ptr):
+    cdef ImmortalCStr fromPtr(void* ptr):
         cdef ImmortalCStr wrapper = ImmortalCStr.__new__(CStr)
         wrapper._ptr = ptr
         return wrapper
 
     @staticmethod
-    cdef ImmortalCStr from_pyobj(object pyobj):
+    def fromObject(object):
+        return ImmortalCStr.fromPyobj(object)
+
+    @staticmethod
+    cdef ImmortalCStr fromPyobj(object pyobj):
         cdef ImmortalCStr wrapper
 
         if isinstance(pyobj,ImmortalCStr):
@@ -758,7 +770,7 @@ cdef class DeviceArray(Pointer):
         self.__dict__["__cuda_array_interface__"]["data"] = (cpython.long.PyLong_FromVoidPtr(ptr),old_data[1])
 
     @staticmethod
-    cdef DeviceArray from_ptr(void* ptr):
+    cdef DeviceArray fromPtr(void* ptr):
         cdef DeviceArray wrapper = DeviceArray.__new__(DeviceArray)
         wrapper._set_ptr(ptr)
         return wrapper
@@ -927,7 +939,7 @@ cdef class DeviceArray(Pointer):
                     return ValueError("'stream': expected positive integer")
                 self.__dict__["__cuda_array_interface__"]["stream"] = stream
             else:
-                self.__dict__["__cuda_array_interface__"]["stream"] = int(Pointer.from_pyobj(stream))
+                self.__dict__["__cuda_array_interface__"]["stream"] = int(Pointer.fromPyobj(stream))
         if "read_only" in kwargs:
             read_only = kwargs["read_only"]
             if not isinstance(read_only,bool):
@@ -981,7 +993,11 @@ cdef class DeviceArray(Pointer):
             raise NotImplementedError(f"no conversion implemented for instance of '{type(pyobj)}'")
 
     @staticmethod
-    cdef DeviceArray from_pyobj(object pyobj):
+    def fromObject(object):
+        return DeviceArray.fromPyobj(object)
+
+    @staticmethod
+    cdef DeviceArray fromPyobj(object pyobj):
         """Derives a DeviceArray from the given object.
 
         In case ``pyobj`` is itself an `DeviceArray` instance, this method
@@ -1104,7 +1120,7 @@ cdef class DeviceArray(Pointer):
             offset += start*stride
             stride *= <size_t>shape[i]
         offset *= self._itemsize # scale offset with itemsize
-        return DeviceArray.from_ptr(<void*>(<unsigned long>self._ptr + offset)).configure(
+        return DeviceArray.fromPtr(<void*>(<unsigned long>self._ptr + offset)).configure(
             _force=True,
             typestr=self.typestr,
             itemsize=self.itemsize,
@@ -1184,11 +1200,11 @@ cdef class ListOfBytes(Pointer):
 
         A `list` or `tuple` of `bytes` or `~.CStr` objects.
         In this case, this type allocates an array of ``const char*`` pointers wherein it stores the addresses from the `list`/ `tuple` entries.
-        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+        Furthermore, the instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
-        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        In this case, init code from `~.Pointer` is used and the C attribute `self._is_ptr_owner` remains unchanged.
         See `~.Pointer.__init__` for more information.
 
     Note:
@@ -1201,7 +1217,7 @@ cdef class ListOfBytes(Pointer):
             See `~.Pointer` for more information.
         _py_buffer_acquired (`bool`, protected):
             See `~.Pointer` for more information.
-        _owner (`bint`, protected):
+        _is_ptr_owner (`bint`, protected):
             If this object is the owner of the allocated buffer. Defaults to `False`.
     """
     # C members declared in declaration part ``types.pxd``
@@ -1210,10 +1226,10 @@ cdef class ListOfBytes(Pointer):
         return f"<ListOfBytes object, _ptr={int(self)}>"
 
     def __cinit__(self):
-        self._owner = False
+        self._is_ptr_owner = False
 
     @staticmethod
-    cdef ListOfBytes from_ptr(void* ptr):
+    cdef ListOfBytes fromPtr(void* ptr):
         cdef ListOfBytes wrapper = ListOfBytes.__new__(ListOfBytes)
         wrapper._ptr = ptr
         return wrapper
@@ -1228,9 +1244,9 @@ cdef class ListOfBytes(Pointer):
         cdef const char* entry_as_cstr = NULL
 
         self._py_buffer_acquired = False
-        self._owner = False
+        self._is_ptr_owner = False
         if isinstance(pyobj,(tuple,list)):
-            self._owner = True
+            self._is_ptr_owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void*))
             libc.string.memset(self._ptr, 0, len(pyobj)*sizeof(void*))
             for i,entry in enumerate(pyobj):
@@ -1248,7 +1264,11 @@ cdef class ListOfBytes(Pointer):
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    cdef ListOfBytes from_pyobj(object pyobj):
+    def fromObject(object):
+        return ListOfBytes.fromPyobj(object)
+
+    @staticmethod
+    cdef ListOfBytes fromPyobj(object pyobj):
         """Derives a ListOfBytes from the given object.
 
         In case ``pyobj`` is itself an `ListOfBytes` instance, this method
@@ -1275,7 +1295,7 @@ cdef class ListOfBytes(Pointer):
             return wrapper
 
     def __dealloc__(self):
-        if self._owner:
+        if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
@@ -1304,11 +1324,11 @@ cdef class ListOfPointer(Pointer):
 
         A `list` or `tuple` of types that can be converted to `~.Pointer`.
         In this case, this type allocates an array of ``void *`` pointers wherein it stores the addresses obtained from the `list`/`tuple` entries.
-        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+        Furthermore, the instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
-        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        In this case, init code from `~.Pointer` is used and the C attribute `self._is_ptr_owner` remains unchanged.
         See `~.Pointer.__init__` for more information.
 
     Note:
@@ -1321,7 +1341,7 @@ cdef class ListOfPointer(Pointer):
             See `~.Pointer` for more information.
         _py_buffer_acquired (`bool`, protected):
             See `~.Pointer` for more information.
-        _owner (`bint`, protected):
+        _is_ptr_owner (`bint`, protected):
             If this object is the owner of the allocated buffer. Defaults to `False`.
     """
     # C members declared in declaration part ``types.pxd``
@@ -1330,10 +1350,10 @@ cdef class ListOfPointer(Pointer):
         return f"<ListOfPointer object, _ptr={int(self)}>"
 
     def __cinit__(self):
-        self._owner = False
+        self._is_ptr_owner = False
 
     @staticmethod
-    cdef ListOfPointer from_ptr(void* ptr):
+    cdef ListOfPointer fromPtr(void* ptr):
         cdef ListOfPointer wrapper = ListOfPointer.__new__(ListOfPointer)
         wrapper._ptr = ptr
         return wrapper
@@ -1346,22 +1366,26 @@ cdef class ListOfPointer(Pointer):
             of the original object.
         """
         self._py_buffer_acquired = False
-        self._owner = False
+        self._is_ptr_owner = False
         if isinstance(pyobj,ListOfPointer):
             self._ptr = (<ListOfPointer>pyobj)._ptr
 
         elif isinstance(pyobj,(tuple,list)):
-            self._owner = True
+            self._is_ptr_owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void *))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(void *))
             for i,entry in enumerate(pyobj):
-                (<void**>self._ptr)[i] = cpython.long.PyLong_AsVoidPtr(int(Pointer.from_pyobj(entry)))
+                (<void**>self._ptr)[i] = cpython.long.PyLong_AsVoidPtr(int(Pointer.fromPyobj(entry)))
         else:
-            self._owner = False
+            self._is_ptr_owner = False
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    cdef ListOfPointer from_pyobj(object pyobj):
+    def fromObject(object):
+        return ListOfPointer.fromPyobj(object)
+
+    @staticmethod
+    cdef ListOfPointer fromPyobj(object pyobj):
         """Derives a ListOfPointer from the given object.
 
         In case ``pyobj`` is itself an `ListOfPointer` instance, this method
@@ -1389,7 +1413,7 @@ cdef class ListOfPointer(Pointer):
             return wrapper
 
     def __dealloc__(self):
-        if self._owner:
+        if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
@@ -1417,11 +1441,11 @@ cdef class ListOfInt(Pointer):
 
         A `list` or `tuple` of types that can be converted to C type ``int``.
         In this case, this type allocates an array of C ``int`` values wherein it stores the values obtained from the `list`/`tuple` entries.
-        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+        Furthermore, the instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
-        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        In this case, init code from `~.Pointer` is used and the C attribute `self._is_ptr_owner` remains unchanged.
         See `~.Pointer` for more information.
 
     Note:
@@ -1438,7 +1462,7 @@ cdef class ListOfInt(Pointer):
             See `~.Pointer` for more information.
         _py_buffer_acquired (`bool`, protected):
             See `~.Pointer` for more information.
-        _owner (`bint`, protected):
+        _is_ptr_owner (`bint`, protected):
             If this object is the owner of the allocated buffer. Defaults to `False`.
     """
     # C members declared in declaration part ``types.pxd``
@@ -1447,10 +1471,10 @@ cdef class ListOfInt(Pointer):
         return f"<ListOfDataInt object, _ptr={int(self)}>"
 
     def __cinit__(self):
-        self._owner = False
+        self._is_ptr_owner = False
 
     @staticmethod
-    cdef ListOfInt from_ptr(void* ptr):
+    cdef ListOfInt fromPtr(void* ptr):
         cdef ListOfInt wrapper = ListOfInt.__new__(ListOfInt)
         wrapper._ptr = ptr
         return wrapper
@@ -1463,12 +1487,12 @@ cdef class ListOfInt(Pointer):
             of the original object.
         """
         self._py_buffer_acquired = False
-        self._owner = False
+        self._is_ptr_owner = False
         if isinstance(pyobj,ListOfInt):
             self._ptr = (<ListOfInt>pyobj)._ptr
 
         elif isinstance(pyobj,(tuple,list)):
-            self._owner = True
+            self._is_ptr_owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(int))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(int))
             for i,entry in enumerate(pyobj):
@@ -1491,11 +1515,15 @@ cdef class ListOfInt(Pointer):
                 else:
                     raise ValueError(f"element '{i}' of input cannot be converted to C int type")
         else:
-            self._owner = False
+            self._is_ptr_owner = False
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    cdef ListOfInt from_pyobj(object pyobj):
+    def fromObject(object):
+        return ListOfInt.fromPyobj(object)
+
+    @staticmethod
+    cdef ListOfInt fromPyobj(object pyobj):
         """Derives a ListOfInt from the given object.
 
         In case ``pyobj`` is itself an ``ListOfInt`` instance, this method
@@ -1523,7 +1551,7 @@ cdef class ListOfInt(Pointer):
             return wrapper
 
     def __dealloc__(self):
-        if self._owner:
+        if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
@@ -1551,11 +1579,11 @@ cdef class ListOfUnsigned(Pointer):
 
         A `list` or `tuple` of types that can be converted to C type ``unsigned``.
         In this case, this type allocates an array of C ``unsigned`` values wherein it stores the values obtained from the `list`/`tuple` entries.
-        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+        Furthermore, the instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
-        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        In this case, init code from `~.Pointer` is used and the C attribute `self._is_ptr_owner` remains unchanged.
         See `~.Pointer` for more information.
 
     Note:
@@ -1572,7 +1600,7 @@ cdef class ListOfUnsigned(Pointer):
             See `~.Pointer` for more information.
         _py_buffer_acquired (`bool`, protected):
             See `~.Pointer` for more information.
-        _owner (`bint`, protected):
+        _is_ptr_owner (`bint`, protected):
             If this object is the owner of the allocated buffer. Defaults to `False`.
     """
     # C members declared in declaration part ``types.pxd``
@@ -1581,10 +1609,10 @@ cdef class ListOfUnsigned(Pointer):
         return f"<ListOfUnsigned object, _ptr={int(self)}>"
 
     def __cinit__(self):
-        self._owner = False
+        self._is_ptr_owner = False
 
     @staticmethod
-    cdef ListOfUnsigned from_ptr(void* ptr):
+    cdef ListOfUnsigned fromPtr(void* ptr):
         cdef ListOfUnsigned wrapper = ListOfUnsigned.__new__(ListOfUnsigned)
         wrapper._ptr = ptr
         return wrapper
@@ -1597,12 +1625,12 @@ cdef class ListOfUnsigned(Pointer):
             of the original object.
         """
         self._py_buffer_acquired = False
-        self._owner = False
+        self._is_ptr_owner = False
         if isinstance(pyobj,ListOfUnsigned):
             self._ptr = (<ListOfUnsigned>pyobj)._ptr
 
         elif isinstance(pyobj,(tuple,list)):
-            self._owner = True
+            self._is_ptr_owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned int))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(unsigned int))
             for i,entry in enumerate(pyobj):
@@ -1625,11 +1653,15 @@ cdef class ListOfUnsigned(Pointer):
                 else:
                     raise ValueError(f"element '{i}' of input cannot be converted to C unsigned int type")
         else:
-            self._owner = False
+            self._is_ptr_owner = False
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    cdef ListOfUnsigned from_pyobj(object pyobj):
+    def fromObject(object):
+        return ListOfUnsigned.fromPyobj(object)
+
+    @staticmethod
+    cdef ListOfUnsigned fromPyobj(object pyobj):
         """Derives a ListOfUnsigned from the given object.
 
         In case ``pyobj`` is itself an `ListOfUnsigned` instance, this method
@@ -1657,7 +1689,7 @@ cdef class ListOfUnsigned(Pointer):
             return wrapper
 
     def __dealloc__(self):
-        if self._owner:
+        if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):
@@ -1685,11 +1717,11 @@ cdef class ListOfUnsignedLong(Pointer):
 
         A `list` or `tuple` of types that can be converted to C type ``unsigned long``.
         In this case, this type allocates an array of C ``unsigned long`` values wherein it stores the values obtained from the `list`/`tuple` entries.
-        Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+        Furthermore, the instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
-        In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+        In this case, init code from `~.Pointer` is used and the C attribute `self._is_ptr_owner` remains unchanged.
         See `~.Pointer` for more information.
 
     Note:
@@ -1706,7 +1738,7 @@ cdef class ListOfUnsignedLong(Pointer):
             See `~.Pointer` for more information.
         _py_buffer_acquired (`bool`, protected):
             See `~.Pointer` for more information.
-        _owner (`bint`, protected):
+        _is_ptr_owner (`bint`, protected):
             If this object is the owner of the allocated buffer. Defaults to `False`.
     """
     # C members declared in declaration part ``types.pxd``
@@ -1715,10 +1747,10 @@ cdef class ListOfUnsignedLong(Pointer):
         return f"<ListOfUnsigned object, _ptr={int(self)}>"
 
     def __cinit__(self):
-        self._owner = False
+        self._is_ptr_owner = False
 
     @staticmethod
-    cdef ListOfUnsignedLong from_ptr(void* ptr):
+    cdef ListOfUnsignedLong fromPtr(void* ptr):
         cdef ListOfUnsignedLong wrapper = ListOfUnsignedLong.__new__(ListOfUnsignedLong)
         wrapper._ptr = ptr
         return wrapper
@@ -1731,12 +1763,12 @@ cdef class ListOfUnsignedLong(Pointer):
             of the original object.
         """
         self._py_buffer_acquired = False
-        self._owner = False
+        self._is_ptr_owner = False
         if isinstance(pyobj,ListOfUnsignedLong):
             self._ptr = (<ListOfUnsignedLong>pyobj)._ptr
 
         elif isinstance(pyobj,(tuple,list)):
-            self._owner = True
+            self._is_ptr_owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned long))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(unsigned long))
             for i,entry in enumerate(pyobj):
@@ -1759,11 +1791,15 @@ cdef class ListOfUnsignedLong(Pointer):
                 else:
                     raise ValueError(f"element '{i}' of input cannot be converted to C unsigned long type")
         else:
-            self._owner = False
+            self._is_ptr_owner = False
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    cdef ListOfUnsignedLong from_pyobj(object pyobj):
+    def fromObject(object):
+        return ListOfUnsignedLong.fromPyobj(object)
+
+    @staticmethod
+    cdef ListOfUnsignedLong fromPyobj(object pyobj):
         """Derives a ListOfUnsignedLong from the given object.
 
         In case ``pyobj`` is itself an ``ListOfUnsignedLong`` instance, this method
@@ -1791,7 +1827,7 @@ cdef class ListOfUnsignedLong(Pointer):
             return wrapper
 
     def __dealloc__(self):
-        if self._owner:
+        if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
 
     def __init__(self,object pyobj):

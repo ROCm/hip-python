@@ -34,15 +34,15 @@ cdef class Pointer:
     cpdef Pointer createRef(self)
 
     @staticmethod
-    cdef Pointer from_ptr(void* ptr)
+    cdef Pointer fromPtr(void* ptr)
 
     cdef void init_from_pyobj(self, object pyobj)
 
     @staticmethod
-    cdef Pointer from_pyobj(object pyobj)
+    cdef Pointer fromPyobj(object pyobj)
 
 cdef class CStr(Pointer):
-    cdef bint _owner
+    cdef bint _is_ptr_owner
     # These buffer protocol related arrays
     # have to stay alive as long
     # as any buffer views the data,
@@ -51,10 +51,10 @@ cdef class CStr(Pointer):
     cdef Py_ssize_t[1] strides
 
     @staticmethod
-    cdef CStr from_ptr(void* ptr)
+    cdef CStr fromPtr(void* ptr)
 
     @staticmethod
-    cdef CStr from_pyobj(object pyobj)
+    cdef CStr fromPyobj(object pyobj)
 
     cdef Py_ssize_t get_or_determine_len(self)
 
@@ -67,20 +67,20 @@ cdef class CStr(Pointer):
 cdef class ImmortalCStr(CStr):
 
     @staticmethod
-    cdef ImmortalCStr from_ptr(void* ptr)
+    cdef ImmortalCStr fromPtr(void* ptr)
 
     @staticmethod
-    cdef ImmortalCStr from_pyobj(object pyobj)
+    cdef ImmortalCStr fromPyobj(object pyobj)
 
 cdef class DeviceArray(Pointer):
     cdef size_t _itemsize
     cdef dict __dict__
 
     @staticmethod
-    cdef DeviceArray from_ptr(void* ptr)
+    cdef DeviceArray fromPtr(void* ptr)
 
     @staticmethod
-    cdef DeviceArray from_pyobj(object pyobj)
+    cdef DeviceArray fromPyobj(object pyobj)
 
     cdef _set_ptr(self,void* ptr)
 
@@ -91,46 +91,46 @@ cdef class DeviceArray(Pointer):
     cdef tuple _handle_slice(self,slice subscript,size_t shape_dim)
 
 cdef class ListOfPointer(Pointer):
-    cdef bint _owner
+    cdef bint _is_ptr_owner
 
     @staticmethod
-    cdef ListOfPointer from_ptr(void* ptr)
+    cdef ListOfPointer fromPtr(void* ptr)
 
     @staticmethod
-    cdef ListOfPointer from_pyobj(object pyobj)
+    cdef ListOfPointer fromPyobj(object pyobj)
 
 cdef class ListOfBytes(Pointer):
-    cdef bint _owner
+    cdef bint _is_ptr_owner
 
     @staticmethod
-    cdef ListOfBytes from_ptr(void* ptr)
+    cdef ListOfBytes fromPtr(void* ptr)
 
     @staticmethod
-    cdef ListOfBytes from_pyobj(object pyobj)
+    cdef ListOfBytes fromPyobj(object pyobj)
 
 cdef class ListOfInt(Pointer):
-    cdef bint _owner
+    cdef bint _is_ptr_owner
 
     @staticmethod
-    cdef ListOfInt from_ptr(void* ptr)
+    cdef ListOfInt fromPtr(void* ptr)
 
     @staticmethod
-    cdef ListOfInt from_pyobj(object pyobj)
+    cdef ListOfInt fromPyobj(object pyobj)
 
 cdef class ListOfUnsigned(Pointer):
-    cdef bint _owner
+    cdef bint _is_ptr_owner
 
     @staticmethod
-    cdef ListOfUnsigned from_ptr(void* ptr)
+    cdef ListOfUnsigned fromPtr(void* ptr)
 
     @staticmethod
-    cdef ListOfUnsigned from_pyobj(object pyobj)
+    cdef ListOfUnsigned fromPyobj(object pyobj)
 
 cdef class ListOfUnsignedLong(Pointer):
-    cdef bint _owner
+    cdef bint _is_ptr_owner
 
     @staticmethod
-    cdef ListOfUnsignedLong from_ptr(void* ptr)
+    cdef ListOfUnsignedLong fromPtr(void* ptr)
 
     @staticmethod
-    cdef ListOfUnsignedLong from_pyobj(object pyobj)
+    cdef ListOfUnsignedLong fromPyobj(object pyobj)
