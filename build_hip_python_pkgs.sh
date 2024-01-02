@@ -165,6 +165,7 @@ if [ -z ${NO_VENV+x} ]; then
   PYTHON_PATH="$(pwd)/_venv/bin/python3"
 fi
 shopt -s expand_aliases
+declare -x PYVER=$(PYTHON --version | grep -o "3\.[0-9]\+\." | tr -d '.')
 
 if [ ! -z ${HIP+x} ]; then
   # build hip-python
@@ -194,9 +195,8 @@ if [ ! -z ${CUDA+x} ]; then
     mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null || true
     mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null || true
   fi
-  for f in $(find hip-python/dist -maxdepth 1 -name "*.whl"); do
-    PYTHON -m pip install --force-reinstall $f || true
-  done
+  PYTHON -m pip install --force-reinstall $(find . -path "*hip-python/dist/hip_python*${PYVER}*whl")
+  PYTHON _render_update_version.py
   PYTHON -m pip install -r ${PKG}/requirements.txt
   PYTHON _render_update_version.py
   # PYTHON -m build ${PKG} -n
@@ -215,12 +215,7 @@ if [ ! -z ${DOCS+x} ]; then
     echo "docs: obtaining hip-python and hip-python-as-cuda from Test PyPI"
     PYTHON -m pip install -i https://test.pypi.org/simple --force-reinstall hip-python hip-python-as-cuda
   else
-    for f in $(find hip-python/dist -maxdepth 1 -name "*.whl"); do
-      PYTHON -m pip install --force-reinstall $f || true
-    done
-    for f in $(find hip-python-as-cuda/dist -maxdepth 1 -name "*.whl"); do
-      PYTHON -m pip install --force-reinstall $f || true
-    done
+    PYTHON -m pip install --force-reinstall $(find . -path "*hip-python*/dist/hip_python*${PYVER}*whl")
   fi
   DOCS_DIR="docs"
   PYTHON -m pip install -r ${DOCS_DIR}/requirements.txt
@@ -242,12 +237,8 @@ if [ ! -z ${DOCS+x} ]; then
 fi
 
 if [ ! -z ${RUN_TESTS+x} ]; then
-  for f in $(find hip-python/dist -maxdepth 1 -name "*.whl"); do
-    PYTHON -m pip install --force-reinstall $f || true
-  done
-  for f in $(find hip-python-as-cuda/dist -maxdepth 1 -name "*.whl"); do
-    PYTHON -m pip install --force-reinstall $f || true
-  done
+  PYTHON -m pip install --force-reinstall $(find . -path "*hip-python*/dist/hip_python*${PYVER}*whl")
+  PYTHON -m pip install -r examples/requirements.txt
   declare -x HIP_PYTHON_cudaError_t_HALLUCINATE=1
   PYTHON -m pytest -v examples
 fi
