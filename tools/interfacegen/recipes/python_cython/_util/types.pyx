@@ -167,7 +167,7 @@ cdef class Pointer:
 
         In case ``pyobj`` is itself a ``Pointer`` instance, this method
         returns it directly. No new ``Pointer`` is created.
-        """"
+        """
         return Pointer.fromPyobj(pyobj)
 
     @staticmethod
@@ -216,7 +216,7 @@ cdef class Pointer:
     def __repr__(self):
         return f"<Pointer object, _ptr={int(self)}>"
     def as_c_void_p(self):
-        """"Data pointer as ``ctypes.c_void_p``.
+        """Data pointer as ``ctypes.c_void_p``.
         """
         return ctypes.c_void_p(int(self))
 
@@ -379,7 +379,7 @@ cdef class CStr(Pointer):
 
         In case ``pyobj`` is itself a ``CStr`` instance, this method
         returns it directly. No new ``CStr`` is created.
-        """"
+        """
         return CStr.fromPyobj(pyobj)
 
     @staticmethod
@@ -577,7 +577,7 @@ cdef class ImmortalCStr(CStr):
 
         In case ``pyobj`` is itself a ``ImmortalCStr`` instance, this method
         returns it directly. No new ``ImmortalCStr`` is created.
-        """"
+        """
         return ImmortalCStr.fromPyobj(pyobj)
 
     @staticmethod
