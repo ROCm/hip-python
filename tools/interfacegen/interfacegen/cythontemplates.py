@@ -25,34 +25,30 @@
 
 wrapper_class_decl_template = """
 {{default cptr_type = cname + "*"}}
-{{default has_new = True}}
-{{default has_from_pyobj = True}}
+{{default is_complete_type = True}}
 cdef class {{name}}({{util_types_prefix}}Pointer):
-    cdef bint ptr_owner
+    cdef bint _is_ptr_owner
 
     cdef {{cptr_type}} getElementPtr(self)
 
     @staticmethod
-    cdef {{name}} from_ptr(void* ptr, bint owner=*)
-    {{if has_from_pyobj}}
+    cdef {{name}} fromPtr(void* ptr, bint owner=*)
     @staticmethod
-    cdef {{name}} from_pyobj(object pyobj)
-    {{endif}}
-    {{if has_new}}
+    cdef {{name}} fromPyobj(object pyobj)
+    {{if is_complete_type}}
     @staticmethod
     cdef __allocate(void* ptr)
     @staticmethod
     cdef {{name}} new()
     @staticmethod
-    cdef {{name}} from_value({{cname}} other)
+    cdef {{name}} fromValue({{cname}} other)
     {{endif}}
 """
 
 wrapper_class_impl_base_template = """
 {{default cptr_type = cname + "*"}}
 {{default is_funptr = False}}
-{{default has_new = True}}
-{{default has_from_pyobj = True}}
+{{default is_complete_type = True}}
 {{default properties_name = None}}
 cdef class {{name}}({{util_types_prefix}}Pointer):
     \"""Python wrapper for cdef class {{cname}}.
@@ -103,7 +99,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
     C Attributes:
         _ptr (C type ``void *``, protected):
             Stores a pointer to the data of the original Python object.
-        _ptr_owner (C type ``bint``, protected):
+        _is_ptr_owner (C type ``bint``, protected):
             If this wrapper is the owner of the underlying data.
         _py_buffer (C type ``Py_buffer`, protected):
             Stores a pointer to the data of the original Python object.
@@ -114,17 +110,17 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
 
     def __cinit__(self):
         self._ptr = NULL
-        self.ptr_owner = False
+        self._is_ptr_owner = False
         self._py_buffer_acquired = False
 
     cdef {{cptr_type}} getElementPtr(self):
         return <{{cptr_type}}>self._ptr
 
     @staticmethod
-    cdef {{name}} from_ptr(void* ptr, bint owner=False):
+    cdef {{name}} fromPtr(void* ptr, bint owner=False):
         \"""Factory function to create ``{{name}}`` objects from
         given ``{{cname}}`` pointer.
-        {{if has_new}}
+        {{if is_complete_type}}
 
         Setting ``owner`` flag to ``True`` causes
         the extension type to free the structure pointed to by ``ptr``
@@ -134,12 +130,15 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef {{name}} wrapper = {{name}}.__new__({{name}})
         wrapper._ptr = ptr
-        wrapper.ptr_owner = owner
+        wrapper._is_ptr_owner = owner
         return wrapper
 
-    {{if has_from_pyobj}}
     @staticmethod
-    cdef {{name}} from_pyobj(object pyobj):
+    def fromObject(object):
+        return {{name}}.fromPyobj(object)
+
+    @staticmethod
+    cdef {{name}} fromPyobj(object pyobj):
         \"""Derives a {{name}} from a Python object.
 
         Derives a {{name}} from the given Python object ``pyobj``.
@@ -162,20 +161,18 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
             wrapper = {{name}}.__new__({{name}})
             wrapper.init_from_pyobj(pyobj)
             return wrapper
-    {{endif}}
+
     def __dealloc__(self):
         # Release the buffer handle
-        {{if has_from_pyobj}}
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
-        {{endif}}
-        {{if has_new}}
+        {{if is_complete_type}}
         # De-allocate if not null and flag is set
-        if self._ptr is not NULL and self.ptr_owner is True:
+        if self._ptr is not NULL and self._is_ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
         {{endif}}
-    {{if has_new}}
+    {{if is_complete_type}}
 
     @staticmethod
     cdef __allocate(void** ptr):
@@ -191,10 +188,10 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         newly allocated {{cname}}\"""
         cdef void* ptr
         {{name}}.__allocate(&ptr)
-        return {{name}}.from_ptr(ptr, owner=True)
+        return {{name}}.fromPtr(ptr, owner=True)
 
     @staticmethod
-    cdef {{name}} from_value({{cname}} other):
+    cdef {{name}} fromValue({{cname}} other):
         \"""Allocate new C type and copy from ``other``.
         \"""
         wrapper = {{name}}.new()
@@ -216,7 +213,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
 
     def __repr__(self):
-        return f"<{{name}} object, self.ptr={int(self)}>"
+        return f"<{{name}} object, ptr: {int(self)}>"
 
     def as_c_void_p(self):
         \"""Returns the data's address as `ctypes.c_void_p`
@@ -228,6 +225,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
 """
 
 wrapper_class_record_init_template = """\
+    {{if is_complete_type}}
     {{default defaults = dict()}}
     {{default all_properties_rendered = False}}
     {{default is_union = False}}
@@ -253,7 +251,7 @@ wrapper_class_record_init_template = """\
                 per member that you want to initialize.
         \"""
         {{name}}.__allocate(&self._ptr)
-        self.ptr_owner = True
+        self._is_ptr_owner = True
         {{for k,v in defaults.items()}}
         self.{{k}} = {{v}}
         {{endfor}}
@@ -277,6 +275,7 @@ wrapper_class_record_init_template = """\
             elif k not in attribs:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
+    {{endif}}
 """
 
 # note: must be dedented
@@ -303,7 +302,7 @@ def {{attr}}(self, {{typename}} value):
 def get_{{attr}}(self, i):
     \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
-    return {{handler}}.from_ptr({{element_ptr}}[i].{{attr}})
+    return {{handler}}.fromPtr({{element_ptr}}[i].{{attr}})
 def set_{{attr}}(self, i, object value):
     \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
 
@@ -311,7 +310,7 @@ def set_{{attr}}(self, i, object value):
         This can be dangerous if the pointer is from a python object
         that is later on garbage collected.
     \"""
-    {{element_ptr}}[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
+    {{element_ptr}}[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.fromPyobj(value)))
 @property
 def {{attr}}(self):
     \"""{{brief_comment}}
@@ -363,7 +362,7 @@ def {{attr}}(self, value):
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
     \"""
-    return {{typename}}.from_ptr(&{{element_ptr}}[i].{{attr}})
+    return {{typename}}.fromPtr(&{{element_ptr}}[i].{{attr}})
 @property
 def {{attr}}(self):
     \"""{{brief_comment}}\"""

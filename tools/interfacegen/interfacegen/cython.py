@@ -760,7 +760,7 @@ class RecordMixin(CythonMixin):
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
-            has_new=not self.is_incomplete,
+            is_complete_type=not self.is_incomplete,
             util_types_prefix=self.util_types_prefix,
         )
 
@@ -779,7 +779,7 @@ class RecordMixin(CythonMixin):
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
-            has_new=not self.is_incomplete,
+            is_complete_type=not self.is_incomplete,
             defaults=self._defaults if self.has_defaults else {},
             properties_name=python_interface_record_properties_name,
             all_properties_rendered=all_propertys_rendered,
@@ -1108,7 +1108,7 @@ class ConstantArrayMixin(CythonMixin):
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
-            has_new=True,
+            is_complete_type=True,
             util_types_prefix=self.util_types_prefix,
         )
 
@@ -1124,7 +1124,7 @@ class ConstantArrayMixin(CythonMixin):
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
-            has_new=True,
+            is_complete_type=True,
             util_types_prefix=self.util_types_prefix,
             is_basic_type = True,
             dim = self.dim,
@@ -1153,7 +1153,7 @@ class FunctionPointerMixin(CythonMixin):
             name=name,
             cname=cname,
             cptr_type=cname,  # type is already a pointer
-            has_new=False,
+            is_complete_type=False,
             util_types_prefix=self.util_types_prefix,
         )
 
@@ -1170,7 +1170,7 @@ class FunctionPointerMixin(CythonMixin):
             cname=cname,
             cptr_type=cname,  # type is already a pointer
             is_funptr=True,
-            has_new=False,
+            is_complete_type=False,
             util_types_prefix=self.util_types_prefix,
         )
 
@@ -1493,7 +1493,7 @@ cdef void* {funptr_name} = NULL
                 degree=2
             ) or parm.is_pointer_to_function_proto(degree=2):
                 parm_typename = parm_innermost_type.cython_global_name
-                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
+                prolog.append(f"{parm_name} = {parm_typename}.fromPtr(NULL)")
                 c_interface_call_args.append(f"<{cprefix}{parm_typename}**>&{parm_name}._ptr") # ! must be lvalue expression, can't use getElementPtr
                 parm_python_types[parm.name] = parm_typename
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
@@ -1510,7 +1510,7 @@ cdef void* {funptr_name} = NULL
                 else:
                     parm_typename = parm.ptr_complicated_type_handler(parm)
                     cparm_typename = parm.cursor.type.get_canonical().spelling
-                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
+                prolog.append(f"{parm_name} = {parm_typename}.fromPtr(NULL)")
                 c_interface_call_args.append(f"<{cparm_typename}>&{parm_name}._ptr") # ! must be lvalue expression, can't use getElementPtr
                 parm_python_types[parm.name] = parm_typename
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
@@ -1565,7 +1565,7 @@ cdef void* {funptr_name} = NULL
             handler_name = parm.ptr_complicated_type_handler(parm)
             sig_args.append(f"object {parm_name}")
             c_interface_call_args.append( # note: typecasts to expected type
-                f"\n{indent*2}<{cprefix}{parm_typename}>{handler_name}.from_pyobj({parm_name})._ptr"
+                f"\n{indent*2}<{cprefix}{parm_typename}>{handler_name}.fromPyobj({parm_name})._ptr"
             )
             parm_python_types[parm.name] = f"{handler_name}/object"
 
@@ -1598,7 +1598,7 @@ cdef void* {funptr_name} = NULL
                 sig_args.append(f"object {parm_name}")
                 parm_python_types[parm.name] = f"{parm_typename}/object" # use original name as key
                 c_interface_call_args.append(
-                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).getElementPtr()"
+                    f"\n{indent*2}{parm_typename}.fromPyobj({parm_name}).getElementPtr()"
                 )
             elif parm.is_pointer_to_constantarray_of_basic_type(degree=1, incomplete_array=True):
                 if isinstance(parm_innermost_type,tree.ConstantArray): # type has a wrapper class
@@ -1606,7 +1606,7 @@ cdef void* {funptr_name} = NULL
                     sig_args.append(f"object {parm_name}")
                     parm_python_types[parm.name] = f"{parm_typename}/object" # use original name as key
                     c_interface_call_args.append(
-                        f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).getElementPtr()"
+                        f"\n{indent*2}{parm_typename}.fromPyobj({parm_name}).getElementPtr()"
                     )
                 else: # type has no wrapper class, emit default handler
                     parm_typename = parm.cython_global_typename
@@ -1657,7 +1657,7 @@ cdef void* {funptr_name} = NULL
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
                 c_interface_call_args.append(
-                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name}).getElementPtr()[0]"
+                    f"\n{indent*2}{parm_typename}.fromPyobj({parm_name}).getElementPtr()[0]"
                 )
                 parm_python_types[parm.name] = parm_typename
             else:
@@ -1723,22 +1723,22 @@ cdef void* {funptr_name} = NULL
             innermost_typename = self.lookup_innermost_type().cython_global_name
             # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
             # that was inserted because of a typedef.
-            return f"{retvalname} = {innermost_typename}.from_value({c_interface_call})"
+            return f"{retvalname} = {innermost_typename}.fromValue({c_interface_call})"
         elif self.is_pointer_to_record():
             out_args.insert(0, retvalname_or_none)
             innermost_typename = self.lookup_innermost_type().cython_global_name
             # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
             # that was inserted because of a typedef.
-            return f"{retvalname} = {innermost_typename}.from_ptr({c_interface_call})"
+            return f"{retvalname} = {innermost_typename}.fromPtr({c_interface_call})"
         elif self.is_pointer_to_char(degree=1):
             out_args.insert(0, retvalname_or_none)
-            return f"{retvalname} = {self.util_types_prefix}CStr.from_ptr(<void*>{c_interface_call})"
+            return f"{retvalname} = {self.util_types_prefix}CStr.fromPtr(<void*>{c_interface_call})"
         elif self.is_any_pointer:
             out_args.insert(0, retvalname_or_none)
-            return f"{retvalname} = {self.util_types_prefix}Pointer.from_ptr(<void*>{c_interface_call})"
+            return f"{retvalname} = {self.util_types_prefix}Pointer.fromPtr(<void*>{c_interface_call})"
         else:
             msg = "<{self.render_location()}> function {self.name}: return value type could not be classified."
-            _log.warn(msg)
+            _log.warning(msg)
             raise RuntimeError(msg)
 
     def render_python_docstring(self, cprefix: str) -> str:
