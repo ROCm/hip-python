@@ -752,7 +752,7 @@ def write_package_init_file(
                 pass # may have been excluded from build""")
         f.write(init_content)
 
-def write_cuda_python_requirements_file(requirements_file: str, license_text: str,version: str):
+def write_hip_python_as_cuda_requirements_file(requirements_file: str, license_text: str,version: str):
     with open(requirements_file, "w") as outfile:
         outfile.write(
             license_text
@@ -766,7 +766,7 @@ def write_cuda_python_requirements_file(requirements_file: str, license_text: st
                 cython
                 wheel
                 build
-                hip-python=={version}.{{HIP_PYTHON_VERSION_SHORT}}"""
+                hip-python~={version}"""
             )
         )
 
@@ -985,7 +985,7 @@ if __name__ == "__main__":
     requirements_file = os.path.join(
         OUTPUT_DIR, "hip-python-as-cuda", "requirements.txt.in"
     )
-    write_cuda_python_requirements_file(requirements_file,license_text,version)
+    write_hip_python_as_cuda_requirements_file(requirements_file,license_text,rocm_version_name)
 
     # hip-python docs
     hip_python_docs_dir = os.path.join(OUTPUT_DIR,"docs")
