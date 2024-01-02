@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2023 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -233,6 +233,20 @@ class hip:
         result = result.replace("This section describes the event management functions of HIP runtime API.","")
         return result
 
+    @staticmethod
+    def renamer(name: str):
+        """Handle macros that rename functions and types.
+
+        Handles the following ROCm 6.0.0 macros:
+
+        ```
+        #define hipGetDeviceProperties hipGetDevicePropertiesR0600
+        #define hipDeviceProp_t hipDeviceProp_tR0600
+        #define hipChooseDevice hipChooseDeviceR0600
+        ```
+        """
+        return name.replace("R0600","")
+
 # HIPRTC
 
 class hiprtc:
@@ -372,11 +386,11 @@ class hipblas:
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
-    
+
     @staticmethod
     def raw_comment_cleaner(raw_comment: str):
         """Cleans hipBLAS doxygen documentation strings.
-        
+
         Removes the ******************************************************************
         """
         return raw_comment.replace("******************************************************************","")
@@ -418,7 +432,7 @@ class hipsolver:
         Most of the parameter names follow LAPACK convention.
         """
         return hipblas.ptr_rank(node)
-    
+
     @staticmethod
     def raw_comment_cleaner(raw_comment: str):
         return raw_comment
@@ -646,11 +660,11 @@ class hipsparse:
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
-    
+
     @staticmethod
     def raw_comment_cleaner(raw_comment: str):
         """Cleans hipSPARSE doxygen documentation strings.
-        
+
         Removes the doxygen @{ group start parts from the comments.
         """
         parts = []
@@ -660,11 +674,11 @@ class hipsparse:
                 parts.append(tokens[0])
                 if "@}" in stripped or "@{" in stripped:
                     print(tokens[0])
-                
+
         return "\n".join(parts)
-    
+
 # ROCTX
-    
+
 class roctx:
 
     @staticmethod
@@ -696,10 +710,9 @@ class roctx:
         In roctx, all pointers are `const char *`, i.e. char sequences.
         """
         return 1
-    
+
     @staticmethod
     def raw_comment_cleaner(raw_comment: str):
         """Cleans roctx doxygen documentation strings.
         """
         return raw_comment
-    

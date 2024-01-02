@@ -44,8 +44,6 @@ _log = logging.getLogger("interfacegen")
 
 import controls
 import cuda_interop_layer_gen
-import interfacegen.gitversion
-import interfacegen.cython
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
@@ -313,6 +311,9 @@ def generate_hip_module_files():
                     f"{node.name}.malloc({len_param.name})"
                 )
 
+    def renamer(name: str):
+        return interfacegen.cython.DEFAULT_RENAMER(controls.hip.renamer(name))
+
     generator = CythonModuleGenerator(
         "hip.hip",
         ROCM_INC,
@@ -325,6 +326,7 @@ def generate_hip_module_files():
           # we hijack hipError_t constant hipErrorInitializationError for propagating exceptions
           # more details: https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
         node_init = hip_node_init,
+        renamer=renamer,
         node_filter=controls.hip.node_filter,
         ptr_parm_intent=controls.hip.ptr_parm_intent,
         ptr_rank=controls.hip.ptr_rank,

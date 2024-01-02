@@ -346,7 +346,7 @@ def generate_cuda_interop_module_files(
 
     # main loop over nodes
     for node in backend.walk_filtered_nodes():
-        hip_name = node.name
+        hip_name = node.renamer(node.name)
         if isinstance(node, AnonymousEnum):
             # Anonymous enums won't have a different CUDA name but their constants might
             handle_enum_(node, hip_name, hip_name)  # hip_name is auto_generated in this case
