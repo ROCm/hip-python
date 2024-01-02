@@ -1544,22 +1544,22 @@ cdef void* {funptr_name} = NULL
             elif parm.is_pointer_to_basic_type(degree=-2) or parm.is_pointer_to_void(
                 degree=-2
             ):
-                parm_typename = parm.cursor.type.get_canonical().spelling
                 parm_typename = parm.ptr_complicated_type_handler(parm)
-                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
+                cparm_typename = parm.cursor.type.get_canonical().spelling
+                prolog.append(f"{parm_name} = {parm_typename}.fromPtr(NULL)")
                 c_interface_call_args.append( # note: typecasts to expected type
-                    f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr" # must be lvalue expression
+                    f"\n{indent*2}<{cparm_typename}>&{parm_name}._ptr" # must be lvalue expression
                 )
                 parm_python_types[parm.name] = f"{parm_typename}/object"
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
             elif parm.is_pointer_to_basic_type(degree=-1) or parm.is_pointer_to_void(
                 degree=-1
             ):
-                parm_typename = parm.cursor.type.get_canonical().spelling
                 parm_typename = parm.ptr_complicated_type_handler(parm)
-                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
+                cparm_typename = parm.cursor.type.get_canonical().spelling
+                prolog.append(f"{parm_name} = {parm_typename}.fromPtr(NULL)")
                 c_interface_call_args.append( # note: typecasts to expected type
-                    f"\n{indent*2}<{parm_typename}>{parm_name}._ptr" # must be lvalue expression
+                    f"\n{indent*2}<{cparm_typename}>{parm_name}._ptr" # must be lvalue expression
                 )
                 parm_python_types[parm.name] = f"{parm_typename}/object"
                 out_args.append(f"None if {parm_name}._ptr == NULL else {parm_name}")
