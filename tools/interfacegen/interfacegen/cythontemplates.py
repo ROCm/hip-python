@@ -134,12 +134,18 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         return wrapper
 
     @staticmethod
-    def fromObject(object):
-        return {{name}}.fromPyobj(object)
+    def fromObj(pyobj):
+        \"""Creates a {{name}} from a Python object.
+
+        Derives a {{name}} from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``{{name}}`` reference, this method
+        returns it directly. No new ``{{name}}`` is created in this case.
+        \"""
+        return {{name}}.fromPyobj(pyobj)
 
     @staticmethod
     cdef {{name}} fromPyobj(object pyobj):
-        \"""Derives a {{name}} from a Python object.
+        \"""Creates a {{name}} from a Python object.
 
         Derives a {{name}} from the given Python object ``pyobj``.
         In case ``pyobj`` is itself an ``{{name}}`` reference, this method

@@ -162,15 +162,20 @@ cdef class Pointer:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
 
     @staticmethod
-    def fromObject(object):
-        return Pointer.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates a Pointer from the given object.
+
+        In case ``pyobj`` is itself a ``Pointer`` instance, this method
+        returns it directly. No new ``Pointer`` is created.
+        """"
+        return Pointer.fromPyobj(pyobj)
 
     @staticmethod
     cdef Pointer fromPyobj(object pyobj):
-        """Derives a Pointer from the given object.
+        """Creates a Pointer from the given object.
 
         In case ``pyobj`` is itself an ``Pointer`` instance, this method
-        returns it directly. No new Pointer is created.
+        returns it directly. No new ``Pointer`` is created.
 
         Args:
             pyobj (`object`):
@@ -369,15 +374,20 @@ cdef class CStr(Pointer):
             self.get_or_determine_len()
 
     @staticmethod
-    def fromObject(object):
-        return CStr.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates a CStr from the given object.
+
+        In case ``pyobj`` is itself a ``CStr`` instance, this method
+        returns it directly. No new ``CStr`` is created.
+        """"
+        return CStr.fromPyobj(pyobj)
 
     @staticmethod
     cdef CStr fromPyobj(object pyobj):
         """Derives a CStr from the given object.
 
-        In case ``pyobj`` is itself an `CStr` instance, this method
-        returns it directly. No new `CStr` is created.
+        In case ``pyobj`` is itself an ``CStr`` instance, this method
+        returns it directly. No new ``CStr`` is created.
 
         Args:
             pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
@@ -562,8 +572,13 @@ cdef class ImmortalCStr(CStr):
         return wrapper
 
     @staticmethod
-    def fromObject(object):
-        return ImmortalCStr.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates an ImmortalCStr from the given object.
+
+        In case ``pyobj`` is itself a ``ImmortalCStr`` instance, this method
+        returns it directly. No new ``ImmortalCStr`` is created.
+        """"
+        return ImmortalCStr.fromPyobj(pyobj)
 
     @staticmethod
     cdef ImmortalCStr fromPyobj(object pyobj):
@@ -993,15 +1008,20 @@ cdef class DeviceArray(Pointer):
             raise NotImplementedError(f"no conversion implemented for instance of '{type(pyobj)}'")
 
     @staticmethod
-    def fromObject(object):
-        return DeviceArray.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates a DeviceArray from the given object.
+
+        In case ``pyobj`` is itself a ``DeviceArray`` instance, this method
+        returns it directly. No new ``DeviceArray`` is created.
+        """
+        return DeviceArray.fromPyobj(pyobj)
 
     @staticmethod
     cdef DeviceArray fromPyobj(object pyobj):
-        """Derives a DeviceArray from the given object.
+        """Creates a DeviceArray from the given object.
 
-        In case ``pyobj`` is itself an `DeviceArray` instance, this method
-        returns it directly. No new DeviceArray is created.
+        In case ``pyobj`` is itself a ``DeviceArray`` instance, this method
+        returns it directly. No new ``DeviceArray`` is created.
 
         Args:
             pyobj (`object`):
@@ -1264,15 +1284,20 @@ cdef class ListOfBytes(Pointer):
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    def fromObject(object):
-        return ListOfBytes.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates a ListOfBytes from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfBytes`` instance, this method
+        returns it directly. No new ``ListOfBytes`` is created.
+        """
+        return ListOfBytes.fromPyobj(pyobj)
 
     @staticmethod
     cdef ListOfBytes fromPyobj(object pyobj):
         """Derives a ListOfBytes from the given object.
 
-        In case ``pyobj`` is itself an `ListOfBytes` instance, this method
-        returns it directly. No new ListOfBytes is created.
+        In case ``pyobj`` is itself an ``ListOfBytes`` instance, this method
+        returns it directly. No new ``ListOfBytes`` is created.
 
         Args:
             pyobj (`object`): Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
@@ -1381,15 +1406,20 @@ cdef class ListOfPointer(Pointer):
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    def fromObject(object):
-        return ListOfPointer.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates a ListOfPointer from the given object.
+
+        In case ``pyobj`` is itself a ``ListOfPointer`` instance, this method
+        returns it directly. No new ``ListOfPointer`` is created.
+        """
+        return ListOfPointer.fromPyobj(pyobj)
 
     @staticmethod
     cdef ListOfPointer fromPyobj(object pyobj):
-        """Derives a ListOfPointer from the given object.
+        """Creates a ListOfPointer from the given object.
 
-        In case ``pyobj`` is itself an `ListOfPointer` instance, this method
-        returns it directly. No new `ListOfPointer` is created.
+        In case ``pyobj`` is itself an ``ListOfPointer`` instance, this method
+        returns it directly. No new ``ListOfPointer`` is created.
 
         Args:
             pyobj (`object`):
@@ -1519,15 +1549,20 @@ cdef class ListOfInt(Pointer):
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    def fromObject(object):
-        return ListOfInt.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates a ListOfInt from the given object.
+
+        In case ``pyobj`` is itself a ``ListOfInt`` instance, this method
+        returns it directly. No new ``ListOfInt`` is created.
+        """
+        return ListOfInt.fromPyobj(pyobj)
 
     @staticmethod
     cdef ListOfInt fromPyobj(object pyobj):
         """Derives a ListOfInt from the given object.
 
         In case ``pyobj`` is itself an ``ListOfInt`` instance, this method
-        returns it directly. No new ListOfInt is created.
+        returns it directly. No new ``ListOfInt`` is created.
 
         Args:
             pyobj (`object`):
@@ -1657,15 +1692,20 @@ cdef class ListOfUnsigned(Pointer):
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    def fromObject(object):
-        return ListOfUnsigned.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates a ListOfUnsigned from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfUnsigned`` instance, this method
+        returns it directly. No new ``ListOfUnsigned`` is created.
+        """
+        return ListOfUnsigned.fromPyobj(pyobj)
 
     @staticmethod
     cdef ListOfUnsigned fromPyobj(object pyobj):
-        """Derives a ListOfUnsigned from the given object.
+        """Creates a ListOfUnsigned from the given object.
 
-        In case ``pyobj`` is itself an `ListOfUnsigned` instance, this method
-        returns it directly. No new ListOfUnsigned is created.
+        In case ``pyobj`` is itself an ``ListOfUnsigned`` instance, this method
+        returns it directly. No new ``ListOfUnsigned`` is created.
 
         Args:
             pyobj (`object`):
@@ -1795,15 +1835,20 @@ cdef class ListOfUnsignedLong(Pointer):
             Pointer.init_from_pyobj(self,pyobj)
 
     @staticmethod
-    def fromObject(object):
-        return ListOfUnsignedLong.fromPyobj(object)
+    def fromObj(pyobj):
+        """Creates a ListOfUnsignedLong from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfUnsignedLong`` instance, this method
+        returns it directly. No new ``ListOfUnsignedLong`` is created.
+        """
+        return ListOfUnsignedLong.fromPyobj(pyobj)
 
     @staticmethod
     cdef ListOfUnsignedLong fromPyobj(object pyobj):
-        """Derives a ListOfUnsignedLong from the given object.
+        """Creates a ListOfUnsignedLong from the given object.
 
         In case ``pyobj`` is itself an ``ListOfUnsignedLong`` instance, this method
-        returns it directly. No new ListOfUnsignedLong is created.
+        returns it directly. No new ``ListOfUnsignedLong`` is created.
 
         Args:
             pyobj (`object`):
