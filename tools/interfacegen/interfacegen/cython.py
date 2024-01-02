@@ -1117,7 +1117,7 @@ class ConstantArrayMixin(CythonMixin):
         name = self.cython_global_name
         template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_impl_base_template.rstrip("\n")
-            + "\n\n"
+            + "\n"
             + cythontemplates.wrapper_class_constantarray_get_element_template
         )
         self.all.append(self.cython_global_name)

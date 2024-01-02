@@ -382,11 +382,11 @@ wrapper_class_constantarray_get_element_template = """\
     {{if is_basic_type}}
     def __getitem__(self,subscript):
         {{if is_dim_1}}
-        cdef size_t index
+        cdef ssize_t index
         if isinstance(subscript,int):
-            if subscript < 0 or subscript >= shape[0]:
-                raise IndexError(f"Index must be in range 0 .. {shape[0]}")
-            index = cpython.long.PyLong_AsSize_t(subscript)
+            index = cpython.long.PyLong_AsSsize_t(subscript)
+            if index < 0 or index >= {{shape[0]}}:
+                raise IndexError(f"Index must be in range 0 .. {{shape[0]}}")
             return {{element_ptr}}[0][index]
         elif isinstance(subscript,slice):
             raise NotImplementedError(f"subscript of type 'slice' is not supported yet")
