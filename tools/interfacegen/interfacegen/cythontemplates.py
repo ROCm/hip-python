@@ -279,95 +279,96 @@ wrapper_class_record_init_template = """\
             setattr(self,k,v)
 """
 
+# note: must be dedented
 wrapper_class_record_property_template = """\
-    {{py: cptr_type = record_cname + "*"}}
-    {{py: element_ptr = "(<"+cptr_type+">self._ptr)"}}
-    {{if is_basic_type}}
-    def get_{{attr}}(self, i):
-        \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-        \"""
-        return {{element_ptr}}[i].{{attr}}
-    def set_{{attr}}(self, i, {{typename}} value):
-        \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-        \"""
-        {{element_ptr}}[i].{{attr}} = value
-    @property
-    def {{attr}}(self):
-        \"""{{brief_comment}}\"""
-        return self.get_{{attr}}(0)
-    @{{attr}}.setter
-    def {{attr}}(self, {{typename}} value):
-        self.set_{{attr}}(0,value)
-    {{elif is_pointer_to_basic_type_or_void}}
-    def get_{{attr}}(self, i):
-        \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-        \"""
-        return {{handler}}.from_ptr({{element_ptr}}[i].{{attr}})
-    def set_{{attr}}(self, i, object value):
-        \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+{{py: cptr_type = record_cname + "*"}}
+{{py: element_ptr = "(<"+cptr_type+">self._ptr)"}}
+{{if is_basic_type}}
+def get_{{attr}}(self, i):
+    \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    return {{element_ptr}}[i].{{attr}}
+def set_{{attr}}(self, i, {{typename}} value):
+    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    {{element_ptr}}[i].{{attr}} = value
+@property
+def {{attr}}(self):
+    \"""{{brief_comment}}\"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self, {{typename}} value):
+    self.set_{{attr}}(0,value)
+{{elif is_pointer_to_basic_type_or_void}}
+def get_{{attr}}(self, i):
+    \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    return {{handler}}.from_ptr({{element_ptr}}[i].{{attr}})
+def set_{{attr}}(self, i, object value):
+    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
 
-        Note:
-            This can be dangerous if the pointer is from a python object
-            that is later on garbage collected.
-        \"""
-        {{element_ptr}}[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
-    @property
-    def {{attr}}(self):
-        \"""{{brief_comment}}
-        Note:
-            Setting this {{attr}} can be dangerous if the underlying pointer is from a python object that
-            is later on garbage collected.
-        \"""
-        return self.get_{{attr}}(0)
-    @{{attr}}.setter
-    def {{attr}}(self, object value):
-        self.set_{{attr}}(0,value)
-    {{elif is_basic_type_constantarray}}
-    def get_{{attr}}(self, i):
-        \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
-        \"""
-        return {{element_ptr}}[i].{{attr}}
-    # TODO add setters
-    #def set_{{attr}}(self, i, {{typename}} value):
-    #    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-    #    \"""
-    #    {{element_ptr}}[i].{{attr}} = value
-    @property
-    def {{attr}}(self):
-        \"""{{brief_comment}}\"""
-        return self.get_{{attr}}(0)
-    # TODO add setters
-    #@{{attr}}.setter
-    #def {{attr}}(self, {{typename}} value):
-    #    self.set_{{attr}}(0,value)
-    {{elif is_enum}}
-    def get_{{attr}}(self, i):
-        \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
-        \"""
-        return {{typename}}({{element_ptr}}[i].{{attr}})
-    def set_{{attr}}(self, i, value):
-        \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
-        \"""
-        if not isinstance(value, {{typename}}):
-            raise TypeError("'value' must be of type '{{typename}}'")
-        {{element_ptr}}[i].{{attr}} = value.value
-    @property
-    def {{attr}}(self):
-        \"""{{brief_comment}}\"""
-        return self.get_{{attr}}(0)
-    @{{attr}}.setter
-    def {{attr}}(self, value):
-        self.set_{{attr}}(0,value)
-    {{elif is_record}}
-    def get_{{attr}}(self, i):
-        \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
-        \"""
-        return {{typename}}.from_ptr(&{{element_ptr}}[i].{{attr}})
-    @property
-    def {{attr}}(self):
-        \"""{{brief_comment}}\"""
-        return self.get_{{attr}}(0)
-    {{endif}}
+    Note:
+        This can be dangerous if the pointer is from a python object
+        that is later on garbage collected.
+    \"""
+    {{element_ptr}}[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
+@property
+def {{attr}}(self):
+    \"""{{brief_comment}}
+    Note:
+        Setting this {{attr}} can be dangerous if the underlying pointer is from a python object that
+        is later on garbage collected.
+    \"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self, object value):
+    self.set_{{attr}}(0,value)
+{{elif is_basic_type_constantarray}}
+def get_{{attr}}(self, i):
+    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    return {{element_ptr}}[i].{{attr}}
+# TODO add setters
+#def set_{{attr}}(self, i, {{typename}} value):
+#    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+#    \"""
+#    {{element_ptr}}[i].{{attr}} = value
+@property
+def {{attr}}(self):
+    \"""{{brief_comment}}\"""
+    return self.get_{{attr}}(0)
+# TODO add setters
+#@{{attr}}.setter
+#def {{attr}}(self, {{typename}} value):
+#    self.set_{{attr}}(0,value)
+{{elif is_enum}}
+def get_{{attr}}(self, i):
+    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    return {{typename}}({{element_ptr}}[i].{{attr}})
+def set_{{attr}}(self, i, value):
+    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    if not isinstance(value, {{typename}}):
+        raise TypeError("'value' must be of type '{{typename}}'")
+    {{element_ptr}}[i].{{attr}} = value.value
+@property
+def {{attr}}(self):
+    \"""{{brief_comment}}\"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self, value):
+    self.set_{{attr}}(0,value)
+{{elif is_record}}
+def get_{{attr}}(self, i):
+    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    return {{typename}}.from_ptr(&{{element_ptr}}[i].{{attr}})
+@property
+def {{attr}}(self):
+    \"""{{brief_comment}}\"""
+    return self.get_{{attr}}(0)
+{{endif}}
 """
 
 wrapper_class_constantarray_get_element_template = """\
@@ -396,4 +397,4 @@ wrapper_class_constantarray_get_element_template = """\
         raise NotImplementedError(f"accessing values of multi-dimensional arrays not supported yet")
         {{endif}}
     {{endif}}
-    """
+"""
