@@ -1193,12 +1193,28 @@ class ParmMixin(CythonMixin, Typed):
 
     @property
     def cython_repr(self):
+        """Returns the Cython (C) representation of the parameter.
+
+        Returns ``{typename} {name}`` in most cases.
+        Special care is take for pointers to constant arrays.
+
+        Example:
+
+            For a parameter 'arr' with name 'int (**)[][23]' the parameter representation would be
+            int (**arr)[][23].
+        """
         from . import tree
 
+        # TODO must be adjusted for
         assert isinstance(self, tree.Parm)
-        typename = self.cython_global_typename
+        typename: str = self.cython_global_typename
         name = self.cython_name
-        return f"{typename} {name}"
+        if self.is_pointer_to_constantarray_of_basic_type(-1,True):
+            # example typename: 'int (**)[][23]'
+            parts = typename.split(")",maxsplit=1)
+            return f"{parts[0]}{name}){parts[1]}"
+        else:
+            return f"{typename} {name}"
 
 class FunctionMixin(CythonMixin, Typed):
 
