@@ -825,7 +825,7 @@ def generate_cuda_interop_layer_files(license_text: str):
     global HIP_GENERATOR
 
     if HIPRTC_GENERATOR==None or HIP_GENERATOR==None:
-        _log.warn("No CUDA runtime layer generated as 'hip' and/or 'hiprtc' have not been specified as libraries to parse.")
+        _log.warning("No CUDA runtime layer generated as 'hip' and/or 'hiprtc' have not been specified as libraries to parse.")
         return
 
     cuda_interop_layer_gen.generate_cuda_interop_module_files(

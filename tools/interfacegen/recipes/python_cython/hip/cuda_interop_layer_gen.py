@@ -185,7 +185,7 @@ def generate_cuda_interop_module_files(
                     candidates.append(other_hip_name)
             candidates_formatted = ", ".join(["'" + c + "'" for c in candidates])
             msg += f"; most similar hipify-perl HIP symbols (Levenshtein ratio > {cutoff}): [{candidates_formatted}]"
-        _log.warn(msg)
+        _log.warning(msg)
 
     all = ["HIP_PYTHON","hip_python_mod",module_name]
     docstring_attributes = []
