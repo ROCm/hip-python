@@ -285,7 +285,7 @@ class DoxygenMixin:
             # clip other sections before the brief, TODO make option
             sections = sections[sections.index(doxygen_brief)+1:]
             if len(doxygen_brief[0]) > 1:
-                _log.warn(f"{log_prefix}doxygen: more than one text/verbatim/math block in section 'brief'. Ignore others.")
+                _log.warning(f"{log_prefix}doxygen: more than one text/verbatim/math block in section 'brief'. Ignore others.")
             if not isinstance(doxygen_brief.first_block,doxyparser.TextBlock):
                 raise RuntimeError(f"{log_prefix}doxygen: expected single text block in section 'brief'")
             return doxygen_brief.first_block.transformed_text.strip() +"\n\n"
@@ -1370,14 +1370,14 @@ cdef void* {funptr_name} = NULL
                 dir = (f" -- *{section.tokens[1][1:-1].replace(' ','').upper()}*") if section.tokens[1] != None else ""
                 for name in names:
                     if not len(descr.strip()):
-                        _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: doxygen param '{name}' has empty documentation.")
+                        _log.warning(f"<{self.render_location()}> function {self.name}: doxygen: doxygen param '{name}' has empty documentation.")
 
                     if name in parms_still_to_be_documented:
                         type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
                         parms_still_to_be_documented.remove(name)
                     else:
                         type_info = ""
-                        _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: doxygen param '{name}' is not part of function signature.")
+                        _log.warning(f"<{self.render_location()}> function {self.name}: doxygen: doxygen param '{name}' is not part of function signature.")
 
                     if name in out_arg_names:
                         docstring_out_arg_returns.append(f"{single_level_indent}{type_info}:\n{descr}")
@@ -1390,9 +1390,9 @@ cdef void* {funptr_name} = NULL
 
         # Combine multiple return statements
         if not len(docstring_returns) and not self.is_void:
-            _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: undocumented return value.")
+            _log.warning(f"<{self.render_location()}> function {self.name}: doxygen: undocumented return value.")
         if len(docstring_returns) and self.is_void:
-            _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: has return section but is void.")
+            _log.warning(f"<{self.render_location()}> function {self.name}: doxygen: has return section but is void.")
         combined_docstring_return = None
         if len(docstring_returns):
              retval_typename = self._python_interface_retval_typename()
@@ -1413,7 +1413,7 @@ cdef void* {funptr_name} = NULL
         # append undocumented arguments too but warn
         if len(parms_still_to_be_documented):
             for name in parms_still_to_be_documented:
-                _log.warn(f"<{self.render_location()}> function {self.name}: doxygen: function arg '{name}' is not documented.")
+                _log.warning(f"<{self.render_location()}> function {self.name}: doxygen: function arg '{name}' is not documented.")
                 type_info = "/".join([CythonMixin.to_sphinx_pyobj(p) for p in parm_python_types[name].split("/")])
                 type_info = f" ({type_info})"
                 if name in out_arg_names:
@@ -1680,7 +1680,7 @@ cdef void* {funptr_name} = NULL
 
         fully_specified = len(list(self.parms)) == len(c_interface_call_args)
         if not fully_specified:
-            _log.warn(f"interfacegen.cython: not all parameters could be classified for function {self.name} (from <{self.render_location()}>)")
+            _log.warning(f"interfacegen.cython: not all parameters could be classified for function {self.name} (from <{self.render_location()}>)")
         setattr(self, "is_python_code_complete", fully_specified)
         assert len(parm_python_types) == len(c_interface_call_args), f"{self.name=} {str(parm_python_types)=}"
 
@@ -1796,7 +1796,7 @@ cdef void* {funptr_name} = NULL
                 else:
                     result += f"{indent}return {out_args[0]}\n"
         else:
-            _log.warn(f" function {self.cython_global_name}: not all parameters could be mapped")
+            _log.warning(f" function {self.cython_global_name}: not all parameters could be mapped")
             result += f"{indent}pass"
         self.all.append(self.cython_global_name)
         return result

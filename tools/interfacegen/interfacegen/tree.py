@@ -1209,7 +1209,7 @@ def from_libclang_translation_unit(
                     f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
                 )
                 if warn_mode == control.Warnings.WARN:
-                    _log.warn(msg)
+                    _log.warning(msg)
                 else:
                     _log.error(f"ERROR: {msg}'")
                     sys.exit(2)
@@ -1326,7 +1326,7 @@ def from_libclang_translation_unit(
                 _log.debug(f"handle_typedef_cursor_: typedefed enum/record: found {type_decl_cursor.type.kind} with name and typedef name '{type_decl_cursor.spelling}'")
                 pass # do not append typedef node
         else:
-            _log.warn(f"<{Node.render_cursor_location(cursor)}> Did not handle {cursor.type.kind} with typedef name '{cursor.spelling}'")
+            _log.warning(f"<{Node.render_cursor_location(cursor)}> Did not handle {cursor.type.kind} with typedef name '{cursor.spelling}'")
 
     def handle_nested_record_or_enum_cursor_(cursor: clang.cindex.Cursor, parent: Node):
         """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
