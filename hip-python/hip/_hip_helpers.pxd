@@ -32,9 +32,9 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
     cdef size_t _aligned_size(self, size_t size, size_t factor)
     
     @staticmethod
-    cdef HipModuleLaunchKernel_extra from_ptr(void* ptr)
+    cdef HipModuleLaunchKernel_extra fromPtr(void* ptr)
     
     cdef void init_from_pyobj(self, object pyobj)
     
     @staticmethod
-    cdef HipModuleLaunchKernel_extra from_pyobj(object pyobj)
+    cdef HipModuleLaunchKernel_extra fromPyobj(object pyobj)
