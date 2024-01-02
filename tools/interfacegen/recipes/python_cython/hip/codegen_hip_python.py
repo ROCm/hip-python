@@ -429,12 +429,17 @@ def generate_hipblas_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-    from .chip cimport hipStream_t
+    from .chip cimport *
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    from .hip cimport ihipStream_t
+    from .hip cimport *
+    """
+    )
+    generator.python_interface_impl_prolog += textwrap.dedent(
+        """\
+    from .hip import _hipDataType__Base
     """
     )
     return generator
@@ -461,12 +466,21 @@ def generate_hipsolver_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-    from .chip cimport hipStream_t, float2, double2
+    # from .chip cimport * # via chipblas
+    from .chipblas cimport *
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    from .hip cimport ihipStream_t, float2, double2
+    # from .hip cimport * # via chipblas
+    from .hipblas cimport *
+    """
+    )
+    generator.python_interface_impl_prolog += textwrap.dedent(
+        """\
+    from .hipblas import _hipblasSideMode_t__Base
+    from .hipblas import _hipblasFillMode_t__Base
+    from .hipblas import _hipblasOperation_t__Base
     """
     )
     return generator
@@ -593,14 +607,18 @@ def generate_hipsparse_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-        from .chip cimport *
-        """
+    from .chip cimport *
+    """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-        from .hip import hipError_t, _hipDataType__Base # PY import enums
-        from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
-        """
+    from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
+    """
+    )
+    generator.python_interface_impl_prolog += textwrap.dedent(
+        """\
+    from .hip import hipError_t, _hipDataType__Base # PY import enums
+    """
     )
     return generator
 
