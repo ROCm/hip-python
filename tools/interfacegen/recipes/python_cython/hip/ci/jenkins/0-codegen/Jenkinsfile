@@ -64,7 +64,7 @@ pipeline {
         }
         stage('generate-code') {
             steps {
-                dir('recipes/python_cython/hip') {
+                dir ('recipes/python_cython/hip/hip-python-release-repo') {
                     sh '''#!/usr/bin/env bash
                     set -e
                     set -o xtrace
@@ -76,6 +76,8 @@ pipeline {
                     git branch ${CODEGEN_BRANCH}
                     git checkout ${CODEGEN_BRANCH}
                     '''
+                }
+                dir('recipes/python_cython/hip') {
                     sh 'bash ci/2-generate-code.sh'
                 }
                 dir ('recipes/python_cython/hip/hip-python-release-repo') {
@@ -86,7 +88,7 @@ pipeline {
                     git add hip-python-as-cuda
                     if [[ -n $(git status --porcelain) ]]; then 
                        CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
-                       git commit -m "regenerated code"
+                       git commit -m "generated code"
                        git push --set-upstream origin ${CODEGEN_BRANCH}
                     fi
                     '''
@@ -105,23 +107,24 @@ pipeline {
             steps {
                 sh 'rocm-smi'
                 dir('recipes/python_cython/hip/hip-python-release-repo') {
-                    sh 'bash ci/3-build-and-test-for-multiple-cpython-versions.sh'
-                    dir ('recipes/python_cython/hip/hip-python-release-repo') {
-                       sh '''#!/usr/bin/env bash
-                       set -e
-                       set -o xtrace
-                       CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
-                       git checkout ${CODEGEN_BRANCH}
-                       DEVELOP_BRANCH=${DEVELOP_BRANCH:-develop/rocm-rel-${ROCM_VER}}
-                       # remove local and origin branch if they exist
-                       git branch -d ${DEVELOP_BRANCH} || true
-                       git fetch origin
-                       git push origin --delete ${DEVELOP_BRANCH} || true
-                       git fetch origin
-                       git branch ${DEVELOP_BRANCH}
-                       git push --set-upstream origin ${DEVELOP_BRANCH}
-                       '''
-                    }
+                    sh '''#!/usr/bin/env bash
+                    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/rocm/lib
+                    bash ci/3-build-and-test-for-multiple-cpython-versions.sh
+                    '''
+                    sh '''#!/usr/bin/env bash
+                    set -e
+                    set -o xtrace
+                    CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
+                    git checkout ${CODEGEN_BRANCH}
+                    DEVELOP_BRANCH=${DEVELOP_BRANCH:-develop/rocm-rel-${ROCM_VER}}
+                    # remove local and origin branch if they exist
+                    git branch -d ${DEVELOP_BRANCH} || true
+                    git fetch origin
+                    git push origin --delete ${DEVELOP_BRANCH} || true
+                    git fetch origin
+                    git branch ${DEVELOP_BRANCH}
+                    git push --set-upstream origin ${DEVELOP_BRANCH}
+                    '''
                 }
             }
         }
