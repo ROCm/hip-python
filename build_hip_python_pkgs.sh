@@ -158,11 +158,11 @@ if [ ! -z ${BRANCH+x} ]; then
 fi
 
 alias PYTHON="python3"
-PYTHON_PATH="python3"
+declare -x PYTHON="python3"
 if [ -z ${NO_VENV+x} ]; then
   [ ! -d "_venv" ] && python3 -m venv _venv
   alias PYTHON="$(pwd)/_venv/bin/python3"
-  PYTHON_PATH="$(pwd)/_venv/bin/python3"
+  declare -x PYTHON="$(pwd)/_venv/bin/python3"
 fi
 shopt -s expand_aliases
 declare -x PYVER=$(PYTHON --version | grep -o "3\.[0-9]\+\." | tr -d '.')
