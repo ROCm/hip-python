@@ -60,3 +60,6 @@ sudo apt update
  
 # install ROCm
 sudo amdgpu-install -y --usecase=rocm --rocmrelease=${ROCM_VER} --no-dkms
+
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/rocm/lib
+
