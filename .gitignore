@@ -5,3 +5,4 @@ _venv
 _build
 hip-python
 hip-python-as-cuda
+examples/1_CUDA_Interop/build/
