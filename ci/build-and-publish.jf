@@ -69,27 +69,27 @@ pipeline {
         stage('get-repo') {
             steps {
                 git branch: 'new_main', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/ROCmSoftwarePlatform/hip-python'
-            }
-            dir('.') {
-                withCredentials([
-                    usernamePassword(credentialsId: 'HIP_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
-                    string(credentialsId: 'HIP_PYTHON_DEV_EMAIL', variable: 'GITHUB_EMAIL')
-                ]) {
-                    sh '''#!/usr/bin/env bash
-                    set -e
-                    set -o xtrace
-                    git config user.email "${GITHUB_EMAIL}"
-                    git config user.name "${GITHUB_USER}"
-                    git remote remove origin
-                    git remote add origin https://${GITHUB_TOKEN}@github.com/RocmSoftwarePlatform/hip-python
-                    '''
-                    sh '''#!/usr/bin/env bash
-                    set -e
-                    set -o xtrace
-                    export BASE_BRANCH="${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}"
-                    git checkout ${BASE_BRANCH}
-                    bash init.sh
-                    '''
+                dir('.') {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'HIP_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
+                        string(credentialsId: 'HIP_PYTHON_DEV_EMAIL', variable: 'GITHUB_EMAIL')
+                    ]) {
+                        sh '''#!/usr/bin/env bash
+                        set -e
+                        set -o xtrace
+                        git config user.email "${GITHUB_EMAIL}"
+                        git config user.name "${GITHUB_USER}"
+                        git remote remove origin
+                        git remote add origin https://${GITHUB_TOKEN}@github.com/RocmSoftwarePlatform/hip-python
+                        '''
+                        sh '''#!/usr/bin/env bash
+                        set -e
+                        set -o xtrace
+                        export BASE_BRANCH="${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}"
+                        git checkout ${BASE_BRANCH}
+                        bash init.sh
+                        '''
+                    }
                 }
             }
         }
@@ -140,11 +140,13 @@ pipeline {
         }
         stage('publish-binaries') {
             steps {
-                withCredentials([
-                    usernamePassword(credentialsId: 'HIP_PYTHON_TESTPYPI', passwordVariable: 'BINARY_REPO_TOKEN', usernameVariable: 'BINARY_REPO')
-                ]) {
-                    sh 'bash ci/4-prepare-upload-binary.sh'
-                    sh 'bash ci/5-upload-binary.sh'
+                dir('.') {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'HIP_PYTHON_TESTPYPI', passwordVariable: 'BINARY_REPO_TOKEN', usernameVariable: 'BINARY_REPO')
+                    ]) {
+                        sh 'bash ci/4-prepare-upload-binary.sh'
+                        sh 'bash ci/5-upload-binary.sh'
+                    }
                 }
             }
         }
