@@ -66,4 +66,3 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/rocm/lib
 # patch ROCm C API compilation issues
 sed -s -i "s,typedef rocrand_generator_base_type hiprandGenerator_st;,typedef struct rocrand_generator_base_type hiprandGenerator_st;," /opt/rocm/include/hiprand/hiprand_hcc.h || true
 sed -s -i 's,HIPSPARSE_ORDER_COLUMN\s*[[deprecated("Please use HIPSPARSE_ORDER_COL instead")]],HIPSPARSE_ORDER_COLUMN,g' /opt/rocm/include/hipsparse/hipsparse.h || true
-
