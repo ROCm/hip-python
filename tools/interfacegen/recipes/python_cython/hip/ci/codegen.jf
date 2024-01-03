@@ -1,12 +1,12 @@
 pipeline {
     agent {
-        docker { 
-            image 'ubuntu:20.04' 
+        docker {
+            image 'ubuntu:20.04'
             args '--device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
         }
     }
     parameters {
-        choice(
+        editableChoice(
             choices: [
                 '6.0.0',
                 '5.7.1',
@@ -20,6 +20,13 @@ pipeline {
             name: 'ROCM_VER'
         )
         string defaultValue: 'codegen/base', description: 'The base branch from which to derive the new development branch.', name: 'BASE_BRANCH'
+        editableChoice(
+            choices: [
+                'develop',
+            ],
+            description: 'The branch name will be constructed as `${DEVELOP_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
+            name: 'DEVELOP_BRANCH_PREFIX'
+        )
     }
     stages {
         stage('clean-ws') {
@@ -86,7 +93,7 @@ pipeline {
                     set -o xtrace
                     git add hip-python
                     git add hip-python-as-cuda
-                    if [[ -n $(git status --porcelain) ]]; then 
+                    if [[ -n $(git status --porcelain) ]]; then
                        CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
                        git commit -m "generated code"
                        git push --set-upstream origin ${CODEGEN_BRANCH}

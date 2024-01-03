@@ -19,7 +19,15 @@ pipeline {
             description: 'The ROCm version to target with the code generator.',
             name: 'ROCM_VER'
         )
-        string defaultValue: 'codegen/base', description: 'The base branch from which to derive the new development branch.', name: 'BASE_BRANCH'
+        choice(
+            choices: [
+                'develop',
+                'codegen',
+                'release',
+            ],
+            description: 'The branch name will be constructed as `${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.', 
+            name: 'BASE_BRANCH_PREFIX'
+        )
     }
     stages {
         stage('clean-ws') {
@@ -36,7 +44,10 @@ pipeline {
             steps {
                 sh 'apt-get update && apt-get -y install sudo'
                 dir('recipes/python_cython/hip') {
-                    sh 'bash ci/0-checkout-release-repo.sh'
+                    sh '''#!/usr/bin/env bash
+                    export BASE_BRANCH="${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}"
+                    bash ci/0-checkout-release-repo.sh
+                    '''
                 }
                 dir('recipes/python_cython/hip/hip-python-release-repo') {
                     withCredentials([
@@ -62,39 +73,6 @@ pipeline {
                 }
             }
         }
-        stage('generate-code') {
-            steps {
-                dir ('recipes/python_cython/hip/hip-python-release-repo') {
-                    sh '''#!/usr/bin/env bash
-                    set -e
-                    set -o xtrace
-                    CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
-                    git branch -d ${CODEGEN_BRANCH} || true
-                    git fetch origin
-                    git push origin --delete ${CODEGEN_BRANCH} || true
-                    git fetch origin
-                    git branch ${CODEGEN_BRANCH}
-                    git checkout ${CODEGEN_BRANCH}
-                    '''
-                }
-                dir('recipes/python_cython/hip') {
-                    sh 'bash ci/2-generate-code.sh'
-                }
-                dir ('recipes/python_cython/hip/hip-python-release-repo') {
-                    sh '''#!/usr/bin/env bash
-                    set -e
-                    set -o xtrace
-                    git add hip-python
-                    git add hip-python-as-cuda
-                    if [[ -n $(git status --porcelain) ]]; then 
-                       CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
-                       git commit -m "generated code"
-                       git push --set-upstream origin ${CODEGEN_BRANCH}
-                    fi
-                    '''
-                }
-            }
-        }
         stage('create-conda-envs') {
             steps {
                 dir('recipes/python_cython/hip/hip-python-release-repo') {
@@ -111,20 +89,6 @@ pipeline {
                     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/rocm/lib
                     bash ci/3b-build-and-test-for-multiple-cpython-versions.sh
                     '''
-                    sh '''#!/usr/bin/env bash
-                    set -e
-                    set -o xtrace
-                    CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
-                    git checkout ${CODEGEN_BRANCH}
-                    DEVELOP_BRANCH=${DEVELOP_BRANCH:-develop/rocm-rel-${ROCM_VER}}
-                    # remove local and origin branch if they exist
-                    git branch -d ${DEVELOP_BRANCH} || true
-                    git fetch origin
-                    git push origin --delete ${DEVELOP_BRANCH} || true
-                    git fetch origin
-                    git branch ${DEVELOP_BRANCH}
-                    git push --set-upstream origin ${DEVELOP_BRANCH}
-                    '''
                 }
             }
         }
@@ -132,12 +96,10 @@ pipeline {
         stage('publish') {
             steps {
             withCredentials([
-                usernamePassword(credentialsId: 'HIP_PYTHON_PUBLISH', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')
+                usernamePassword(credentialsId: 'HIP_PYTHON_TESTPYPI', passwordVariable: 'BINARY_REPO_TOKEN', usernameVariable: 'BINARY_REPO')
             ]) {
-                sh '''#!/usr/bin/env bash
-                bash ci/4-prepare-upload-binary.sh
-                bash ci/5-upload-binary.sh
-                '''
+                sh 'bash ci/4-prepare-upload-binary.sh'
+                sh 'bash ci/5-upload-binary.sh'
             }
         }
     }
