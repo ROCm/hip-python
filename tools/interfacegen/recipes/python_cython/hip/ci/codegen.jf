@@ -109,7 +109,7 @@ pipeline {
                 dir('recipes/python_cython/hip/hip-python-release-repo') {
                     sh '''#!/usr/bin/env bash
                     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/rocm/lib
-                    bash ci/3-build-and-test-for-multiple-cpython-versions.sh
+                    bash ci/3a-build-and-test-for-single-cpython-version.sh
                     '''
                     sh '''#!/usr/bin/env bash
                     set -e
