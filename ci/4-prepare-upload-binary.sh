@@ -31,7 +31,8 @@ set -o xtrace
 
 mkdir -p "_upload"
 rm -rf "_upload/*"
-mv hip-python/dist/*.whl _upload/
+cp hip-python/dist/*.whl _upload/
+cp hip-python-as-cuda/dist/*.whl _upload/
 
 cd _upload
 for f in *-linux_x86_64.whl;
