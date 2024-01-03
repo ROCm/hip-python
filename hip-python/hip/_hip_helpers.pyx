@@ -51,7 +51,7 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
         self._config[4] = <void*>hip.chip.HIP_LAUNCH_PARAM_END
 
     @staticmethod
-    cdef HipModuleLaunchKernel_extra from_ptr(void* ptr):
+    cdef HipModuleLaunchKernel_extra fromPtr(void* ptr):
         cdef HipModuleLaunchKernel_extra wrapper = HipModuleLaunchKernel_extra.__new__(HipModuleLaunchKernel_extra)
         wrapper._ptr = ptr
         return wrapper
@@ -125,16 +125,16 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
         else:
             hip._util.types.Pointer.init_from_pyobj(self,pyobj)
 
-   @staticmethod
-   def HipModuleLaunchKernel_extra fromObject(pyobj):
-       """Creates a HipModuleLaunchKernel_extra from the given object.
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a HipModuleLaunchKernel_extra from the given object.
 
-       In case ``pyobj`` is itself a ``HipModuleLaunchKernel_extra`` instance, this method
-       returns it directly. No new ``HipModuleLaunchKernel_extra`` is created.
-       """
-       return HipModuleLaunchKernel_extra.fromPyobj(pyobj)
+        In case ``pyobj`` is itself a ``HipModuleLaunchKernel_extra`` instance, this method
+        returns it directly. No new ``HipModuleLaunchKernel_extra`` is created.
+        """
+        return HipModuleLaunchKernel_extra.fromPyobj(pyobj)
 
-   @staticmethod
+    @staticmethod
     cdef HipModuleLaunchKernel_extra fromPyobj(object pyobj):
         """Creates a HipModuleLaunchKernel_extra from the given object.
 
