@@ -1,0 +1,150 @@
+// MIT License
+//
+// Copyright (c) 2023 Advanced Micro Devices, Inc.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+// requires plugins: "Docker Pipeline", "Editable Choice"
+
+pipeline {
+    agent {
+        docker {
+            image 'ubuntu:20.04'
+            args '--device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
+        }
+    }
+    parameters {
+        editableChoice(
+            choices: [
+                '6.0.0',
+                '5.7.1',
+                '5.7.0',
+                '5.6.1',
+                '5.5.1',
+                '5.5.0',
+                '5.4.3',
+            ],
+            description: 'The ROCm version to target with the code generator.',
+            name: 'ROCM_VER'
+        )
+        editableChoice(
+            choices: [
+                'develop',
+                'codegen',
+                'release',
+            ],
+            description: 'The branch name will be constructed as `${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
+            name: 'BASE_BRANCH_PREFIX'
+        )
+        editableChoice(
+            choices: [
+                'release',
+            ],
+            description: 'The branch name will be constructed as `${RELEASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
+            name: 'RELEASE_BRANCH_PREFIX'
+        )
+    }
+    stages {
+        stage('clean-ws') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('get-release-repo') {
+            steps {
+                sh 'apt-get update && apt-get -y install sudo'
+                dir('.') {
+                    sh '''#!/usr/bin/env bash
+                    export BASE_BRANCH="${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}"
+                    bash ci/0-checkout-release-repo.sh
+                    '''
+                }
+                dir('.') {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'HIP_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
+                        string(credentialsId: 'HIP_PYTHON_DEV_EMAIL', variable: 'GITHUB_EMAIL')
+                    ]) {
+                        sh '''#!/usr/bin/env bash
+                        set -e
+                        set -o xtrace
+                        git config user.email "${GITHUB_EMAIL}"
+                        git config user.name "${GITHUB_USER}"
+                        git remote remove origin
+                        git remote add origin https://${GITHUB_TOKEN}@github.com/RocmSoftwarePlatform/hip-python
+                        '''
+                    }
+                }
+            }
+        }
+        stage('install-rocm') {
+            steps {
+                dir('.') {
+                    sh 'SET_TIMEZONE=1 bash ci/1-install-rocm.sh'
+                }
+            }
+        }
+        stage('create-conda-envs') {
+            steps {
+                dir('.') {
+                    sh 'bash ci/1-install-conda.sh'
+                    sh 'bash ci/2-create-conda-envs.sh'
+                }
+            }
+        }
+        stage('build-and-test-all') {
+            steps {
+                sh 'rocm-smi'
+                dir('.') {
+                    sh '''#!/usr/bin/env bash
+                    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/rocm/lib
+                    bash ci/3b-build-and-test-for-multiple-cpython-versions.sh
+                    '''
+                }
+            }
+        }
+        stage('release-source-code') {
+            steps {
+                dir('.') {
+                    sh '''#!/usr/bin/env bash
+                    set -e
+                    set -o xtrace
+                    export RELEASE_BRANCH="${RELEASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}"
+                    # remove local and origin branch if they exist
+                    git branch -d ${RELEASE_BRANCH} || true
+                    git fetch origin
+                    git push origin --delete ${RELEASE_BRANCH} || true
+                    git fetch origin
+                    git branch ${RELEASE_BRANCH}
+                    git push --set-upstream origin ${RELEASE_BRANCH}
+                    '''
+                }
+            }
+        }
+        stage('publish-binaries') {
+            steps {
+                withCredentials([
+                    usernamePassword(credentialsId: 'HIP_PYTHON_TESTPYPI', passwordVariable: 'BINARY_REPO_TOKEN', usernameVariable: 'BINARY_REPO')
+                ]) {
+                    sh 'bash ci/4-prepare-upload-binary.sh'
+                    sh 'bash ci/5-upload-binary.sh'
+                }
+            }
+        }
+    }
+}
