@@ -36,3 +36,4 @@ pyver=38
 conda activate py${pyver}
 ./build_hip_python_pkgs.sh --pre-clean --post-clean --hip --cuda --run-tests -j ${NUM_JOBS:-16}
 conda deactivate
+
