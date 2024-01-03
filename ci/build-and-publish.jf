@@ -100,7 +100,7 @@ pipeline {
             steps {
                 dir('.') {
                     sh 'apt-get update && apt-get -y install sudo'
-                    sh 'SET_TIMEZONE=1 bash ci/1-install-rocm.sh'
+                    sh 'SET_TIMEZONE=1 bash ci/0-install-rocm.sh'
                 }
             }
         }
