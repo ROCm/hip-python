@@ -34,12 +34,12 @@ set -o xtrace
 
 if [ -z ${BINARY_REPO+x} ]; then
   echo "ERROR: environment variable 'BINARY_REPO' not set."
-  return 1
+  exit 1
 fi
 
 if [ -z ${BINARY_REPO_TOKEN+x} ]; then
-   echo "ERROR: environment variable 'BINARY_REPO_TOKEN' not set."
-  return 1
+  echo "ERROR: environment variable 'BINARY_REPO_TOKEN' not set."
+  exit 1
 fi
 
 python3 -m twine upload --repository ${BINARY_REPO} _upload/*.whl -u__token__ -p${BINARY_REPO_TOKEN}
