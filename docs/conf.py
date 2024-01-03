@@ -13,7 +13,7 @@ from rocm_docs import ROCmDocs
 
 project = "HIP Python"
 author = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
-copyright = "Copyright (c) 2023 Advanced Micro Devices, Inc."
+copyright = "Copyright (c) 2023-2024 Advanced Micro Devices, Inc."
 # article info
 os_support = ["linux"]
 date = "2023-06-23"

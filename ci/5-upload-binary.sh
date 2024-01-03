@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # MIT License
 # 
-# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -43,4 +43,3 @@ if [ -z ${BINARY_REPO_TOKEN+x} ]; then
 fi
 
 python3 -m twine upload --repository ${BINARY_REPO} _upload/*.whl -u__token__ -p${BINARY_REPO_TOKEN}
-

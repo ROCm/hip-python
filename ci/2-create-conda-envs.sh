@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # MIT License
 # 
-# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -34,4 +34,3 @@ for pyver in "38" "39" "310" "311";
 do
   conda env create -n py${pyver} -f ci/envs/py${pyver}.yml
 done
-

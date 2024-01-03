@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2023 Advanced Micro Devices, Inc.
+# Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -74,4 +74,3 @@ if have_hip_python_as_cuda:
     def test_cython_examples(example):
         abspath = os.path.join(os.path.dirname(__file__),os.path.dirname(example))
         subprocess.check_call(shlex.split(f"make -C {abspath} run"))
-
