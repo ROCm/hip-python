@@ -28,7 +28,7 @@ import pytest
 import shlex
 
 from hip import ROCM_VERSION_TUPLE
-enable_hiprtc_tests = ROCM_VERSION_TUPLE[0:2] != (5,5)
+device_printf_works = ROCM_VERSION_TUPLE[0:2] != (5,5)
 
 try:
     from cuda import cuda
@@ -48,7 +48,7 @@ python_examples = [
   "0_Basic_Usage/rccl_comminitall_bcast.py",
 ]
 
-if enable_hiprtc_tests:
+if device_printf_works:
     python_examples += [
       "0_Basic_Usage/hiprtc_launch_kernel_args.py",
       "0_Basic_Usage/hiprtc_launch_kernel_no_args.py",
