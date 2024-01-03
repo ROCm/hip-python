@@ -27,6 +27,14 @@ pipeline {
             description: 'The branch name will be constructed as `${DEVELOP_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
             name: 'DEVELOP_BRANCH_PREFIX'
         )
+        editableChoice(
+            choices: [
+                'feat/const-array-typedefs',
+                'main',
+            ],
+            description: 'The codegenerator branch to use.',
+            name: 'CODEGENERATOR_BRANCH'
+        )
     }
     stages {
         stage('clean-ws') {
@@ -36,7 +44,7 @@ pipeline {
         }
         stage('get-code-generator') {
             steps {
-                git branch: 'feat/const-array-typedefs', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/AMD-AI/hip-python'
+                git branch: '${CODEGENERATOR_BRANCH}', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/AMD-AI/hip-python'
             }
         }
         stage('get-release-repo') {
