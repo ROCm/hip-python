@@ -37,7 +37,7 @@ cp hip-python-as-cuda/dist/*.whl _upload/
 cd _upload
 for f in *-linux_x86_64.whl;
 do
-   mv $f ${linux/manylinux_2_17}
+   mv $f ${f/linux/manylinux_2_17}
 done
 cd ..
 
