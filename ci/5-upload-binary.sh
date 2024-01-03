@@ -42,4 +42,8 @@ if [ -z ${BINARY_REPO_TOKEN+x} ]; then
   exit 1
 fi
 
+pyver=38
+conda activate py${pyver}
 python3 -m twine upload --repository ${BINARY_REPO} _upload/*.whl -u__token__ -p${BINARY_REPO_TOKEN}
+conda deactivate
+
