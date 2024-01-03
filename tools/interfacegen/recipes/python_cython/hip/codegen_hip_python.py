@@ -768,7 +768,7 @@ def write_hip_python_as_cuda_requirements_file(requirements_file: str, license_t
                 cython
                 wheel
                 build
-                hip-python~={version}"""
+                hip-python=={version}.{{HIP_PYTHON_VERSION_SHORT}}"""
             )
         )
 
@@ -955,7 +955,7 @@ if __name__ == "__main__":
         ROCM_VERSION_PATCH,
     )
 
-    version = f"{rocm_version_name}.{interfacegen.gitversion.version()}"
+    version = f"{rocm_version_name}.{interfacegen.gitversion.git_branch_rev_count(interfacegen.gitversion.git_current_branch())}"
     long_version = (
         f"{rocm_version_name}.{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
     )
@@ -987,7 +987,7 @@ if __name__ == "__main__":
     requirements_file = os.path.join(
         OUTPUT_DIR, "hip-python-as-cuda", "requirements.txt.in"
     )
-    write_hip_python_as_cuda_requirements_file(requirements_file,license_text,rocm_version_name)
+    write_hip_python_as_cuda_requirements_file(requirements_file,license_text,version)
 
     # hip-python docs
     hip_python_docs_dir = os.path.join(OUTPUT_DIR,"docs")
