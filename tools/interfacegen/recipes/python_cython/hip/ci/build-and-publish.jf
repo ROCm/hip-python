@@ -1,12 +1,12 @@
 pipeline {
     agent {
-        docker { 
-            image 'ubuntu:20.04' 
+        docker {
+            image 'ubuntu:20.04'
             args '--device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
         }
     }
     parameters {
-        choice(
+        editableChoice(
             choices: [
                 '6.0.0',
                 '5.7.1',
@@ -19,14 +19,21 @@ pipeline {
             description: 'The ROCm version to target with the code generator.',
             name: 'ROCM_VER'
         )
-        choice(
+        editableChoice(
             choices: [
                 'develop',
                 'codegen',
                 'release',
             ],
-            description: 'The branch name will be constructed as `${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.', 
+            description: 'The branch name will be constructed as `${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
             name: 'BASE_BRANCH_PREFIX'
+        )
+        editableChoice(
+            choices: [
+                'release',
+            ],
+            description: 'The branch name will be constructed as `${RELEASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
+            name: 'RELEASE_BRANCH_PREFIX'
         )
     }
     stages {
@@ -92,8 +99,23 @@ pipeline {
                 }
             }
         }
-
-        stage('publish') {
+        stage('release-source-code') {
+            dir('recipes/python_cython/hip/hip-python-release-repo') {
+                sh '''#!/usr/bin/env bash
+                set -e
+                set -o xtrace
+                export RELEASE_BRANCH="${RELEASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}"
+                # remove local and origin branch if they exist
+                git branch -d ${RELEASE_BRANCH} || true
+                git fetch origin
+                git push origin --delete ${RELEASE_BRANCH} || true
+                git fetch origin
+                git branch ${RELEASE_BRANCH}
+                git push --set-upstream origin ${RELEASE_BRANCH}
+                '''
+            }
+        }
+        stage('publish-binaries') {
             steps {
             withCredentials([
                 usernamePassword(credentialsId: 'HIP_PYTHON_TESTPYPI', passwordVariable: 'BINARY_REPO_TOKEN', usernameVariable: 'BINARY_REPO')
