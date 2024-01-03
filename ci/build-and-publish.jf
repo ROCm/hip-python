@@ -69,6 +69,7 @@ pipeline {
         stage('get-repo') {
             steps {
                 git branch: 'new_main', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/ROCmSoftwarePlatform/hip-python'
+                sh 'apt update && apt install -y git'
                 dir('.') {
                     withCredentials([
                         usernamePassword(credentialsId: 'HIP_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
