@@ -32,11 +32,6 @@ fi
 set -e
 set -o xtrace
 
-if [ -z ${ROCM_VER+x} ]; then
-   echo "ERROR: environment variable 'ROCM_VER' not set."
-  return 1
-fi
-
 if [ -z ${BASE_BRANCH+x} ]; then
    echo "ERROR: environment variable 'BASE_BRANCH' not set."
   return 1
@@ -45,14 +40,10 @@ fi
 sudo apt update
 sudo apt install -y git
 
-NEW_BRANCH=${NEW_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
-
 RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-hip-python-release-repo}
 git clone https://github.com/ROCmSoftwarePlatform/hip-python.git ${RELEASE_REPO_DIR}
 cd ${RELEASE_REPO_DIR}
 git checkout ${BASE_BRANCH}
-git checkout ${NEW_BRANCH} || git branch ${NEW_BRANCH}
-git checkout ${NEW_BRANCH}
 
 # checkout all necessary tools
 bash init.sh
