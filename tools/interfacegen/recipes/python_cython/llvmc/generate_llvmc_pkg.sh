@@ -52,6 +52,10 @@ case $1 in
 esac
 
 OUTPUT_DIR=$1
+if [ -z ${OUTPUT_DIR} ]; then
+  echo "ERROR: no output dir specified."
+  exit 1
+fi
 shift
 
 while [[ $# -gt 0 ]]; do
@@ -95,6 +99,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [ -z ${ROCM_VER} ]; then
+  echo "ERROR: no ROCm version specified."
+  exit 1
+fi
+
 [ -z ${PRE_CLEAN+x} ] || rm -rf venv
 
 alias PYTHON="python3"
@@ -111,7 +120,7 @@ declare -x ROCM_LLVM_PYTHON_LIBS=${ROCM_LLVM_PYTHON_LIBS:-*}
 declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 declare -x ROCM_LLVM_PYTHON_CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
 
-PYTHON codegen_llvm_c.py ${OUTPUT_DIR} --rocm-version ${ROCM_VERSION}
+PYTHON codegen_llvmc.py ${OUTPUT_DIR} --rocm-version ${ROCM_VERSION}
 cp -v -f -R ../_util ${OUTPUT_DIR}/rocm/llvm
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv

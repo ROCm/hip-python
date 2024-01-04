@@ -96,7 +96,7 @@ def parse_options():
     parser = argparse.ArgumentParser(
         description=textwrap.dedent(
             """\
-        Generator for ROCm LLVM Python package 'rocm-llvm'.
+        Generator for ROCm LLVM Python package 'rocm-llvm-python'.
     
         NOTE:
             You can also use the environment variables 'ROCM_PATH' (or 'ROCM_HOME'),
@@ -115,7 +115,7 @@ def parse_options():
     parser.add_argument(
         "output_dir",
         type=dir_path,
-        help="The output directory to which the files should be written to. Must contain `rocm-llvm` subfolder.",
+        help="The output directory to which the files should be written to. Must contain `rocm-llvm-python` subfolder.",
     )
     parser.add_argument(
         "--rocm-path",
@@ -463,7 +463,7 @@ if __name__ == "__main__":
                 raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}")
 
     Path(os.path.join(OUTPUT_DIR, "rocm-llvm-python", "rocm")).mkdir(parents=False, exist_ok=True) # throw error if it does not exist
-    rocm_llvm_output_dir = os.path.join(OUTPUT_DIR, "rocm-llvm", "rocm", "llvm")
+    rocm_llvm_output_dir = os.path.join(OUTPUT_DIR, "rocm-llvm-python", "rocm", "llvm")
     Path(rocm_llvm_output_dir).mkdir(parents=False, exist_ok=True) # throw error if it does not exist
     # FIXME catch error
     global_module_names = []
@@ -559,6 +559,8 @@ if __name__ == "__main__":
         ("c","transforms",),
         ("config",),
     ):
+        subdirpath = os.path.join(rocm_llvm_output_dir, *subpkg)
+        Path(subdirpath).mkdir(parents=False, exist_ok=True) # throw error if it does not exist
         with open(os.path.join(rocm_llvm_output_dir, *subpkg, "__init__.py"), "w") as f:
             f.write(lstrip_all_lines(f"""\
                 {LICENSE_TEXT}
