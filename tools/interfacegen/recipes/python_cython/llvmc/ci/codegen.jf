@@ -79,10 +79,10 @@ pipeline {
                     usernamePassword(credentialsId: 'ROCM_LLVM_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
                     string(credentialsId: 'ROCM_LLVM_PYTHON_DEV_EMAIL', variable: 'GITHUB_EMAIL')
                 ]) {
-                    dir('recipes/python_cython/hip') {
+                    dir('recipes/python_cython/llvmc') {
                         sh 'bash ci/0-checkout-release-repo.sh'
                     }
-                    dir('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
+                    dir('recipes/python_cython/llvmc/rocm-llvm-python-release-repo') {
                         sh '''#!/usr/bin/env bash
                         set -e
                         set -o xtrace
@@ -99,14 +99,14 @@ pipeline {
         }
         stage('install-rocm') {
             steps {
-                dir('recipes/python_cython/hip') {
+                dir('recipes/python_cython/llvmc') {
                     sh 'SET_TIMEZONE=1 bash ci/1-install-rocm.sh'
                 }
             }
         }
         stage('generate-code') {
             steps {
-                dir ('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
+                dir ('recipes/python_cython/llvmc/rocm-llvm-python-release-repo') {
                     sh '''#!/usr/bin/env bash
                     set -e
                     set -o xtrace
@@ -119,10 +119,10 @@ pipeline {
                     git checkout ${CODEGEN_BRANCH}
                     '''
                 }
-                dir('recipes/python_cython/hip') {
+                dir('recipes/python_cython/llvmc') {
                     sh 'bash ci/2-generate-code.sh'
                 }
-                dir ('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
+                dir ('recipes/python_cython/llvmc/rocm-llvm-python-release-repo') {
                     sh '''#!/usr/bin/env bash
                     set -e
                     set -o xtrace
@@ -138,7 +138,7 @@ pipeline {
         }
         stage('create-conda-envs') {
             steps {
-                dir('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
+                dir('recipes/python_cython/llvmc/rocm-llvm-python-release-repo') {
                     sh 'bash ci/1-install-conda.sh'
                     sh 'bash ci/2-create-conda-envs.sh'
                 }
@@ -147,7 +147,7 @@ pipeline {
         stage('build-and-test') {
             steps {
                 sh 'rocm-smi'
-                dir('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
+                dir('recipes/python_cython/llvmc/rocm-llvm-python-release-repo') {
                     sh '''#!/usr/bin/env bash
                     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/rocm/lib
                     bash ci/3a-build-and-test-for-single-cpython-version.sh
