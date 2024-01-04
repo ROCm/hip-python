@@ -52,6 +52,10 @@ case $1 in
 esac
 
 OUTPUT_DIR=$1
+if [ -z ${OUTPUT_DIR} ]; then
+  echo "ERROR: no output dir specified."
+  exit 1
+fi
 shift
 
 while [[ $# -gt 0 ]]; do
@@ -94,6 +98,11 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [ -z ${ROCM_VER} ]; then
+  echo "ERROR: no ROCm version specified."
+  exit 1
+fi
 
 [ -z ${PRE_CLEAN+x} ] || rm -rf venv
 
