@@ -175,7 +175,7 @@ def parse_options():
     )
     args = parser.parse_args()
 
-    OUTPUT_DIR = args.output_dir
+    OUTPUT_DIR = os.path.join(args.output_dir,"rocm-llvm-python")
     RUNTIME_LINKING = args.runtime_linking
     LIBS = args.libs
 
@@ -462,8 +462,8 @@ if __name__ == "__main__":
             if name not in avail_lib_names:
                 raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}")
 
-    Path(os.path.join(OUTPUT_DIR, "rocm-llvm-python", "rocm")).mkdir(parents=False, exist_ok=True) # throw error if it does not exist
-    rocm_llvm_output_dir = os.path.join(OUTPUT_DIR, "rocm-llvm-python", "rocm", "llvm")
+    Path(os.path.join(OUTPUT_DIR, "rocm")).mkdir(parents=False, exist_ok=True) # throw error if it does not exist
+    rocm_llvm_output_dir = os.path.join(OUTPUT_DIR, "rocm", "llvm")
     Path(rocm_llvm_output_dir).mkdir(parents=False, exist_ok=True) # throw error if it does not exist
     # FIXME catch error
     global_module_names = []
