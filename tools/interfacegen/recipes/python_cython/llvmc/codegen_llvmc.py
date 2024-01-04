@@ -483,7 +483,7 @@ if __name__ == "__main__":
         ROCM_VERSION_MAJOR * 10000000 + ROCM_VERSION_MINOR * 100000 + ROCM_VERSION_PATCH
     )
 
-    VERSION = f"{ROCM_VERSION_MAJOR}.{ROCM_VERSION_MINOR}.{ROCM_VERSION_PATCH}.{interfacegen.gitversion.version()}"
+    VERSION = f"{ROCM_VERSION_NAME}.{interfacegen.gitversion.git_branch_rev_count(interfacegen.gitversion.git_current_branch())}"
     LONG_VERSION = (
         f"{ROCM_VERSION_NAME}.{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
     )
