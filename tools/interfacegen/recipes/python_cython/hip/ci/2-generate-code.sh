@@ -33,7 +33,7 @@ set -o xtrace
 
 if [ -z ${ROCM_VER+x} ]; then
   echo "ERROR: environment variable 'ROCM_VER' not set."
-  return 1
+  exit 1
 fi
 
 sudo apt install -y python3 python3-venv

@@ -33,8 +33,8 @@ set -e
 set -o xtrace
 
 if [ -z ${BASE_BRANCH+x} ]; then
-   echo "ERROR: environment variable 'BASE_BRANCH' not set."
-  return 1
+  echo "ERROR: environment variable 'BASE_BRANCH' not set."
+  exit 1
 fi
 
 sudo apt update
