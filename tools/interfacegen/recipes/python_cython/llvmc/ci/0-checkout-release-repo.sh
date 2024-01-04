@@ -37,11 +37,16 @@ if [ -z ${BASE_BRANCH+x} ]; then
   exit 1
 fi
 
+if [ -z ${GITHUB_TOKEN+x} ]; then
+  echo "ERROR: environment variable 'GITHUB_TOKEN' not set."
+  exit 1
+fi
+
 sudo apt update
 sudo apt install -y git
 
 RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-rocm-llvm-python-release-repo}
-git clone https://github.com/ROCmSoftwarePlatform/rocm-llvm-python.git ${RELEASE_REPO_DIR}
+git clone https://${GITHUB_TOKEN}@github.com/ROCmSoftwarePlatform/rocm-llvm-python.git ${RELEASE_REPO_DIR}
 cd ${RELEASE_REPO_DIR}
 git checkout ${BASE_BRANCH}
 

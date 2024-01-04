@@ -75,21 +75,21 @@ pipeline {
         stage('get-release-repo') {
             steps {
                 sh 'apt-get update && apt-get -y install sudo'
-                dir('recipes/python_cython/hip') {
-                    sh 'bash ci/0-checkout-release-repo.sh'
-                }
-                dir('recipes/python_cython/hip/hip-python-release-repo') {
-                    withCredentials([
-                        usernamePassword(credentialsId: 'ROCM_LLVM_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
-                        string(credentialsId: 'ROCM_LLVM_PYTHON_DEV_EMAIL', variable: 'GITHUB_EMAIL')
-                    ]) {
+                withCredentials([
+                    usernamePassword(credentialsId: 'ROCM_LLVM_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
+                    string(credentialsId: 'ROCM_LLVM_PYTHON_DEV_EMAIL', variable: 'GITHUB_EMAIL')
+                ]) {
+                    dir('recipes/python_cython/hip') {
+                        sh 'bash ci/0-checkout-release-repo.sh'
+                    }
+                    dir('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
                         sh '''#!/usr/bin/env bash
                         set -e
                         set -o xtrace
                         git config user.email "${GITHUB_EMAIL}"
                         git config user.name "${GITHUB_USER}"
                         git remote remove origin
-                        git remote add origin https://${GITHUB_TOKEN}@github.com/RocmSoftwarePlatform/hip-python
+                        git remote add origin https://${GITHUB_TOKEN}@github.com/RocmSoftwarePlatform/rocm-llvm-python
                         git fetch origin
                         git branch -a
                         '''
@@ -106,7 +106,7 @@ pipeline {
         }
         stage('generate-code') {
             steps {
-                dir ('recipes/python_cython/hip/hip-python-release-repo') {
+                dir ('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
                     sh '''#!/usr/bin/env bash
                     set -e
                     set -o xtrace
@@ -122,12 +122,11 @@ pipeline {
                 dir('recipes/python_cython/hip') {
                     sh 'bash ci/2-generate-code.sh'
                 }
-                dir ('recipes/python_cython/hip/hip-python-release-repo') {
+                dir ('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
                     sh '''#!/usr/bin/env bash
                     set -e
                     set -o xtrace
-                    git add hip-python
-                    git add hip-python-as-cuda
+                    git add rocm-llvm-python
                     if [[ -n $(git status --porcelain) ]]; then
                        CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
                        git commit -m "generated code"
@@ -139,7 +138,7 @@ pipeline {
         }
         stage('create-conda-envs') {
             steps {
-                dir('recipes/python_cython/hip/hip-python-release-repo') {
+                dir('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
                     sh 'bash ci/1-install-conda.sh'
                     sh 'bash ci/2-create-conda-envs.sh'
                 }
@@ -148,7 +147,7 @@ pipeline {
         stage('build-and-test') {
             steps {
                 sh 'rocm-smi'
-                dir('recipes/python_cython/hip/hip-python-release-repo') {
+                dir('recipes/python_cython/hip/rocm-llvm-python-release-repo') {
                     sh '''#!/usr/bin/env bash
                     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/rocm/lib
                     bash ci/3a-build-and-test-for-single-cpython-version.sh
