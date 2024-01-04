@@ -501,13 +501,13 @@ if __name__ == "__main__":
             
             __author__ = "Advanced Micro Devices, Inc. <rocm-llvm-python.maintainer@amd.com>"
 
-            VERSION = __version__ = "{VERSION}.{{ROCM_VERSION_SHORT}}"
-            LONG_VERSION = __long_version__ = "{LONG_VERSION}.{{ROCM_VERSION}}"
+            VERSION = __version__ = "{VERSION}.{{ROCM_LLVM_PYTHON_VERSION_SHORT}}"
+            LONG_VERSION = __long_version__ = "{LONG_VERSION}.{{ROCM_LLVM_PYTHON_VERSION}}"
             ROCM_LLVM_PYTHON_CODEGEN_BRANCH = "{interfacegen.gitversion.git_current_branch()}"
             ROCM_LLVM_PYTHON_CODEGEN_VERSION = "{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
             ROCM_LLVM_PYTHON_CODEGEN_REV = "{interfacegen.gitversion.git_rev()}"
             ROCM_LLVM_PYTHON_BRANCH = "{{ROCM_LLVM_PYTHON_BRANCH}}"
-            ROCM_VERSION = "{{ROCM_VERSION}}"
+            ROCM_LLVM_PYTHON_VERSION = "{{ROCM_LLVM_PYTHON_VERSION}}"
             ROCM_LLVM_PYTHON_REV = "{{ROCM_LLVM_PYTHON_REV}}"
 
             ROCM_LLVM_PYTHON_MODULE_LIST = [
