@@ -127,5 +127,6 @@ for i,x_h_i in enumerate(x_h):
 hip_check(hip.hipFree(x_d))
 
 hip_check(hip.hipModuleUnload(module))
+hip_check(hip.hiprtcDestroyProgram(prog))
 
 print("ok")
