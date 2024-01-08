@@ -1630,6 +1630,7 @@ cdef void* {funptr_name} = NULL
             elif parm.is_pointer_to_record(
                 degree=-2, incomplete_array=True
             ) or parm.is_pointer_to_function_proto(degree=-2, incomplete_array=True):
+                # TODO: split and use rank == 0 (scalar) information to handle some record arg destroy funs such as 'hiprtcDestroyProgram(struct _hiprtcProgram**)'
                 parm_typename = parm.cython_global_typename
                 emit_datahandle_(parm_typename, parm, cprefix)
             elif parm.is_pointer_to_constantarray_of_basic_type(degree=-2, incomplete_array=True):
