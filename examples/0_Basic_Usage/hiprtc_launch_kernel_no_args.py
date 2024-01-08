@@ -81,6 +81,6 @@ hip_check(
 
 hip_check(hip.hipDeviceSynchronize())
 hip_check(hip.hipModuleUnload(module))
-hip_check(hip.hiprtcDestroyProgram(prog))
+hip_check(hiprtc.hiprtcDestroyProgram(prog.createRef()))
 
 print("ok")
