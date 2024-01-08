@@ -60,6 +60,13 @@ pipeline {
             description: 'The branch name will be constructed as `${RELEASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
             name: 'RELEASE_BRANCH_PREFIX'
         )
+        editableChoice(
+            choices: [
+                'new_main',
+            ],
+            description: 'The main branch where the ci scripts, docs and other files imported by `init.sh` are located.',
+            name: 'MAIN_BRANCH'
+        )
     }
     stages {
         stage('clean-ws') {
@@ -69,7 +76,8 @@ pipeline {
         }
         stage('get-repo') {
             steps {
-                git branch: 'new_main', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/ROCmSoftwarePlatform/hip-python'
+                // TODO Below `git branch: 'main' ...` can likely be removed via non-lightweight checkout
+                git branch: 'main', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/ROCmSoftwarePlatform/hip-python'
                 sh 'apt update && apt install -y git'
                 dir('.') {
                     withCredentials([
