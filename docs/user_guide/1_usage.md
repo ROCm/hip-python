@@ -186,7 +186,7 @@ The {ref}`example below <hiprtc_launch_kernel_no_args>` demonstrates how to do s
 1. In the example, the kernel `print_tid` defined within the string `source` simply prints the
 block-local thread ID (`threadIDx.x`) for every thread running the kernel (line 20).
 1. A program `prog` is then created in line 25 via {py:obj}`~.hiprtcCreateProgram`, where we pass `source` as first argument,
-we further give the kernel a name (note the `b".."`), specify zero headers and include names (last three arguments).
+we further give the program a name (note the `b".."`), specify zero headers and include names (last three arguments).
 1. Next we query the architecture name via {py:obj}`~.hipGetDeviceProperties` (more details: <project:#sec_obtaining_device_properties>)
 and use it in lines 33-34, where we specify compile flags (`cflags`) and
 compile `prog` via {py:obj}`~.hiprtcCompileProgram`.
