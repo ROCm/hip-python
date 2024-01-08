@@ -38,5 +38,3 @@ subtrees:
       - file: python_api/nvrtc
   - caption: Developer Guide
     entries:
-      - file: developer_guide/0_overview
-      - file: developer_guide/4_commit_guide
