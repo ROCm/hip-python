@@ -23,7 +23,6 @@
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 # [literalinclude-begin]
-import ctypes
 from hip import hip, hiprtc
 
 def hip_check(call_result):
