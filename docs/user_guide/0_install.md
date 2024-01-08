@@ -26,7 +26,7 @@
 
 Currently, only AMD GPUs are supported.
 
-* See the ROCm&trade; [Hardware_and_Software_Support](https://docs.amd.com/bundle/Hardware_and_Software_Reference_Guide/page/Hardware_and_Software_Support.html) page for a list of supported AMD GPUs.
+* See the ROCm&trade; [Hardware_and_Software_Support](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/reference/system-requirements.html) page for a list of supported AMD GPUs.
 
 ## Supported Operation Systems
 
