@@ -235,6 +235,7 @@ if __name__ == "__main__":
         kernel = hip_check(hip.hipModuleGetFunction(module, b"scale"))
 
         f32, size = 4, 32
+        assert size <= 1024
         xh = array.array("f", [1.0] * size)
         xd = hip_check(hip.hipMalloc(f32 * size))
         hip_check(
@@ -244,7 +245,7 @@ if __name__ == "__main__":
             hip.hipModuleLaunchKernel(
                 kernel,
                 *(1, 1, 1),  # grid
-                *(32, 1, 1),  # block
+                *(size, 1, 1),  # block
                 sharedMemBytes=0,
                 stream=None,
                 kernelParams=None,
