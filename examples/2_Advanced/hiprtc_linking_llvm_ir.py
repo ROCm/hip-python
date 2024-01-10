@@ -28,7 +28,7 @@ LLVM IR snippet that contains the definition of that device function ``scale_op`
 (Note that we could have also used LLVM BC (bitcode) instead of human-readable LLVM IR.)
 
 To make this work, the HIP C++ snippet needs to be compiled with
-the ``-fgpu-rdc`` option and all compilation results needs to
+the ``-fgpu-rdc`` option and all compilation results need to
 be added as ``HIPRTC_JIT_INPUT_LLVM_BITCODE`` type input to the HIPRTC link object.
 
 Note that the LLVM IR in this example is target dependent.
@@ -62,7 +62,7 @@ def hip_check(call_result):
     return result
 
 
-class LLVMIRProgram:
+class LLLVMProgram:
     def __init__(self, name: str, source: bytes):
         self.name = name.encode("utf-8")
         self.llvm_bc_or_ir = source
@@ -200,6 +200,14 @@ if __name__ == "__main__":
         ).encode("utf-8"),
     }
 
+    # scale_op_hip = textwrap.dedent(
+    #     """\
+    #     __device__ void scale_op(float arr[], float factor) {
+    #         arr[threadIdx.x] *= factor;
+    #     }
+    #     """
+    # ).encode("utf-8")
+
     props = hip.hipDeviceProp_t()
     hip_check(hip.hipGetDeviceProperties(props, 0))
     arch = props.gcnArchName
@@ -211,16 +219,14 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
-    with HiprtcLinker() as linker, HipProgram(
+    with HiprtcLinker(
+    ) as linker, HipProgram(
         "kernel", arch, kernel_hip
     ) as kernel_prog, HipProgram(
-        # "scale_op", arch, scale_op_hip) as scale_op_prog, LLVMIRProgram(
-        "print_val",
-        arch,
-        print_val_hip,
-    ) as print_val_prog, LLVMIRProgram(
+        "print_val", arch, print_val_hip,
+    ) as print_val_prog, LLLVMProgram( 
         "scale_op", scale_op_llvm_ir[gpugen]
-    ) as scale_op_prog:
+    ) as scale_op_prog: # vs HipProgram("scale_op", arch, scale_op_hip) as scale_op_prog
         linker.add_program(kernel_prog)
         linker.add_program(print_val_prog)
         linker.add_program(scale_op_prog)
