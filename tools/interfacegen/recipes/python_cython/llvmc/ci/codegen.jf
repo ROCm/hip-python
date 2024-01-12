@@ -60,11 +60,6 @@ pipeline {
             description: 'The codegenerator branch to use.',
             name: 'CODEGENERATOR_BRANCH'
         )
-        booleanParam (
-            defaultValue: false,
-            description: 'Publish source code after the different stages.',
-            name: 'PUBLISH'
-        )
     }
     stages {
         stage('clean-ws') {
@@ -115,15 +110,13 @@ pipeline {
                     sh '''#!/usr/bin/env bash
                     set -e
                     set -o xtrace
-                    if [[ "${PUBLISH}" == "true" ]]; then
-                        CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
-                        git branch -d ${CODEGEN_BRANCH} || true
-                        git fetch origin
-                        git push origin --delete ${CODEGEN_BRANCH} || true
-                        git fetch origin
-                        git branch ${CODEGEN_BRANCH}
-                        git checkout ${CODEGEN_BRANCH}
-                    fi
+                    CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
+                    git branch -d ${CODEGEN_BRANCH} || true
+                    git fetch origin
+                    git push origin --delete ${CODEGEN_BRANCH} || true
+                    git fetch origin
+                    git branch ${CODEGEN_BRANCH}
+                    git checkout ${CODEGEN_BRANCH}
                     '''
                 }
                 dir('recipes/python_cython/llvmc') {
@@ -162,18 +155,16 @@ pipeline {
                     sh '''#!/usr/bin/env bash
                     set -e
                     set -o xtrace
-                    if [[ "${PUBLISH}" == "true" ]]; then
-                        CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
-                        git checkout ${CODEGEN_BRANCH}
-                        DEVELOP_BRANCH=${DEVELOP_BRANCH:-develop/rocm-rel-${ROCM_VER}}
-                        # remove local and origin branch if they exist
-                        git branch -d ${DEVELOP_BRANCH} || true
-                        git fetch origin
-                        git push origin --delete ${DEVELOP_BRANCH} || true
-                        git fetch origin
-                        git branch ${DEVELOP_BRANCH}
-                        git push --set-upstream origin ${DEVELOP_BRANCH}
-                    fi
+                    CODEGEN_BRANCH=${CODEGEN_BRANCH:-codegen/rocm-rel-${ROCM_VER}}
+                    git checkout ${CODEGEN_BRANCH}
+                    DEVELOP_BRANCH=${DEVELOP_BRANCH:-develop/rocm-rel-${ROCM_VER}}
+                    # remove local and origin branch if they exist
+                    git branch -d ${DEVELOP_BRANCH} || true
+                    git fetch origin
+                    git push origin --delete ${DEVELOP_BRANCH} || true
+                    git fetch origin
+                    git branch ${DEVELOP_BRANCH}
+                    git push --set-upstream origin ${DEVELOP_BRANCH}
                     '''
                 }
             }
