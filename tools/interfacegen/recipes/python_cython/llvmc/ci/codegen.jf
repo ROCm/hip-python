@@ -54,7 +54,6 @@ pipeline {
         )
         editableChoice(
             choices: [
-                'feat/const-array-typedefs',
                 'main',
             ],
             description: 'The codegenerator branch to use.',
