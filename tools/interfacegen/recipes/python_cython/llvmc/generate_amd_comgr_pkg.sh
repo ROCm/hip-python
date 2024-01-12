@@ -36,7 +36,7 @@ Required:
 
 Options:
   --rocm-path       Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
-  --libs            HIP Python libraries to generate as comma separated list without whitespaces, defaults to variable 'ROCM_LLVM_PYTHON_LIBS' if set or '*'.
+  --libs            HIP Python libraries to generate as comma separated list without whitespaces, defaults to variable 'AMD_COMGR_PYTHON_LIBS' if set or '*'.
                     Add a prefix '^' to NOT generate code for the comma-separated list of libraries that follows but all other libraries.
   --pre-clean       Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
   --post-clean      Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
@@ -73,7 +73,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --libs)
-      ROCM_LLVM_PYTHON_LIBS=$2
+      AMD_COMGR_PYTHON_LIBS=$2
       shift; shift
       ;;
     --rocm-path)
@@ -116,11 +116,10 @@ shopt -s expand_aliases
 PYTHON -m pip install -r requirements.txt
 
 declare -x HIP_PLATFORM=${HIP_PLATFORM:-amd}
-declare -x ROCM_LLVM_PYTHON_LIBS=${ROCM_LLVM_PYTHON_LIBS:-*}
+declare -x AMD_COMGR_PYTHON_LIBS=${AMD_COMGR_PYTHON_LIBS:-*}
 declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 declare -x CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
 
-PYTHON codegen_llvmc.py ${OUTPUT_DIR} --rocm-version ${ROCM_VER}
-cp -v -f -R ../_util ${OUTPUT_DIR}/rocm-llvm-python/rocm/llvm
+PYTHON codegen_amd_comgr.py ${OUTPUT_DIR} --rocm-version ${ROCM_VER}
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv

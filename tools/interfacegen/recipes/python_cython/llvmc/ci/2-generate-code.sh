@@ -42,3 +42,4 @@ sudo apt install -y python3 python3-venv
 RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-rocm-llvm-python-release-repo}
 export PYTHONPATH=$(git rev-parse --show-toplevel)
 bash ./generate_llvmc_pkg.sh ${RELEASE_REPO_DIR} --rocm-version ${ROCM_VER} "$@"
+bash ./generate_amd_comgr_pkg.sh ${RELEASE_REPO_DIR} --rocm-version ${ROCM_VER} "$@"
