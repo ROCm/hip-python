@@ -50,11 +50,11 @@ gitdb==4.0.10
     # via gitpython
 gitpython==3.1.32
     # via rocm-docs-core
-hip-python==5.7.1.324.58
+hip-python==6.0.0.412.5
     # via
     #   -r requirements.in
     #   hip-python-as-cuda
-hip-python-as-cuda==5.7.1.324.58
+hip-python-as-cuda==6.0.0.412.5
     # via -r requirements.in
 idna==3.4
     # via requests
@@ -114,7 +114,7 @@ requests==2.31.0
     # via
     #   pygithub
     #   sphinx
-rocm-docs-core==0.30.3
+rocm-docs-core==0.30.0
     # via -r requirements.in
 smmap==5.0.0
     # via gitdb
