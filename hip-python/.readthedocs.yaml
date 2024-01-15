@@ -11,8 +11,8 @@ build:
 sphinx:
   configuration: hip-python/docs/conf.py
 
-formats: [htmlzip]
+formats: [htmlzip, pdf, epub]
 
 python:
   install:
-  - requirements: hip-python/docs/.sphinx/requirements.txt
+  - requirements: hip-python/docs/sphinx/requirements.txt
