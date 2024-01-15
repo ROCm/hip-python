@@ -186,7 +186,7 @@ cdef class Pointer:
             This routine does not perform a copy but returns the original pyobj
             if ``pyobj`` is an instance of `~.Pointer`.
         """
-        cdef Pointer wrapper = Pointer.__new__(Pointer)
+        cdef Pointer wrapper
 
         if isinstance(pyobj,Pointer):
             return pyobj
@@ -596,11 +596,20 @@ cdef class ImmortalCStr(CStr):
         """
         CStr.init_from_pyobj(self,pyobj)
 
-cdef class DeviceArray(Pointer):
-    """Datatype for handling device buffers.
+cdef class NDBuffer(Pointer):
+    """Datatype for handling n-dimensional buffers of various datatypes.
 
-    Datatype for handling device buffers returned by `~.hipMalloc` and related device
-    memory allocation routines.
+    Datatype for handling n-dimensional buffers of various datatypes.
+    The buffer can be reshaped via its ``configure`` method.
+
+    Note:
+        This buffer does not provide any routines to read or write
+        elements of the buffer. Instead, its ``__getitem__`` operator is overloaded
+        to return ``NDBuffer`` instances pointing to contiguous subregions
+        or single elements of the original buffer. If this buffer is wrapped around host data,
+        users can convert it to types that allow access to the underlying
+        data such as `bytes`, `bytearray` or numpy array types as this
+        type implements the Python buffer protocol.
 
     This type implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol.
 
@@ -651,7 +660,7 @@ cdef class DeviceArray(Pointer):
     # C members declared in declaration part ``types.pxd``
 
     def __repr__(self):
-        return f"<DeviceArray object, _ptr={int(self)}, typestr={self.typestr}, itemsize={self.itemsize}, shape={str(self.shape)}, is_read_only={self.is_read_only}, stream={self.stream_as_int}>"
+        return f"<NDBuffer object, _ptr={int(self)}, typestr={self.typestr}, itemsize={self.itemsize}, shape={str(self.shape)}, is_read_only={self.is_read_only}, stream={self.stream_as_int}>"
 
     NUMPY_CHAR_CODES = (
         "?", "=?", "<?", ">?", "bool", "bool_", "bool8",
@@ -785,8 +794,8 @@ cdef class DeviceArray(Pointer):
         self.__dict__["__cuda_array_interface__"]["data"] = (cpython.long.PyLong_FromVoidPtr(ptr),old_data[1])
 
     @staticmethod
-    cdef DeviceArray fromPtr(void* ptr):
-        cdef DeviceArray wrapper = DeviceArray.__new__(DeviceArray)
+    cdef NDBuffer fromPtr(void* ptr):
+        cdef NDBuffer wrapper = NDBuffer.__new__(NDBuffer)
         wrapper._set_ptr(ptr)
         return wrapper
 
@@ -889,7 +898,7 @@ cdef class DeviceArray(Pointer):
             itemsize (`int`):
                 Size in bytes of each item. Defaults to 1. See the notes.
             read_only (`bool`):
-                `DeviceArray` is read_only. Second entry of the
+                `NDBuffer` is read_only. Second entry of the
                 CUDA array interface 'data' tuple. Defaults to False.
             _force(`bool`):
                 Ignore changes in the total number of bytes when
@@ -978,7 +987,7 @@ cdef class DeviceArray(Pointer):
     cdef void init_from_pyobj(self, object pyobj):
         """
         Note:
-            If ``pyobj`` is an instance of DeviceArray, only the pointer is copied.
+            If ``pyobj`` is an instance of NDBuffer, only the pointer is copied.
             Releasing an acquired Py_buffer handles is still an obligation of the original object.
         """
         cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
@@ -998,7 +1007,7 @@ cdef class DeviceArray(Pointer):
             ptr_as_int = cuda_array_interface["data"][0]
             self._set_ptr(cpython.long.PyLong_AsVoidPtr(ptr_as_int))
             self.configure(cuda_array_interface)
-            if isinstance(pyobj,DeviceArray):
+            if isinstance(pyobj,NDBuffer):
                 self._itemsize = pyobj._itemsize
         elif isinstance(pyobj,Pointer):
             self._set_ptr((<Pointer>pyobj)._ptr)
@@ -1009,19 +1018,19 @@ cdef class DeviceArray(Pointer):
 
     @staticmethod
     def fromObj(pyobj):
-        """Creates a DeviceArray from the given object.
+        """Creates a NDBuffer from the given object.
 
-        In case ``pyobj`` is itself a ``DeviceArray`` instance, this method
-        returns it directly. No new ``DeviceArray`` is created.
+        In case ``pyobj`` is itself a ``NDBuffer`` instance, this method
+        returns it directly. No new ``NDBuffer`` is created.
         """
-        return DeviceArray.fromPyobj(pyobj)
+        return NDBuffer.fromPyobj(pyobj)
 
     @staticmethod
-    cdef DeviceArray fromPyobj(object pyobj):
-        """Creates a DeviceArray from the given object.
+    cdef NDBuffer fromPyobj(object pyobj):
+        """Creates a NDBuffer from the given object.
 
-        In case ``pyobj`` is itself a ``DeviceArray`` instance, this method
-        returns it directly. No new ``DeviceArray`` is created.
+        In case ``pyobj`` is itself a ``NDBuffer`` instance, this method
+        returns it directly. No new ``NDBuffer`` is created.
 
         Args:
             pyobj (`object`):
@@ -1031,14 +1040,14 @@ cdef class DeviceArray(Pointer):
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of `DeviceArray`.
+            if ``pyobj`` is an instance of `NDBuffer`.
         """
-        cdef DeviceArray wrapper = DeviceArray.__new__(DeviceArray)
+        cdef NDBuffer wrapper = NDBuffer.__new__(NDBuffer)
 
-        if isinstance(pyobj,DeviceArray):
+        if isinstance(pyobj,NDBuffer):
             return pyobj
         else:
-            wrapper = DeviceArray.__new__(DeviceArray)
+            wrapper = NDBuffer.__new__(NDBuffer)
             wrapper.init_from_pyobj(pyobj)
             return wrapper
 
@@ -1140,7 +1149,7 @@ cdef class DeviceArray(Pointer):
             offset += start*stride
             stride *= <size_t>shape[i]
         offset *= self._itemsize # scale offset with itemsize
-        return DeviceArray.fromPtr(<void*>(<unsigned long>self._ptr + offset)).configure(
+        return NDBuffer.fromPtr(<void*>(<unsigned long>self._ptr + offset)).configure(
             _force=True,
             typestr=self.typestr,
             itemsize=self.itemsize,
@@ -1192,7 +1201,7 @@ cdef class DeviceArray(Pointer):
 
         Args:
             pyobj (`object`):
-                See the class description `~.DeviceArray` for information
+                See the class description `~.NDBuffer` for information
                 about accepted types for ``pyobj``.
 
         Raises:
@@ -1206,7 +1215,102 @@ cdef class DeviceArray(Pointer):
         See:
             `~.configure`
         """
-        DeviceArray.init_from_pyobj(self,pyobj)
+        NDBuffer.init_from_pyobj(self,pyobj)
+
+cdef class DeviceArray(NDBuffer):
+    """Datatype for handling device buffers.
+
+    Datatype for handling device buffers returned by `~.hipMalloc` and related device
+    memory allocation routines.
+
+    This type implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol.
+
+    It can be initialized from the following Python objects:
+
+    * `None`:
+        This will set the ``self._ptr`` attribute to ``NULL``.
+        No shape and type information is available in this case!
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+        In this case, init code from `~.Pointer` is used.
+        `~.Py_buffer` object ownership is not transferred
+        See `~.Pointer.__init__` for more information.
+        No shape and type information is available in this case!
+    * `int`:
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+        No shape and type information is available in this case!
+    * `ctypes.c_void_p`:
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        No shape and type information is available in this case!
+    * `object` with ``__cuda_array_interface__`` member:
+        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
+        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+        Copies shape and type information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Shape and type information and other metadata can be modified or overwritten after creation via the `~.configure`
+        member function. be aware that you might need to pass the ``_force=True`` keyword argument ---
+        in particular if your instance was created from a type that does not implement the
+        `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol.
+    See:
+        `~.configure`
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer (`~.Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (`bool`, protected):
+            Stores a pointer to the data of the original Python object.
+        _itemsize (``size_t``, protected):
+            Stores the itemsize.
+        __dict__ (`dict`, protected):
+            Dict with member ``__cuda_array_interface__``.
+    """
+    # C members declared in declaration part ``types.pxd``
+
+    @staticmethod
+    def DeviceArray(pyobj):
+        """Creates a NDBuffer from the given object.
+
+        In case ``pyobj`` is itself a ``NDBuffer`` instance, this method
+        returns it directly. No new ``NDBuffer`` is created.
+        """
+        return DeviceArray.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef DeviceArray fromPyobj(object pyobj):
+        """Creates a NDBuffer from the given object.
+
+        In case ``pyobj`` is itself a ``NDBuffer`` instance, this method
+        returns it directly. No new ``NDBuffer`` is created.
+
+        Args:
+            pyobj (`object`):
+                Must be either `None`, a simple, contiguous buffer according to the buffer protocol,
+                an `object` that implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_
+                protocol, or an instance of `Pointer`, `int`, or `ctypes.c_void_p`
+
+        Note:
+            This routine does not perform a copy but returns the original pyobj
+            if ``pyobj`` is an instance of `NDBuffer`.
+        """
+        cdef DeviceArray wrapper
+
+        if isinstance(pyobj,DeviceArray):
+            return pyobj
+        else:
+            wrapper = DeviceArray.__new__(DeviceArray)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    @staticmethod
+    cdef DeviceArray fromPtr(void* ptr):
+        cdef DeviceArray wrapper = DeviceArray.__new__(DeviceArray)
+        wrapper._set_ptr(ptr)
+        return wrapper
 
 cdef class ListOfBytes(Pointer):
     """Datatype for handling Python `list` or `tuple` objects with entries of type `bytes` or `~.CStr`.
@@ -1310,7 +1414,7 @@ cdef class ListOfBytes(Pointer):
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
         """
-        cdef ListOfBytes wrapper = ListOfBytes.__new__(ListOfBytes)
+        cdef ListOfBytes wrapper
 
         if isinstance(pyobj,ListOfBytes):
             return pyobj
@@ -1433,7 +1537,7 @@ cdef class ListOfPointer(Pointer):
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
         """
-        cdef ListOfPointer wrapper = ListOfPointer.__new__(ListOfPointer)
+        cdef ListOfPointer wrapper
 
         if isinstance(pyobj,ListOfPointer):
             return pyobj
@@ -1576,7 +1680,7 @@ cdef class ListOfInt(Pointer):
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
         """
-        cdef ListOfInt wrapper = ListOfInt.__new__(ListOfInt)
+        cdef ListOfInt wrapper
 
         if isinstance(pyobj,ListOfInt):
             return pyobj
@@ -1719,7 +1823,7 @@ cdef class ListOfUnsigned(Pointer):
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
         """
-        cdef ListOfUnsigned wrapper = ListOfUnsigned.__new__(ListOfUnsigned)
+        cdef ListOfUnsigned wrapper
 
         if isinstance(pyobj,ListOfUnsigned):
             return pyobj
@@ -1862,7 +1966,7 @@ cdef class ListOfUnsignedLong(Pointer):
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
         """
-        cdef ListOfUnsignedLong wrapper = ListOfUnsignedLong.__new__(ListOfUnsignedLong)
+        cdef ListOfUnsignedLong wrapper
 
         if isinstance(pyobj,ListOfUnsignedLong):
             return pyobj

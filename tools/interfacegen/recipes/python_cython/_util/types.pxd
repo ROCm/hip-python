@@ -72,15 +72,15 @@ cdef class ImmortalCStr(CStr):
     @staticmethod
     cdef ImmortalCStr fromPyobj(object pyobj)
 
-cdef class DeviceArray(Pointer):
+cdef class NDBuffer(Pointer):
     cdef size_t _itemsize
     cdef dict __dict__
 
     @staticmethod
-    cdef DeviceArray fromPtr(void* ptr)
+    cdef NDBuffer fromPtr(void* ptr)
 
     @staticmethod
-    cdef DeviceArray fromPyobj(object pyobj)
+    cdef NDBuffer fromPyobj(object pyobj)
 
     cdef _set_ptr(self,void* ptr)
 
@@ -89,6 +89,14 @@ cdef class DeviceArray(Pointer):
     cdef tuple _handle_int(self,size_t subscript, size_t shape_dim)
 
     cdef tuple _handle_slice(self,slice subscript,size_t shape_dim)
+
+cdef class DeviceArray(NDBuffer):
+
+    @staticmethod
+    cdef DeviceArray fromPtr(void* ptr)
+
+    @staticmethod
+    cdef DeviceArray fromPyobj(object pyobj)
 
 cdef class ListOfPointer(Pointer):
     cdef bint _is_ptr_owner
