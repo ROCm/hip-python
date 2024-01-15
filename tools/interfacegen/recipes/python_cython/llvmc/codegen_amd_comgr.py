@@ -66,7 +66,7 @@ def create_generator(
         return 0
 
     def ptr_parm_intent(parm: Parm):
-        func_name, parm_index = parm.parent.name, parm.index
+        func_name, parm_index = parm.parent.name, parm.parm_index
         if func_name in (
             "amd_comgr_get_isa_count",
             "amd_comgr_get_version",
@@ -89,6 +89,8 @@ def create_generator(
             ("amd_comgr_metadata_lookup", 2),
             ("amd_comgr_get_metadata_list_size", 1),
             ("amd_comgr_index_list_metadata", 2),
+            ("amd_comgr_create_symbolizer_info", 2),
+            ("amd_comgr_create_disassembly_info", 4),
         ):
             return ParmIntent.OUT
         # INOUT:
@@ -154,9 +156,7 @@ def create_generators(root: it.Root):
 
 
 if __name__ == "__main__":
-    interfacegen.cython.FunctionMixin.python_interface_always_return_tuple = (
-        True
-    )
+    interfacegen.cython.FunctionMixin.python_interface_always_return_tuple = True
 
     pkg_opts: support.RocmPackageOpts = support.create_rocm_package_opts_from_cli(
         project="AMD Code Object Manager (Comgr) Python",
