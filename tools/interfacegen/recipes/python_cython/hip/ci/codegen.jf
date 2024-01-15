@@ -120,6 +120,7 @@ pipeline {
                     '''
                 }
                 dir('recipes/python_cython/hip') {
+                    sh 'git branch --set-upstream-to=origin/main main' // seems to be sometimes required
                     sh 'bash ci/2-generate-code.sh'
                 }
                 dir ('recipes/python_cython/hip/hip-python-release-repo') {
