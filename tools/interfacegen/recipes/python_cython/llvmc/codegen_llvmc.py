@@ -119,13 +119,18 @@ def create_generator(
         return ParmIntent.IN
 
     def ptr_complicated_type_handler(node: Node):
-        if (node.parent.cursor.spelling, node.cursor.spelling) in (
+        if (node.parent.cursor.spelling, node.cursor.spelling) in ( # parameters
             ("LLVMFunctionType", "ParamTypes"),
             ("LLVMGetParams", "Params"),
             ("LLVMGetParamTypes", "Dest"),
             ("LLVMRunFunction", "Args"),
+            ("LLVMGetBufferStart")
         ):
             return f"{pkg_opts.util_types_prefix}ListOfPointer"
+        elif node.cursor.spelling in ( # function return values
+            "LLVMGetBufferStart",
+        ):
+            return f"{pkg_opts.util_types_prefix}NDBuffer"
         return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(pkg_opts.util_types_prefix)(
             node
         )
