@@ -28,11 +28,11 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
       values of all `ctypes` datatype entries of `pyobj` plus all the addresses from the
       entries that can be converted to type `~.Pointer`. The buffer is padded with additional bytes to account 
       for the alignment requirements of each entry; for more details, see `~.hipModuleLaunchKernel`.
-      Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+      Furthermore, the instance's `self._is_ptr_owner ` C attribute is set to `True` in this case.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
       
-      In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+      In this case, init code from `~.Pointer` is used and the C attribute `self._is_ptr_owner ` remains unchanged.
       See `~.Pointer.__init__` for more information.
     
     Note:
@@ -92,11 +92,11 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
         cdef size_t MAX_ALIGN = 8
 
         self._py_buffer_acquired = False
-        self._owner = False
+        self._is_ptr_owner  = False
         if isinstance(pyobj,HipModuleLaunchKernel_extra):
             self._ptr = (<HipModuleLaunchKernel_extra>pyobj)._ptr
         elif isinstance(pyobj,(tuple,list)):
-            self._owner = True
+            self._is_ptr_owner  = True
             # 1. Calcualte number of bytes needed
             for entry in pyobj:
                 if isinstance(entry,ctypes_types):
@@ -169,7 +169,7 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
             return wrapper
     
     def __dealloc__(self):
-        if self._owner:
+        if self._is_ptr_owner :
             libc.stdlib.free(<void*>self._config[1])
 
     def __init__(self,object pyobj):
@@ -184,11 +184,11 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
           values of all `ctypes` datatype entries of `pyobj` plus all the addresses from the
           entries that can be converted to type `~.Pointer`. The buffer is padded with additional bytes to account 
           for the alignment requirements of each entry; for more details, see `~.hipModuleLaunchKernel`.
-          Furthermore, the instance's `self._owner` C attribute is set to `True` in this case.
+          Furthermore, the instance's `self._is_ptr_owner ` C attribute is set to `True` in this case.
 
         * `object` that is accepted as input by `~.Pointer.__init__`:
         
-          In this case, init code from `~.Pointer` is used and the C attribute `self._owner` remains unchanged.
+          In this case, init code from `~.Pointer` is used and the C attribute `self._is_ptr_owner ` remains unchanged.
           See `~.Pointer.__init__` for more information.
         
         Note:

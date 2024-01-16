@@ -25,7 +25,7 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 cimport hip._util.types
 
 cdef class HipModuleLaunchKernel_extra(hip._util.types.Pointer):
-    cdef bint _owner
+    cdef bint _is_ptr_owner 
     cdef void* _config[5]
     cdef size_t _args_buffer_size
     
