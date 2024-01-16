@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,6 +35,7 @@ import enum
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
+
 class HipPlatform(enum.IntEnum):
     AMD = 0
     NVIDIA = 1
@@ -56,6 +57,7 @@ class HipPlatform(enum.IntEnum):
     def cflags(self):
         return ["-D", f"__HIP_PLATFORM_{self.name}__"]
 
+
 def parse_options():
     global ROCM_INC
     global ROCM_LIB
@@ -72,16 +74,20 @@ def parse_options():
         elif value in no_vals:
             return False
         else:
-            allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals) + list(no_vals))])
+            allowed_vals = ", ".join(
+                [f"'{a}'" for a in (list(yes_vals) + list(no_vals))]
+            )
             raise RuntimeError(
                 f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}"
             )
 
-    rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME",None))
-    platform=os.environ.get("HIP_PLATFORM","amd")
-    verbose=os.environ.get("HIP_PYTHON_VERBOSE","amd")
-    HIP_PYTHON_LIBS=os.environ.get("HIP_PYTHON_LIBS", "*")
-    HIP_PYTHON_RUNTIME_LINKING=get_bool_environ_var("HIP_PYTHON_RUNTIME_LINKING", "yes")
+    rocm_path = os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME", None))
+    platform = os.environ.get("HIP_PLATFORM", "amd")
+    verbose = os.environ.get("HIP_PYTHON_VERBOSE", "amd")
+    HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS", "*")
+    HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var(
+        "HIP_PYTHON_RUNTIME_LINKING", "yes"
+    )
 
     if not rocm_path:
         raise RuntimeError("ROCm path is not set")
@@ -93,6 +99,7 @@ def parse_options():
 
     EXTRA_COMPILE_ARGS = HipPlatform.from_string(platform).cflags + [f"-I{ROCM_INC}"]
 
+
 def create_extension(name, sources):
     global ROCM_INC
     global ROCM_LIB
@@ -103,10 +110,13 @@ def create_extension(name, sources):
         sources=sources,
         include_dirs=[ROCM_INC],
         library_dirs=[ROCM_LIB],
-        libraries=[] if HIP_PYTHON_RUNTIME_LINKING else [mod.lib for mod in HIP_MODULES],
+        libraries=[]
+        if HIP_PYTHON_RUNTIME_LINKING
+        else [mod.lib for mod in HIP_MODULES],
         language="c",
-        extra_compile_args=EXTRA_COMPILE_ARGS + ["-D","__half=uint16_t"],
+        extra_compile_args=EXTRA_COMPILE_ARGS + ["-D", "__half=uint16_t"],
     )
+
 
 class Module:
     PKG_NAME = "hip"
@@ -126,6 +136,7 @@ class Module:
             (f"{self.PKG_NAME}.{self.name}", [f"./{self.PKG_NAME}/{self.name}.pyx"]),
         ]
 
+
 # differs between hip-python and hip-python-as-cuda package
 def gather_ext_modules():
     global CYTHON_EXT_MODULES
@@ -137,9 +148,12 @@ def gather_ext_modules():
     )
     HIP_MODULES += [
         Module(
-        "hip",
-        lib="amdhip64",
-        helpers=[("hip._hip_helpers", ["./hip/_hip_helpers.pyx"])],
+            "hip",
+            lib="amdhip64",
+            helpers=[
+                ("hip._hip_helpers", ["./hip/_hip_helpers.pyx"]),
+                ("hip._hiprtc_helpers", ["./hip/_hiprtc_helpers.pyx"]),
+            ],
         ),
         Module("hiprtc"),
         Module("hipblas"),
@@ -156,33 +170,38 @@ def gather_ext_modules():
     if HIP_PYTHON_LIBS == "*":
         selected_libs = module_names
     else:
-        processed_libs = HIP_PYTHON_LIBS.replace(" ","")
+        processed_libs = HIP_PYTHON_LIBS.replace(" ", "")
         if processed_libs.startswith("^"):
             processed_libs = processed_libs[1:].split(",")
-            selected_libs = [name for name in module_names if name not in processed_libs]
+            selected_libs = [
+                name for name in module_names if name not in processed_libs
+            ]
         else:
             processed_libs = processed_libs.split(",")
             selected_libs = processed_libs
         for name in processed_libs:
             if name not in module_names:
-                raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(module_names)}")
-            
+                raise ValueError(
+                    f"library name '{name}' is not valid, use one of: {', '.join(module_names)}"
+                )
+
     for mod in HIP_MODULES:
         if mod.name in selected_libs:
             CYTHON_EXT_MODULES += mod.ext_modules
 
+
 if __name__ == "__main__":
-    HIP_PYTHON_LIBS=None
-    HIP_PYTHON_RUNTIME_LINKING=True
+    HIP_PYTHON_LIBS = None
+    HIP_PYTHON_RUNTIME_LINKING = True
     ROCM_INC = None
     ROCM_LIB = None
     EXTRA_COMPILE_ARGS = None
     VERBOSE = False
     HIP_MODULES = []
     CYTHON_EXT_MODULES = []
-   
+
     parse_options()
-    gather_ext_modules() 
+    gather_ext_modules()
     ext_modules = []
     for name, sources in CYTHON_EXT_MODULES:
         extension = create_extension(name, sources)
@@ -196,9 +215,9 @@ if __name__ == "__main__":
 
     # load _version.py
     ns = {}
-    exec(open(os.path.join(Module.PKG_NAME,"_version.py"),"r").read(), ns)
+    exec(open(os.path.join(Module.PKG_NAME, "_version.py"), "r").read(), ns)
 
     setup(
         ext_modules=ext_modules,
-        version = ns["__version__"],
+        version=ns["__version__"],
     )
