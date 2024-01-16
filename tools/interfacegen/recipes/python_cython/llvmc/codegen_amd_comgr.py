@@ -30,6 +30,8 @@ __author__ = "Advanced Micro Devices, Inc."
 
 import os
 
+import textwrap
+
 import logging
 
 import interfacegen
@@ -187,4 +189,15 @@ if __name__ == "__main__":
         INCTREE,
         pkg_opts,
         main_dir=os.path.join(pkg_opts.package_dir, "rocm", "amd_comgr"),
+        main_child_modules=[],
+        main_init_file_epilog=textwrap.dedent(
+            """
+        try:
+            from . import amd_comgr
+        except ImportError:
+            pass # may have been excluded from build
+        else: # no import error
+            from . import amd_comgr_pyutil
+            setattr(amd_comgr,"util",amd_comgr_pyutil)"""
+        ),
     )
