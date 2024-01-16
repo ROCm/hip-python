@@ -420,6 +420,19 @@ def generate_hiprtc_module_files():
         ptr_complicated_type_handler=hiprtc_ptr_complicated_type_handler,
         cflags=GENERATOR_ARGS,
     )
+    generator.python_interface_impl_prolog += textwrap.dedent(
+        """\
+        cimport hip._hiprtc_helpers
+        """
+    )
+    generator.python_interface_impl_epilog += textwrap.dedent(
+        """\
+        from hip._hiprtc_util import *
+        import hip._hiprtc_util
+        __all__ += hip._hiprtc_util.__all__
+        """
+    )
+
     HIPRTC_GENERATOR = generator
     return generator
 
