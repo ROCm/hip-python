@@ -425,13 +425,6 @@ def generate_hiprtc_module_files():
         cimport hip._hiprtc_helpers
         """
     )
-    generator.python_interface_impl_epilog += textwrap.dedent(
-        """\
-        from hip._hiprtc_util import *
-        import hip._hiprtc_util
-        __all__ += hip._hiprtc_util.__all__
-        """
-    )
 
     HIPRTC_GENERATOR = generator
     return generator
@@ -779,13 +772,25 @@ def write_package_init_file(
             init_content += "\nfrom . import _util"
 
         for module_name in lib_names:
-            init_content += textwrap.dedent(
-                f"""
-            try:
-                from . import {module_name}
-            except ImportError:
-                pass # may have been excluded from build"""
-            )
+            if module_name == "hiprtc":
+                init_content += textwrap.dedent(
+                    f"""
+                try:
+                    from . import hiprtc
+                except ImportError:
+                    pass # may have been excluded from build
+                else: # no import error
+                    from . import hiprtc_pyutil
+                    setattr(hiprtc,"util",hiprtc_pyutil)"""
+                )
+            else:
+                init_content += textwrap.dedent(
+                    f"""
+                try:
+                    from . import {module_name}
+                except ImportError:
+                    pass # may have been excluded from build"""
+                )
         f.write(init_content)
 
 
@@ -1036,7 +1041,9 @@ if __name__ == "__main__":
     )
 
     version = f"{rocm_version_name}.{gitversion.git_branch_rev_count(gitversion.git_current_branch())}"
-    long_version = f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
+    long_version = (
+        f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
+    )
 
     hip_python_lib_names = AVAILABLE_GENERATORS.keys()
     cuda_python_lib_names = ["cuda", "cudart", "nvrtc"]
