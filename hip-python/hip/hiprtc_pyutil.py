@@ -21,6 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import ctypes
+
 from hip import hiprtc
 from hip._util.types import Pointer, ListOfPointer, ListOfBytes
 
@@ -152,7 +154,7 @@ class HiprtcLinkCreateOpts:
                 hiprtc.hiprtcJIT_option.HIPRTC_JIT_ERROR_LOG_BUFFER,
             ):
                 self.values.append(
-                    Pointer(value)  # obtains pointer to bytes' Python buffer protocol
+                    Pointer(value)  # obtains pointer to bytes' data via Python buffer protocol
                 )
             else:
                 raise NotImplementedError(f"could not handle key '{key_str}'")
