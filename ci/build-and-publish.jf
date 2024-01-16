@@ -97,6 +97,7 @@ pipeline {
                         sh '''#!/usr/bin/env bash
                         set -e
                         set -o xtrace
+                        git checkout ${MAIN_BRANCH} # create local version of $MAIN_BRANCH
                         export BASE_BRANCH="${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}"
                         git checkout ${BASE_BRANCH}
                         bash init.sh
