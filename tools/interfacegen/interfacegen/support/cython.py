@@ -464,10 +464,11 @@ def generate_all_rocm_package_files(
             and the specified Python namespace is used. Defaults to ``None``.
         main_init_file_epilog (str,optional):
             Epilog to append to the main dir's init file. Defaults to ``""``.)
-        main_children_names (list(str), optional):
-            Names of the children of the main module. Defaults to ``None``.
-            If ``None`` is specified, the root trees child modules are 
-            used.
+        main_child_modules (list(str), optional):
+            Names of the child module of the main module.
+            If an empty list is passed, no imports are generated.
+            If ``None`` is specified, the root trees child modules are
+            used. Defaults to ``None``.
     """
     # create directories
     output_dir = pkg_opts.package_dir
@@ -488,7 +489,9 @@ def generate_all_rocm_package_files(
     # create init and version file in main dir
     if not main_dir:
         main_dir = os.path.join(output_dir, root.py_global_path)
-    if not main_child_modules:
+    if (
+        main_child_modules == None
+    ):  # ! NOTE: we do not use 'if not main_child_modules:' by purpose !
         main_child_modules = sorted(
             set([f"{c.py_name}" for c in root.children])
         )  # removes duplicates due to splits etc.
