@@ -39,6 +39,9 @@ import argparse
 import logging
 
 import interfacegen
+
+from interfacegen.support import gitversion
+
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
 
@@ -47,15 +50,21 @@ import cuda_interop_layer_gen
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
-interfacegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
-cuda_interop_layer_gen.python_interface_pyobj_role_template = r"`.{name}`" # note: here we want to keep the qualifier
+interfacegen.cython.python_interface_pyobj_role_template = (
+    r"`~.{name}`"  # ~: removes the qualifier from the link text
+)
+cuda_interop_layer_gen.python_interface_pyobj_role_template = (
+    r"`.{name}`"  # note: here we want to keep the qualifier
+)
 
 from interfacegen.cython import (
     CythonModuleGenerator,
     CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
 )
 
-HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER("hip._util.types.")
+HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER = (
+    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER("hip._util.types.")
+)
 
 from interfacegen.cparser import TypeHandler
 
@@ -68,6 +77,7 @@ from interfacegen.tree import (
 )
 
 from parse_hipify_perl import parse_hipify_perl
+
 
 def parse_options():
     global OUTPUT_DIR
@@ -129,8 +139,10 @@ def parse_options():
     )
 
     def rocm_version(arg):
-        if not re.match(r"[0-9]+\.[0-9]+\.[0-9]+",arg):
-            raise ValueError("Value of required argument `--rocm-version` must be a dot-separated number triple.")
+        if not re.match(r"[0-9]+\.[0-9]+\.[0-9]+", arg):
+            raise ValueError(
+                "Value of required argument `--rocm-version` must be a dot-separated number triple."
+            )
         return [int(p) for p in arg.split(".")]
 
     parser.add_argument(
@@ -190,8 +202,7 @@ def parse_options():
     RUNTIME_LINKING = args.runtime_linking
     LIBS = args.libs
 
-    ( ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR,
-     ROCM_VERSION_PATCH ) = args.rocm_version
+    (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR, ROCM_VERSION_PATCH) = args.rocm_version
 
     if not args.rocm_path:
         raise RuntimeError("ROCm path is not set")
@@ -287,7 +298,7 @@ def generate_hip_module_files():
 
     def hip_node_init(node: Node):
         # node modifications
-        if isinstance(node,interfacegen.tree.Function):
+        if isinstance(node, interfacegen.tree.Function):
             if not node.is_enum and node.name.startswith("hip"):
                 # hip routines without hipError_t return status
                 # we force them to not throw exceptions
@@ -297,15 +308,16 @@ def generate_hip_module_files():
                 node.prepend_python_return_value(
                     "hipError_t.hipSuccess",
                     "hipError_t",
-                    "Always returns `~.hipError_t.hipSuccess`.")
-        elif isinstance(node,interfacegen.tree.Parm):
+                    "Always returns `~.hipError_t.hipSuccess`.",
+                )
+        elif isinstance(node, interfacegen.tree.Parm):
             func_name, parm_idx = node.parent.name, node.parm_index
             if (func_name, parm_idx) in (
                 ("hipDeviceGetName", 0),
                 ("hipDeviceGetPCIBusId", 0),
             ):
                 func = node.parent
-                assert isinstance(func,interfacegen.cython.FunctionMixin)
+                assert isinstance(func, interfacegen.cython.FunctionMixin)
                 len_param: interfacegen.tree.Parm = func.get_parm(1)
                 func.python_body_prepend_before_c_interface_call(
                     f"{node.name}.malloc({len_param.name})"
@@ -321,11 +333,11 @@ def generate_hip_module_files():
         runtime_linking=RUNTIME_LINKING,
         util_pkg="hip._util",
         dll="libamdhip64.so",
-        modifiers_lazy_loader = " except? hipErrorInitializationError nogil",
-        error_return_value_lazy_loader = "hipErrorInitializationError",
-          # we hijack hipError_t constant hipErrorInitializationError for propagating exceptions
-          # more details: https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
-        node_init = hip_node_init,
+        modifiers_lazy_loader=" except? hipErrorInitializationError nogil",
+        error_return_value_lazy_loader="hipErrorInitializationError",
+        # we hijack hipError_t constant hipErrorInitializationError for propagating exceptions
+        # more details: https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
+        node_init=hip_node_init,
         renamer=renamer,
         node_filter=controls.hip.node_filter,
         ptr_parm_intent=controls.hip.ptr_parm_intent,
@@ -369,18 +381,21 @@ def generate_hiprtc_module_files():
     global HIPRTC_GENERATOR
 
     def hiprtc_ptr_complicated_type_handler(parm: Parm):
-        list_of_str_parms = (
+        if (parm.parent.name, parm.name) in (
             ("hiprtcCompileProgram", "options"),
             ("hiprtcCreateProgram", "headers"),
             ("hiprtcCreateProgram", "includeNames"),
-        )
-        if (parm.parent.name, parm.name) in list_of_str_parms:
+        ):
             return "hip._util.types.ListOfBytes"
+        if (parm.parent.name, parm.name) == ("hiprtcLinkCreate", "option_ptr"):
+            return "hip._hiprtc_helpers.HiprtcLinkCreate_option_ptr"
+        if (parm.parent.name, parm.name) == ("hiprtcLinkCreate", "option_vals_pptr"):
+            return "hip._util.types.ListOfPointer"
         return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     def hiprtc_node_init(node: Node):
         # node modifications
-        if isinstance(node,interfacegen.tree.Function):
+        if isinstance(node, interfacegen.tree.Function):
             if not node.is_enum and node.name.startswith("hiprtc"):
                 # hip routines without hipError_t return status
                 # we force them to not throw exceptions
@@ -394,11 +409,11 @@ def generate_hiprtc_module_files():
         runtime_linking=RUNTIME_LINKING,
         util_pkg="hip._util",
         dll="libhiprtc.so",
-          # we hijack hiprtcResult constant HIPRTC_ERROR_INTERNAL_ERROR for propagating exceptions
-          # more details: https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
-        modifiers_lazy_loader = " except? HIPRTC_ERROR_INTERNAL_ERROR nogil",
-        error_return_value_lazy_loader = "HIPRTC_ERROR_INTERNAL_ERROR",
-        node_init = hiprtc_node_init,
+        # we hijack hiprtcResult constant HIPRTC_ERROR_INTERNAL_ERROR for propagating exceptions
+        # more details: https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#error-return-values
+        modifiers_lazy_loader=" except? HIPRTC_ERROR_INTERNAL_ERROR nogil",
+        error_return_value_lazy_loader="HIPRTC_ERROR_INTERNAL_ERROR",
+        node_init=hiprtc_node_init,
         node_filter=controls.hiprtc.node_filter,
         ptr_parm_intent=controls.hiprtc.ptr_parm_intent,
         ptr_rank=controls.hiprtc.ptr_rank,
@@ -446,6 +461,7 @@ def generate_hipblas_module_files():
     )
     return generator
 
+
 # hipsolver
 def generate_hipsolver_module_files():
     global ROCM_INC
@@ -486,6 +502,7 @@ def generate_hipsolver_module_files():
     """
     )
     return generator
+
 
 # rccl
 def generate_rccl_module_files():
@@ -624,6 +641,7 @@ def generate_hipsparse_module_files():
     )
     return generator
 
+
 # roctx
 def generate_roctx_module_files():
     global ROCM_INC
@@ -646,6 +664,7 @@ def generate_roctx_module_files():
     )
     return generator
 
+
 def write_version_file(
     output_dir: str,
     license_text: str,
@@ -656,7 +675,7 @@ def write_version_file(
         f.write(
             license_text
             + textwrap.dedent(
-            f"""\
+                f"""\
 
             # This file has been autogenerated, do not modify.
 
@@ -664,9 +683,9 @@ def write_version_file(
 
             VERSION = __version__ = "{version}.{{HIP_PYTHON_VERSION_SHORT}}"
             LONG_VERSION = __long_version__ = "{long_version}.{{HIP_PYTHON_VERSION}}"
-            HIP_PYTHON_CODEGEN_BRANCH = "{interfacegen.gitversion.git_current_branch()}"
-            HIP_PYTHON_CODEGEN_VERSION = "{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
-            HIP_PYTHON_CODEGEN_REV = "{interfacegen.gitversion.git_rev()}"
+            HIP_PYTHON_CODEGEN_BRANCH = "{gitversion.git_current_branch()}"
+            HIP_PYTHON_CODEGEN_VERSION = "{gitversion.version(append_hash=True,append_date=True)}"
+            HIP_PYTHON_CODEGEN_REV = "{gitversion.git_rev()}"
             HIP_PYTHON_BRANCH = "{{HIP_PYTHON_BRANCH}}"
             HIP_PYTHON_VERSION = "{{HIP_PYTHON_VERSION}}"
             HIP_PYTHON_REV = "{{HIP_PYTHON_REV}}"\
@@ -674,18 +693,21 @@ def write_version_file(
             ).strip()
         )
 
-def _version_as_str(major,minor,patch,githash=None):
+
+def _version_as_str(major, minor, patch, githash=None):
     if githash:
         return f"{major}.{minor}.{patch}-{githash}"
     else:
         return f"{major}.{minor}.{patch}"
 
-def _version_as_int(major,minor,patch):
+
+def _version_as_int(major, minor, patch):
     """Return ROCm / HIP version as integer.
     Note:
         This is the typical way to compute the version.
     """
     return major * 10000000 + minor * 100000 + patch
+
 
 def write_package_init_file(
     output_dir: str,
@@ -723,10 +745,8 @@ def write_package_init_file(
     )
 
     with open(os.path.join(output_dir, "__init__.py"), "w") as f:
-        init_content = (
-            license_text
-            + textwrap.dedent(
-                f"""\
+        init_content = license_text + textwrap.dedent(
+            f"""\
 
                 # This file has been autogenerated, do not modify.
 
@@ -741,20 +761,24 @@ def write_package_init_file(
                 HIP_VERSION_TUPLE = hip_version_tuple = ({hip_version_major},{hip_version_minor},{hip_version_patch},"{hip_version_githash}")
 
                 """
-            )
         )
         if for_hip_python_package:
             init_content += "\nfrom . import _util"
 
         for module_name in lib_names:
-            init_content += textwrap.dedent(f"""
+            init_content += textwrap.dedent(
+                f"""
             try:
                 from . import {module_name}
             except ImportError:
-                pass # may have been excluded from build""")
+                pass # may have been excluded from build"""
+            )
         f.write(init_content)
 
-def write_hip_python_as_cuda_requirements_file(requirements_file: str, license_text: str,version: str):
+
+def write_hip_python_as_cuda_requirements_file(
+    requirements_file: str, license_text: str, version: str
+):
     with open(requirements_file, "w") as outfile:
         outfile.write(
             license_text
@@ -772,14 +796,19 @@ def write_hip_python_as_cuda_requirements_file(requirements_file: str, license_t
             )
         )
 
-def write_docs_page_per_module(hip_python_docs_dir: str, hip_python_lib_names, cuda_python_lib_names):
 
-    def write_module_markdown_file_(module,lib,extra=""):
+def write_docs_page_per_module(
+    hip_python_docs_dir: str, hip_python_lib_names, cuda_python_lib_names
+):
+    def write_module_markdown_file_(module, lib, extra=""):
         nonlocal hip_python_docs_dir
 
-        with open(os.path.join(hip_python_docs_dir, "python_api", f"{lib}.md"),"w") as outfile:
-            outfile.write(textwrap.dedent(
-                f"""\
+        with open(
+            os.path.join(hip_python_docs_dir, "python_api", f"{lib}.md"), "w"
+        ) as outfile:
+            outfile.write(
+                textwrap.dedent(
+                    f"""\
                 # {module}.{lib}
 
                 <!-- This file has been autogenerated, do not modify. -->
@@ -790,50 +819,64 @@ def write_docs_page_per_module(hip_python_docs_dir: str, hip_python_lib_names, c
                 {extra}
 
                 ```"""
-            ))
+                )
+            )
 
     for lib in hip_python_lib_names:
-        write_module_markdown_file_("hip",lib)
+        write_module_markdown_file_("hip", lib)
     for lib in cuda_python_lib_names:
-        write_module_markdown_file_("cuda",lib,extra="   :noindex:") # noindex, prevents ambiguity issues with enum constants
+        write_module_markdown_file_(
+            "cuda", lib, extra="   :noindex:"
+        )  # noindex, prevents ambiguity issues with enum constants
+
 
 def render_index_md(
     hip_python_docs_dir: str,
     hip_python_lib_names,
     cuda_python_lib_names,
-    rocm_version_name
+    rocm_version_name,
 ):
-    index_md = os.path.join(
-        hip_python_docs_dir, "index.md"
-    )
-    python_api_doc_names = [f"- {{doc}}`python_api/{lib}`" for lib in hip_python_lib_names]
-    python_api_doc_names_cuda = [f"- {{doc}}`python_api/{lib}`" for lib in cuda_python_lib_names]
-    with open(index_md + ".in","r"
-         ) as infile, open(index_md, "w") as outfile:
-
+    index_md = os.path.join(hip_python_docs_dir, "index.md")
+    python_api_doc_names = [
+        f"- {{doc}}`python_api/{lib}`" for lib in hip_python_lib_names
+    ]
+    python_api_doc_names_cuda = [
+        f"- {{doc}}`python_api/{lib}`" for lib in cuda_python_lib_names
+    ]
+    with open(index_md + ".in", "r") as infile, open(index_md, "w") as outfile:
         rendered = infile.read()
-        rendered = rendered.replace("{PYTHON_API_DOC_NAMES}","\n".join(python_api_doc_names))
-        rendered = rendered.replace("{PYTHON_API_DOC_NAMES_CUDA}","\n".join(python_api_doc_names_cuda))
+        rendered = rendered.replace(
+            "{PYTHON_API_DOC_NAMES}", "\n".join(python_api_doc_names)
+        )
+        rendered = rendered.replace(
+            "{PYTHON_API_DOC_NAMES_CUDA}", "\n".join(python_api_doc_names_cuda)
+        )
         rendered = rendered.replace("{ROCM_VERSION_NAME}", rocm_version_name)
         outfile.write(rendered)
+
 
 def render_toc_yml_in(
     hip_python_docs_dir: str,
     hip_python_lib_names,
     cuda_python_lib_names,
 ):
-    toc_yml_in = os.path.join(
-        hip_python_docs_dir, ".sphinx", "_toc.yml.in"
-    )
-    python_api_file_names = [f"      - file: python_api/{lib}" for lib in hip_python_lib_names]
-    python_api_file_names_cuda = [f"      - file: python_api/{lib}" for lib in cuda_python_lib_names]
-    with open(toc_yml_in + ".in","r"
-         ) as infile, open(toc_yml_in, "w") as outfile:
-
+    toc_yml_in = os.path.join(hip_python_docs_dir, ".sphinx", "_toc.yml.in")
+    python_api_file_names = [
+        f"      - file: python_api/{lib}" for lib in hip_python_lib_names
+    ]
+    python_api_file_names_cuda = [
+        f"      - file: python_api/{lib}" for lib in cuda_python_lib_names
+    ]
+    with open(toc_yml_in + ".in", "r") as infile, open(toc_yml_in, "w") as outfile:
         rendered = infile.read()
-        rendered = rendered.replace("{PYTHON_API_FILE_NAMES}","\n".join(python_api_file_names))
-        rendered = rendered.replace("{PYTHON_API_FILE_NAMES_CUDA}","\n".join(python_api_file_names_cuda))
+        rendered = rendered.replace(
+            "{PYTHON_API_FILE_NAMES}", "\n".join(python_api_file_names)
+        )
+        rendered = rendered.replace(
+            "{PYTHON_API_FILE_NAMES_CUDA}", "\n".join(python_api_file_names_cuda)
+        )
         outfile.write(rendered)
+
 
 def generate_cuda_interop_layer_files(license_text: str):
     """Generate the CUDA interoperability layer.
@@ -844,16 +887,17 @@ def generate_cuda_interop_layer_files(license_text: str):
     global HIPRTC_GENERATOR
     global HIP_GENERATOR
 
-    if HIPRTC_GENERATOR==None or HIP_GENERATOR==None:
-        _log.warning("No CUDA runtime layer generated as 'hip' and/or 'hiprtc' have not been specified as libraries to parse.")
+    if HIPRTC_GENERATOR == None or HIP_GENERATOR == None:
+        _log.warning(
+            "No CUDA runtime layer generated as 'hip' and/or 'hiprtc' have not been specified as libraries to parse."
+        )
         return
 
     cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR,"nvrtc", HIPRTC_GENERATOR, HIP_2_CUDA,
-        license_text
+        OUTPUT_DIR, "nvrtc", HIPRTC_GENERATOR, HIP_2_CUDA, license_text
     )
 
-    def collect_imports_(import_stmt: str,py_generator):
+    def collect_imports_(import_stmt: str, py_generator):
         contribs = ""
         for node in py_generator:
             hip_name = node.cython_global_name
@@ -861,25 +905,42 @@ def generate_cuda_interop_layer_files(license_text: str):
                 for cuda_name in HIP_2_CUDA[hip_name]:
                     contribs += f"{import_stmt} {cuda_name}\n"
         return contribs
-    extra_imports = collect_imports_("from cuda.nvrtc import",HIPRTC_GENERATOR.backend.walk_entities_to_import(False))
-    extra_cimports = collect_imports_("from cuda.nvrtc cimport",HIPRTC_GENERATOR.backend.walk_entities_to_cimport(False))
-    extra_cmodule_cimports = collect_imports_("from cuda.cnvrtc cimport",HIPRTC_GENERATOR.backend.walk_entities_to_cimport(True))
+
+    extra_imports = collect_imports_(
+        "from cuda.nvrtc import",
+        HIPRTC_GENERATOR.backend.walk_entities_to_import(False),
+    )
+    extra_cimports = collect_imports_(
+        "from cuda.nvrtc cimport",
+        HIPRTC_GENERATOR.backend.walk_entities_to_cimport(False),
+    )
+    extra_cmodule_cimports = collect_imports_(
+        "from cuda.cnvrtc cimport",
+        HIPRTC_GENERATOR.backend.walk_entities_to_cimport(True),
+    )
 
     cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR, "cuda", HIP_GENERATOR, HIP_2_CUDA,
+        OUTPUT_DIR,
+        "cuda",
+        HIP_GENERATOR,
+        HIP_2_CUDA,
         license_text,
         extra_imports=extra_imports,
         extra_cimports=extra_cimports,
         extra_cmodule_cimports=extra_cmodule_cimports,
     )
     cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR, "cudart", HIP_GENERATOR, HIP_2_CUDA,
+        OUTPUT_DIR,
+        "cudart",
+        HIP_GENERATOR,
+        HIP_2_CUDA,
         license_text,
         warn=False,
         extra_imports=extra_imports,
         extra_cimports=extra_cimports,
         extra_cmodule_cimports=extra_cmodule_cimports,
     )  # NOTE: cudart is the same as cuda, but we generate it to have also the corresponding pxd/pyx files. Could be solved via symlinks & __init__.py mod too.
+
 
 if __name__ == "__main__":
     OUTPUT_DIR = None
@@ -890,10 +951,8 @@ if __name__ == "__main__":
     LIBS = None
     HIP_2_CUDA = None
 
-    ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR, ROCM_VERSION_PATCH = (
-        0, 0, 0)
-    HIP_VERSION_MAJOR, HIP_VERSION_MINOR, HIP_VERSION_PATCH = (
-        0, 0, 0)
+    ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR, ROCM_VERSION_PATCH = (0, 0, 0)
+    HIP_VERSION_MAJOR, HIP_VERSION_MINOR, HIP_VERSION_PATCH = (0, 0, 0)
     HIP_VERSION_GITHASH = ""
 
     HIPRTC_GENERATOR = None
@@ -902,7 +961,7 @@ if __name__ == "__main__":
     parse_options()
 
     AVAILABLE_GENERATORS = dict(
-        hip=generate_hip_module_files, # produces the versions
+        hip=generate_hip_module_files,  # produces the versions
         hiprtc=generate_hiprtc_module_files,
         hipblas=generate_hipblas_module_files,
         rccl=generate_rccl_module_files,
@@ -915,7 +974,7 @@ if __name__ == "__main__":
 
     # process and check user-provided library names
     avail_lib_names = AVAILABLE_GENERATORS.keys()
-    processed_libs = LIBS.replace(" ","")
+    processed_libs = LIBS.replace(" ", "")
     if processed_libs == "*":
         lib_names = avail_lib_names
     else:
@@ -927,12 +986,18 @@ if __name__ == "__main__":
             lib_names = processed_libs
         for name in processed_libs:
             if name not in avail_lib_names:
-                raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}")
+                raise ValueError(
+                    f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}"
+                )
 
     Path(os.path.join(OUTPUT_DIR, "hip-python")).mkdir(parents=False, exist_ok=True)
-    Path(os.path.join(OUTPUT_DIR, "hip-python-as-cuda")).mkdir(parents=False, exist_ok=True)
+    Path(os.path.join(OUTPUT_DIR, "hip-python-as-cuda")).mkdir(
+        parents=False, exist_ok=True
+    )
     hip_output_dir = os.path.join(OUTPUT_DIR, "hip-python", "hip")
-    cuda_output_dir = os.path.join(OUTPUT_DIR, "hip-python-as-cuda", "cuda") # must be here because of cuda interop codegen
+    cuda_output_dir = os.path.join(
+        OUTPUT_DIR, "hip-python-as-cuda", "cuda"
+    )  # must be here because of cuda interop codegen
     Path(hip_output_dir).mkdir(parents=False, exist_ok=True)
     Path(cuda_output_dir).mkdir(parents=False, exist_ok=True)
     for entry in lib_names:
@@ -944,8 +1009,10 @@ if __name__ == "__main__":
         generator = AVAILABLE_GENERATORS[libname]()
         generator.write_module_files(output_dir=hip_output_dir)
 
-    with open("../LICENSE","r") as licensefile:
-        license_text = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
+    with open("../LICENSE", "r") as licensefile:
+        license_text = "".join(
+            [f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()]
+        )
 
     generate_cuda_interop_layer_files(license_text)
 
@@ -955,17 +1022,15 @@ if __name__ == "__main__":
         ROCM_VERSION_PATCH,
     )
 
-    version = f"{rocm_version_name}.{interfacegen.gitversion.git_branch_rev_count(interfacegen.gitversion.git_current_branch())}"
-    long_version = (
-        f"{rocm_version_name}.{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
-    )
+    version = f"{rocm_version_name}.{gitversion.git_branch_rev_count(gitversion.git_current_branch())}"
+    long_version = f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
 
     hip_python_lib_names = AVAILABLE_GENERATORS.keys()
-    cuda_python_lib_names = ["cuda","cudart","nvrtc"]
+    cuda_python_lib_names = ["cuda", "cudart", "nvrtc"]
 
     for output_dir in (hip_output_dir, cuda_output_dir):
         # hip|cuda/_version.py
-        write_version_file(output_dir,license_text,version,long_version)
+        write_version_file(output_dir, license_text, version, long_version)
         # hip|cuda/__init__.py
         # TODO make option to use all generators or only specified ones
         for_hip_python_package = output_dir == hip_output_dir
@@ -987,16 +1052,27 @@ if __name__ == "__main__":
     requirements_file = os.path.join(
         OUTPUT_DIR, "hip-python-as-cuda", "requirements.txt.in"
     )
-    write_hip_python_as_cuda_requirements_file(requirements_file,license_text,version)
+    write_hip_python_as_cuda_requirements_file(requirements_file, license_text, version)
 
     # hip-python docs
-    hip_python_docs_dir = os.path.join(OUTPUT_DIR,"docs")
+    hip_python_docs_dir = os.path.join(OUTPUT_DIR, "docs")
     Path(hip_python_docs_dir).mkdir(parents=False, exist_ok=True)
     # files per api
-    Path(os.path.join(hip_python_docs_dir, "python_api")).mkdir(parents=False, exist_ok=True)
-    write_docs_page_per_module(hip_python_docs_dir, hip_python_lib_names, cuda_python_lib_names)
+    Path(os.path.join(hip_python_docs_dir, "python_api")).mkdir(
+        parents=False, exist_ok=True
+    )
+    write_docs_page_per_module(
+        hip_python_docs_dir, hip_python_lib_names, cuda_python_lib_names
+    )
     # index.md from index.md.in
-    render_index_md(hip_python_docs_dir,hip_python_lib_names,cuda_python_lib_names,rocm_version_name)
+    render_index_md(
+        hip_python_docs_dir,
+        hip_python_lib_names,
+        cuda_python_lib_names,
+        rocm_version_name,
+    )
     # _toc.yml.in from _toc.yml.in.in
-    Path(os.path.join(hip_python_docs_dir, ".sphinx")).mkdir(parents=False, exist_ok=True)
-    render_toc_yml_in(hip_python_docs_dir,hip_python_lib_names,cuda_python_lib_names)
+    Path(os.path.join(hip_python_docs_dir, ".sphinx")).mkdir(
+        parents=False, exist_ok=True
+    )
+    render_toc_yml_in(hip_python_docs_dir, hip_python_lib_names, cuda_python_lib_names)
