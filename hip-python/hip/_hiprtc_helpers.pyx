@@ -64,9 +64,10 @@ cdef class HiprtcLinkCreate_option_ptr(hip._util.types.Pointer):
             
             # 3. Copy the data into the struct and calculate the offset
             for i in range(0,num_entries):
-                if not isinstance(pyobj,hip.hiprtc.hiprtcJIT_option):
+                entry = pyobj[i]
+                if not isinstance(entry,hip.hiprtc.hiprtcJIT_option):
                     raise ValueError("list/tuple entries must be of type 'hip.hiprtc.hiprtcJIT_option'")
-                element_ptr[i] = <unsigned int>cpython.long.PyLong_AsUnsignedLong(pyobj[i])
+                element_ptr[i] = <unsigned int>cpython.long.PyLong_AsUnsignedLong(entry.value)
         else:
             hip._util.types.Pointer.init_from_pyobj(self,pyobj)
 
