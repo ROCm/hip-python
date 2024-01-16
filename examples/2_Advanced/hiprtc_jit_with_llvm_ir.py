@@ -70,7 +70,14 @@ class LLLVMProgram:
 
 class HiprtcLinker:
     def __init__(self):
-        self.link_state = hip_check(hiprtc.hiprtcLinkCreate(0, None, None))
+        self.link_state = hip_check(
+            hiprtc.hiprtcLinkCreate(
+                *hiprtc.util.HiprtcLinkCreateOpts(
+                    HIPRTC_JIT_GENERATE_DEBUG_INFO=1,
+                    HIPRTC_JIT_GENERATE_LINE_INFO=1,
+                )
+            )
+        )
         self.completed = False
         self.code = None
         self.code_size = None
