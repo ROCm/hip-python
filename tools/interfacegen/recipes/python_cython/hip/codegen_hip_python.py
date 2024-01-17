@@ -780,8 +780,8 @@ def write_package_init_file(
                 except ImportError:
                     pass # may have been excluded from build
                 else: # no import error
-                    from . import hiprtc_pyutil
-                    setattr(hiprtc,"util",hiprtc_pyutil)"""
+                    from . import hiprtc_pyext
+                    setattr(hiprtc,"ext",hiprtc_pyext)"""
                 )
             else:
                 init_content += textwrap.dedent(
