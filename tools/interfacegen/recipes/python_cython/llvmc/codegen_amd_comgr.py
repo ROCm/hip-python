@@ -197,7 +197,7 @@ if __name__ == "__main__":
         except ImportError:
             pass # may have been excluded from build
         else: # no import error
-            from . import amd_comgr_pyutil
-            setattr(amd_comgr,"util",amd_comgr_pyutil)"""
+            from . import amd_comgr_pyext
+            setattr(amd_comgr,"ext",amd_comgr_pyext)"""
         ),
     )
