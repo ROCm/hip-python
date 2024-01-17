@@ -424,7 +424,7 @@ def generate_cuda_interop_module_files(
                 docstring_attrib = textwrap.dedent(
                         f"""\
                         {cuda_name}:
-                            alias of {python_interface_pyobj_role_template.format(name=hip_name)}
+                            Alias of {python_interface_pyobj_role_template.format(name=hip_name)}
                         """
                     )
             else: # raw string
