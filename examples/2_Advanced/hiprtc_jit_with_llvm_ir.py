@@ -132,7 +132,7 @@ if __name__ == "__main__":
         ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
         declare i32 @llvm.amdgcn.workitem.id.x() #1
         attributes #0 = { mustprogress nofree norecurse nosync nounwind willreturn memory(argmem: readwrite) "amdgpu-flat-work-group-size"="1,1024" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="gfx90a" "target-features"="+16-bit-insts,+atomic-buffer-global-pk-add-f16-insts,+atomic-fadd-rtn-insts,+ci-insts,+cumode,+dl-insts,+dot1-insts,+dot10-insts,+dot2-insts,+dot3-insts,+dot4-insts,+dot5-insts,+dot6-insts,+dot7-insts,+dpp,+gfx8-insts,+gfx9-insts,+gfx90a-insts,+mai-insts,+s-memrealtime,+s-memtime-inst,+sramecc,+wavefrontsize64,-xnack" "uniform-work-group-size"="true" }
-        attributes #7 = { convergent nocallback nofree nounwind willreturn memory(none) }
+        attributes #1 = { convergent nocallback nofree nounwind willreturn memory(none) }
 
         !llvm.module.flags = !{!0, !1, !2, !3, !4}
         !opencl.ocl.version = !{!5}
