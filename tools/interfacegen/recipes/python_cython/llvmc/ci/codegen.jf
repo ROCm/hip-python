@@ -121,6 +121,8 @@ pipeline {
                 dir('recipes/python_cython/llvmc') {
                     sh 'git branch --set-upstream-to=origin/main main' // seems to be sometimes required
                     sh 'bash ci/2-generate-code.sh'
+                    sh 'bash ci/3-generate-hiprtc-runtime.sh'
+                    sh 'bash ci/4-get-rocm-llvm-project-clang-bindings.sh'
                 }
                 dir ('recipes/python_cython/llvmc/rocm-llvm-python-release-repo') {
                     sh '''#!/usr/bin/env bash
