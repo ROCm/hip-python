@@ -56,3 +56,5 @@ cp ${DEPSDIR}/llvm-project/clang/bindings/python/clang/* ${RELEASE_REPO_DIR}/roc
 for f in $(find ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/); do
   sed -s -i "s,clang\.enumerations,rocm.clang.enumerations," ${f} || true
 done
+# copy LLVM license into rocm.clang
+cp ${DEPSDIR}/llvm-project/LICENSE.TXT ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/
