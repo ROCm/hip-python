@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # MIT License
 #
-# Copyright (c) 2024 Advanced Micro Devices, Inc.
+# Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ from . import includetree as it
 MIT_LICENSE_AMD = f"""\
 # MIT License
 #
-# Copyright (c) {datetime.today().year} Advanced Micro Devices, Inc.
+# Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
