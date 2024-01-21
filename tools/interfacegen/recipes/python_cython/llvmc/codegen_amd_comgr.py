@@ -84,7 +84,7 @@ def create_generator(
             ("amd_comgr_get_data_kind", 1),
             ("amd_comgr_action_data_count", 2),
             ("amd_comgr_action_data_get_data", 3),
-            ("amd_comgr_get_isa_name",1),
+            ("amd_comgr_get_isa_name", 1),
             ("amd_comgr_get_isa_metadata", 1),
             ("amd_comgr_get_data_metadata", 1),
             ("amd_comgr_get_metadata_kind", 1),
@@ -193,12 +193,9 @@ if __name__ == "__main__":
         main_child_modules=[],
         main_init_file_epilog=textwrap.dedent(
             """
-        try:
-            from . import amd_comgr
-        except ImportError:
-            pass # may have been excluded from build
-        else: # no import error
-            from . import amd_comgr_pyext
-            setattr(amd_comgr,"ext",amd_comgr_pyext)"""
+        from . import amd_comgr
+        from . import amd_comgr_pyext
+        setattr(amd_comgr,"ext",amd_comgr_pyext)
+        """
         ),
     )

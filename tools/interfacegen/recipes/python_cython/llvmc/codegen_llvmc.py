@@ -273,9 +273,12 @@ if __name__ == "__main__":
         INCTREE,
         pkg_opts,
         main_dir=os.path.join(pkg_opts.package_dir,"rocm","llvm"),
-        main_child_modules=["c","config"],
+        main_child_modules=[],
         main_init_file_epilog=textwrap.dedent(
             f"""
+            from . import c
+            from . import config
+
             from . import _util
 
             import sys
