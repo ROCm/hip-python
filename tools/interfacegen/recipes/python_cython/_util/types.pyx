@@ -79,6 +79,10 @@ cdef class Pointer:
 
         Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
 
+    * `object` that has `as_c_void_p(self)` method:
+
+        Takes the pointer address ``pyobj.as_c_void_p().value`` and writes it to ``self._ptr``.
+
     * `object` that implements the CUDA Array Interface protocol:
 
         Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
@@ -143,6 +147,9 @@ cdef class Pointer:
             self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
+        elif hasattr(pyobj,"as_c_void_p"):
+            c_void_p_value = pyobj.as_c_void_p().value
+            self._ptr = cpython.long.PyLong_AsVoidPtr(c_void_p_value) if c_void_p_value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
