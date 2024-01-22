@@ -37,24 +37,23 @@ fi
 
 ROCM_VER_SHORT=$(echo ${ROCM_VER} | sed "s,\([0-9]\+\.[0-9]\+\)\.0,\1,g")
 
-DEPSDIR=${DEPSDIR:-"__deps"}
-DEPSDIR=$(realpath ${DEPSDIR})
-
 RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-rocm-llvm-python-release-repo}
 RELEASE_REPO_DIR=$(realpath ${RELEASE_REPO_DIR})
 
-# clone ROCM/llvm-project
-echo "clone ROCm llvm-project"
-cd ${DEPSDIR}
-git clone https://github.com/ROCm/llvm-project.git -b rocm-${ROCM_VER_SHORT}.x || true
+sudo apt install wget
 
-# copy header file into release repo
+cd ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/
+
+# 1) copy clang bindings into ROCm LLVM Python 'rocm.llvm.clang' package
 echo "copy clang bindings into ROCm LLVM Python 'rocm.llvm.clang' package"
-mkdir -p ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/
-rm ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/*
-cp ${DEPSDIR}/llvm-project/clang/bindings/python/clang/* ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/
-for f in $(find ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/); do
-  sed -s -i "s,clang\.enumerations,rocm.clang.enumerations," ${f} || true
+for f in "__init__.py" "cindex.py" "enumerations.py"; do
+  rm -f ${f}
+  wget https://raw.githubusercontent.com/ROCm/llvm-project/rocm-${ROCM_VER_SHORT}.x/clang/bindings/python/clang/${f}
 done
-# copy LLVM license into rocm.clang
-cp ${DEPSDIR}/llvm-project/LICENSE.TXT ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/
+sed -s -i "s,clang\.enumerations,rocm.clang.enumerations," ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/cindex.py
+
+# 2) copy LLVM LICENSE.TXT int into ROCm LLVM Python 'rocm.llvm.clang' package
+echo "copy LLVM LICENSE.TXT int into ROCm LLVM Python 'rocm.llvm.clang' package"
+
+rm -f LICENSE.TXT
+wget https://raw.githubusercontent.com/ROCm/llvm-project/rocm-${ROCM_VER_SHORT}.x/LICENSE.TXT
