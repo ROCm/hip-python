@@ -27,6 +27,8 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
    return
 fi
 
+sudo apt install build-essential -y
+
 set -e
 set -o xtrace
 

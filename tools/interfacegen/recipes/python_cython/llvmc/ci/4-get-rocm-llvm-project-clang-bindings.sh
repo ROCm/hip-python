@@ -30,6 +30,8 @@ fi
 set -e
 set -o xtrace
 
+sudo apt install wget
+
 if [ -z ${ROCM_VER+x} ]; then
   echo "ERROR: environment variable 'ROCM_VER' not set."
   exit 1
@@ -40,15 +42,13 @@ ROCM_VER_X=$(echo "${ROCM_VER}.x" | sed "s,\([0-9]\+\.[0-9]\+\)\.[0-9]\+,\1,g")
 RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-rocm-llvm-python-release-repo}
 RELEASE_REPO_DIR=$(realpath ${RELEASE_REPO_DIR})
 
-sudo apt install wget
-
 cd ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/
 
 # 1) copy clang bindings into ROCm LLVM Python 'rocm.llvm.clang' package
 echo "copy clang bindings into ROCm LLVM Python 'rocm.llvm.clang' package"
 for f in "__init__.py" "cindex.py" "enumerations.py"; do
   rm -f ${f}
-  wget https://raw.githubusercontent.com/ROCm/llvm-project/rocm-${ROCM_VER_X}//clang/bindings/python/clang/${f}
+  wget https://raw.githubusercontent.com/ROCm/llvm-project/rocm-${ROCM_VER_X}/clang/bindings/python/clang/${f}
 done
 sed -s -i "s,clang\.enumerations,rocm.clang.enumerations," ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/cindex.py
 
@@ -56,4 +56,4 @@ sed -s -i "s,clang\.enumerations,rocm.clang.enumerations," ${RELEASE_REPO_DIR}/r
 echo "copy LLVM LICENSE.TXT int into ROCm LLVM Python 'rocm.llvm.clang' package"
 
 rm -f LICENSE.TXT
-wget https://raw.githubusercontent.com/ROCm/llvm-project/rocm-${ROCM_VER_SHORT}.x/LICENSE.TXT
+wget https://raw.githubusercontent.com/ROCm/llvm-project/rocm-${ROCM_VER_X}/LICENSE.TXT
