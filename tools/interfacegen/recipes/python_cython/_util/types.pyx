@@ -66,23 +66,6 @@ cdef class Pointer:
 
         This will set the ``self._ptr`` attribute to ``NULL``.
 
-    * `~.Pointer`:
-
-        Copies ``pyobj._ptr`` to ``self._ptr``.
-        `~.Py_buffer` object ownership is not transferred!
-
-    * `int`:
-
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
-
-    * `ctypes.c_void_p`:
-
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
-
-    * `object` that has `as_c_void_p(self)` method:
-
-        Takes the pointer address ``pyobj.as_c_void_p().value`` and writes it to ``self._ptr``.
-
     * `object` that implements the CUDA Array Interface protocol:
 
         Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
@@ -95,7 +78,33 @@ cdef class Pointer:
         sets the `self._py_buffer_acquired` flag to `True`, and
         writes `self._py_buffer.buf` to the data pointer `self._ptr`.
 
+    * `~.Pointer`:
+
+        Copies ``pyobj._ptr`` to ``self._ptr``.
+        `~.Py_buffer` object ownership is not transferred!
+
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+
+    * `object` that has `as_c_void_p(self)` method:
+
+        Takes the pointer address ``pyobj.as_c_void_p().value`` and writes it to ``self._ptr``.
+
+    * `int`:
+
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+
     Type checks are performed in the above order.
+
+    Note:
+        When initializing `~.Pointer` instances from a Python input object,
+        buffer types are checked first by purpose.
+        Acquiring/releasing a buffer typically implies that the reference count
+        of the buffer is incremented/decremented.
+        If the Python input object releases a buffer but a
+        `~.Pointer` instance still has acquired it,
+        the buffer data will not be freed until the `~.Pointer` instance is deleted.
 
     C Attributes:
         _ptr (C type ``void *``, protected):
@@ -141,20 +150,6 @@ cdef class Pointer:
         self._py_buffer_acquired = False
         if pyobj is None:
             self._ptr = NULL
-        elif isinstance(pyobj,Pointer):
-            self._ptr = (<Pointer>pyobj)._ptr
-        elif isinstance(pyobj,int):
-            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
-        elif isinstance(pyobj,ctypes.c_void_p):
-            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
-        elif hasattr(pyobj,"as_c_void_p"):
-            c_void_p_value = pyobj.as_c_void_p().value
-            self._ptr = cpython.long.PyLong_AsVoidPtr(c_void_p_value) if c_void_p_value != None else NULL
-        elif cuda_array_interface != None:
-            if not "data" in cuda_array_interface:
-                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
-            ptr_as_int = cuda_array_interface["data"][0]
-            self._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer(
                 pyobj,
@@ -165,6 +160,20 @@ cdef class Pointer:
                 raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
             self._py_buffer_acquired = True
             self._ptr = self._py_buffer.buf
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            self._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
+        elif isinstance(pyobj,Pointer):
+            self._ptr = (<Pointer>pyobj)._ptr
+        elif isinstance(pyobj,int):
+            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
+        elif hasattr(pyobj,"as_c_void_p"):
+            c_void_p_value = pyobj.as_c_void_p().value
+            self._ptr = cpython.long.PyLong_AsVoidPtr(c_void_p_value) if c_void_p_value != None else NULL
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
 
