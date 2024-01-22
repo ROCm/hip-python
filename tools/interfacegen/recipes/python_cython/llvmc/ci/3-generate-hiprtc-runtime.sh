@@ -60,7 +60,11 @@ declare -x OPENCL_DIR=${DEPSDIR}/clr/opencl
 declare -x ROCCLR_DIR=${DEPSDIR}/clr/rocclr
 declare -x HIP_PLATFORM=amd
 
-pip install cmake
+# create and soure a venv
+python3 -m venv _venv
+source _venv/bin/activate
+pip install cmake cppheaderparser
+
 cd ${DEPSDIR}/clr/hipamd/
 mkdir -p build
 cd build
@@ -79,3 +83,7 @@ make hiprtc-builtins VERBOSE=1
 # copy header file into release repo
 echo "copy header file into ROCm LLVM Python 'rocm.llvm.amd_comgr' package"
 cp ${DEPSDIR}/clr/hipamd/build/src/hiprtc/hip_rtc_gen/hipRTC ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/amd_comgr/hiprtc_runtime.h
+
+# decativate venv and remove folder
+deactivate
+rm -rf _venv
