@@ -35,7 +35,7 @@ if [ -z ${ROCM_VER+x} ]; then
   exit 1
 fi
 
-ROCM_VER_SHORT=$(echo ${ROCM_VER} | sed "s,\([0-9]\+\.[0-9]\+\)\.0,\1,g")
+ROCM_VER_X=$(echo "${ROCM_VER}.x" | sed "s,\([0-9]\+\.[0-9]\+\)\.[0-9]\+,\1,g")
 
 RELEASE_REPO_DIR=${RELEASE_REPO_DIR:-rocm-llvm-python-release-repo}
 RELEASE_REPO_DIR=$(realpath ${RELEASE_REPO_DIR})
@@ -48,7 +48,7 @@ cd ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/
 echo "copy clang bindings into ROCm LLVM Python 'rocm.llvm.clang' package"
 for f in "__init__.py" "cindex.py" "enumerations.py"; do
   rm -f ${f}
-  wget https://raw.githubusercontent.com/ROCm/llvm-project/rocm-${ROCM_VER_SHORT}.x/clang/bindings/python/clang/${f}
+  wget https://raw.githubusercontent.com/ROCm/llvm-project/rocm-${ROCM_VER_X}//clang/bindings/python/clang/${f}
 done
 sed -s -i "s,clang\.enumerations,rocm.clang.enumerations," ${RELEASE_REPO_DIR}/rocm-llvm-python/rocm/clang/cindex.py
 

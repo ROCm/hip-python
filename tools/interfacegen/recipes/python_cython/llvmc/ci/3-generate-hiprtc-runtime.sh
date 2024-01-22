@@ -35,7 +35,7 @@ if [ -z ${ROCM_VER+x} ]; then
   exit 1
 fi
 
-ROCM_VER_SHORT=$(echo ${ROCM_VER} | sed "s,\([0-9]\+\.[0-9]\+\)\.0,\1,g")
+ROCM_VER_X=$(echo "${ROCM_VER}.x" | sed "s,\([0-9]\+\.[0-9]\+\)\.[0-9]\+,\1,g")
 
 DEPSDIR=${DEPSDIR:-"__deps"}
 DEPSDIR=$(realpath ${DEPSDIR})
@@ -46,10 +46,10 @@ RELEASE_REPO_DIR=$(realpath ${RELEASE_REPO_DIR})
 mkdir -p ${DEPSDIR}
 cd ${DEPSDIR}
 echo "get ROCm/clr"
-git clone https://github.com/ROCm/clr.git -b rocm-${ROCM_VER_SHORT}.x ||\
-        git clone https://github.com/ROCm/clr.git -b develop || true # < ROCm 5.6 does not have a separate branch/tag
+git clone https://github.com/ROCm/clr.git -b rocm-${ROCM_VER_X} ||\
+        git clone https://github.com/ROCm/clr.git -b develop # < ROCm 5.6 does not have a separate branch/tag
 echo "get ROCm/HIP"
-git clone https://github.com/ROCm/HIP.git -b rocm-${ROCM_VER_SHORT}.x || true 
+git clone https://github.com/ROCm/HIP.git -b rocm-${ROCM_VER_X}
 
 # run cmake
 echo "run cmake"
