@@ -909,7 +909,7 @@ cdef class NDBuffer(Pointer):
                 The length of the tuple is the number of dimensions.
             typestr (`str`):
                 A numpy typestr, see the notes for more details.
-                stream (`int` or `None`): The stream to synchronize before consuming
+            stream (`int` or `None`): The stream to synchronize before consuming
                 this array. See first note for more details.
             itemsize (`int`):
                 Size in bytes of each item. Defaults to 1. See the notes.
