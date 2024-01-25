@@ -391,6 +391,12 @@ def generate_hiprtc_module_files():
             return "hip._hiprtc_helpers.HiprtcLinkCreate_option_ptr"
         if (parm.parent.name, parm.name) == ("hiprtcLinkCreate", "option_vals_pptr"):
             return "hip._util.types.ListOfPointer"
+        if (parm.parent.name, parm.parm_index) in (
+            ("hiprtcLinkComplete", 1),
+            ("hiprtcGetCode", 1),
+            ("hiprtcGetBitcode", 1),
+        ):
+            return "hip._util.types.NDBuffer"
         return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     def hiprtc_node_init(node: Node):
