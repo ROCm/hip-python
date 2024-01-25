@@ -214,7 +214,7 @@ cdef class Pointer:
             return wrapper
 
     def __dealloc__(self):
-        if self._py_buffer_acquired is True:
+        if self._py_buffer_acquired:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     @property
     def is_ptr_null(self):
@@ -1313,7 +1313,8 @@ cdef class NDBuffer(Pointer):
     def __dealloc__(self):
         if self._py_buffer_shape != NULL:
             libc.stdlib.free(self._py_buffer_shape)
-        Pointer.__dealloc__(self)
+        if self._py_buffer_acquired:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
 
 cdef class DeviceArray(NDBuffer):
     """Datatype for handling device buffers.
@@ -1522,6 +1523,8 @@ cdef class ListOfBytes(Pointer):
             return wrapper
 
     def __dealloc__(self):
+        if self._py_buffer_acquired:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
 
@@ -1644,10 +1647,6 @@ cdef class ListOfPointer(Pointer):
             wrapper.init_from_pyobj(pyobj)
             return wrapper
 
-    def __dealloc__(self):
-        if self._is_ptr_owner:
-            libc.stdlib.free(self._ptr)
-
     def __init__(self,object pyobj):
         """Constructor.
 
@@ -1660,6 +1659,12 @@ cdef class ListOfPointer(Pointer):
             `TypeError`: If the input object ``pyobj`` is not of the right type.
         """
         ListOfPointer.init_from_pyobj(self,pyobj)
+
+    def __dealloc__(self):
+        if self._py_buffer_acquired:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        if self._is_ptr_owner:
+            libc.stdlib.free(self._ptr)
 
 cdef class ListOfInt(Pointer):
     """Datatype for handling Python `list` or `tuple` objects with entries that can be converted to C type ``int``.
@@ -1931,6 +1936,8 @@ cdef class ListOfUnsigned(Pointer):
             return wrapper
 
     def __dealloc__(self):
+        if self._py_buffer_acquired:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
 
@@ -2073,10 +2080,6 @@ cdef class ListOfUnsignedLong(Pointer):
             wrapper.init_from_pyobj(pyobj)
             return wrapper
 
-    def __dealloc__(self):
-        if self._is_ptr_owner:
-            libc.stdlib.free(self._ptr)
-
     def __init__(self,object pyobj):
         """Constructor.
 
@@ -2089,3 +2092,9 @@ cdef class ListOfUnsignedLong(Pointer):
             `TypeError`: If the input object ``pyobj`` is not of the right type.
         """
         ListOfUnsignedLong.init_from_pyobj(self,pyobj)
+
+    def __dealloc__(self):
+        if self._py_buffer_acquired:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        if self._is_ptr_owner:
+            libc.stdlib.free(self._ptr)
