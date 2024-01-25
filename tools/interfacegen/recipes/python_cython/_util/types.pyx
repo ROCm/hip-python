@@ -1042,10 +1042,14 @@ cdef class NDBuffer(Pointer):
 
             shape = [cpython.long.PyLong_FromSsize_t(self._py_buffer.shape[i])
                     for i in range(0,self._py_buffer.ndim)]
-            typestr = cpython.bytes.PyBytes_FromString(self._py_buffer.format).decode("utf-8")
+            if self._py_buffer.format == NULL:
+                typestr = 'B' # see https://peps.python.org/pep-3118/#the-py-buffer-struct
+            else:
+                typestr = cpython.bytes.PyBytes_FromString(self._py_buffer.format).decode("utf-8")
             itemsize = cpython.long.PyLong_FromSsize_t(self._py_buffer.itemsize)
             read_only = cpython.bool.PyBool_FromLong(<long>self._py_buffer.readonly)
             self.configure(
+                _force=True,
                 typestr=typestr,
                 itemsize=itemsize,
                 shape=tuple(shape),
