@@ -791,50 +791,6 @@ cdef class NDBuffer(Pointer):
         "m8[as]", "=m8[as]", "<m8[as]", ">m8[as]",
     )
 
-    def __cinit__(self):
-        self._ptr = NULL
-        self._py_buffer_acquired = False
-        self.__view_count = 0
-        self._py_buffer_shape = NULL
-        self._itemsize = 1
-        self.__dict__ = dict(
-            __cuda_array_interface__ = dict(
-               shape=(1,),
-               typestr='b', # See: https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__
-               data=(None,False), # 1: data pointer as int (long int), 2: read-only?
-               strides=None,
-               offset=0,
-               mask=None,
-               version=3,
-               # numba
-               stream=None, #
-           )
-        )
-
-    cdef _set_ptr(self,void* ptr):
-        cdef tuple old_data = self.__dict__["__cuda_array_interface__"]["data"]
-        self._ptr = ptr
-        self.__dict__["__cuda_array_interface__"]["data"] = (cpython.long.PyLong_FromVoidPtr(ptr),old_data[1])
-
-    @staticmethod
-    cdef NDBuffer fromPtr(void* ptr):
-        cdef NDBuffer wrapper = NDBuffer.__new__(NDBuffer)
-        wrapper._set_ptr(ptr)
-        return wrapper
-
-    @property
-    def rank(self):
-        """Rank of the underlying data.
-
-        See:
-            set_bounds
-        """
-        cdef size_t rank = 0
-        for r in self.__dict__["__cuda_array_interface__"]["shape"]:
-            if r > 1:
-                rank += 1
-        return rank
-
     cdef int _numpy_typestr_to_bytes(self,str typestr):
         if typestr in ("?", "=?", "<?", ">?", "bool", "bool_", "bool8"):
             return <int>sizeof(bool)
@@ -903,6 +859,52 @@ cdef class NDBuffer(Pointer):
         elif typestr in ("clongdouble", "clongfloat", "longcomplex", "G", "=G", "<G", ">G"):
             return <int>sizeof(long double complex)
         return -1
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self._py_buffer_acquired = False
+        self.__view_count = 0
+        self._py_buffer_shape = NULL
+        self._itemsize = 1
+        self.__dict__ = dict(
+            __cuda_array_interface__ = dict(
+               shape=(1,), # by default assume a single byte
+               typestr='B', # See: https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__
+               data=(None,False), # 1: data pointer as int (long int), 2: read-only
+               strides=None,
+               offset=0,
+               mask=None,
+               version=3,
+               # numba
+               stream=None, #
+           )
+        )
+
+    cdef _set_ptr(self,void* ptr):
+        """Sets the `self._ptr` C member and the 'data' field in the CUDA array interface.
+        """
+        cdef tuple old_data = self.__dict__["__cuda_array_interface__"]["data"]
+        self._ptr = ptr
+        self.__dict__["__cuda_array_interface__"]["data"] = (cpython.long.PyLong_FromVoidPtr(ptr),old_data[1])
+
+    @staticmethod
+    cdef NDBuffer fromPtr(void* ptr):
+        cdef NDBuffer wrapper = NDBuffer.__new__(NDBuffer)
+        wrapper._set_ptr(ptr)
+        return wrapper
+
+    @property
+    def rank(self):
+        """Rank of the underlying data.
+
+        See:
+            set_bounds
+        """
+        cdef size_t rank = 0
+        for r in self.__dict__["__cuda_array_interface__"]["shape"]:
+            if r > 1:
+                rank += 1
+        return rank
 
     def configure(self, **kwargs):
         """(Re-)configure this contiguous n-dimensional buffer.
