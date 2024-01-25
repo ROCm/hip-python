@@ -380,24 +380,25 @@ def generate_hiprtc_module_files():
     global RUNTIME_LINKING
     global HIPRTC_GENERATOR
 
-    def hiprtc_ptr_complicated_type_handler(parm: Parm):
-        if (parm.parent.name, parm.name) in (
-            ("hiprtcCompileProgram", "options"),
-            ("hiprtcCreateProgram", "headers"),
-            ("hiprtcCreateProgram", "includeNames"),
-        ):
-            return "hip._util.types.ListOfBytes"
-        if (parm.parent.name, parm.name) == ("hiprtcLinkCreate", "option_ptr"):
-            return "hip._hiprtc_helpers.HiprtcLinkCreate_option_ptr"
-        if (parm.parent.name, parm.name) == ("hiprtcLinkCreate", "option_vals_pptr"):
-            return "hip._util.types.ListOfPointer"
-        if (parm.parent.name, parm.parm_index) in (
-            ("hiprtcLinkComplete", 1),
-            ("hiprtcGetCode", 1),
-            ("hiprtcGetBitcode", 1),
-        ):
-            return "hip._util.types.NDBuffer"
-        return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
+    def hiprtc_ptr_complicated_type_handler(node: Node):
+        if isinstance(node, Parm):
+            if (node.parent.name, node.name) in (
+                ("hiprtcCompileProgram", "options"),
+                ("hiprtcCreateProgram", "headers"),
+                ("hiprtcCreateProgram", "includeNames"),
+            ):
+                return "hip._util.types.ListOfBytes"
+            if (node.parent.name, node.name) == ("hiprtcLinkCreate", "option_ptr"):
+                return "hip._hiprtc_helpers.HiprtcLinkCreate_option_ptr"
+            if (node.parent.name, node.name) == ("hiprtcLinkCreate", "option_vals_pptr"):
+                return "hip._util.types.ListOfPointer"
+            if (node.parent.name, node.parm_index) in (
+                ("hiprtcLinkComplete", 1),
+                ("hiprtcGetCode", 1),
+                ("hiprtcGetBitcode", 1),
+            ):
+                return "hip._util.types.NDBuffer"
+        return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(node)
 
     def hiprtc_node_init(node: Node):
         # node modifications

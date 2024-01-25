@@ -48,7 +48,6 @@ cdef class CStr(Pointer):
     # as any buffer views the data,
     # so we store them as members.
     cdef Py_ssize_t[1] _shape
-    cdef Py_ssize_t[1] strides
 
     @staticmethod
     cdef CStr fromPtr(void* ptr)
@@ -73,8 +72,11 @@ cdef class ImmortalCStr(CStr):
     cdef ImmortalCStr fromPyobj(object pyobj)
 
 cdef class NDBuffer(Pointer):
-    cdef size_t _itemsize
+    cdef size_t _itemsize # itemsize is not part of the CUDA array interface
     cdef dict __dict__
+    cdef Py_ssize_t* _py_buffer_shape # for providing shape information
+                                      # to viewers of this Python buffer
+    cdef int __view_count # For counting the current number of views
 
     @staticmethod
     cdef NDBuffer fromPtr(void* ptr)
