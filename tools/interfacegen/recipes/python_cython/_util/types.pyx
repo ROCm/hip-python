@@ -22,11 +22,13 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+cimport cpython.bool
 cimport cpython.long
-cimport cpython.int
 cimport cpython.buffer
+cimport cpython.bytes
 cimport cpython.string
 cimport cpython.ref
+
 cimport libc.stdlib
 cimport libc.string
 cimport libc.stdint
@@ -66,11 +68,6 @@ cdef class Pointer:
 
         This will set the ``self._ptr`` attribute to ``NULL``.
 
-    * `object` that implements the CUDA Array Interface protocol:
-
-        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
-        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
-
     * `object` that implements the Python buffer protocol:
 
         If the object represents a simple contiguous array,
@@ -78,10 +75,19 @@ cdef class Pointer:
         sets the `self._py_buffer_acquired` flag to `True`, and
         writes `self._py_buffer.buf` to the data pointer `self._ptr`.
 
+    * `object` that implements the CUDA Array Interface protocol:
+
+        Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
+        from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
+
     * `~.Pointer`:
 
         Copies ``pyobj._ptr`` to ``self._ptr``.
         `~.Py_buffer` object ownership is not transferred!
+
+    * `int`:
+
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
 
     * `ctypes.c_void_p`:
 
@@ -90,10 +96,6 @@ cdef class Pointer:
     * `object` that has `as_c_void_p(self)` method:
 
         Takes the pointer address ``pyobj.as_c_void_p().value`` and writes it to ``self._ptr``.
-
-    * `int`:
-
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
 
     Type checks are performed in the above order.
 
@@ -263,6 +265,8 @@ cdef class Pointer:
         """
 
         Pointer.init_from_pyobj(self,pyobj)
+
+
 cdef class CStr(Pointer):
     """Datatype for handling C strings (`char *` and related).
 
@@ -312,9 +316,6 @@ cdef class CStr(Pointer):
         _shape (`Py_size_t[1]`, protected):
             Size of the wrapped zero-terminated C char,
             stored into first array element.
-        strides (`Py_size_t[1]`, public):
-            Stride `1` as this is an array of bytes/8-bit chars,
-            stored into first array element.
         _py_buffer (`~.Py_buffer`, protected):
             See `~.Pointer` for more information.
         _py_buffer_acquired (`bool`, protected):
@@ -325,7 +326,6 @@ cdef class CStr(Pointer):
     def __cinit__(self):
         self._is_ptr_owner = False
         self._shape[0] = 0 # must be zero
-        self.strides[0] = 1
 
     cdef const char* getElementPtr(self):
         return <const char*>self._ptr
@@ -523,10 +523,11 @@ cdef class CStr(Pointer):
         Note:
             `buffer.len` and `buffer.shape` are computed on-the-fly (if not set already)
             via `CStr.get_or_determine_len(self)`.
-
+        See:
+            For details on the Python buffer protocol see https://peps.python.org/pep-3118/.
         """
         buffer.buf = <char *>(self._ptr)
-        buffer.format = 'B' # bytes
+        buffer.format = NULL # NULL implies bytes, 'B'
         buffer.internal = NULL # for storing context
                                # for the implementor at dealloc time
         buffer.itemsize = 1
@@ -535,7 +536,7 @@ cdef class CStr(Pointer):
         buffer.readonly = 1
         buffer.len = self.get_or_determine_len() # product(_shape) * itemsize
         buffer.shape = self._shape # must follow buffer.len
-        buffer.strides = self.strides # must follow buffer.len
+        buffer.strides = NULL # contiguous
         buffer.suboffsets = NULL # for pointer arrays only
 
     def __releasebuffer__(self, Py_buffer *buffer):
@@ -613,9 +614,9 @@ cdef class ImmortalCStr(CStr):
         CStr.init_from_pyobj(self,pyobj)
 
 cdef class NDBuffer(Pointer):
-    """Datatype for handling n-dimensional buffers of various datatypes.
+    """Datatype for handling contiguous n-dimensional buffers of various element types.
 
-    Datatype for handling n-dimensional buffers of various datatypes.
+    Datatype for handling contiguous n-dimensional buffers of various element types.
     The buffer can be reshaped via its ``configure`` method.
 
     Note:
@@ -627,28 +628,28 @@ cdef class NDBuffer(Pointer):
         data such as `bytes`, `bytearray` or numpy array types as this
         type implements the Python buffer protocol.
 
-    This type implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_ protocol.
+    This type implements the `CUDA Array Interface <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html>`_
+    protocol. Note, however that it is the user's obligation to only pass this type to consumers of the
+    CUDA array interface if and only if the underlying data is device data.
 
     It can be initialized from the following Python objects:
 
-    * `None`:
-        This will set the ``self._ptr`` attribute to ``NULL``.
-        No shape and type information is available in this case!
-    * `object` that is accepted as input by `~.Pointer.__init__`:
-        In this case, init code from `~.Pointer` is used.
-        `~.Py_buffer` object ownership is not transferred
-        See `~.Pointer.__init__` for more information.
-        No shape and type information is available in this case!
-    * `int`:
-        Interprets the integer value as pointer address and writes it to ``self._ptr``.
-        No shape and type information is available in this case!
-    * `ctypes.c_void_p`:
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
-        No shape and type information is available in this case!
     * `object` with ``__cuda_array_interface__`` member:
         Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
         from `pyobj`'s member ``__cuda_array_interface__``  and writes it to ``self._ptr``.
         Copies shape and type information.
+
+    * `object` that implements the Python buffer protocol:
+
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute `self._is_ptr_owner` remains unchanged.
+        See `~.Pointer.__init__` for more information.
 
     Note:
         Type checks are performed in the above order.
@@ -668,10 +669,14 @@ cdef class NDBuffer(Pointer):
             Stores a pointer to the data of the original Python object.
         _py_buffer_acquired (`bool`, protected):
             Stores a pointer to the data of the original Python object.
-        _itemsize (``size_t``, protected):
-            Stores the itemsize.
         __dict__ (`dict`, protected):
             Dict with member ``__cuda_array_interface__``.
+        _itemsize (``size_t``, protected):
+            Stores the itemsize. The item size is not member of
+            ``__cuda_array_interface__``.
+        _py_buffer_shape (``Py_Ssize_t*``, private):
+            A buffer to pass shape information to consumers
+            of this Python buffer.
     """
     # C members declared in declaration part ``types.pxd``
 
@@ -789,6 +794,8 @@ cdef class NDBuffer(Pointer):
     def __cinit__(self):
         self._ptr = NULL
         self._py_buffer_acquired = False
+        self.__view_count = 0
+        self._py_buffer_shape = NULL
         self._itemsize = 1
         self.__dict__ = dict(
             __cuda_array_interface__ = dict(
@@ -898,19 +905,25 @@ cdef class NDBuffer(Pointer):
         return -1
 
     def configure(self, **kwargs):
-        """(Re-)configure this device array.
+        """(Re-)configure this contiguous n-dimensional buffer.
 
-        Args:
-            **kwargs: Keyword arguments.
+        Warning:
+            When you reconfigure the buffer shape, previously acquired
+            views on this NDBuffer via the Python buffer protocol
+            might become invalid. Therefore, a `RuntimeException`
+            is thrown if this method is called while the view count
+            is greater than zero.
 
-        Kwargs:
+        Keyword arguments:
             shape (`tuple`):
                 A tuple that describes the extent per dimension.
                 The length of the tuple is the number of dimensions.
             typestr (`str`):
                 A numpy typestr, see the notes for more details.
-            stream (`int` or `None`): The stream to synchronize before consuming
+            stream (`int` or `None`):
+                The stream to synchronize before consuming
                 this array. See first note for more details.
+                Only makes sense if this buffer wraps device data.
             itemsize (`int`):
                 Size in bytes of each item. Defaults to 1. See the notes.
             read_only (`bool`):
@@ -939,6 +952,9 @@ cdef class NDBuffer(Pointer):
         cdef bint read_only
         cdef int itemsize = -1
         cdef str typestr = None
+
+        if self.__view_count > 0:
+            raise RuntimeError("cannot re-configure this NDBuffer while it is viewed by other objects via the Python buffer protocol")
 
         for k in kwargs:
             if k not in (supported_keys + extra_keys):
@@ -1011,10 +1027,29 @@ cdef class NDBuffer(Pointer):
         self._py_buffer_acquired = False
         if pyobj is None:
             self._set_ptr(NULL)
-        elif isinstance(pyobj,int):
-            self._set_ptr(cpython.long.PyLong_AsVoidPtr(pyobj))
-        elif isinstance(pyobj,ctypes.c_void_p):
-            self._set_ptr(cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj): # handles 'bytes' too
+            err = cpython.buffer.PyObject_GetBuffer(
+                pyobj,
+                &self._py_buffer,
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            self._py_buffer_acquired = True
+            self._set_ptr(self._py_buffer.buf)
+
+            shape = [cpython.long.PyLong_FromSsize_t(self._py_buffer.shape[i])
+                    for i in range(0,self._py_buffer.ndim)]
+            typestr = cpython.bytes.PyBytes_FromString(self._py_buffer.format).decode("utf-8")
+            itemsize = cpython.long.PyLong_FromSsize_t(self._py_buffer.itemsize)
+            read_only = cpython.bool.PyBool_FromLong(<long>self._py_buffer.readonly)
+            self.configure(
+                typestr=typestr,
+                itemsize=itemsize,
+                shape=tuple(shape),
+                read_only=read_only,
+            )
+            self.__dict__["__pybuffer_obj"] = self._py_buffer.obj
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -1025,12 +1060,9 @@ cdef class NDBuffer(Pointer):
             self.configure(cuda_array_interface)
             if isinstance(pyobj,NDBuffer):
                 self._itemsize = pyobj._itemsize
-        elif isinstance(pyobj,Pointer):
-            self._set_ptr((<Pointer>pyobj)._ptr)
-        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
-            raise NotImplementedError("Py_buffer is no ideal format for data that is not accessible from the host.")
         else:
-            raise NotImplementedError(f"no conversion implemented for instance of '{type(pyobj)}'")
+            pointer = Pointer.fromPyobj(pyobj)
+            self._set_ptr(pointer._ptr)
 
     @staticmethod
     def fromObj(pyobj):
@@ -1181,6 +1213,51 @@ cdef class NDBuffer(Pointer):
             self._set_ptr(self._ptr)
         return super().__getattribute__(key)
 
+    def __getbuffer__(self, Py_buffer *buffer, int flags):
+        """Buffer protocol routine for acquiring a view on this NDBuffer's data.
+
+        Note:
+            `__getbuffer__` and `__releasebuffer__` allow to convert this
+            object to bytes.
+        Note:
+            The caller is responsible for keeping a reference to obj until releasebuffer is called.
+        See:
+            For details on the Python buffer protocol see https://peps.python.org/pep-3118/.
+        """
+        cdef Py_ssize_t ndim = cpython.long.PyLong_AsSsize_t(len(self.shape))
+        cdef Py_ssize_t size = cpython.long.PyLong_AsSsize_t(self.size)
+        # reallocate the shape buffer
+        if self._py_buffer_shape != NULL:
+            libc.stdlib.free(self._py_buffer_shape)
+        self._py_buffer_shape = <Py_ssize_t*>libc.stdlib.malloc(ndim*sizeof(Py_ssize_t))
+        shape = self.shape
+        for i in range(0,ndim):
+            self._py_buffer_shape[i] = cpython.long.PyLong_AsSsize_t(shape[i])
+
+        buffer.buf = <char *>(self._ptr)
+        self.__dict__["__typestr_bytes"] = self.typestr.encode(
+            "utf-8")+b"\x00"  # NUL-terminated, reference must stay alive
+        buffer.format = cpython.bytes.PyBytes_AsString(self.__dict__["__typestr_bytes"])
+        buffer.internal = NULL # for storing context
+                               # for the implementor at dealloc time
+        buffer.itemsize = self._itemsize
+        buffer.ndim = ndim
+        buffer.obj = self
+        buffer.readonly = self.is_read_only
+        buffer.len = size*self._itemsize
+        buffer.shape = self._py_buffer_shape
+        buffer.strides = NULL # contiguous
+        buffer.suboffsets = NULL # for pointer arrays only
+
+        self.__view_count += 1
+
+    def __releasebuffer__(self, Py_buffer *buffer):
+        """Buffer protocol routine for releasing a view on this NDBuffer's data.
+
+        Decrements the view count.
+        """
+        self.__view_count -= 1
+
     @property
     def typestr(self):
         """The type string (see `CUDA Array Interface specification <https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html#python-interface-specification>`_).
@@ -1232,6 +1309,11 @@ cdef class NDBuffer(Pointer):
             `~.configure`
         """
         NDBuffer.init_from_pyobj(self,pyobj)
+
+    def __dealloc__(self):
+        if self._py_buffer_shape != NULL:
+            libc.stdlib.free(self._py_buffer_shape)
+        Pointer.__dealloc__(self)
 
 cdef class DeviceArray(NDBuffer):
     """Datatype for handling device buffers.
