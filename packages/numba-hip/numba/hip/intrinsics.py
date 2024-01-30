@@ -7,7 +7,7 @@ from numba.core.errors import RequireLiteralValue
 from numba.core.typing import signature
 from numba.core.extending import overload_attribute
 #: from numba.cuda import nvvmutils # TODO: HIP/AMD: not supported
-from numba.roc.extending import intrinsic
+from numba.hip.extending import intrinsic
 
 
 #-------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ def grid(typingctx, ndim):
     and is similar for the other two indices, but using the ``y`` and ``z``
     attributes.
     '''
-    raise NotImplementedError("numba.roc: not implemented yet")
+    raise NotImplementedError("numba.hip: not implemented yet")
     if not isinstance(ndim, types.IntegerLiteral):
         raise RequireLiteralValue(ndim)
 
@@ -74,7 +74,7 @@ def gridsize(typingctx, ndim):
     and is similar for the other two indices, but using the ``y`` and ``z``
     attributes.
     '''
-    raise NotImplementedError("numba.roc: not implemented yet")
+    raise NotImplementedError("numba.hip: not implemented yet")
     if not isinstance(ndim, types.IntegerLiteral):
         raise RequireLiteralValue(ndim)
 
@@ -105,7 +105,7 @@ def gridsize(typingctx, ndim):
 
 @intrinsic
 def _warpsize(typingctx):
-    raise NotImplementedError("numba.roc: not implemented yet")
+    raise NotImplementedError("numba.hip: not implemented yet")
     sig = signature(types.int32)
 
     def codegen(context, builder, sig, args):
@@ -136,7 +136,7 @@ def syncthreads(typingctx):
     function waits until all threads in the block call it, at which point it
     returns control to all its callers.
     '''
-    raise NotImplementedError("numba.roc: not implemented yet")
+    raise NotImplementedError("numba.hip: not implemented yet")
     sig = signature(types.none)
 
     def codegen(context, builder, sig, args):
@@ -151,7 +151,7 @@ def syncthreads(typingctx):
 
 
 def _syncthreads_predicate(typingctx, predicate, fname):
-    raise NotImplementedError("numba.roc: not implemented yet")
+    raise NotImplementedError("numba.hip: not implemented yet")
     if not isinstance(predicate, types.Integer):
         return None
 
@@ -173,7 +173,7 @@ def syncthreads_count(typingctx, predicate):
     An extension to numba.cuda.syncthreads where the return value is a count
     of the threads where predicate is true.
     '''
-    raise NotImplementedError("numba.roc: not implemented yet")
+    raise NotImplementedError("numba.hip: not implemented yet")
     fname = 'llvm.nvvm.barrier0.popc'
     return _syncthreads_predicate(typingctx, predicate, fname)
 
@@ -186,7 +186,7 @@ def syncthreads_and(typingctx, predicate):
     An extension to numba.cuda.syncthreads where 1 is returned if predicate is
     true for all threads or 0 otherwise.
     '''
-    raise NotImplementedError("numba.roc: not implemented yet")
+    raise NotImplementedError("numba.hip: not implemented yet")
     fname = 'llvm.nvvm.barrier0.and'
     return _syncthreads_predicate(typingctx, predicate, fname)
 
@@ -199,6 +199,6 @@ def syncthreads_or(typingctx, predicate):
     An extension to numba.cuda.syncthreads where 1 is returned if predicate is
     true for any thread or 0 otherwise.
     '''
-    raise NotImplementedError("numba.roc: not implemented yet")
+    raise NotImplementedError("numba.hip: not implemented yet")
     fname = 'llvm.nvvm.barrier0.or'
     return _syncthreads_predicate(typingctx, predicate, fname)

@@ -1,15 +1,16 @@
 # Re export
 import sys
-from .stubs import (threadIdx, blockIdx, blockDim, gridDim, laneid, warpsize,
-                    syncwarp, shared, local, const, atomic,
-                    shfl_sync_intrinsic, vote_sync_intrinsic, match_any_sync, #: TODO: HIP/AMD: provide the correct intrinsics, support trivial _sync intrinsics
-                    match_all_sync, threadfence_block, threadfence_system,
-                    threadfence, selp, popc, brev, clz, ffs, fma, cbrt, cg,
-                    activemask, lanemask_lt, nanosleep, fp16,
-                    _vector_type_stubs)
+# from .stubs import (threadIdx, blockIdx, blockDim, gridDim, laneid, warpsize,
+#                     syncwarp, shared, local, const, atomic,
+#                     shfl_sync_intrinsic, vote_sync_intrinsic, match_any_sync, #: TODO: HIP/AMD: provide the correct intrinsics, support trivial _sync intrinsics
+#                     match_all_sync, threadfence_block, threadfence_system,
+#                     threadfence, selp, popc, brev, clz, ffs, fma, cbrt, cg,
+#                     activemask, lanemask_lt, nanosleep, fp16,
+#                     _vector_type_stubs)
 from .intrinsics import (grid, gridsize, syncthreads, syncthreads_and,
                          syncthreads_count, syncthreads_or)
-from .cudadrv.error import CudaSupportError
+from .hipdrv.error import HipSupportError
+from .hipdrv.error import HipSupportError as CudaSupportError
 from numba.cuda.cudadrv.driver import (BaseCUDAMemoryManager,
                                        HostOnlyCUDAMemoryManager,
                                        GetIpcHandleMixin, MemoryPointer,
@@ -17,7 +18,7 @@ from numba.cuda.cudadrv.driver import (BaseCUDAMemoryManager,
                                        IpcHandle, set_memory_manager)
 from numba.cuda.cudadrv.runtime import runtime
 #: from .cudadrv import nvvm #: FIXME: HIP/AMD: not supported
-from numba.roc import initialize
+from numba.hip import initialize
 from .errors import KernelRuntimeError
 
 #: from .decorators import jit, declare_device #: FIXME: HIP/AMD: not supported yet
@@ -34,11 +35,11 @@ from .intrinsic_wrapper import (all_sync, any_sync, eq_sync, ballot_sync,
 #: reduce = Reduce = reduction.Reduce #: FIXME: HIP/AMD: not supported yet
 
 # Expose vector type constructors and aliases as module level attributes.
-for vector_type_stub in _vector_type_stubs:
-    setattr(sys.modules[__name__], vector_type_stub.__name__, vector_type_stub)
-    for alias in vector_type_stub.aliases:
-        setattr(sys.modules[__name__], alias, vector_type_stub)
-del vector_type_stub, _vector_type_stubs
+# for vector_type_stub in _vector_type_stubs:
+#     setattr(sys.modules[__name__], vector_type_stub.__name__, vector_type_stub)
+#     for alias in vector_type_stub.aliases:
+#         setattr(sys.modules[__name__], alias, vector_type_stub)
+# del vector_type_stub, _vector_type_stubs
 
 
 def is_available():
@@ -54,7 +55,7 @@ def is_available():
     driver_is_available = False
     try:
         driver_is_available = driver.driver.is_available
-    except CudaSupportError:
+    except HipSupportError:
         pass
 
     return driver_is_available #:  and nvvm.is_available() #: TODO: HIP/AMD: not supported yet

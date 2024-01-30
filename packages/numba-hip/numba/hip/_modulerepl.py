@@ -205,12 +205,12 @@ class ModuleReplicator:
     ```
 
     The class further needs to know the global identifier for the package, e.g.
-    an expression like `numba.roc.cudadrv` in order to register newly created
+    an expression like `numba.hip.cudadrv` in order to register newly created
     modules correctly in the `sys.modules` registry.
 
     Members:
         new_global_pkg_name (str):
-                The global name of this package, e.g. "numba.roc.cudadrv".
+                The global name of this package, e.g. "numba.hip.cudadrv".
         orig_pkg_path (str):
             Path to the sources files of the original package, e.g.
             `os.path.join(os.path.dirname(__file__), "..", "..", "cuda", "cudadrv")`
@@ -237,7 +237,7 @@ class ModuleReplicator:
 
         Args:
             new_global_pkg_name (str):
-                The global name of this package, e.g. "numba.roc.cudadrv".
+                The global name of this package, e.g. "numba.hip.cudadrv".
             orig_pkg_path (str):
                 Path to the sources files of the original package, e.g.
                 `os.path.join(os.path.dirname(__file__), "..", "..", "cuda", "cudadrv")`
