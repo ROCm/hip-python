@@ -68,6 +68,12 @@ cdef class Pointer:
 
         This will set the ``self._ptr`` attribute to ``NULL``.
 
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown reasons.
+        Therefore, it must be checked for this type first.
+
     * `object` that implements the Python buffer protocol:
 
         If the object represents a simple contiguous array,
@@ -88,10 +94,6 @@ cdef class Pointer:
     * `int`:
 
         Interprets the integer value as pointer address and writes it to ``self._ptr``.
-
-    * `ctypes.c_void_p`:
-
-        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
 
     * `object` that has `as_c_void_p(self)` method:
 
@@ -152,6 +154,10 @@ cdef class Pointer:
         self._py_buffer_acquired = False
         if pyobj is None:
             self._ptr = NULL
+        elif isinstance(pyobj,ctypes.c_void_p):
+            # NOTE: must come before the PyObject_CheckBuffer check
+            #       as it classifies ctypes.c_void_p as Py buffer for some reason.
+            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer(
                 pyobj,
@@ -171,9 +177,11 @@ cdef class Pointer:
             self._ptr = (<Pointer>pyobj)._ptr
         elif isinstance(pyobj,int):
             self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
-        elif isinstance(pyobj,ctypes.c_void_p):
-            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif hasattr(pyobj,"as_c_void_p"):
+            # NOTE: This must stay down here because 'as_c_void_p' is
+            #       an interface provided by all the *_util.types types
+            #       that should only be used if the type couldn't
+            #       be identified as a Python buffer.
             c_void_p_value = pyobj.as_c_void_p().value
             self._ptr = cpython.long.PyLong_AsVoidPtr(c_void_p_value) if c_void_p_value != None else NULL
         else:
@@ -299,6 +307,13 @@ cdef class CStr(Pointer):
 
     The type can be initialized from the following Python objects:
 
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        Length information is obtained via ``strlen`` in this case.
+        Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown reasons.
+        Therefore, it must be checked for this type first.
+
     * `object` that implements the Python buffer protocol:
 
         If the object represents a simple contiguous array,
@@ -369,6 +384,11 @@ cdef class CStr(Pointer):
         if isinstance(pyobj,CStr):
             self._ptr = (<CStr>pyobj)._ptr
             self._shape[0] = (<CStr>pyobj)._shape[0]
+        elif isinstance(pyobj,ctypes.c_void_p):
+            # NOTE: must come before the PyObject_CheckBuffer check
+            #       as it classifies ctypes.c_void_p as Py buffer for some reason.
+            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
+            self.get_or_determine_len()
         elif isinstance(pyobj,str):
             raise RuntimeError("CStr.init_from_pyobj: currently no support for Python `str` objects.")
             # self._ptr = <void*>cpython.string.PyString_AsString(pyobj) # caused 'undefined reference' at runtime
@@ -633,6 +653,13 @@ cdef class NDBuffer(Pointer):
     CUDA array interface if and only if the underlying data is device data.
 
     It can be initialized from the following Python objects:
+
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        No length information can be obtained in this case.
+        Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown reasons.
+        Therefore, it must be checked for this type first.
 
     * `object` with ``__cuda_array_interface__`` member:
         Takes the integer-valued pointer address, i.e. the first entry of the `data` tuple
@@ -1029,6 +1056,10 @@ cdef class NDBuffer(Pointer):
         self._py_buffer_acquired = False
         if pyobj is None:
             self._set_ptr(NULL)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            # NOTE: must come before the PyObject_CheckBuffer check
+            #       as it classifies ctypes.c_void_p as Py buffer for some reason.
+            self._set_ptr(cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj): # handles 'bytes' too
             err = cpython.buffer.PyObject_GetBuffer(
                 pyobj,
