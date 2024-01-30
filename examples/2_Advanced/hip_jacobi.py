@@ -155,7 +155,7 @@ HIP_SOURCE = rb"""
   }
   """
 
-if __name__ == "__main__":
+if __name__ in ("__test__","__main__"):
     DEBUG = False
     DEFAULT_BLOCK_SIZE = 64 # must be divisor of n!
     KERNEL_NAME = "jacobi_gpu" # "jacobi_gpu", "jacobi_gpu_unoptimized"

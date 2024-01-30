@@ -28,7 +28,14 @@ import pytest
 import shlex
 
 from hip import ROCM_VERSION_TUPLE
+from hip import hip as hiprt
+
 device_printf_works = ROCM_VERSION_TUPLE[0:2] != (5,5)
+    
+props = hiprt.hipDeviceProp_t()
+hiprt.hipGetDeviceProperties(props, 0)
+gpugen = props.gcnArchName.decode("utf-8").split(":")[0]
+have_compatible_gpu_target = gpugen == "gfx90a"
 
 try:
     from cuda import cuda
@@ -36,6 +43,8 @@ try:
     have_hip_python_as_cuda = True
 except ImportError:
     have_hip_python_as_cuda = False
+
+
 
 python_examples = [
   "0_Basic_Usage/hip_deviceattributes.py",
@@ -62,7 +71,15 @@ if have_hip_python_as_cuda:
 
 python_examples += [
   "2_Advanced/hip_jacobi.py",
+  "2_Advanced/hiprtc_linking_device_functions.py",
 ]
+
+if have_compatible_gpu_target:
+    python_examples += [
+      "2_Advanced/hiprtc_jit_with_llvm_ir.py",
+      "2_Advanced/hiprtc_linking_llvm_ir.py",
+    ]
+
 
 @pytest.mark.parametrize('example', python_examples)
 def test_python_examples(example):

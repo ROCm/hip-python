@@ -118,7 +118,7 @@ class HiprtcLinker:
     def __exit__(self, exc_type, exc_value, traceback):
         hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
 
-if __name__ == "__main__":
+if __name__ in ("__test__","__main__"):
     import textwrap
 
     device_fun_src = textwrap.dedent(

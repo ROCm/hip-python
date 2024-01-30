@@ -106,7 +106,7 @@ class HiprtcLinker:
         hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
 
 
-if __name__ == "__main__":
+if __name__ in ("__test__","__main__"):
     import textwrap
 
     # warning: below IR contains target dependent information
