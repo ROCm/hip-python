@@ -52,6 +52,7 @@ from hip import HIP_VERSION_TUPLE
 from .hipsource import *
 
 from . import typemaps
+from . import comgrutils
 
 _lock = threading.Lock()
 

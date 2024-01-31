@@ -27,8 +27,7 @@ __author__ = "Advanced Micro Devices, Inc."
 
 from rocm.amd_comgr import amd_comgr as comgr
 
-import llvmutils
-
+from . import llvmutils
 
 def compile_hip_source_to_llvm(
     source: str,
