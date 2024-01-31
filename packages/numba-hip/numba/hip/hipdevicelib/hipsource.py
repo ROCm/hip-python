@@ -112,7 +112,7 @@ class HIPDeviceFunction:
     def parm_type_kinds(self, canonical=False):
         """Yields the type kind of cursors of kind `~.ci.CursorKind.PARM_DECL`."""
         for parm_type in self.parm_types(canonical=canonical):
-            yield parm_type.kind
+            yield cparser.clang_type_kind(parm_type)
 
     def parm_type_kind_layers(self, canonical=False):
         """Yields the kind of the type layers of cursors of kind `~.ci.CursorKind.PARM_DECL`."""
@@ -122,17 +122,21 @@ class HIPDeviceFunction:
     def result_type(self, canonical=False):
         """Returns the type of the result."""
         if canonical:
-            return self.cursor.result_type.get_canonical()
+            return self._cursor.result_type.get_canonical()
         else:
-            return self.cursor.result_type
+            return self._cursor.result_type
 
     def result_type_kind(self, canonical=False):
         """Returns the kind of the result type."""
-        return self.result_type(canonical=canonical).kind
+        return cparser.clang_type_kind(self.result_type(canonical=canonical))
 
     def result_type_kind_layers(self, canonical=False):
         """Returns the kind of each result type layer."""
-        return list(cparser.TypeHandler(self.result_type(canonical=canonical)).walk_clang_type_layers())
+        return list(
+            cparser.TypeHandler(
+                self.result_type(canonical=canonical)
+            ).walk_clang_type_layers()
+        )
 
     @property
     def is_definition(self):

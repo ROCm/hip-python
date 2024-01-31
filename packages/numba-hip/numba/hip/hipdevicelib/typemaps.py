@@ -103,19 +103,20 @@ _clang_to_llvmlite_map = {
 
 def map_clang_to_numba_core_type(clang_type: ci.Type):
     """Maps a Clang Python binding type to a ``numba.core`` equivalent."""
+    global _clang_to_numba_core_map
     layers = tuple(
         cparser.TypeHandler.get(clang_type).walk_clang_type_layers(canonical=True)
     )
-    if layers[0].kind == ci.TypeKind.COMPLEX:
-        type_map_arg = (layers[0].kind,layers[1].kind)
+    if cparser.clang_type_kind(layers[0]) == ci.TypeKind.COMPLEX:
+        type_map_arg = (cparser.clang_type_kind(layers[0]),cparser.clang_type_kind(layers[1]))
     else:
-        type_map_arg = layers[0].kind
+        type_map_arg = cparser.clang_type_kind(layers[0])
     numba_type = _clang_to_numba_core_map.get(type_map_arg, None)
     if numba_type:
         return numba_type
-    elif clang_type.kind == ci.TypeKind.ENUM:
-        return map_clang_to_numba_core_type(clang_type.enum_type.kind)
-    elif clang_type.kind in (ci.TypeKind.RECORD, ci.TypeKind.CONSTANTARRAY):
+    elif cparser.clang_type_kind(clang_type) == ci.TypeKind.ENUM:
+        return _clang_to_numba_core_map(clang_type.enum_type)
+    elif cparser.clang_type_kind(clang_type) in (ci.TypeKind.RECORD, ci.TypeKind.CONSTANTARRAY):
         # TODO implement
         return None  # implies that it is ignored
     else:
@@ -125,19 +126,20 @@ def map_clang_to_numba_core_type(clang_type: ci.Type):
 
 def map_clang_to_llvmlite_type(clang_type: ci.Type):
     """Maps a Clang Python binding type to a ``numba.core`` equivalent."""
+    global _clang_to_llvmlite_map
     layers = tuple(
         cparser.TypeHandler.get(clang_type).walk_clang_type_layers(canonical=True)
     )
-    if layers[0].kind == ci.TypeKind.COMPLEX:
-        type_map_arg = (layers[0].kind,layers[1].kind)
+    if cparser.clang_type_kind(layers[0]) == ci.TypeKind.COMPLEX:
+        type_map_arg = (cparser.clang_type_kind(layers[0]),cparser.clang_type_kind(layers[1]))
     else:
-        type_map_arg = layers[0].kind
+        type_map_arg = cparser.clang_type_kind(layers[0])
     numba_type = _clang_to_llvmlite_map.get(type_map_arg, None)
     if numba_type:
         return numba_type
-    elif clang_type.kind == ci.TypeKind.ENUM:
+    elif cparser.clang_type_kind(clang_type) == ci.TypeKind.ENUM:
         return _clang_to_llvmlite_map(clang_type.enum_type)
-    elif clang_type.kind in (ci.TypeKind.RECORD, ci.TypeKind.CONSTANTARRAY):
+    elif cparser.clang_type_kind(clang_type) in (ci.TypeKind.RECORD, ci.TypeKind.CONSTANTARRAY):
         # TODO implement
         return None  # implies that it is ignored
     else:

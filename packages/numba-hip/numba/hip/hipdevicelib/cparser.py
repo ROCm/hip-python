@@ -53,6 +53,14 @@ def walk_cursors(root: ci.Cursor, postorder=False):
     yield from descend_(root)
 
 
+def clang_type_kind(clang_type: ci.Type) -> ci.TypeKind:
+    """Works around missing entries in the `clang.cindex.TypeKind` enum list.
+    """
+    if clang_type.spelling == "_Float16":
+        return ci.TypeKind.HALF
+    else:
+        return clang_type.kind
+
 class TypeHandler:
     _INSTANCE = None
 
@@ -256,13 +264,11 @@ class TypeHandler:
             Note that this is by default a pre-order walk, e.g., if we have a type `void *`,
             we will obtain first the pointer type and then the `void` type.
         """
+        global clang_type_kind
 
         def descend_(clang_type: ci.Type):
             nonlocal postorder
-            if clang_type.spelling in ("_Float16"):
-                yield clang_type
-                return
-            type_kind = clang_type.kind
+            type_kind = clang_type_kind(clang_type)
             if TypeHandler.match_invalid_type(type_kind):
                 yield clang_type
             elif TypeHandler.match_void_type(
