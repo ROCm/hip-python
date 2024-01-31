@@ -394,14 +394,15 @@ class HIPSource:
                 )  # sets parent to top-most parent for i > 0
                 setattr(cls, parts[i + 1], member)
             else:  # i == len(parts)
+                _log.warn(f"created stub '{'.'.join(parts)}'")  # TODO warn -> debug
                 stub_processor(cls, parent if parent else cls, variants, parts)
             return cls
 
-        result = type("stubs", (object,), {})
+        result = {}
         for name, variants in self.device_functions.items():
             parts = function_renamer_splitter(name)
-            setattr(result, parts[0], descend_(parts, result.__dict__, variants))
-        return result.__dict__
+            result[parts[0]] = descend_(parts, result, variants)
+        return result
 
     def render_device_function_wrappers(
         self,
