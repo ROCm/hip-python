@@ -39,7 +39,7 @@ import rocm.clang.cindex as ci
 
 from . import cparser
 
-logger = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 
 class HIPDeviceFunction:
@@ -319,7 +319,7 @@ class HIPSource:
                     ):
                         found_duplicate = True
                         if log_errors:
-                            logger.error(
+                            _log.error(
                                 f"{device_fun1.mangled_name} at {device_fun1.location} (): duplicate at {device_fun2.location}"
                             )
                         if remove:
@@ -476,84 +476,84 @@ class HIPSource:
         return result
 
 
-if __name__ == "__main__":
-    # TODO convert to test
-    import pprint
+# if __name__ == "__main__":
+#     # TODO convert to test
+#     import pprint
 
-    ci.Config.set_library_path("/opt/rocm/llvm/lib")
-    from rocm.amd_comgr import amd_comgr as comgr
+#     ci.Config.set_library_path("/opt/rocm/llvm/lib")
+#     from rocm.amd_comgr import amd_comgr as comgr
 
-    import llvmutils
-    import comgrutils
+#     import llvmutils
+#     import comgrutils
 
-    HIPDeviceFunction.TYPE_MAPPER = HIPDeviceFunction.TYPE_RENDERER
+#     HIPDeviceFunction.TYPE_MAPPER = HIPDeviceFunction.TYPE_RENDERER
 
-    def _hiprtc_runtime_header_filter(cursor: ci.Cursor):
-        return not cursor.spelling.startswith("operator")
+#     def _hiprtc_runtime_header_filter(cursor: ci.Cursor):
+#         return not cursor.spelling.startswith("operator")
 
-    def _hiprtc_runtime_function_renamer_splitter(name: str):
-        """Splits atomics, strips "_".
+#     def _hiprtc_runtime_function_renamer_splitter(name: str):
+#         """Splits atomics, strips "_".
 
-        Examples:
+#         Examples:
 
-        * Converts ``"safeAtomicAdd"`` to ``["atomic","add","safe"]``.
-        * Converts ``"unsafeAtomicAdd_system"`` to ``["atomic","add","system","unsafe"]``.
-        * Converts ``"__syncthreads"`` to ``["syncthreads"]``.
+#         * Converts ``"safeAtomicAdd"`` to ``["atomic","add","safe"]``.
+#         * Converts ``"unsafeAtomicAdd_system"`` to ``["atomic","add","system","unsafe"]``.
+#         * Converts ``"__syncthreads"`` to ``["syncthreads"]``.
 
-        Returns:
-            list: Parts of the name, describe a nesting hierarchy.
-        """
-        p_atomic = re.compile(r"(safe|unsafe)?[Aa]tomic([A-Z][A-Za-z]+)_?(\w+)?")
-        name = name.lstrip("_")
-        if "atomic" in name.lower():
-            name = p_atomic.sub(repl=r"atomic.\2.\3.\1", string=name).rstrip(".")
-            name = name.lower()
-        return name.split(".")
+#         Returns:
+#             list: Parts of the name, describe a nesting hierarchy.
+#         """
+#         p_atomic = re.compile(r"(safe|unsafe)?[Aa]tomic([A-Z][A-Za-z]+)_?(\w+)?")
+#         name = name.lstrip("_")
+#         if "atomic" in name.lower():
+#             name = p_atomic.sub(repl=r"atomic.\2.\3.\1", string=name).rstrip(".")
+#             name = name.lower()
+#         return name.split(".")
 
-    _hiprtc_runtime_hip_source = HIPSource(
-        source=comgr.ext.HIPRTC_RUNTIME_HEADER,
-        filter=_hiprtc_runtime_header_filter,
-        append_cflags=["-D__HIPCC_RTC__"],
-    )
+#     _hiprtc_runtime_hip_source = HIPSource(
+#         source=comgr.ext.HIPRTC_RUNTIME_HEADER,
+#         filter=_hiprtc_runtime_header_filter,
+#         append_cflags=["-D__HIPCC_RTC__"],
+#     )
 
-    # pprint.pprint(
-    #     hiprtlib.create_stubs(
-    #         function_renamer_splitter=_hiprtc_runtime_function_renamer_splitter
-    #     )
-    # )
+#     # pprint.pprint(
+#     #     hiprtlib.create_stubs(
+#     #         function_renamer_splitter=_hiprtc_runtime_function_renamer_splitter
+#     #     )
+#     # )
 
-    PREFIX = "NUMBA_HIP_"
-    _hiprtc_runtime_hip_source.check_for_duplicates(log_errors=True)
-    wrappers = _hiprtc_runtime_hip_source.render_device_function_wrappers(prefix=PREFIX)
+#     PREFIX = "NUMBA_HIP_"
+#     _hiprtc_runtime_hip_source.check_for_duplicates(log_errors=True)
+#     wrappers = _hiprtc_runtime_hip_source.render_device_function_wrappers(prefix=PREFIX)
 
-    from hip import HIP_VERSION_TUPLE
+#     from hip import HIP_VERSION_TUPLE
 
-    coordinates = ""
-    for kind in ("threadIdx", "blockIdx", "blockDim", "gridDim"):
-        for dim in "xyz":
-            coordinates += textwrap.dedent(
-                f"""\
-            extern "C" std::uint32_t __attribute__((device)) {PREFIX}{kind}_{dim}() {{
-                return {kind}.{dim};
-            }}
-            """
-            )
+#     coordinates = ""
+#     for kind in ("threadIdx", "blockIdx", "blockDim", "gridDim"):
+#         for dim in "xyz":
+#             coordinates += textwrap.dedent(
+#                 f"""\
+#             extern "C" std::uint32_t __attribute__((device)) {PREFIX}{kind}_{dim}() {{
+#                 return {kind}.{dim};
+#             }}
+#             """
+#             )
 
-    hipdevicelib_source = comgr.ext.HIPRTC_RUNTIME_HEADER + wrappers + coordinates
+#     hipdevicelib_source = comgr.ext.HIPRTC_RUNTIME_HEADER + wrappers + coordinates
 
-    # print(hipdevicelib_source)
-    (bcbuf, logbuf, diagnosticbuf) = comgrutils.compile_hip_source_to_llvm(
-        amdgpu_arch="gfx90a",
-        extra_opts=" -D__HIPCC_RTC__",
-        hip_version_tuple=HIP_VERSION_TUPLE,
-        comgr_logging=False,
-        source=hipdevicelib_source,
-        to_llvm_ir=True,
-    )
+#     # print(hipdevicelib_source)
+#     (bcbuf, logbuf, diagnosticbuf) = comgrutils.compile_hip_source_to_llvm(
+#         amdgpu_arch="gfx90a",
+#         extra_opts=" -D__HIPCC_RTC__",
+#         hip_version_tuple=HIP_VERSION_TUPLE,
+#         comgr_logging=False,
+#         source=hipdevicelib_source,
+#         to_llvm_ir=True,
+#     )
 
-    with open("hiprtc_runtime2.ll", "w") as outfile:
-        outfile.write(bcbuf.decode("utf-8"))
+#     with open("hiprtc_runtime2.ll", "w") as outfile:
+#         outfile.write(bcbuf.decode("utf-8"))
 
-    with open("hiprtc_runtime2.ll", "r") as infile:
-        irbuf = infile.read()
-        llvmutils.convert_llvm_ir_to_bc(irbuf)
+#     with open("hiprtc_runtime2.ll", "r") as infile:
+#         irbuf = infile.read()
+#         llvmutils.convert_llvm_ir_to_bc(irbuf)
