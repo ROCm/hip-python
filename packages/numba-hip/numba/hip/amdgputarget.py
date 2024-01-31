@@ -177,10 +177,10 @@ class AMDGPUTargetMachine:
     """
 
     TRIPLE = "amdgcn-amd-amdhsa"
-    # ISA_INFOS: dict = {
-    #     isa_name.replace("amdgcn-amd-amdhsa--", ""): ISAInfo(entry)
-    #     for isa_name, entry in comgr.ext.get_isa_metadata_all().items()
-    # }
+    ISA_INFOS: dict = {
+        isa_name.replace("amdgcn-amd-amdhsa--", ""): ISAInfo(entry)
+        for isa_name, entry in comgr.ext.get_isa_metadata_all().items()
+    }
 
     __INSTANCES = {}
 
