@@ -29,7 +29,15 @@ import sys
 import os
 import re
 
+from . import stubs
 from . import hipdevicelib
+
+_unsupported = {}
+for name, stub in hipdevicelib.stubs.items():
+    if stub.is_supported():
+        globals()[name] =  stub
+    else:
+        _unsupported[name] = stub
 
 mr = _modulerepl.ModuleReplicator(
     "numba.hip",

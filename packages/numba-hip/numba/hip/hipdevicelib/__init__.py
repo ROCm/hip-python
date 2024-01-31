@@ -26,6 +26,19 @@ ci.Config.set_library_path(
     "/opt/rocm/llvm/lib"
 )  # TODO make dependent on CUDA_PATH/ROCM_PATH
 
-from .hipdevicelib import HIPDeviceLib
+from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
 
-HIPDeviceLib()
+stubs, typing_registry, impl_registry  = _HIPDeviceLib().create_stubs_decls_impls()
+
+def get_llvm_bc(amdgpu_arch):
+    """Return a bitcode library for the given AMD GPU architecture.
+
+    Args:
+        amdgpu_arch (`str`):
+            An AMD GPU arch identifier such as `gfx90a` (MI200 series) or `gfx942` (MI300 series).
+            Can also have target features appended that are separated via ":".
+            These are stripped away where not needed.
+    """
+    return _HIPDeviceLib(amdgpu_arch).llvm_bc
+
+# test = get_llvm_bc("gfx90a")
