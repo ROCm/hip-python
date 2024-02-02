@@ -257,7 +257,7 @@ class AMDGPUTargetMachine:
 # No changes noticed.
 DATA_LAYOUT = AMDGPUTargetMachine("gfx90a").data_layout
 
-all = [
+__all__ = [
     "ADDRSPACE_GENERIC",
     "ADDRSPACE_GLOBAL",
     "ADDRSPACE_SHARED",

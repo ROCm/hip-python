@@ -48,10 +48,10 @@ from hip import HIP_VERSION_TUPLE
 from numba.core import cgutils, types
 
 import numba.core.typing.templates as typing_templates
-import numba.core.imputils as imputils
+import numba.core.implutils as implutils
 
 from numba.hip.amdgputargetmachine import ISA_INFOS
-from numba.hip import stubs as numba_hip_stubs
+from numba.hip.typing_lowering import stubs as numba_hip_stubs
 
 from .hipsource import *
 from . import typemaps
@@ -386,7 +386,7 @@ class HIPDeviceLib:
             return [name]
 
         typing_registry: typing_templates.Registry = typing_templates.Registry()
-        impl_registry: imputils.Registry = imputils.Registry()
+        impl_registry: implutils.Registry = implutils.Registry()
 
         def process_stub_(stub, parent, device_fun_variants, name_parts):
             """Registers function signatures and call generators for every stub.
@@ -548,7 +548,7 @@ class HIPDeviceLib:
 
     @staticmethod
     def register_call_generator_for_function_without_ptr_parms(
-        impl_registry: imputils.Registry,
+        impl_registry: implutils.Registry,
         func_name: str,
         key: object,
         result_type_numba,
@@ -584,7 +584,7 @@ class HIPDeviceLib:
 
     @staticmethod
     def register_call_generator_for_function_with_ptr_parms(
-        impl_registry: imputils.Registry,
+        impl_registry: implutils.Registry,
         func_name: str,
         key: object,
         result_type_numba,

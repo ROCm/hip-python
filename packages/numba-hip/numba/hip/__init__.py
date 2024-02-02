@@ -29,10 +29,11 @@ import sys
 import os
 import re
 
-from . import rocm_paths
-from . import stubs
-from . import hipdevicelib
-from . import math
+from . import rocmpaths
+from .typing_lowering import stubs
+from .typing_lowering import hipdevicelib
+from .typing_lowering import math
+from .typing_lowering import numpy
 
 mr = _modulerepl.ModuleReplicator(
     "numba.hip",

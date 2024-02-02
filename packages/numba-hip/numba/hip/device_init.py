@@ -54,7 +54,7 @@ import sys
 #:                     threadfence, selp, popc, brev, clz, ffs, fma, cbrt, cg,
 #:                     activemask, lanemask_lt, nanosleep, fp16,
 #:                     _vector_type_stubs)
-from .stubs import (
+from .typing_lowering.stubs import (
     _vector_type_stubs,
     shared,
     local,

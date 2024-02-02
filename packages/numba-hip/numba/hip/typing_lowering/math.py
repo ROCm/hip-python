@@ -20,15 +20,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Registers typing declarations and implementations for Python math function objects.
+
+Attributes:
+    typing_registry (`numba.core.typing.templates.Registry`):
+        A registry of typing declarations. The registry stores such declarations
+        for functions, attributes and globals.
+    impl_registry (`numba.core.implutils.Registry`):
+        A registry of function and attribute implementations.
+"""
+
 import math
 
-from numba.core import imputils
+from numba.core import implutils
 import numba.core.typing.templates as typing_templates
 
-from numba.hip import hipdevicelib
+from numba.hip.typing_lowering import hipdevicelib
 
 typing_registry = typing_templates.Registry()
-impl_registry = imputils.Registry()
+impl_registry = implutils.Registry()
 
 for name, mathobj in vars(math).items():
     stub = hipdevicelib.stubs.get(name, None)
@@ -49,3 +59,5 @@ for k in list(globals().keys()):
     if k not in ("typing_registry", "impl_registry"):
         del globals()[k]
 del k
+
+__all__ = ["typing_registry", "impl_registry"]

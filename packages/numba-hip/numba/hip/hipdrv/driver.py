@@ -79,7 +79,7 @@ from ctypes import (
 )
 import contextlib
 import importlib
-import numpy as np
+import numba.hip.typing_lowering.numpy as np
 from collections import namedtuple, deque
 
 from numba import mviewbuf
@@ -90,7 +90,7 @@ cu_device_ptr = c_size_t  # defined as unsigned long long
 cu_stream = c_void_p  # an opaque handle
 cu_stream_callback_pyobj = CFUNCTYPE(None, cu_stream, c_int, py_object)
 
-from numba.hip import rocm_paths
+from numba.hip import rocmpaths
 from numba.hip.hipdrv import hiprtc
 
 USE_NV_BINDING = True  #: HIP/AMD: always use HIP Python bindings
@@ -174,7 +174,7 @@ def locate_runtime_and_loader():  #: HIP/AMD: modified body
     else:
         # Assume to be *nix like
         dlloader = ctypes.CDLL
-        dldir = [rocm_paths.get_rocm_path("lib")]
+        dldir = [rocmpaths.get_rocm_path("lib")]
         dlnames = ["libamdhip64.so"]
 
     if envpath:

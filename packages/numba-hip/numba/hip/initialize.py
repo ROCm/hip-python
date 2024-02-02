@@ -7,10 +7,10 @@ def initialize_all():
     #
     #from numba.cuda.decorators import jit
     #from numba.cuda.dispatcher import CUDADispatcher
-    #from numba.core.target_extension import (target_registry,
-    #                                         dispatcher_registry,
-    #                                         jit_registry)
+    from numba.core.target_extension import (target_registry,
+                                            dispatcher_registry,
+                                            jit_registry)
 
-    # roc_target = target_registry["roc"]
-    # jit_registry[roc_target] = jit
+    # hip_target = target_registry["hip"]
+    # jit_registry[hip_target] = jit
     # dispatcher_registry[roc_target] = CUDADispatcher

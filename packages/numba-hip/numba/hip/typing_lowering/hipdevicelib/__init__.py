@@ -20,6 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Provides access to types and functions in the HIP device library.
+
+Attributes:
+    stubs:
+        TODO document 'stubs'
+    unsupported_stubs:
+        TODO document 'unsupported_stubs'
+    typing_registry (`numba.core.typing.templates.Registry`):
+        A registry of typing declarations. The registry stores such declarations
+        for functions, attributes and globals.
+    impl_registry (`numba.core.implutils.Registry`):
+        A registry of function and attribute implementations.
+"""
+
 import rocm.clang.cindex as ci
 from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_MAJOR as _LLVM_VERSION_MAJOR,
@@ -27,7 +41,7 @@ from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_PATCH as _LLVM_VERSION_PATCH,
 )
 
-from numba.hip import rocm_paths as _rocm_paths
+from numba.hip import rocmpaths as _rocm_paths
 
 ci.Config.set_library_path(_rocm_paths.get_rocm_path("llvm", "lib"))
 
@@ -71,5 +85,13 @@ def get_llvm_bc(amdgpu_arch):
     """
     return _HIPDeviceLib(amdgpu_arch).llvm_bc
 
+
+__all__ = [
+    "stubs",
+    "unsupported_stubs",
+    "typing_registry",
+    "impl_registry",
+    "get_llvm_bc",
+]
 
 # test = get_llvm_bc("gfx90a")
