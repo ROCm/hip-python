@@ -620,7 +620,7 @@ def met_requirement_for_device(device):
     return True  # TODO: HIP/AMD: add supported AMDGPU gfx codes
 
 
-class BaseCUDAMemoryManager(object, metaclass=ABCMeta):
+class BaseHIPMemoryManager(object, metaclass=ABCMeta):
     """Abstract base class for External Memory Management (EMM) Plugins."""
 
     def __init__(self, *args, **kwargs):
@@ -736,7 +736,7 @@ class BaseCUDAMemoryManager(object, metaclass=ABCMeta):
         """
 
 
-class HostOnlyCUDAMemoryManager(BaseCUDAMemoryManager):
+class HostOnlyHIPMemoryManager(BaseHIPMemoryManager):
     """Base class for External Memory Management (EMM) Plugins that only
     implement on-device allocation. A subclass need not implement the
     ``memhostalloc`` and ``mempin`` methods.
@@ -927,7 +927,7 @@ class GetIpcHandleMixin:
         return IpcHandle(memory, ipchandle, memory.size, source_info, offset=offset)
 
 
-class NumbaCUDAMemoryManager(GetIpcHandleMixin, HostOnlyCUDAMemoryManager):
+class NumbaHIPMemoryManager(GetIpcHandleMixin, HostOnlyHIPMemoryManager):
     """Internal on-device memory management for Numba. This is implemented using
     the EMM Plugin interface, but is not part of the public API."""
 
@@ -979,7 +979,7 @@ def _ensure_memory_manager():
         return
 
     if config.CUDA_MEMORY_MANAGER == "default":
-        _memory_manager = NumbaCUDAMemoryManager
+        _memory_manager = NumbaHIPMemoryManager
         return
 
     try:
