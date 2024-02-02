@@ -110,24 +110,28 @@ class HIPDeviceLib:
 
         def cursor_filter_(cursor: ci.Cursor):
             """Filter what cursors to consider when parsing device functions."""
-            if "threadIdx" in cursor.spelling:
-                _log.warn(
-                    f"process cursor '{cursor.spelling}' of kind '{cursor.kind.name}'"
-                )
-            if cursor.kind == ci.CursorKind.FUNCTION_DECL:
-                for parm_type_kind_layers in HIPDeviceFunction(
-                    cursor
-                ).parm_type_kind_layers(canonical=True):
-                    if parm_type_kind_layers[-1] == ci.TypeKind.RECORD:
-                        return False  # TODO activate later on
-                    if parm_type_kind_layers == [
-                        ci.TypeKind.POINTER,
-                        ci.TypeKind.CHAR_S,
-                    ]:
-                        return False  # TODO activate later on for C chars
-                return not cursor.spelling.startswith(
-                    "operator"
-                )  # TODO activate later on
+            if cursor.location.file and cursor.location.file.name.endswith(filename):
+                if cursor.kind == ci.CursorKind.FUNCTION_DECL:
+                    # print(cursor.displayname)
+                    for parm_type_kind_layers in HIPDeviceFunction(
+                        cursor
+                    ).parm_type_kind_layers(canonical=True):
+                        if parm_type_kind_layers[-1] == ci.TypeKind.RECORD:
+                            # TODO activate later on for char1...4, int1...4
+                            # TODO activate later on for __half, which is a struct
+                            return False
+                        if parm_type_kind_layers == [
+                            ci.TypeKind.POINTER,
+                            ci.TypeKind.CHAR_S,
+                        ]:
+                            return False  # TODO activate later on for C chars
+                    if "make_mantissa" in cursor.spelling:
+                        return False
+                    if cursor.spelling.startswith("__ldg"):
+                        return False
+                    if cursor.spelling.startswith("operator"):  # TODO activate later on
+                        return False
+                    return True
             return False
 
         hiprtc_runtime_source = HIPSource(
