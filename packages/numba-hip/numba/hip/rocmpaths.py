@@ -22,6 +22,10 @@
 
 import os
 
+import logging
+
+_log = logging.getLogger(__name__)
+
 def get_rocm_path(*subdirs):
     """Get paths of ROCM_PATH.
 
@@ -29,7 +33,17 @@ def get_rocm_path(*subdirs):
         subdirs (optional):
             The subdirectory name to be appended in the resulting path.
     """
-    rocm_path = os.environ.get("ROCM_HOME")
+    rocm_path = os.environ.get("ROCM_HOME",os.environ.get("ROCM_PATH"))
     if rocm_path is None:
-        rocm_path = os.environ.get("ROCM_PATH","/opt/rocm")
-    return os.path.join(rocm_path, *subdirs)
+        _log.info("neither 'ROCM_PATH' nor 'ROCM_HOME' environment variable specified, trying default path '/opt/rocm'")
+    rocm_path = "/opt/rocm/"
+    if not os.path.exists(rocm_path):
+        msg = "no ROCm installation found, checked 'ROCM_PATH' and 'ROCM_HOME' and tried '/opt/rocm'"
+        _log.error(msg)
+        raise FileNotFoundError(msg)
+    rocm_subdir = os.path.join(rocm_path, *subdirs)
+    if not os.path.exists(rocm_subdir):
+        msg = f"found ROCm installation at '{rocm_path}' but not subdirectory '{rocm_subdir}'"
+        _log.error(msg)
+        raise FileNotFoundError(msg)
+    return rocm_subdir

@@ -41,14 +41,14 @@ from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_PATCH as _LLVM_VERSION_PATCH,
 )
 
-from numba.hip import rocmpaths as _rocm_paths
+from numba.hip import rocmpaths as _rocmpaths
 
-ci.Config.set_library_path(_rocm_paths.get_rocm_path("llvm", "lib"))
+ci.Config.set_library_path(_rocmpaths.get_rocm_path("llvm", "lib"))
 
 from . import cparser as _cparser
 
 _cparser.CParser.set_clang_res_dir(
-    _rocm_paths.get_rocm_path(
+    _rocmpaths.get_rocm_path(
         "llvm",
         "lib",
         "clang",
