@@ -21,10 +21,22 @@
 # SOFTWARE.
 
 import rocm.clang.cindex as ci
+from rocm.llvm.config.llvm_config import (
+    LLVM_VERSION_MAJOR as _LLVM_VERSION_MAJOR,
+    LLVM_VERSION_MINOR as _LLVM_VERSION_MINOR,
+    LLVM_VERSION_PATCH as _LLVM_VERSION_PATCH,
+)
 
-ci.Config.set_library_path(
-    "/opt/rocm/llvm/lib"
-)  # TODO make dependent on CUDA_PATH/ROCM_PATH
+_ROCM_PATH = "/opt/rocm"  # TODO make depend on numba config env var
+
+ci.Config.set_library_path(f"{_ROCM_PATH}/llvm/lib")
+
+from . import cparser as _cparser
+
+_cparser.CParser.set_clang_res_dir(
+    f"{_ROCM_PATH}/llvm/lib/clang/"
+    + f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}"
+)
 
 from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
 
@@ -40,5 +52,6 @@ def get_llvm_bc(amdgpu_arch):
             These are stripped away where not needed.
     """
     return _HIPDeviceLib(amdgpu_arch).llvm_bc
+
 
 # test = get_llvm_bc("gfx90a")

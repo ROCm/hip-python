@@ -335,6 +335,15 @@ class TypeHandler:
 class CParser:
     """Parser for C APIs."""
 
+    _CLANG_RES_DIR = None
+
+    @classmethod
+    def set_clang_res_dir(cls, clang_res_dir: str):
+        """Set the clang resource dir.
+        """
+        # TODO check path
+        cls._CLANG_RES_DIR = clang_res_dir
+
     def __init__(self, filename: str, append_cflags: list = [], unsaved_files=None):
         """Parse the specified file.
 
@@ -355,10 +364,12 @@ class CParser:
 
     def parse(self):
         """Parse the specified file."""
+        if not CParser._CLANG_RES_DIR:
+            raise RuntimeError("Clang resource dir is not set.")
         # print(self._append_cflags)
         self.translation_unit = ci.TranslationUnit.from_source(
             self.filename,
-            args=["-x", "c"] + self.append_cflags,
+            args=["-x", "c","-resource-dir",CParser._CLANG_RES_DIR] + self.append_cflags,
             options=(
                 ci.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD  # keeps the macro defs as "fake" nodes without location
             ),
