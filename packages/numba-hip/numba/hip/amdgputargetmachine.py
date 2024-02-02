@@ -36,7 +36,7 @@ class AMDGPUTargetInitError(Exception):
     pass
 
 
-logger = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 # see: https://llvm.org/docs/AMDGPUUsage.html#address-spaces
 ADDRSPACE_GENERIC = 0
@@ -185,9 +185,10 @@ class AMDGPUTargetMachine:
     __INSTANCES = {}
 
     def __new__(cls, offload_arch: str, features: str = ""):
+        global _lock
         with _lock:
             if not len(AMDGPUTargetMachine.__INSTANCES):
-                logger.debug("[amdgpu] initialize LLVM target machines")
+                _log.debug("[amdgpu] initialize LLVM target machines")
                 LLVMInitializeAllTargetInfos()  # all three inits are required
                 LLVMInitializeAllTargets()
                 LLVMInitializeAllTargetMCs()
@@ -197,7 +198,7 @@ class AMDGPUTargetMachine:
         return cls.__INSTANCES[arch_features]
 
     def __init_target_machine(self, offload_arch: str, features: str = ""):
-        logger.debug(
+        _log.debug(
             f"[amdgpu] create LLVM AMDGPU target machine for arch-features pair '{offload_arch}')"
         )
         triple = self.TRIPLE.encode("utf-8")
@@ -237,6 +238,21 @@ class AMDGPUTargetMachine:
     def __del__(self):
         LLVMDisposeTargetMachine(self.__target_machine)
 
+# We define 'gfx90a' data layout as default data layout.
+# No changes noticed.
+DATA_LAYOUT = AMDGPUTargetMachine("gfx90a").data_layout
+
+all = [
+    "ADDRSPACE_GENERIC",
+    "ADDRSPACE_GLOBAL",
+    "ADDRSPACE_SHARED",
+    "ADDRSPACE_CONSTANT",
+    "ADDRSPACE_LOCAL",
+    "DATA_LAYOUT"
+    "AMDGPUTargetInitError",
+    "AMDGPUTargetMachine",
+    "ISAInfo",
+]
 
 if __name__ in ("__main__", "__test__"):
     import pprint

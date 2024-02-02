@@ -50,7 +50,7 @@ from numba.core import cgutils, types
 import numba.core.typing.templates as typing_templates
 import numba.core.imputils as imputils
 
-from numba.hip.amdgputarget import *
+from numba.hip.amdgputargetmachine import *
 from numba.hip import stubs as numba_hip_stubs
 
 from .hipsource import *
