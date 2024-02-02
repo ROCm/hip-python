@@ -60,7 +60,7 @@ from .typing_lowering.stubs import (
     local,
     const,
 )
-from . import hipdevicelib
+from .typing_lowering import hipdevicelib
 globals().update(hipdevicelib.stubs)
 del globals()["gridsize"] # will be imported as intrinsic below
 del globals()["warpsize"] # hipdevicelib implements it as function, intrinsics adds it as attribute
@@ -81,7 +81,7 @@ from numba.cuda.cudadrv.runtime import runtime
 from numba.hip import initialize
 from .errors import KernelRuntimeError
 
-#: from .decorators import jit, declare_device #: FIXME: HIP/AMD: not supported yet
+from .decorators import jit, declare_device
 from .api import *
 from .api import _auto_device
 from .args import In, Out, InOut

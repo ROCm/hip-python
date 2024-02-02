@@ -29,10 +29,10 @@ Attributes:
     typing_registry (`numba.core.typing.templates.Registry`):
         A registry of typing declarations. The registry stores such declarations
         for functions, attributes and globals.
-    impl_registry (`numba.core.implutils.Registry`):
+    impl_registry (`numba.core.imputils.Registry`):
         A registry of function and attribute implementations.
 """
 
-import os
-import re
+from .typingdecls import typing_registry
+from .loweringimpls import impl_registry
 

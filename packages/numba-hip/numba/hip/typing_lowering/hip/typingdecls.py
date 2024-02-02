@@ -67,7 +67,8 @@ from numba.core.typing.templates import (
 )
 
 #: from numba.hip.types import dim3, grid_group
-from numba.hip.types import dim3
+from numba.hip.typing_lowering.types import dim3
+from numba.hip.typing_lowering import stubs
 from numba import hip
 
 typing_registry = Registry()
@@ -102,17 +103,17 @@ class Hip_array_decl(CallableTemplate):
 
 @register
 class Hip_shared_array(Hip_array_decl):
-    key = hip.shared.array
+    key = stubs.shared.array
 
 
 @register
 class Hip_local_array(Hip_array_decl):
-    key = hip.local.array
+    key = stubs.local.array
 
 
 @register
 class Hip_const_array_like(CallableTemplate):
-    key = hip.const.array_like
+    key = stubs.const.array_like
 
     def generic(self):
         def typer(ndarray):
@@ -137,7 +138,7 @@ class Dim3_attrs(AttributeTemplate):
 
 @register_attr
 class HipSharedModuleTemplate(AttributeTemplate):
-    key = types.Module(hip.shared)
+    key = types.Module(stubs.shared)
 
     def resolve_array(self, mod):
         return types.Function(Hip_shared_array)
@@ -145,7 +146,7 @@ class HipSharedModuleTemplate(AttributeTemplate):
 
 @register_attr
 class HipConstModuleTemplate(AttributeTemplate):
-    key = types.Module(hip.const)
+    key = types.Module(stubs.const)
 
     def resolve_array_like(self, mod):
         return types.Function(Hip_const_array_like)
@@ -153,7 +154,7 @@ class HipConstModuleTemplate(AttributeTemplate):
 
 @register_attr
 class HipLocalModuleTemplate(AttributeTemplate):
-    key = types.Module(hip.local)
+    key = types.Module(stubs.local)
 
     def resolve_array(self, mod):
         return types.Function(Hip_local_array)

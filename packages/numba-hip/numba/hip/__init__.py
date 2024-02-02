@@ -30,12 +30,8 @@ import os
 import re
 
 from . import rocmpaths
-from .typing_lowering import stubs
-from .typing_lowering import hipdevicelib
-from .typing_lowering import math
-from .typing_lowering import numpy
 
-mr = _modulerepl.ModuleReplicator(
+_mr = _modulerepl.ModuleReplicator(
     "numba.hip",
     os.path.join(os.path.dirname(__file__), "..", "cuda"),
     base_context=globals(),
@@ -44,7 +40,7 @@ mr = _modulerepl.ModuleReplicator(
     ).replace("cudadrv", "hipdrv"),
 )
 
-api_util = mr.create_and_register_derived_module(
+api_util = _mr.create_and_register_derived_module(
     "api_util"
 )  # make this a submodule of the package
 
@@ -54,48 +50,35 @@ cudadrv = hipdrv
 sys.modules["numba.hip.cudadrv"] = hipdrv
 sys.modules["numba.hip.hipdrv"] = hipdrv
 
-errors = mr.create_and_register_derived_module(
+errors = _mr.create_and_register_derived_module(
     "errors",
     preprocess=lambda content: content.replace("CudaLoweringError", "HipLoweringError"),
 )  # make this a submodule of the package
 
-api = mr.create_and_register_derived_module(
+api = _mr.create_and_register_derived_module(
     "api"
 )  # make this a submodule of the package
 
-args = mr.create_and_register_derived_module(
+args = _mr.create_and_register_derived_module(
     "args"
 )  # make this a submodule of the package
-
-# Gives us types
-#   Dim3(types.Type),
-#   GridGroup(types.Type),
-#   CUDADispatcher(types.Dispatcher)->HIPDispatcher(types.Dispatcher)
-# Gives us global vars:
-#   dim3 = Dim3(),
-#   grid_group = GridGroup()
-types = mr.create_and_register_derived_module(
-    "types", preprocess=lambda content: content.replace("CUDA", "HIP")
-)  # make this a submodule of the package
-
-# TODO reenable models
-# models = mr.create_and_register_derived_module(
-#     "models",
-#     preprocess=_preprocess
-# )  # make this a submodule of the package
-
-# TODO: reuse mathimpl as it delegates only to libdevice, hipdevicelib is our superset
-# replace: from numba.cuda import libdevice -> numba.hip import hipdeviceimpl
-#          from numba import cuda -> from numba import hip as cuda # required for cuda.fp16... expressions
 
 # Other
 from .device_init import *
 from .device_init import _auto_device
 
+from . import codegen
+from . import compiler
+
+from .compiler import compile_llvm_ir, compile_llvm_ir_for_current_device
+
+from . import decorators
+from . import descriptor
+from . import dispatcher
+from . import target
+
 # clean up
 # del _preprocess
-del mr
-del _modulerepl
 del sys
 del os
 del re

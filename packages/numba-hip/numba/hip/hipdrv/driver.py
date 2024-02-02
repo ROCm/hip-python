@@ -425,7 +425,10 @@ class Driver(object):  #: HIP/AMD: modified
 
     def get_version(self):
         """
-        Returns the CUDA Runtime version as a tuple (major, minor).
+        Returns the HIP runtime version as a tuple (major, minor).
+
+        Note:
+            ``cuDriverGetVersion`` equals ``hipDriverGetVersion()`` equals ``hipRuntimeGetVersion()``.
         """
         version = driver.cuDriverGetVersion()
 

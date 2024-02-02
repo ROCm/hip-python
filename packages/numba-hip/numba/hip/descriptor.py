@@ -45,50 +45,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Registers typing declarations and implementations for numpy types and functions.
 
-Attributes:
-    typing_registry (`numba.core.typing.templates.Registry`):
-        A registry of typing declarations. The registry stores such declarations
-        for functions, attributes and globals.
-    impl_registry (`numba.core.imputils.Registry`):
-        A registry of function and attribute implementations.
-"""
+from numba.core.descriptors import TargetDescriptor
+from numba.core.options import TargetOptions
+from .target import HIPTargetContext, HIPTypingContext
 
-# typing/decls
 
-import numba.core.typing.templates as typing_templates
+class HIPTargetOptions(TargetOptions):
+    pass
 
-from numba.core.typing.npydecl import (
-    register_numpy_ufunc,
-    trigonometric_functions,
-    comparison_functions,
-    bit_twiddling_functions,
-)
 
-typing_registry = typing_templates.Registry()
+class HIPTarget(TargetDescriptor):
+    def __init__(self, name):
+        self.options = HIPTargetOptions
+        # The typing and target contexts are initialized only when needed -
+        # this prevents an attempt to load HIP libraries at import time on
+        # systems that might not have them present.
+        self._typingctx = None
+        self._targetctx = None
+        super().__init__(name)
 
-for func in trigonometric_functions:
-    register_numpy_ufunc(func, typing_registry.register_global)
+    @property
+    def typing_context(self):
+        if self._typingctx is None:
+            self._typingctx = HIPTypingContext()
+        return self._typingctx
 
-for func in comparison_functions:
-    register_numpy_ufunc(func, typing_registry.register_global)
+    @property
+    def target_context(self):
+        if self._targetctx is None:
+            self._targetctx = HIPTargetContext(self._typingctx)
+        return self._targetctx
 
-for func in bit_twiddling_functions:
-    register_numpy_ufunc(func, typing_registry.register_global)
 
-# code generators/impls
-
-from numba.core import imputils
-
-from numba.np.npyimpl import register_ufuncs
-from numba.np import ufunc_db
-
-impl_registry = imputils.Registry()
-
-register_ufuncs(ufunc_db.get_ufuncs(), impl_registry.lower)
-
-__all__ = [
-    "typing_registry",
-    "impl_registry",
-]
+hip_target = HIPTarget('hip')

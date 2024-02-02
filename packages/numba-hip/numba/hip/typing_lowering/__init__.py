@@ -19,3 +19,73 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+import os
+import re
+
+import numba.hip._modulerepl as _modulerepl
+
+_mr = _modulerepl.ModuleReplicator(
+    "numba.hip.typing_lowering",
+    os.path.join(os.path.dirname(__file__), "..", "..", "cuda"),
+    base_context=globals(),
+    preprocess_all=lambda content: re.sub(
+        r"\bnumba.cuda\b", "numba.hip", content
+    ).replace("cudadrv", "hipdrv"),
+)
+
+from . import stubs
+from . import hipdevicelib
+
+# Gives us types
+#   Dim3(types.Type),
+#   GridGroup(types.Type),
+#   CUDADispatcher(types.Dispatcher)->HIPDispatcher(types.Dispatcher)
+# Gives us global vars:
+#   dim3 = Dim3(),
+#   grid_group = GridGroup()
+types = _mr.create_and_register_derived_module(
+    "types", preprocess=lambda content: content.replace("CUDA", "HIP")
+)  # make this a submodule of the package
+delattr(types, "GridGroup")  # TODO cooperative groups
+delattr(types, "grid_group")  # TODO cooperative groups
+
+from . import models
+from . import hip
+from . import math
+from . import numpy
+
+ufuncs = _mr.create_and_register_derived_module(
+    "ufuncs",
+    preprocess=lambda content: content.replace(
+        "numba.hip.mathimpl", "numba.hip.typing_lowering.math"
+    ), # NOTE the preprocess_all has converted numba.cuda.mathimpl -> numba.hip.mathimpl
+)  # make this a submodule of the package
+
+
+def get_typing_registries():
+    """Yields typing/declaration registries of all typing/lowering libraries in this package.
+
+    Yields:
+        `numba.core.typing.templates.Registry`:
+            A registry of typing declarations. The registry stores such declarations
+            for functions, attributes and globals.
+        `numba.core.imputils.Registry`:
+            A registry of function and attribute implementations.
+    """
+    for registry_provider in (hipdevicelib, hip, math, numpy):
+        yield registry_provider.typing_registry
+
+
+def get_impl_registries():
+    """Yields lowering/implementation registries of all typing/lowering libraries in this package.
+
+    Yields:
+        `numba.core.typing.templates.Registry`:
+            A registry of typing declarations. The registry stores such declarations
+            for functions, attributes and globals.
+        `numba.core.imputils.Registry`:
+            A registry of function and attribute implementations.
+    """
+    for registry_provider in (hipdevicelib, hip, math, numpy):
+        yield registry_provider.impl_registry

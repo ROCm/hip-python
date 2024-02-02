@@ -68,7 +68,7 @@ from numba.core.extending import overload_attribute
 #: from numba.cuda import nvvmutils # TODO: HIP/AMD: not supported
 from numba.hip.extending import intrinsic
 
-from numba.hip.hipdevicelib import (
+from numba.hip.typing_lowering.hipdevicelib import (
     global_id as _global_id,  # these stubs are created at runtime,
     gridsize as _gridsize,  # see numba.hip.hipdevicelib.HIPDeviceLib._create_extensions,
     warpsize as _warpsize_fun,

@@ -45,7 +45,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import numba.hip.typing_lowering.numpy as np
+import numpy as np
 from collections import defaultdict
 import functools
 import itertools

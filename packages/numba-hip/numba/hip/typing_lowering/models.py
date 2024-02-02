@@ -45,50 +45,52 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Registers typing declarations and implementations for numpy types and functions.
+import functools
 
-Attributes:
-    typing_registry (`numba.core.typing.templates.Registry`):
-        A registry of typing declarations. The registry stores such declarations
-        for functions, attributes and globals.
-    impl_registry (`numba.core.imputils.Registry`):
-        A registry of function and attribute implementations.
-"""
+from llvmlite import ir
 
-# typing/decls
+from numba.core.datamodel.registry import DataModelManager, register
+from numba.core.extending import models
+from numba.core import types
+from numba.hip.typing_lowering.types import Dim3, HIPDispatcher
 
-import numba.core.typing.templates as typing_templates
 
-from numba.core.typing.npydecl import (
-    register_numpy_ufunc,
-    trigonometric_functions,
-    comparison_functions,
-    bit_twiddling_functions,
-)
+hip_data_manager = DataModelManager()
 
-typing_registry = typing_templates.Registry()
+register_model = functools.partial(register, hip_data_manager)
 
-for func in trigonometric_functions:
-    register_numpy_ufunc(func, typing_registry.register_global)
 
-for func in comparison_functions:
-    register_numpy_ufunc(func, typing_registry.register_global)
+@register_model(Dim3)
+class Dim3Model(models.StructModel):
+    def __init__(self, dmm, fe_type):
+        members = [
+            ('x', types.int32),
+            ('y', types.int32),
+            ('z', types.int32)
+        ]
+        super().__init__(dmm, fe_type, members)
 
-for func in bit_twiddling_functions:
-    register_numpy_ufunc(func, typing_registry.register_global)
 
-# code generators/impls
+# @register_model(GridGroup)
+# class GridGroupModel(models.PrimitiveModel):
+#     def __init__(self, dmm, fe_type):
+#         be_type = ir.IntType(64)
+#         super().__init__(dmm, fe_type, be_type)
 
-from numba.core import imputils
 
-from numba.np.npyimpl import register_ufuncs
-from numba.np import ufunc_db
+@register_model(types.Float)
+class FloatModel(models.PrimitiveModel):
+    def __init__(self, dmm, fe_type):
+        if fe_type == types.float16:
+            raise NotImplementedError(fe_type)
+            be_type = ir.IntType(16)
+        elif fe_type == types.float32:
+            be_type = ir.FloatType()
+        elif fe_type == types.float64:
+            be_type = ir.DoubleType()
+        else:
+            raise NotImplementedError(fe_type)
+        super(FloatModel, self).__init__(dmm, fe_type, be_type)
 
-impl_registry = imputils.Registry()
 
-register_ufuncs(ufunc_db.get_ufuncs(), impl_registry.lower)
-
-__all__ = [
-    "typing_registry",
-    "impl_registry",
-]
+register_model(HIPDispatcher)(models.OpaqueModel)
