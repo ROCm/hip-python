@@ -20,6 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""AMD GPU target information and target machine creation
+
+This module provides a class `~.AMDGPUTargetMachine` for creating
+an LLVM target machine for all supported AMD GPU architectures.
+The supported AMD GPU architectures are the keys of the `~.ISA_INFOS`
+`dict` attribute of this module. More information on the particular
+architecture can be obtained via the corresponding `dict` value.
+
+Attributes:
+    TRIPLE (`str`):
+        The target triple, 'amdgcn-amd-amdhsa'.
+    ISA_INFOS (`dict`):
+        Per supported AMD ISA ('gfx...'), a data object
+        that can be queried for information about hardware features
+        such as the total/addressable number of SGPRs/VGPRs or the size
+        of the LDS ('shared memory') as well as about metadata such
+        as the vendor or the os.
+    DATA_LAYOUT (`str`):
+        Default data layout. Currently obtained via target machine for AMD GPU arch 'gfx90a'.
+"""
+
 __author__ = "Advanced Micro Devices, Inc."
 
 import logging
@@ -31,11 +52,6 @@ from rocm.llvm.c.targetmachine import *
 
 from rocm.amd_comgr import amd_comgr as comgr
 
-
-class AMDGPUTargetInitError(Exception):
-    pass
-
-
 _log = logging.getLogger(__name__)
 
 # see: https://llvm.org/docs/AMDGPUUsage.html#address-spaces
@@ -44,8 +60,6 @@ ADDRSPACE_GLOBAL = 1
 ADDRSPACE_SHARED = 3
 ADDRSPACE_CONSTANT = 4
 ADDRSPACE_LOCAL = 5
-
-_lock = threading.Lock()
 
 
 class ISAInfo:
@@ -134,7 +148,7 @@ class ISAInfo:
 
     def __str__(self):
         return (
-            f"<numba.hip.amdgpu.ISAInfo at {hex(id(self))}>(\n"
+            f"<numba.hip.amdgputargetmachine.ISAInfo at {hex(id(self))}>(\n"
             + f"   {self.name=},\n"
             + f"   {self.architecture=},\n"
             + f"   {self.vendor=},\n"
@@ -160,27 +174,25 @@ class ISAInfo:
     __repr__ = __str__
 
 
+TRIPLE = "amdgcn-amd-amdhsa"
+ISA_INFOS: dict = {
+    isa_name.replace(f"{TRIPLE}", ""): ISAInfo(entry)
+    for isa_name, entry in comgr.ext.get_isa_metadata_all().items()
+}
+
+
+class AMDGPUTargetInitError(Exception):
+    pass
+
+
+_lock = threading.Lock()
+
+
 class AMDGPUTargetMachine:
     """Provides access to LLVM AMDGPU target machines for different AMD GPU ISAs.
 
     A singleton is created per pair of target architecture and target features.
-
-    Class attributes:
-        TRIPLE (`str`):
-            The target triple, 'amdgcn-amd-amdhsa'.
-        ISA_INFOS (`dict`):
-            Per supported AMD ISA ('gfx...'), a data object
-            that can be queried for information about hardware features
-            such as the total/addressable number of SGPRs/VGPRs or the size
-            of the LDS ('shared memory') as well as about metadata such
-            as the vendor or the os.
     """
-
-    TRIPLE = "amdgcn-amd-amdhsa"
-    ISA_INFOS: dict = {
-        isa_name.replace("amdgcn-amd-amdhsa--", ""): ISAInfo(entry)
-        for isa_name, entry in comgr.ext.get_isa_metadata_all().items()
-    }
 
     __INSTANCES = {}
 
@@ -198,10 +210,12 @@ class AMDGPUTargetMachine:
         return cls.__INSTANCES[arch_features]
 
     def __init_target_machine(self, offload_arch: str, features: str = ""):
+        global TRIPLE
+
         _log.debug(
             f"[amdgpu] create LLVM AMDGPU target machine for arch-features pair '{offload_arch}')"
         )
-        triple = self.TRIPLE.encode("utf-8")
+        triple = TRIPLE.encode("utf-8")
 
         # create target
         (status, self.__target, error) = LLVMGetTargetFromTriple(triple)
@@ -238,6 +252,7 @@ class AMDGPUTargetMachine:
     def __del__(self):
         LLVMDisposeTargetMachine(self.__target_machine)
 
+
 # We define 'gfx90a' data layout as default data layout.
 # No changes noticed.
 DATA_LAYOUT = AMDGPUTargetMachine("gfx90a").data_layout
@@ -248,16 +263,17 @@ all = [
     "ADDRSPACE_SHARED",
     "ADDRSPACE_CONSTANT",
     "ADDRSPACE_LOCAL",
-    "DATA_LAYOUT"
-    "AMDGPUTargetInitError",
-    "AMDGPUTargetMachine",
     "ISAInfo",
+    "TRIPLE",
+    "ISA_INFOS" "AMDGPUTargetInitError",
+    "AMDGPUTargetMachine",
+    "DATA_LAYOUT",
 ]
 
 if __name__ in ("__main__", "__test__"):
     import pprint
 
     pprint.pprint(comgr.ext.get_isa_metadata_all())
-    #pprint.pprint(AMDGPUTargetMachine.ISA_INFOS)
+    # pprint.pprint(ISA_INFOS)
     machine = AMDGPUTargetMachine(offload_arch="gfx90a")
     print(machine.data_layout)

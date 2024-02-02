@@ -50,7 +50,7 @@ from numba.core import cgutils, types
 import numba.core.typing.templates as typing_templates
 import numba.core.imputils as imputils
 
-from numba.hip.amdgputargetmachine import *
+from numba.hip.amdgputargetmachine import ISA_INFOS
 from numba.hip import stubs as numba_hip_stubs
 
 from .hipsource import *
@@ -337,10 +337,8 @@ class HIPDeviceLib:
         return self._amdgpu_arch
 
     def _set_amdgpu_arch(self, arch: str):
-        if arch != None and arch.split(":")[0] not in AMDGPUTargetMachine.ISA_INFOS:
-            supported_archs = ", ".join(
-                (f"{a}" for a in AMDGPUTargetMachine.ISA_INFOS.keys())
-            )
+        if arch != None and arch.split(":")[0] not in ISA_INFOS:
+            supported_archs = ", ".join((f"{a}" for a in ISA_INFOS.keys()))
             raise ValueError(
                 f"{self._amdgpu_arch} must be `None` or one of: {supported_archs} (features may be appended after ':')"
             )
