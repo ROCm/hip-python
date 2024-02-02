@@ -27,8 +27,11 @@ __author__ = "Advanced Micro Devices, Inc."
 Stubs, signature matching, and implementation support for HIP device library functions.
 
 Note:
-    In parts based on the following Numba CUDA files:
-    `numba/cuda/libdevicedecl.py` and `numba/cuda/libdeviceimpl.py`.
+    Parts derived from the following Numba CUDA files:
+    `numba/cuda/libdevicedecl.py`, `numba/cuda/libdeviceimpl.py`.
+Note:
+    Adds overloaded variants such as variants that take
+    uint64 and int64 for math functions.
 """
 
 import threading
@@ -97,7 +100,13 @@ class HIPDeviceLib:
         and per direction ``x``, ``y``, and ``z``; this routine further adds a
         wrapper function that accesses members of the struct. The wrapper
         functions have the name ``get_<struct>_<direction>``.
+
+        TODO:
+            * Support functions that take/return char*.
+            * Support functions take/return vector types such as uchar4, int3, ...
+            * Support function that take/return __half, which is defined as struct.
         """
+        filename = "source.hip"
 
         def cursor_filter_(cursor: ci.Cursor):
             """Filter what cursors to consider when parsing device functions."""
@@ -122,12 +131,143 @@ class HIPDeviceLib:
             return False
 
         hiprtc_runtime_source = HIPSource(
-            source=comgr.ext.HIPRTC_RUNTIME_HEADER + HIPDeviceLib._create_extensions(),
+            filename=filename,
+            source=(
+                comgr.ext.HIPRTC_RUNTIME_HEADER
+                + HIPDeviceLib._create_overloads()
+                + HIPDeviceLib._create_extensions()
+            ),
             filter=cursor_filter_,
             append_cflags=["-D__HIPCC_RTC__"],
         )
         hiprtc_runtime_source.check_for_duplicates(log_errors=True)
         return hiprtc_runtime_source
+
+    @staticmethod
+    def _create_overloads():
+        """Create overloaded variants for certain functions.
+
+        Note:
+            We follow ``numba/cuda/cudamath.py`` here.
+            The HIPRTC runtime header file already contains
+            double-float-overloaded variants for math functions such as
+            ``sin`` and ``cos``. This routine adds further overloaded
+            variants that take ``long long`` and ``unsigned long long``
+            as argument and return a ``double``.
+            Function ``pow(*,*)`` already has all required overloads.
+
+            We used the following snippet for generating the list of math functions:
+
+            ```python
+            from numba import hip
+            import math
+            # binary ops
+            sorted([key for key in vars(math).keys()
+                if key in vars(hip) and not key.startswith("_")
+                and key.startswith("is")
+                and len(getattr(hip,key)._signatures_[0].args)==1])
+            # unary double ops
+            sorted([key for key in vars(math).keys()
+                if key in vars(hip) and not key.startswith("_")
+                and not key.startswith("is")
+                and len(getattr(hip,key)._signatures_[0].args)==1])
+            ```
+        TODO:
+            * Overload math functions to accept integer arguments, see
+              `numba/cuda/cudamath.py`. Typically, ``double`` versions accept unsigned and signed ``long long``.
+            * Overload certain math functions to accept fp16 type too,
+              `numba/cuda/cudamath.py`.
+        """
+        overloads = ""
+        # 1) Integer functions with ll suffix
+        # popcll: (uint64,) -> uint32
+        # ffsll: (uint64,) -> uint32, (int64,) -> uint32
+        # brevll: (uint64,) -> uint64
+        # clzll: (int64,) -> int32
+        overloads += textwrap.dedent(
+            """\
+            // popc
+            unsigned int __attribute__((device)) __popc(unsigned long long _0) {
+                return __popcll(_0);
+            }
+            // ffs
+            unsigned int __attribute__((device)) __ffs(unsigned long long _0) {
+                return __ffsll(_0);
+            }
+            unsigned int __attribute__((device)) __ffs(long long _0) {
+                return __ffsll(_0);
+            }
+            // brev
+            unsigned long long __attribute__((device)) __brev(unsigned long long _0) {
+                return __brevll(_0);
+            }
+            // clz
+            int __attribute__((device)) __clz(unsigned long long _0) {
+                return __clzll(_0);
+            }
+            """
+        )
+        # 2) Math functions
+        # 2.a) Boolean functions
+        for fun in ["isfinite", "isinf", "isnan"]:
+            constant = (
+                "true" if fun == "isfinite" else "false"
+            )  # infinity, NaN, finiteness are float concepts
+            overloads += textwrap.dedent(
+                f"""\
+                // {fun}
+                bool __attribute__((device)) {fun}(unsigned long long _0) {{
+                    return {constant};
+                }}
+                bool __attribute__((device)) {fun}(long long _0) {{
+                    return {constant};
+                }}
+                """
+            )
+        # 2.b) Unary functions
+        # <fun>(double)->double): <fun>(ull)->double), <fun>(ll)->double)
+        # fmt: off
+        for fun in [
+            'acos', 'acosh', 'asin', 'asinh', 'atan', 'atanh', 'ceil', 'cos',
+            'cosh', 'erf', 'erfc', 'exp', 'expm1', 'fabs', 'floor', "frexp",
+            'lgamma', 'log', 'log10', 'log1p', 'log2', "modf", 'sin', 'sinh',
+            'sqrt', 'tan', 'tanh', 'trunc'
+        ]:
+            # fmt: on
+            if fun in ("modf","frexp"):
+                continue # these are not further overloaded for integers; see numba/cuda/cudamath.py
+            overloads += textwrap.dedent(f"""\
+                // {fun}
+                double __attribute__((device)) {fun}(unsigned long long _0) {{
+                    return {fun}(static_cast<double>(_0));
+                }}
+                double __attribute__((device)) {fun}(long long _0) {{
+                    return {fun}(static_cast<double>(_0));
+                }}
+                """)
+        # 2.c) Binary functions
+        # <fun>(double,double) -> double: <fun>(ull,ull) -> double, <fun>(ll,ll) -> double
+        for fun in [ 'atan2', 'copysign', 'fmod', 'hypot', 'remainder']:
+            overloads += textwrap.dedent(f"""\
+                // {fun}
+                double __attribute__((device)) {fun}(unsigned long long _0, unsigned long long _1) {{
+                    return {fun}(static_cast<double>(_0),static_cast<double>(_1));
+                }}
+                double __attribute__((device)) {fun}(long long _0, long long _1) {{
+                    return {fun}(static_cast<double>(_0),static_cast<double>(_1));
+                }}
+                """)
+        # NOTE: function pow(*,*) already has all required overloads.
+        overloads += textwrap.dedent(f"""\
+            // ldexp
+            float __attribute__((device)) ldexp(float _0, float _1) {{
+                return {fun}(_0,static_cast<int>(_1));
+            }}
+            double __attribute__((device)) ldexp(double _0, double _1) {{
+                return {fun}(_0,static_cast<int>(_1));
+            }}
+            """)
+        return overloads
 
     @staticmethod
     def _create_extensions():
