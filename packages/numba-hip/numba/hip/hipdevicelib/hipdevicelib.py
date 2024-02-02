@@ -341,6 +341,9 @@ class HIPDeviceLib:
                 (4) a list of all parameter types, and (5) a mask, a list of bools, that indicates per
                 parameter if it has a pointer type or not. All entries of the first three result tuple entries
                 are expressed via `numba.core.types` types.
+        TODO:
+            * Distinguish between void* and pointers to basic type.
+              parm_is_ptr[i] -> out_parm[i] is too simple.
         """
         parm_is_ptr = [
             cparser.clang_type_kind(parm_type) == ci.TypeKind.POINTER
@@ -374,9 +377,15 @@ class HIPDeviceLib:
                 ),
             )
 
-        successful_mapping = all(in_parm_types_numba) and all(
-            result_types_numba
-        )  # checks for None
+        # If a in/out parameter value couldn't be mapped or has
+        # been mapped to types.void, we do not generate a signature.
+        # Note that typemaps.map_clang_to_numba_core_type returns None
+        # if a mapping failed.
+        successful_mapping = True
+        for numba_type in in_parm_types_numba + result_types_numba:
+            if numba_type in (None, types.void):
+                successful_mapping = False
+
         if successful_mapping:
             if len(result_types_numba) > 1:
                 result_type_numba = types.Tuple(result_types_numba)
