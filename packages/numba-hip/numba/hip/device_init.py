@@ -47,22 +47,35 @@
 
 # Re export
 import sys
-# from .stubs import (threadIdx, blockIdx, blockDim, gridDim, laneid, warpsize,
-#                     syncwarp, shared, local, const, atomic,
-#                     shfl_sync_intrinsic, vote_sync_intrinsic, match_any_sync, #: TODO: HIP/AMD: provide the correct intrinsics, support trivial _sync intrinsics
-#                     match_all_sync, threadfence_block, threadfence_system,
-#                     threadfence, selp, popc, brev, clz, ffs, fma, cbrt, cg,
-#                     activemask, lanemask_lt, nanosleep, fp16,
-#                     _vector_type_stubs)
-from .intrinsics import (grid, gridsize, syncthreads, syncthreads_and,
-                         syncthreads_count, syncthreads_or)
+#: from .stubs import (threadIdx, blockIdx, blockDim, gridDim, laneid, warpsize,
+#:                     syncwarp, shared, local, const, atomic,
+#:                     shfl_sync_intrinsic, vote_sync_intrinsic, match_any_sync, #: TODO: HIP/AMD: provide the correct intrinsics, support trivial _sync intrinsics
+#:                     match_all_sync, threadfence_block, threadfence_system,
+#:                     threadfence, selp, popc, brev, clz, ffs, fma, cbrt, cg,
+#:                     activemask, lanemask_lt, nanosleep, fp16,
+#:                     _vector_type_stubs)
+from .stubs import (
+    _vector_type_stubs,
+    shared,
+    local,
+    const,
+)
+from . import hipdevicelib
+globals().update(hipdevicelib.stubs)
+del globals()["gridsize"] # will be imported as intrinsic below
+del globals()["warpsize"] # hipdevicelib implements it as function, intrinsics adds it as attribute
+del hipdevicelib
+
+#: from .intrinsics import (grid, gridsize, syncthreads, syncthreads_and,
+#:                          syncthreads_count, syncthreads_or)
+from .intrinsics import (grid, gridsize)
 from .hipdrv.error import HipSupportError
 from .hipdrv.error import HipSupportError as CudaSupportError
-from numba.cuda.cudadrv.driver import (BaseCUDAMemoryManager,
-                                       HostOnlyCUDAMemoryManager,
-                                       GetIpcHandleMixin, MemoryPointer,
-                                       MappedMemory, PinnedMemory, MemoryInfo,
-                                       IpcHandle, set_memory_manager)
+from .hipdrv.driver import (BaseHIPMemoryManager,
+                            HostOnlyHIPMemoryManager,
+                            GetIpcHandleMixin, MemoryPointer,
+                            MappedMemory, PinnedMemory, MemoryInfo,
+                            IpcHandle, set_memory_manager)
 from numba.cuda.cudadrv.runtime import runtime
 #: from .cudadrv import nvvm #: FIXME: HIP/AMD: not supported
 from numba.hip import initialize
@@ -73,20 +86,16 @@ from .api import *
 from .api import _auto_device
 from .args import In, Out, InOut
 
-from .intrinsic_wrapper import (all_sync, any_sync, eq_sync, ballot_sync,
-                                shfl_sync, shfl_up_sync, shfl_down_sync,
-                                shfl_xor_sync)
-
 #: from .kernels import reduction #: FIXME: HIP/AMD: not supported yet
 
 #: reduce = Reduce = reduction.Reduce #: FIXME: HIP/AMD: not supported yet
 
 # Expose vector type constructors and aliases as module level attributes.
-# for vector_type_stub in _vector_type_stubs:
-#     setattr(sys.modules[__name__], vector_type_stub.__name__, vector_type_stub)
-#     for alias in vector_type_stub.aliases:
-#         setattr(sys.modules[__name__], alias, vector_type_stub)
-# del vector_type_stub, _vector_type_stubs
+for vector_type_stub in _vector_type_stubs:
+    setattr(sys.modules[__name__], vector_type_stub.__name__, vector_type_stub)
+    for alias in vector_type_stub.aliases:
+        setattr(sys.modules[__name__], alias, vector_type_stub)
+del vector_type_stub, _vector_type_stubs
 
 
 def is_available():
