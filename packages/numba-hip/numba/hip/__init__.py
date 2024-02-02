@@ -31,19 +31,15 @@ import re
 
 from . import stubs
 from . import hipdevicelib
-
-_unsupported = {}
-for name, stub in hipdevicelib.stubs.items():
-    if stub.is_supported():
-        globals()[name] =  stub
-    else:
-        _unsupported[name] = stub
+from . import math
 
 mr = _modulerepl.ModuleReplicator(
     "numba.hip",
     os.path.join(os.path.dirname(__file__), "..", "cuda"),
     base_context=globals(),
-    preprocess_all=lambda content: re.sub(r"\bnumba.cuda\b", "numba.hip", content).replace("cudadrv","hipdrv"),
+    preprocess_all=lambda content: re.sub(
+        r"\bnumba.cuda\b", "numba.hip", content
+    ).replace("cudadrv", "hipdrv"),
 )
 
 api_util = mr.create_and_register_derived_module(
@@ -51,12 +47,14 @@ api_util = mr.create_and_register_derived_module(
 )  # make this a submodule of the package
 
 from . import hipdrv
+
 cudadrv = hipdrv
 sys.modules["numba.hip.cudadrv"] = hipdrv
 sys.modules["numba.hip.hipdrv"] = hipdrv
 
 errors = mr.create_and_register_derived_module(
-    "errors"
+    "errors",
+    preprocess=lambda content: content.replace("CudaLoweringError", "HipLoweringError"),
 )  # make this a submodule of the package
 
 api = mr.create_and_register_derived_module(
@@ -67,8 +65,15 @@ args = mr.create_and_register_derived_module(
     "args"
 )  # make this a submodule of the package
 
+# Gives us types
+#   Dim3(types.Type),
+#   GridGroup(types.Type),
+#   CUDADispatcher(types.Dispatcher)->HIPDispatcher(types.Dispatcher)
+# Gives us global vars:
+#   dim3 = Dim3(),
+#   grid_group = GridGroup()
 types = mr.create_and_register_derived_module(
-    "types"
+    "types", preprocess=lambda content: content.replace("CUDA", "HIP")
 )  # make this a submodule of the package
 
 # TODO reenable models
