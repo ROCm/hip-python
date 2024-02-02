@@ -27,15 +27,19 @@ from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_PATCH as _LLVM_VERSION_PATCH,
 )
 
-_ROCM_PATH = "/opt/rocm"  # TODO make depend on numba config env var
+from numba.hip import rocm_paths as _rocm_paths
 
-ci.Config.set_library_path(f"{_ROCM_PATH}/llvm/lib")
+ci.Config.set_library_path(_rocm_paths.get_rocm_path("llvm", "lib"))
 
 from . import cparser as _cparser
 
 _cparser.CParser.set_clang_res_dir(
-    f"{_ROCM_PATH}/llvm/lib/clang/"
-    + f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}"
+    _rocm_paths.get_rocm_path(
+        "llvm",
+        "lib",
+        "clang",
+        f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
+    )
 )
 
 from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
@@ -46,9 +50,9 @@ unsupported_stubs = {}
 stubs = {}
 for name, stub in _all_stubs.items():
     if stub.is_supported():
-        stubs[
-            name
-        ] = stub  # allows to easily add them to numba.hip globals() in __init__.py
+        stubs[name] = (
+            stub  # allows to easily add them to numba.hip globals() in __init__.py
+        )
         globals()[
             name
         ] = stub  # allows to import them via from 'numba.hip.hipdevicelib import ...'

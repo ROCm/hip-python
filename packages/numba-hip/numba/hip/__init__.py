@@ -29,6 +29,7 @@ import sys
 import os
 import re
 
+from . import rocm_paths
 from . import stubs
 from . import hipdevicelib
 from . import math

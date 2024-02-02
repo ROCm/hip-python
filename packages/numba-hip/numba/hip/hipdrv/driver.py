@@ -89,7 +89,9 @@ from .error import HipSupportError, HipRuntimeError
 cu_device_ptr = c_size_t  # defined as unsigned long long
 cu_stream = c_void_p  # an opaque handle
 cu_stream_callback_pyobj = CFUNCTYPE(None, cu_stream, c_int, py_object)
-from numba.hip.hipdrv import hiprtc, _extras
+
+from numba.hip import rocm_paths
+from numba.hip.hipdrv import hiprtc
 
 USE_NV_BINDING = True  #: HIP/AMD: always use HIP Python bindings
 
@@ -155,8 +157,10 @@ class HipAPIError(HipRuntimeError):
         return "[%s] %s" % (self.code, self.msg)
 
 
-def locate_driver_and_loader():  #: HIP/AMD: modified body
-    envpath = config.CUDA_DRIVER
+def locate_runtime_and_loader():  #: HIP/AMD: modified body
+    # envpath = config.CUDA_DRIVER
+    # NOTE we don't have any entries in the numba core config
+    envpath = os.environ.get("NUMBA_HIP_RUNTIME")
 
     if envpath == "0":
         # Force fail
@@ -170,7 +174,7 @@ def locate_driver_and_loader():  #: HIP/AMD: modified body
     else:
         # Assume to be *nix like
         dlloader = ctypes.CDLL
-        dldir = ["/opt/rocm/lib"]
+        dldir = [rocm_paths.get_rocm_path("lib")]
         dlnames = ["libamdhip64.so"]
 
     if envpath:
@@ -217,7 +221,7 @@ def load_runtime(dlloader, candidates):
 
 
 def find_runtime():
-    dlloader, candidates = locate_driver_and_loader()
+    dlloader, candidates = locate_runtime_and_loader()
     dll, _ = load_runtime(dlloader, candidates)
     return dll
 
