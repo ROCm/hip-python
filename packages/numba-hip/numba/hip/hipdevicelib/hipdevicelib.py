@@ -239,9 +239,8 @@ class HIPDeviceLib:
                 for dim in "xyz":
                     if name == f"GET_{kind}_{dim}":
                         return [kind, dim]
-            for kind in "warpsize":
-                if name == f"GET_{kind}":
-                    return [kind]
+            if name == f"GET_warpsize":
+                return ["warpsize"]
             return [name]
 
         typing_registry: typing_templates.Registry = typing_templates.Registry()
