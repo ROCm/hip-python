@@ -422,6 +422,9 @@ class HIPDeviceLib:
         and 'args' (actual arguments passed to the function call).
         If not done so already, the function call generator further inserts a
         function declaration into the builder's module via `numba.core.cgutils` ("codegen utils").
+
+        Returns:
+            `tuple`: A tuple of size 2 that contains (1) the call generator and (2) the argument types.
         """
 
         def core(context, builder, sig, args):
@@ -434,8 +437,8 @@ class HIPDeviceLib:
             fn = cgutils.get_or_insert_function(lmod, fnty, func_name)
             return builder.call(fn, args)
 
-        # Note below is expanded: 'HIPDeviceLib.impl_registry.functions.append((core, key, *numba_parm_types))'
-        return impl_registry.lower(key, *parm_types_numba)(core)
+        # NOTE: 'impl_registry.lower(...)' is expanded: 'HIPDeviceLib.impl_registry.functions.append((core, key, *numba_parm_types))' and returns 'core'
+        return (impl_registry.lower(key, *parm_types_numba)(core), parm_types_numba)
 
     @staticmethod
     def register_call_generator_for_function_with_ptr_parms(
@@ -463,9 +466,12 @@ class HIPDeviceLib:
 
         double bar
 
-        TODOs:
+        TODO:
             * Distinguish between pointers to records and basic types, chars.
             * Provide a way to prescribe pointer intent (in, inout, out).
+
+        Returns:
+            `tuple`: A tuple of size 2 that contains (1) the call generator and (2) the argument types.
         """
 
         def core(context, builder, sig, args):
@@ -526,7 +532,11 @@ class HIPDeviceLib:
             for i, parm_type_numba in enumerate(parm_types_numba)
             if not parm_is_out_ptr[i]
         ]
-        return impl_registry.lower(key, *in_parm_types_numba)(core)
+        # NOTE: 'impl_registry.lower(...)' is expanded: 'HIPDeviceLib.impl_registry.functions.append((core, key, *in_parm_types_numba))' and returns 'core'
+        return (
+            impl_registry.lower(key, *in_parm_types_numba)(core),
+            in_parm_types_numba,
+        )
 
     @property
     def llvm_bc(self):
