@@ -275,11 +275,11 @@ class HIPDeviceLib:
                     parm_is_ptr,
                 ) = HIPDeviceLib.create_signature(device_fun)
                 if not success:
-                    _log.warn(
+                    _log.debug(
                         f"stub '{'.'.join(name_parts)}' failed to create Numba signature for function '{device_fun.displayname}'"
                     )  # TODO warn -> debug
                 else:
-                    _log.warn(
+                    _log.debug(
                         f"stub '{'.'.join(name_parts)}': created Numba signature for function '{device_fun.displayname}: {device_fun.result_type().spelling}'"
                     )  # TODO warn -> debug
                     stub._signatures_.append(
@@ -367,7 +367,6 @@ class HIPDeviceLib:
             for i, parm_type_numba in enumerate(parm_types_numba)
             if not parm_is_ptr[i]
         ]
-
         if device_fun.result_type_kind(canonical=True) != ci.TypeKind.VOID:
             result_types_numba.insert(
                 0,

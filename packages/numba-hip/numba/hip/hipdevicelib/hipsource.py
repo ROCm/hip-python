@@ -394,7 +394,7 @@ class HIPSource:
                 )  # sets parent to top-most parent for i > 0
                 setattr(cls, parts[i + 1], member)
             else:  # i == len(parts)
-                _log.warn(f"created stub '{'.'.join(parts)}'")  # TODO warn -> debug
+                _log.debug(f"created stub '{'.'.join(parts)}'")  # TODO warn -> debug
                 stub_processor(cls, parent if parent else cls, variants, parts)
             return cls
 
