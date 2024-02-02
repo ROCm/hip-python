@@ -40,7 +40,21 @@ _cparser.CParser.set_clang_res_dir(
 
 from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
 
-stubs, typing_registry, impl_registry  = _HIPDeviceLib().create_stubs_decls_impls()
+_all_stubs, typing_registry, impl_registry = _HIPDeviceLib().create_stubs_decls_impls()
+
+unsupported_stubs = {}
+stubs = {}
+for name, stub in _all_stubs.items():
+    if stub.is_supported():
+        stubs[
+            name
+        ] = stub  # allows to easily add them to numba.hip globals() in __init__.py
+        globals()[
+            name
+        ] = stub  # allows to import them via from 'numba.hip.hipdevicelib import ...'
+    else:
+        unsupported_stubs[name] = stub
+
 
 def get_llvm_bc(amdgpu_arch):
     """Return a bitcode library for the given AMD GPU architecture.
