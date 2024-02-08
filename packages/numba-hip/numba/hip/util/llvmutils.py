@@ -361,7 +361,7 @@ def link_modules(modules, to_bc: bool = False):
             Defaults to `False`.
     """
     if not len(modules):
-        raise ValueError("argument 'irs' must have at least one entry")
+        raise ValueError("argument 'modules' must have at least one entry")
     # create LLVM module from every input
     cloned_modules = []
     for entry in modules:
@@ -446,9 +446,9 @@ if __name__ in ("__main__",):
 
         ; Function Attrs: convergent mustprogress norecurse nounwind
         define protected amdgpu_kernel void @_Z8mykernelPff(ptr addrspace(1) %0, float %1) local_unnamed_addr #0 {
-        %3 = addrspacecast ptr addrspace(1) %0 to ptr
-        tail call void @_Z5scalePff(ptr %3, float %1) #2
-        ret void
+          %3 = addrspacecast ptr addrspace(1) %0 to ptr
+          tail call void @_Z5scalePff(ptr %3, float %1) #2
+          ret void
         }
 
         ; Function Attrs: convergent nounwind
@@ -490,13 +490,13 @@ if __name__ in ("__main__",):
 
         ; Function Attrs: mustprogress nofree nosync nounwind willreturn memory(argmem: readwrite)
         define hidden void @_Z5scalePff(ptr nocapture %0, float %1) local_unnamed_addr #0 {
-            %3 = tail call i32 @llvm.amdgcn.workitem.id.x(), !range !0, !noundef !1
-            %4 = zext i32 %3 to i64
-            %5 = getelementptr inbounds float, ptr %0, i64 %4
-            %6 = load float, ptr %5, align 4, !tbaa !2
-            %7 = fmul contract float %6, %1
-            store float %7, ptr %5, align 4, !tbaa !2
-            ret void
+          %3 = tail call i32 @llvm.amdgcn.workitem.id.x(), !range !0, !noundef !1
+          %4 = zext i32 %3 to i64
+          %5 = getelementptr inbounds float, ptr %0, i64 %4
+          %6 = load float, ptr %5, align 4, !tbaa !2
+          %7 = fmul contract float %6, %1
+          store float %7, ptr %5, align 4, !tbaa !2
+          ret void
         }
 
         ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
