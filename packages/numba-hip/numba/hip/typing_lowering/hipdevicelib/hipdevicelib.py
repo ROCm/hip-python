@@ -52,10 +52,11 @@ import numba.core.imputils as imputils
 
 from numba.hip.amdgputargetmachine import ISA_INFOS
 from numba.hip.typing_lowering import stubs as numba_hip_stubs
+from numba.hip.util import comgrutils
 
 from .hipsource import *
 from . import typemaps
-from . import comgrutils
+
 
 _lock = threading.Lock()
 

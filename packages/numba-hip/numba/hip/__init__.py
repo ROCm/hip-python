@@ -30,6 +30,7 @@ import os
 import re
 
 from . import rocmpaths
+from . import util
 
 _mr = _modulerepl.ModuleReplicator(
     "numba.hip",
