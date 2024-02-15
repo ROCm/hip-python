@@ -62,7 +62,7 @@ def compile_hip_source_to_llvm(
         extra_opts=extra_opts,
     )
     if to_llvm_ir:
-        llvm_bc_or_ir = llvmutils.convert_llvm_bc_to_ir(
+        llvm_bc_or_ir = llvmutils.to_ir_from_bc(
             llvm_bc_or_ir, len(llvm_bc_or_ir)
         )
     return (llvm_bc_or_ir, log, diagnostic)

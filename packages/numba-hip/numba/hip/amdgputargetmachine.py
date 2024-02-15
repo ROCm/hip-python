@@ -45,12 +45,27 @@ __author__ = "Advanced Micro Devices, Inc."
 
 import logging
 import threading
+import multiprocessing as mp
+import sys
 
-from rocm.llvm.c.core import LLVMDisposeMessage
+from rocm.llvm.c.types import LLVMOpaqueModule
+from rocm.llvm.c.core import (
+    LLVMDisposeMessage,
+    LLVMCloneModule,
+)
+from rocm.llvm.c.error import (
+    LLVMGetErrorMessage,
+    LLVMDisposeErrorMessage,
+)
+from rocm.llvm.c.bitwriter import LLVMWriteBitcodeToMemoryBuffer
+
 from rocm.llvm.c.target import *
 from rocm.llvm.c.targetmachine import *
+from rocm.llvm.c.transforms import passbuilder
 
 from rocm.amd_comgr import amd_comgr as comgr
+
+from numba.hip.util import llvmutils
 
 _log = logging.getLogger(__name__)
 
@@ -188,6 +203,24 @@ class AMDGPUTargetInitError(Exception):
 _lock = threading.Lock()
 
 
+def _RUN_PASSES(M, P, TM, O):
+    """
+    Note:
+        As of ROCm 6.0.0 and LLVM 17.0.0, LLVMRunPasses raises
+        an abort signal, which prevents us to capture
+        any error. Furthermore, this forces
+        us to create a child process. We let the child process
+        abort and let the main process report a runtime error.
+    """
+    err = passbuilder.LLVMRunPasses(M, P, TM, O)
+    if err:
+        # TODO dead code, never reached as LLVMRunPasses raises SIGABRT
+        msg = LLVMGetErrorMessage(err)  # consumes the error
+        err_str = f'error: {msg.decode("utf-8")}'  # copies the message
+        LLVMDisposeErrorMessage(msg)
+        raise RuntimeError(f"error: {err_str}")
+
+
 class AMDGPUTargetMachine:
     """Provides access to LLVM AMDGPU target machines for different AMD GPU ISAs.
 
@@ -218,28 +251,28 @@ class AMDGPUTargetMachine:
         triple = TRIPLE.encode("utf-8")
 
         # create target
-        (status, self.__target, error) = LLVMGetTargetFromTriple(triple)
+        (status, self._target, error) = LLVMGetTargetFromTriple(triple)
         if status > 0:
             msg = str(error)
             LLVMDisposeMessage(error)
             raise AMDGPUTargetInitError(msg)
 
         # create target machine
-        self.__keep_alive = (
+        self._keep_alive = (
             triple,
             offload_arch.split(":")[0].encode("utf-8"),  # remove feature part
             features.encode("utf-8"),
         )
-        self.__target_machine = LLVMCreateTargetMachine(
-            self.__target,
-            *self.__keep_alive,
+        self._target_machine = LLVMCreateTargetMachine(
+            self._target,
+            *self._keep_alive,
             LLVMCodeGenOptLevel.LLVMCodeGenLevelDefault,
             LLVMRelocMode.LLVMRelocDefault,
             LLVMCodeModel.LLVMCodeModelDefault,
         )
-        data_layout = LLVMCreateTargetDataLayout(self.__target_machine)
+        data_layout = LLVMCreateTargetDataLayout(self._target_machine)
         data_layout_cstr = LLVMCopyStringRepOfTargetData(data_layout)
-        self.__data_layout = data_layout_cstr.decode("utf-8")
+        self._data_layout = data_layout_cstr.decode("utf-8")
         LLVMDisposeMessage(data_layout_cstr)
 
     def __init__(self, offload_arch: str):
@@ -247,10 +280,119 @@ class AMDGPUTargetMachine:
 
     @property
     def data_layout(self):
-        return self.__data_layout
+        return self._data_layout
+
+    def optimize_module(
+        self, mod, mod_len: int = -1, passes: str = "default<O3>", **pass_builder_opts
+    ):
+        r"""Optimizes LLVM IR, bitcode, or `rocm.llvm.c.types.LLVMOpaqueModule`.
+
+        Args:
+            mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
+                Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+            mod_len (`int`, optional):
+                Length of the LLVM IR/BC buffer. Must be supplied if it cannot
+                be obtained via ``len(mod)``. Not used at all if ``mod`` is no instance of
+                `rocm.llvm.c.types.LLVMOpaqueModule`.
+            passes (UTF-8 `str`):
+                The format of this string is the same as opt's -passes argument for the new pass
+                manager. Individual passes may be specified, separated by commas. Full
+                pipelines may also be invoked using ``default<O3>`` and friends. See opt for
+                full reference of the ``passes`` format. Defaults to ``default<O3>``.
+            \*\*pass_builder_opts (keyword arguments):
+                Pairs of boolean values and keys such as ``VerifyEach`` that can be
+                mapped directly to a pass builder option `LLVMPassBuilderOptionsSet<key>`.
+                Note that the number of available C API tranforms changes frequently
+                with LLVM releases. Hence, this approach to passing such options was chosen.
+                The ``passes`` argument is more stable and should be preferred.
+
+        Returns:
+            The optimized module in the input format.
+        """
+        opts = passbuilder.LLVMCreatePassBuilderOptions()
+        option_setter_prefix = "LLVMPassBuilderOptionsSet"
+        for k, v in pass_builder_opts:
+            try:
+                setter = getattr(passbuilder, option_setter_prefix + k)
+            except AttributeError:
+                available_opts = ", ".join(
+                    [
+                        f'{k.replace(option_setter_prefix,"")}'
+                        for k in vars(passbuilder).keys()
+                        if k.startswith(option_setter_prefix)
+                    ]
+                )
+                raise KeyError(
+                    f"unknown pass builder option '{k}', use one of: {available_opts}"
+                )
+            else:
+                if not isinstance(v, bool):
+                    return ValueError(
+                        "pass builder option values must be of type 'bool'"
+                    )
+                setter(opts, int(v))
+
+        if isinstance(mod, LLVMOpaqueModule):
+            optimized = mod
+        else:
+            gm_res = llvmutils._get_module(mod, mod_len)
+            optimized = gm_res[0]
+            from_bc = gm_res[-1]
+
+        # As LLVMRunPasses aborts the process, we need to run it in a separate process
+        # stderr_post = sys.stderr
+        process = mp.Process(
+            target=_RUN_PASSES,
+            args=(optimized, passes.encode("utf-8"), self._target_machine, opts),
+        )
+        process.start()
+        process.join()
+        # The child’s exit code. This will be None if the process has not yet terminated.
+        # If the child’s run() method returned normally, the exit code will be 0.
+        # If it terminated via sys.exit() with an integer argument N, the exit code will be N.
+        # If the child terminated due to an exception not caught within run(),
+        # the exit code will be 1. If it was terminated by signal N, the exit code
+        # will be the negative value -N.
+        # https://docs.python.org/3.9/library/multiprocessing.html#multiprocessing.Process.exitcode
+        if process.exitcode != 0:
+            raise RuntimeError(
+                "LLVMRunPasses failed and was aborted; please check error output"
+            )
+
+        if isinstance(mod, LLVMOpaqueModule):
+            result = optimized
+        else:
+            result = (
+                llvmutils.to_bc(optimized) if from_bc else llvmutils.to_ir(optimized)
+            )
+
+        # clean up
+        if not isinstance(mod, LLVMOpaqueModule):
+            llvmutils._get_module_dispose_all(*gm_res)
+        passbuilder.LLVMDisposePassBuilderOptions(opts)
+        return result
+
+    def verify_module(self, ir, ir_len: int = -1):
+        """Returns verified LLVM IR in the input format.
+
+        Calls ``self.optimize_llvm_ir`` with ``passes='verify'``.
+
+        Args:
+            mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
+                Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+            mod_len (`int`, optional):
+                Length of the LLVM IR/BC buffer. Must be supplied if it cannot
+                be obtained via ``len(mod)``. Not used at all if ``mod`` is no instance of
+                `rocm.llvm.c.types.LLVMOpaqueModule`.
+        See:
+            `~.AMDGPUTargetMachine.optimize_llvm_ir`.
+        Returns:
+            The optimized module in the input format.
+        """
+        return self.optimize_module(ir, ir_len, passes="verify")
 
     def __del__(self):
-        LLVMDisposeTargetMachine(self.__target_machine)
+        LLVMDisposeTargetMachine(self._target_machine)
 
 
 # We define 'gfx90a' data layout as default data layout.
@@ -269,11 +411,3 @@ __all__ = [
     "AMDGPUTargetMachine",
     "DATA_LAYOUT",
 ]
-
-if __name__ in ("__main__", "__test__"):
-    import pprint
-
-    pprint.pprint(comgr.ext.get_isa_metadata_all())
-    # pprint.pprint(ISA_INFOS)
-    machine = AMDGPUTargetMachine(offload_arch="gfx90a")
-    print(machine.data_layout)
