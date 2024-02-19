@@ -149,7 +149,7 @@ def test_01_link_modules():
     
     verify(main_llvm_ir)
     # verify(dep_llvm_ir) # TODO get strange error 'Attribute does not match Module context!'
-    linked = link_modules([main_llvm_ir, dep_llvm_ir]).decode("utf-8")
+    linked = link_modules([main_llvm_ir, dep_llvm_ir], to_bc=False).decode("utf-8")
     # verify(linked)
     # print(linked)
 
