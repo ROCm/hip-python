@@ -74,7 +74,7 @@ from numba.core.datamodel import models
 from numba.core import types, cgutils
 from numba.np import ufunc_db
 from numba.np.npyimpl import register_ufuncs
-import numba.hip.amdgputargetmachine as amdgputargetmachine
+import numba.hip.amdgcn as amdgcn
 from numba.hip.typing_lowering import stubs
 # from numba import HIP
 # from numba.HIP import nvvmutils, stubs, errors
@@ -127,7 +127,7 @@ def hip_shared_array_integer(context, builder, sig, args):
     dtype = parse_dtype(sig.args[1])
     return _generic_array(context, builder, shape=(length,), dtype=dtype,
                           symbol_name=_get_unique_smem_id('_HIPpy_smem'),
-                          addrspace=amdgputargetmachine.ADDRSPACE_SHARED,
+                          addrspace=amdgcn.ADDRSPACE_SHARED,
                           can_dynsized=True)
 
 
@@ -138,7 +138,7 @@ def hip_shared_array_tuple(context, builder, sig, args):
     dtype = parse_dtype(sig.args[1])
     return _generic_array(context, builder, shape=shape, dtype=dtype,
                           symbol_name=_get_unique_smem_id('_HIPpy_smem'),
-                          addrspace=amdgputargetmachine.ADDRSPACE_SHARED,
+                          addrspace=amdgcn.ADDRSPACE_SHARED,
                           can_dynsized=True)
 
 
@@ -148,7 +148,7 @@ def hip_local_array_integer(context, builder, sig, args):
     dtype = parse_dtype(sig.args[1])
     return _generic_array(context, builder, shape=(length,), dtype=dtype,
                           symbol_name='_HIPpy_lmem',
-                          addrspace=amdgputargetmachine.ADDRSPACE_LOCAL,
+                          addrspace=amdgcn.ADDRSPACE_LOCAL,
                           can_dynsized=False)
 
 
@@ -159,7 +159,7 @@ def ptx_lmem_alloc_array(context, builder, sig, args):
     dtype = parse_dtype(sig.args[1])
     return _generic_array(context, builder, shape=shape, dtype=dtype,
                           symbol_name='_HIPpy_lmem',
-                          addrspace=amdgputargetmachine.ADDRSPACE_LOCAL,
+                          addrspace=amdgcn.ADDRSPACE_LOCAL,
                           can_dynsized=False)
 
 def _generic_array(context, builder, shape, dtype, symbol_name, addrspace,
@@ -185,7 +185,7 @@ def _generic_array(context, builder, shape, dtype, symbol_name, addrspace,
     lldtype = context.get_data_type(dtype)
     laryty = ir.ArrayType(lldtype, elemcount)
 
-    if addrspace == amdgputargetmachine.ADDRSPACE_LOCAL:
+    if addrspace == amdgcn.ADDRSPACE_LOCAL:
         # Special case local address space allocation to use alloca
         # NVVM is smart enough to only use local memory if no register is
         # available
@@ -217,7 +217,7 @@ def _generic_array(context, builder, shape, dtype, symbol_name, addrspace,
         dataptr = builder.addrspacecast(gvmem, ir.PointerType(ir.IntType(8)),
                                         'generic')
 
-    targetdata = ll.create_target_data(amdgputargetmachine.DATA_LAYOUT) # TODO numba.hip: Potentially needs to be configured by compiler before lowering
+    targetdata = ll.create_target_data(amdgcn.DATA_LAYOUT) # TODO numba.hip: Potentially needs to be configured by compiler before lowering
     lldtype = context.get_data_type(dtype)
     itemsize = lldtype.get_abi_size(targetdata)
 

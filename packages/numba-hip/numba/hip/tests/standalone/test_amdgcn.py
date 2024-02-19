@@ -25,7 +25,7 @@ __author__ = "Advanced Micro Devices, Inc."
 import textwrap
 import pprint
 
-from numba.hip.amdgputargetmachine import AMDGPUTargetMachine
+from numba.hip.amdgcn import AMDGPUTargetMachine
 
 from rocm.amd_comgr import amd_comgr as comgr
 
