@@ -263,7 +263,7 @@ class HIPRTC:
             return result
 
 
-def compile(src, name, arch):
+def compile(src, name, amdgpu_arch):
     """
     Compile a HIP C/C++ source to LLVM BC for a given architecture.
 
@@ -271,7 +271,7 @@ def compile(src, name, arch):
     :type src: str
     :param name: The filename of the source (for information only)
     :type name: str
-    :param arch: The AMD GPU architecture string.
+    :param amdgpu_arch: The AMD GPU architecture string.
     :type name: str
     :return: The compiled LLVM BC (`bytes`) and compilation log (`str`)
     :rtype: tuple
@@ -284,13 +284,13 @@ def compile(src, name, arch):
     # - The CUDA include path is added.
     # - Relocatable Device Code (-fgpu-rdc) is needed to prevent device functions
     #   being optimized away, further will generate LLVM bitcode for AMD GPUs.
-    arch = f"--offload-arch={arch}"
+    amdgpu_arch = f"--offload-arch={amdgpu_arch}"
     include = f"-I{config.CUDA_INCLUDE_PATH}"
 
     hipdrv_path = os.path.dirname(os.path.abspath(__file__))
     numba_hip = os.path.dirname(hipdrv_path)
     numba_include = f"-I{numba_hip}"
-    options = [arch, include, numba_include, "-fgpu-rdc"]
+    options = [amdgpu_arch, include, numba_include, "-fgpu-rdc"]
 
     # Compile the program
     compile_error = hiprtc.compile_program(program, options)
