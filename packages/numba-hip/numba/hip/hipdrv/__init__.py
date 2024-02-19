@@ -46,12 +46,13 @@ from . import driver
 
 devices = mr.create_and_register_derived_module(
     "devices",
-    preprocess=lambda content: content.replace("CUDA","HIP")
 )  # make this a submodule of the package
 
 devicearray = mr.create_and_register_derived_module(
     "devicearray",
-    preprocess=lambda content: content.replace("CUDA","HIP")
+    preprocess=lambda content: content.replace("from numba import cuda","from numba import hip as cuda"),
+    # preprocess=lambda content: content.replace("CUDA","HIP")
+    # Reuse CUDA config values as they are for now: config.CUDA_WARN_ON_IMPLICIT_COPY
 )  # make this a submodule of the package
 
 ndarray = mr.create_and_register_derived_module(

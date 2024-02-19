@@ -1847,9 +1847,7 @@ class MemoryPointer(object):
             if size < 0:
                 raise RuntimeError("size cannot be negative")
             if USE_NV_BINDING:
-                pointer = binding.CUdeviceptr()
-                ctypes_ptr = cu_device_ptr(int(pointer))
-                ctypes_ptr.value = base  #: TODO: HIP/AMD: check
+                pointer = binding.CUdeviceptr(base)
             else:
                 raise NotImplementedError()
             view = MemoryPointer(self.context, pointer, size, owner=self.owner)
@@ -1870,7 +1868,7 @@ class MemoryPointer(object):
         if USE_NV_BINDING:
             return int(self.device_pointer) or None
         else:
-            return self.device_pointer.value
+            raise NotImplementedError()
 
 
 class AutoFreePointer(MemoryPointer):

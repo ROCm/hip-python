@@ -125,7 +125,7 @@ class TestCudaDriver(HIPTestCase):
     def test_cuda_driver_basic(self):
         # TODO do something similar wih HIP
 
-        module = self.context.create_module_amdgpu_codeobj(self.amdgpu_codeobj)
+        module = self.context.create_module_from_codeobj(self.amdgpu_codeobj)
         function = module.get_function('set_thread_idx')
 
         array = (c_int * 100)()
@@ -154,7 +154,7 @@ class TestCudaDriver(HIPTestCase):
         module.unload()
 
     def test_cuda_driver_stream_operations(self):
-        module = self.context.create_module_amdgpu_codeobj(self.amdgpu_codeobj)
+        module = self.context.create_module_from_codeobj(self.amdgpu_codeobj)
         function = module.get_function("set_thread_idx")
 
         array = (c_int * 100)()
@@ -239,7 +239,7 @@ class TestCudaDriver(HIPTestCase):
         self.assertTrue(s.external)
 
     def test_cuda_driver_occupancy(self):
-        module = self.context.create_module_amdgpu_codeobj(self.amdgpu_codeobj)
+        module = self.context.create_module_from_codeobj(self.amdgpu_codeobj)
         function = module.get_function('set_thread_idx')
 
         value = self.context.get_active_blocks_per_multiprocessor(function,
