@@ -79,7 +79,7 @@ from ctypes import (
 )
 import contextlib
 import importlib
-import numba.hip.typing_lowering.numpy as np
+import numpy as np
 from collections import namedtuple, deque
 
 from numba import mviewbuf
@@ -96,13 +96,19 @@ from numba.hip.hipdrv import hiprtc
 USE_NV_BINDING = True  #: HIP/AMD: always use HIP Python bindings
 
 if USE_NV_BINDING:
-    import hip
+    import hip as _hip
     from cuda import cuda as binding
 
-    # There is no definition of the default stream in the Nvidia bindings (nor
-    # is there at the C/C++ level), so we define it here so we don't need to
+    # We define it here so we don't need to
     # use a magic number 0 in places where we want the default stream.
-    CU_STREAM_DEFAULT = 0
+    HIP_STREAM_DEFAULT = 0
+
+    # HIP (via hip/hip_runtime_api.h)
+    HIP_STREAM_LEGACY = (
+        0  # TODO HIP check if legacy stream can be replaced by default stream
+    )
+    HIP_STREAM_PER_THREAD = 2
+
 else:
     raise NotImplementedError()
 
@@ -529,11 +535,11 @@ class Device(object):
         # self.compute_capability = (self.COMPUTE_CAPABILITY_MAJOR, # via __getattr__
         #                            self.COMPUTE_CAPABILITY_MINOR) # via __getattr__
         # Get the architecture string
-        props = binding.hipDeviceProp_t()  # is actually: hipDeviceProp_t
+        props = binding.cudaDeviceProp()  # is actually: hipDeviceProp_t
         driver.cudaGetDeviceProperties(
             props, 0
         )  # Driver's function wrapper will check for errors
-        self.arch = props.gcnArchName.decode("utf-8")
+        self.amdgpu_arch = props.gcnArchName.decode("utf-8")
 
         # Read name
         bufsz = 128
@@ -1203,8 +1209,14 @@ class Context(object):
     ):
         b2d_cb = ctypes.CFUNCTYPE(c_size_t, c_int)(b2d_func)
         ptr = int.from_bytes(b2d_cb, byteorder="little")
-        driver_b2d_cb = binding.CUoccupancyB2DSize(ptr)
-        args = [func.handle, driver_b2d_cb, memsize, blocksizelimit]
+
+        # driver_b2d_cb = binding.CUoccupancyB2DSize(ptr) # TODO HIP arg not necessary; why?
+        args = [
+            func.handle,
+            # driver_b2d_cb,  # TODO HIP arg not necessary; why?
+            memsize,
+            blocksizelimit,
+        ]
 
         if not flags:
             return driver.cuOccupancyMaxPotentialBlockSize(*args)
@@ -1255,7 +1267,7 @@ class Context(object):
         Returns an *IpcHandle* from a GPU allocation.
         """
         if not SUPPORTS_IPC:
-            raise OSError("OS does not support CUDA IPC")
+            raise OSError("OS does not support HIP IPC")
         return self.memory_manager.get_ipc_handle(memory)
 
     def open_ipc_handle(self, handle, size):
@@ -1286,11 +1298,12 @@ class Context(object):
 
         return bool(can_access_peer)
 
-    def create_module_ptx(self, ptx):
-        if isinstance(ptx, str):
-            ptx = ptx.encode("utf8")
+    def create_module_from_codeobj(self, codeobj):
+        """Create a module from an AMD GPU code object."""
+        if isinstance(codeobj, str):
+            codeobj = codeobj.encode("utf8")
         if USE_NV_BINDING:
-            image = ptx
+            image = codeobj
         else:
             raise NotImplementedError()
         return self.create_module_image(image)
@@ -1313,21 +1326,22 @@ class Context(object):
 
     def get_default_stream(self):
         if USE_NV_BINDING:
-            handle = binding.CUstream(CU_STREAM_DEFAULT)
+            handle = binding.CUstream(HIP_STREAM_DEFAULT)
         else:
             raise NotImplementedError()
         return Stream(weakref.proxy(self), handle, None)
 
     def get_legacy_default_stream(self):
+        """HIP: Returns the same stream as the `default` stream."""
         if USE_NV_BINDING:
-            handle = binding.CUstream(binding.CU_STREAM_LEGACY)
+            handle = binding.CUstream(HIP_STREAM_LEGACY)
         else:
             raise NotImplementedError()
         return Stream(weakref.proxy(self), handle, None)
 
     def get_per_thread_default_stream(self):
         if USE_NV_BINDING:
-            handle = binding.CUstream(binding.CU_STREAM_PER_THREAD)
+            handle = binding.CUstream(HIP_STREAM_PER_THREAD)
         else:
             raise NotImplementedError()
         return Stream(weakref.proxy(self), handle, None)
@@ -1338,8 +1352,8 @@ class Context(object):
             # stream synchronizes with stream 0 (this is different from the
             # default stream, which we define also as CU_STREAM_DEFAULT when
             # the NV binding is in use).
-            flags = binding.CUstream_flags.CU_STREAM_DEFAULT.value
-            handle = driver.cuStreamCreate(flags)
+            flags = _hip.hip.hipStreamDefault
+            handle = driver.cuStreamCreate(flags)  # alias of hipStreamCreateWithFlags
         else:
             raise NotImplementedError()
         return Stream(
@@ -1350,7 +1364,7 @@ class Context(object):
         if not isinstance(ptr, int):
             raise TypeError("ptr for external stream must be an int")
         if USE_NV_BINDING:
-            handle = binding.CUstream(ptr)
+            handle = binding.CUstream(ptr)  # alias of hipStream_t
         else:
             raise NotImplementedError()
         return Stream(weakref.proxy(self), handle, None, external=True)
@@ -1379,7 +1393,7 @@ class Context(object):
                 yield
 
     def __repr__(self):
-        return "<CUDA context %s of device %d>" % (self.handle, self.device.id)
+        return "<HIP context %s of device %d>" % (self.handle, self.device.id)
 
     def __eq__(self, other):
         if isinstance(other, Context):
@@ -1404,31 +1418,39 @@ def load_module_image(context, image):
 def load_module_image_cuda_python(context, image):
     """
     image must be a pointer
+
+    Note:
+        `hipModuleLoadDataEx` options are ignored by
+        the HIP runtime (state: ROCm 6.0.0).
+        The implementation simply calls `hipModuleLoadData`
+        internally. Therefore, we directly call that
+        `hipModuleLoadData` here instead.
     """
     logsz = config.CUDA_LOG_SIZE
-
     jitinfo = bytearray(logsz)
-    jiterrors = bytearray(logsz)
+    # jiterrors = bytearray(logsz)
 
-    jit_option = binding.CUjit_option
-    options = {
-        jit_option.CU_JIT_INFO_LOG_BUFFER: jitinfo,
-        jit_option.CU_JIT_INFO_LOG_BUFFER_SIZE_BYTES: logsz,
-        jit_option.CU_JIT_ERROR_LOG_BUFFER: jiterrors,
-        jit_option.CU_JIT_ERROR_LOG_BUFFER_SIZE_BYTES: logsz,
-        jit_option.CU_JIT_LOG_VERBOSE: config.CUDA_VERBOSE_JIT_LOG,
-    }
+    # jit_option = binding.CUjit_option
+    # options = {
+    #     jit_option.CU_JIT_INFO_LOG_BUFFER: jitinfo,
+    #     jit_option.CU_JIT_INFO_LOG_BUFFER_SIZE_BYTES: logsz,
+    #     jit_option.CU_JIT_ERROR_LOG_BUFFER: jiterrors,
+    #     jit_option.CU_JIT_ERROR_LOG_BUFFER_SIZE_BYTES: logsz,
+    #     jit_option.CU_JIT_LOG_VERBOSE: config.CUDA_VERBOSE_JIT_LOG,
+    # }
 
-    option_keys = [k for k in options.keys()]
-    option_vals = [v for v in options.values()]
+    # option_keys = [k for k in options.keys()]
+    # option_vals = [v for v in options.values()]
 
     try:
-        handle = driver.cuModuleLoadDataEx(
-            image, len(options), option_keys, option_vals
-        )
+        # handle = driver.cuModuleLoadDataEx(
+        #     image, len(options), option_keys, option_vals
+        # )
+        handle = driver.cuModuleLoadData(image)
     except HipAPIError as e:
-        err_string = jiterrors.decode("utf-8")
-        msg = "cuModuleLoadDataEx error:\n%s" % err_string
+        # err_string = jiterrors.decode("utf-8")
+        # msg = "cuModuleLoadDataEx error:\n%s" % err_string
+        msg = "failed to load module from image"
         raise HipAPIError(e.code, msg)
 
     info_log = jitinfo.decode("utf-8")
@@ -1454,7 +1476,7 @@ def _hostalloc_finalizer(memory_manager, ptr, alloc_key, size, mapped):
     """
     Finalize page-locked host memory allocated by `context.memhostalloc`.
 
-    This memory is managed by CUDA, and finalization entails deallocation. The
+    This memory is managed by HIP, and finalization entails deallocation. The
     issues noted in `_pin_finalizer` are not relevant in this case, and the
     finalization is placed in the `context.deallocations` queue along with
     finalization of device objects.
@@ -1477,7 +1499,7 @@ def _pin_finalizer(memory_manager, ptr, alloc_key, mapped):
     """
     Finalize temporary page-locking of host memory by `context.mempin`.
 
-    This applies to memory not otherwise managed by CUDA. Page-locking can
+    This applies to memory not otherwise managed by HIP. Page-locking can
     be requested multiple times on the same memory, and must therefore be
     lifted as soon as finalization is requested, otherwise subsequent calls to
     `mempin` may fail with `CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED`, leading
@@ -1534,8 +1556,8 @@ def _module_finalizer(context, handle):
     return core
 
 
-class _CudaIpcImpl(object):
-    """Implementation of GPU IPC using CUDA driver API.
+class _HipIpcImpl(object):
+    """Implementation of GPU IPC using HIP driver API.
     This requires the devices to be peer accessible.
     """
 
@@ -1573,7 +1595,7 @@ class _CudaIpcImpl(object):
 
 class _StagedIpcImpl(object):
     """Implementation of GPU IPC using custom staging logic to workaround
-    CUDA IPC limitation on peer accessibility between devices.
+    HIP IPC limitation on peer accessibility between devices.
     """
 
     def __init__(self, parent, source_info):
@@ -1592,7 +1614,7 @@ class _StagedIpcImpl(object):
         else:
             raise NotImplementedError()
 
-        impl = _CudaIpcImpl(parent=self.parent)
+        impl = _HipIpcImpl(parent=self.parent)
         # Open context on the source device.
         with cuda.gpus[srcdev_id]:
             source_ptr = impl.open(cuda.devices.get_context())
@@ -1616,12 +1638,12 @@ class _StagedIpcImpl(object):
 
 class IpcHandle(object):
     """
-    CUDA IPC handle. Serialization of the CUDA IPC handle object is implemented
+    HIP IPC handle. Serialization of the HIP IPC handle object is implemented
     here.
 
     :param base: A reference to the original allocation to keep it alive
     :type base: MemoryPointer
-    :param handle: The CUDA IPC handle, as a ctypes array of bytes.
+    :param handle: The HIP IPC handle, as a ctypes array of bytes.
     :param size: Size of the original allocation
     :type size: int
     :param source_info: The identity of the device on which the IPC handle was
@@ -1671,14 +1693,14 @@ class IpcHandle(object):
         if self._impl is not None:
             raise ValueError("IpcHandle is already opened")
 
-        self._impl = _CudaIpcImpl(self)
+        self._impl = _HipIpcImpl(self)
         return self._impl.open(context)
 
     def open(self, context):
         """Open the IPC handle and import the memory for usage in the given
         context.  Returns a raw CUDA memory pointer object.
 
-        This is enhanced over CUDA IPC that it will work regardless of whether
+        This is enhanced over HIP IPC that it will work regardless of whether
         the source device is peer-accessible by the destination device.
         If the devices are peer-accessible, it uses .open_direct().
         If the devices are not peer-accessible, it uses .open_staged().
@@ -2044,9 +2066,9 @@ class Stream(object):
     def __repr__(self):
         if USE_NV_BINDING:
             default_streams = {
-                CU_STREAM_DEFAULT: "<Default CUDA stream on %s>",
-                binding.CU_STREAM_LEGACY: "<Legacy default CUDA stream on %s>",
-                binding.CU_STREAM_PER_THREAD: "<Per-thread default CUDA stream on %s>",
+                HIP_STREAM_DEFAULT: "<Default HIP stream on %s>",
+                # CU_STREAM_LEGACY: "<Legacy default HIP stream on %s>", # HIP same as default
+                HIP_STREAM_PER_THREAD: "<Per-thread default HIP stream on %s>",
             }
             ptr = int(self.handle) or 0
         else:
@@ -2055,9 +2077,9 @@ class Stream(object):
         if ptr in default_streams:
             return default_streams[ptr] % self.context
         elif self.external:
-            return "<External CUDA stream %d on %s>" % (ptr, self.context)
+            return "<External HIP stream %d on %s>" % (ptr, self.context)
         else:
-            return "<CUDA stream %d on %s>" % (ptr, self.context)
+            return "<HIP stream %d on %s>" % (ptr, self.context)
 
     def synchronize(self):
         """
@@ -2351,11 +2373,8 @@ def launch_kernel(
 if USE_NV_BINDING:
     jitty = binding.CUjitInputType
     FILE_EXTENSION_MAP = {
-        "ll": jitty.CU_JIT_INPUT_PTX,
-        "a": jitty.CU_JIT_INPUT_LIBRARY,
-        "lib": jitty.CU_JIT_INPUT_LIBRARY,
-        "cubin": jitty.CU_JIT_INPUT_CUBIN,
-        "fatbin": jitty.CU_JIT_INPUT_FATBINARY,
+        "ll": jitty.HIPRTC_JIT_INPUT_LLVM_BITCODE,
+        "bc": jitty.HIPRTC_JIT_INPUT_LLVM_BITCODE,
     }
 else:
     raise NotImplementedError
@@ -2365,11 +2384,11 @@ class Linker(metaclass=ABCMeta):
     """Abstract base class for linkers"""
 
     @classmethod
-    def new(cls, max_registers=0, lineinfo=False, cc=None):
+    def new(cls, max_registers=0, lineinfo=False, amdgpu_arch=None):
         # if config.CUDA_ENABLE_MINOR_VERSION_COMPATIBILITY:
         #     return MVCLinker(max_registers, lineinfo, cc)
         if USE_NV_BINDING:
-            return CudaPythonLinker(max_registers, lineinfo, cc)
+            return CudaPythonLinker(max_registers, lineinfo, amdgpu_arch)
         else:
             raise NotImplementedError()
 
@@ -2388,24 +2407,24 @@ class Linker(metaclass=ABCMeta):
         """Return the error log from the linker invocation"""
 
     @abstractmethod
-    def add_llvm_ir(self, ptx, name):
+    def add_llvm_ir(self, llvm_ir, name):
         """Add LLVM IR in human-readable or bitcode form (Python buffer, `bytes` or `str`) to the link"""
 
-    def add_hip(self, cu, name):
+    def add_hip(self, hip_source, name):
         """Add HIP source in a string to the link. The name of the source
         file should be specified in `name`."""
         with driver.get_active_context() as ac:
-            dev = driver.get_device(ac.devnum)
-            cc = dev.compute_capability
+            dev: Device = driver.get_device(ac.devnum)
+            amdgpu_arch = dev.amdgpu_arch
 
-        llvm_ir, _ = hiprtc.compile(cu, name, cc)
+        llvm_ir, _ = hiprtc.compile(hip_source, name, amdgpu_arch)
 
         if config.DUMP_ASSEMBLY:
             print(("ASSEMBLY %s" % name).center(80, "-"))
             print(llvm_ir)
             print("=" * 80)
 
-        # Link the program's PTX using the normal linker mechanism
+        # Link the program's LLVM IR using the normal linker mechanism
         llvm_ir_filename = os.path.splitext(name)[0] + ".ll"
         self.add_llvm_ir(llvm_ir, llvm_ir_filename)
 
@@ -2423,7 +2442,7 @@ class Linker(metaclass=ABCMeta):
         ext = os.path.splitext(path)[1][1:]
         if ext == "":
             raise RuntimeError("Don't know how to link file with no extension")
-        elif ext in ("cu", "hip", "hip.cpp"):
+        elif ext in ("cu", "hip", "hip.cpp", ".cpp", ".h", ".hpp"):
             self.add_hip_file(path)
         else:
             kind = FILE_EXTENSION_MAP.get(ext, None)
@@ -2492,14 +2511,17 @@ class CudaPythonLinker(Linker):
 
         if arch is None:
             # No option value is needed, but we need something as a placeholder
-            options.update(HIPRTC_JIT_TARGET_FROM_HIPCONTEXT = 1)
+            options.update(HIPRTC_JIT_TARGET_FROM_HIPCONTEXT=1)
         else:
             # TODO: HIP/AMD unknown what value to put here
             # options.update(HIPRTC_JIT_TARGET = 1)
             pass
 
         from hip import hiprtc as hiprtc_bindings
-        self.handle = driver.cuLinkCreate(*hiprtc_bindings.ext.HiprtcLinkCreateOpts(**options))
+
+        self.handle = driver.cuLinkCreate(
+            *hiprtc_bindings.ext.HiprtcLinkCreateOpts(**options)
+        )
 
         weakref.finalize(self, driver.cuLinkDestroy, self.handle)
 
@@ -2516,18 +2538,33 @@ class CudaPythonLinker(Linker):
     def error_log(self):
         return self.linker_errors_buf.decode("utf8")
 
-    def add_llvm_ir(self, llvm_ir, name="<rocpy-llvmir>"):
+    def add_llvm_ir(self, buf, name="<rocpy-llvmir>"):
+        """Add LLVM IR/BC to this linker program.
+
+        Args:
+            mod (UTF-8 `str` or implementor of the Python buffer protocol such as `bytes`):
+                A buffer that contains either LLVM IR or LLVM BC.
+        """
+        if isinstance(buf, str):
+            buf = buf.encode("utf-8")
+        elif not isinstance(buf, bytes):
+            try:
+                buf = bytes(buf)
+            except:
+                raise TypeError("argument 'buf' must be bytes-like")
         namebuf = name.encode("utf8")
-        self._keep_alive += [llvm_ir, namebuf]
+        self._keep_alive += [buf, namebuf]
         try:
             input_type = binding.CUjitInputType.HIPRTC_JIT_INPUT_LLVM_BITCODE
             driver.cuLinkAddData(
-                self.handle, input_type, llvm_ir, len(llvm_ir), namebuf, 0, None, None
+                self.handle, input_type, buf, len(buf), namebuf, 0, None, None
             )
         except HipAPIError as e:
             raise LinkerError("%s\n%s" % (e, self.error_log))
 
-    def add_file(self, path, kind):
+    def add_file(self, path: str, kind):
+        """Add a HIP C++ or LLVM IR/BC file to this linker program."""
+
         pathbuf = path.encode("utf8")
         self._keep_alive.append(pathbuf)
 
@@ -2548,7 +2585,7 @@ class CudaPythonLinker(Linker):
 
         assert code_size > 0, "linker returned a zero sized binary"
         del self._keep_alive[:]
-        # We return a copy of the cubin because it's owned by the linker
+        # We return a copy of the code obj because it's owned by the linker
         code_ptr = ctypes.cast(code_buf.as_c_void_p(), ctypes.POINTER(ctypes.c_char))
         return bytes(np.ctypeslib.as_array(code_ptr, shape=(code_size,)))
 
