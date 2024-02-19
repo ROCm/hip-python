@@ -146,7 +146,7 @@ class hip:
             return True
         if not isinstance(node, MacroDefinition):
             if "hip/" in node.file:
-                # some modifications:
+                # some modifications: # TODO move this into node_init
                 if isinstance(node, Record) and node.name == "dim3":
                     node.set_defaults(x=1, y=1, z=1)
                 return True
@@ -183,12 +183,21 @@ class hip:
         func_name, parm_idx = parm.parent.name, parm.parm_index
         if (
             parm.is_pointer_to_record(degree=2)
-            or parm.is_pointer_to_enum(degree=1)
             or (
                 parm.is_pointer_to_basic_type(degree=1)
                 and not parm.is_pointer_to_char(degree=1)
             )
         ):
+            return ParmIntent.OUT
+        if parm.is_pointer_to_enum(degree=1):
+            if (func_name, parm_idx) in (
+                ("hipDrvPointerGetAttributes", 1),
+                ("hipMemRangeGetAttributes", 2),
+                ("hipMemPoolGetAccess", 0),
+                ("hipModuleLoadDataEx", 3),
+                ("hipThreadExchangeStreamCaptureMode", 0),
+            ):
+                return ParmIntent.IN
             return ParmIntent.OUT
         if parm.is_pointer_to_void(degree=2):
             if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
@@ -213,10 +222,19 @@ class hip:
         if isinstance(node, Parm):
             if (
                 (node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1))
-                or node.is_pointer_to_enum(degree=1)
                 or node.is_pointer_to_record(degree=1)
                 or node.is_pointer_to_record(degree=2)
             ):
+                return 0
+            func_name, parm_idx = node.parent.name, node.parm_index
+            if node.is_pointer_to_enum(degree=1):
+                if (func_name, parm_idx) in (
+                    ("hipDrvPointerGetAttributes", 1),
+                    ("hipMemRangeGetAttributes", 2),
+                    ("hipMemPoolGetAccess", 0),
+                    ("hipModuleLoadDataEx", 3),
+                ):
+                    return 1
                 return 0
         elif isinstance(node, Field):
             pass  # nothing to do
