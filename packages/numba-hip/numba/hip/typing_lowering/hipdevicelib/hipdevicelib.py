@@ -328,7 +328,14 @@ class HIPDeviceLib:
         Note:
             Argument ``amdgpu_arch`` can be `None` but in this case no bitcode can be generated.
             Any attempt will result in an error message.
+        Note:
+            __init__ might be called multiple times due to the way we implement the
+            singleton pattern. Hence, we need to check if attributes set in
+            the __init__ routine are already present and if that's
+            the case we need to return immediately.
         """
+        if hasattr(self, "amdgpu_arch"):
+            return
         self._amdgpu_arch: str = None
         self._set_amdgpu_arch(amdgpu_arch)
         self._bitcode = None  # lazily

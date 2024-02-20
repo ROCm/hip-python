@@ -237,7 +237,7 @@ class AMDGPUTargetMachine:
                 LLVMInitializeAllTargetInfos()  # all three inits are required
                 LLVMInitializeAllTargets()
                 LLVMInitializeAllTargetMCs()
-            arch_features = offload_arch + "--" + features
+            arch_features = offload_arch + "--" + features.replace(" ", "")
             if arch_features not in cls.__INSTANCES:
                 cls.__INSTANCES[arch_features] = inst = object.__new__(cls)
         return cls.__INSTANCES[arch_features]

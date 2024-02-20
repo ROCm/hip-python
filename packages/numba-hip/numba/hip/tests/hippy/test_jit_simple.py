@@ -59,13 +59,14 @@ class TestCudaDeviceRecord(CUDATestCase):
         def empty():
             pass
 
-        for i in range(0,1): # TODO check caching performance etc.
+        for i in range(0, 5):
             ir, restype = cuda.compile_llvm_ir_for_current_device(
                 pyfunc=empty, sig=(), device=True, to_bc=False
             )
-        self.assertIn("test_compile_llvm_ir_for_empty_device_fun",ir.decode("utf-8"))
+        self.assertIn("test_compile_llvm_ir_for_empty_device_fun", ir.decode("utf-8"))
         # with open("empty.ll","w") as outfile:
         #     outfile.write(ir.decode("utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()
