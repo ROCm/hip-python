@@ -420,12 +420,26 @@ class Driver(object):  #: HIP/AMD: modified
             dev.reset()
 
     def pop_active_context(self):
-        """Pop the active CUDA context and return the handle.
-        If no CUDA context is active, return None.
+        """Pop the active HIP context and return the handle.
+        If no HIP context is active, return None.
+
+        Note:
+            On the HIP implementation:
+
+            While the CUDA implementation returns CUDA_SUCCESS and None
+            if no context is bound to the calling CPU thread
+            (https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html),
+            the HIP implementation returns hipErrorInvalidContext.
+            (https://github.com/ROCm/clr/blob/28743d8dbd47423ce5b97e7b6931e3db25f22d68/hipamd/src/hip_context.cpp#L245)
+            Therefore, we have to catch the consequent HipAPIError and
+            return None ourselves here.
         """
         with self.get_active_context() as ac:
             if ac.devnum is not None:
-                return driver.cuCtxPopCurrent()
+                try:
+                    return driver.cuCtxPopCurrent()
+                except HipAPIError:
+                    return None
 
     def get_active_context(self):
         """Returns an instance of ``_ActiveContext``."""
