@@ -892,12 +892,10 @@ class HostOnlyHIPMemoryManager(BaseHIPMemoryManager):
         if USE_NV_BINDING:
 
             def allocator():
-                ma_flags = binding.CUmemAttach_flags
-
                 if attach_global:
-                    flags = ma_flags.CU_MEM_ATTACH_GLOBAL.value
+                    flags = _hip.hip.hipMemAttachGlobal
                 else:
-                    flags = ma_flags.CU_MEM_ATTACH_HOST.value
+                    flags = _hip.hip.hipMemAttachHost
 
                 return driver.cuMemAllocManaged(size, flags)
 
