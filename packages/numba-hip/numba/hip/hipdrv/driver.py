@@ -109,6 +109,8 @@ if USE_NV_BINDING:
     )
     HIP_STREAM_PER_THREAD = 2
 
+    # HIP: we need to
+    hipDeviceptr_t = CUdeviceptr = _hip._util.types.Pointer
 else:
     raise NotImplementedError()
 
