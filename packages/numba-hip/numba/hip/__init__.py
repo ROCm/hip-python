@@ -77,6 +77,8 @@ from . import decorators
 from . import descriptor
 from . import dispatcher
 from . import target
+from . import testing
+from . import tests
 
 # clean up
 # del _preprocess

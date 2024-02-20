@@ -2633,6 +2633,7 @@ def device_memory_size(devmem):
     It may query the driver for the memory size of the device memory allocation.
     """
     sz = getattr(devmem, "_cuda_memsize_", None)
+    # print(f"device_memory_size(...): {sz=}")
     if sz is None:
         s, e = device_extents(devmem)
         if USE_NV_BINDING:
