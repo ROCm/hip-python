@@ -355,25 +355,39 @@ class HIPDeviceLib:
     @staticmethod
     def create_stubs_decls_impls():
         """_summary_"""
+        p_atomic_op = re.compile(
+            r"(safe|unsafe)?[Aa]tomic([A-Z][A-Za-z]+)_?(\w+)?"
+        )  # group 1,3 optional
 
         def function_renamer_splitter_(name: str):
             """Splits atomics and coordinate getters, strips leading "_".
 
             Examples:
 
-            * Converts ``"safeAtomicAdd"`` to ``["atomic","add","safe"]``.
-            * Converts ``"unsafeAtomicAdd_system"`` to ``["atomic","add","system","unsafe"]``.
+            * Converts ``"atomicAdd"`` to ``["atomic","add"]``.
+            * Converts ``"safeAtomicAdd"`` to ``["atomic","safe","add"]``.
+            * Converts ``"atomicAdd_system"`` to ``["atomic","system","add"]``.
+            * Converts ``"unsafeAtomicAdd_system"`` to ``["atomic","system","safe","add"]``.
             * Converts ``"__syncthreads"`` to ``["syncthreads"]``.
             * Converts ``"GET_threadIdx_x"`` to ``["threadIdx","x"]``.
             * Converts ``"GET_warpsize"`` to ``["warpsize"]``.
 
+            Note:
+                We must ensure that the stub hierarchy parents do not
+                map to functions themselves for the attribute resolution to work
+                (see numba/hip/target.py). Therefore, we split the atomics in the
+                way shown in the examples, i.e. the operation ("add", "min", ...)
+                is always the innermost stub.
+
             Returns:
                 list: Parts of the name, which describe a nesting hierarchy.
             """
-            p_atomic = re.compile(r"(safe|unsafe)?[Aa]tomic([A-Z][A-Za-z]+)_?(\w+)?")
+            nonlocal p_atomic_op
+
+            # example: (unsafe)Atomic(Add)_(system)
             name = name.lstrip("_")
             if "atomic" in name.lower():
-                name = p_atomic.sub(repl=r"atomic.\2.\3.\1", string=name).rstrip(".")
+                name = p_atomic_op.sub(repl=r"atomic.\1.\3.\2", string=name)
                 name = name.lower()
                 return [
                     part for part in name.split(".") if part
@@ -461,14 +475,16 @@ class HIPDeviceLib:
                         )
             # register signatures
             if len(stub._signatures_):
+                if device_fun.name == "__syncthreads":
+                    print(f"{device_fun.name} - {id(stub)=}")
                 typename = DEVICE_FUN_PREFIX + "_".join(
                     name_parts
                 )  # just a unique name TODO check if current is fine
-                typing_registry.register(
-                    typing_templates.make_concrete_template(
-                        typename, stub, stub._signatures_
-                    )
+                template = typing_templates.make_concrete_template(
+                    name=typename, key=stub, signatures=stub._signatures_
                 )
+                setattr(stub, "_template_", template)
+                typing_registry.register(template)
 
         stubs = HIPDeviceLib._HIPRTC_RUNTIME_SOURCE.create_stubs(
             stub_base_class=numba_hip_stubs.Stub,
