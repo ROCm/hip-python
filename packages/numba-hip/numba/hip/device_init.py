@@ -139,7 +139,7 @@ def cuda_error():
     If there was an error initializing the driver, a string describing the
     error is returned.
     """
-    return driver.driver.initialization_error
+    return driver.driver.initialization_error # driver avail via 'from api import *'
 
 
 initialize.initialize_all()

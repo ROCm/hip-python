@@ -60,30 +60,32 @@ from numba.core.compiler_machinery import LoweringPass, PassManager, register_pa
 from numba.core.errors import NumbaInvalidConfigWarning
 from numba.core.typed_passes import IRLegalization, NativeLowering, AnnotateTypes
 from warnings import warn
+
 from numba.hip.api import get_current_device
 
+from numba.hip import target
+from numba.hip import codegen
 
-# TODO options
-# def _nvvm_options_type(x):
-#     if x is None:
-#         return None
+def _options_type(x):
+    if x is None:
+        return None
 
-#     else:
-#         assert isinstance(x, dict)
-#         return x
+    else:
+        assert isinstance(x, dict)
+        return x
 
 
 class HIPFlags(Flags):
-    arch = Option(
+    amdgpu_arch = Option(
         type=str,
         default=None,
         doc="AMD GPU architecture.",
     )
-    # nvvm_options = Option(
-    #     type=_nvvm_options_type,
-    #     default=None,
-    #     doc="NVVM options",
-    # )
+    hip_options = Option( # note plain 'options' must not be used as it overrides a member of the base class 'Flags'
+        type=_options_type,
+        default=None,
+        doc="HIP compilation options",
+    ) # TODO add options for particular stages (linking, compiling, etc.)
     # compute_capability = Option(
     #     type=tuple,
     #     default=None,
@@ -153,7 +155,7 @@ class CreateLibrary(LoweringPass):
     """
     Create a HIPCodeLibrary for the NativeLowering pass to populate. The
     NativeLowering pass will create a code library if none exists, but we need
-    to set it up with nvvm_options from the flags if they are present.
+    to set it up with options from the flags if they are present.
     """
 
     _name = "create_library"
@@ -162,11 +164,14 @@ class CreateLibrary(LoweringPass):
         LoweringPass.__init__(self)
 
     def run_pass(self, state):
-        codegen = state.targetctx.codegen()
+        codegenerator: codegen.JITHIPCodegen = state.targetctx.codegen()
         name = state.func_id.func_qualname
-        amdgpu_arch = state.flags.arch
-        # nvvm_options = state.flags.nvvm_options
-        state.library = codegen.create_library(name, amdgpu_arch=amdgpu_arch)
+
+        options = state.flags.hip_options
+        state.library = codegenerator.create_library(
+            name, options=options
+        )
+        assert isinstance(state.library,codegen.HIPCodeLibrary)
         # Enable object caching upfront so that the library can be serialized.
         state.library.enable_object_caching()
 
@@ -214,11 +219,11 @@ def compile_hip(
     lineinfo=False,
     inline=False,
     fastmath=False,
-    # nvvm_options=None, TODO
-    arch=None,
+    options=None,
+    amdgpu_arch=None,
 ):
-    if arch is None:
-        raise ValueError("Compute Capability must be supplied")
+    if amdgpu_arch is None:
+        raise ValueError("AMD GPU architecture must be supplied")
 
     from .descriptor import hip_target
 
@@ -251,10 +256,9 @@ def compile_hip(
         flags.forceinline = True
     if fastmath:
         flags.fastmath = True
-    # TODO
-    # if nvvm_options:
-    #     flags.nvvm_options = nvvm_options
-    flags.compute_capability = arch
+    if options:
+        flags.hip_options = options
+    flags.amdgpu_arch = amdgpu_arch
 
     # Run compilation pipeline
     from numba.core.target_extension import target_override
@@ -287,31 +291,38 @@ def compile_llvm_ir(
     fastmath: bool=False,
     amdgpu_arch: str=None,
     opt: bool=True,
+    to_bc: bool = True,
 ):
     """Compile a Python function to LLVM IR for a given set of argument types.
 
-    :param pyfunc: The Python function to compile.
-    :param sig: The signature representing the function's input and output
-                types.
-    :param debug: Whether to include debug info in the generated PTX.
-    :type debug: bool
-    :param lineinfo: Whether to include a line mapping from the generated PTX
-                     to the source code. Usually this is used with optimized
-                     code (since debug mode would automatically include this),
-                     so we want debug info in the LLVM but only the line
-                     mapping in the final PTX.
-    :type lineinfo: bool
-    :param device: Whether to compile a device function. Defaults to ``False``,
-                   to compile global kernel functions.
-    :type device: bool
-    :param fastmath: Whether to enable fast math flags (ftz=1, prec_sqrt=0,
-                     prec_div=, and fma=1) TODO
-    :type fastmath: bool
-    :param amdgpu_arch: AMD GPU architecture, e.g. ``gfx90a``.
-    :type amdgpu_arch: str
-    :param opt: Enable optimizations. Defaults to ``True``.
-    :type opt: bool
-    :return: (llvm_ir, resty): The LLVM IR/BC code and inferred return type
+    Links in all dependencies and produces a single LLVM IR file. 
+
+    Args:
+        pyfunc: 
+            The Python function to compile.
+        sig: 
+            The signature representing the function's input and output types.
+        debug (`bool`): 
+            Whether to include debug info in the generated PTX.
+        lineinfo (`bool`): 
+            Whether to include a line mapping from the generated PTX
+            to the source code. Usually this is used with optimized
+            code (since debug mode would automatically include this),
+            so we want debug info in the LLVM but only the line
+            mapping in the final PTX.
+        device (`bool`): 
+            Whether to compile a device function. Defaults to ``False``,
+            to compile global kernel functions.
+        fastmath (`bool`): 
+            Whether to enable fast math flags (ftz=1, prec_sqrt=0, prec_div=, and fma=1) TODO HIP enable
+        amdgpu_arch (`str`): 
+            AMD GPU architecture, e.g. ``gfx90a``.
+        opt (`bool`): 
+            Enable optimizations. Defaults to ``True``. TODO HIP enable
+        to_bc (`bool`)
+            Compile the result to bitcode. Defaults to 'True'.
+
+    :return: (llvm_ir, resty): The LLVM IR code and inferred return type
     :rtype: tuple
     """
     if debug and opt:
@@ -322,14 +333,15 @@ def compile_llvm_ir(
         )
         warn(NumbaInvalidConfigWarning(msg))
 
-    # nvvm_options = { # TODO comgr / hiprtc options
-    #     'fastmath': fastmath,
-    #     'opt': 3 if opt else 0
-    # }
+    options = {
+        'fastmath': fastmath,
+        'opt': 3 if opt else 0
+    }
 
     args, return_type = sigutils.normalize_signature(sig)
 
-    cc = cc or config.CUDA_DEFAULT_PTX_CC
+    # TODO HIP have similar config option
+    # cc = cc or config.CUDA_DEFAULT_PTX_CC
     cres = compile_hip(
         pyfunc,
         return_type,
@@ -337,18 +349,18 @@ def compile_llvm_ir(
         debug=debug,
         lineinfo=lineinfo,
         fastmath=fastmath,
-        # nvvm_options=nvvm_options,
-        cc=cc,
+        options=options,
+        amdgpu_arch=amdgpu_arch,
     )
     resty = cres.signature.return_type
 
     if resty and not device and resty != types.void:
         raise TypeError("HIP kernel must have void return type.")
 
-    if device:
+    if device: # device function, __device__
         lib = cres.library
-    else:
-        tgt = cres.target_context
+    else: # kernel, __global__
+        tgt: target.HIPTargetContext = cres.target_context
         code = pyfunc.__code__
         filename = code.co_filename
         linenum = code.co_firstlineno
@@ -358,22 +370,23 @@ def compile_llvm_ir(
             cres.fndesc,
             debug,
             lineinfo,
-            # nvvm_options, # TODO
+            options,
             filename,
             linenum,
         )
-
-    llvm_ir = lib.get_llvm_ir(amdgpu_arch=amdgpu_arch)
+    assert isinstance(lib,codegen.HIPCodeLibrary)
+    llvm_ir = lib.get_linked_llvm_ir(amdgpu_arch=amdgpu_arch,to_bc=to_bc)
     return llvm_ir, resty
 
 
 def compile_llvm_ir_for_current_device(
-    pyfunc, sig, debug=False, lineinfo=False, device=False, fastmath=False, opt=True
+    pyfunc, sig, debug=False, lineinfo=False, device=False, fastmath=False, opt=True,
+    to_bc: bool = True,
 ):
-    """Compile a Python function to PTX for a given set of argument types for
+    """Compile a Python function to AMD GPU LLVM IR for a given set of argument types for
     the current device's compute capabilility. This calls :func:`compile_llvm_ir`
     with an appropriate ``cc`` value for the current device."""
-    amdgpu_arch = get_current_device().arch
+    amdgpu_arch = get_current_device().amdgpu_arch
     return compile_llvm_ir(
         pyfunc,
         sig,
@@ -383,13 +396,14 @@ def compile_llvm_ir_for_current_device(
         fastmath=fastmath,
         amdgpu_arch=amdgpu_arch,
         opt=opt,
+        to_bc=to_bc,
     )
 
-
+# TODO check if this is relevant for HIP as no HSA device functions can be linked, only LLVM IR ones
 def declare_device_function(name, restype, argtypes):
     return declare_device_function_template(name, restype, argtypes).key
 
-
+# TODO check if this is relevant for HIP as no HSA device functions can be linked, only LLVM IR ones
 def declare_device_function_template(name, restype, argtypes):
     from .descriptor import hip_target
 

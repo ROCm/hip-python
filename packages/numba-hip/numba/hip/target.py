@@ -58,7 +58,7 @@ from numba.core.typing import cmathdecl
 from numba.core import datamodel
 
 # from .hipdrv import nvvm
-from . import amdgputargetmachine
+from . import amdgcn
 from numba.hip import codegen  # , nvvmutils, ufuncs
 from numba.hip.typing_lowering import ufuncs
 from numba.hip.typing_lowering.models import hip_data_manager
@@ -166,7 +166,7 @@ class HIPTargetContext(BaseContext):
         self.install_registry(cffiimpl.registry)
         self.install_registry(cmathimpl.registry)
 
-        for impl_registry in typing_lowering.get_typing_registries():
+        for impl_registry in typing_lowering.get_impl_registries():
             self.install_registry(impl_registry)
         # self.install_registry(hipimpl.registry)
         # self.install_registry(printimpl.registry)
@@ -180,7 +180,7 @@ class HIPTargetContext(BaseContext):
     @property
     def target_data(self):
         if self._target_data is None:
-            self._target_data = ll.create_target_data(amdgputargetmachine.DATA_LAYOUT)
+            self._target_data = ll.create_target_data(amdgcn.DATA_LAYOUT)
         return self._target_data
 
     @cached_property
@@ -192,7 +192,7 @@ class HIPTargetContext(BaseContext):
         """
         from numba import hip
 
-        nonconsts = (
+        nonconsts = ( # TODO HIP check this
             "threadIdx",
             "blockDim",
             "blockIdx",
@@ -229,17 +229,25 @@ class HIPTargetContext(BaseContext):
 
         Returns the new code library and the wrapper function.
 
-        Parameters:
+        Args:
+            codelib:
+                The CodeLibrary containing the device function to wrap in a kernel call.
+            fndesc:
+                The FunctionDescriptor of the source function.
+            debug:
+                Whether to compile with debug.
+            lineinfo:
+                Whether to emit line info.
+            options:
+                Dict of options used when compiling the new library.
+            filename:
+                The source filename that the function is contained in.
+            linenum:
+                The source line that the function is on.
+            max_registers: The max_registers argument for the code library.
 
-        codelib:       The CodeLibrary containing the device function to wrap
-                       in a kernel call.
-        fndesc:        The FunctionDescriptor of the source function.
-        debug:         Whether to compile with debug.
-        lineinfo:      Whether to emit line info.
-        options:       Dict of options used when compiling the new library.
-        filename:      The source filename that the function is contained in.
-        linenum:       The source line that the function is on.
-        max_registers: The max_registers argument for the code library.
+        Returns:
+
         """
         kernel_name = itanium_mangler.prepend_namespace(
             fndesc.llvm_func_name,
@@ -281,21 +289,23 @@ class HIPTargetContext(BaseContext):
         builder = ir.IRBuilder(wrapfn.append_basic_block(""))
 
         if debug or lineinfo:
-            directives_only = lineinfo and not debug
-            debuginfo = self.DIBuilder(
-                module=wrapper_module,
-                filepath=filename,
-                cgctx=self,
-                directives_only=directives_only,
-            )
-            debuginfo.mark_subprogram(
-                wrapfn,
-                kernel_name,
-                fndesc.args,
-                argtypes,
-                linenum,
-            )
-            debuginfo.mark_location(builder, linenum)
+            pass
+            # TODO enable debugging
+            # directives_only = lineinfo and not debug
+            # debuginfo = self.DIBuilder(
+            #     module=wrapper_module,
+            #     filepath=filename,
+            #     cgctx=self,
+            #     directives_only=directives_only,
+            # )
+            # debuginfo.mark_subprogram(
+            #     wrapfn,
+            #     kernel_name,
+            #     fndesc.args,
+            #     argtypes,
+            #     linenum,
+            # )
+            # debuginfo.mark_location(builder, linenum)
 
         # Define error handling variable
         def define_error_gv(postfix):
@@ -376,7 +386,7 @@ class HIPTargetContext(BaseContext):
         constaryty = ir.ArrayType(ir.IntType(8), len(constvals))
         constary = ir.Constant(constaryty, constvals)
 
-        addrspace = amdgputargetmachine.ADDRSPACE_CONSTANT
+        addrspace = amdgcn.ADDRSPACE_CONSTANT
         gv = cgutils.add_global_variable(
             lmod, constary.type, "_hippy_cmem", addrspace=addrspace
         )
@@ -421,7 +431,7 @@ class HIPTargetContext(BaseContext):
         if global_var is None:
             # Not defined yet
             global_var = cgutils.add_global_variable(
-                mod, text.type, name, addrspace=amdgputargetmachine.ADDRSPACE_CONSTANT
+                mod, text.type, name, addrspace=amdgcn.ADDRSPACE_CONSTANT
             )
             global_var.linkage = "internal"
             global_var.global_constant = True
@@ -429,7 +439,7 @@ class HIPTargetContext(BaseContext):
 
         # Cast to a i8* pointer
         charty = global_var.type.pointee.element
-        return global_var.bitcast(charty.as_pointer(amdgputargetmachine.ADDRSPACE_CONSTANT))
+        return global_var.bitcast(charty.as_pointer(amdgcn.ADDRSPACE_CONSTANT))
 
     def insert_string_const_addrspace(self, builder, string):
         """
@@ -442,18 +452,6 @@ class HIPTargetContext(BaseContext):
         gv = self.insert_const_string(lmod, string)
         charptrty = ir.PointerType(ir.IntType(8))
         return builder.addrspacecast(gv, charptrty, "generic")
-
-    def optimize_function(self, func):
-        """Run O1 function passes"""
-        pass
-        ## XXX skipped for now
-        # fpm = lp.FunctionPassManager.new(func.module)
-        #
-        # lp.PassManagerBuilder.new().populate(fpm)
-        #
-        # fpm.initialize()
-        # fpm.run(func)
-        # fpm.finalize()
 
     def get_ufunc_info(self, ufunc_key):
         return ufuncs.get_ufunc_info(ufunc_key)

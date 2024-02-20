@@ -66,7 +66,6 @@ class _Kernel(serialize.ReduceMixin):
         opt=True,
         device=False,
     ):
-
         if device:
             raise RuntimeError("Cannot compile a device function as a kernel")
 
@@ -93,9 +92,9 @@ class _Kernel(serialize.ReduceMixin):
         self.lineinfo = lineinfo
         self.extensions = extensions or []
 
-        nvvm_options = {"fastmath": fastmath, "opt": 3 if opt else 0}
+        options = {"fastmath": fastmath, "opt": 3 if opt else 0}
 
-        cc = get_current_device().compute_capability
+        amdgpu_arch = get_current_device().amdgpu_arch # from numba.hip.api
         cres = compile_hip(
             self.py_func,
             types.void,
@@ -104,8 +103,8 @@ class _Kernel(serialize.ReduceMixin):
             lineinfo=lineinfo,
             inline=inline,
             fastmath=fastmath,
-            # nvvm_options=nvvm_options, TODO
-            cc=cc,
+            options=options,
+            amdgpu_arch=amdgpu_arch,
         )
         tgt_ctx = cres.target_context
         code = self.py_func.__code__
@@ -116,37 +115,38 @@ class _Kernel(serialize.ReduceMixin):
             cres.fndesc,
             debug,
             lineinfo,
-            nvvm_options,
+            options,
             filename,
             linenum,
             max_registers,
         )
+        assert isinstance(lib,hip.codegen.HIPCodeLibrary)
 
         if not link:
             link = []
 
-        # TODO supports cooperative groups
+        # TODO HIP supports cooperative groups
         # # A kernel needs cooperative launch if grid_sync is being used.
+        self.cooperative = False
         # self.cooperative = "hipCGGetIntrinsicHandle" in lib.get_asm_str()
         # # We need to link against hipdevrt if grid sync is being used.
         # if self.cooperative:
         #     lib.needs_hipdevrt = True
 
-        # TODO support fp16 functions
+        # TODO HIP support fp16 functions, note that CUDA fp16 code license is not permissive
         # res = [
         #     fn
         #     for fn in hip_fp16_math_funcs
         #     if (f"__numba_wrapper_{fn}" in lib.get_asm_str())
         # ]
-
         # if res:
         #     # Path to the source containing the foreign function
         #     basedir = os.path.dirname(os.path.abspath(__file__))
         #     functions_cu_path = os.path.join(basedir, "cpp_function_wrappers.cu")
         #     link.append(functions_cu_path)
 
-        for filepath in link:
-            lib.add_linking_file(filepath)
+        for dependency in link:
+            lib.add_linking_dependency(dependency)
 
         # populate members
         self.entry_name = kernel.name
@@ -159,7 +159,7 @@ class _Kernel(serialize.ReduceMixin):
         # - There are no referenced environments in HIP.
         # - Kernels don't have lifted code.
         # - reload_init is only for parfors.
-        self.target_context = tgt_ctx
+        self.target_context: hip.target.HIPTargetContext = tgt_ctx
         self.fndesc = cres.fndesc
         self.environment = cres.environment
         self._referenced_environments = []
@@ -167,7 +167,7 @@ class _Kernel(serialize.ReduceMixin):
         self.reload_init = []
 
     @property
-    def library(self):
+    def library(self) -> hip.codegen.HIPCodeLibrary:
         return self._codelibrary
 
     @property
@@ -178,7 +178,7 @@ class _Kernel(serialize.ReduceMixin):
         return self._referenced_environments
 
     @property
-    def codegen(self):
+    def codegen(self) -> hip.codegen.JITHIPCodegen:
         return self.target_context.codegen()
 
     @property
@@ -239,42 +239,42 @@ class _Kernel(serialize.ReduceMixin):
         """
         Force binding to current HIP context
         """
-        self._codelibrary.get_cufunc()
+        self._codelibrary.get_hipfunc()
 
     @property
     def regs_per_thread(self):
         """
         The number of registers used by each thread for this kernel.
         """
-        return self._codelibrary.get_cufunc().attrs.regs
+        return self._codelibrary.get_hipfunc().attrs.regs
 
     @property
     def const_mem_size(self):
         """
         The amount of constant memory used by this kernel.
         """
-        return self._codelibrary.get_cufunc().attrs.const
+        return self._codelibrary.get_hipfunc().attrs.const
 
     @property
     def shared_mem_per_block(self):
         """
         The amount of shared memory used per block for this kernel.
         """
-        return self._codelibrary.get_cufunc().attrs.shared
+        return self._codelibrary.get_hipfunc().attrs.shared
 
     @property
     def max_threads_per_block(self):
         """
         The maximum allowable threads per block.
         """
-        return self._codelibrary.get_cufunc().attrs.maxthreads
+        return self._codelibrary.get_hipfunc().attrs.maxthreads
 
     @property
     def local_mem_per_thread(self):
         """
         The amount of local memory used per thread for this kernel.
         """
-        return self._codelibrary.get_cufunc().attrs.local
+        return self._codelibrary.get_hipfunc().attrs.local
 
     def inspect_llvm(self):
         """
@@ -337,7 +337,7 @@ class _Kernel(serialize.ReduceMixin):
         :return: The maximum number of blocks in the grid.
         """
         ctx = get_context()
-        cufunc = self._codelibrary.get_cufunc()
+        cufunc = self._codelibrary.get_hipfunc()
 
         if isinstance(blockdim, tuple):
             blockdim = functools.reduce(lambda x, y: x * y, blockdim)
@@ -349,7 +349,7 @@ class _Kernel(serialize.ReduceMixin):
 
     def launch(self, args, griddim, blockdim, stream=0, sharedmem=0):
         # Prepare kernel
-        cufunc = self._codelibrary.get_cufunc()
+        cufunc = self._codelibrary.get_hipfunc()
 
         if self.debug:
             excname = cufunc.name + "__errcode__"
@@ -548,7 +548,7 @@ class ForAll(object):
             # it so we can get the cufunc from the code library
             kernel = next(iter(dispatcher.overloads.values()))
             kwargs = dict(
-                func=kernel._codelibrary.get_cufunc(),
+                func=kernel._codelibrary.get_hipfunc(),
                 b2d_func=0,  # dynamic-shared memory is constant to blksz
                 memsize=self.sharedmem,
                 blocksizelimit=1024,
@@ -565,7 +565,7 @@ class _LaunchConfiguration:
         self.stream = stream
         self.sharedmem = sharedmem
 
-        if config.HIP_LOW_OCCUPANCY_WARNINGS:
+        if config.CUDA_LOW_OCCUPANCY_WARNINGS: # TODO HIP reuse CUDA config
             # Warn when the grid has fewer than 128 blocks. This number is
             # chosen somewhat heuristically - ideally the minimum is 2 times
             # the number of SMs, but the number of SMs varies between devices -
@@ -924,10 +924,10 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                 inline = self.targetoptions.get("inline")
                 fastmath = self.targetoptions.get("fastmath")
 
-                # nvvm_options = { # TODO options for COMGR / HIPRTC
-                #     "opt": 3 if self.targetoptions.get("opt") else 0,
-                #     "fastmath": fastmath,
-                # }
+                options = { # TODO HIP options for COMGR / HIPRTC
+                    "opt": 3 if self.targetoptions.get("opt") else 0,
+                    "fastmath": fastmath,
+                }
 
                 amdgpu_arch = get_current_device().arch
                 cres = compile_hip(
@@ -938,7 +938,7 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                     lineinfo=lineinfo,
                     inline=inline,
                     fastmath=fastmath,
-                    # nvvm_options=nvvm_options, TODO options for COMGR / HPIRTC
+                    options=options, # TODO HIP options for COMGR / HIPRTC
                     amdgpu_arch=amdgpu_arch
                 )
                 self.overloads[args] = cres

@@ -191,7 +191,7 @@ class ISAInfo:
 
 TRIPLE = "amdgcn-amd-amdhsa"
 ISA_INFOS: dict = {
-    isa_name.replace(f"{TRIPLE}", ""): ISAInfo(entry)
+    isa_name.replace(f"{TRIPLE}--", ""): ISAInfo(entry)
     for isa_name, entry in comgr.ext.get_isa_metadata_all().items()
 }
 

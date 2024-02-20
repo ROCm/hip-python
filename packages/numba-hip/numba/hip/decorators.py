@@ -3,51 +3,87 @@ from numba.core import types, config, sigutils
 from numba.core.errors import DeprecationError, NumbaInvalidConfigWarning
 from numba.hip.compiler import declare_device_function
 from numba.hip.dispatcher import HIPDispatcher
+
 # from numba.hip.simulator.kernel import FakeHIPKernel # TODO support simulator
 
-_msg_deprecated_signature_arg = ("Deprecated keyword argument `{0}`. "
-                                 "Signatures should be passed as the first "
-                                 "positional argument.")
+_msg_deprecated_signature_arg = (
+    "Deprecated keyword argument `{0}`. "
+    "Signatures should be passed as the first "
+    "positional argument."
+)
 
 
-def jit(func_or_sig=None, device=False, inline=False, link=[], debug=None,
-        opt=True, lineinfo=False, cache=False, **kws):
+def jit(
+    func_or_sig=None,
+    device=False,
+    inline=False,
+    link=[],
+    debug=None,
+    opt=True,
+    lineinfo=False,
+    cache=False,
+    **kws
+):
     """
     JIT compile a Python function for AMD GPUs.
 
-    :param func_or_sig: A function to JIT compile, or *signatures* of a
-       function to compile. If a function is supplied, then a
-       :class:`Dispatcher <numba.hip.dispatcher.HIPDispatcher>` is returned.
-       Otherwise, ``func_or_sig`` may be a signature or a list of signatures,
-       and a function is returned. The returned function accepts another
-       function, which it will compile and then return a :class:`Dispatcher
-       <numba.hip.dispatcher.HIPDispatcher>`. See :ref:`jit-decorator` for
-       more information about passing signatures.
+    Args:
+        func_or_sig (optional):
+            A function to JIT compile, or *signatures* of a
+            function to compile. If a function is supplied, then a
+            :class:`Dispatcher <numba.hip.dispatcher.HIPDispatcher>` is returned.
+            Otherwise, ``func_or_sig`` may be a signature or a list of signatures,
+            and a function is returned. The returned function accepts another
+            function, which it will compile and then return a :class:`Dispatcher
+            <numba.hip.dispatcher.HIPDispatcher>`. See :ref:`jit-decorator` for
+            more information about passing signatures.
+            Defaults to ``None``.
 
-       .. note:: A kernel cannot have any return value.
-    :param device: Indicates whether this is a device function.
-    :type device: bool
-    :param link: A list of files containing LLVM IR/BC or HIP C++ source to link
-       with the function
-    :type link: list
-    :param debug: If True, check for exceptions thrown when executing the
-       kernel. Since this degrades performance, this should only be used for
-       debugging purposes. If set to True, then ``opt`` should be set to False.
-       Defaults to False.  (The default value can be overridden by setting
-       environment variable ``NUMBA_CUDA_DEBUGINFO=1``.)
-    :param fastmath: When True, enables fastmath optimizations.
-    :param max_registers: Request that the kernel is limited to using at most
-       this number of registers per thread. The limit may not be respected if
-       the ABI requires a greater number of registers than that requested.
-       Useful for increasing occupancy.
-    :param opt: (UNSUPPORTED) Set optimization level to 3 (``True``) or 0 (``False``).
-    :type opt: bool
-    :param lineinfo: (UNSUPPORTED) If ``True``, generate a line mapping between source code and
-       assembly code. This enables inspection of the source code in AMD GPU
-       profiling tools and correlation with program counter sampling.
-    :type lineinfo: bool
-    :param cache: If True, enables the file-based cache for this function.
-    :type cache: bool
+            Note:
+                A kernel cannot have any return value.
+        device (`bool`, optional):
+            Indicates whether this is a device function.
+            Defaults to ``False``.
+        link (`list`, optional):
+            This list contains entries of the following kind:
+            
+            1) LLVM IR/BC buffers to link with the
+               generated LLVM IR. These are linked using the Driver API at
+               link time. Such buffers must be inserted as 2-tuple ``(buffer,buffer_len)``.
+               The buffer length can be specified as ``None`` or `-1` if it can be derived
+               via ``len(buffer)``.
+            2) Files to link with the generated LLVM IR. These are linked using the
+               Driver API at link time.
+            3) ROCm LLVM Python module types.
+            
+            Defaults to ``[]``.
+        debug (`bool` or ``None``, optional):
+            If True, check for exceptions thrown when executing the
+            kernel. Since this degrades performance, this should only be used for
+            debugging purposes. If set to True, then ``opt`` should be set to False.
+            Defaults to ``None``, which implies that the value `config.CUDA_DEBUGINFO_DEFAULT` is used,
+            which is ``False`` if this config setting has not been changed via environment
+            variable ``NUMBA_CUDA_DEBUGINFO``.
+        fastmath (`bool`, optional):
+            When True, enables fastmath optimizations.
+            Defaults to ``False``.
+        max_registers (`int`, optional):
+            Request that the kernel is limited to using at most
+            this number of registers per thread. The limit may not be respected if
+            the ABI requires a greater number of registers than that requested.
+            Useful for increasing occupancy.
+            Defaults to ``False``.
+        opt (`bool`, optional): # TODO HIP enable
+            Set optimization level to 3 (``True``) or 0 (``False``).
+            Defaults to ``True``.
+        lineinfo (`bool`, optional): # TODO HIP enable
+            If ``True``, generate a line mapping between source code and
+            assembly code. This enables inspection of the source code in AMD GPU
+            profiling tools and correlation with program counter sampling.
+            Defaults to ``False``.
+        cache (`bool`, optional):
+            If True, enables the file-based cache for this function.
+            Defaults to ``False``.
     """
     # TODO enable unsupported option
 
@@ -55,36 +91,44 @@ def jit(func_or_sig=None, device=False, inline=False, link=[], debug=None,
     # if link and config.ENABLE_CUDASIM:
     #     raise NotImplementedError('Cannot link PTX in the simulator')
 
-    if kws.get('boundscheck'):
+    if kws.get("boundscheck"):
         raise NotImplementedError("bounds checking is not supported for HIP")
 
-    if kws.get('argtypes') is not None:
-        msg = _msg_deprecated_signature_arg.format('argtypes')
+    if kws.get("argtypes") is not None:
+        msg = _msg_deprecated_signature_arg.format("argtypes")
         raise DeprecationError(msg)
-    if kws.get('restype') is not None:
-        msg = _msg_deprecated_signature_arg.format('restype')
+    if kws.get("restype") is not None:
+        msg = _msg_deprecated_signature_arg.format("restype")
         raise DeprecationError(msg)
-    if kws.get('bind') is not None:
-        msg = _msg_deprecated_signature_arg.format('bind')
+    if kws.get("bind") is not None:
+        msg = _msg_deprecated_signature_arg.format("bind")
         raise DeprecationError(msg)
 
-    debug = config.CUDA_DEBUGINFO_DEFAULT if debug is None else debug # TODO add HIP option
-    fastmath = kws.get('fastmath', False)
-    extensions = kws.get('extensions', [])
+    debug = (
+        config.CUDA_DEBUGINFO_DEFAULT if debug is None else debug
+    )  # TODO add HIP option
+    fastmath = kws.get("fastmath", False)
+    extensions = kws.get("extensions", [])
 
     if debug and opt:
-        msg = ("debug=True with opt=True (the default) "
-               "is not supported by HIP. This may result in a crash"
-               " - set debug=False or opt=False.") # TODO check if that's also the case for HIP
+        msg = (
+            "debug=True with opt=True (the default) "
+            "is not supported by HIP. This may result in a crash"
+            " - set debug=False or opt=False."
+        )  # TODO check if that's also the case for HIP
         warn(NumbaInvalidConfigWarning(msg))
 
     if debug and lineinfo:
-        msg = ("debug and lineinfo are mutually exclusive. Use debug to get "
-               "full debug info (this disables some optimizations), or "
-               "lineinfo for line info only with code generation unaffected.")
-        warn(NumbaInvalidConfigWarning(msg)) # TODO check if that's also the case for HIP
+        msg = (
+            "debug and lineinfo are mutually exclusive. Use debug to get "
+            "full debug info (this disables some optimizations), or "
+            "lineinfo for line info only with code generation unaffected."
+        )
+        warn(
+            NumbaInvalidConfigWarning(msg)
+        )  # TODO check if that's also the case for HIP
 
-    if device and kws.get('link'):
+    if device and kws.get("link"):
         raise ValueError("link keyword invalid for device function")
 
     if sigutils.is_signature(func_or_sig):
@@ -105,13 +149,13 @@ def jit(func_or_sig=None, device=False, inline=False, link=[], debug=None,
 
         def _jit(func):
             targetoptions = kws.copy()
-            targetoptions['debug'] = debug
-            targetoptions['lineinfo'] = lineinfo
-            targetoptions['link'] = link
-            targetoptions['opt'] = opt
-            targetoptions['fastmath'] = fastmath
-            targetoptions['device'] = device
-            targetoptions['extensions'] = extensions
+            targetoptions["debug"] = debug
+            targetoptions["lineinfo"] = lineinfo
+            targetoptions["link"] = link
+            targetoptions["opt"] = opt
+            targetoptions["fastmath"] = fastmath
+            targetoptions["device"] = device
+            targetoptions["extensions"] = extensions
 
             disp = HIPDispatcher(func, targetoptions=targetoptions)
 
@@ -126,6 +170,7 @@ def jit(func_or_sig=None, device=False, inline=False, link=[], debug=None,
 
                 if device:
                     from numba.core import typeinfer
+
                     with typeinfer.register_dispatcher(disp):
                         disp.compile_device(argtypes, restype)
                 else:
@@ -146,9 +191,18 @@ def jit(func_or_sig=None, device=False, inline=False, link=[], debug=None,
                 #     return FakeHIPKernel(func, device=device,
                 #                           fastmath=fastmath)
             else:
+
                 def autojitwrapper(func):
-                    return jit(func, device=device, debug=debug, opt=opt,
-                               lineinfo=lineinfo, link=link, cache=cache, **kws)
+                    return jit(
+                        func,
+                        device=device,
+                        debug=debug,
+                        opt=opt,
+                        lineinfo=lineinfo,
+                        link=link,
+                        cache=cache,
+                        **kws
+                    )
 
             return autojitwrapper
         # func_or_sig is a function
@@ -160,13 +214,13 @@ def jit(func_or_sig=None, device=False, inline=False, link=[], debug=None,
                 #                       fastmath=fastmath)
             else:
                 targetoptions = kws.copy()
-                targetoptions['debug'] = debug
-                targetoptions['lineinfo'] = lineinfo
-                targetoptions['opt'] = opt
-                targetoptions['link'] = link
-                targetoptions['fastmath'] = fastmath
-                targetoptions['device'] = device
-                targetoptions['extensions'] = extensions
+                targetoptions["debug"] = debug
+                targetoptions["lineinfo"] = lineinfo
+                targetoptions["opt"] = opt
+                targetoptions["link"] = link
+                targetoptions["fastmath"] = fastmath
+                targetoptions["device"] = device
+                targetoptions["extensions"] = extensions
                 disp = HIPDispatcher(func_or_sig, targetoptions=targetoptions)
 
                 if cache:
@@ -186,7 +240,7 @@ def declare_device(name, sig):
     """
     argtypes, restype = sigutils.normalize_signature(sig)
     if restype is None:
-        msg = 'Return type must be provided for device declarations'
+        msg = "Return type must be provided for device declarations"
         raise TypeError(msg)
 
     return declare_device_function(name, restype, argtypes)

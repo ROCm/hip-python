@@ -1,5 +1,5 @@
 def initialize_all():
-    """Register the ROC extension."""
+    """Register the HIP extension."""
     # todo FIXME
     # Import models to register them with the data model manager
     import numba.hip.typing_lowering.models  # noqa: F401
