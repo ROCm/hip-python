@@ -63,7 +63,6 @@ from numba import hip
 from numba.hip import codegen  # , nvvmutils, ufuncs
 from numba.hip.typing_lowering import ufuncs
 from numba.hip.typing_lowering.models import hip_data_manager
-from numba.core.typing.templates import AttributeTemplate
 
 from numba.hip.typing_lowering import hipdevicelib
 
@@ -73,12 +72,17 @@ from numba.hip.typing_lowering import hipdevicelib
 
 def _resolve_attributes(thekey, thestubs):
     """
-    Let's Numba know what an expression such as 'hip.syncthreads()' means.
+    Lets Numba know what an expression such as 'hip.syncthreads()' means
+    given the object `hip`.
+
+    See:
+        `numba.core.typing.templates.AttributeTemplate._resolve`
     """
+    from numba.core.typing.templates import AttributeTemplate
     assert isinstance(thestubs, dict)
 
     @hipdevicelib.typing_registry.register_attr
-    class _AttributeTemplate(AttributeTemplate):
+    class AttributeTemplate_(AttributeTemplate):
         key = thekey
         _stubs: dict = thestubs
 
@@ -97,13 +101,13 @@ def _resolve_attributes(thekey, thestubs):
                                 not hasattr(childstub, "_signatures_")
                                 and len(childstub._signatures_) > 0
                             ), "function may not have children itself"
-                            return types.Module(
+                            return lambda value: types.Module(
                                 childstub
                             )  # register stub for parent stubs
                         else:
                             # print(f"{childstub=}")
                             # traceback.print_stack()
-                            return types.Function(
+                            return lambda value: types.Function(
                                 childstub._template_
                             )  # register concrete/callable template for function stubs
             return super().__getattribute__(name)
