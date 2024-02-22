@@ -101,7 +101,13 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
     """
 
     def __init__(
-        self, codegen, name, entry_name=None, max_registers=None, options=None, device: bool = True
+        self,
+        codegen,
+        name,
+        entry_name=None,
+        max_registers=None,
+        options=None,
+        device: bool = True,
     ):
         """
         codegen:
@@ -170,8 +176,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         self.set_entry_name(entry_name)
 
     def set_entry_name(self, entry_name: str):
-        """Sets `self._entry_name` and `self._orginal_entry_name` to the passed one.
-        """
+        """Sets `self._entry_name` and `self._orginal_entry_name` to the passed one."""
         self._entry_name = entry_name
         self._original_entry_name = entry_name
 
@@ -181,7 +186,11 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         Requires that `self._entry_name` and `self._original_entry_name` have been set before.
         An assertion fails otherwise.
         """
-        assert self._entry_name != None and self._original_entry_name != None
+        assert (
+            new_entry_name != None
+            and self._entry_name != None
+            and self._original_entry_name != None
+        )
         self._original_entry_name = self._entry_name
         self._entry_name = new_entry_name
 
@@ -476,7 +485,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                         fn.name = self._entry_name
                 # NOTE: We assume there is only one definition in the
                 # use `fn.linkage` field to specify visibility
-                fn.linkage = comgrutils.llvm_amdgpu_device_fun_visibility #  + " linkonce_odr"
+                fn.linkage = (
+                    comgrutils.llvm_amdgpu_device_fun_visibility
+                )  #  + " linkonce_odr"
                 fn.calling_convention = ""
                 # Abuse attributes to specify address significance
                 # set.add(fn.attributes, "local_unnamed_addr") # TODO HIP disabled for now, causes error
