@@ -271,4 +271,5 @@ def compile(src, name, amdgpu_arch):
         warnings.warn(msg)
 
     llvm_bc = hiprtc.get_llvm_bc(program)
+    hiprtc.destroy_program(program)
     return llvm_bc, log
