@@ -1,4 +1,3 @@
-
 # Copyright (c) 2012, Anaconda, Inc.
 # All rights reserved.
 #
@@ -46,7 +45,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from numba.core import config
+# from numba.core import config
 from numba.hip.hipdrv.error import (
     HiprtcError,
     HiprtcCompilationError,
@@ -54,7 +53,6 @@ from numba.hip.hipdrv.error import (
 
 import ctypes
 import functools
-import os
 import threading
 import warnings
 
@@ -285,12 +283,12 @@ def compile(src, name, amdgpu_arch):
     # - Relocatable Device Code (-fgpu-rdc) is needed to prevent device functions
     #   being optimized away, further will generate LLVM bitcode for AMD GPUs.
     amdgpu_arch = f"--offload-arch={amdgpu_arch}"
-    include = f"-I{config.CUDA_INCLUDE_PATH}"
+    # include = f"-I{config.CUDA_INCLUDE_PATH}"
 
-    hipdrv_path = os.path.dirname(os.path.abspath(__file__))
-    numba_hip = os.path.dirname(hipdrv_path)
-    numba_include = f"-I{numba_hip}"
-    options = [amdgpu_arch, include, numba_include, "-fgpu-rdc"]
+    # hipdrv_path = os.path.dirname(os.path.abspath(__file__))
+    # numba_hip = os.path.dirname(hipdrv_path)
+    # numba_include = f"-I{numba_hip}"
+    options = [amdgpu_arch, "-fgpu-rdc"]
 
     # Compile the program
     compile_error = hiprtc.compile_program(program, options)
