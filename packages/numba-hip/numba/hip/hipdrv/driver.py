@@ -2353,6 +2353,7 @@ class CudaPythonFunction(Function):
 def launch_kernel(
     cufunc_handle, gx, gy, gz, bx, by, bz, sharedmem, hstream, args, cooperative=False
 ):
+    raise NotImplementedError("TODO HIP port launcher")
     param_ptrs = [addressof(arg) for arg in args]
     params = (c_void_p * len(param_ptrs))(*param_ptrs)
 
@@ -2550,7 +2551,7 @@ class CudaPythonLinker(Linker):
     def error_log(self):
         return self.linker_errors_buf.decode("utf8")
 
-    def add_llvm_ir(self, buf, name="<rocpy-llvmir>"):
+    def add_llvm_ir(self, buf, name="<hippy-llvmir>"):
         """Add LLVM IR/BC to this linker program.
 
         Args:
