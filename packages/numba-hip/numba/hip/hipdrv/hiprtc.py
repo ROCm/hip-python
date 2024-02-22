@@ -224,42 +224,6 @@ class HIPRTC:
 
         return llvm_bc
 
-    def get_llvm_ir(self, program):
-        """
-        Get human-readable LLVM IR of the compiled program as Python `str`.
-
-        Note:
-            Only works if the `rocm-llvm-python` package is installed.
-        """
-        try:
-            from rocm.llvm.c.core import (
-                LLVMCreateMemoryBufferWithMemoryRange,
-                LLVMDisposeMemoryBuffer,
-                LLVMDisposeMessage,
-                LLVMDisposeModule,
-                LLVMPrintModuleToString,
-            )
-            from rocm.llvm.c.bitreader import LLVMParseBitcode2
-        except ImportError:
-            raise HiprtcError("do not have ROCm LLVM Python bindings")
-        else:
-            llvm_bc = self.get_llvm_bc(program)
-            buf = LLVMCreateMemoryBufferWithMemoryRange(
-                llvm_bc,
-                len(llvm_bc),
-                b"llvm-ir-buffer",
-                0,
-            )
-            (status, mod) = LLVMParseBitcode2(buf)
-            if status != 0:
-                raise HiprtcError("failed to parse bitcode")
-            ir = LLVMPrintModuleToString(mod)
-            result = bytes(ir).decode("utf-8")  # copies into buffer
-            LLVMDisposeMessage(ir)
-            LLVMDisposeModule(mod)
-            LLVMDisposeMemoryBuffer(buf)
-            return result
-
 
 def compile(src, name, amdgpu_arch):
     """
