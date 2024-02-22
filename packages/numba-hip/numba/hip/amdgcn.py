@@ -229,7 +229,14 @@ class AMDGPUTargetMachine:
 
     __INSTANCES = {}
 
-    def __new__(cls, offload_arch: str, features: str = ""):
+    def __new__(cls, target_cpu: str, target_features: str = ""):
+        """
+        Args:
+            target_cpu (`str`):
+                AMD GPU architecture, e.g. ``gfx90a``.
+            target_features (`str`):
+                Features that should be enabled for the target.
+        """
         global _lock
         with _lock:
             if not len(AMDGPUTargetMachine.__INSTANCES):
@@ -237,16 +244,18 @@ class AMDGPUTargetMachine:
                 LLVMInitializeAllTargetInfos()  # all three inits are required
                 LLVMInitializeAllTargets()
                 LLVMInitializeAllTargetMCs()
-            arch_features = offload_arch + "--" + features.replace(" ", "")
-            if arch_features not in cls.__INSTANCES:
-                cls.__INSTANCES[arch_features] = inst = object.__new__(cls)
-        return cls.__INSTANCES[arch_features]
+            target_ident = target_cpu
+            if target_features:
+                target_ident += +"--" + target_features.replace(" ", "")
+            if target_ident not in cls.__INSTANCES:
+                cls.__INSTANCES[target_ident] = object.__new__(cls)
+        return cls.__INSTANCES[target_ident]
 
-    def __init_target_machine(self, offload_arch: str, features: str = ""):
+    def __init_target_machine(self, target_cpu: str, target_features: str = ""):
         global TRIPLE
 
         _log.debug(
-            f"[amdgpu] create LLVM AMDGPU target machine for arch-features pair '{offload_arch}')"
+            f"[amdgpu] create LLVM AMDGPU target machine for arch-features pair '{target_cpu}')"
         )
         triple = TRIPLE.encode("utf-8")
 
@@ -260,8 +269,8 @@ class AMDGPUTargetMachine:
         # create target machine
         self._keep_alive = (
             triple,
-            offload_arch.split(":")[0].encode("utf-8"),  # remove feature part
-            features.encode("utf-8"),
+            target_cpu.split(":")[0].encode("utf-8"),  # remove feature part
+            target_features.encode("utf-8"),
         )
         self._target_machine = LLVMCreateTargetMachine(
             self._target,
