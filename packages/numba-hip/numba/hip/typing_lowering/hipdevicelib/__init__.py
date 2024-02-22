@@ -56,7 +56,7 @@ _cparser.CParser.set_clang_res_dir(
     )
 )
 
-from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
+from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib, DEVICE_FUN_PREFIX
 
 _all_stubs, typing_registry, impl_registry = _HIPDeviceLib().create_stubs_decls_impls()
 
@@ -92,6 +92,7 @@ __all__ = [
     "typing_registry",
     "impl_registry",
     "get_llvm_bc",
+    "DEVICE_FUN_PREFIX",
 ]
 
 # test = get_llvm_bc("gfx90a")

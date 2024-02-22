@@ -64,6 +64,7 @@ _log = logging.getLogger(__name__)
 
 DEVICE_FUN_PREFIX = "NUMBA_HIP_"
 
+_GET = f"{DEVICE_FUN_PREFIX}_GET"
 
 class HIPDeviceLib:
     """Generate Python stubs and bitcode per GPU architecture.
@@ -286,7 +287,7 @@ class HIPDeviceLib:
             for dim in "xyz":
                 extensions += textwrap.dedent(
                     f"""\
-                unsigned __attribute__((device)) GET_{kind}_{dim}() {{
+                unsigned __attribute__((device)) {_GET}_{kind}_{dim}() {{
                     return {kind}.{dim};
                 }}
                 """
@@ -294,11 +295,11 @@ class HIPDeviceLib:
         for dim in "xyz":
             extensions += textwrap.dedent(
                 f"""\
-            unsigned __attribute__((device)) GET_global_id_{dim}() {{
+            unsigned __attribute__((device)) {_GET}_global_id_{dim}() {{
                 return threadIdx.{dim} + blockIdx.{dim} * blockDim.{dim};
             }}
 
-            unsigned __attribute__((device)) GET_gridsize_{dim}() {{
+            unsigned __attribute__((device)) {_GET}_gridsize_{dim}() {{
                 return blockDim.{dim}*gridDim.{dim};
             }}
             """
@@ -306,8 +307,8 @@ class HIPDeviceLib:
         # NOTE all lower case "warpsize" in "GET_warpsize" is by purpose;
         #      we follow Numba CUDA here.
         extensions += textwrap.dedent(
-            """
-            int __attribute__((device)) GET_warpsize() {{
+            f"""
+            int __attribute__((device)) {_GET}_warpsize() {{
                 return warpSize;
             }}
             """
@@ -369,8 +370,8 @@ class HIPDeviceLib:
             * Converts ``"atomicAdd_system"`` to ``["atomic","system","add"]``.
             * Converts ``"unsafeAtomicAdd_system"`` to ``["atomic","system","safe","add"]``.
             * Converts ``"__syncthreads"`` to ``["syncthreads"]``.
-            * Converts ``"GET_threadIdx_x"`` to ``["threadIdx","x"]``.
-            * Converts ``"GET_warpsize"`` to ``["warpsize"]``.
+            * Converts ``"{_GET}_threadIdx_x"`` to ``["threadIdx","x"]``.
+            * Converts ``"{_GET}_warpsize"`` to ``["warpsize"]``.
 
             Note:
                 We must ensure that the stub hierarchy parents do not
@@ -401,9 +402,9 @@ class HIPDeviceLib:
                 "gridsize",
             ):
                 for dim in "xyz":
-                    if name == f"GET_{kind}_{dim}":
+                    if name == f"{_GET}_{kind}_{dim}":
                         return [kind, dim]
-            if name == f"GET_warpsize":
+            if name == f"{_GET}_warpsize":
                 return ["warpsize"]
             return [name]
 
