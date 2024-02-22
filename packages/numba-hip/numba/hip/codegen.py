@@ -508,11 +508,12 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         #
         # See also discussion on PR #890:
         # https://github.com/numba/numba/pull/890
-        for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
-            if isinstance(dependency, HIPCodeLibrary):
-                for fn in dependency._module.functions:
-                    if not fn.is_declaration:
-                        fn.linkage = "linkonce_odr"  # TODO check if this is required
+        # for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
+        #     if isinstance(dependency, HIPCodeLibrary):
+        #         for fn in dependency._module.functions:
+        #             if not fn.is_declaration:
+        #                 fn.linkage = "linkonce_odr"  # TODO check if this is required
+        #                 fn.unnamed_addr = True
 
         # TODO original Numba CUDA code; kept (a while) for reference
         # for library in self._linking_libraries:
