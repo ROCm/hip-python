@@ -721,11 +721,22 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
     def call(self, args, griddim, blockdim, stream, sharedmem):
         """
         Compile if necessary and invoke this kernel with *args*.
+
+        Note:
+            The routine `_dispatcher.Dispatcher._cuda_call` stems
+            from C++ extension module  `numba._dispatcher`, which is
+            built from the C++ files `numba/_dispatcher.h/cpp`.
+            We utilize the same routines as Numba CUDA as they
+            are applicable to HIP too and are not
+            depending on any CUDA libraries
         """
         if self.specialized:
             kernel = next(iter(self.overloads.values()))
         else:
-            kernel = _dispatcher.Dispatcher._hip_call(self, *args)
+            # NOTE: We use the same dispatcher.
+            kernel = _dispatcher.Dispatcher._cuda_call(
+                self, *args
+            )  # NOTE: '_cuda_call' is not a typo
 
         kernel.launch(args, griddim, blockdim, stream, sharedmem)
 
@@ -957,8 +968,19 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
         return cres
 
     def add_overload(self, kernel, argtypes):
+        """
+        Note:
+            The routine `self._insert` is inherited from
+            base class `numba._dispatcher.Dispatcher`
+            (via super class numba.core.dispatcher.Dispatcher).
+            Module `numba._dispatcher` is a C++ extension module
+            built from the C++ files `numba/_dispatcher.h/cpp`.
+            We utilize the same routines as Numba CUDA as they
+            are applicable to HIP too and are not
+            depending on any CUDA libraries
+        """
         c_sig = [a._code for a in argtypes]
-        self._insert(c_sig, kernel, hip=True)
+        self._insert(c_sig, kernel, cuda=True)  # NOTE: 'cuda' is not a typo
         self.overloads[argtypes] = kernel
 
     def compile(self, sig):
