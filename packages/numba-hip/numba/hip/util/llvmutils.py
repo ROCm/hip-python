@@ -270,7 +270,7 @@ def to_ir(mod, mod_len: int = -1):
         mod_len (`int`, optional):
             Length of the buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-            Defaults to ``-1``. Not used at all if ``mod`` is no instance of
+            Defaults to ``-1``. Not used at all if ``mod`` is an instance of
             `rocm.llvm.c.types.LLVMOpaqueModule`.
     Returns:
         `bytes`:
@@ -295,7 +295,7 @@ def to_bc(mod, mod_len: int = -1):
         mod_len (`int`, optional):
             Length of the buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-            Defaults to ``-1``. Not used at all if ``mod`` is no instance of
+            Defaults to ``-1``. Not used at all if ``mod`` is an instance of
             `rocm.llvm.c.types.LLVMOpaqueModule`.
     Returns:
         `bytes`:
@@ -334,7 +334,7 @@ def verify(mod, mod_len: int = -1):
         mod_len (`int`, optional):
             Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-            Defaults to ``-1``. Not used at all if ``mod`` is no instance of
+            Defaults to ``-1``. Not used at all if ``mod`` is an instance of
             `rocm.llvm.c.types.LLVMOpaqueModule`.
     """
     if isinstance(mod, LLVMOpaqueModule):
@@ -373,7 +373,7 @@ def link_modules(
               * ir_len (`int`):
                     Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
                     or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-                    Defaults to ``-1``. Not used at all if ``mod`` is no instance of
+                    Defaults to ``-1``. Not used at all if ``mod`` is an instance of
                     `rocm.llvm.c.types.LLVMOpaqueModule`.
         to_bc (`bool`, optional):
             If the result should be LLVM bitcode instead of human-readable LLVM IR.
@@ -433,7 +433,7 @@ def get_function_names(
         mod_len (`int`, optional):
             Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-            Defaults to ``-1``. Not used at all if ``mod`` is no instance of
+            Defaults to ``-1``. Not used at all if ``mod`` is an instance of
             `rocm.llvm.c.types.LLVMOpaqueModule`.
         matcher (callable, optional):
             Function describing what a match is.
@@ -479,7 +479,7 @@ def delete_functions(
     """Deletes all matching functions from a module.
 
     Note:
-        With the default ``matcher``, no deletes are performed.
+        With the default ``matcher``, no deletions are performed.
 
     Note:
         If the input is of type `rocm.llvm.c.types.LLVMOpaqueModule`,
@@ -493,7 +493,7 @@ def delete_functions(
         mod_len (`int`, optional):
             Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-            Defaults to ``-1``. Not used at all if ``mod`` is no instance of
+            Defaults to ``-1``. Not used at all if ``mod`` is an instance of
             `rocm.llvm.c.types.LLVMOpaqueModule`.
         matcher (callable, optional):
             Function describing what a match is.

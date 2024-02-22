@@ -445,7 +445,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
             mod_len (`int`, optional):
                 Length of the LLVM IR/BC buffer. Must be supplied if it cannot
-                be obtained via ``len(mod)``. Not used at all if ``mod`` is no instance of
+                be obtained via ``len(mod)``. Not used at all if ``mod`` is an instance of
                 `rocm.llvm.c.types.LLVMOpaqueModule`.
         """
         self._linking_dependencies.append((mod, mod_len))
