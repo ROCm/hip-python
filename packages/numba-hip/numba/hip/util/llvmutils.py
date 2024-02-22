@@ -43,6 +43,11 @@ from rocm.llvm.c.core import (
     LLVMGetGlobalContext,
     LLVMCloneModule,
     LLVMModuleCreateWithName,
+    LLVMIsDeclaration,
+    LLVMGetValueName2,
+    LLVMGetFirstFunction,
+    LLVMGetNextFunction,
+    LLVMDeleteFunction,
 )
 from rocm.llvm.c.bitreader import LLVMParseBitcode
 from rocm.llvm.c.bitwriter import LLVMWriteBitcodeToMemoryBuffer
@@ -340,7 +345,9 @@ def verify(mod, mod_len: int = -1):
         _get_module_dispose_all(*gm_res)
 
 
-def link_modules(modules, to_bc: bool = True) -> bytes:
+def link_modules(
+    modules, to_bc: bool = True, name: str = "link-modules-result"
+) -> bytes:
     """Links the LLVM modules in the list together.
 
     Note:
@@ -368,11 +375,11 @@ def link_modules(modules, to_bc: bool = True) -> bytes:
                     or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
                     Defaults to ``-1``. Not used at all if ``mod`` is no instance of
                     `rocm.llvm.c.types.LLVMOpaqueModule`.
-
         to_bc (`bool`, optional):
             If the result should be LLVM bitcode instead of human-readable LLVM IR.
             Defaults to `True`.
-
+        name (`str`, optional):
+            Name for the resulting module.
     Returns:
         `bytes`:
             The result of the linking as LLVM bitcode or human-readable LLVM IR depending on argument ``to_bc``.
@@ -397,7 +404,7 @@ def link_modules(modules, to_bc: bool = True) -> bytes:
             )  # store the result of _get_module to dispose later
 
     # LLVMLinkModules2(Dest, Src) "Links the source module into the destination module. The source module is destroyed."
-    dest = LLVMModuleCreateWithName(b"link-modules-result")
+    dest = LLVMModuleCreateWithName(name.encode("utf-8"))
     for src in reversed(cloned_modules):
         if LLVMLinkModules2(dest, src[0]) > 0:
             raise RuntimeError("An error has occurred")
@@ -409,3 +416,120 @@ def link_modules(modules, to_bc: bool = True) -> bytes:
         if gm_res:  # might be None if one input is instance of LLVMOpaqueModule
             _get_module_dispose_all(*gm_res)
     return result
+
+
+def get_function_names(
+    mod,
+    mod_len: int = -1,
+    matcher=lambda name: True,
+    declares: bool = True,
+    defines: bool = True,
+):
+    """Gets the names of matching functions in a module.
+
+    Args:
+        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
+            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+        mod_len (`int`, optional):
+            Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
+            or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
+            Defaults to ``-1``. Not used at all if ``mod`` is no instance of
+            `rocm.llvm.c.types.LLVMOpaqueModule`.
+        matcher (callable, optional):
+            Function describing what a match is.
+            Defaults to a lambda that returns ``True`` for any name.
+        declares (`bool`, optional):
+            Consider function declarations. Defaults to ``True``.
+        defines (`bool`, optional):
+            Consider function definitions. Defaults to ``True``.
+    """
+
+    def function_names_(mod):
+        nonlocal declares
+        nonlocal defines
+        result = []
+        fn = LLVMGetFirstFunction(mod)
+        while fn:
+            name_cstr, _ = LLVMGetValueName2(fn)
+            if name_cstr:
+                name = name_cstr.decode("utf-8")
+                if matcher(name):
+                    is_declare = LLVMIsDeclaration(fn) > 0
+                    if is_declare and declares or not is_declare and defines:
+                        result.append(name)
+            fn = LLVMGetNextFunction(fn)
+        return result
+
+    if isinstance(mod, LLVMOpaqueModule):
+        result = function_names_(mod)
+    else:
+        gm_res = _get_module(mod, mod_len)
+        result = function_names_(mod=gm_res[0])
+        _get_module_dispose_all(*gm_res)
+    return result
+
+
+def delete_functions(
+    mod,
+    mod_len: int = -1,
+    matcher=lambda name: False,
+    declares: bool = True,
+    defines: bool = True,
+):
+    """Deletes all matching functions from a module.
+
+    Note:
+        With the default ``matcher``, no deletes are performed.
+
+    Note:
+        If the input is of type `rocm.llvm.c.types.LLVMOpaqueModule`,
+        the passed in module is modified and returned.
+        If the inputs are LLVM IR/BC buffers, the modified module
+        is returned in the respective input form.
+
+    Args:
+        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
+            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+        mod_len (`int`, optional):
+            Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
+            or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
+            Defaults to ``-1``. Not used at all if ``mod`` is no instance of
+            `rocm.llvm.c.types.LLVMOpaqueModule`.
+        matcher (callable, optional):
+            Function describing what a match is.
+            Defaults to a lambda that returns ``False`` for any name.
+        declares (`bool`, optional):
+            Consider function declarations. Defaults to ``True``.
+        defines (`bool`, optional):
+            Consider function definitions. Defaults to ``True``.
+    """
+
+    def delete_functions_(mod):
+        nonlocal matcher
+        nonlocal declares
+        nonlocal defines
+        fn = LLVMGetFirstFunction(mod)
+        while fn:
+            name_cstr, _ = LLVMGetValueName2(fn)
+            fn_next = LLVMGetNextFunction(fn)
+            if name_cstr:
+                name = name_cstr.decode("utf-8")
+                if matcher(name):
+                    is_declare = LLVMIsDeclaration(fn) > 0
+                    if is_declare and declares or not is_declare and defines:
+                        # print(f"delete function {name}")
+                        LLVMDeleteFunction(fn)
+            fn = fn_next
+
+    if isinstance(mod, LLVMOpaqueModule):
+        delete_functions_(mod)
+        return mod
+    else:
+        (mod, buf, from_bc) = _get_module(mod, mod_len)
+        delete_functions_(mod=mod)
+        if from_bc:
+            result = _to_bc(mod)
+        else:
+            result = _to_ir(mod)
+        _get_module_dispose_all(mod, buf, from_bc)
+        return result
