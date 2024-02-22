@@ -53,7 +53,7 @@ from numba import hip as cuda, void
 from numba.hip.testing import unittest, HIPTestCase as CUDATestCase
 
 
-class TestCudaDeviceRecord(CUDATestCase):
+class TestJitSimple(CUDATestCase):
 
     def test_compile_llvm_ir_for_empty_device_fun(self):
 
@@ -86,16 +86,21 @@ class TestCudaDeviceRecord(CUDATestCase):
         print(f"{id(cuda.syncthreads)=}")  # same id, same object
 
         def syncthreads():
+
             cuda.syncthreads()
             # syncthreads()
 
         for _ in range(0, 2):
             ir, restype = cuda.compile_llvm_ir_for_current_device(
-                pyfunc=syncthreads, sig=(), device=True, to_bc=False
+                pyfunc=syncthreads,
+                sig=(),
+                device=True,
+                to_bc=False,
+                name="GENERIC_OP_FOR_PHILIPP",
             )
-        self.assertIn("test_compile_llvm_ir_for_syncthreads", ir.decode("utf-8"))
-        # with open("empty.ll","w") as outfile:
-        #     outfile.write(ir.decode("utf-8"))
+        self.assertIn("GENERIC_OP_FOR_PHILIPP", ir.decode("utf-8"))
+        with open("syncthreads.ll", "w") as outfile:
+            outfile.write(ir.decode("utf-8"))
 
 
 if __name__ == "__main__":

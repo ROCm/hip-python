@@ -286,6 +286,7 @@ def compile_llvm_ir(
     amdgpu_arch: str = None,
     opt: bool = True,
     to_bc: bool = True,
+    name: str = None,
 ):
     """Compile a Python function to LLVM IR for a given set of argument types.
 
@@ -315,9 +316,15 @@ def compile_llvm_ir(
             Enable optimizations. Defaults to ``True``. TODO HIP enable
         to_bc (`bool`)
             Compile the result to bitcode. Defaults to 'True'.
+        name (`str` or `None`, optional):
+            If not set to ``None``, gives this name to
+            the compiled function.
 
     :return: (llvm_ir, resty): The LLVM IR code and inferred return type
     :rtype: tuple
+
+    Note:
+        Creates an additional code library when preparing a kernel.
     """
     if debug and opt:
         msg = (
@@ -333,7 +340,7 @@ def compile_llvm_ir(
 
     # TODO HIP have similar config option
     # cc = cc or config.CUDA_DEFAULT_PTX_CC
-    cres = compile_hip(
+    cres: CompileResult = compile_hip(
         pyfunc,
         return_type,
         args,
@@ -348,14 +355,20 @@ def compile_llvm_ir(
     if resty and not device and resty != types.void:
         raise TypeError("HIP kernel must have void return type.")
 
+    fndesc: funcdesc.FunctionDescriptor = cres.fndesc
     if device:  # device function, __device__
-        lib = cres.library
+        lib: codegen.HIPCodeLibrary = cres.library
+        lib.set_entry_name(fndesc.llvm_func_name)
+        if name:
+            lib.change_entry_name(name)
     else:  # kernel, __global__
         tgt: target.HIPTargetContext = cres.target_context
         code = pyfunc.__code__
         filename = code.co_filename
         linenum = code.co_firstlineno
 
+        # TODO pass amdgpu arch here in order to set
+        # the kernel arguments correctly
         lib, kernel = tgt.prepare_hip_kernel(
             cres.library,
             cres.fndesc,
@@ -379,10 +392,17 @@ def compile_llvm_ir_for_current_device(
     fastmath=False,
     opt=True,
     to_bc: bool = True,
+    name: str = None,
 ):
     """Compile a Python function to AMD GPU LLVM IR for a given set of argument types for
     the current device's compute capabilility. This calls :func:`compile_llvm_ir`
-    with an appropriate ``cc`` value for the current device."""
+    with an appropriate ``cc`` value for the current device.
+
+    Args:
+        name (`str` or `None`, optional):
+            If not set to ``None``, gives this name to
+            the compiled function.
+    """
     amdgpu_arch = get_current_device().amdgpu_arch
     return compile_llvm_ir(
         pyfunc,
@@ -394,6 +414,7 @@ def compile_llvm_ir_for_current_device(
         amdgpu_arch=amdgpu_arch,
         opt=opt,
         to_bc=to_bc,
+        name=name,
     )
 
 

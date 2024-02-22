@@ -46,6 +46,7 @@
 # SOFTWARE.
 
 import os
+import textwrap
 
 from llvmlite import ir
 
@@ -55,12 +56,24 @@ from .hipdrv import devices, driver
 
 from .amdgcn import TRIPLE as HIP_TRIPLE
 from .amdgcn import DATA_LAYOUT
-from numba.hip.util import llvmutils
+from numba.hip.util import llvmutils, comgrutils
 from numba.hip.typing_lowering import hipdevicelib
 from numba.hip.hipdrv import hiprtc
 
 # TODO replace by AMD COMGR based disasm
 # def run_nvdisasm(cubin, flags):
+
+FILE_SEP = "-" * 10 + "(start of next file)" + "-" * 10
+
+
+def bundle_file_contents(strs):
+    filesep = "\n\n" + {FILE_SEP} + "\n\n"
+    return filesep.join(strs)
+
+
+def unbundle_file_contents(bundled):
+    filesep = "\n\n" + {FILE_SEP} + "\n\n"
+    return bundled.split(filesep)
 
 
 def _read_file(filepath: str, mode="r"):
@@ -88,7 +101,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
     """
 
     def __init__(
-        self, codegen, name, entry_name=None, max_registers=None, options=None
+        self, codegen, name, entry_name=None, max_registers=None, options=None, device: bool = True
     ):
         """
         codegen:
@@ -102,6 +115,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             The maximum register usage to aim for when linking.
         options:
             Dict of options to pass to the compiler/optimizer.
+        device (`bool`,optional):
+            If the function definition in this module is an
+            AMD GPU device function instead of an AMD GPU kernel.
+            Defaults to ``True``.
         """
         if max_registers != None:
             raise NotImplementedError(
@@ -112,6 +129,8 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
 
         # The llvmlite module for this library.
         self._module = None
+        # if this module is an AMD GPU kernel
+        self._device: bool = device
         # This list contains entries of the following kind:
         # 1) CodeLibrary objects that will be "linked" into this library. The
         #    modules within them are compiled to LLVM IR along with the
@@ -124,18 +143,19 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         #    Driver API at link time.
         # NOTE: list maintains insertion order
         self._linking_dependencies = []
+        # TODO HIP add TBC HipProgram with user-configurable input as accepted dependency type
 
-        # Cache the LLVM IR string representation of this
-        # HIPCodeLibrary's and its dependencies' `_module`` member
-        # as well as of all LLVM IR/BC buffers.
-        # TODO LLVM IR is technically already target dependent.
-        self._llvm_strs = None
-
+        # The raw LLVM IR strs as generated via Numba or
+        # added as LLVM IR/BC buffers/files or HIP C++ files to this
+        # code library.
+        self._raw_source_strs = []
+        # Maps GPU arch -> Unlinked AMD GPU LLVM IR snippets (str) per dependency.
+        self._unlinked_amdgpu_llvm_strs_cache = {}
         # Maps GPU arch -> Linked AMD GPU LLVM IR (str)
         # A single LLVM file per GPU arch that has been
         # constructed by converting all files to LLVM IR/BC
         # and linking them together into a single LLVM module
-        self._linked_llvm_cache = {}
+        self._linked_amdgpu_llvm_ir_cache = {}
         # Maps GPU arch -> AMD GPU code object
         self._codeobj_cache = {}
         # Maps GPU arch -> linker info output for AMD GPU codeobj
@@ -147,88 +167,23 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if options is None:
             options = {}
         self._options = options
+        self.set_entry_name(entry_name)
+
+    def set_entry_name(self, entry_name: str):
+        """Sets `self._entry_name` and `self._orginal_entry_name` to the passed one.
+        """
         self._entry_name = entry_name
+        self._original_entry_name = entry_name
 
-    @property
-    def llvm_strs(self):
-        """Get this instance's LLVM module as string and recursively that of all its dependencies.
+    def change_entry_name(self, new_entry_name: str):
+        """Sets `self._entry_name` stores the original one in `self._orginal_entry_name`.
 
-        Note:
-            Link-time file dependencies are not considered.
-
-        Returns:
-            `list`:
-                A string representation (human-readable LLVM IR) of this instance's LLVM module
-                and recursively that of all its dependencies.
+        Requires that `self._entry_name` and `self._original_entry_name` have been set before.
+        An assertion fails otherwise.
         """
-        return self._get_llvm_strs()
-
-    def _get_llvm_strs(self, compile_hip_files: bool = False, amdgpu_arch: str = None):
-        """Get this instance's LLVM module as string and recursively that of all its dependencies.
-
-        Note:
-            Link-time file dependencies are not considered.
-
-        Args:
-            amdgpu_arch (`str`, optional): AMD GPU architecture string such as `gfx90a`.
-                Defaults to None. If ``None`` is specified, the architecture of the first device
-                in the current HIP context is used instead.
-
-        Returns:
-            `list`:
-                A string representation (human-readable LLVM IR) of this instance's LLVM module
-                and recursively that of all its dependencies.
-        """
-        if self._llvm_strs is None:
-            self._llvm_strs = []
-            for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
-                if isinstance(dependency, HIPCodeLibrary):
-                    self._llvm_strs.append(str(dependency._module))
-                elif isinstance(dependency, str):  # an LLVM IR/BC file
-                    fileext = os.path.basename(dependency).split(os.path.extsep)[-1]
-                    if fileext in ("ll", "bc"):
-                        mode = "rb" if fileext == "bc" else "r"
-                        self._llvm_strs.append(
-                            llvmutils.to_ir(_read_file(dependency, mode)).decode(
-                                "utf-8"
-                            )
-                        )
-                    elif compile_hip_files:  # assumes HIP C++
-                        prog = hiprtc.HIPRTC().create_program(
-                            _read_file(dependency, "r"), name=dependency
-                        )
-                        compile_opts = (
-                            f"--offload-arch={_get_amdgpu_arch(amdgpu_arch)} -fgpu-rdc"
-                        )
-                        hiprtc.HIPRTC().compile_program(prog, compile_opts)
-                elif isinstance(dependency, tuple):  # an LLVM IR/BC buffer
-                    self._llvm_strs.append(llvmutils.to_ir(*dependency).decode("utf-8"))
-        return self._llvm_strs
-
-    def _join_strs(self, strs):
-        return "\n\n".join(strs)
-
-    # @abstractmethod (5/6)
-    def get_llvm_str(self):
-        """Joins the string representation of this instance's LLVM module and that of all its dependencies (recursively)
-
-        Note:
-            Link-time file dependencies are not considered.
-
-        Returns:
-            `str`:
-                The joined string representation of this instance's LLVM module and that of all its dependencies (recursively).
-        """
-        return "\n\n".join(self.llvm_strs)
-
-    # @abstractmethod (5/6)
-    def get_asm_str(self):
-        """Same as get_llvm_str()
-
-        Note:
-            Currently, simply returns `self.get_llvm_str()`.
-        """
-        return self.get_llvm_str()
+        assert self._entry_name != None and self._original_entry_name != None
+        self._original_entry_name = self._entry_name
+        self._entry_name = new_entry_name
 
     @staticmethod
     def _walk_linking_dependencies(library, post_order: bool = False):
@@ -265,6 +220,204 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if post_order:
             yield library
 
+    def _collect_dependency_llvm_ir(
+        self,
+        link_time: bool = False,
+        amdgpu_arch: str = None,
+        force_ir: bool = False,
+    ):
+        """Collects LLVM IR/BC from all dependencies.
+
+        Note:
+            Result may not only contain LLVM IR/BC if a dependency
+            is of HIP C++ kind and argument ``link_time==False``.
+
+        Note:
+            Simple HIP C++ files that can be compiled via
+            HIPRTC and do not require additional includes
+            can be specified as dependencies too.
+            If compilation of a HIP C++ file is more complicated,
+            it is better to use the `numba.hip.hipdrv.hiprtc`
+            or `numba.hip.util.comgrutils` APIs directly.
+
+        Note:
+            If a dependency is a HIP C++ file and ``link_time==False``,
+            it is appended in raw form to the result list.
+            If ``link_time==True``, it is first compiled to LLVM IR/BC
+            via HIPRTC, which considers the argument ``amdgpu_arch``.
+
+        Args:
+            link_time (`bool`,optional):
+                If we collect the dependencies at link time and hence
+                HIP C++ input files can be compiled to LLVM IR
+                and AMD GPU specific modifications can be applied
+                to function definitions.
+            amdgpu_arch (`str`, optional): AMD GPU architecture string such as `gfx90a`.
+                Defaults to ``None``. If ``None`` is specified, the architecture of the first device
+                in the current HIP context is used instead.
+                Only used if argument ``link_time==True``.
+            force_ir (`bool`, optional):
+                Converts LLVM BC to human-readable IR (`str`) where required.
+                Defaults to ``False``.
+        Returns:
+            `list`:
+                A string representation (human-readable LLVM IR) of this instance's LLVM module
+                and recursively that of all its dependencies.
+        """
+        amdgpu_arch = _get_amdgpu_arch(amdgpu_arch)
+
+        # helper routines
+
+        def process_buf_(buf, buf_len: int = -1):
+            # note buf_args might be buf and buf_len
+            nonlocal force_ir
+            if force_ir:
+                return llvmutils.to_ir(buf, buf_len).decode("utf-8")
+            else:
+                try:  # check if the buffer length can be obtained via `len(buf)`
+                    len(buf)
+                except:  # if not, try to convert to bc buffer
+                    if not buf_len or buf_len < 1:
+                        raise RuntimeError(
+                            f"buffer size cannot be obtained for input {str(buf)}"
+                        )
+                    return llvmutils.to_bc(buf, buf_len).decode("utf-8")
+                else:  # if `len(buf)` works, return `buf`
+                    return buf
+
+        def compile_hiprtc_program_(source, name):
+            nonlocal amdgpu_arch
+            nonlocal process_buf_
+            return process_buf_(hiprtc.compile(source, name, amdgpu_arch))
+
+        # NOTE: 'ptx' is interpreted as 'll' to ease some porting
+        LLVM_IR_EXT = ("ll", "bc", "ptx")
+
+        result = []
+        for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
+            if isinstance(dependency, HIPCodeLibrary):
+                # TODO get unlinked_llvm_ir but with attribute modifications
+                if link_time:
+                    result.append(dependency.get_unlinked_llvm_ir(amdgpu_arch))
+                else:
+                    result.append(str(dependency._module))
+            elif isinstance(dependency, str):  # an LLVM IR/BC file
+                fileext = os.path.basename(dependency).split(os.path.extsep)[-1]
+                if fileext in LLVM_IR_EXT:  # 'ptx' is interpreted as 'll'.
+                    mode = "rb" if fileext == "bc" else "r"
+                    result.append(process_buf_(_read_file(dependency, mode)))
+                elif link_time:  # assumes HIP C++
+                    result.append(
+                        compile_hiprtc_program_(
+                            _read_file(dependency, "r"), name=dependency
+                        )
+                    )
+                else:  # assumes HIP C++
+                    result.append(_read_file(dependency, "r"))
+            elif isinstance(dependency, tuple):  # an LLVM IR/BC buffer
+                if len(dependency) == 2:  # always assume LLVM IR/BC
+                    result.append(process_buf_(*dependency))
+                elif len(dependency) == 3:
+                    fileext = dependency[2]
+                    if fileext in LLVM_IR_EXT:
+                        result.append(process_buf_(*dependency[:2]))
+                    else:  # assumes HIP C++
+                        result.append(
+                            compile_hiprtc_program_(dependency[0], name=dependency)
+                        )
+                else:
+                    raise RuntimeError(
+                        "tuple dependency specifications must have length 2 '(buffer, buffer-len or None)' or 3 '(buffer, buffer-len or None, file-ext)'"
+                    )
+            else:
+                raise RuntimeError(
+                    f"don't know how to handle dependency specification of type '{type(dependency)}'"
+                )
+        return result
+
+    def get_raw_source_strs(self):
+        """Return raw LLVM IR or HIP C++ sources of this module and its dependencies.
+
+        The first entry contains the LLVM IR for this HIPCodeLibrary's module.
+        """
+        if self._raw_source_strs:
+            return self._raw_source_strs
+        return self._collect_dependency_llvm_ir(link_time=False, force_ir=True)
+
+    def get_unlinked_llvm_strs(self, amdgpu_arch):
+        """Return unlinked AMD GPU LLVM IR of this module and all its dependencies.
+
+        The first entry contains the LLVM IR for this HIPCodeLibrary's module.
+
+        Returns:
+            `list`:
+                Contains unlinked AMD GPU LLVM IR of this module and its dependencies.
+        """
+        unlinked_llvm = self._unlinked_amdgpu_llvm_strs_cache.get(amdgpu_arch, None)
+        if unlinked_llvm:
+            return unlinked_llvm
+        else:
+            unlinked_llvm = self._collect_dependency_llvm_ir(
+                link_time=True, force_ir=True
+            )
+            self._unlinked_amdgpu_llvm_strs_cache[amdgpu_arch, None] = unlinked_llvm
+            return unlinked_llvm
+
+    def get_raw_source_str(self):
+        """Bundles the string representation of this instance's LLVM module and that of its dependencies.
+
+        Returns:
+            `str`:
+                The joined string representation of this instance's LLVM module
+                and that of all its dependencies (recursively). Dependencies can
+                be other HIPCodeLibrary instances, LLVM IR/BC buffers/files, and
+                simple HIP C++ buffers/files
+
+        See:
+            `HIPCodeLibrary.get_raw_source_strs`
+        """
+        return bundle_file_contents(self.get_raw_source_strs)
+
+    # @abstractmethod (5/6), added arch amdgpu_arch
+    def get_llvm_str(self, amdgpu_arch: str = None, linked: bool = False):
+        """Get linked/unlinked LLVM representation of this HIPCodeLibrary.
+
+        Args:
+            amdgpu_arch (`str`, optional): AMD GPU architecture string such as `gfx90a`.
+                Defaults to None. If ``None`` is specified, the architecture of the first device
+                in the current HIP context is used instead.
+            linked (`bool`, optional`):
+                Return the string representation of the fully linked LLVM IR, where
+                all dependencies including the Numba HIP device library have been linked in.
+                This file can be quite large (10k+ lines of code).
+                Otherwise, bundles the string representation of this instance's LLVM module
+                and that of its dependencies.
+                Defaults to ``True``.
+        Returns:
+            `str`:
+                The joined string representation of this instance's LLVM module and that of all its dependencies (recursively).
+        See:
+            `HIPCodeLibrary.get_raw_source_strs`
+        """
+        if linked:
+            return self.get_linked_llvm_ir(amdgpu_arch)
+        else:
+            return bundle_file_contents(self.get_unlinked_llvm_strs(amdgpu_arch))
+
+    # @abstractmethod (5/6), added arch amdgpu_arch
+    def get_asm_str(self, amdgpu_arch: str):
+        """(Currently not implemented.)
+
+        Return a disassembly of the AMD code object.
+        Requires that this functionality is added to
+        ROCm AMD COMGR.
+
+        amdgpu_arch (`str`, optional): AMD GPU architecture string such as `gfx90a`.
+            Defaults to None. If ``None`` is specified, the architecture of the first device
+            in the current HIP context is used instead.
+        """
+        raise NotImplementedError()
+
     @property
     def linking_libraries(self):
         """Recursively create a list of link-time dependencies.
@@ -293,8 +446,75 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             if isinstance(dependency, HIPCodeLibrary)
         )
 
-    def get_linked_llvm_ir(self, amdgpu_arch: str = None, to_bc: bool = True):
+    def _apply_llvm_amdgpu_modifications(self, amdgpu_arch: str = None):
+        """Applies modifications for LLVM AMD GPU device functions.
+
+        Modifies visibility, calling convention and function attributes.
+
+        Args:
+            amdgpu_arch (`str`, optional): AMD GPU architecture string such as `gfx90a`.
+                Defaults to None. If ``None`` is specified, the architecture of the first device
+                in the current HIP context is used instead.
+                This argument is required if device-code only HIP C++ files are encountered
+                that need to compiled to LLVM IR first via HIPRTC.
+
+        Note:
+            Directly and persistently modifies member ``self._module``.
+        """
+        amdgpu_arch = _get_amdgpu_arch(amdgpu_arch)
+
+        llvm_fun_attributes = comgrutils.get_llvm_device_fun_attributes(
+            amdgpu_arch, only_kv=True, raw=True
+        )
+        print(self.name)
+        print(self._original_entry_name)
+        for fn in self._module.functions:
+            assert isinstance(fn, ir.Function)
+            if not fn.is_declaration:
+                if fn.name == self._original_entry_name:
+                    if self._entry_name != self._original_entry_name:
+                        fn.name = self._entry_name
+                # NOTE: We assume there is only one definition in the
+                # use `fn.linkage` field to specify visibility
+                fn.linkage = comgrutils.llvm_amdgpu_device_fun_visibility #  + " linkonce_odr"
+                fn.calling_convention = ""
+                # Abuse attributes to specify address significance
+                # set.add(fn.attributes, "local_unnamed_addr") # TODO HIP disabled for now, causes error
+                for attrib in llvm_fun_attributes:
+                    # We bypass the known-attribute check performed by ir.FunctionAttributes
+                    # by calling the `add` method of the super class `set`
+                    # (`ir.FunctionAttributes`->`ir.FunctionAttributes`->`set`)
+                    set.add(fn.attributes, attrib)
+
+    def get_unlinked_llvm_ir(
+        self,
+        amdgpu_arch: str = None,
+    ):
+        """Returns the unlinked AMDGPU LLVM IR of this HIPCodeLibrary's module in human-readable format.
+
+        Note:
+            Applies architecture specific modifications to the function
+            definitions in the `llvmlite.ir.Module` member `self._module`.
+
+        Note:
+            Must not be confused with `get_unlinked_llvm_strs` which
+            returns LLVM IR for this module and all its dependencies.
+        """
+        self._apply_llvm_amdgpu_modifications(amdgpu_arch)
+        llvm_ir = str(self._module)
+        return llvm_ir
+
+    def get_linked_llvm_ir(
+        self,
+        amdgpu_arch: str = None,
+        to_bc: bool = True,
+        remove_unused_helpers: bool = True,
+    ):
         """Returns/Creates single module from linking in all link-time dependencies.
+
+        Note:
+            Always compiles to an AMD GPU device function, never to an AMD GPU kernel.
+            The result may be transformed to a kernel in `numba.hip.compiler`.
 
         Args:
             amdgpu_arch (`str`, optional): AMD GPU architecture string such as `gfx90a`.
@@ -304,24 +524,53 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 that need to compiled to LLVM IR first via HIPRTC.
             to_bc (`bool`, optional):
                 If the result should be LLVM bitcode instead of human-readable LLVM IR.
-                Defaults to `True`.
-
+                Defaults to ``True``.
+            remove_unused_helpers (`bool`, optional)
+                Remove unused helper functions. Can reduce generated IR by a factor
+                of approx. 5x but has small performance impact at codegen time.
+                Defaults to ``True``.
         Returns:
             `bytes`:
                 The result of the linking as LLVM bitcode or human-readable LLVM IR depending on argument ``to_bc``.
         """
         amdgpu_arch = _get_amdgpu_arch(amdgpu_arch)
-        linked_llvm = self._linked_llvm_cache.get(amdgpu_arch, None)
+        linked_llvm = self._linked_amdgpu_llvm_ir_cache.get(amdgpu_arch, None)
         if linked_llvm:
             return linked_llvm
 
-        # add module + dependencies
-        linker_inputs = self._get_llvm_strs(compile_hip_files=True, amdgpu_arch=amdgpu_arch)
+        # 1. link all dependencies except the hip device lib
+        # - add self._module + dependencies
+        # - applies AMD GPU specific modifications to all function definitions.
+        linker_inputs = self.get_unlinked_llvm_strs(
+            amdgpu_arch=amdgpu_arch,
+        )
+        if not remove_unused_helpers:
+            linker_inputs.append(hipdevicelib.get_llvm_bc(amdgpu_arch))
+        linked_llvm = llvmutils.link_modules(linker_inputs, to_bc=True)
+
+        if remove_unused_helpers:
+            used_hipdevicelib_declares = llvmutils.get_function_names(
+                linked_llvm, defines=False
+            )
+            # 2. now link the hip device lib
+            linked_llvm = llvmutils.link_modules(
+                [linked_llvm, hipdevicelib.get_llvm_bc(amdgpu_arch)], to_bc
+            )
+
+            # 3. remove unused hip device lib function definitions
+            def delete_matcher_(name: str):
+                nonlocal used_hipdevicelib_declares
+                if hipdevicelib.DEVICE_FUN_PREFIX in name:
+                    return not name in used_hipdevicelib_declares
+                return False
+
+            linked_llvm = llvmutils.delete_functions(
+                linked_llvm, matcher=delete_matcher_, defines=True
+            )
+            # 4. link a last time to get rid of unused third-order function declarations
+            linked_llvm = llvmutils.link_modules([linked_llvm], to_bc)
         # lastly add the HIP device lib
-        linker_inputs.append(hipdevicelib.get_llvm_bc(amdgpu_arch))
-        # link and cache result
-        linked_llvm = llvmutils.link_modules(linker_inputs,to_bc)
-        self._linked_llvm_cache[amdgpu_arch] = linked_llvm
+        self._linked_amdgpu_llvm_ir_cache[amdgpu_arch] = linked_llvm
         return linked_llvm
 
     def get_codeobj(self, amdgpu_arch=None):
@@ -338,9 +587,20 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 Defaults to None. If ``None`` is specified, the architecture of the first device
                 in the current HIP context is used instead.
 
+        Note:
+            We use HIPRTC as linker here instead of ROCm LLVM link module APIs.
         Returns:
             The code object buffer.
         """
+        if self._device:
+            raise NotImplementedError(
+                textwrap.dedent(
+                    """\
+                    Compiling device functions to AMD GPU code is currently not supported.
+                    Device functions can currently only be compiled to LLVM IR.
+                    """
+                )
+            )
         amdgpu_arch = _get_amdgpu_arch(amdgpu_arch)
 
         codeobj = self._codeobj_cache.get(amdgpu_arch, None)
@@ -350,6 +610,25 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         linker = driver.Linker.new(
             max_registers=self._max_registers, amdgpu_arch=amdgpu_arch
         )
+
+        llvm_fun_attributes = comgrutils.get_llvm_kernel_attributes(
+            amdgpu_arch, only_kv=True, raw=True
+        )
+
+        # reframe the function as kernel
+        for fn in self._module.functions:
+            if not fn.is_declaration:
+                # abuse linkage to specify visibility
+                # fn.linkage = comgrutils.llvm_amdgpu_kernel_visibility
+                # abuse attributes to specify address significance
+                set.add(fn.attributes, "local_unnamed_addr")
+                for attrib in llvm_fun_attributes:
+                    # We bypass the known-attribute check performed by ir.FunctionAttributes
+                    # by calling the `add` method of the super class `set`
+                    # (ir.FunctionAttributes->ir.FunctionAttributes->set)
+                    # TODO filter device features?
+                    set.add(fn.attributes, attrib)
+                fn.calling_convention = comgrutils.llvm_amdgpu_kernel_calling_convention
 
         # self._module is also a linking dependency.
         for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
@@ -368,9 +647,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         return codeobj
 
     def get_hipfunc(self):
-        if self._entry_name is None:
+        if self._device:
             msg = (
-                "Missing entry_name - are you trying to get the cufunc "
+                "Missing entry_name - are you trying to get the hipfunc "
                 "for a device function?"
             )
             raise RuntimeError(msg)
@@ -451,7 +730,20 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         self._linking_dependencies.append((mod, mod_len))
 
     def add_linking_file(self, filepath: str):
-        """Add files in formats such as HIP C++ or LLVM IR/BC as link-time dependency."""
+        """Add files in formats such as HIP C++ or LLVM IR/BC as link-time dependency.
+
+        Note:
+            Simple HIP C++ files that can be compiled via HIPRTC and do not
+            require additional includes or compiler arguments can be
+            specified as dependencies too.
+
+            If compilation of a HIP C++ file is more complicated,
+            it is better to use the `numba.hip.hipdrv.hiprtc`
+            or `numba.hip.util.comgrutils` APIs directly to
+            create an LLVM IR/BC buffer that can then be specified
+            as dependency to this `HIPCodeLibrary` via `HIPCodeLibrary.add_linking_ir`
+            or `HIPCodeLibrary.add_linking_dependency`.
+        """
         self._linking_dependencies.append(filepath)
 
     def add_linking_dependency(self, dependency):
@@ -464,11 +756,11 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                    IR from this module - in that sense they are "linked" by LLVM IR
                    generation time, rather than at link time.
                    See `add_linking_library` for more details.
-                2. LLVM IR/BC or ROCm LLVM Python module types to link with the 
+                2. LLVM IR/BC or ROCm LLVM Python module types to link with the
                    generated LLVM IR. These are linked using the Driver API at
                    link time. See `add_linking_ir` for more details.
                 3. Files to link with the generated LLVM IR. These are linked using the
-                   Driver API at link time. See `add_linking_file` for more details.
+                   Driver API at link time. See `HIPCodeLibrary.add_linking_file` for more details.
         """
         if isinstance(dependency, HIPCodeLibrary):
             self._raise_if_finalized()
@@ -551,8 +843,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             codegen=None,
             name=self.name,
             entry_name=self._entry_name,
-            llvm_strs=self.llvm_strs,
-            linked_llvm_cache=self._linked_llvm_cache,
+            renamed_entry_name=self._original_entry_name,
+            raw_source_strs=self._raw_source_strs,
+            unlinked_llvm_strs_cache=self._unlinked_amdgpu_llvm_strs_cache,
+            linked_llvm_ir_cache=self._linked_amdgpu_llvm_ir_cache,
             codeobj_cache=self._codeobj_cache,
             linkerinfo_cache=self._linkerinfo_cache,
             max_registers=self._max_registers,
@@ -565,8 +859,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         codegen,
         name,
         entry_name,
-        llvm_strs,
-        linked_llvm_cache,
+        original_entry_name,
+        raw_source_strs,
+        unlinked_llvm_strs_cache,
+        linked_llvm_ir_cache,
         codeobj_cache,
         linkerinfo_cache,
         max_registers,
@@ -577,8 +873,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         """
         instance = cls(codegen, name, entry_name=entry_name)
 
-        instance._llvm_strs = llvm_strs
-        instance._linked_llvm_cache = linked_llvm_cache
+        instance._original_entry_name = original_entry_name
+        instance._raw_source_strs = raw_source_strs
+        instance._unlinked_amdgpu_llvm_strs_cache = unlinked_llvm_strs_cache
+        instance._linked_amdgpu_llvm_ir_cache = linked_llvm_ir_cache
         instance._codeobj_cache = codeobj_cache
         instance._linkerinfo_cache = linkerinfo_cache
 
@@ -615,7 +913,6 @@ class JITHIPCodegen(Codegen):
     def _add_module(self, module):
         pass
 
-    
     def magic_tuple(self):
         """
         Return a tuple unambiguously describing the codegen behaviour.

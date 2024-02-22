@@ -275,6 +275,7 @@ class HIPTargetContext(BaseContext):
         filename,
         linenum,
         max_registers=None,
+        name: str = None,
     ):
         """
         Adapt a code library ``codelib`` with the numba compiled HIP kernel
@@ -308,12 +309,16 @@ class HIPTargetContext(BaseContext):
             fndesc.llvm_func_name,
             ns="hippy",
         )
-        library = self.codegen().create_library(
+        library: codegen.HIPCodeLibrary = self.codegen().create_library(
             f"{codelib.name}_kernel_",
             entry_name=kernel_name,
             options=options,
             max_registers=max_registers,
+            device=False
         )
+        if name:
+            library.change_entry_name(name)
+            kernel_name = library._entry_name
         library.add_linking_library(codelib)
         wrapper = self.generate_kernel_wrapper(
             library, fndesc, kernel_name, debug, lineinfo, filename, linenum
