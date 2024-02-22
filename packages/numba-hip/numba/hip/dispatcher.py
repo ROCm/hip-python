@@ -94,7 +94,7 @@ class _Kernel(serialize.ReduceMixin):
 
         options = {"fastmath": fastmath, "opt": 3 if opt else 0}
 
-        amdgpu_arch = get_current_device().amdgpu_arch # from numba.hip.api
+        amdgpu_arch = get_current_device().amdgpu_arch  # from numba.hip.api
         cres = compile_hip(
             self.py_func,
             types.void,
@@ -120,7 +120,7 @@ class _Kernel(serialize.ReduceMixin):
             linenum,
             max_registers,
         )
-        assert isinstance(lib,hip.codegen.HIPCodeLibrary)
+        assert isinstance(lib, hip.codegen.HIPCodeLibrary)
 
         if not link:
             link = []
@@ -352,11 +352,13 @@ class _Kernel(serialize.ReduceMixin):
         cufunc = self._codelibrary.get_hipfunc()
 
         if self.debug:
-            excname = cufunc.name + "__errcode__"
-            excmem, excsz = cufunc.module.get_global_symbol(excname)
-            assert excsz == ctypes.sizeof(ctypes.c_int)
-            excval = ctypes.c_int()
-            excmem.memset(0, stream=stream)
+            pass
+            # TODO HIP enable debug
+            # excname = cufunc.name + "__errcode__"
+            # excmem, excsz = cufunc.module.get_global_symbol(excname)
+            # assert excsz == ctypes.sizeof(ctypes.c_int)
+            # excval = ctypes.c_int()
+            # excmem.memset(0, stream=stream)
 
         # Prepare arguments
         retr = []  # hold functors for writeback
@@ -384,39 +386,41 @@ class _Kernel(serialize.ReduceMixin):
         )
 
         if self.debug:
-            driver.device_to_host(ctypes.addressof(excval), excmem, excsz)
-            if excval.value != 0:
-                # An error occurred
-                def load_symbol(name):
-                    mem, sz = cufunc.module.get_global_symbol(
-                        "%s__%s__" % (cufunc.name, name)
-                    )
-                    val = ctypes.c_int()
-                    driver.device_to_host(ctypes.addressof(val), mem, sz)
-                    return val.value
+            pass
+            # TODO HIP enable debug
+            # driver.device_to_host(ctypes.addressof(excval), excmem, excsz)
+            # if excval.value != 0:
+            #     # An error occurred
+            #     def load_symbol(name):
+            #         mem, sz = cufunc.module.get_global_symbol(
+            #             "%s__%s__" % (cufunc.name, name)
+            #         )
+            #         val = ctypes.c_int()
+            #         driver.device_to_host(ctypes.addressof(val), mem, sz)
+            #         return val.value
 
-                tid = [load_symbol("tid" + i) for i in "zyx"]
-                ctaid = [load_symbol("ctaid" + i) for i in "zyx"]
-                code = excval.value
-                exccls, exc_args, loc = self.call_helper.get_exception(code)
-                # Prefix the exception message with the source location
-                if loc is None:
-                    locinfo = ""
-                else:
-                    sym, filepath, lineno = loc
-                    filepath = os.path.abspath(filepath)
-                    locinfo = "In function %r, file %s, line %s, " % (
-                        sym,
-                        filepath,
-                        lineno,
-                    )
-                # Prefix the exception message with the thread position
-                prefix = "%stid=%s ctaid=%s" % (locinfo, tid, ctaid)
-                if exc_args:
-                    exc_args = ("%s: %s" % (prefix, exc_args[0]),) + exc_args[1:]
-                else:
-                    exc_args = (prefix,)
-                raise exccls(*exc_args)
+            #     tid = [load_symbol("tid" + i) for i in "zyx"]
+            #     ctaid = [load_symbol("ctaid" + i) for i in "zyx"]
+            #     code = excval.value
+            #     exccls, exc_args, loc = self.call_helper.get_exception(code)
+            #     # Prefix the exception message with the source location
+            #     if loc is None:
+            #         locinfo = ""
+            #     else:
+            #         sym, filepath, lineno = loc
+            #         filepath = os.path.abspath(filepath)
+            #         locinfo = "In function %r, file %s, line %s, " % (
+            #             sym,
+            #             filepath,
+            #             lineno,
+            #         )
+            #     # Prefix the exception message with the thread position
+            #     prefix = "%stid=%s ctaid=%s" % (locinfo, tid, ctaid)
+            #     if exc_args:
+            #         exc_args = ("%s: %s" % (prefix, exc_args[0]),) + exc_args[1:]
+            #     else:
+            #         exc_args = (prefix,)
+            #     raise exccls(*exc_args)
 
         # retrieve auto converted arrays
         for wb in retr:
@@ -565,7 +569,7 @@ class _LaunchConfiguration:
         self.stream = stream
         self.sharedmem = sharedmem
 
-        if config.CUDA_LOW_OCCUPANCY_WARNINGS: # TODO HIP reuse CUDA config
+        if config.CUDA_LOW_OCCUPANCY_WARNINGS:  # TODO HIP reuse CUDA config
             # Warn when the grid has fewer than 128 blocks. This number is
             # chosen somewhat heuristically - ideally the minimum is 2 times
             # the number of SMs, but the number of SMs varies between devices -
@@ -749,6 +753,7 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
         Create a new instance of this dispatcher specialized for the given
         *args*.
         """
+        # TODO HIP adjust this to amdgpu_arch
         cc = get_current_device().compute_capability
         argtypes = tuple([self.typingctx.resolve_argument_type(a) for a in args])
         if self.specialized:
@@ -924,7 +929,7 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                 inline = self.targetoptions.get("inline")
                 fastmath = self.targetoptions.get("fastmath")
 
-                options = { # TODO HIP options for COMGR / HIPRTC
+                options = {  # TODO HIP options for COMGR / HIPRTC
                     "opt": 3 if self.targetoptions.get("opt") else 0,
                     "fastmath": fastmath,
                 }
@@ -938,8 +943,8 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                     lineinfo=lineinfo,
                     inline=inline,
                     fastmath=fastmath,
-                    options=options, # TODO HIP options for COMGR / HIPRTC
-                    amdgpu_arch=amdgpu_arch
+                    options=options,  # TODO HIP options for COMGR / HIPRTC
+                    amdgpu_arch=amdgpu_arch,
                 )
                 self.overloads[args] = cres
 
