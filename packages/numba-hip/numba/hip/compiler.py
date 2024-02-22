@@ -66,6 +66,7 @@ from numba.hip.api import get_current_device
 from numba.hip import target
 from numba.hip import codegen
 
+
 def _options_type(x):
     if x is None:
         return None
@@ -81,16 +82,11 @@ class HIPFlags(Flags):
         default=None,
         doc="AMD GPU architecture.",
     )
-    hip_options = Option( # note plain 'options' must not be used as it overrides a member of the base class 'Flags'
+    hip_options = Option(  # note plain 'options' must not be used as it overrides a member of the base class 'Flags'
         type=_options_type,
         default=None,
         doc="HIP compilation options",
-    ) # TODO add options for particular stages (linking, compiling, etc.)
-    # compute_capability = Option(
-    #     type=tuple,
-    #     default=None,
-    #     doc="Compute Capability",
-    # )
+    )  # TODO add options for particular stages (linking, compiling, etc.)
 
 
 # TODO read that carefully
@@ -168,10 +164,8 @@ class CreateLibrary(LoweringPass):
         name = state.func_id.func_qualname
 
         options = state.flags.hip_options
-        state.library = codegenerator.create_library(
-            name, options=options
-        )
-        assert isinstance(state.library,codegen.HIPCodeLibrary)
+        state.library = codegenerator.create_library(name, options=options)
+        assert isinstance(state.library, codegen.HIPCodeLibrary)
         # Enable object caching upfront so that the library can be serialized.
         state.library.enable_object_caching()
 
@@ -275,7 +269,7 @@ def compile_hip(
             pipeline_class=HIPCompiler,
         )
 
-    library = cres.library
+    library: codegen.HIPCodeLibrary = cres.library
     library.finalize()
 
     return cres
@@ -285,39 +279,39 @@ def compile_hip(
 def compile_llvm_ir(
     pyfunc,
     sig,
-    debug: bool=False,
-    lineinfo: bool=False,
-    device: bool=False,
-    fastmath: bool=False,
-    amdgpu_arch: str=None,
-    opt: bool=True,
+    debug: bool = False,
+    lineinfo: bool = False,
+    device: bool = False,
+    fastmath: bool = False,
+    amdgpu_arch: str = None,
+    opt: bool = True,
     to_bc: bool = True,
 ):
     """Compile a Python function to LLVM IR for a given set of argument types.
 
-    Links in all dependencies and produces a single LLVM IR file. 
+    Links in all dependencies and produces a single LLVM IR file.
 
     Args:
-        pyfunc: 
+        pyfunc:
             The Python function to compile.
-        sig: 
+        sig:
             The signature representing the function's input and output types.
-        debug (`bool`): 
+        debug (`bool`):
             Whether to include debug info in the generated PTX.
-        lineinfo (`bool`): 
+        lineinfo (`bool`):
             Whether to include a line mapping from the generated PTX
             to the source code. Usually this is used with optimized
             code (since debug mode would automatically include this),
             so we want debug info in the LLVM but only the line
             mapping in the final PTX.
-        device (`bool`): 
+        device (`bool`):
             Whether to compile a device function. Defaults to ``False``,
             to compile global kernel functions.
-        fastmath (`bool`): 
+        fastmath (`bool`):
             Whether to enable fast math flags (ftz=1, prec_sqrt=0, prec_div=, and fma=1) TODO HIP enable
-        amdgpu_arch (`str`): 
+        amdgpu_arch (`str`):
             AMD GPU architecture, e.g. ``gfx90a``.
-        opt (`bool`): 
+        opt (`bool`):
             Enable optimizations. Defaults to ``True``. TODO HIP enable
         to_bc (`bool`)
             Compile the result to bitcode. Defaults to 'True'.
@@ -333,10 +327,7 @@ def compile_llvm_ir(
         )
         warn(NumbaInvalidConfigWarning(msg))
 
-    options = {
-        'fastmath': fastmath,
-        'opt': 3 if opt else 0
-    }
+    options = {"fastmath": fastmath, "opt": 3 if opt else 0}
 
     args, return_type = sigutils.normalize_signature(sig)
 
@@ -357,9 +348,9 @@ def compile_llvm_ir(
     if resty and not device and resty != types.void:
         raise TypeError("HIP kernel must have void return type.")
 
-    if device: # device function, __device__
+    if device:  # device function, __device__
         lib = cres.library
-    else: # kernel, __global__
+    else:  # kernel, __global__
         tgt: target.HIPTargetContext = cres.target_context
         code = pyfunc.__code__
         filename = code.co_filename
@@ -374,13 +365,19 @@ def compile_llvm_ir(
             filename,
             linenum,
         )
-    assert isinstance(lib,codegen.HIPCodeLibrary)
-    llvm_ir = lib.get_linked_llvm_ir(amdgpu_arch=amdgpu_arch,to_bc=to_bc)
+    assert isinstance(lib, codegen.HIPCodeLibrary)
+    llvm_ir = lib.get_linked_llvm_ir(amdgpu_arch=amdgpu_arch, to_bc=to_bc)
     return llvm_ir, resty
 
 
 def compile_llvm_ir_for_current_device(
-    pyfunc, sig, debug=False, lineinfo=False, device=False, fastmath=False, opt=True,
+    pyfunc,
+    sig,
+    debug=False,
+    lineinfo=False,
+    device=False,
+    fastmath=False,
+    opt=True,
     to_bc: bool = True,
 ):
     """Compile a Python function to AMD GPU LLVM IR for a given set of argument types for
@@ -399,9 +396,11 @@ def compile_llvm_ir_for_current_device(
         to_bc=to_bc,
     )
 
+
 # TODO check if this is relevant for HIP as no HSA device functions can be linked, only LLVM IR ones
 def declare_device_function(name, restype, argtypes):
     return declare_device_function_template(name, restype, argtypes).key
+
 
 # TODO check if this is relevant for HIP as no HSA device functions can be linked, only LLVM IR ones
 def declare_device_function_template(name, restype, argtypes):
