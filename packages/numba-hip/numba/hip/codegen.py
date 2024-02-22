@@ -409,7 +409,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             `HIPCodeLibrary.get_raw_source_strs`
         """
         if linked:
-            return self.get_linked_llvm_ir(amdgpu_arch)
+            return llvmutils.to_ir(self.get_linked_llvm_ir(amdgpu_arch))
         else:
             return bundle_file_contents(self.get_unlinked_llvm_strs(amdgpu_arch))
 
@@ -472,11 +472,20 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         """
         amdgpu_arch = _get_amdgpu_arch(amdgpu_arch)
 
-        llvm_fun_attributes = comgrutils.get_llvm_device_fun_attributes(
-            amdgpu_arch, only_kv=True, raw=True
-        )
-        print(self.name)
-        print(self._original_entry_name)
+        if self._device:
+            fun_linkage = comgrutils.llvm_amdgpu_device_fun_visibility
+            fun_call_conv = ""
+            fun_attributes = comgrutils.get_llvm_device_fun_attributes(
+                amdgpu_arch, only_kv=True, raw=True
+            )
+        else:
+            fun_linkage = comgrutils.llvm_amdgpu_kernel_visibility
+            fun_call_conv = comgrutils.llvm_amdgpu_kernel_calling_convention
+            fun_attributes = comgrutils.get_llvm_kernel_attributes(
+                amdgpu_arch, only_kv=True, raw=True
+            )
+        # print(self.name)
+        # print(self._original_entry_name)
         for fn in self._module.functions:
             assert isinstance(fn, ir.Function)
             if not fn.is_declaration:
@@ -485,13 +494,11 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                         fn.name = self._entry_name
                 # NOTE: We assume there is only one definition in the
                 # use `fn.linkage` field to specify visibility
-                fn.linkage = (
-                    comgrutils.llvm_amdgpu_device_fun_visibility
-                )  #  + " linkonce_odr"
-                fn.calling_convention = ""
+                fn.linkage = fun_linkage
+                fn.calling_convention = fun_call_conv
                 # Abuse attributes to specify address significance
                 # set.add(fn.attributes, "local_unnamed_addr") # TODO HIP disabled for now, causes error
-                for attrib in llvm_fun_attributes:
+                for attrib in fun_attributes:
                     # We bypass the known-attribute check performed by ir.FunctionAttributes
                     # by calling the `add` method of the super class `set`
                     # (`ir.FunctionAttributes`->`ir.FunctionAttributes`->`set`)
@@ -621,37 +628,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         linker = driver.Linker.new(
             max_registers=self._max_registers, amdgpu_arch=amdgpu_arch
         )
-
-        llvm_fun_attributes = comgrutils.get_llvm_kernel_attributes(
-            amdgpu_arch, only_kv=True, raw=True
-        )
-
-        # reframe the function as kernel
-        for fn in self._module.functions:
-            if not fn.is_declaration:
-                # abuse linkage to specify visibility
-                # fn.linkage = comgrutils.llvm_amdgpu_kernel_visibility
-                # abuse attributes to specify address significance
-                set.add(fn.attributes, "local_unnamed_addr")
-                for attrib in llvm_fun_attributes:
-                    # We bypass the known-attribute check performed by ir.FunctionAttributes
-                    # by calling the `add` method of the super class `set`
-                    # (ir.FunctionAttributes->ir.FunctionAttributes->set)
-                    # TODO filter device features?
-                    set.add(fn.attributes, attrib)
-                fn.calling_convention = comgrutils.llvm_amdgpu_kernel_calling_convention
-
-        # self._module is also a linking dependency.
-        for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
-            if isinstance(dependency, HIPCodeLibrary):
-                linker.add_llvm_ir(str(dependency._module))
-            elif isinstance(dependency, str):  # this is a filepath
-                linker.add_file_guess_ext(dependency)
-            elif isinstance(dependency, tuple):  # this is a
-                linker.add_llvm_ir(llvmutils.to_bc(*dependency))
-        # lastly link the HIP device lib
-        linker.add_llvm_ir(hipdevicelib.get_llvm_bc(amdgpu_arch))
-
+        linker.add_llvm_ir(self.get_linked_llvm_ir(amdgpu_arch, to_bc=True))
         codeobj = linker.complete()
         self._codeobj_cache[amdgpu_arch] = codeobj
         self._linkerinfo_cache[amdgpu_arch] = linker.info_log
