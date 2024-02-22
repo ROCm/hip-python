@@ -161,7 +161,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 A string representation (human-readable LLVM IR) of this instance's LLVM module
                 and recursively that of all its dependencies.
         """
-        return self._llvm_strs()
+        return self._get_llvm_strs()
 
     def _get_llvm_strs(self, compile_hip_files: bool = False, amdgpu_arch: str = None):
         """Get this instance's LLVM module as string and recursively that of all its dependencies.
