@@ -32,6 +32,11 @@ from rocm.amd_comgr import amd_comgr as comgr
 
 from . import llvmutils
 
+llvm_amdgpu_kernel_visibility = "protected"
+llvm_amdgpu_kernel_calling_convention = "amdgpu_kernel"
+llvm_amdgpu_device_fun_visibility = "hidden"
+llvm_amdgpu_kernel_address_significance = "local_unnamed_addr"
+llvm_amdgpu_device_fun_address_significance = llvm_amdgpu_kernel_address_significance
 
 def compile_hip_source_to_llvm(
     source: str,
@@ -81,12 +86,6 @@ extern "C" __attribute__((device)) void MYFUNC ({args}) {{
     return;
 }}
 """
-
-llvm_amdgpu_kernel_visibility = "protected"
-llvm_amdgpu_kernel_calling_convention = "amdgpu_kernel"
-llvm_amdgpu_device_fun_visibility = "hidden"
-llvm_amdgpu_kernel_address_significance = "local_unnamed_addr"
-llvm_amdgpu_device_fun_address_significance = llvm_amdgpu_kernel_address_significance
 
 
 def _compile_dummy_snippet_to_llvm_ir(source: str, amdgpu_arch: str, args: str):
