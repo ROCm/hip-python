@@ -285,7 +285,8 @@ class AMDGPUTargetMachine:
         LLVMDisposeMessage(data_layout_cstr)
 
     def __init__(self, offload_arch: str):
-        self.__init_target_machine(offload_arch)
+        if not hasattr(self, "_keep_alive"):  # already initialized
+            self.__init_target_machine(offload_arch)
 
     @property
     def data_layout(self):
