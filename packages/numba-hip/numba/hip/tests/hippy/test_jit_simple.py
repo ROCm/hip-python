@@ -85,6 +85,8 @@ class TestJitSimple(CUDATestCase):
 
         print(f"{id(cuda.syncthreads)=}")  # same id, same object
 
+        # compile_llvm_ir_for_current_device
+
         def syncthreads():
 
             cuda.syncthreads()
@@ -96,11 +98,33 @@ class TestJitSimple(CUDATestCase):
                 sig=(),
                 device=True,
                 to_bc=False,
-                name="GENERIC_OP_FOR_PHILIPP",
+                name="GENERIC_OP",
             )
-        self.assertIn("GENERIC_OP_FOR_PHILIPP", ir.decode("utf-8"))
+        self.assertIn("GENERIC_OP", ir.decode("utf-8"))
         with open("syncthreads.ll", "w") as outfile:
             outfile.write(ir.decode("utf-8"))
+
+    def test_jit_device_syncthreads(self):
+        # jit - device function
+
+        @cuda.jit(device=True)
+        def syncthreads_jit():
+
+            cuda.syncthreads()
+
+        print(syncthreads_jit)
+
+    def test_jit_kernel_syncthreads(self):
+        # jit + run - kernel
+
+        @cuda.jit(device=False)
+        def syncthreads_kernel():
+
+            cuda.syncthreads()
+
+        threadsperblock = (16, 16)
+        blockspergrid = (1, 1)
+        syncthreads_kernel[blockspergrid, threadsperblock]()
 
 
 if __name__ == "__main__":

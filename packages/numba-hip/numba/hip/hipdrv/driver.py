@@ -333,7 +333,14 @@ class Driver(object):  #: HIP/AMD: modified
         return self._cuda_python_wrap_fn(fname)
 
     def _cuda_python_wrap_fn(self, fname):
-        libfn = getattr(binding, fname)
+        """
+        Checks HIP Python for function names that start with "hip".
+        Checks the CUDA Python interoperability layer for any other functions.
+        """
+        if fname.startswith("hip"):
+            libfn = getattr(_hip.hip, fname, None)
+        else:
+            libfn = getattr(binding, fname)
 
         def verbose_cuda_api_call(*args):
             argstr = ", ".join([str(arg) for arg in args])
@@ -2353,7 +2360,6 @@ class CudaPythonFunction(Function):
 def launch_kernel(
     cufunc_handle, gx, gy, gz, bx, by, bz, sharedmem, hstream, args, cooperative=False
 ):
-    raise NotImplementedError("TODO HIP port launcher")
     param_ptrs = [addressof(arg) for arg in args]
     params = (c_void_p * len(param_ptrs))(*param_ptrs)
 
@@ -2364,11 +2370,11 @@ def launch_kernel(
         raise NotImplementedError()
 
     if cooperative:
-        driver.cuLaunchCooperativeKernel(
+        driver.hipModuleLaunchCooperativeKernel(
             cufunc_handle, gx, gy, gz, bx, by, bz, sharedmem, hstream, params_for_launch
         )
     else:
-        driver.cuLaunchKernel(
+        driver.hipModuleLaunchKernel(
             cufunc_handle,
             gx,
             gy,
