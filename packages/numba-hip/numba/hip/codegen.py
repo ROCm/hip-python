@@ -630,6 +630,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         )
         linker.add_llvm_ir(self.get_linked_llvm_ir(amdgpu_arch, to_bc=True))
         codeobj = linker.complete()
+        # for inspecting the code object
+        # import rocm.amd_comgr.amd_comgr as comgr
+        # import pprint
+        # pprint.pprint(list(comgr.ext.parse_code_symbols(codeobj,len(codeobj)).keys()))
         self._codeobj_cache[amdgpu_arch] = codeobj
         self._linkerinfo_cache[amdgpu_arch] = linker.info_log
         return codeobj
@@ -642,7 +646,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             )
             raise RuntimeError(msg)
 
-        ctx = devices.get_context()
+        ctx: driver.Context = devices.get_context()
         device: driver.Device = ctx.device
 
         hipfunc = self._hipfunc_cache.get(device.id, None)

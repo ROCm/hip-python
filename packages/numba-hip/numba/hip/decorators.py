@@ -128,6 +128,7 @@ def jit(
             NumbaInvalidConfigWarning(msg)
         )  # TODO check if that's also the case for HIP
 
+    # TODO HIP reassess that
     if device and kws.get("link"):
         raise ValueError("link keyword invalid for device function")
 
