@@ -945,7 +945,8 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                     "fastmath": fastmath,
                 }
 
-                amdgpu_arch = get_current_device().arch
+                device: driver.Device = get_current_device()
+                amdgpu_arch = device.amdgpu_arch
                 cres = compile_hip(
                     self.py_func,
                     return_type,
