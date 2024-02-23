@@ -51,6 +51,7 @@ import functools
 import itertools
 from inspect import Signature, Parameter
 
+from numba.core import types
 
 class Stub(object):
     """Numba HIP stub object
@@ -137,6 +138,56 @@ def stub_function(fn):
         raise NotImplementedError("%s cannot be called from host code" % fn)
 
     return wrapped
+
+# ------------------------------------------------------------------------------
+# Attribute resolution
+def resolve_attributes(registry, thekey, thestubs):
+    """
+    Lets Numba know what an expression such as 'hip.syncthreads()' means
+    given the object `hip`.
+
+    See:
+        `numba.core.typing.templates.AttributeTemplate._resolve`
+    """
+    from numba.core.typing.templates import AttributeTemplate
+    assert isinstance(thestubs, dict)
+
+    @registry.register_attr
+    class AttributeTemplate_(AttributeTemplate):
+        key = types.Module(thekey)
+        _stubs: dict = thestubs
+
+        def __getattribute__(self, name: str):
+            if name.startswith("resolve_"):
+                attr = name.replace("resolve_", "")
+                childstub: Stub = self._stubs.get(attr, None)
+                if childstub != None:
+                    if childstub.is_supported():
+                        children = list(childstub.get_children())
+                        if len(children):
+                            assert not hasattr(childstub, "_signatures_"), "function may not have children itself"
+                            return lambda value: types.Module(
+                                childstub
+                            )  # register stub for parent stubs
+                        else:
+                            return lambda value: types.Function(
+                                childstub._template_
+                            )  # register concrete/callable template for function stubs
+            return super().__getattribute__(name)
+
+    for _, stub in thestubs.items():
+        children = dict(stub.get_children())
+        if len(children):
+            resolve_attributes(registry, stub, children)
+
+#--------------------------------------------------------------------------------
+# HIP
+
+class warpsize(Stub):
+    """
+    The size of a warp/wavefront. Typically is 64 for AMD GPU architectures.
+    """
+    _description_ = '<warpsize>'
 
 
 # -------------------------------------------------------------------------------
