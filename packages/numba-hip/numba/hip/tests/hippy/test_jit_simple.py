@@ -49,7 +49,7 @@
 """
 
 import math
-from numba import hip as cuda, void
+from numba import hip as cuda
 from numba.hip.testing import unittest, HIPTestCase as CUDATestCase
 
 
@@ -68,18 +68,22 @@ class TestJitSimple(CUDATestCase):
         # with open("empty.ll","w") as outfile:
         #     outfile.write(ir.decode("utf-8"))
 
-    # def test_compile_llvm_ir_for_math_sin(self):
+    def test_compile_llvm_ir_for_grid(self):
 
-    #     def math_sin():
-    #         math.sin(0)
+        def grid():
+            x, y = cuda.grid(2)
+            dim_x, dim_y = cuda.gridsize(2)
+            cuda.syncthreads()
+            cuda.get_threadIdx.x()
+            ws = cuda.warpsize
 
-    #     for _ in range(0, 2):
-    #         ir, restype = cuda.compile_llvm_ir_for_current_device(
-    #             pyfunc=math_sin, sig=(), device=True, to_bc=False
-    #         )
-    #     self.assertIn("test_compile_llvm_ir_for_syncthreads", ir.decode("utf-8"))
-    #     # with open("empty.ll","w") as outfile:
-    #     #     outfile.write(ir.decode("utf-8"))
+        for _ in range(0, 2):
+            ir, restype = cuda.compile_llvm_ir_for_current_device(
+                pyfunc=grid, sig=(), device=True, to_bc=False
+            )
+        self.assertIn("grid", ir.decode("utf-8"))
+        with open("grid.ll", "w") as outfile:
+            outfile.write(ir.decode("utf-8"))
 
     def test_compile_llvm_ir_for_syncthreads(self):
 
