@@ -59,11 +59,10 @@ from .typing_lowering.stubs import (
     shared,
     local,
     const,
+    warpsize,
 )
 from .typing_lowering import hipdevicelib
 globals().update(hipdevicelib.stubs)
-del globals()["gridsize"] # will be imported as intrinsic below
-del globals()["warpsize"] # hipdevicelib implements it as function, intrinsics adds it as attribute
 del hipdevicelib
 
 #: from .intrinsics import (grid, gridsize, syncthreads, syncthreads_and,
