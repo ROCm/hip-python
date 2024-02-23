@@ -60,24 +60,28 @@ import math
 from numba.core import imputils, types, typing
 import numba.core.typing.templates as typing_templates
 
-from numba.hip.typing_lowering import hipdevicelib
+from numba.hip.typing_lowering import hipdevicelib, stubs as _stubs
 
 typing_registry = typing_templates.Registry()
 impl_registry = imputils.Registry()
 
-for name, mathobj in vars(math).items():
-    stub = hipdevicelib.stubs.get(name, None)
-    if stub != None:
+stubs = {}
+for _name, _mathobj in vars(math).items():
+    _stub = hipdevicelib.stubs.get(_name, None)
+    if _stub != None:
         # register signatures
         typing_registry.register_global(
-            val=mathobj,
-            typ=typing_templates.make_concrete_template(
-                name=f"Hip_math_{name}", key=mathobj, signatures=stub._signatures_
-            ),
+            val=_mathobj,
+            typ=_stub._template_
         )
         # register code generators
-        for callgen, numba_parm_types in stub._call_generators_:
-            impl_registry.lower(mathobj, *numba_parm_types)(callgen)
+        for _callgen, _numba_parm_types in _stub._call_generators_:
+            impl_registry.lower(_mathobj, *_numba_parm_types)(_callgen)
+        stubs[_name] = _stub
+
+#
+# HIP: Below code unrelated to above, just to support import `ufuncs` module in __init__.py file.
+#
 
 unarys = [
     ("ceil", "ceilf", math.ceil),
