@@ -387,7 +387,7 @@ class HIPSource:
         def descend_(parts, thedict, variants, i=0, parent=None):
             nonlocal stub_processor
 
-            cls = thedict.get(parts[i], type(parts[i].lower(), (stub_base_class,), {}))
+            cls = thedict.get(parts[i], type(parts[i], (stub_base_class,), {}))
             if i < len(parts) - 1:
                 member = descend_(
                     parts, cls.__dict__, variants, i + 1, parent if parent else cls
