@@ -69,15 +69,16 @@ from numba.core.extending import overload_attribute
 from numba.hip.extending import intrinsic
 
 from numba.hip.typing_lowering.hipdevicelib import (
-    global_id as _global_id,  # these stubs are created at runtime,
-    gridsize as _gridsize,  # see numba.hip.hipdevicelib.HIPDeviceLib._create_extensions,
-    warpsize as _warpsize_fun,
+    get_global_id as _get_global_id,  # these stubs are created at runtime,
+    get_gridsize as _get_gridsize,  # see numba.hip.hipdevicelib.HIPDeviceLib._create_extensions,
+    get_warpsize as _get_warpsize,
 )
 
 
-def _call_first(stub, *args):
-    """Runs the first call generator registered with the stub."""
-    return stub._call_generators_[0](*args)
+def _call_first(stub, context, builder, sig, args):
+    """Returns the first call generator registered with the stub."""
+    # print(stub._call_generators_[0])
+    return stub._call_generators_[0][0](context, builder, sig, args)
 
 
 # -------------------------------------------------------------------------------
@@ -118,16 +119,19 @@ def grid(typingctx, ndim):
     sig = _type_grid_function(ndim)
 
     def codegen(context, builder, sig, args):
+        cfargs = (context, builder, sig, ())
         restype = sig.return_type
         if restype == types.int32:
             # return nvvmutils.get_global_id(builder, dim=1)
-            return _call_first(_global_id.x)
+            return _call_first(_get_global_id.x, *cfargs)
         elif isinstance(restype, types.UniTuple):
-            # ids = nvvmutils.get_global_id(builder, dim=restype.count)
             ids = [
-                _call_first(stub)
-                for stub in (_global_id.x, _global_id.y, _global_id.z)[: restype.count]
+                _call_first(stub, *cfargs)
+                for stub in (_get_global_id.x, _get_global_id.y, _get_global_id.z)[
+                    : restype.count
+                ]
             ]
+            # print(ids)
             return cgutils.pack_array(builder, ids)
 
     return sig, codegen
@@ -155,15 +159,18 @@ def gridsize(typingctx, ndim):
     sig = _type_grid_function(ndim)
 
     def codegen(context, builder, sig, args):
+        cfargs = (context, builder, sig, ())
         restype = sig.return_type
         if restype == types.int32:
             # return nvvmutils.get_global_id(builder, dim=1)
-            return _call_first(_gridsize.x)
+            return _call_first(_get_gridsize.x, *cfargs)
         elif isinstance(restype, types.UniTuple):
             # ids = nvvmutils.get_global_id(builder, dim=restype.count)
             ids = [
-                _call_first(stub)
-                for stub in (_gridsize.x, _gridsize.y, _gridsize.z)[: restype.count]
+                _call_first(stub, *cfargs)
+                for stub in (_get_gridsize.x, _get_gridsize.y, _get_gridsize.z)[
+                    : restype.count
+                ]
             ]
             return cgutils.pack_array(builder, ids)
 
@@ -172,10 +179,15 @@ def gridsize(typingctx, ndim):
 
 @intrinsic
 def _warpsize(typingctx):
+    """The size of a warp/wavefront.
+
+    Is typically '64'.
+    """
     sig = signature(types.int32)
 
     def codegen(context, builder, sig, args):
-        return _call_first(_warpsize_fun)
+        cfargs = (context, builder, sig, ())
+        return _call_first(_get_warpsize, *cfargs)
 
     return sig, codegen
 
@@ -183,8 +195,7 @@ def _warpsize(typingctx):
 @overload_attribute(types.Module(hip), "warpsize", target="hip")
 def hip_warpsize(mod):
     """
-    The size of a warp. All architectures implemented to date have a warp size
-    of 64.
+    The size of a warp/wavefront. Typically is 64 for AMD GPU architectures.
     """
 
     def get(mod):

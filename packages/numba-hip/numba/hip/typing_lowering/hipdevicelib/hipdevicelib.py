@@ -64,7 +64,7 @@ _log = logging.getLogger(__name__)
 
 DEVICE_FUN_PREFIX = "NUMBA_HIP_"
 
-_GET = f"{DEVICE_FUN_PREFIX}GET"
+_GET = f"{DEVICE_FUN_PREFIX}GET_"
 
 
 class HIPDeviceLib:
@@ -102,7 +102,7 @@ class HIPDeviceLib:
         Per coordinate struct ``threadIdx``, ``blockIdx``, ``blockDim``, and ``gridDim``;
         and per direction ``x``, ``y``, and ``z``; this routine further adds a
         wrapper function that accesses members of the struct. The wrapper
-        functions have the name ``get_<struct>_<direction>``.
+        functions have the name ``{_GET}<struct>_<direction>``.
 
         TODO:
             * Support functions that take/return char*.
@@ -288,7 +288,7 @@ class HIPDeviceLib:
             for dim in "xyz":
                 extensions += textwrap.dedent(
                     f"""\
-                unsigned __attribute__((device)) {_GET}_{kind}_{dim}() {{
+                unsigned __attribute__((device)) {_GET}{kind}_{dim}() {{
                     return {kind}.{dim};
                 }}
                 """
@@ -296,11 +296,11 @@ class HIPDeviceLib:
         for dim in "xyz":
             extensions += textwrap.dedent(
                 f"""\
-            unsigned __attribute__((device)) {_GET}_global_id_{dim}() {{
+            unsigned __attribute__((device)) {_GET}global_id_{dim}() {{
                 return threadIdx.{dim} + blockIdx.{dim} * blockDim.{dim};
             }}
 
-            unsigned __attribute__((device)) {_GET}_gridsize_{dim}() {{
+            unsigned __attribute__((device)) {_GET}gridsize_{dim}() {{
                 return blockDim.{dim}*gridDim.{dim};
             }}
             """
@@ -309,7 +309,7 @@ class HIPDeviceLib:
         #      we follow Numba CUDA here.
         extensions += textwrap.dedent(
             f"""
-            int __attribute__((device)) {_GET}_warpsize() {{
+            int __attribute__((device)) {_GET}warpsize() {{
                 return warpSize;
             }}
             """
@@ -371,8 +371,8 @@ class HIPDeviceLib:
             * Converts ``"atomicAdd_system"`` to ``["atomic","system","add"]``.
             * Converts ``"unsafeAtomicAdd_system"`` to ``["atomic","system","safe","add"]``.
             * Converts ``"__syncthreads"`` to ``["syncthreads"]``.
-            * Converts ``"{_GET}_threadIdx_x"`` to ``["threadIdx","x"]``.
-            * Converts ``"{_GET}_warpsize"`` to ``["warpsize"]``.
+            * Converts ``"{_GET}threadIdx_x"`` to ``["get_threadIdx","x"]``.
+            * Converts ``"{_GET}warpsize"`` to ``["get_warpsize"]``.
 
             Note:
                 We must ensure that the stub hierarchy parents do not
@@ -394,7 +394,7 @@ class HIPDeviceLib:
                 return [
                     part for part in name.split(".") if part
                 ]  # remove "", some match groups are optional
-            elif name == f"{_GET}_warpsize":
+            elif name == f"{_GET}warpsize":
                 return ["get_warpsize"]
             elif name == "lane_id":
                 return ["get_lane_id"]
@@ -408,7 +408,7 @@ class HIPDeviceLib:
                 "gridsize",
             ):
                 for dim in "xyz":
-                    if name == f"{_GET}_{kind}_{dim}":
+                    if name == f"{_GET}{kind}_{dim}":
                         return [f"get_{kind}", dim]
             return [name]
 
