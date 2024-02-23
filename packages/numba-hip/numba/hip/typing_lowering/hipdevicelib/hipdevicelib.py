@@ -64,7 +64,8 @@ _log = logging.getLogger(__name__)
 
 DEVICE_FUN_PREFIX = "NUMBA_HIP_"
 
-_GET = f"{DEVICE_FUN_PREFIX}_GET"
+_GET = f"{DEVICE_FUN_PREFIX}GET"
+
 
 class HIPDeviceLib:
     """Generate Python stubs and bitcode per GPU architecture.
@@ -393,6 +394,11 @@ class HIPDeviceLib:
                 return [
                     part for part in name.split(".") if part
                 ]  # remove "", some match groups are optional
+            elif name == f"{_GET}_warpsize":
+                return ["get_warpsize"]
+            elif name == "lane_id":
+                return ["get_lane_id"]
+
             for kind in (
                 "threadIdx",
                 "blockIdx",
@@ -403,9 +409,7 @@ class HIPDeviceLib:
             ):
                 for dim in "xyz":
                     if name == f"{_GET}_{kind}_{dim}":
-                        return [kind, dim]
-            if name == f"{_GET}_warpsize":
-                return ["warpsize"]
+                        return [f"get_{kind}", dim]
             return [name]
 
         typing_registry: typing_templates.Registry = typing_templates.Registry()
@@ -476,8 +480,6 @@ class HIPDeviceLib:
                         )
             # register signatures
             if len(stub._signatures_):
-                if device_fun.name == "__syncthreads":
-                    print(f"{device_fun.name} - {id(stub)=}")
                 typename = DEVICE_FUN_PREFIX + "_".join(
                     name_parts
                 )  # just a unique name TODO check if current is fine
