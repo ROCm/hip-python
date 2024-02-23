@@ -601,7 +601,7 @@ class HIPDeviceLib:
             nonlocal parm_types_numba
             lmod = builder.module
             fretty = context.get_value_type(result_type_numba)
-            fargtys = [context.get_value_type(arg.ty) for arg in parm_types_numba]
+            fargtys = [context.get_value_type(parm_type) for parm_type in parm_types_numba]
             fnty = ir.FunctionType(fretty, fargtys)
             fn = cgutils.get_or_insert_function(lmod, fnty, func_name)
             return builder.call(fn, args)
