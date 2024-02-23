@@ -61,65 +61,19 @@ from numba.core import datamodel
 from . import amdgcn
 from numba import hip
 from numba.hip import codegen  # , nvvmutils, ufuncs
-from numba.hip.typing_lowering import ufuncs
+from numba.hip.typing_lowering import stubs, ufuncs
 from numba.hip.typing_lowering.models import hip_data_manager
-
-from numba.hip.typing_lowering import hipdevicelib
+import math
+from numba.hip.typing_lowering import hipdevicelib, math as _math
 
 # -----------------------------------------------------------------------------
 # Typing
 
-
-def _resolve_attributes(thekey, thestubs):
-    """
-    Lets Numba know what an expression such as 'hip.syncthreads()' means
-    given the object `hip`.
-
-    See:
-        `numba.core.typing.templates.AttributeTemplate._resolve`
-    """
-    from numba.core.typing.templates import AttributeTemplate
-    assert isinstance(thestubs, dict)
-
-    @hipdevicelib.typing_registry.register_attr
-    class AttributeTemplate_(AttributeTemplate):
-        key = thekey
-        _stubs: dict = thestubs
-
-        def __getattribute__(self, name: str):
-            from numba.hip.typing_lowering import stubs
-            import traceback
-
-            if name.startswith("resolve_"):
-                attr = name.replace("resolve_", "")
-                childstub: stubs.Stub = self._stubs.get(attr, None)
-                if childstub != None:
-                    if childstub.is_supported():
-                        children = list(childstub.get_children())
-                        if len(children):
-                            assert (
-                                not hasattr(childstub, "_signatures_")
-                                and len(childstub._signatures_) > 0
-                            ), "function may not have children itself"
-                            return lambda value: types.Module(
-                                childstub
-                            )  # register stub for parent stubs
-                        else:
-                            # print(f"{childstub=}")
-                            # traceback.print_stack()
-                            return lambda value: types.Function(
-                                childstub._template_
-                            )  # register concrete/callable template for function stubs
-            return super().__getattribute__(name)
-
-    for _, stub in thestubs.items():
-        children = dict(stub.get_children())
-        if len(children):
-            _resolve_attributes(stub, children)
-
-
 # TODO add grid, gridsize as well
-_resolve_attributes(types.Module(hip), hipdevicelib.stubs)
+stubs.resolve_attributes(
+    hipdevicelib.typing_registry, hip, hipdevicelib.stubs
+)
+stubs.resolve_attributes(_math.typing_registry, math, _math.stubs)
 
 
 class HIPTypingContext(typing.BaseContext):
@@ -314,7 +268,7 @@ class HIPTargetContext(BaseContext):
             entry_name=kernel_name,
             options=options,
             max_registers=max_registers,
-            device=False
+            device=False,
         )
         if name:
             library.change_entry_name(name)
