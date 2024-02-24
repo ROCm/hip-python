@@ -46,16 +46,33 @@
 # SOFTWARE.
 
 """Very simple HIP JIT compilation examples.
+
+Note:
+    If you run this test via `pytest -v --durations=0 <test-file-name>.py`,
+    the rest results will be listed together with the execution time 
+    per test.
 """
+import os
+from numba.hip.testing import unittest, HIPTestCase as CUDATestCase
+
+DUMP_IR = bool(os.environ.get("NUMBA_HIP_TESTS_DUMP_IR", False))
+
+# Disable low occupancy warnings for our simple kernels
+from numba import config
+
+config.CUDA_LOW_OCCUPANCY_WARNINGS = False
+
+# Numba user code imports
 
 import math
 from numba import hip as cuda
-from numba.hip.testing import unittest, HIPTestCase as CUDATestCase
+
+runtimes = ""
 
 
 class TestJitSimple(CUDATestCase):
 
-    def test_compile_llvm_ir_for_empty_device_fun(self):
+    def test_00_compile_llvm_ir_for_empty_device_fun(self):
 
         def empty():
             pass
@@ -64,30 +81,13 @@ class TestJitSimple(CUDATestCase):
             ir, restype = cuda.compile_llvm_ir_for_current_device(
                 pyfunc=empty, sig=(), device=True, to_bc=False
             )
-        self.assertIn("test_compile_llvm_ir_for_empty_device_fun", ir.decode("utf-8"))
+        self.assertIn(
+            "test_00_compile_llvm_ir_for_empty_device_fun", ir.decode("utf-8")
+        )
         # with open("empty.ll","w") as outfile:
         #     outfile.write(ir.decode("utf-8"))
 
-    def test_compile_llvm_ir_for_grid(self):
-
-        def grid():
-            x, y = cuda.grid(2)
-            dim_x, dim_y = cuda.gridsize(2)
-            cuda.syncthreads()
-            cuda.get_threadIdx.x()
-            ws = cuda.warpsize
-
-        for _ in range(0, 2):
-            ir, restype = cuda.compile_llvm_ir_for_current_device(
-                pyfunc=grid, sig=(), device=True, to_bc=False
-            )
-        self.assertIn("grid", ir.decode("utf-8"))
-        with open("grid.ll", "w") as outfile:
-            outfile.write(ir.decode("utf-8"))
-
-    def test_compile_llvm_ir_for_syncthreads(self):
-
-        print(f"{id(cuda.syncthreads)=}")  # same id, same object
+    def test_01_compile_llvm_ir_for_syncthreads(self):
 
         # compile_llvm_ir_for_current_device
 
@@ -105,30 +105,56 @@ class TestJitSimple(CUDATestCase):
                 name="GENERIC_OP",
             )
         self.assertIn("GENERIC_OP", ir.decode("utf-8"))
-        with open("syncthreads.ll", "w") as outfile:
-            outfile.write(ir.decode("utf-8"))
+        if DUMP_IR:
+            with open("syncthreads.ll", "w") as outfile:
+                outfile.write(ir.decode("utf-8"))
 
-    def test_jit_device_syncthreads(self):
+    def test_03_jit_device_syncthreads(self):
         # jit - device function
 
         @cuda.jit(device=True)
-        def syncthreads_jit():
+        def syncthreads():
 
             cuda.syncthreads()
 
-        print(syncthreads_jit)
+        self.assertIsInstance(syncthreads, cuda.dispatcher.HIPDispatcher)
+        # print(syncthreads_jit)
 
-    def test_jit_kernel_syncthreads(self):
+    def test_04_jit_kernel_syncthreads(self):
         # jit + run - kernel
 
         @cuda.jit(device=False)
-        def syncthreads_kernel():
+        def syncthreads():
 
             cuda.syncthreads()
 
+        self.assertIsInstance(syncthreads, cuda.dispatcher.HIPDispatcher)
+
         threadsperblock = (16, 16)
         blockspergrid = (1, 1)
-        syncthreads_kernel[blockspergrid, threadsperblock]()
+        syncthreads[blockspergrid, threadsperblock]()
+
+    def test_05_compile_llvm_ir_for_one_of_each(self):
+
+        def mykernel():
+            x, y = cuda.grid(2)
+            dim_x, dim_y = cuda.gridsize(2)
+            cuda.syncthreads()
+            ws = cuda.warpsize
+            lane = cuda.laneid
+            cuda.cos(5)
+            cuda.cos(5.0)
+            math.cos(5)
+            cuda.threadIdx.x
+
+        for _ in range(0, 2):
+            ir, restype = cuda.compile_llvm_ir_for_current_device(
+                pyfunc=mykernel, sig=(), device=True, to_bc=False
+            )
+        self.assertIn("mykernel", ir.decode("utf-8"))
+        if DUMP_IR:
+            with open("one_of_each.ll", "w") as outfile:
+                outfile.write(ir.decode("utf-8"))
 
 
 if __name__ == "__main__":

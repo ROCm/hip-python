@@ -59,33 +59,10 @@ ufuncs = _mr.create_and_register_derived_module(
     "ufuncs",
     preprocess=lambda content: content.replace(
         "numba.hip.mathimpl", "numba.hip.typing_lowering.math"
-    ), # NOTE the preprocess_all has converted numba.cuda.mathimpl -> numba.hip.mathimpl
+    ),  # NOTE the preprocess_all has converted numba.cuda.mathimpl -> numba.hip.mathimpl
 )  # make this a submodule of the package
 
-
-def get_typing_registries():
-    """Yields typing/declaration registries of all typing/lowering libraries in this package.
-
-    Yields:
-        `numba.core.typing.templates.Registry`:
-            A registry of typing declarations. The registry stores such declarations
-            for functions, attributes and globals.
-        `numba.core.imputils.Registry`:
-            A registry of function and attribute implementations.
-    """
-    for registry_provider in (hipdevicelib, hip, math, numpy):
-        yield registry_provider.typing_registry
-
-
-def get_impl_registries():
-    """Yields lowering/implementation registries of all typing/lowering libraries in this package.
-
-    Yields:
-        `numba.core.typing.templates.Registry`:
-            A registry of typing declarations. The registry stores such declarations
-            for functions, attributes and globals.
-        `numba.core.imputils.Registry`:
-            A registry of function and attribute implementations.
-    """
-    for registry_provider in (hipdevicelib, hip, math, numpy):
-        yield registry_provider.impl_registry
+from .registries import (
+    typing_registry,
+    impl_registry,
+)

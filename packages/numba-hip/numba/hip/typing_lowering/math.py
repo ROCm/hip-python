@@ -58,26 +58,29 @@ Attributes:
 import math
 
 from numba.core import imputils, types, typing
-import numba.core.typing.templates as typing_templates
 
-from numba.hip.typing_lowering import hipdevicelib, stubs as _stubs
+from numba.hip.typing_lowering.registries import (
+    typing_registry,
+    impl_registry,
+)
+from numba.hip.typing_lowering import hipdevicelib
 
-typing_registry = typing_templates.Registry()
-impl_registry = imputils.Registry()
-
-stubs = {}
+thestubs = {}
 for _name, _mathobj in vars(math).items():
-    _stub = hipdevicelib.stubs.get(_name, None)
+    _stub = hipdevicelib.thestubs.get(_name, None)
     if _stub != None:
-        # register signatures
-        typing_registry.register_global(
-            val=_mathobj,
-            typ=_stub._template_
-        )
-        # register code generators
-        for _callgen, _numba_parm_types in _stub._call_generators_:
-            impl_registry.lower(_mathobj, *_numba_parm_types)(_callgen)
-        stubs[_name] = _stub
+        # register hipdevicelib typing template for this math object
+        # NOTE:
+        #     We use an existing stub and hence
+        #     specify keyword argument 'typing_key=_stub._template_'.
+        #     It is further not necessart to register any additional
+        #     lowering implementations. The `typing_key` suffices
+        #     to identify the correct lowering implementations.
+        # NOTE:
+        #     We still collect the stubs to inform the `math` module
+        #     attribute resolution in `numba/hip/target.py`.
+        typing_registry.register_global(val=_mathobj, typing_key=_stub._template_)
+        thestubs[_name] = _stub
 
 #
 # HIP: Below code unrelated to above, just to support import `ufuncs` module in __init__.py file.
@@ -139,9 +142,9 @@ def get_unary_impl_for_fn_and_ty(fn, ty):
     for fname64, fname32, key in unarys + [tanh_impls]:
         if fn == key:
             if ty == types.types.float32:
-                impl = hipdevicelib.stubs.get(fname32)
+                impl = hipdevicelib.thestubs.get(fname32)
             elif ty == types.types.float64:
-                impl = hipdevicelib.stubs.get(fname64)
+                impl = hipdevicelib.thestubs.get(fname64)
 
             return get_lower_unary_impl(key, ty, impl)
 
@@ -181,13 +184,14 @@ def get_binary_impl_for_fn_and_ty(fn, ty):
     for fname64, fname32, key in binarys:
         if fn == key:
             if ty == types.types.float32:
-                impl = hipdevicelib.stubs.get(fname32)
+                impl = hipdevicelib.thestubs.get(fname32)
             elif ty == types.types.float64:
-                impl = hipdevicelib.stubs.get(fname64)
+                impl = hipdevicelib.thestubs.get(fname64)
 
             return get_lower_binary_impl(key, ty, impl)
 
     raise RuntimeError(f"Implementation of {fn} for {ty} not found")
+
 
 __all__ = [
     "typing_registry",

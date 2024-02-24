@@ -64,16 +64,22 @@ from numba.hip import codegen  # , nvvmutils, ufuncs
 from numba.hip.typing_lowering import stubs, ufuncs
 from numba.hip.typing_lowering.models import hip_data_manager
 import math
-from numba.hip.typing_lowering import hipdevicelib, math as _math
+from numba.hip import typing_lowering
 
 # -----------------------------------------------------------------------------
 # Typing
 
-# TODO add grid, gridsize as well
+module_hip_attributes = {}
+module_hip_attributes.update(typing_lowering.hipdevicelib.thestubs)
+module_hip_attributes.update(typing_lowering.hip.thestubs)
+# TODO HIP continue working on intrinsics
+# del module_hip_attributes["warpsize"]
 stubs.resolve_attributes(
-    hipdevicelib.typing_registry, hip, hipdevicelib.stubs
+    typing_lowering.registries.typing_registry, hip, module_hip_attributes
 )
-stubs.resolve_attributes(_math.typing_registry, math, _math.stubs)
+stubs.resolve_attributes(
+    typing_lowering.registries.typing_registry, math, typing_lowering.math.thestubs
+)
 
 
 class HIPTypingContext(typing.BaseContext):
@@ -85,8 +91,7 @@ class HIPTypingContext(typing.BaseContext):
         self.install_registry(cmathdecl.registry)
         self.install_registry(enumdecl.registry)
 
-        for typing_registry in typing_lowering.get_typing_registries():
-            self.install_registry(typing_registry)
+        self.install_registry(typing_lowering.typing_registry)
         # self.install_registry(cudadecl.registry)
         # self.install_registry(cudamath.registry)
         # self.install_registry(libdevicedecl.registry)
@@ -175,8 +180,7 @@ class HIPTargetContext(BaseContext):
         self.install_registry(cffiimpl.registry)
         self.install_registry(cmathimpl.registry)
 
-        for impl_registry in typing_lowering.get_impl_registries():
-            self.install_registry(impl_registry)
+        self.install_registry(typing_lowering.impl_registry)
         # self.install_registry(hipimpl.registry)
         # self.install_registry(printimpl.registry)
         # self.install_registry(libdeviceimpl.registry)

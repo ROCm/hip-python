@@ -355,7 +355,10 @@ class HIPDeviceLib:
         self._amdgpu_arch = arch
 
     @staticmethod
-    def create_stubs_decls_impls():
+    def create_stubs_decls_impls(
+        typing_registry: typing_templates.Registry,
+        impl_registry: imputils.Registry,
+    ):
         """_summary_"""
         p_atomic_op = re.compile(
             r"(safe|unsafe)?[Aa]tomic([A-Z][A-Za-z]+)_?(\w+)?"
@@ -411,9 +414,6 @@ class HIPDeviceLib:
                     if name == f"{_GET}{kind}_{dim}":
                         return [f"get_{kind}", dim]
             return [name]
-
-        typing_registry: typing_templates.Registry = typing_templates.Registry()
-        impl_registry: imputils.Registry = imputils.Registry()
 
         def process_stub_(stub, parent, device_fun_variants, name_parts):
             """Registers function signatures and call generators for every stub.
@@ -494,7 +494,7 @@ class HIPDeviceLib:
             function_renamer_splitter=function_renamer_splitter_,
             stub_processor=process_stub_,
         )
-        return (stubs, typing_registry, impl_registry)
+        return stubs
 
     @staticmethod  # TODO externalize to typemaps -> typemapping
     def create_signature(device_fun: HIPDeviceFunction):
@@ -596,18 +596,20 @@ class HIPDeviceLib:
             `tuple`: A tuple of size 2 that contains (1) the call generator and (2) the argument types.
         """
 
-        def core(context, builder, sig, args):
+        def callgen(context, builder, sig, args):
             nonlocal result_type_numba
             nonlocal parm_types_numba
             lmod = builder.module
             fretty = context.get_value_type(result_type_numba)
-            fargtys = [context.get_value_type(parm_type) for parm_type in parm_types_numba]
+            fargtys = [
+                context.get_value_type(parm_type) for parm_type in parm_types_numba
+            ]
             fnty = ir.FunctionType(fretty, fargtys)
             fn = cgutils.get_or_insert_function(lmod, fnty, func_name)
             return builder.call(fn, args)
 
         # NOTE: 'impl_registry.lower(...)' is expanded: 'HIPDeviceLib.impl_registry.functions.append((core, key, *numba_parm_types))' and returns 'core'
-        return (impl_registry.lower(key, *parm_types_numba)(core), parm_types_numba)
+        return (impl_registry.lower(key, *parm_types_numba)(callgen), parm_types_numba)
 
     @staticmethod
     def register_call_generator_for_function_with_ptr_parms(
@@ -643,7 +645,7 @@ class HIPDeviceLib:
             `tuple`: A tuple of size 2 that contains (1) the call generator and (2) the argument types.
         """
 
-        def core(context, builder, sig, args):
+        def callgen(context, builder, sig, args):
             nonlocal result_type_numba
             nonlocal parm_types_numba
             nonlocal parm_is_out_ptr
@@ -703,7 +705,7 @@ class HIPDeviceLib:
         ]
         # NOTE: 'impl_registry.lower(...)' is expanded: 'HIPDeviceLib.impl_registry.functions.append((core, key, *in_parm_types_numba))' and returns 'core'
         return (
-            impl_registry.lower(key, *in_parm_types_numba)(core),
+            impl_registry.lower(key, *in_parm_types_numba)(callgen),
             in_parm_types_numba,
         )
 

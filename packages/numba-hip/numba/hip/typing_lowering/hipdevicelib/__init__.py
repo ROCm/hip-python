@@ -58,13 +58,18 @@ _cparser.CParser.set_clang_res_dir(
 
 from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib, DEVICE_FUN_PREFIX
 
-_all_stubs, typing_registry, impl_registry = _HIPDeviceLib().create_stubs_decls_impls()
+from numba.hip.typing_lowering.registries import (
+    typing_registry,
+    impl_registry,
+)
+
+_all_stubs = _HIPDeviceLib().create_stubs_decls_impls(typing_registry, impl_registry)
 
 unsupported_stubs = {}
-stubs = {}
+thestubs = {}
 for name, stub in _all_stubs.items():
     if stub.is_supported():
-        stubs[name] = (
+        thestubs[name] = (
             stub  # allows to easily add them to numba.hip globals() in __init__.py
         )
         globals()[
@@ -87,7 +92,7 @@ def get_llvm_bc(amdgpu_arch):
 
 
 __all__ = [
-    "stubs",
+    "thestubs",
     "unsupported_stubs",
     "typing_registry",
     "impl_registry",

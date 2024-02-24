@@ -51,7 +51,6 @@ import sys
 from rocm.llvm.c.types import LLVMOpaqueModule
 from rocm.llvm.c.core import (
     LLVMDisposeMessage,
-    LLVMCloneModule,
 )
 from rocm.llvm.c.error import (
     LLVMGetErrorMessage,

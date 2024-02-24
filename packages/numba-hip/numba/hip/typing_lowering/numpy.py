@@ -66,7 +66,7 @@ from numba.core.typing.npydecl import (
     bit_twiddling_functions,
 )
 
-typing_registry = typing_templates.Registry()
+from numba.hip.typing_lowering.registries import typing_registry
 
 for func in trigonometric_functions:
     register_numpy_ufunc(func, typing_registry.register_global)

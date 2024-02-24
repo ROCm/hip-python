@@ -68,10 +68,11 @@ from numba.core.extending import overload_attribute
 #: from numba.cuda import nvvmutils # TODO: HIP/AMD: not supported
 from numba.hip.extending import intrinsic
 
+from numba.hip import typing_lowering
+
 from numba.hip.typing_lowering.hipdevicelib import (
     get_global_id as _get_global_id,  # these stubs are created at runtime,
     get_gridsize as _get_gridsize,  # see numba.hip.hipdevicelib.HIPDeviceLib._create_extensions,
-    get_warpsize as _get_warpsize,
 )
 
 
@@ -177,28 +178,22 @@ def gridsize(typingctx, ndim):
     return sig, codegen
 
 
-@intrinsic
-def _warpsize(typingctx):
-    """The size of a warp/wavefront.
+def _overload_attribute(stub, attr, getter_stub, sig=signature(types.int32)):
 
-    Is typically '64'.
-    """
-    sig = signature(types.int32)
+    @overload_attribute(types.Module(stub), attr, target="hip")
+    def _attribute_resolution(mod):
+        @intrinsic
+        def _attribute_resolution_inner(typingctx):
+            return sig, lambda *cfargs: _call_first(getter_stub, *cfargs)
 
-    def codegen(context, builder, sig, args):
-        cfargs = (context, builder, sig, ())
-        return _call_first(_get_warpsize, *cfargs)
+        def get(mod):
+            return _attribute_resolution_inner()
 
-    return sig, codegen
+        return get
 
 
-@overload_attribute(types.Module(hip), "warpsize", target="hip")
-def hip_warpsize(mod):
-    """
-    The size of a warp/wavefront. Typically is 64 for AMD GPU architectures.
-    """
-
-    def get(mod):
-        return _warpsize()
-
-    return get
+for _scalar in ("warpsize", "lane_id"):
+    # NOTE: typing_lowering.hip stubs will be eventually put into `numba.hip` module.
+    _attr = _scalar.replace("_", "")  # lane_id -> laneid
+    _getter_stub = getattr(typing_lowering.hipdevicelib, f"get_{_scalar}")
+    _overload_attribute(hip, _attr, _getter_stub)

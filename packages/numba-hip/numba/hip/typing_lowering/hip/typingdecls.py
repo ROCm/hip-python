@@ -68,10 +68,10 @@ from numba.core.typing.templates import (
 
 #: from numba.hip.types import dim3, grid_group
 from numba.hip.typing_lowering.types import dim3
-from numba.hip.typing_lowering import stubs
-from numba import hip
+from . import hipstubs
 
-typing_registry = Registry()
+from numba.hip.typing_lowering.registries import typing_registry
+
 register = typing_registry.register
 register_attr = typing_registry.register_attr
 register_global = typing_registry.register_global
@@ -103,17 +103,17 @@ class Hip_array_decl(CallableTemplate):
 
 @register
 class Hip_shared_array(Hip_array_decl):
-    key = stubs.shared.array
+    key = hipstubs.shared.array
 
 
 @register
 class Hip_local_array(Hip_array_decl):
-    key = stubs.local.array
+    key = hipstubs.local.array
 
 
 @register
 class Hip_const_array_like(CallableTemplate):
-    key = stubs.const.array_like
+    key = hipstubs.const.array_like
 
     def generic(self):
         def typer(ndarray):
@@ -123,22 +123,8 @@ class Hip_const_array_like(CallableTemplate):
 
 
 @register_attr
-class Dim3_attrs(AttributeTemplate):
-    key = dim3
-
-    def resolve_x(self, mod):
-        return types.int32
-
-    def resolve_y(self, mod):
-        return types.int32
-
-    def resolve_z(self, mod):
-        return types.int32
-
-
-@register_attr
 class HipSharedModuleTemplate(AttributeTemplate):
-    key = types.Module(stubs.shared)
+    key = types.Module(hipstubs.shared)
 
     def resolve_array(self, mod):
         return types.Function(Hip_shared_array)
@@ -146,7 +132,7 @@ class HipSharedModuleTemplate(AttributeTemplate):
 
 @register_attr
 class HipConstModuleTemplate(AttributeTemplate):
-    key = types.Module(stubs.const)
+    key = types.Module(hipstubs.const)
 
     def resolve_array_like(self, mod):
         return types.Function(Hip_const_array_like)
@@ -154,7 +140,7 @@ class HipConstModuleTemplate(AttributeTemplate):
 
 @register_attr
 class HipLocalModuleTemplate(AttributeTemplate):
-    key = types.Module(stubs.local)
+    key = types.Module(hipstubs.local)
 
     def resolve_array(self, mod):
         return types.Function(Hip_local_array)
