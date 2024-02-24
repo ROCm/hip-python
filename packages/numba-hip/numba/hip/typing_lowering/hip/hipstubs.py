@@ -90,7 +90,7 @@ class laneid(Stub):
 # Array creation
 
 
-class shared(Stub):
+class shared(StubResolveAlways):
     """Shared memory namespace"""
 
     _description_ = "<shared>"
@@ -115,7 +115,7 @@ class shared(Stub):
         """
 
 
-class local(Stub):
+class local(StubResolveAlways):
     """Local memory namespace"""
 
     _description_ = "<local>"
@@ -137,7 +137,7 @@ class local(Stub):
         """
 
 
-class const(Stub):
+class const(StubResolveAlways):
     """Constant memory namespace"""
 
     @stub_function

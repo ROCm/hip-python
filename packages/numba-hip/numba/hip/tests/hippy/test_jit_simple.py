@@ -64,6 +64,7 @@ config.CUDA_LOW_OCCUPANCY_WARNINGS = False
 
 # Numba user code imports
 
+import numpy as np
 import math
 from numba import hip as cuda
 
@@ -136,7 +137,7 @@ class TestJitSimple(CUDATestCase):
 
     def test_05_compile_llvm_ir_for_one_of_each(self):
 
-        def mykernel():
+        def mydevicefun():
             x, y = cuda.grid(2)
             dim_x, dim_y = cuda.gridsize(2)
             cuda.syncthreads()
@@ -146,12 +147,14 @@ class TestJitSimple(CUDATestCase):
             cuda.cos(5.0)
             math.cos(5)
             cuda.threadIdx.x
+            lA = cuda.local.array(shape=(4, 4), dtype=np.float32)
+            sA = cuda.shared.array(shape=(4, 4), dtype=np.int64)
 
         for _ in range(0, 2):
             ir, restype = cuda.compile_llvm_ir_for_current_device(
-                pyfunc=mykernel, sig=(), device=True, to_bc=False
+                pyfunc=mydevicefun, sig=(), device=True, to_bc=False, name="mydevicefun"
             )
-        self.assertIn("mykernel", ir.decode("utf-8"))
+        self.assertIn("mydevicefun", ir.decode("utf-8"))
         if DUMP_IR:
             with open("one_of_each.ll", "w") as outfile:
                 outfile.write(ir.decode("utf-8"))

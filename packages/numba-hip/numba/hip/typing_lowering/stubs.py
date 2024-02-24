@@ -122,6 +122,18 @@ class Stub(object):
             yield cls
 
 
+class StubResolveAlways(Stub):
+    """
+    A stub that is always resolved as attribute
+    of its parent even if it has no children
+    and no typed attributes.
+    """
+
+    @classmethod
+    def has_attributes(cls):
+        return True
+
+
 def stub_function(fn):
     """
     A stub function to represent special functions that are meaningless
