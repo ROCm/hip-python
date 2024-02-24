@@ -53,6 +53,7 @@ from inspect import Signature, Parameter
 
 from numba.core import types
 
+
 class Stub(object):
     """Numba HIP stub object
 
@@ -83,6 +84,12 @@ class Stub(object):
                 pass
 
     @classmethod
+    def has_attributes(cls):
+        children = list(cls.get_children())
+        typed_attributes = getattr(cls, "_typed_attributes_", {})
+        return len(children) or len(typed_attributes)
+
+    @classmethod
     def is_supported(cls):
         """If a Numba signature could be derived for the stub itself or any child.
 
@@ -91,21 +98,9 @@ class Stub(object):
         """
         if hasattr(cls, "_signatures_") and len(cls._signatures_) > 0:
             return True
-        for _, child in cls.get_children():
-            if child.is_supported():
-                return True
+        elif cls.has_attributes():
+            return True
         return False
-
-    @classmethod
-    def remove_unsupported(cls):
-        """Remove children for which no Numba signature could be derived.
-
-        Note:
-            Works recursively if a child has children itself.
-        """
-        for name, child in cls.get_children():
-            if not child.is_supported():
-                delattr(cls, name)
 
     @classmethod
     def walk(cls, post_order=False):
@@ -139,33 +134,62 @@ def stub_function(fn):
 
     return wrapped
 
+
 # ------------------------------------------------------------------------------
 # Attribute resolution
-def resolve_attributes(registry, thekey, thestubs):
-    """
-    Lets Numba know what an expression such as 'hip.syncthreads()' means
-    given the object `hip`.
+def resolve_attributes(
+    registry, thekey: Stub, stub_attributes: dict, typed_attributes: dict = {}
+):
+    """Tells Numba how to resolve attributes of Python object 'thekey' (recursively)
 
+    This function walks through the whole stub hierarchy and calls itself for
+    every attribute that is a parent stub (stub without signatures but with children).
+    For such parent stubs, the children stubs are passed as ``stub_attributes`` argument
+    and class member `_typed_attributes_` is passed as ``typed_attributes`` argument.
+
+    Example:
+        Lets Numba know what an expression such as 'hip.syncthreads()' means
+        given the object `hip`.
+
+    Args:
+        stub_attributes (`dict`):
+            A dictionary that stores per attribute name key, a Stub instance <stub>.
+            If the Stub instance has child stubs, the attribute is resolved as `numba.core.types.Module(<stub>)`
+            If not, it is resolved as `numba.core.types.Function(<stub>)`
+        typed_attributes (`dict`, optional):
+            A dictionary that stores per attribute name key, an instance of `numba.core.types.Type`.
+    Note:
+        ``typed_attributes`` are checked first, which allows to overwrite
+        (potentially automatically generated) stub attributes.
     See:
         `numba.core.typing.templates.AttributeTemplate._resolve`
     """
     from numba.core.typing.templates import AttributeTemplate
-    assert isinstance(thestubs, dict)
+
+    assert isinstance(stub_attributes, dict)
+    assert isinstance(typed_attributes, dict)
 
     @registry.register_attr
     class AttributeTemplate_(AttributeTemplate):
         key = types.Module(thekey)
-        _stubs: dict = thestubs
+        _stub_attributes: dict = stub_attributes
+        _typed_attributes: dict = typed_attributes
 
         def __getattribute__(self, name: str):
             if name.startswith("resolve_"):
                 attr = name.replace("resolve_", "")
-                childstub: Stub = self._stubs.get(attr, None)
+                # 1. check typed attributes
+                numba_type = self._typed_attributes.get(attr, None)
+                if numba_type:
+                    return lambda value: numba_type
+                # 2. check stub attributes
+                childstub: Stub = self._stub_attributes.get(attr, None)
                 if childstub != None:
                     if childstub.is_supported():
-                        children = list(childstub.get_children())
-                        if len(children):
-                            assert not hasattr(childstub, "_signatures_"), "function may not have children itself"
+                        if childstub.has_attributes():
+                            assert not hasattr(
+                                childstub, "_signatures_"
+                            ), "function must not have children itself"
                             return lambda value: types.Module(
                                 childstub
                             )  # register stub for parent stubs
@@ -175,177 +199,9 @@ def resolve_attributes(registry, thekey, thestubs):
                             )  # register concrete/callable template for function stubs
             return super().__getattribute__(name)
 
-    for _, stub in thestubs.items():
-        children = dict(stub.get_children())
-        if len(children):
-            resolve_attributes(registry, stub, children)
-
-#--------------------------------------------------------------------------------
-# HIP
-
-class warpsize(Stub):
-    """
-    The size of a warp/wavefront. Typically is 64 for AMD GPU architectures.
-    """
-    _description_ = '<warpsize>'
-
-
-# -------------------------------------------------------------------------------
-# Array creation
-
-
-class shared(Stub):
-    """Shared memory namespace"""
-
-    _description_ = "<shared>"
-
-    @stub_function
-    def array(shape, dtype):
-        """Allocate a shared memory array
-
-        Allocate a shared array of the given *shape* and *type*. *shape* is
-        either an integer or a tuple of integers representing the array's
-        dimensions.  *type* is a :ref:`Numba type <numba-types>` of the
-        elements needing to be stored in the array.
-
-        The returned array-like object can be read and written to like any
-        normal device array (e.g. through indexing).
-
-        Example usage:
-
-        ```python
-        sA = hip.shared.array(shape=(32, 32), dtype=float32)
-        ```
-        """
-
-
-class local(Stub):
-    """Local memory namespace"""
-
-    _description_ = "<local>"
-
-    @stub_function
-    def array(shape, dtype):
-        """Allocate a global memory array that is restricted to the current thread.
-
-        Allocate a local array of the given *shape* and *type*. The array is
-        private to the current thread, and resides in global memory. An
-        array-like object is returned which can be read and written to like any
-        standard array (e.g.  through indexing).
-
-        Example usage:
-
-        ```python
-        lA = hip.local.array(shape=(4, 4), dtype=float32)
-        ```
-        """
-
-
-class const(Stub):
-    """Constant memory namespace"""
-
-    @stub_function
-    def array_like(ndarray):
-        """Clone the other array
-
-        Create a const array from *ndarry*. The resulting const array will have
-        the same shape, type, and values as *ndarray*.
-        """
-
-
-# -------------------------------------------------------------------------------
-# Cooperative groups
-
-# TODO Not supported yet.
-
-
-# -------------------------------------------------------------------------------
-# vector types
-
-# TODO Directly generate these simple types from the HIPRTC Header file.
-# Needed to copy the Numba CUDA code as the vector-type base type ("Stub")
-# cannot be supplied as parameter to make_vector_type_stubs. Furthermore, didn't
-# want to trigger any init code of numba.cuda via an import statement.
-
-
-def make_vector_type_stubs():
-    """Make user facing objects for vector types"""
-    vector_type_stubs = []
-    vector_type_prefix = (
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "uint8",
-        "uint16",
-        "uint32",
-        "uint64",
-        "float32",
-        "float64",
-    )
-    vector_type_element_counts = (1, 2, 3, 4)
-    vector_type_attribute_names = ("x", "y", "z", "w")
-
-    for prefix, nelem in itertools.product(
-        vector_type_prefix, vector_type_element_counts
-    ):
-        type_name = f"{prefix}x{nelem}"
-        attr_names = vector_type_attribute_names[:nelem]
-
-        vector_type_stub = type(
-            type_name,
-            (Stub,),  #:
-            {
-                **{attr: lambda self: None for attr in attr_names},
-                **{
-                    "_description_": f"<{type_name}>",
-                    "__signature__": Signature(
-                        parameters=[
-                            Parameter(name=attr_name, kind=Parameter.POSITIONAL_ONLY)
-                            for attr_name in attr_names[:nelem]
-                        ]
-                    ),
-                    "__doc__": f"A stub for {type_name} to be used in " "HIP kernels.",
-                },
-                **{"aliases": []},
-            },
-        )
-        vector_type_stubs.append(vector_type_stub)
-    return vector_type_stubs
-
-
-def map_vector_type_stubs_to_alias(vector_type_stubs):
-    """For each of the stubs, create its aliases.
-
-    For example: float64x3 -> double3
-    """
-    # C-compatible type mapping, see:
-    # https://numpy.org/devdocs/reference/arrays.scalars.html#integer-types
-    base_type_to_alias = {
-        "char": f"int{np.dtype(np.byte).itemsize * 8}",
-        "short": f"int{np.dtype(np.short).itemsize * 8}",
-        "int": f"int{np.dtype(np.intc).itemsize * 8}",
-        "long": f"int{np.dtype(np.int_).itemsize * 8}",
-        "longlong": f"int{np.dtype(np.longlong).itemsize * 8}",
-        "uchar": f"uint{np.dtype(np.ubyte).itemsize * 8}",
-        "ushort": f"uint{np.dtype(np.ushort).itemsize * 8}",
-        "uint": f"uint{np.dtype(np.uintc).itemsize * 8}",
-        "ulong": f"uint{np.dtype(np.uint).itemsize * 8}",
-        "ulonglong": f"uint{np.dtype(np.ulonglong).itemsize * 8}",
-        "float": f"float{np.dtype(np.single).itemsize * 8}",
-        "double": f"float{np.dtype(np.double).itemsize * 8}",
-    }
-
-    base_type_to_vector_type = defaultdict(list)
-    for stub in vector_type_stubs:
-        base_type_to_vector_type[stub.__name__[:-2]].append(stub)
-
-    for alias, base_type in base_type_to_alias.items():
-        vector_type_stubs = base_type_to_vector_type[base_type]
-        for stub in vector_type_stubs:
-            nelem = stub.__name__[-1]
-            stub.aliases.append(f"{alias}{nelem}")
-
-
-_vector_type_stubs = make_vector_type_stubs()
-map_vector_type_stubs_to_alias(_vector_type_stubs)
+    for _, stub in stub_attributes.items():
+        assert issubclass(stub, Stub)
+        if stub.has_attributes():
+            children = dict(stub.get_children())
+            typed_attributes = getattr(stub, "_typed_attributes_", {})
+            resolve_attributes(registry, stub, children, typed_attributes)
