@@ -46,19 +46,20 @@
 # SOFTWARE.
 
 import os
+import re
 import textwrap
 
 from llvmlite import ir
 
 from numba.core import config, serialize
 from numba.core.codegen import Codegen, CodeLibrary
-from .hipdrv import devices, driver
 
-from .amdgcn import TRIPLE as HIP_TRIPLE
-from .amdgcn import DATA_LAYOUT
-from numba.hip.util import llvmutils, comgrutils
-from numba.hip.typing_lowering import hipdevicelib
-from numba.hip.hipdrv import hiprtc
+from .hipdrv import devices, driver
+from . import amdgcn
+from . import hipconfig
+from .util import llvmutils, comgrutils
+from .typing_lowering import hipdevicelib
+from .hipdrv import hiprtc
 
 # TODO replace by AMD COMGR based disasm
 # def run_nvdisasm(cubin, flags):
@@ -67,13 +68,16 @@ FILE_SEP = "-" * 10 + "(start of next file)" + "-" * 10
 
 
 def bundle_file_contents(strs):
-    filesep = "\n\n" + {FILE_SEP} + "\n\n"
+    filesep = "\n\n" + FILE_SEP + "\n\n"
     return filesep.join(strs)
 
 
 def unbundle_file_contents(bundled):
-    filesep = "\n\n" + {FILE_SEP} + "\n\n"
+    filesep = "\n\n" + FILE_SEP + "\n\n"
     return bundled.split(filesep)
+
+
+_TYPED_PTR = re.compile(pattern=r"\w+\*+")
 
 
 def _read_file(filepath: str, mode="r"):
@@ -134,7 +138,8 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         super().__init__(codegen, name)
 
         # The llvmlite module for this library.
-        self._module = None
+        # (see: https://github.com/numba/llvmlite/blob/main/llvmlite/ir/module.py)
+        self._module: ir.Module = None
         # if this module is an AMD GPU kernel
         self._device: bool = device
         # This list contains entries of the following kind:
@@ -173,9 +178,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if options is None:
             options = {}
         self._options = options
-        self.set_entry_name(entry_name)
+        self.init_entry_name(entry_name)
 
-    def set_entry_name(self, entry_name: str):
+    def init_entry_name(self, entry_name: str):
         """Sets `self._entry_name` and `self._orginal_entry_name` to the passed one."""
         self._entry_name = entry_name
         self._original_entry_name = entry_name
@@ -366,6 +371,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if unlinked_llvm:
             return unlinked_llvm
         else:
+            # NOTE:
+            #     We need to set `force_ir` because we
+            #     need to apply preprocessing to the generated IR.
             unlinked_llvm = self._collect_dependency_llvm_ir(
                 link_time=True, force_ir=True
             )
@@ -484,25 +492,49 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             fun_attributes = comgrutils.get_llvm_kernel_attributes(
                 amdgpu_arch, only_kv=True, raw=True
             )
-        # print(self.name)
-        # print(self._original_entry_name)
+        self._module.data_layout = amdgcn.AMDGPUTargetMachine(amdgpu_arch).data_layout
         for fn in self._module.functions:
             assert isinstance(fn, ir.Function)
             if not fn.is_declaration:
                 if fn.name == self._original_entry_name:
-                    if self._entry_name != self._original_entry_name:
-                        fn.name = self._entry_name
-                # NOTE: We assume there is only one definition in the
-                # use `fn.linkage` field to specify visibility
-                fn.linkage = fun_linkage
-                fn.calling_convention = fun_call_conv
-                # Abuse attributes to specify address significance
-                # set.add(fn.attributes, "local_unnamed_addr") # TODO HIP disabled for now, causes error
-                for attrib in fun_attributes:
-                    # We bypass the known-attribute check performed by ir.FunctionAttributes
-                    # by calling the `add` method of the super class `set`
-                    # (`ir.FunctionAttributes`->`ir.FunctionAttributes`->`set`)
-                    set.add(fn.attributes, attrib)
+                    # NOTE setting f.name here has no effect, as the name might be cached
+                    #      Hence, we overwrite it directly in LLVM IR at the
+                    #      get_unliked_llvm_ir step.
+                    # NOTE: We assume there is only one definition in the
+                    # use `fn.linkage` field to specify visibility
+                    fn.linkage = fun_linkage
+                    fn.calling_convention = fun_call_conv
+                    # Abuse attributes to specify address significance
+                    # set.add(fn.attributes, "local_unnamed_addr") # TODO HIP disabled for now, causes error
+                    for attrib in fun_attributes:
+                        # We bypass the known-attribute check performed by ir.FunctionAttributes
+                        # by calling the `add` method of the super class `set`
+                        # (`ir.FunctionAttributes`->`ir.FunctionAttributes`->`set`)
+                        set.add(fn.attributes, attrib)
+
+    def _postprocess_llvm_ir(self, llvm_str: str):
+        """Postprocess Numba and third-party LLVM assembly.
+
+        Note:
+            Numba might be using an llvmlite package
+            that is based on an older LLVM release, which means, e.g., that
+            Numba-generated LLVM assembly contains typed pointers such as ``i8*``,
+            ``double**``, ... This preprocessing routine converts these to opaque
+            pointers (``ptr``), which is the way more recent LLVM releases handle pointers.
+            More details: https://llvm.org/docs/OpaquePointers.html#version-support
+
+            Further replaces ``sext ptr to null to i<bits>`` with
+            ``ptrtoint ptr null to i<bits>`` as ``sext`` only accepts
+            integer types now.
+            https://llvm.org/docs/LangRef.html#sext-to-instruction
+            More details: https://llvm.org/docs/LangRef.html#i-ptrtoint
+        """
+        global _TYPED_PTR
+        if self._entry_name != None:
+            assert self._original_entry_name != None
+            llvm_str = llvm_str.replace(self._original_entry_name, self._entry_name)
+        llvm_str = _TYPED_PTR.sub(string=llvm_str, repl="ptr")
+        return llvm_str.replace("sext ptr null to i", "ptrtoint ptr null to i")
 
     def get_unlinked_llvm_ir(
         self,
@@ -517,16 +549,58 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         Note:
             Must not be confused with `get_unlinked_llvm_strs` which
             returns LLVM IR for this module and all its dependencies.
+        Note:
+            Call `self._apply_llvm_amdgpu_modifications` modifies ``self._module``.
+            ``self._preprocess_llvm_ir(llvm_ir)`` applies modifications
+            that can only/most easily be applied to the LLVM IR in the text representation.
         """
         self._apply_llvm_amdgpu_modifications(amdgpu_arch)
-        llvm_ir = str(self._module)
+        llvm_ir = self._postprocess_llvm_ir(str(self._module))
         return llvm_ir
+
+    def _postprocess_unlinked_llvm_strs(self, llvm_strs):
+        """Preprocess Numba *and* third-party LLVM assembly.
+
+        Note:
+            Numba might be using an llvmlite package
+            that is based on an older LLVM release, which means, e.g., that
+            Numba-generated IR contains typed pointers such as ``i8*``, ``double*``, ...
+            This preprocessing routine converts those to opaque pointers (``ptr``).
+            More details: https://llvm.org/docs/OpaquePointers.html#version-support
+
+            Further replaces ``sext ptr to null to i<bits>`` with
+            ``ptrtoint ptr null to i<bits>`` as ``sext`` only accepts
+            integer types now.
+            https://llvm.org/docs/LangRef.html#sext-to-instruction
+            More details: https://llvm.org/docs/LangRef.html#i-ptrtoint
+        """
+        if config.DUMP_LLVM:
+            print(
+                (
+                    "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, unpreprocessed)"
+                    % self._entry_name
+                ).center(80, "-")
+            )
+            print(bundle_file_contents(llvm_strs))
+            print("=" * 80)
+
+        for i in range(len(llvm_strs)):
+            llvm_strs[i] = self._postprocess_llvm_ir(llvm_strs[i])
+
+        if config.DUMP_LLVM:
+            print(
+                (
+                    "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, preprocessed)"
+                    % self._entry_name
+                ).center(80, "-")
+            )
+            print(bundle_file_contents(llvm_strs))
+            print("=" * 80)
 
     def get_linked_llvm_ir(
         self,
         amdgpu_arch: str = None,
         to_bc: bool = True,
-        remove_unused_helpers: bool = True,
     ):
         """Returns/Creates single module from linking in all link-time dependencies.
 
@@ -562,31 +636,45 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         linker_inputs = self.get_unlinked_llvm_strs(
             amdgpu_arch=amdgpu_arch,
         )
-        if not remove_unused_helpers:
-            linker_inputs.append(hipdevicelib.get_llvm_bc(amdgpu_arch))
+        self._postprocess_unlinked_llvm_strs(linker_inputs)
         linked_llvm = llvmutils.link_modules(linker_inputs, to_bc=True)
+        # 2 identify numba hip helper functions
+        used_hipdevicelib_declares = llvmutils.get_function_names(
+            linked_llvm, defines=False
+        )
+        # 2. apply mid-end optimizations if requested
+        if hipconfig.ENABLE_MIDEND_OPT and self._options.get("opt", False):
 
-        if remove_unused_helpers:
-            used_hipdevicelib_declares = llvmutils.get_function_names(
-                linked_llvm, defines=False
+            linked_llvm = amdgcn.AMDGPUTargetMachine(amdgpu_arch).optimize_module(
+                linked_llvm
             )
-            # 2. now link the hip device lib
-            linked_llvm = llvmutils.link_modules(
-                [linked_llvm, hipdevicelib.get_llvm_bc(amdgpu_arch)], to_bc
-            )
+            if config.DUMP_LLVM:
+                print(
+                    (
+                        "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)"
+                        % self._entry_name
+                    ).center(80, "-")
+                )
+                print(llvmutils.to_ir(linked_llvm).decode("utf-8"))
+                print("=" * 80)
 
-            # 3. remove unused hip device lib function definitions
-            def delete_matcher_(name: str):
-                nonlocal used_hipdevicelib_declares
-                if hipdevicelib.DEVICE_FUN_PREFIX in name:
-                    return not name in used_hipdevicelib_declares
-                return False
+        # 3. now link the hip device lib
+        linked_llvm = llvmutils.link_modules(
+            [linked_llvm, hipdevicelib.get_llvm_bc(amdgpu_arch)], to_bc
+        )
 
-            linked_llvm = llvmutils.delete_functions(
-                linked_llvm, matcher=delete_matcher_, defines=True
-            )
-            # 4. link a last time to get rid of unused third-order function declarations
-            linked_llvm = llvmutils.link_modules([linked_llvm], to_bc)
+        # 4. remove unused hip device lib function definitions
+        def delete_matcher_(name: str):
+            nonlocal used_hipdevicelib_declares
+            if hipdevicelib.DEVICE_FUN_PREFIX in name:
+                return not name in used_hipdevicelib_declares
+            return False
+
+        linked_llvm = llvmutils.delete_functions(
+            linked_llvm, matcher=delete_matcher_, defines=True
+        )
+        # 4. link a last time to get rid of unused third-order function declarations
+        linked_llvm = llvmutils.link_modules([linked_llvm], to_bc)
         # lastly add the HIP device lib
         self._linked_amdgpu_llvm_ir_cache[amdgpu_arch] = linked_llvm
         return linked_llvm
@@ -835,7 +923,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             codegen=None,
             name=self.name,
             entry_name=self._entry_name,
-            renamed_entry_name=self._original_entry_name,
+            original_entry_name=self._original_entry_name,
             raw_source_strs=self._raw_source_strs,
             unlinked_llvm_strs_cache=self._unlinked_amdgpu_llvm_strs_cache,
             linked_llvm_ir_cache=self._linked_amdgpu_llvm_ir_cache,
@@ -898,8 +986,8 @@ class JITHIPCodegen(Codegen):
 
     def _create_empty_module(self, name):
         ir_module = ir.Module(name)
-        ir_module.triple = HIP_TRIPLE
-        ir_module.data_layout = DATA_LAYOUT
+        ir_module.triple = amdgcn.TRIPLE
+        ir_module.data_layout = amdgcn.DATA_LAYOUT
         return ir_module
 
     def _add_module(self, module):

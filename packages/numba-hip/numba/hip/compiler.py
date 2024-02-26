@@ -358,7 +358,7 @@ def compile_llvm_ir(
     fndesc: funcdesc.FunctionDescriptor = cres.fndesc
     if device:  # device function, __device__
         lib: codegen.HIPCodeLibrary = cres.library
-        lib.set_entry_name(fndesc.llvm_func_name)
+        lib.init_entry_name(fndesc.llvm_func_name)
         if name:
             lib.change_entry_name(name)
     else:  # kernel, __global__
