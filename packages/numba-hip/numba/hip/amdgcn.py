@@ -283,9 +283,9 @@ class AMDGPUTargetMachine:
         self._data_layout = data_layout_cstr.decode("utf-8")
         LLVMDisposeMessage(data_layout_cstr)
 
-    def __init__(self, offload_arch: str):
+    def __init__(self, target_cpu: str):
         if not hasattr(self, "_keep_alive"):  # already initialized
-            self.__init_target_machine(offload_arch)
+            self.__init_target_machine(target_cpu)
 
     @property
     def data_layout(self):
