@@ -292,8 +292,6 @@ class CudaArraySetting(CUDATestCase):
     tests focus on the setting logic.
     """
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_scalar(self):
         arr = np.arange(5 * 7).reshape(5, 7)
         darr = cuda.to_device(arr)
@@ -301,8 +299,6 @@ class CudaArraySetting(CUDATestCase):
         darr[2, 2] = 500
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_rank(self):
         arr = np.arange(5 * 7).reshape(5, 7)
         darr = cuda.to_device(arr)
@@ -310,8 +306,8 @@ class CudaArraySetting(CUDATestCase):
         darr[2] = 500
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
+    # TODO HIP segmentation fault
+    @unittest.skip("TODO HIP segmentation fault")
     def test_broadcast(self):
         arr = np.arange(5 * 7).reshape(5, 7)
         darr = cuda.to_device(arr)
@@ -319,8 +315,6 @@ class CudaArraySetting(CUDATestCase):
         darr[:, 2] = 500
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_array_assign_column(self):
         arr = np.arange(5 * 7).reshape(5, 7)
         darr = cuda.to_device(arr)
@@ -329,8 +323,8 @@ class CudaArraySetting(CUDATestCase):
         darr[2] = _400
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
+    # TODO HIP segmentation fault
+    @unittest.skip("TODO HIP segmentation fault")
     def test_array_assign_row(self):
         arr = np.arange(5 * 7).reshape(5, 7)
         darr = cuda.to_device(arr)
@@ -339,8 +333,6 @@ class CudaArraySetting(CUDATestCase):
         darr[:, 2] = _400
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_array_assign_subarray(self):
         arr = np.arange(5 * 6 * 7).reshape(5, 6, 7)
         darr = cuda.to_device(arr)
@@ -349,8 +341,8 @@ class CudaArraySetting(CUDATestCase):
         darr[2] = _400
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
+    # TODO HIP segmentation fault
+    @unittest.skip("TODO HIP segmentation fault")
     def test_array_assign_deep_subarray(self):
         arr = np.arange(5 * 6 * 7 * 8).reshape(5, 6, 7, 8)
         darr = cuda.to_device(arr)
@@ -359,8 +351,6 @@ class CudaArraySetting(CUDATestCase):
         darr[:, :, 2] = _400
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_array_assign_all(self):
         arr = np.arange(5 * 7).reshape(5, 7)
         darr = cuda.to_device(arr)
@@ -369,8 +359,6 @@ class CudaArraySetting(CUDATestCase):
         darr[:] = _400
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_strides(self):
         arr = np.ones(20)
         darr = cuda.to_device(arr)
@@ -410,8 +398,6 @@ class CudaArraySetting(CUDATestCase):
         )
 
     # @skip_on_cudasim('cudasim does not use streams and operates synchronously')
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_sync(self):
         # There should be a synchronization when no stream is supplied
         darr = cuda.to_device(np.arange(5))
@@ -424,8 +410,6 @@ class CudaArraySetting(CUDATestCase):
         mock_sync.assert_called_once()
 
     # @skip_on_cudasim('cudasim does not use streams and operates synchronously')
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_no_sync_default_stream(self):
         # There should not be a synchronization when the array has a default
         # stream, whether it is the default stream, the legacy default stream,
@@ -448,8 +432,6 @@ class CudaArraySetting(CUDATestCase):
             mock_sync.assert_not_called()
 
     # @skip_on_cudasim('cudasim does not use streams and operates synchronously')
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_no_sync_supplied_stream(self):
         # There should not be a synchronization when a stream is supplied for
         # the setitem call, whether it is the default stream, the legacy default
