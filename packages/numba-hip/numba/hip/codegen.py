@@ -242,6 +242,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         link_time: bool = False,
         amdgpu_arch: str = None,
         force_ir: bool = False,
+        remove_duplicates: bool = True,
     ):
         """Collects LLVM IR/BC from all dependencies.
 
@@ -276,6 +277,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             force_ir (`bool`, optional):
                 Converts LLVM BC to human-readable IR (`str`) where required.
                 Defaults to ``False``.
+            remove_duplicates (`bool`, optional):
+                Removes duplicates starting from the end of
+                the linearized dependency list.
+                Defaults to `True`.
         Returns:
             `list`:
                 A string representation (human-readable LLVM IR) of this instance's LLVM module
@@ -307,37 +312,49 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             nonlocal process_buf_
             return process_buf_(hiprtc.compile(source, name, amdgpu_arch))
 
-        result = []
+        def add_(llvm_buf, id=None):
+            nonlocal unprocessed_result
+            nonlocal dependency
+            if remove_duplicates:
+                unprocessed_result.append(
+                    (id(dependency) if id == None else id, llvm_buf)
+                )
+            else:
+                unprocessed_result.append(llvm_buf)
+
+        # pre-order walk
+        unprocessed_result = []
         for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
             if isinstance(dependency, HIPCodeLibrary):
                 # TODO get unlinked_llvm_ir but with attribute modifications
                 if link_time:
-                    result.append(dependency.get_unlinked_llvm_ir(amdgpu_arch))
+                    add_(dependency.get_unlinked_llvm_ir(amdgpu_arch))
                 else:
-                    result.append(str(dependency._module))
+                    add_(str(dependency._module))
             elif isinstance(dependency, str):  # an LLVM IR/BC file
                 fileext = os.path.basename(dependency).split(os.path.extsep)[-1]
-                if fileext in LLVM_IR_EXT:  # 'ptx' is interpreted as 'll'.
+                if fileext in self.LLVM_IR_EXT:  # 'ptx' is interpreted as 'll'.
                     mode = "rb" if fileext == "bc" else "r"
-                    result.append(process_buf_(_read_file(dependency, mode)))
+                    add_(process_buf_(_read_file(dependency, mode), id=dependency))
                 elif link_time:  # assumes HIP C++
-                    result.append(
+                    add_(
                         compile_hiprtc_program_(
                             _read_file(dependency, "r"), name=dependency
-                        )
+                        ),
+                        id=dependency,
                     )
                 else:  # assumes HIP C++
-                    result.append(_read_file(dependency, "r"))
+                    add_(_read_file(dependency, "r"), id=dependency)
             elif isinstance(dependency, tuple):  # an LLVM IR/BC buffer
                 if len(dependency) == 2:  # always assume LLVM IR/BC
-                    result.append(process_buf_(*dependency))
+                    add_(process_buf_(*dependency))
                 elif len(dependency) == 3:
                     fileext = dependency[2]
-                    if fileext in LLVM_IR_EXT:
-                        result.append(process_buf_(*dependency[:2]))
+                    if fileext in self.LLVM_IR_EXT:
+                        add_(process_buf_(*dependency[:2]))
                     else:  # assumes HIP C++
-                        result.append(
-                            compile_hiprtc_program_(dependency[0], name=dependency)
+                        add_(
+                            compile_hiprtc_program_(dependency[0], name=dependency),
                         )
                 else:
                     raise RuntimeError(
@@ -347,7 +364,18 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 raise RuntimeError(
                     f"don't know how to handle dependency specification of type '{type(dependency)}'"
                 )
-        return result
+
+        if remove_duplicates:
+            # Example: 'A -> [B, C->B]' linearized to '[A, B, C, B]' => '[A, C, B]'
+            result = []
+            ids = set()
+            for id, llvm_buf in reversed(unprocessed_result):
+                if id not in ids:
+                    result.append(llvm_buf)
+                ids.add(id)
+            return list(reversed(result))
+        else:
+            return unprocessed_result
 
     def get_raw_source_strs(self):
         """Return raw LLVM IR or HIP C++ sources of this module and its dependencies.
@@ -794,8 +822,6 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         # because our linked libraries are modified by the finalization, and we
         # won't be able to finalize again after adding new ones
         self._raise_if_finalized()
-
-        # TODO HIP way of adding dependencies might cause issues in trees like A -> {C, B->C}.
 
         if not library in self._linking_dependencies:
             self._linking_dependencies.append(library)
