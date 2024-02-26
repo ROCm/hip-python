@@ -312,12 +312,12 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             nonlocal process_buf_
             return process_buf_(hiprtc.compile(source, name, amdgpu_arch))
 
-        def add_(llvm_buf, id=None):
+        def add_(llvm_buf, dep_id=None):
             nonlocal unprocessed_result
             nonlocal dependency
             if remove_duplicates:
                 unprocessed_result.append(
-                    (id(dependency) if id == None else id, llvm_buf)
+                    (id(dependency) if dep_id == None else dep_id, llvm_buf)
                 )
             else:
                 unprocessed_result.append(llvm_buf)
@@ -335,16 +335,16 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 fileext = os.path.basename(dependency).split(os.path.extsep)[-1]
                 if fileext in self.LLVM_IR_EXT:  # 'ptx' is interpreted as 'll'.
                     mode = "rb" if fileext == "bc" else "r"
-                    add_(process_buf_(_read_file(dependency, mode), id=dependency))
+                    add_(process_buf_(_read_file(dependency, mode)), dep_id=dependency)
                 elif link_time:  # assumes HIP C++
                     add_(
                         compile_hiprtc_program_(
                             _read_file(dependency, "r"), name=dependency
                         ),
-                        id=dependency,
+                        dep_id=dependency,
                     )
                 else:  # assumes HIP C++
-                    add_(_read_file(dependency, "r"), id=dependency)
+                    add_(_read_file(dependency, "r"), dep_id=dependency)
             elif isinstance(dependency, tuple):  # an LLVM IR/BC buffer
                 if len(dependency) == 2:  # always assume LLVM IR/BC
                     add_(process_buf_(*dependency))
@@ -368,11 +368,11 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if remove_duplicates:
             # Example: 'A -> [B, C->B]' linearized to '[A, B, C, B]' => '[A, C, B]'
             result = []
-            ids = set()
-            for id, llvm_buf in reversed(unprocessed_result):
-                if id not in ids:
+            dep_ids = set()
+            for dep_id, llvm_buf in reversed(unprocessed_result):
+                if dep_id not in dep_ids:
                     result.append(llvm_buf)
-                ids.add(id)
+                dep_ids.add(dep_id)
             return list(reversed(result))
         else:
             return unprocessed_result
@@ -548,7 +548,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             that is based on an older LLVM release, which means, e.g., that
             Numba-generated LLVM assembly contains typed pointers such as ``i8*``,
             ``double**``, ... This preprocessing routine converts these to opaque
-            pointers (``ptr``), which is the way more recent LLVM releases handle pointers.
+            pointers (``ptr``), which is the way more recent LLVM releases model pointers.
             More details: https://llvm.org/docs/OpaquePointers.html#version-support
 
             Further replaces ``sext ptr to null to i<bits>`` with
@@ -589,18 +589,8 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
     def _postprocess_unlinked_llvm_strs(self, llvm_strs):
         """Preprocess Numba *and* third-party LLVM assembly.
 
-        Note:
-            Numba might be using an llvmlite package
-            that is based on an older LLVM release, which means, e.g., that
-            Numba-generated IR contains typed pointers such as ``i8*``, ``double*``, ...
-            This preprocessing routine converts those to opaque pointers (``ptr``).
-            More details: https://llvm.org/docs/OpaquePointers.html#version-support
-
-            Further replaces ``sext ptr to null to i<bits>`` with
-            ``ptrtoint ptr null to i<bits>`` as ``sext`` only accepts
-            integer types now.
-            https://llvm.org/docs/LangRef.html#sext-to-instruction
-            More details: https://llvm.org/docs/LangRef.html#i-ptrtoint
+        See:
+            _postprocess_llvm_ir
         """
         if config.DUMP_LLVM:
             print(
@@ -823,8 +813,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         # won't be able to finalize again after adding new ones
         self._raise_if_finalized()
 
-        if not library in self._linking_dependencies:
-            self._linking_dependencies.append(library)
+        self._linking_dependencies.append(library)
 
     def add_linking_ir(self, mod, mod_len: int = -1):
         """Add LLVM IR/BC buffers or ROCm LLVM Python module types as link-time dependency.
@@ -842,15 +831,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             by users. The users must ensure correct order
             of inputs.
         """
-        if not next(
-            (
-                True
-                for tup in self._linking_dependencies
-                if isinstance(tup, tuple) and tup[0] == mod
-            ),
-            False,
-        ):
-            self._linking_dependencies.append((mod, mod_len))
+        self._linking_dependencies.append((mod, mod_len))
 
     def add_linking_file(self, filepath: str):
         """Add files in formats such as HIP C++ or LLVM IR/BC as link-time dependency.
@@ -873,8 +854,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             by users. The users must ensure correct order
             of inputs.
         """
-        if not filepath in self._linking_dependencies:
-            self._linking_dependencies.append(filepath)
+        self._linking_dependencies.append(filepath)
 
     def add_linking_dependency(self, dependency):
         """Adds linking dependency in one of the supported formats.
