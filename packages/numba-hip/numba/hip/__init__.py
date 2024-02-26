@@ -185,6 +185,9 @@ from . import compiler
 
 from .compiler import compile_llvm_ir, compile_llvm_ir_for_current_device
 
+compile_ptx = compile_llvm_ir
+compile_ptx_for_current_device = compile_llvm_ir_for_current_device
+
 from . import decorators
 from . import descriptor
 from . import dispatcher
