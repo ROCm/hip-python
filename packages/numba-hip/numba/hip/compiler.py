@@ -65,7 +65,7 @@ from numba.hip.api import get_current_device
 
 from numba.hip import target
 from numba.hip import codegen
-
+from numba.hip import hipconfig
 
 def _options_type(x):
     if x is None:
@@ -334,7 +334,7 @@ def compile_llvm_ir(
         )
         warn(NumbaInvalidConfigWarning(msg))
 
-    options = {"fastmath": fastmath, "opt": 3 if opt else 0}
+    options = {"fastmath": fastmath, "opt": hipconfig.OPT_LEVEL if opt else 0}
 
     args, return_type = sigutils.normalize_signature(sig)
 
