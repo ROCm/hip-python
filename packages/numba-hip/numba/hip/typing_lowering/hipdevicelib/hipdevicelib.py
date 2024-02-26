@@ -62,6 +62,9 @@ _lock = threading.Lock()
 
 _log = logging.getLogger(__name__)
 
+USER_HIP_EXTENSIONS = ""
+USER_HIP_CFLAGS = []
+
 DEVICE_FUN_PREFIX = "NUMBA_HIP_"
 
 _GET = f"{DEVICE_FUN_PREFIX}GET_"
@@ -79,21 +82,29 @@ class HIPDeviceLib:
 
     __INSTANCES = {}
 
-    _HIPRTC_RUNTIME_SOURCE: HIPSource = None
+    _HIPDEVICELIB_SOURCE: HIPSource = None
+
+    def reload(cls):
+        """Rewrite the input HIP source and clear the BC cache.
+        """
+        cls._HIPDEVICELIB_SOURCE = (
+            HIPDeviceLib._create_hipdevicelib_source()
+        )
+        cls.__INSTANCES.clear()
 
     def __new__(cls, amdgpu_arch: str = None):
         """Creates/returns the singleton per AMD GPU architecture."""
         with _lock:
-            if not cls._HIPRTC_RUNTIME_SOURCE:
-                cls._HIPRTC_RUNTIME_SOURCE = (
-                    HIPDeviceLib._create_hiprtc_runtime_source()
+            if not cls._HIPDEVICELIB_SOURCE:
+                cls._HIPDEVICELIB_SOURCE = (
+                    HIPDeviceLib._create_hipdevicelib_source()
                 )
             if amdgpu_arch not in cls.__INSTANCES:
                 cls.__INSTANCES[amdgpu_arch] = object.__new__(cls)
         return cls.__INSTANCES[amdgpu_arch]
 
     @staticmethod
-    def _create_hiprtc_runtime_source() -> HIPSource:
+    def _create_hipdevicelib_source() -> HIPSource:
         """Create HIPSource from HIPRTC runtime header file.
 
         Create an object that allows to parse the HIP C++ entities
@@ -143,9 +154,10 @@ class HIPDeviceLib:
                 comgr.ext.HIPRTC_RUNTIME_HEADER
                 + HIPDeviceLib._create_overloads()
                 + HIPDeviceLib._create_extensions()
+                + USER_HIP_EXTENSIONS
             ),
             filter=cursor_filter_,
-            append_cflags=["-D__HIPCC_RTC__"],
+            append_cflags=["-D__HIPCC_RTC__"]+USER_HIP_CFLAGS,
         )
         hiprtc_runtime_source.check_for_duplicates(log_errors=True)
         return hiprtc_runtime_source
@@ -489,7 +501,7 @@ class HIPDeviceLib:
                 setattr(stub, "_template_", template)
                 typing_registry.register(template)
 
-        stubs = HIPDeviceLib._HIPRTC_RUNTIME_SOURCE.create_stubs(
+        stubs = HIPDeviceLib._HIPDEVICELIB_SOURCE.create_stubs(
             stub_base_class=numba_hip_stubs.Stub,
             function_renamer_splitter=function_renamer_splitter_,
             stub_processor=process_stub_,
@@ -733,11 +745,11 @@ class HIPDeviceLib:
         The prefix is prepended to prevent conflicts with the types/functions declared/defined by the HIPRTC runtime header.
         """
         global DEVICE_FUN_PREFIX
-        wrappers = HIPDeviceLib._HIPRTC_RUNTIME_SOURCE.render_device_function_wrappers(
+        wrappers = HIPDeviceLib._HIPDEVICELIB_SOURCE.render_device_function_wrappers(
             prefix=DEVICE_FUN_PREFIX
         )
 
-        hipdevicelib_src = self._HIPRTC_RUNTIME_SOURCE.source + wrappers
+        hipdevicelib_src = self._HIPDEVICELIB_SOURCE.source + wrappers
 
         # print(hipdevicelib_source)
         amdgpu_arch = self.amdgpu_arch.split(":")[
