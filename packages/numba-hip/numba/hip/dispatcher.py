@@ -764,13 +764,12 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
         Create a new instance of this dispatcher specialized for the given
         *args*.
         """
-        # TODO HIP adjust this to amdgpu_arch
-        cc = get_current_device().compute_capability
+        amdgpu_arch = get_current_device().amdgpu_arch
         argtypes = tuple([self.typingctx.resolve_argument_type(a) for a in args])
         if self.specialized:
             raise RuntimeError("Dispatcher already specialized")
 
-        specialization = self.specializations.get((cc, argtypes))
+        specialization = self.specializations.get((amdgpu_arch, argtypes))
         if specialization:
             return specialization
 
@@ -779,7 +778,7 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
         specialization.compile(argtypes)
         specialization.disable_compile()
         specialization._specialized = True
-        self.specializations[cc, argtypes] = specialization
+        self.specializations[amdgpu_arch, argtypes] = specialization
         return specialization
 
     @property
