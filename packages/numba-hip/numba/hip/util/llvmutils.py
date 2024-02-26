@@ -107,7 +107,13 @@ def _parse_llvm_bc(bc, bc_len: int = -1):
 
 
 def _parse_llvm_ir(ir, ir_len: int = -1):
-    """Parse human-readable LLVM IR.
+    """Parse both human-readable LLVM IR or LLVM bitcode.
+
+    Note:
+        Both formats human-readable LLVM IR LLVM assembly and
+        LLVM bitcode are supported by routine
+        `rocm.llvm.c.irreader.LLVMParseIRInContext`
+        which is called by this function.
 
     Note:
         Always uses the global context.
@@ -140,8 +146,9 @@ def _parse_llvm_ir(ir, ir_len: int = -1):
         b"llvm-ir-buffer",
         0,
     )
-    # (status, mod, message, ir_llvm_buf)
-    return (*LLVMParseIRInContext(LLVMGetGlobalContext(), buf), buf)
+    # (status, mod, message)
+    # TODO HIP check memory, mod seems to take ownership of the buffer
+    return LLVMParseIRInContext(LLVMGetGlobalContext(), buf)
 
 
 def _get_module(ir, ir_len: int = -1):
@@ -162,22 +169,17 @@ def _get_module(ir, ir_len: int = -1):
             * buf - An LLVM IR/BC buffer, or None.
             * from_bc - A flag indicating that the input is bitcode.
     """
-    (parse_ir_status, mod, err_cstr, ir_buf) = _parse_llvm_ir(ir, ir_len)
-    if parse_ir_status > 0:  # failure
-        ir_err = err_cstr.decode("utf-8")
+    (status, mod, err_cstr) = _parse_llvm_ir(ir, ir_len)
+    if status > 0:  # failure
+        errmsg = err_cstr.decode("utf-8")
         LLVMDisposeMessage(err_cstr)
-        LLVMDisposeModule(mod)
-        LLVMDisposeMemoryBuffer(ir_buf)
-        (parse_bc_status, mod, err_cstr, bc_buf) = _parse_llvm_bc(ir, ir_len)
-        if parse_bc_status:
-            bc_err = err_cstr.decode("utf-8")
-            if err_cstr:
-                LLVMDisposeMessage(err_cstr)
-            raise ValueError(
-                "input 'buf' seems to be neither (1) LLVM bitcode nor human-readable (2) LLVM IR."
-                + f"\nReason (1): {bc_err}\nReason (2): {ir_err}"
-            )
-        return (mod, bc_buf, True)
+        if mod:
+            LLVMDisposeModule(mod)
+        # LLVMDisposeMemoryBuffer(ir_buf) mod seems to take ownership of the buffer # TODO HIP check memory
+        raise ValueError(
+            "input 'buf' seems to be neither valid LLVM bitcode nor LLVM assembly.\n\n"
+            f"Reason: {errmsg}"
+        )
     else:
         return (mod, None, False)
 
@@ -221,7 +223,7 @@ def _to_bc(mod: LLVMOpaqueModule):
 
 
 def to_ir_from_bc(bc, bc_len: int = -1):
-    """Convert LLVM bitcode to human-readable LLVM IR.
+    """LLVM bitcode as humand-readable LLVM assembly.
 
     Args:
         bcbuf (implementor of the Python buffer protocol such as `bytes`):
@@ -238,7 +240,7 @@ def to_ir_from_bc(bc, bc_len: int = -1):
 
 
 def to_bc_from_ir(ir, ir_len: int = -1):
-    """Convert human-readable LLVM IR to bitcode.
+    """Human-readable LLVM assembly or LLVM bitcode as LLVM bitcode.
 
     Args:
         ir (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`):
