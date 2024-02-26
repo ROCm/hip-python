@@ -90,7 +90,7 @@ cu_device_ptr = c_size_t  # defined as unsigned long long
 cu_stream = c_void_p  # an opaque handle
 cu_stream_callback_pyobj = CFUNCTYPE(None, cu_stream, c_int, py_object)
 
-from numba.hip import rocmpaths
+from numba.hip import hipconfig
 from numba.hip.hipdrv import hiprtc
 
 USE_NV_BINDING = True  #: HIP/AMD: always use HIP Python bindings
@@ -182,7 +182,7 @@ def locate_runtime_and_loader():  #: HIP/AMD: modified body
     else:
         # Assume to be *nix like
         dlloader = ctypes.CDLL
-        dldir = [rocmpaths.get_rocm_path("lib")]
+        dldir = [hipconfig.get_rocm_path("lib")]
         dlnames = ["libamdhip64.so"]
 
     if envpath:
