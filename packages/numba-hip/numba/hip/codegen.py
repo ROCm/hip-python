@@ -104,6 +104,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
     for multiple different AMD GPU architectures.
     """
 
+    # NOTE: 'ptx' is interpreted as 'll' to ease some porting
+    LLVM_IR_EXT = ("ll", "bc", "ptx")
+
     def __init__(
         self,
         codegen,
@@ -303,9 +306,6 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             nonlocal amdgpu_arch
             nonlocal process_buf_
             return process_buf_(hiprtc.compile(source, name, amdgpu_arch))
-
-        # NOTE: 'ptx' is interpreted as 'll' to ease some porting
-        LLVM_IR_EXT = ("ll", "bc", "ptx")
 
         result = []
         for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
@@ -787,6 +787,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             adding new ones.
         """
         assert isinstance(library, HIPCodeLibrary)
+        # print(f"{self.name} add library: {library._module.name}")
         library._ensure_finalized()
 
         # We don't want to allow linking more libraries in after finalization
@@ -794,7 +795,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         # won't be able to finalize again after adding new ones
         self._raise_if_finalized()
 
-        self._linking_dependencies.append(library)
+        # TODO HIP way of adding dependencies might cause issues in trees like A -> {C, B->C}.
+
+        if not library in self._linking_dependencies:
+            self._linking_dependencies.append(library)
 
     def add_linking_ir(self, mod, mod_len: int = -1):
         """Add LLVM IR/BC buffers or ROCm LLVM Python module types as link-time dependency.
@@ -806,8 +810,21 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 Length of the LLVM IR/BC buffer. Must be supplied if it cannot
                 be obtained via ``len(mod)``. Not used at all if ``mod`` is an instance of
                 `rocm.llvm.c.types.LLVMOpaqueModule`.
+        Note:
+            Only append an IR linking dependency once.
+            This is an API that must be used explicitly
+            by users. The users must ensure correct order
+            of inputs.
         """
-        self._linking_dependencies.append((mod, mod_len))
+        if not next(
+            (
+                True
+                for tup in self._linking_dependencies
+                if isinstance(tup, tuple) and tup[0] == mod
+            ),
+            False,
+        ):
+            self._linking_dependencies.append((mod, mod_len))
 
     def add_linking_file(self, filepath: str):
         """Add files in formats such as HIP C++ or LLVM IR/BC as link-time dependency.
@@ -823,8 +840,15 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             create an LLVM IR/BC buffer that can then be specified
             as dependency to this `HIPCodeLibrary` via `HIPCodeLibrary.add_linking_ir`
             or `HIPCodeLibrary.add_linking_dependency`.
+
+        Note:
+            Only append an IR linking dependency once.
+            This is an API that must be used explicitly
+            by users. The users must ensure correct order
+            of inputs.
         """
-        self._linking_dependencies.append(filepath)
+        if not filepath in self._linking_dependencies:
+            self._linking_dependencies.append(filepath)
 
     def add_linking_dependency(self, dependency):
         """Adds linking dependency in one of the supported formats.
@@ -908,9 +932,16 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         non_llvm_linking_files = [
             dependency
             for dependency in HIPCodeLibrary._walk_linking_dependencies(self)
-            if isinstance(dependency, str)
-            and os.path.basename(dependency).split(os.path.extsep)[-1]
-            not in ("ll", "bc")
+            if (
+                isinstance(dependency, str)
+                and os.path.basename(dependency).split(os.path.extsep)[-1]
+                not in self.LLVM_IR_EXT
+            )
+            or (
+                isinstance(dependency, tuple)
+                and len(dependency) == 3
+                and dependency[2] not in self.LLVM_IR_EXT
+            )
         ]
         if any(
             non_llvm_linking_files
