@@ -1,4 +1,5 @@
 from _ast import ImportFrom
+import textwrap
 from typing import Any
 from numba import runtests
 from numba.core import config
@@ -67,6 +68,54 @@ args = _mr.create_and_register_derived_module(
 # Other
 from .device_init import *
 from .device_init import _auto_device
+
+from . import codegen
+from . import compiler
+
+from .compiler import compile_llvm_ir, compile_llvm_ir_for_current_device
+
+compile_ptx = compile_llvm_ir
+compile_ptx_for_current_device = compile_llvm_ir_for_current_device
+
+from . import decorators
+from . import descriptor
+from . import dispatcher
+from . import target
+from . import testing
+from . import tests
+
+hipdecl = _mr.create_and_register_derived_module(
+    "hipdecl",
+    from_file=False,
+    module_content=textwrap.dedent(
+        """\
+        from numba.hip.typing_lowering.registries import (
+            typing_registry as registry
+        )
+        """
+    ),
+)
+
+hipimpl = _mr.create_and_register_derived_module(
+    "hipimpl",
+    from_file=False,
+    module_content=textwrap.dedent(
+        """\
+        from numba.hip.typing_lowering.registries import (
+            impl_registry as registry
+        )
+        lower = registry.lower
+        lower_attr = registry.lower_getattr
+        lower_constant = registry.lower_constant
+        """
+    ),
+)
+cudadecl = hipdecl
+cudaimpl = hipimpl
+sys.modules["numba.hip.cudadecl"] = hipdecl
+sys.modules["numba.hip.cudaimpl"] = hipimpl
+
+# HIP C++ extensions
 
 
 def current_hip_extra_cflags():
@@ -179,21 +228,6 @@ def set_hip_extensions(
     hipdevicelib.__dict__.update(hipdevicelib.thestubs)
     globals().update(hipdevicelib.thestubs)
 
-
-from . import codegen
-from . import compiler
-
-from .compiler import compile_llvm_ir, compile_llvm_ir_for_current_device
-
-compile_ptx = compile_llvm_ir
-compile_ptx_for_current_device = compile_llvm_ir_for_current_device
-
-from . import decorators
-from . import descriptor
-from . import dispatcher
-from . import target
-from . import testing
-from . import tests
 
 # clean up
 # del _preprocess
