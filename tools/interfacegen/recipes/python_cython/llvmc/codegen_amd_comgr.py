@@ -159,7 +159,7 @@ def create_generators(root: it.Root):
 
 
 if __name__ == "__main__":
-    interfacegen.cython.FunctionMixin.python_interface_always_return_tuple = True
+    interfacegen.cython.Function.python_interface_always_return_tuple = True
 
     pkg_opts: support.RocmPackageOpts = support.create_rocm_package_opts_from_cli(
         project="AMD Code Object Manager (Comgr) Python",

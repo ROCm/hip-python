@@ -37,7 +37,7 @@ from interfacegen.tree import (
     Record,
 )
 
-from interfacegen.control import ParmIntent
+from .control import ParmIntent
 
 # HIP
 

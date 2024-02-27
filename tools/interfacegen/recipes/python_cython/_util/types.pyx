@@ -67,6 +67,12 @@ cdef class Pointer:
     * `None`:
 
         This will set the ``self._ptr`` attribute to ``NULL``.
+    
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown reasons.
+        Therefore, it must be checked for this type first.
 
     * `ctypes.c_void_p`:
 
@@ -310,7 +316,7 @@ cdef class CStr(Pointer):
     * `ctypes.c_void_p`:
 
         Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
-        Length information is obtained via ``strlen`` in this case.
+        If needed, length information must be obtained via ``strlen`` in this case.
         Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown reasons.
         Therefore, it must be checked for this type first.
 

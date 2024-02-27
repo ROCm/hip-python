@@ -28,16 +28,15 @@ it generates Fortran module files.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+import os
 import textwrap
 import logging
 
 import interfacegen
 
-from interfacegen.support import gitversion
-
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
-
+from interfacegen.support import includetree as it
 
 from interfacegen.support import fortran as support
 from interfacegen.support.recipes import hip as controls
@@ -58,8 +57,7 @@ from interfacegen.tree import (
 
 # hip
 def generate_hip_module_files():
-    global OUTPUT_DIR
-    global ROCM_INC
+    global pkg_opts
     global GENERATOR_ARGS
     global HIP_GENERATOR
 
@@ -125,7 +123,7 @@ def generate_hip_module_files():
 
     generator = FortranModuleGenerator(
         "hipfort_hip",
-        ROCM_INC,
+        pkg_opts.abs_inc_dir,
         "hip/hip_runtime.h",
         node_init=hip_node_init,
         renamer=renamer,
@@ -163,8 +161,7 @@ def generate_hip_module_files():
 
 # hiprtc
 def generate_hiprtc_module_files():
-    global OUTPUT_DIR
-    global ROCM_INC
+    global pkg_opts
     global GENERATOR_ARGS
     global HIPRTC_GENERATOR
 
@@ -199,7 +196,7 @@ def generate_hiprtc_module_files():
 
     generator = FortranModuleGenerator(
         "hipfort_hiprtc",
-        ROCM_INC,
+        pkg_opts.abs_inc_dir,
         "hip/hiprtc.h",
         # node_init=hiprtc_node_init,
         node_filter=controls.hiprtc.node_filter,
@@ -219,12 +216,12 @@ def generate_hiprtc_module_files():
 
 # hipblas
 def generate_hipblas_module_files():
-    global ROCM_INC
+    global pkg_opts
     global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hipblas",
-        ROCM_INC,
+        pkg_opts.abs_inc_dir,
         "hipblas/hipblas.h",
         node_filter=controls.hipblas.node_filter,
         ptr_parm_intent=controls.hipblas.ptr_parm_intent,
@@ -252,12 +249,12 @@ def generate_hipblas_module_files():
 
 # hipsolver
 def generate_hipsolver_module_files():
-    global ROCM_INC
+    global pkg_opts
     global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hipsolver",
-        ROCM_INC,
+        pkg_opts.abs_inc_dir,
         "hipsolver/hipsolver.h",
         node_filter=controls.hipsolver.node_filter,
         ptr_parm_intent=controls.hipsolver.ptr_parm_intent,
@@ -289,12 +286,12 @@ def generate_hipsolver_module_files():
 
 # rccl
 def generate_rccl_module_files():
-    global ROCM_INC
+    global pkg_opts
     global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_rccl",
-        ROCM_INC,
+        pkg_opts.abs_inc_dir,
         "rccl/rccl.h",
         dll="librccl.so",
         node_filter=controls.rccl.node_filter,
@@ -318,12 +315,12 @@ def generate_rccl_module_files():
 
 # hiprand
 def generate_hiprand_module_files():
-    global ROCM_INC
+    global pkg_opts
     global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hiprand",
-        ROCM_INC,
+        pkg_opts.abs_inc_dir,
         "hiprand/hiprand.h",
         node_filter=controls.hiprand.node_filter,
         macro_type=controls.hiprand.macro_type,
@@ -346,12 +343,12 @@ def generate_hiprand_module_files():
 
 # hipfft
 def generate_hipfft_module_files():
-    global ROCM_INC
+    global pkg_opts
     global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hipfft",
-        ROCM_INC,
+        pkg_opts.abs_inc_dir,
         "hipfft/hipfft.h",
         node_filter=controls.hipfft.node_filter,
         macro_type=controls.hipfft.macro_type,
@@ -374,12 +371,12 @@ def generate_hipfft_module_files():
 
 # hipsparse
 def generate_hipsparse_module_files():
-    global ROCM_INC
+    global pkg_opts
     global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hipsparse",
-        ROCM_INC,
+        pkg_opts.abs_inc_dir,
         "hipsparse/hipsparse.h",
         node_filter=controls.hipsparse.node_filter,
         macro_type=controls.hipsparse.macro_type,
@@ -393,7 +390,7 @@ def generate_hipsparse_module_files():
 
 # roctx
 def generate_roctx_module_files():
-    global ROCM_INC
+    global pkg_opts
 
     generator = FortranModuleGenerator(
         "hipfort_roctx",
@@ -408,12 +405,20 @@ def generate_roctx_module_files():
     return generator
 
 
-if __name__ == "__main__":
-    OUTPUT_DIR = None
+AVAILABLE_GENERATORS = dict(
+    hip=generate_hip_module_files,  # produces the versions
+    hiprtc=generate_hiprtc_module_files,
+    hipblas=generate_hipblas_module_files,
+    rccl=generate_rccl_module_files,
+    hiprand=generate_hiprand_module_files,
+    hipfft=generate_hipfft_module_files,
+    hipsparse=generate_hipsparse_module_files,
+    roctx=generate_roctx_module_files,
+    hipsolver=generate_hipsolver_module_files,
+)
 
-    ROCM_INC = None
+if __name__ == "__main__":
     GENERATOR_ARGS = None
-    LIBS = None
     HIP_2_CUDA = None
 
     pkg_opts: support.RocmPackageOpts = support.create_rocm_package_opts_from_cli(
@@ -421,22 +426,38 @@ if __name__ == "__main__":
         env_var_prefix="HIPFORT_",
         libs_example="hip,hiprtc",
         package="hipfort",
-        rel_inc_dir=os.path.join("llvm", "include"),
-        util_pkg="rocm.llvm._util",
-        dll="librocmllvm.so",
+        rel_inc_dir="include",
         author="Advanced Micro Devices, Inc.",
-        email="hip-python.maintainer@amd.com",
+        email="hipfort.maintainer@amd.com",
     )
-    
 
-    AVAILABLE_GENERATORS = dict(
-        hip=generate_hip_module_files,  # produces the versions
-        hiprtc=generate_hiprtc_module_files,
-        hipblas=generate_hipblas_module_files,
-        rccl=generate_rccl_module_files,
-        hiprand=generate_hiprand_module_files,
-        hipfft=generate_hipfft_module_files,
-        hipsparse=generate_hipsparse_module_files,
-        roctx=generate_roctx_module_files,
-        hipsolver=generate_hipsolver_module_files,
-    )
+    def filter(filepath: str):
+        filename = os.path.basename(filepath)
+        # print(filename)
+        if filename in ("rccl.h", "miopen.h", "hip_runtime_api.h"):
+            return True
+        if filename[:3] in ("hip", "roc", "amd"):
+            # TODO fortran cory are those needed?
+            for temporarily_excluded in (
+                "rocrandapi.h",
+                "hiplibxt.h",
+                "v2/rocprofiler.h",
+            ):
+                if temporarily_excluded in filepath:
+                    return False
+            if "-" in filename:
+                return False
+            if "_" in filename:
+                if filename not in ("rocm_smi.h",):
+                    return False
+            for key in ("detail", "internal", "version"):
+                if key in filepath:
+                    return False
+            return True
+        return False
+
+    root = it.build_include_tree(incdir=pkg_opts.abs_inc_dir, filter=filter)
+    # create_generators(INCTREE)
+    print(root.file_tree_to_str())
+    print(root.py_module_tree_to_str())
+    print(root.py_imports_to_str())

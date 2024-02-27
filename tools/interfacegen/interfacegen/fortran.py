@@ -39,11 +39,11 @@ import Cython.Tempita
 
 from . import tree
 
-from . import cythontemplates
 from . import cparser
-from . import control
 from . import doxyparser
 from .support import cython as support
+
+from .support.recipes import control
 
 indent = " " * 2
 
@@ -412,8 +412,8 @@ class Function(tree.Function, FortranMixin, Typed):
         """
         hipfn = self.fortran_name
         binding = f"{hipfn}"
-        parm_names = ",".join(parm.name for parm in self.parms])
-        parm_decls = "\n".join([parm.fortran_repr for parm in self.parms])
+        parm_names = ",".join(parm.name for parm in self.parms)
+        parm_decls = "\n".join(parm.fortran_repr for parm in self.parms)
         
         return textwrap.dedent(
             f"""\
@@ -576,8 +576,6 @@ class FortranBackend:
             Moving those entities out of the `extern from` block
             ensures that Fortran creates a proper C type on its own.
         """
-        from . import tree
-
         global indent
         curr_indent = ""
         result = []

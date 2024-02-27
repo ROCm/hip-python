@@ -23,13 +23,12 @@
 __author__ = "Advanced Micro Devices, Inc."
 
 from . import cparser
-from . import tree
 from . import typehandler
-from . import cython
-from . import control
-from . import doxyparser
+from . import tree
 from . import support
 from . import treefactory
+from . import cython
+from . import doxyparser
 
 # configure logging
 def disable_logging():

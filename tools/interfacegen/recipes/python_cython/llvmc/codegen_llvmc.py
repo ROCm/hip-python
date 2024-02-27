@@ -56,7 +56,7 @@ from interfacegen.tree import (
     Parm,
 )
 
-from interfacegen.control import ParmIntent
+from interfacegen.support.recipes.control import ParmIntent
 
 from interfacegen.support import cython as support
 
@@ -264,7 +264,7 @@ if __name__ == "__main__":
         pkg_opts.abs_inc_dir, py_namespace="rocm", filter=filter
     )
     INCTREE.find_node(name="llvm-c").py_split_at_char("-")
-    interfacegen.cython.FunctionMixin.python_interface_always_return_tuple = (
+    interfacegen.cython.Function.python_interface_always_return_tuple = (
         False  # same for all modules, unlike callbacks
     )
 

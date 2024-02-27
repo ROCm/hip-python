@@ -40,13 +40,13 @@ import Cython.Tempita
 
 from . import tree
 
-from tree import Node # make available to treefactory
-
 from . import cythontemplates
 from . import cparser
-from . import control
 from . import doxyparser
+
+from .support.recipes import control
 from .support import cython as support
+
 
 indent = " " * 4
 

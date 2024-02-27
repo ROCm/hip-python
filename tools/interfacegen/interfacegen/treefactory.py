@@ -30,7 +30,7 @@ _log = logging.getLogger("interfacegen")
 
 import clang.cindex
 
-from . import control
+from .support.recipes import control
 
 from . import cython
 
