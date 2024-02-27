@@ -23,7 +23,6 @@
 __author__ = "Advanced Micro Devices, Inc."
 
 import collections
-import sys
 
 import logging
 
@@ -31,24 +30,12 @@ _log = logging.getLogger("interfacegen")
 
 import clang.cindex
 
-from . import control
 from . import cparser
-from . import cython
 
 indent = " " * 4
 
-__RootMixins = (cython.RootMixin,)
-__MacroDefinitionMixins = (cython.MacroDefinitionMixin,)
-__FieldMixins = (cython.FieldMixin,)
-__StructMixins = (cython.StructMixin,)
-__UnionMixins = (cython.UnionMixin,)
-__EnumMixins = (cython.EnumMixin,)
-__TypedefMixins = (cython.TypedefMixin,)
-__TypedefedFunctionPointerMixins = (cython.TypedefedFunctionPointerMixin,)
-__AnonymousFunctionPointerMixins = (cython.AnonymousFunctionPointerMixin,)
-__ParmMixins = (cython.ParmMixin,)
-__FunctionMixins = (cython.FunctionMixin,)
-__ConstantArrayMixins = (cython.ConstantArrayMixin,)
+# TODO dynamically create a tree module for backend in (cython, fortran)
+# and make it available via __init__ package
 
 
 class Node:
@@ -182,15 +169,13 @@ class Node:
                 yield from child.walk()
 
 
-class Root(Node, *__RootMixins):
+class Root(Node):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
     ):
         Node.__init__(self, cursor, None)
         self.types = collections.OrderedDict()
-        for mixin in globals()["__RootMixins"]:
-            mixin.__init__(self)
 
     def lookup_all_types(self, canonical_typename: str) -> list:
         return self.types.get(canonical_typename, [])
@@ -297,11 +282,9 @@ class Root(Node, *__RootMixins):
             self.types[canonical_typename].remove(node)
 
 
-class MacroDefinition(Node, *__MacroDefinitionMixins):
+class MacroDefinition(Node):
     def __init__(self, cursor: clang.cindex.Cursor, parent: Node):
         Node.__init__(self, cursor, parent)
-        for mixin in globals()["__MacroDefinitionMixins"]:
-            mixin.__init__(self)
 
 
 class Typed:
@@ -775,7 +758,7 @@ class Typed:
         return self.typehandler.is_innermost_canonical_type_layer_of_basic_type_or_void
 
 
-class Field(Node, Typed, *__FieldMixins):
+class Field(Node, Typed):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -784,8 +767,6 @@ class Field(Node, Typed, *__FieldMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
-        for mixin in globals()["__FieldMixins"]:
-            mixin.__init__(self)
 
 
 class Type(Node):
@@ -853,21 +834,17 @@ class Record(Type):
         return self.is_incomplete
 
 
-class Struct(Record, *__StructMixins):
+class Struct(Record):
     def __init__(self, *args, **kwargs):
         Record.__init__(self, *args, **kwargs)
-        for mixin in globals()["__StructMixins"]:
-            mixin.__init__(self)
 
 
-class Union(Record, *__UnionMixins):
+class Union(Record):
     def __init__(self, *args, **kwargs):
         Record.__init__(self, *args, **kwargs)
-        for mixin in globals()["__UnionMixins"]:
-            mixin.__init__(self)
 
 
-class Enum(Type, *__EnumMixins):
+class Enum(Type):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -876,8 +853,6 @@ class Enum(Type, *__EnumMixins):
     ):
         Type.__init__(self, cursor, parent)
         self._from_typedef_with_anon_child: bool = from_typedef_with_anon_child
-        for mixin in globals()["__EnumMixins"]:
-            mixin.__init__(self)
 
     @property
     def is_incomplete(self):
@@ -963,7 +938,7 @@ class AnonymousEnum(Enum, Anonymous):
             return self._name
 
 
-class Typedef(Type, Typed, *__TypedefMixins):
+class Typedef(Type, Typed):
     @staticmethod
     def match_typedefed_enum(clang_type: clang.cindex.Type):
         """If the type is a typedef of an enum."""
@@ -1027,11 +1002,9 @@ class Typedef(Type, Typed, *__TypedefMixins):
     ):
         Type.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
-        for mixin in globals()["__TypedefMixins"]:
-            mixin.__init__(self)
 
 
-class ConstantArray(Type, Typed, *__ConstantArrayMixins):
+class ConstantArray(Type, Typed):
     @staticmethod
     def match_typedefed_constantarray_of_basic_type(clang_type: clang.cindex.Type):
         """If the type is a typedef of a basic type."""
@@ -1053,8 +1026,6 @@ class ConstantArray(Type, Typed, *__ConstantArrayMixins):
         Typed.__init__(self, self.cursor.type, typeref)
         self.element_type, self.shape = self._get_element_type_and_shape()
         self.dim = len(self.shape)
-        for mixin in globals()["__ConstantArrayMixins"]:
-            mixin.__init__(self)
 
     def _get_element_type_and_shape(self):
         """Returns element type and the array shape. Uses canonical type."""
@@ -1114,7 +1085,7 @@ class FunctionPointer(Type):  # TODO handle result type
             yield parm.global_typename(sep, renamer, prefer_canonical)
 
 
-class TypedefedFunctionPointer(FunctionPointer, *__TypedefedFunctionPointerMixins):
+class TypedefedFunctionPointer(FunctionPointer):
     @staticmethod
     def match(clang_type: clang.cindex.Type):
         return list(cparser.TypeHandler(clang_type).clang_type_layer_kinds()) == [
@@ -1126,13 +1097,9 @@ class TypedefedFunctionPointer(FunctionPointer, *__TypedefedFunctionPointerMixin
     def __init__(self, cursor: clang.cindex.Cursor, parent: Node):  # TYPEDEF_DECL
         result_type = cursor.underlying_typedef_type.get_pointee().get_result()
         FunctionPointer.__init__(self, cursor, parent, result_type)
-        for mixin in globals()["__TypedefedFunctionPointerMixins"]:
-            mixin.__init__(self)
 
 
-class AnonymousFunctionPointer(
-    FunctionPointer, Anonymous, *__AnonymousFunctionPointerMixins
-):
+class AnonymousFunctionPointer(FunctionPointer, Anonymous):
     @staticmethod
     def match(clang_type: clang.cindex.Type):
         return list(cparser.TypeHandler(clang_type).clang_type_layer_kinds()) == [
@@ -1145,8 +1112,6 @@ class AnonymousFunctionPointer(
     ):
         result_type = cursor.type.get_pointee().get_result()
         FunctionPointer.__init__(self, cursor, parent, result_type)
-        for mixin in globals()["__AnonymousFunctionPointerMixins"]:
-            mixin.__init__(self)
 
     @property
     def anon_funptr_index(self):
@@ -1157,7 +1122,7 @@ class AnonymousFunctionPointer(
         return f"anon_funptr_{self.anon_funptr_index}"
 
 
-class Parm(Node, Typed, *__ParmMixins):
+class Parm(Node, Typed):
     unnamed_parm_template = "arg{parm_index}"
 
     def __init__(
@@ -1168,8 +1133,6 @@ class Parm(Node, Typed, *__ParmMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
-        for mixin in globals()["__ParmMixins"]:
-            mixin.__init__(self)
 
     @property
     def parm_index(self):
@@ -1188,7 +1151,7 @@ class Parm(Node, Typed, *__ParmMixins):
         return given_name
 
 
-class Function(Node, Typed, *__FunctionMixins):
+class Function(Node, Typed):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -1197,8 +1160,6 @@ class Function(Node, Typed, *__FunctionMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.result_type, typeref)
-        for mixin in globals()["__FunctionMixins"]:
-            mixin.__init__(self)
 
     @property
     def parms(self):
@@ -1230,278 +1191,3 @@ class Function(Node, Typed, *__FunctionMixins):
         for parm in self.parms:
             assert isinstance(parm, Parm)
             yield parm.global_typename(sep, renamer, prefer_canonical)
-
-
-def from_libclang_translation_unit(
-    translation_unit: clang.cindex.TranslationUnit, warn_mode=control.Warnings.WARN
-) -> Root:
-    """Create a tree from a libclang translation unit."""
-
-    def first_child_cursor_of_kinds_(cursor: clang.cindex.Cursor, kinds: tuple):
-        """Returns the first typeref child or None. Not recursive."""
-        return next(
-            (
-                child_cursor
-                for child_cursor in cursor.get_children()
-                if child_cursor.kind in kinds
-            ),
-            None,
-        )
-
-    structure_types = {
-        clang.cindex.CursorKind.STRUCT_DECL: Struct,
-        clang.cindex.CursorKind.UNION_DECL: Union,
-        clang.cindex.CursorKind.ENUM_DECL: Enum,
-    }
-    anon_structure_types = {
-        clang.cindex.CursorKind.STRUCT_DECL: AnonymousStruct,
-        clang.cindex.CursorKind.UNION_DECL: AnonymousUnion,
-        clang.cindex.CursorKind.ENUM_DECL: AnonymousEnum,
-    }
-
-    def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root: Root):
-        """Handle cursors whose parent is the cursor of kind TRANSLATION_UNIT."""
-        nonlocal structure_types
-        nonlocal warn_mode
-
-        if cursor.kind in structure_types.keys():
-            handle_top_level_record_or_enum_cursor_(cursor, root)
-        elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
-            handle_typedef_cursor_(cursor, root)
-        elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
-            if warn_mode in (control.Warnings.WARN, control.Warnings.ERROR):
-                msg = (
-                    f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
-                )
-                if warn_mode == control.Warnings.WARN:
-                    _log.warning(msg)
-                else:
-                    _log.error(f"ERROR: {msg}'")
-                    sys.exit(2)
-        elif cursor.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
-            root.append(MacroDefinition(cursor, root))
-        elif cursor.kind == clang.cindex.CursorKind.FUNCTION_DECL:
-            typeref_cursor = first_child_cursor_of_kinds_(
-                cursor, (clang.cindex.CursorKind.TYPE_REF,)
-            )
-            typeref = root.lookup_type_from_cursor(typeref_cursor)
-            node = Function(cursor, root, typeref=typeref)
-            descend_into_child_cursors_(node)
-            root.append(node)
-
-    def handle_top_level_record_or_enum_cursor_(
-        cursor: clang.cindex.Cursor, root: Root
-    ):
-        """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
-        Other cursors are ignored.
-
-        Note:
-            In contrast to the `handle_nested_record_or_enum_cursor_`,
-            this routine never creates `AnonymousStruct`, `AnonymousUnion`, `AnonymousEnum`
-            instances, instead it sets a flag indicating that the node
-            is from a typedef with anoymous inner node. This is mainly
-            for debugging purposes. It is assumes that the name of the node
-            gets overwritten when the respetive typedef is handled.
-        """
-        nonlocal structure_types
-
-        if cursor.kind in structure_types:
-            cls = structure_types[cursor.kind]
-            node = cls(
-                cursor, root, from_typedef_with_anon_child=(cursor.spelling == "")
-            )
-            descend_into_child_cursors_(node)
-            root.append(node)
-
-    def handle_typedef_cursor_(cursor: clang.cindex.Cursor, root: Root):
-        """Handle typedef cursors with respect to their children and type.
-
-        Checks if the typedef has any STRUCT_DECL, UNION_DECL, ENUM_DECL, or TYPE_REF child cursor, which
-        all indicate that there is already a node in the Root's child_nodes list for the inner type
-        due to libclang's way of constructing the parse tree.
-
-        In case of the former three, three different cases have to be handled:
-
-        1. The inner type is anonymous.
-
-           In this case, the previously inserted (anonymous) Struct/-Union/-Enum node has to
-           be given a name that uses a `ctypedef struct <name>`/...
-           instead of `cdef struct <name>`/...  when rendering Cython code,
-           where `<name>` is the spelling of the `TYPEDEF_DECL` cursor. (FIXME Cython backend specific text)
-
-        2. Inner type and typedef name are the same.
-
-            In this case, no Typedef node is inserted as only `cdef struct <name>`/...  needs to be specified
-            in the rendered Cython code.
-
-        3. Inner type and typedef name differ.
-
-            In this case a Typedef case is inserted that specifies a previously added
-            Struct/Union/Enum as typeref argument.
-
-        In case none of the listed four child cursors could be found,
-        the routine checks if the cursor's type might be a typedefed function pointer.
-        In this case, no Typedef node but a `TypedefedFunctionPointer` is inserted.
-        """
-        if TypedefedFunctionPointer.match(cursor.type):
-            _log.debug(
-                f"handle_typedef_cursor_: typedefed function pointer: found {cursor.type.kind} with typedef name '{cursor.spelling}'"
-            )
-            node = TypedefedFunctionPointer(cursor, root)
-            descend_into_child_cursors_(node)  # post-order walk,
-            root.append(node)
-        elif ConstantArray.match_typedefed_constantarray_of_basic_type(cursor.type):
-            _log.debug(
-                f"handle_typedef_cursor_: typedefed constant array of basic type elements found: found {cursor.type.kind} with typedef name '{cursor.spelling}'"
-            )
-            node = ConstantArray(
-                cursor,
-                root,
-            )
-            root.append(node)
-        elif Typedef.match_typedefed_basic_type(cursor.type):
-            _log.debug(
-                f"handle_typedef_cursor_: typedefed basic type: found {cursor.type.kind} with typedef name '{cursor.spelling}'"
-            )
-            node = Typedef(cursor, root)
-            root.append(node)
-        elif Typedef.match_typedefed_void(cursor.type):
-            _log.debug(
-                f"handle_typedef_cursor_: typedefed void: found {cursor.type.kind} with typedef name '{cursor.spelling}'"
-            )
-            node = Typedef(cursor, root)
-            root.append(node)
-        elif Typedef.match_typedefed_pointer(cursor.type):
-            _log.debug(
-                f"handle_typedef_cursor_: typedefed pointer type: found {cursor.type.kind} with typedef name '{cursor.spelling}'"
-            )
-            node = Typedef(cursor, root)
-            typeref_cursor = first_child_cursor_of_kinds_(  #
-                cursor, (clang.cindex.CursorKind.TYPE_REF,)
-            )  # TODO see if looking up the TYPE_REF cursor can be done via clang.cindex.
-            if typeref_cursor is not None:
-                node.typeref = root.lookup_type_from_cursor(typeref_cursor)
-            root.append(node)
-        elif Typedef.match_typedefed_record_or_enum(
-            cursor.type
-        ):  # typedef of struct or union
-            type_decl_cursor = cursor.underlying_typedef_type.get_declaration()  # FIX
-            if not len(
-                type_decl_cursor.spelling
-            ):  # found anonymous struct/union/enum child
-                _log.debug(
-                    f"handle_typedef_cursor_: typedefed enum/record: found anonymous {type_decl_cursor.type.kind} cursor with typedef name '{cursor.spelling}'"
-                )
-                # in case of anon enum, replace the original node with the given one
-                type_decl = root.lookup_type_from_cursor(type_decl_cursor)
-                assert type_decl != None, Node.render_cursor_location(cursor)
-                assert isinstance(type_decl, (Enum, Record))
-                assert type_decl._from_typedef_with_anon_child
-                type_decl.overwrite_name(cursor.spelling)
-                pass  # do not append typedef node
-            elif (
-                type_decl_cursor.spelling != cursor.spelling
-            ):  # child with different name
-                _log.debug(
-                    f"handle_typedef_cursor_: typedefed enum/record: found {type_decl_cursor.type.kind} with name '{type_decl_cursor.spelling}' and typedef name '{cursor.spelling}'"
-                )
-                # update, append typedef node
-                node = Typedef(cursor, root)  # quiet/silent creation depending on case
-                node.typeref = root.lookup_type_from_cursor(type_decl_cursor)
-                root.append(node)
-            else:  # child with same name
-                _log.debug(
-                    f"handle_typedef_cursor_: typedefed enum/record: found {type_decl_cursor.type.kind} with name and typedef name '{type_decl_cursor.spelling}'"
-                )
-                pass  # do not append typedef node
-        else:
-            _log.warning(
-                f"<{Node.render_cursor_location(cursor)}> Did not handle {cursor.type.kind} with typedef name '{cursor.spelling}'"
-            )
-
-    def handle_nested_record_or_enum_cursor_(cursor: clang.cindex.Cursor, parent: Node):
-        """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
-        Other cursors are ignored.
-        """
-        nonlocal structure_types
-        nonlocal anon_structure_types
-
-        is_anonymous = cursor.spelling == ""
-
-        if cursor.kind in structure_types:
-            cls = structure_types[cursor.kind]
-            cls_anon = anon_structure_types[cursor.kind]
-            if is_anonymous:
-                node = cls_anon(cursor, parent)
-            else:
-                node = cls(cursor, parent)
-            descend_into_child_cursors_(node)
-            parent.append(node)
-
-    def handle_param_or_field_decl_cursor_(cursor: clang.cindex.Cursor, parent: Node):
-        """Handle PARAM_DECL/FIELD_DECL cursors.
-
-        First check if the cursor's type is anonymous function pointer.
-        In this case emit an additional AnonymousFunctionPointer node.
-        If there are further PARAM_DECL children of the given cursor, it visits
-        them first before emitting an `AnonymousFunctionPointer` node.
-        This guarantees that nested anoymous pointers are processed
-        before constructing the `AnonymousFunctionPointer` node for the parent cursor.
-
-        Note:
-            AnonymousFunctionPointer instances must appear as child node of their
-            parent in order to give them a unique index.
-        """
-        assert cursor.kind in (
-            clang.cindex.CursorKind.PARM_DECL,
-            clang.cindex.CursorKind.FIELD_DECL,
-        )
-        if AnonymousFunctionPointer.match(cursor.type):
-            typeref = AnonymousFunctionPointer(cursor, parent)
-            descend_into_child_cursors_(typeref)  # post-order walk
-            parent.append(typeref)
-        else:
-            # FIXME prove robustness
-            typeref_cursor = first_child_cursor_of_kinds_(
-                cursor,
-                (
-                    clang.cindex.CursorKind.TYPE_REF,
-                    clang.cindex.CursorKind.STRUCT_DECL,
-                    clang.cindex.CursorKind.UNION_DECL,
-                    clang.cindex.CursorKind.ENUM_DECL,
-                ),
-            )
-            # TODO check that typeref is only None if no type is involved
-            root = parent.get_root()
-            typeref = root.lookup_type_from_cursor(typeref_cursor)
-        if cursor.kind == clang.cindex.CursorKind.PARM_DECL:
-            node = Parm(cursor, parent, typeref=typeref)
-        else:
-            node = Field(cursor, parent, typeref=typeref)
-        parent.append(node)
-
-    def descend_(cursor, parent=None):
-        assert isinstance(parent, Node)
-        assert parent.cursor is not None
-        parent_cursor = parent.cursor
-        if parent_cursor.kind == clang.cindex.CursorKind.TRANSLATION_UNIT:
-            handle_top_level_cursor_(cursor, parent)
-        elif parent_cursor.kind in (
-            clang.cindex.CursorKind.STRUCT_DECL,
-            clang.cindex.CursorKind.UNION_DECL,
-        ):
-            handle_nested_record_or_enum_cursor_(cursor, parent)
-        #
-        if cursor.kind in (
-            clang.cindex.CursorKind.PARM_DECL,
-            clang.cindex.CursorKind.FIELD_DECL,
-        ):
-            handle_param_or_field_decl_cursor_(cursor, parent)
-
-    def descend_into_child_cursors_(node: Node):
-        for child_cursor in node.cursor.get_children():
-            descend_(child_cursor, node)
-
-    root = Root(translation_unit.cursor)
-    descend_into_child_cursors_(root)
-    return root

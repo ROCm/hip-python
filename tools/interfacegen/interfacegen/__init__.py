@@ -29,6 +29,7 @@ from . import cython
 from . import control
 from . import doxyparser
 from . import support
+from . import treefactory
 
 # configure logging
 def disable_logging():
