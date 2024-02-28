@@ -29,6 +29,8 @@ _log = logging.getLogger(__name__)
 ENABLE_MIDEND_OPT=bool(os.environ.get("NUMBA_HIP_MIDEND_OPT",False))
 OPT_LEVEL=int(os.environ.get("NUMBA_HIP_OPT_LEVEL",3))
 
+POSE_AS_CUDA=int(os.environ.get("NUMBA_HIP_POSE_AS_CUDA",False))
+
 def get_rocm_path(*subdirs):
     """Get paths of ROCM_PATH.
 

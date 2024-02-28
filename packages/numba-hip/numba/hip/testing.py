@@ -35,6 +35,9 @@ class HIPTestCase(SerialMixin, TestCase):
         config.CUDA_LOW_OCCUPANCY_WARNINGS = self._low_occupancy_warnings
         config.CUDA_WARN_ON_IMPLICIT_COPY = self._warn_on_implicit_copy
 
+# CUDA interoperability
+CUDATestCase = HIPTestCase
+
 
 class ContextResettingTestCase(HIPTestCase):
     """
@@ -56,6 +59,8 @@ def skip_on_hipsim(reason):
     """Skip this test if running on the HIP simulator"""
     return unittest.skipIf(config.ENABLE_CUDASIM, _hipify_reason(reason))
 
+# CUDA interoperability
+skip_on_cudasim = skip_on_hipsim
 
 def skip_unless_hipsim(reason):
     """Skip this test if running on HIP hardware"""
@@ -100,6 +105,8 @@ def skip_if_hip_includes_missing(fn):
     hip_runtime_h_file = (os.path.exists(hip_runtime_h) and os.path.isfile(hip_runtime_h))
     reason = 'HIP include dir not available on this system'
     return unittest.skipUnless(hip_runtime_h_file, reason)(fn)
+
+skip_if_cuda_includes_missing = skip_if_hip_includes_missing
 
 # TODO HIP not supported
 # def skip_if_mvc_enabled(reason):

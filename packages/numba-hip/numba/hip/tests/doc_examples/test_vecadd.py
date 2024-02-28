@@ -1,8 +1,9 @@
 import unittest
 
-from numba.hip.testing import HIPTestCase as CUDATestCase, skip_on_hipsim as skip_on_cudasim
+from numba import hip
+hip.pose_as_cuda()
+from numba.cuda.testing import CUDATestCase, skip_on_cudasim
 from numba.tests.support import captured_stdout
-
 
 @skip_on_cudasim("cudasim doesn't support cuda import at non-top-level")
 class TestVecAdd(CUDATestCase):
@@ -25,7 +26,7 @@ class TestVecAdd(CUDATestCase):
     def test_ex_vecadd(self):
         # ex_vecadd.import.begin
         import numpy as np
-        from numba import hip as cuda
+        from numba import cuda
         # ex_vecadd.import.end
 
         # ex_vecadd.kernel.begin

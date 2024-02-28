@@ -228,6 +228,43 @@ def set_hip_extensions(
     hipdevicelib.__dict__.update(hipdevicelib.thestubs)
     globals().update(hipdevicelib.thestubs)
 
+def pose_as_cuda():
+    """Delegate all 'numba.cuda' and 'from numba import cuda' imports to 'numba.hip'.
+
+    After calling this function, you can write:
+
+    ```py
+    from numba import cuda 
+    # same now as 'from numba import hip'
+
+    import numba.cuda.cudadrv
+    # same now as 'import numba.hip.hipdrv'.
+
+    # ...
+    ```
+    
+    Deregisters all ``numba.cuda*`` modules from
+    the ``sys.modules`` registry and puts 
+    all ``numba.hip*`` modules with "numba.cuda" prefix into it
+    instead.
+
+    Further replaces the "cuda" attribute value of ``sys.modules["numba"]``
+    by ``sys.modules["numba.hip"]``.
+
+    Warning:
+        Cannot be undone.
+    """
+    import sys
+    numba_cuda_modules = [name for name in sys.modules.keys() if name.startswith("numba.cuda")]
+    numba_hip_modules = [name for name in sys.modules.keys() if name.startswith("numba.hip")]
+    for mod in numba_cuda_modules:
+        del sys.modules[mod]
+    for mod in numba_hip_modules:
+        sys.modules[mod.replace("numba.hip","numba.cuda")] = sys.modules[mod]
+    setattr(sys.modules["numba"],"cuda",sys.modules["numba.hip"])
+
+if hipconfig.POSE_AS_CUDA:
+    pose_as_cuda()
 
 # clean up
 # del _preprocess
