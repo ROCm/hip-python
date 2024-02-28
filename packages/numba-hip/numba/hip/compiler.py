@@ -67,6 +67,7 @@ from numba.hip import target
 from numba.hip import codegen
 from numba.hip import hipconfig
 
+
 def _options_type(x):
     if x is None:
         return None
@@ -285,7 +286,8 @@ def compile_llvm_ir(
     fastmath: bool = False,
     amdgpu_arch: str = None,
     opt: bool = True,
-    to_bc: bool = True,
+    to_bc: bool = False,
+    ir_as_str: bool = True,
     name: str = None,
 ):
     """Compile a Python function to LLVM IR for a given set of argument types.
@@ -315,7 +317,12 @@ def compile_llvm_ir(
         opt (`bool`):
             Enable optimizations. Defaults to ``True``. TODO HIP enable
         to_bc (`bool`)
-            Compile the result to bitcode. Defaults to 'True'.
+            Compile the result to bitcode. Defaults to 'False'.
+        ir_as_str (`bool`)
+            Convert human-readable LLVM IR to `str`, don't
+            keep it in its original `bytes` form.
+            Only used if ``to_bc`` is set to ``False``.
+            Defaults to ``True``.
         name (`str` or `None`, optional):
             If not set to ``None``, gives this name to
             the compiled function.
@@ -380,6 +387,8 @@ def compile_llvm_ir(
         )
     assert isinstance(lib, codegen.HIPCodeLibrary)
     llvm_ir = lib.get_linked_llvm_ir(amdgpu_arch=amdgpu_arch, to_bc=to_bc)
+    if ir_as_str:
+        llvm_ir = llvm_ir.decode("utf-8")
     return llvm_ir, resty
 
 
@@ -391,7 +400,8 @@ def compile_llvm_ir_for_current_device(
     device=False,
     fastmath=False,
     opt=True,
-    to_bc: bool = True,
+    to_bc: bool = False,
+    ir_as_str: bool = True,
     name: str = None,
 ):
     """Compile a Python function to AMD GPU LLVM IR for a given set of argument types for
@@ -402,6 +412,9 @@ def compile_llvm_ir_for_current_device(
         name (`str` or `None`, optional):
             If not set to ``None``, gives this name to
             the compiled function.
+
+    See:
+        compile_llvm_ir
     """
     amdgpu_arch = get_current_device().amdgpu_arch
     return compile_llvm_ir(
@@ -414,6 +427,7 @@ def compile_llvm_ir_for_current_device(
         amdgpu_arch=amdgpu_arch,
         opt=opt,
         to_bc=to_bc,
+        ir_as_str=ir_as_str,
         name=name,
     )
 
