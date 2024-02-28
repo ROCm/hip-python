@@ -120,7 +120,7 @@ class Node:
 
     def py_imports_to_str(self):
         result = ""
-        for file in root.walk_files():
+        for file in self.walk_files():
             result += f"{file.py_global_name}\n"
             for incfile in file.includes:
                 assert isinstance(incfile, File)
@@ -322,7 +322,7 @@ class Root(Directory):
         relpath: str = None,
         py_name: str = None,
         py_global_name: str = None,
-    ) -> Node:
+    ):
         """Find nodes with one of the specified properties."""
         assert (
             name != None

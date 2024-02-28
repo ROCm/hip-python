@@ -457,6 +457,11 @@ if __name__ == "__main__":
         return False
 
     root = it.build_include_tree(incdir=pkg_opts.abs_inc_dir, filter=filter)
+    # patch some of the includes
+    root.find_node(name="hipsolver.h").includes.append(
+        root.find_node(name="hipblas.h"))
+    root.find_node(name="rocsolver.h").includes.append(
+        root.find_node(name="rocblas.h"))
     # create_generators(INCTREE)
     print(root.file_tree_to_str())
     print(root.py_module_tree_to_str())
