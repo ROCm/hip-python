@@ -68,6 +68,7 @@ from .hipdrv.error import HipSupportError as CudaSupportError
 from .hipdrv.driver import (
     BaseHIPMemoryManager,
     HostOnlyHIPMemoryManager,
+    HostOnlyCUDAMemoryManager,
     GetIpcHandleMixin,
     MemoryPointer,
     MappedMemory,

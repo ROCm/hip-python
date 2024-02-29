@@ -940,6 +940,9 @@ class HostOnlyHIPMemoryManager(BaseHIPMemoryManager):
             yield
 
 
+HostOnlyCUDAMemoryManager = HostOnlyHIPMemoryManager
+
+
 class GetIpcHandleMixin:
     """A class that provides a default implementation of ``get_ipc_handle()``."""
 
