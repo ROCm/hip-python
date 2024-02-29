@@ -82,10 +82,10 @@ class TestJitSimple(CUDATestCase):
             pyfunc=empty, sig=(), device=True, to_bc=False
         )
         self.assertIn(
-            "test_00_compile_llvm_ir_for_empty_device_fun", ir.decode("utf-8")
+            "test_00_compile_llvm_ir_for_empty_device_fun", ir
         )
         # with open("empty.ll","w") as outfile:
-        #     outfile.write(ir.decode("utf-8"))
+        #     outfile.write(ir)
 
     def test_01_compile_llvm_ir_for_syncthreads(self):
 
@@ -103,10 +103,10 @@ class TestJitSimple(CUDATestCase):
             to_bc=False,
             name="GENERIC_OP",
         )
-        self.assertIn("GENERIC_OP", ir.decode("utf-8"))
+        self.assertIn("GENERIC_OP", ir)
         if DUMP_IR:
             with open("syncthreads.ll", "w") as outfile:
-                outfile.write(ir.decode("utf-8"))
+                outfile.write(ir)
 
     def test_03_jit_device_for_syncthreads(self):
         # jit - device function
@@ -144,17 +144,17 @@ class TestJitSimple(CUDATestCase):
             cuda.cos(5)
             cuda.cos(5.0)
             math.cos(5)
-            cuda.threadIdx.x
+            x = cuda.threadIdx.x
             lA = cuda.local.array(shape=(4, 4), dtype=np.float32)
             sA = cuda.shared.array(shape=(4, 4), dtype=np.int64)
 
         ir, restype = cuda.compile_llvm_ir_for_current_device(
             pyfunc=mydevicefun, sig=(), device=True, to_bc=False, name="mydevicefun"
         )
-        self.assertIn("mydevicefun", ir.decode("utf-8"))
+        self.assertIn("mydevicefun", ir)
         if DUMP_IR:
             with open("one_of_each.ll", "w") as outfile:
-                outfile.write(ir.decode("utf-8"))
+                outfile.write(ir)
 
     def test_06_compile_llvm_ir_device_fun_with_args(self):
         def device_fun_with_args(arr, a):
@@ -167,10 +167,10 @@ class TestJitSimple(CUDATestCase):
             to_bc=False,
             name="mydevicefun", # TODO Fix this again
         )
-        self.assertIn("device_fun_with_args", ir.decode("utf-8"))
+        self.assertIn("device_fun_with_args", ir)
         if DUMP_IR:
             with open("device_fun_with_args.ll", "w") as outfile:
-                outfile.write(ir.decode("utf-8"))
+                outfile.write(ir)
 
 
 if __name__ == "__main__":
