@@ -327,11 +327,16 @@ def compile_llvm_ir(
             If not set to ``None``, gives this name to
             the compiled function.
 
-    :return: (llvm_ir, resty): The LLVM IR code and inferred return type
-    :rtype: tuple
+    Returns:
+        `tuple`:
+            A tuple ``(llvm_ir, resty)`` consisting of the
+            LLVM IR code and the inferred return type (in that order).
 
     Note:
-        Creates an additional code library when preparing a kernel.
+        Creates an additional code library on top of the
+        one that contains the device function when preparing
+        a kernel as this allows to add additional globals
+        such as debug variables.
     """
     if debug and opt:
         msg = (
@@ -345,8 +350,7 @@ def compile_llvm_ir(
 
     args, return_type = sigutils.normalize_signature(sig)
 
-    # TODO HIP have similar config option
-    # cc = cc or config.CUDA_DEFAULT_PTX_CC
+    amdgpu_arch = amdgpu_arch or get_current_device().amdgpu_arch
     cres: CompileResult = compile_hip(
         pyfunc,
         return_type,
@@ -376,7 +380,7 @@ def compile_llvm_ir(
 
         # TODO pass amdgpu arch here in order to set
         # the kernel arguments correctly
-        lib, kernel = tgt.prepare_hip_kernel(
+        lib, _kernel = tgt.prepare_hip_kernel(
             cres.library,
             cres.fndesc,
             debug,
@@ -416,7 +420,6 @@ def compile_llvm_ir_for_current_device(
     See:
         compile_llvm_ir
     """
-    amdgpu_arch = get_current_device().amdgpu_arch
     return compile_llvm_ir(
         pyfunc,
         sig,
@@ -424,7 +427,7 @@ def compile_llvm_ir_for_current_device(
         lineinfo=lineinfo,
         device=device,
         fastmath=fastmath,
-        amdgpu_arch=amdgpu_arch,
+        amdgpu_arch=None,  # results in selection of current device arch
         opt=opt,
         to_bc=to_bc,
         ir_as_str=ir_as_str,
