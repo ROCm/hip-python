@@ -155,7 +155,9 @@ def from_libclang_translation_unit(
             node = backend.TypedefedFunctionPointer(cursor, root)
             descend_into_child_cursors_(node)  # post-order walk,
             root.append(node)
-        elif backend.ConstantArray.match_typedefed_constantarray_of_basic_type(cursor.type):
+        elif backend.ConstantArray.match_typedefed_constantarray_of_basic_type(
+            cursor.type
+        ):
             _log.debug(
                 f"handle_typedef_cursor_: typedefed constant array of basic type elements found: found {cursor.type.kind} with typedef name '{cursor.spelling}'"
             )
@@ -211,7 +213,9 @@ def from_libclang_translation_unit(
                     f"handle_typedef_cursor_: typedefed enum/record: found {type_decl_cursor.type.kind} with name '{type_decl_cursor.spelling}' and typedef name '{cursor.spelling}'"
                 )
                 # update, append typedef node
-                node = backend.Typedef(cursor, root)  # quiet/silent creation depending on case
+                node = backend.Typedef(
+                    cursor, root
+                )  # quiet/silent creation depending on case
                 node.typeref = root.lookup_type_from_cursor(type_decl_cursor)
                 root.append(node)
             else:  # child with same name
@@ -224,7 +228,9 @@ def from_libclang_translation_unit(
                 f"<{backend.Node.render_cursor_location(cursor)}> Did not handle {cursor.type.kind} with typedef name '{cursor.spelling}'"
             )
 
-    def handle_nested_record_or_enum_cursor_(cursor: clang.cindex.Cursor, parent: backend.Node):
+    def handle_nested_record_or_enum_cursor_(
+        cursor: clang.cindex.Cursor, parent: backend.Node
+    ):
         """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
         Other cursors are ignored.
         """
@@ -243,7 +249,9 @@ def from_libclang_translation_unit(
             descend_into_child_cursors_(node)
             parent.append(node)
 
-    def handle_param_or_field_decl_cursor_(cursor: clang.cindex.Cursor, parent: backend.Node):
+    def handle_param_or_field_decl_cursor_(
+        cursor: clang.cindex.Cursor, parent: backend.Node
+    ):
         """Handle PARAM_DECL/FIELD_DECL cursors.
 
         First check if the cursor's type is anonymous function pointer.

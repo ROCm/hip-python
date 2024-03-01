@@ -22,8 +22,9 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
-import re
+import sys
 import os
+import re
 import keyword
 import textwrap
 
@@ -44,6 +45,15 @@ from . import doxyparser
 from .support import cython as support
 
 from .support.recipes import control
+
+# import original tree nodes so that the treefactory can use them via backend.
+for name, attr in vars(tree).items():
+    try:
+        if issubclass(attr, tree.Node):
+            globals()[name] = attr
+    except TypeError:
+        pass
+
 
 indent = " " * 2
 
@@ -128,12 +138,6 @@ def DEFAULT_MACRO_TYPE(node):  # backend-specific
 
 # Utility types
 
-
-def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
-    """Creates the default type handler routine."""
-    return "type(c_ptr)"
-
-
 LICENSE_TEXT = f"""\
 {support.render_license_MIT(year_start=2021,comment_char="!")}
 """
@@ -148,6 +152,7 @@ default_module_prolog = f"""\
 class FortranMixin:
     def __init__(self):
         self.renamer = DEFAULT_RENAMER
+        self.raw_comment_cleaner = lambda comment: comment
         self.sep = "_"
 
     @property
@@ -183,7 +188,7 @@ class FortranMixin:
         else:
             return ""
 
-    def render_c_interface(self):
+    def render_c_bindings(self):
         """Render a Fortran interface for external C code."""
         return None
 
@@ -192,6 +197,7 @@ class Root(tree.Root, FortranMixin):
     def __init__(self, *args, **kwargs):
         tree.Root.__init__(self, *args, **kwargs)
         FortranMixin.__init__(self)
+
 
 class Typed:
     @property
@@ -300,40 +306,53 @@ class Enum(tree.Enum, FortranMixin):
         """Yields expressions of the form '"enumerator" "::" name [ "=" value]'."""
         for child_cursor in self.cursor.get_children():
             assert isinstance(child_cursor, clang.cindex.Cursor)
-            name = self.fortran_name(child_cursor.spelling)
+            name = self.renamer(child_cursor.spelling)
             value = child_cursor.enum_value
             if value:
                 yield f"enumerator :: {name} = {value}"
             else:
                 yield f"enumerator ::  {name}"
 
-    def render_c_interface(self):
+    def render_c_bindings(self):
         # TODO fortran implement correctly
         global indent
         return (
-            "enum, bind(c)"
+            "enum, bind(c)\n"
             + textwrap.indent("\n".join(self._render_fortran_enums()), indent)
-            + "end enum"
+            + "\nend enum"
         )
 
 
 class Parm(tree.Parm, FortranMixin, Typed):
     def __init__(self, *args, **kwargs):
-        global CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
         tree.Parm.__init__(self, *args, **kwargs)
         FortranMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
         self.ptr_intent = control.DEFAULT_PTR_PARM_INTENT
-        self.ptr_complicated_type_handler = CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
 
     @property
-    def fortran_decl(self):
-        """Returns the Fortran interface declaration for the parameter."""
+    def fortran_c_binding_decl(self):
+        """Returns the Fortran C binding declaration
+        for the parameter.
+
+        1. If the is a pointer and the parameter is no output
+           parameter, adds the 'value' qualifier to pass
+           the pointer value.
+        2. If the type is a pointer and the parameter
+           is an output parameter, do not add the 'value'
+           qualifier as the pointer value must be written by the
+           callee. We must pass a reference to the
+           'type(c_ptr)' instance, essentially we must pass
+           a `void**` pointer.
+        """
         name = self.fortran_name
-        if self.is_any_pointer(degree=-1):
-            return f"type(c_ptr),value :: {name}"
+        if self.is_any_pointer:
+            if self.ptr_intent(self) == control.ParmIntent.OUT:
+                return f"type(c_ptr) :: {name}"
+            else:
+                return f"type(c_ptr), value :: {name}"
         else:
-            return C_TO_FORTRAN(self.cursor.type.get_canonical().spelling)
+            return f"{C_TO_FORTRAN(self.cursor.type.get_canonical().spelling)}, value :: {name}"
 
 
 class Function(tree.Function, FortranMixin, Typed):
@@ -342,6 +361,7 @@ class Function(tree.Function, FortranMixin, Typed):
         tree.Function.__init__(self, *args, **kwargs)
         FortranMixin.__init__(self)
         Typed.__init__(self)
+        self.decl_list_prolog = ""
 
     @property
     def _has_funptr_parm(self):
@@ -354,81 +374,129 @@ class Function(tree.Function, FortranMixin, Typed):
                     return True
         return False
 
-    def _fortran_retval(self,fn_name):
-        """Returns """
+    def _fortran_retval(self, fn_name):
+        """Returns"""
 
-        typename = self.cython_global_typename
+        typename = self.fortran_global_typename
         if self.is_void:
-            return None
-        elif self.is_basic_type or self.is_pointer_to_char(degree=1):
+            return ""
+        elif self.is_any_pointer:
+            return f"type(c_ptr) :: {fn_name}"
+        elif self.is_basic_type:
             return f"{C_TO_FORTRAN(typename)} :: {fn_name}"
         elif self.is_enum or self.is_record:
             return f"integer(kind({typename})) :: {fn_name}"
         else:
-            return None
+            raise NotImplementedError(
+                f"cannot handle return value of type '{typename}' yet"
+            )
 
-    def render_c_interface(self, modifiers_front="", modifiers=""):
+    def render_c_bindings(self, modifiers_front="", modifiers=""):
         """
         Renders the C interface.
 
-        Example:
+        Todos:
+
+            * TODO add user-friendly overloads that take Fortran
+              array arget and pointer variables.
+            * TODO Hipify information must be made available
+              to get a CUDA name. Note that hipify information should be
+              supplied via codegen_hipfort.py, which uses
+              `from interfacegen.support.recipes.hipify import parse_hipify_perl`.
+
+              Implementation should however be generic in sense that
+              a list of `#if` conditions plus the associated binding name
+              are supplied.
+
+        Example output:
 
         ```f90
-        !>  @brief Returns the approximate HIP driver version.
+        !>  \brief BLAS Level 1 API
         !>
-        !>  @param [out] driverVersion
+        !>     \details
+        !>     amax finds the first index of the element of maximum magnitude of a vector x.
         !>
-        !>  @returns hipSuccess, hipErrorInavlidValue
-        !>
-        !>  @warning The HIP feature set does not correspond to an exact CUDA SDK driver revision.
-        !>  This function always set *driverVersion to 4 as an approximation though HIP supports
-        !>  some features which were introduced in later CUDA SDK revisions.
-        !>  HIP apps code should not rely on the driver revision number here and should
-        !>  use arch feature flags to test device capabilities or conditional compilation.
-        !>
-        !>  @see hipRuntimeGetVersion
-        interface hipDriverGetVersion
+        !>     @param[in]
+        !>     handle    [hipblasHandle_t]
+        !>               handle to the hipblas library context queue.
+        !>     @param[in]
+        !>     n         [int]
+        !>               the number of elements in x.
+        !>     @param[in]
+        !>     x         device pointer storing vector x.
+        !>     @param[in]
+        !>     incx      [int]
+        !>               specifies the increment for the elements of y.
+        !>     @param[inout]
+        !>     result
+        !>               device pointer or host pointer to store the amax index.
+        !>               return is 0.0 if n, incx<=0.
+        interface hipblasIzamax
         #ifdef USE_CUDA_NAMES
-            function hipDriverGetVersion_(driverVersion) bind(c, name="cudaDriverGetVersion")
+            function hipblasIzamax_(handle,n,x,incx,myResult) bind(c, name="cublasIzamax_v2")
         #else
-            function hipDriverGetVersion_(driverVersion) bind(c, name="hipDriverGetVersion")
+            function hipblasIzamax_(handle,n,x,incx,myResult) bind(c, name="hipblasIzamax")
         #endif
             use iso_c_binding
-        #ifdef USE_CUDA_NAMES
-            use hipfort_cuda_errors
-        #endif
-            use hipfort_enums
-            use hipfort_types
+            use hipfort_hipblas_enums
             implicit none
-        #ifdef USE_CUDA_NAMES
-            integer(kind(cudaSuccess)) :: hipDriverGetVersion_
-        #else
-            integer(kind(hipSuccess)) :: hipDriverGetVersion_
-        #endif
-            type(c_ptr),value :: driverVersion
+            integer(kind(HIPBLAS_STATUS_SUCCESS)) :: hipblasIzamax_
+            type(c_ptr),value :: handle
+            integer(c_int),value :: n
+            type(c_ptr),value :: x
+            integer(c_int),value :: incx
+            type(c_ptr),value :: myResult
             end function
+
+        #ifdef USE_FPOINTER_INTERFACES
+            module procedure &
+            hipblasIzamax_rank_0,&
+            hipblasIzamax_rank_1
+        #endif
         end interface
         ```
         """
-        hipfn = self.fortran_name
-        binding = f"{hipfn}"
+        fn_name = self.fortran_name
+        binding = f"{fn_name}"
         parm_names = ",".join(parm.name for parm in self.parms)
-        parm_decls = "\n".join(parm.fortran_repr for parm in self.parms)
-        
-        return textwrap.dedent(
+        parm_decls = "\n".join(parm.fortran_c_binding_decl for parm in self.parms)
+        retval_decl = self._fortran_retval(fn_name)
+
+        c_binding = textwrap.dedent(
+            f"""\
+            function {fn_name}_({parm_names}) bind(c, name="{binding}")
+              use iso_c_binding
+            {{decl_list_prolog}}
+              implicit none
+            {{parm_decls}}
+            {indent}{retval_decl}
+            end function
+            """
+        ).format(
+            decl_list_prolog=textwrap.indent(self.decl_list_prolog, indent),
+            parm_decls=textwrap.indent(parm_decls, indent),
+        )
+        interface_members = [c_binding]
+        # TODO fortran add names of user-friendly interface overloads that call
+        # the C binding
+        # TODO fortran add a 'contains' section that contains
+        # the implementations of user-friendly interface overloads
+        # that call the C binding
+
+        declarations = textwrap.dedent(
             f"""\
             {{doxygen}}
-            interface {hipfn}(parm_names)
-                function {hipfn}_(driverVersion) bind(c, name="{binding}")
-            {{parm_decls}}
-                end function
+            interface {fn_name}
+            {{interface_members}}
             end interface
             """
         ).format(
             doxygen=self._raw_comment_as_fortran_comment().rstrip(),
-            parm_names=parm_names,
-            parm_decls=textwrap.indent(parm_decls,indent*2),
+            interface_members=textwrap.indent("\n".join(interface_members), indent),
         )
+        implementations = None
+        return declarations, implementations
+
 
 class FortranBackend:
     def from_libclang_translation_unit(
@@ -438,9 +506,13 @@ class FortranBackend:
         **opts,
     ):
         """See `FortranBackend.__init__` for further details."""
-        from . import tree
+        from . import treefactory
 
-        root = tree.from_libclang_translation_unit(translation_unit, warn_mode)
+        root = treefactory.from_libclang_translation_unit(
+            backend=sys.modules[__name__],  # this module is the backend
+            translation_unit=translation_unit,
+            warn_mode=warn_mode,
+        )
         return FortranBackend(
             root,
             filename,
@@ -456,11 +528,13 @@ class FortranBackend:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
-        ptr_complicated_type_handler=None,
         renamer: callable = DEFAULT_RENAMER,
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         doxygen_cleaner: callable = DEFAULT_DOXYGEN_CLEANER,
         node_init: callable = lambda node: None,
+        function_preamble: str = "",
+        module_preamble: str = "",
+        enum_module_preamble: str = "",
     ):
         """Constructor.
 
@@ -478,10 +552,15 @@ class FortranBackend:
                 Assigns the intent (in,out,inout,create) to a pointer-type function parameter/struct field node..
             ptr_rank (callable, optional):
                 Assigns the "rank" (scalar,buffer) to a function parameter node.
-            ptr_complicated_type_handler (callable, optional):
-                A handler that infers a type for complicated pointer types.
-                Selects `CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(f"{util_pkg}.types.")`
-                if the default value `None` is not overwritten with a user callback.
+            module_preamble (`str`):
+                Specify the declaration section of the function-containing module.
+                Defaults to empty string.
+            enum_module_preamble (`str`):
+                Specify the declaration section of the enum-containing module.
+                Defaults to empty string.
+            function_preamble (`str`):
+                Additional declarations that are prepended
+                to the declaration list of a function.
         Note:
             Argument 'root' has no type hint in order to prevent a circular inclusion error.
             Instead an assertion is used in the body that checks if the type is `tree.Root`.
@@ -496,16 +575,13 @@ class FortranBackend:
         self.macro_type = macro_type
         self.ptr_parm_intent = ptr_parm_intent
         self.ptr_rank = ptr_rank
-        if ptr_complicated_type_handler == None:
-            self.ptr_complicated_type_handler = (
-                CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(f"{util_pkg}.types.")
-            )
-        else:
-            self.ptr_complicated_type_handler = ptr_complicated_type_handler
         self.renamer = renamer
         self.raw_comment_cleaner = raw_comment_cleaner
         self.doxygen_cleaner = doxygen_cleaner
         self.node_init = node_init
+        self.module_preamble = module_preamble
+        self.enum_module_preamble = enum_module_preamble
+        self.function_preamble = function_preamble
 
         self.initialize_nodes()
 
@@ -518,29 +594,26 @@ class FortranBackend:
         """
         for node in self.root.walk(postorder=True):
             if isinstance(node, FortranMixin):
-                # set defaults
-                setattr(node, "sep", "_")
-                # set user callbacks
-                setattr(node, "renamer", self.renamer)
-                setattr(node, "raw_comment_cleaner", self.raw_comment_cleaner)
-                setattr(node, "docstring_cleaner", self.doxygen_cleaner)
-                # if isinstance(node, MacroDefinitionMixin):
-                #     setattr(node, "macro_type", self.macro_type)
+                node.sep = "_"
+                node.renamer = self.renamer
+                node.raw_comment_cleaner = self.raw_comment_cleaner
                 if isinstance(node, Parm):
-                    setattr(node, "ptr_rank", self.ptr_rank)
-                    setattr(node, "ptr_intent", self.ptr_parm_intent)
-                    setattr(
-                        node,
-                        "ptr_complicated_type_handler",
-                        self.ptr_complicated_type_handler,
-                    )
+                    node.ptr_rank = self.ptr_rank
+                    node.ptr_intent = self.ptr_parm_intent
+                    # setattr(
+                    #     node,
+                    #     "ptr_complicated_type_handler",
+                    #     self.ptr_complicated_type_handler,
+                    # )
                 elif isinstance(node, Function):
                     setattr(node, "ptr_rank", self.ptr_rank)
-                    setattr(
-                        node,
-                        "ptr_complicated_type_handler",
-                        self.ptr_complicated_type_handler,
-                    )
+                    # setattr(
+                    #     node,
+                    #     "ptr_complicated_type_handler",
+                    #     self.ptr_complicated_type_handler,
+                    # )
+                    # node.
+                    node.decl_list_prolog = self.function_preamble
                 self.node_init(node)
 
     def walk_filtered_nodes(self):
@@ -559,38 +632,67 @@ class FortranBackend:
                         )
                         yield node
 
-    def create_c_interface(self):
+    def render_module(self, name, enums=False):
         """Returns the content of a Fortran bindings file.
 
         Creates the content of a Fortran bindings file.
         Contains Fortran declarations per C declaration
         plus helper types that have been introduced for nested enum/struct/union types.
-
-        Note:
-            Anonymous types for which we have a tree node with
-            autogenerated name must be excluded from the `extern from "<header_name.h>`
-            block as entities listed within the body of the construct,
-            are assumed by Fortran to be present in C code whenever
-            the respective header is included.
-
-            Moving those entities out of the `extern from` block
-            ensures that Fortran creates a proper C type on its own.
         """
         global indent
-        curr_indent = ""
-        result = []
 
+        # Example:
+        # module hipfort
+        # #ifdef USE_CUDA_NAMES
+        #   use hipfort_cuda_errors
+        # #endif
+        #   use hipfort_enums
+        #   use hipfort_types
+        #   use hipfort_hipmalloc
+        #   use hipfort_hipmemcpy
+        #   use hipfort_auxiliary
+        #   implicit none
+        #
+        # ...
+        # end module hipfort
+
+        declarations = []
+        implementations = []
         for node in self.walk_filtered_nodes():
-            if isinstance(node, (Enum, Function)):
-                contrib = node.render_c_interface()
-                if contrib != None:
-                    result.append(textwrap.indent(contrib, curr_indent))
-        return result
+            if isinstance(node, Enum if enums else Function):
+                try:
+                    contrib = node.render_c_bindings()
 
-    def render_c_interface_decl_part(self, runtime_linking: bool = False):
-        """Returns the Fortran bindings file content for the given headers."""
-        nl = "\n\n"
-        return nl.join(self.create_c_interface(runtime_linking))
+                    if contrib != None:
+                        if isinstance(contrib, str):  # only declarations
+                            declarations.append(textwrap.indent(contrib, indent))
+                        elif isinstance(contrib, tuple):
+                            declarations.append(textwrap.indent(contrib[0], indent))
+                            if contrib[1]:
+                                implementations.append(
+                                    textwrap.indent(contrib[1], indent)
+                                )
+                except (
+                    NotImplementedError
+                ) as err:  # TODO fortran enable more and more bindings
+                    _log.warn(str(err))
+        return textwrap.dedent(
+            f"""\
+            module {name}
+            {{preamble}}
+              implicit none
+            {{declarations}}
+            {"contains" if len(declarations) else ""}
+            {{implementations}}
+            end module
+            """
+        ).format(
+            preamble=textwrap.indent(
+                self.enum_module_preamble if enums else self.module_preamble, indent
+            ),
+            declarations="\n\n".join(declarations),
+            implementations="\n\n".join(implementations),
+        )
 
 
 class FortranModuleGenerator:
@@ -629,13 +731,12 @@ class FortranModuleGenerator:
         """
         global default_module_prolog
         self.module_name = module_name
-        self.enum_module_name = module_name+"_enums"
+        self.enum_module_name = module_name + "_enums"
         self.module_ext = module_ext
 
         self.include_dir = include_dir
         self.header = header
         self.cflags = cflags
-        self.c_interface_prolog = default_module_prolog
 
         if isinstance(header, str):
             filename = header
@@ -656,7 +757,7 @@ class FortranModuleGenerator:
         )
         parser.parse()
 
-        self.backend = FortranBackend.from_libclang_translation_unit(
+        self.backend: FortranBackend = FortranBackend.from_libclang_translation_unit(
             parser.translation_unit, header, **opts
         )
 
@@ -668,21 +769,13 @@ class FortranModuleGenerator:
         """
 
         # enums, types
-        with open(f"{output_dir}/{self.module_name}_enums.{self.module_ext}", "w") as outfile:
-            outfile.write(self.c_interface_prolog)
-            outfile.write(
-                self.backend.render_c_interface_decl_part(
-                    runtime_linking=self.runtime_linking
-                )
-            )
-            outfile.write(self.c_interface_decl_epilog)
+        enum_module_name = f"{self.module_name}_enums"
+        fileext = self.module_ext.lstrip(".")
+        with open(f"{output_dir}/{enum_module_name}.{fileext}", "w") as outfile:
+            outfile.write(default_module_prolog)
+            outfile.write(self.backend.render_module(enum_module_name, enums=True))
 
         # functions, other
-        with open(f"{output_dir}/{self.module_name}_enums.{self.module_ext}", "w") as outfile:
-            outfile.write(self.c_interface_prolog)
-            outfile.write(
-                self.backend.render_c_interface_decl_part(
-                    runtime_linking=self.runtime_linking
-                )
-            )
-            outfile.write(self.c_interface_decl_epilog)
+        with open(f"{output_dir}/{self.module_name}.{fileext}", "w") as outfile:
+            outfile.write(default_module_prolog)
+            outfile.write(self.backend.render_module(self.module_name, enums=False))

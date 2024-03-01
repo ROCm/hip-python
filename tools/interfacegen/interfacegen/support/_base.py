@@ -165,6 +165,7 @@ def create_rocm_package_cli_parser(
 
 class PackageOpts:
     def __init__(self):
+        self.output_dir: str = None
         self.package_dir: str = None
         self.rel_inc_dir: str = None
         self.abs_inc_dir: str = None
@@ -271,6 +272,7 @@ def _create_rocm_package_opts_from_cli(
     )
     args = parser.parse_args()
 
+    rocm_package_opts.output_dir = args.output_dir
     rocm_package_opts.package_dir = os.path.join(args.output_dir, package)
     try:
         rocm_package_opts.runtime_linking = args.runtime_linking

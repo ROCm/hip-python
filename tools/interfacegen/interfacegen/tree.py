@@ -36,8 +36,6 @@ indent = " " * 4
 
 # TODO dynamically create a tree module for backend in (cython, fortran)
 # and make it available via __init__ package
-
-
 class Node:
     def __init__(
         self,

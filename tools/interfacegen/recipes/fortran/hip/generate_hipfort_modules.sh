@@ -119,7 +119,8 @@ declare -x HIP_PLATFORM=${HIP_PLATFORM:-amd}
 declare -x HIP_PYTHON_LIBS=${HIP_PYTHON_LIBS:-*}
 declare -x ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 declare -x CLANG_RES_DIR=$(${ROCM_PATH}/llvm/bin/clang -print-resource-dir)
-
+echo $ROCM_PATH
+echo $CLANG_RES_DIR
 PYTHON codegen_hipfort.py ${OUTPUT_DIR} --rocm-version ${ROCM_VER}
 
 [ -z ${POST_CLEAN+x} ] || rm -rf venv

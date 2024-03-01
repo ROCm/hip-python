@@ -488,6 +488,7 @@ class CythonMixin(DoxygenMixin):
     def to_sphinx_pyobj(expr: str):
         return python_interface_pyobj_role_template.format(name=expr)
 
+Node = CythonMixin # alias so that it can be used in treefactory
 
 class Root(tree.Root, CythonMixin):
     def __init__(self, *args, **kwargs):

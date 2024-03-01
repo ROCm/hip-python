@@ -29,7 +29,6 @@ it generates Fortran module files.
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import os
-import textwrap
 import logging
 
 import interfacegen
@@ -49,95 +48,37 @@ from interfacegen.cparser import TypeHandler
 TypeCategory = TypeHandler.TypeCategory
 
 from interfacegen.tree import (
-    Node,
     MacroDefinition,
-    Parm,
 )
+
+HIPFORT_FILE_EXT = "f"
 
 
 # hip
 def generate_hip_module_files():
     global pkg_opts
-    global GENERATOR_ARGS
-    global HIP_GENERATOR
+    global HIPFORT_FILE_EXT
 
     global HIP_VERSION_MAJOR
     global HIP_VERSION_MINOR
     global HIP_VERSION_PATCH
     global HIP_VERSION_GITHASH
 
-    # def toclassname(name: str):
-    #     return name[0].upper() + name[1:]
-
-    # def hip_ptr_complicated_type_handler(parm: Node):
-    #     if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel", "extra"):
-    #         return f"hip._hip_helpers.{toclassname(parm.parent.name)}_{parm.name}"
-    #     if (parm.parent.name, parm.name) in (
-    #         ("hipMalloc", "ptr"),
-    #         ("hipExtMallocWithFlags", "ptr"),
-    #         ("hipMallocManaged", "dev_ptr"),
-    #         ("hipMallocAsync", "dev_ptr"),
-    #         ("hipMallocFromPoolAsync", "dev_ptr"),
-    #     ):
-    #         if parm.parent.name == "hipExtMallocWithFlags":
-    #             size = "sizeBytes"
-    #         else:
-    #             size = "size"
-    #         parm.parent.python_body_prepend_before_return(
-    #             f"{parm.name}.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong({size}),))"
-    #         )
-    #         return "hip._util.types.DeviceArray"
-
-    #     return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
-
-    def hip_node_init(node: Node):
-        pass
-        # # node modifications
-        # if isinstance(node, interfacegen.tree.Function):
-        #     if not node.is_enum and node.name.startswith("hip"):
-        #         # hip routines without hipError_t return status
-        #         # we force them to not throw exceptions
-        #         node.error_return_value_lazy_loader = None
-        #         node.modifiers_lazy_loader = " noexcept nogil"
-        #         # we force them to have always return hipSuccess as first return value
-        #         node.prepend_python_return_value(
-        #             "hipError_t.hipSuccess",
-        #             "hipError_t",
-        #             "Always returns `~.hipError_t.hipSuccess`.",
-        #         )
-        # elif isinstance(node, interfacegen.tree.Parm):
-        #     func_name, parm_idx = node.parent.name, node.parm_index
-        #     if (func_name, parm_idx) in (
-        #         ("hipDeviceGetName", 0),
-        #         ("hipDeviceGetPCIBusId", 0),
-        #     ):
-        #         func = node.parent
-        #         assert isinstance(func, interfacegen.cython.Function)
-        #         len_param: interfacegen.tree.Parm = func.get_parm(1)
-        #         func.python_body_prepend_before_c_interface_call(
-        #             f"{node.name}.malloc({len_param.name})"
-        #         )
-
     def renamer(name: str):
         return interfacegen.cython.DEFAULT_RENAMER(controls.hip.renamer(name))
 
     generator = FortranModuleGenerator(
-        "hipfort_hip",
+        "hipfort",  # note: no "_hip" suffix used here
+        HIPFORT_FILE_EXT,
         pkg_opts.abs_inc_dir,
         "hip/hip_runtime.h",
-        node_init=hip_node_init,
         renamer=renamer,
         node_filter=controls.hip.node_filter,
         ptr_parm_intent=controls.hip.ptr_parm_intent,
         ptr_rank=controls.hip.ptr_rank,
         macro_type=controls.hip.macro_type,
         raw_comment_cleaner=controls.hip.raw_comment_cleaner,
-        cflags=GENERATOR_ARGS,
-    )
-    generator.python_interface_impl_prolog += textwrap.dedent(
-        """\
-    cimport hip._hip_helpers
-    """
+        cflags=pkg_opts.generator_args,
     )
 
     HIP_VERSION_MAJOR = 0
@@ -155,94 +96,43 @@ def generate_hip_module_files():
                 HIP_VERSION_PATCH = int(last_token)
             elif node.name == "HIP_VERSION_GITHASH":
                 HIP_VERSION_GITHASH = last_token.strip('"')
-    HIP_GENERATOR = generator
     return generator
 
 
 # hiprtc
 def generate_hiprtc_module_files():
     global pkg_opts
-    global GENERATOR_ARGS
-    global HIPRTC_GENERATOR
-
-    # def hiprtc_ptr_complicated_type_handler(node: Node):
-    #     if isinstance(node, Parm):
-    #         if (node.parent.name, node.name) in (
-    #             ("hiprtcCompileProgram", "options"),
-    #             ("hiprtcCreateProgram", "headers"),
-    #             ("hiprtcCreateProgram", "includeNames"),
-    #         ):
-    #             return "hip._util.types.ListOfBytes"
-    #         if (node.parent.name, node.name) == ("hiprtcLinkCreate", "option_ptr"):
-    #             return "hip._hiprtc_helpers.HiprtcLinkCreate_option_ptr"
-    #         if (node.parent.name, node.name) == ("hiprtcLinkCreate", "option_vals_pptr"):
-    #             return "hip._util.types.ListOfPointer"
-    #         if (node.parent.name, node.parm_index) in (
-    #             ("hiprtcLinkComplete", 1),
-    #             ("hiprtcGetCode", 1),
-    #             ("hiprtcGetBitcode", 1),
-    #         ):
-    #             return "hip._util.types.NDBuffer"
-    #     return HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(node)
-
-    # def hiprtc_node_init(node: Node):
-    #     # node modifications
-    #     if isinstance(node, interfacegen.tree.Function):
-    #         if not node.is_enum and node.name.startswith("hiprtc"):
-    #             # hip routines without hipError_t return status
-    #             # we force them to not throw exceptions
-    #             node.error_return_value_lazy_loader = None
-    #             node.modifiers_lazy_loader = " noexcept nogil"
+    global HIPFORT_FILE_EXT
 
     generator = FortranModuleGenerator(
         "hipfort_hiprtc",
+        HIPFORT_FILE_EXT,
         pkg_opts.abs_inc_dir,
         "hip/hiprtc.h",
         # node_init=hiprtc_node_init,
         node_filter=controls.hiprtc.node_filter,
         ptr_parm_intent=controls.hiprtc.ptr_parm_intent,
         ptr_rank=controls.hiprtc.ptr_rank,
-        cflags=GENERATOR_ARGS,
-    )
-    generator.python_interface_impl_prolog += textwrap.dedent(
-        """\
-        cimport hip._hiprtc_helpers
-        """
+        cflags=pkg_opts.generator_args,
     )
 
-    HIPRTC_GENERATOR = generator
     return generator
 
 
 # hipblas
 def generate_hipblas_module_files():
     global pkg_opts
-    global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hipblas",
+        HIPFORT_FILE_EXT,
         pkg_opts.abs_inc_dir,
         "hipblas/hipblas.h",
         node_filter=controls.hipblas.node_filter,
         ptr_parm_intent=controls.hipblas.ptr_parm_intent,
         ptr_rank=controls.hipblas.ptr_rank,
         raw_comment_cleaner=controls.hipblas.raw_comment_cleaner,
-        cflags=GENERATOR_ARGS,
-    )
-    generator.c_interface_prolog += textwrap.dedent(
-        """\
-    from .chip cimport *
-    """
-    )
-    generator.python_interface_decl_prolog += textwrap.dedent(
-        """\
-    from .hip cimport *
-    """
-    )
-    generator.python_interface_impl_prolog += textwrap.dedent(
-        """\
-    from .hip import _hipDataType__Base
-    """
+        cflags=pkg_opts.generator_args,
     )
     return generator
 
@@ -250,36 +140,17 @@ def generate_hipblas_module_files():
 # hipsolver
 def generate_hipsolver_module_files():
     global pkg_opts
-    global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hipsolver",
+        HIPFORT_FILE_EXT,
         pkg_opts.abs_inc_dir,
         "hipsolver/hipsolver.h",
         node_filter=controls.hipsolver.node_filter,
         ptr_parm_intent=controls.hipsolver.ptr_parm_intent,
         ptr_rank=controls.hipsolver.ptr_rank,
         raw_comment_cleaner=controls.hipsolver.raw_comment_cleaner,
-        cflags=GENERATOR_ARGS,
-    )
-    generator.c_interface_prolog += textwrap.dedent(
-        """\
-    # from .chip cimport * # via chipblas
-    from .chipblas cimport *
-    """
-    )
-    generator.python_interface_decl_prolog += textwrap.dedent(
-        """\
-    # from .hip cimport * # via chipblas
-    from .hipblas cimport *
-    """
-    )
-    generator.python_interface_impl_prolog += textwrap.dedent(
-        """\
-    from .hipblas import _hipblasSideMode_t__Base
-    from .hipblas import _hipblasFillMode_t__Base
-    from .hipblas import _hipblasOperation_t__Base
-    """
+        cflags=pkg_opts.generator_args,
     )
     return generator
 
@@ -287,28 +158,17 @@ def generate_hipsolver_module_files():
 # rccl
 def generate_rccl_module_files():
     global pkg_opts
-    global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_rccl",
+        HIPFORT_FILE_EXT,
         pkg_opts.abs_inc_dir,
         "rccl/rccl.h",
-        dll="librccl.so",
         node_filter=controls.rccl.node_filter,
         macro_type=controls.rccl.macro_type,
         ptr_parm_intent=controls.rccl.ptr_parm_intent,
         ptr_rank=controls.rccl.ptr_rank,
-        cflags=GENERATOR_ARGS,
-    )
-    generator.c_interface_prolog += textwrap.dedent(
-        """\
-    from .chip cimport hipStream_t
-    """
-    )
-    generator.python_interface_decl_prolog += textwrap.dedent(
-        """\
-    from .hip cimport ihipStream_t
-    """
+        cflags=pkg_opts.generator_args,
     )
     return generator
 
@@ -316,27 +176,17 @@ def generate_rccl_module_files():
 # hiprand
 def generate_hiprand_module_files():
     global pkg_opts
-    global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hiprand",
+        HIPFORT_FILE_EXT,
         pkg_opts.abs_inc_dir,
         "hiprand/hiprand.h",
         node_filter=controls.hiprand.node_filter,
         macro_type=controls.hiprand.macro_type,
         ptr_parm_intent=controls.hiprand.ptr_parm_intent,
         ptr_rank=controls.hiprand.ptr_rank,
-        cflags=GENERATOR_ARGS,
-    )
-    generator.c_interface_prolog += textwrap.dedent(
-        """\
-    from .chip cimport hipStream_t
-    """
-    )
-    generator.python_interface_decl_prolog += textwrap.dedent(
-        """\
-    from .hip cimport ihipStream_t
-    """
+        cflags=pkg_opts.generator_args,
     )
     return generator
 
@@ -344,27 +194,17 @@ def generate_hiprand_module_files():
 # hipfft
 def generate_hipfft_module_files():
     global pkg_opts
-    global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hipfft",
+        HIPFORT_FILE_EXT,
         pkg_opts.abs_inc_dir,
         "hipfft/hipfft.h",
         node_filter=controls.hipfft.node_filter,
         macro_type=controls.hipfft.macro_type,
         ptr_parm_intent=controls.hipfft.ptr_parm_intent,
         ptr_rank=controls.hipfft.ptr_rank,
-        cflags=GENERATOR_ARGS,
-    )
-    generator.c_interface_prolog += textwrap.dedent(
-        """\
-    from .chip cimport hipStream_t, float2, double2
-    """
-    )
-    generator.python_interface_decl_prolog += textwrap.dedent(
-        """\
-    from .hip cimport ihipStream_t, float2, double2
-    """
+        cflags=pkg_opts.generator_args,
     )
     return generator
 
@@ -372,10 +212,10 @@ def generate_hipfft_module_files():
 # hipsparse
 def generate_hipsparse_module_files():
     global pkg_opts
-    global GENERATOR_ARGS
 
     generator = FortranModuleGenerator(
         "hipfort_hipsparse",
+        HIPFORT_FILE_EXT,
         pkg_opts.abs_inc_dir,
         "hipsparse/hipsparse.h",
         node_filter=controls.hipsparse.node_filter,
@@ -383,7 +223,7 @@ def generate_hipsparse_module_files():
         ptr_parm_intent=controls.hipsparse.ptr_parm_intent,
         ptr_rank=controls.hipsparse.ptr_rank,
         raw_comment_cleaner=controls.hipsparse.raw_comment_cleaner,
-        cflags=GENERATOR_ARGS,
+        cflags=pkg_opts.generator_args,
     )
     return generator
 
@@ -394,18 +234,19 @@ def generate_roctx_module_files():
 
     generator = FortranModuleGenerator(
         "hipfort_roctx",
-        ROCM_INC,
+        HIPFORT_FILE_EXT,
+        pkg_opts.abs_inc_dir,
         "roctracer/roctx.h",
         node_filter=controls.roctx.node_filter,
         macro_type=controls.roctx.macro_type,
         ptr_parm_intent=controls.roctx.ptr_parm_intent,
         ptr_rank=controls.roctx.ptr_rank,
-        cflags=GENERATOR_ARGS,
+        cflags=pkg_opts.generator_args,
     )
     return generator
 
 
-AVAILABLE_GENERATORS = dict(
+SPECIALIZED_GENERATORS = dict(
     hip=generate_hip_module_files,  # produces the versions
     hiprtc=generate_hiprtc_module_files,
     hipblas=generate_hipblas_module_files,
@@ -417,8 +258,46 @@ AVAILABLE_GENERATORS = dict(
     hipsolver=generate_hipsolver_module_files,
 )
 
+
+def resolve_dependencies(node: it.File):
+    assert node.codegen != None, "no codegenerator set"
+    codegen: FortranModuleGenerator = node.codegen
+    for dep in node.includes:
+        assert isinstance(dep, it.File)
+        codegen.backend.module_preamble += f"use hipfort_{dep.name}\n"
+        codegen.backend.function_preamble += f"use hipfort_{dep.name}\n"
+    # Reinitialize the nodes with the new information
+    node.codegen.backend.initialize_nodes()
+
+
+# roctx
+def create_default_generator(node: it.File):
+    global pkg_opts
+
+    generator = FortranModuleGenerator(
+        module_name=f"hipfort_{node.basename_no_ext}",
+        module_ext=HIPFORT_FILE_EXT,
+        include_dir=pkg_opts.abs_inc_dir,
+        header=node.relpath,
+        cflags=pkg_opts.generator_args,
+    )
+    return generator
+
+
+def create_generators(root: it.Root):
+    global SPECIALIZED_GENERATORS
+    for node in root.walk_files():
+        key = node.basename_no_ext.replace("hip_runtime","hip")
+        if key in SPECIALIZED_GENERATORS:
+            node.codegen = SPECIALIZED_GENERATORS[key]()
+        else:
+            node.codegen = create_default_generator(node)
+
+    for node in root.walk_files():
+        resolve_dependencies(node)
+
+
 if __name__ == "__main__":
-    GENERATOR_ARGS = None
     HIP_2_CUDA = None
 
     pkg_opts: support.RocmPackageOpts = support.create_rocm_package_opts_from_cli(
@@ -432,9 +311,11 @@ if __name__ == "__main__":
     )
 
     def filter(filepath: str):
+        _log.debug(f"touch header file {filepath}")
         filename = os.path.basename(filepath)
         # print(filename)
-        if filename in ("rccl.h", "miopen.h", "hip_runtime_api.h"):
+        if filename in ("rccl.h", "miopen.h", "hip_runtime.h"):
+            _log.info(f"accept header file {filepath}")
             return True
         if filename[:3] in ("hip", "roc", "amd"):
             # TODO fortran cory are those needed?
@@ -453,16 +334,19 @@ if __name__ == "__main__":
             for key in ("detail", "internal", "version"):
                 if key in filepath:
                     return False
+            _log.info(f"accept header file {filepath}")
             return True
         return False
 
     root = it.build_include_tree(incdir=pkg_opts.abs_inc_dir, filter=filter)
     # patch some of the includes
-    root.find_node(name="hipsolver.h").includes.append(
-        root.find_node(name="hipblas.h"))
-    root.find_node(name="rocsolver.h").includes.append(
-        root.find_node(name="rocblas.h"))
+    root.find_node(name="hipsolver.h").includes.append(root.find_node(name="hipblas.h"))
+    root.find_node(name="rocsolver.h").includes.append(root.find_node(name="rocblas.h"))
     # create_generators(INCTREE)
-    print(root.file_tree_to_str())
-    print(root.py_module_tree_to_str())
-    print(root.py_imports_to_str())
+    # _log.info(root.file_tree_to_str())
+    _log.info("\nBEGIN INCLUDES\n" + root.includes_to_str().rstrip() + "\nEND INCLUDES")
+
+    create_generators(root)
+
+    for node in root.walk_files():
+        node.codegen.write_module_files(pkg_opts.output_dir)

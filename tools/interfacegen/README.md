@@ -75,6 +75,8 @@ be used similarly to the CUDA Python interfaces.
 
 Requires that ROCm&trade; HIP SDK is installed on your system.
 
+Requires that `python3` and the `venv` package are installed.
+
 All Python requirements are taking care of by the `generate_hip_python_pkgs.sh` script. 
 If you decide not to use it, take a look into the `requirements.txt` file 
 in the top-level folder of the this repository.

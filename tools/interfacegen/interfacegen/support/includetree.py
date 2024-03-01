@@ -127,6 +127,15 @@ class Node:
                 result += f"  -> {incfile.py_global_name}\n"
         return result
 
+    def includes_to_str(self):
+        result = ""
+        for file in self.walk_files():
+            result += f"{file.abspath}\n"
+            for incfile in file.includes:
+                assert isinstance(incfile, File)
+                result += f"  -> {incfile.abspath}\n"
+        return result
+
 
 class File(Node):
     def __init__(self, parent: Node, name: str):
@@ -139,6 +148,10 @@ class File(Node):
         result: str = name.split(os.extsep, maxsplit=1)[0]
         result = result.replace("-", "_")
         return result.lower()
+
+    @property
+    def basename_no_ext(self):
+        return self.name.split(os.extsep, maxsplit=1)[0]
 
     py_namer = DEFAULT_PY_MODULE_NAMER
 
