@@ -877,10 +877,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         elif isinstance(dependency, str):  # this is a filepath
             pass
         elif isinstance(dependency, tuple):  # this is a
-            if not len(dependency) == 2:
-                raise TypeError("expected tuple of length 2")
+            if len(dependency) not in (2, 3):
+                raise TypeError("expected tuple of length 2 or 3")
         else:
-            raise TypeError("expected tuple of length 2")
+            raise TypeError(f"unexpected input of type {type(dependency)}")
         self._linking_dependencies.append(dependency)
 
     # @abstractmethod (4/6)
