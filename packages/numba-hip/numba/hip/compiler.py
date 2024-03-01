@@ -434,6 +434,40 @@ def compile_llvm_ir_for_current_device(
         name=name,
     )
 
+compile_ptx_for_current_device = compile_llvm_ir_for_current_device
+
+def compile_ptx(
+    pyfunc,
+    sig,
+    debug: bool = False,
+    lineinfo: bool = False,
+    device: bool = False,
+    fastmath: bool = False,
+    cc: str = None,
+    opt: bool = True,
+    to_bc: bool = False,
+    ir_as_str: bool = True,
+    name: str = None,
+):
+    """Same as compile_llvm_ir wit CUDA-like argumnet names.
+    Same as compile_llvm_ir but argument
+    `amdgpu_arch` is renamed to `cc` for
+    compatibility reasons.
+    """
+    return compile_llvm_ir(
+        pyfunc,
+        sig,
+        debug=debug,
+        lineinfo=lineinfo,
+        device=device,
+        fastmath=fastmath,
+        amdgpu_arch=cc,  # results in selection of current device arch
+        opt=opt,
+        to_bc=to_bc,
+        ir_as_str=ir_as_str,
+        name=name,
+    )
+
 
 # TODO check if this is relevant for HIP as no HSA device functions can be linked, only LLVM IR ones
 def declare_device_function(name, restype, argtypes):

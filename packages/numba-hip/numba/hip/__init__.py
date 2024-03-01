@@ -76,10 +76,12 @@ from .device_init import _auto_device
 from . import codegen
 from . import compiler
 
-from .compiler import compile_llvm_ir, compile_llvm_ir_for_current_device
-
-compile_ptx = compile_llvm_ir
-compile_ptx_for_current_device = compile_llvm_ir_for_current_device
+from .compiler import (
+    compile_llvm_ir,
+    compile_llvm_ir_for_current_device,
+    compile_ptx,
+    compile_ptx_for_current_device,
+)
 
 from . import decorators
 from . import descriptor
@@ -272,6 +274,7 @@ def pose_as_cuda():
     for mod in numba_hip_modules:
         sys.modules[mod.replace("numba.hip", "numba.cuda")] = sys.modules[mod]
     setattr(sys.modules["numba"], "cuda", sys.modules["numba.hip"])
+
 
 # clean up
 # del _preprocess
