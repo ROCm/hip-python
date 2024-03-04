@@ -554,15 +554,16 @@ class Device(object):
 
         self.attributes = {}
 
-        # Read compute capability
-        # self.compute_capability = (self.COMPUTE_CAPABILITY_MAJOR, # via __getattr__
-        #                            self.COMPUTE_CAPABILITY_MINOR) # via __getattr__
         # Get the architecture string
         props = binding.cudaDeviceProp()  # is actually: hipDeviceProp_t
         driver.cudaGetDeviceProperties(
             props, 0
         )  # Driver's function wrapper will check for errors
-        self.amdgpu_arch = props.gcnArchName.decode("utf-8")
+        amdgpu_arch_plus_features = props.gcnArchName.decode("utf-8")
+        if hipconfig.DEFAULT_ARCH_WITH_FEATURES:
+            self.amdgpu_arch = amdgpu_arch_plus_features
+        else:
+            self.amdgpu_arch = amdgpu_arch_plus_features.split(":")[0]
 
         # Read name
         bufsz = 128

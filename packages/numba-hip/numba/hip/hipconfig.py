@@ -20,14 +20,51 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Configuration options for Numba HIP
+
+Attributes (Controllable via Environment Variables ``NUMBA_HIP_<attribute>``):
+    ENABLE_MIDEND_OPT (`bool`):
+        Enable midend optimizations.
+        Defaults to ``False``.
+    OPT_LEVEL (`int`):
+        Default level when doing optimizations.
+        Defaults to ``3``.
+    DEFAULT_ARCH_WITH_FEATURES (`str`):
+        Use a device's default arch with features, e.g. 'gfx90a:xnack-'
+        instead of 'gfx90a'. Note that features
+        enabled for Numba-generated IR must match those of all
+        external dependencies that should be linked in.
+        As external dependencies are usually compiled with 
+        no additional features, e.g. with a simple `--offload-arch=gfx90a`,
+        this option defaults to ``False``.
+        (Note that `hipcc` per default also specifies the first device's
+        architecture without an appended feature set as offload arch.)
+
+Note:
+    We currently don't want to break out of subfolder 
+    ``numba/hip``with the changes that we apply to an 
+    Numba installation in order to make patching
+    and upgrading as frictionless as possible.
+"""
+
 import os
 
 import logging
 
 _log = logging.getLogger(__name__)
 
-ENABLE_MIDEND_OPT = bool(os.environ.get("NUMBA_HIP_MIDEND_OPT", False))
-OPT_LEVEL = int(os.environ.get("NUMBA_HIP_OPT_LEVEL", 3))
+ENABLE_MIDEND_OPT = bool(
+    os.environ.get("NUMBA_HIP_MIDEND_OPT", False)
+)  # enable midend optimizations
+OPT_LEVEL = int(os.environ.get("NUMBA_HIP_OPT_LEVEL", 3))  # default optimization level
+DEFAULT_ARCH_WITH_FEATURES = int(
+    os.environ.get("NUMBA_HIP_DEFAULT_ARCH_WITH_FEATURES", 0)
+)  # Use a device's default arch with features, e.g. 'gfx90a:xnack-'
+# instead of 'gfx90a'. Note that features
+# enabled for Numba-generated IR must match those of all
+# external dependencies that should be linked in.
+# As external dependencies are usually compiled with `gfx90a`.
+# this option defaults to `False`.
 
 
 def get_rocm_path(*subdirs):
