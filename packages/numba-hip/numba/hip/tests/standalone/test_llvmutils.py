@@ -29,6 +29,9 @@ from numba.hip.util.llvmutils import (
     to_ir,
     to_bc,
     link_modules,
+    is_human_readable_clang_offload_bundle,
+    amdgpu_target_id,
+    split_human_readable_clang_offload_bundle,
 )
 
 def test_00_to_bc_to_ir():
@@ -153,3 +156,26 @@ def test_01_link_modules():
     # verify(linked)
     # print(linked)
 
+def test_02_is_human_readable_clang_offload_bundle():
+    bundle = textwrap.dedent("""\
+    ; __CLANG_OFFLOAD_BUNDLE____START__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
+    ; DEVICE PART
+    ; __CLANG_OFFLOAD_BUNDLE____END__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
+    ; __CLANG_OFFLOAD_BUNDLE____START__ host-x86_64-unknown-linux-gnu-
+    ; HOST PART
+    ; __CLANG_OFFLOAD_BUNDLE____END__ host-x86_64-unknown-linux-gnu-
+    """)
+    assert is_human_readable_clang_offload_bundle(bundle)
+
+
+def test_03_split_human_readable_clang_offload_bundle():
+    bundle = textwrap.dedent("""\
+    ; __CLANG_OFFLOAD_BUNDLE____START__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
+    ; DEVICE PART
+    ; __CLANG_OFFLOAD_BUNDLE____END__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
+    ; __CLANG_OFFLOAD_BUNDLE____START__ host-x86_64-unknown-linux-gnu-
+    ; HOST PART
+    ; __CLANG_OFFLOAD_BUNDLE____END__ host-x86_64-unknown-linux-gnu-
+    """)
+    parts = split_human_readable_clang_offload_bundle(bundle)
+    assert amdgpu_target_id("gfx90a:sramecc+:xnack-") in parts

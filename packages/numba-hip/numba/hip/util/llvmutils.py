@@ -535,3 +535,76 @@ def delete_functions(
             result = _to_ir(mod)
         _get_module_dispose_all(mod, buf, from_bc)
         return result
+
+
+def is_human_readable_clang_offload_bundle(filecontent: str):
+    """Checks if a file is a bundle of (human-readable) LLVM IR.
+
+    Note:
+        Human-readable clang offload bundles contain
+        strings such as "; __CLANG_OFFLOAD_BUNDLE____START__ <target-id>"
+        and "; __CLANG_OFFLOAD_BUNDLE____END__ <target-id>".
+    Note:
+        Clang offload bundles that contain bitcode
+        contain strings such as: `__CLANG_OFFLOAD_BUNDLE__<target-id>`
+    """
+    try:
+        if isinstance(filecontent, bytes):
+            filecontent = filecontent.decode("utf-8")
+        return "; __CLANG_OFFLOAD_BUNDLE____END__" in filecontent
+    except:
+        return False
+
+
+def amdgpu_target_id(amdgpu_arch: str):
+    """Returns a target ID for the AMD GPU arch.
+
+    The resulting string can be used as key
+    for results of `split_human_readable_clang_offload_bundle`.
+    """
+    return f"hip-amdgcn-amd-amdhsa--{amdgpu_arch}"
+
+
+def split_human_readable_clang_offload_bundle(bundle):
+    """Splits a human-readable LLVM IR bundle into its parts.
+
+    Example:
+
+        ```llvm
+        ; __CLANG_OFFLOAD_BUNDLE____START__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
+        ; ...
+        ; __CLANG_OFFLOAD_BUNDLE____END__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
+        ; __CLANG_OFFLOAD_BUNDLE____START__ host-x86_64-unknown-linux-gnu-
+        ; ...
+        ; __CLANG_OFFLOAD_BUNDLE____END__ host-x86_64-unknown-linux-gnu-
+        ```
+
+        will reproduce a dictionary with the two keys 'hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-'
+        and 'host-x86_64-unknown-linux-gnu-'.
+
+    Returns:
+        `dict`:
+            A `dict` that holds an IR module per detected target ID.
+    """
+    result = {}
+    if isinstance(bundle, bytes):
+        bundle = bundle.decode("utf-8")
+    else:
+        RuntimeError("expected `str` or `bytes`")
+    assert isinstance(bundle, str)
+
+    p_begin = "; __CLANG_OFFLOAD_BUNDLE____START__ "
+    p_end = "; __CLANG_OFFLOAD_BUNDLE____END__ "
+    target_id = None
+    for line in bundle.splitlines(keepends=True):
+        if line.lstrip().startswith(p_begin):
+            assert target_id == None
+            target_id = line.replace(p_begin, "").strip()
+            result[target_id] = ""
+        elif line.lstrip().startswith(p_end):
+            assert target_id != None
+            target_id = None
+        else:
+            if target_id != None:
+                result[target_id] += line
+    return result

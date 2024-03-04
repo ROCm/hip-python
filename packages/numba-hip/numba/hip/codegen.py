@@ -292,7 +292,14 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
 
         def process_buf_(buf, buf_len: int = -1):
             # note buf_args might be buf and buf_len
+            nonlocal amdgpu_arch
             nonlocal force_ir
+
+            if llvmutils.is_human_readable_clang_offload_bundle(buf):
+                buf = llvmutils.split_human_readable_clang_offload_bundle(buf)[
+                    llvmutils.amdgpu_target_id(amdgpu_arch)
+                ]
+                buf_len = len(buf)
             if force_ir:
                 return llvmutils.to_ir(buf, buf_len).decode("utf-8")
             else:

@@ -29,7 +29,7 @@ Attributes (Controllable via Environment Variables ``NUMBA_HIP_<attribute>``):
     OPT_LEVEL (`int`):
         Default level when doing optimizations.
         Defaults to ``3``.
-    DEFAULT_ARCH_WITH_FEATURES (`str`):
+    DEFAULT_ARCH_WITH_FEATURES (`bool`):
         Use a device's default arch with features, e.g. 'gfx90a:xnack-'
         instead of 'gfx90a'. Note that features
         enabled for Numba-generated IR must match those of all
