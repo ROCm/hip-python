@@ -137,4 +137,11 @@ def cuda_error():
     return driver.driver.initialization_error  # driver avail via 'from api import *'
 
 
+# make all cuda names also available via hip name
+for k, v in list(globals().items()):
+    if "cuda" in k:
+        hip_name = k.replace("cuda", "hip")
+        if hip_name not in globals():
+            globals()[hip_name] = v
+
 initialize.initialize_all()
