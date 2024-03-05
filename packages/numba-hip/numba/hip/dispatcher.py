@@ -748,14 +748,14 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
 
     def typeof_pyval(self, val):
         # Based on _DispatcherBase.typeof_pyval, but differs from it to support
-        # the HIP Array Interface.
+        # the CUDA Array Interface.
         try:
             return typeof(val, Purpose.argument)
         except ValueError:
-            if hip.is_hip_array(val):
+            if hip.is_cuda_array(val):
                 # When typing, we don't need to synchronize on the array's
                 # stream - this is done when the kernel is launched.
-                return typeof(hip.as_hip_array(val, sync=False), Purpose.argument)
+                return typeof(hip.as_cuda_array(val, sync=False), Purpose.argument)
             else:
                 raise
 
