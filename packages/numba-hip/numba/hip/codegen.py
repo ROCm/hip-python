@@ -408,7 +408,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         else:
             # NOTE:
             #     We need to set `force_ir` because we
-            #     need to apply preprocessing to the generated IR.
+            #     need to apply postprocessing to the generated IR.
             unlinked_llvm = self._collect_dependency_llvm_ir(
                 link_time=True, force_ir=True
             )
@@ -586,12 +586,17 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             returns LLVM IR for this module and all its dependencies.
         Note:
             Call `self._apply_llvm_amdgpu_modifications` modifies ``self._module``.
-            ``self._preprocess_llvm_ir(llvm_ir)`` applies modifications
+            ``self._postprocess_llvm_ir(llvm_ir)`` applies modifications
             that can only/most easily be applied to the LLVM IR in the text representation.
         """
         self._apply_llvm_amdgpu_modifications(amdgpu_arch)
         llvm_ir = self._postprocess_llvm_ir(str(self._module))
         return llvm_ir
+
+    def _dump_ir(self, title: str, body: str):
+        print((title % self._entry_name).center(80, "-"))
+        print(body)
+        print("=" * 80)
 
     def _postprocess_unlinked_llvm_strs(self, llvm_strs):
         """Preprocess Numba *and* third-party LLVM assembly.
@@ -600,27 +605,19 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             _postprocess_llvm_ir
         """
         if config.DUMP_LLVM:
-            print(
-                (
-                    "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, unpreprocessed)"
-                    % self._entry_name
-                ).center(80, "-")
+            self._dump_ir(
+                "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, unpostprocessed)",
+                bundle_file_contents(llvm_strs),
             )
-            print(bundle_file_contents(llvm_strs))
-            print("=" * 80)
 
         for i in range(len(llvm_strs)):
             llvm_strs[i] = self._postprocess_llvm_ir(llvm_strs[i])
 
         if config.DUMP_LLVM:
-            print(
-                (
-                    "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, preprocessed)"
-                    % self._entry_name
-                ).center(80, "-")
+            self._dump_ir(
+                "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, postprocessed)",
+                bundle_file_contents(llvm_strs),
             )
-            print(bundle_file_contents(llvm_strs))
-            print("=" * 80)
 
     def get_linked_llvm_ir(
         self,
@@ -674,14 +671,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 linked_llvm
             )
             if config.DUMP_LLVM:
-                print(
-                    (
-                        "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)"
-                        % self._entry_name
-                    ).center(80, "-")
+                self._dump_ir(
+                    "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)",
+                    llvmutils.to_ir(linked_llvm).decode("utf-8"),
                 )
-                print(llvmutils.to_ir(linked_llvm).decode("utf-8"))
-                print("=" * 80)
 
         # 3. now link the hip device lib
         linked_llvm = llvmutils.link_modules(
@@ -698,9 +691,13 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         linked_llvm = llvmutils.delete_functions(
             linked_llvm, matcher=delete_matcher_, defines=True
         )
-        # 4. link a last time to get rid of unused third-order function declarations
-        linked_llvm = llvmutils.link_modules([linked_llvm], to_bc)
-        # lastly add the HIP device lib
+        # 5. link a last time to get rid of unused third-order function declarations
+        linked_llvm = llvmutils.link_modules([linked_llvm], to_bc=to_bc)
+        if config.DUMP_LLVM:
+            self._dump_ir(
+                "AMD GPU LLVM for pyfunc '%s' (final LLVM IR, HIP device library linked)",
+                llvmutils.to_ir(linked_llvm).decode("utf-8"),
+            )
         self._linked_amdgpu_llvm_ir_cache[amdgpu_arch] = linked_llvm
         return linked_llvm
 
