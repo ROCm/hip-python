@@ -568,7 +568,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
 
             ```llvm
             %.34__tmp =  alloca { ptr, i32, i32 }, align 8, addrspace(5)
-            %.34 = addrspacecast ptr %.34__tmp to ptr addrspace(0)
+            %.34 = addrspacecast ptr addrspace(5) %.34__tmp to ptr addrspace(0)
             ```
         """
         global _p_alloca
