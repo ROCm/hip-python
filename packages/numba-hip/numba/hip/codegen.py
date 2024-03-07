@@ -80,7 +80,9 @@ def unbundle_file_contents(bundled):
 _TYPED_PTR = re.compile(pattern=r"\w+\*+")
 
 # Parse alloca instruction; more details: https://llvm.org/docs/LangRef.html#alloca-instruction
-_p_alloca = re.compile(r'\s*%"?(?P<lhs>.?\w+)"?\s*=\s*alloca\s+(?P<parms>.+)')
+_p_alloca = re.compile(
+    r'\s*%(?P<lhs_full>"?(?P<lhs>.?\w+)"?)\s*=\s*alloca\s+(?P<parms>.+)'
+)
 
 
 def _read_file(filepath: str, mode="r"):
@@ -583,13 +585,16 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 result = _p_alloca.match(line)
                 if result:
                     lhs: str = result.group("lhs")
+                    lhs_full: str = result.group("lhs_full")
                     parms: str = result.group("parms")
-                    new_lhs = f"{lhs}_{mangle}"
+                    tmp_lhs = f"{lhs}_{mangle}"
+                    if lhs_full != lhs:  # quoted
+                        tmp_lhs = '"' + tmp_lhs + '"'
                     new_ir.append(
-                        f"%{new_lhs} = alloca {parms}, addrspace(5)"
-                    )  # new_lhs is a ptr
+                        f"%{tmp_lhs} = alloca {parms}, addrspace(5)"
+                    )  # tmp_lhs is a ptr
                     new_ir.append(
-                        f"%{lhs} = addrspacecast ptr addrspace(5) %{new_lhs} to ptr addrspace(0)"
+                        f"%{lhs_full} = addrspacecast ptr addrspace(5) %{tmp_lhs} to ptr addrspace(0)"
                     )
                 else:
                     new_ir.append(line)
