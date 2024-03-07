@@ -79,6 +79,9 @@ def unbundle_file_contents(bundled):
 
 _TYPED_PTR = re.compile(pattern=r"\w+\*+")
 
+# Parse alloca instruction; more details: https://llvm.org/docs/LangRef.html#alloca-instruction
+_p_alloca = re.compile(r'\s*%"?(?P<lhs>.?\w+)"?\s*=\s*alloca\s+(?P<parms>.+)')
+
 
 def _read_file(filepath: str, mode="r"):
     """Helper routine for reading files in bytes or ASCII mode."""
@@ -547,29 +550,85 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                         # (`ir.FunctionAttributes`->`ir.FunctionAttributes`->`set`)
                         set.add(fn.attributes, attrib)
 
+    @staticmethod
+    def _alloca_addrspace_correction(llvm_ir):
+        """Correct alloca statements without `addrspace(5)` parameter.
+
+        Rewrites llvm_ir such that `alloca`'s go into `addrspace(5)` (AMD GPU local address space)
+        and are then `addrspacecast` back to to `addrspace(0)`. Alloca into 5 is a requirement of
+        the datalayout specification.
+
+        Example:
+
+            ```llvm
+            %.34 = alloca { ptr, i32, i32 }, align 8
+            ```
+
+            is transformed to:
+
+            ```llvm
+            %.34__tmp =  alloca { ptr, i32, i32 }, align 8, addrspace(5)
+            %.34 = addrspacecast ptr %.34__tmp to ptr addrspace(0)
+            ```
+        """
+        global _p_alloca
+        lines = llvm_ir.splitlines()
+        mangle = "__numba_hip_tmp"
+        new_ir = []
+        for line in lines:
+            # pluck lines containing alloca
+            if (
+                "alloca " in line and "addrspace(" not in line
+            ):  # inputs might be already in correct shape
+                result = _p_alloca.match(line)
+                if result:
+                    lhs: str = result.group("lhs")
+                    parms: str = result.group("parms")
+                    new_lhs = f"{lhs}_{mangle}"
+                    new_ir.append(
+                        f"%{new_lhs} = alloca {parms}, addrspace(5)"
+                    )  # new_lhs is a ptr
+                    new_ir.append(
+                        f"%{lhs} = addrspacecast ptr addrspace(5) %{new_lhs} to ptr addrspace(0)"
+                    )
+                else:
+                    new_ir.append(line)
+            else:
+                new_ir.append(line)
+        return "\n".join(new_ir)
+
     def _postprocess_llvm_ir(self, llvm_str: str):
         """Postprocess Numba and third-party LLVM assembly.
 
-        Note:
-            Numba might be using an llvmlite package
-            that is based on an older LLVM release, which means, e.g., that
-            Numba-generated LLVM assembly contains typed pointers such as ``i8*``,
-            ``double**``, ... This preprocessing routine converts these to opaque
-            pointers (``ptr``), which is the way more recent LLVM releases model pointers.
-            More details: https://llvm.org/docs/OpaquePointers.html#version-support
+        1. Overwrites the function name if so requested by the user.
+        2. Translates typed pointers to opaque pointers. Numba might be using an llvmlite package
+           that is based on an older LLVM release, which means, e.g., that
+           Numba-generated LLVM assembly contains typed pointers such as ``i8*``,
+           ``double**``, ... This postprocessing routine converts these to opaque
+           pointers (``ptr``), which is the way more recent LLVM releases model pointers.
+           More details: https://llvm.org/docs/OpaquePointers.html#version-support
+        3. Further replaces ``sext ptr to null to i<bits>`` with
+           ``ptrtoint ptr null to i<bits>`` as ``sext`` only accepts
+           integer types now.
+           https://llvm.org/docs/LangRef.html#sext-to-instruction
+           More details: https://llvm.org/docs/LangRef.html#i-ptrtoint
+        4. Finally, ensures that all ``alloca`` instructions go into addrspace(5)
+           (AMD GPU ADDRSPACE LOCAL).
 
-            Further replaces ``sext ptr to null to i<bits>`` with
-            ``ptrtoint ptr null to i<bits>`` as ``sext`` only accepts
-            integer types now.
-            https://llvm.org/docs/LangRef.html#sext-to-instruction
-            More details: https://llvm.org/docs/LangRef.html#i-ptrtoint
+        Note:
+            Transformations 3 and 4 must always be run after transformation 2.
+        Note:
+            This routine may be applied to inputs that are already
+            in the correct form. Transformations 2-4 must not have any effect
+            in this case.
         """
         global _TYPED_PTR
         if self._entry_name != None:
             assert self._original_entry_name != None
             llvm_str = llvm_str.replace(self._original_entry_name, self._entry_name)
         llvm_str = _TYPED_PTR.sub(string=llvm_str, repl="ptr")
-        return llvm_str.replace("sext ptr null to i", "ptrtoint ptr null to i")
+        llvm_str = llvm_str.replace("sext ptr null to i", "ptrtoint ptr null to i")
+        return self._alloca_addrspace_correction(llvm_str)
 
     def get_unlinked_llvm_ir(
         self,
