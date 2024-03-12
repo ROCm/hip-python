@@ -42,14 +42,25 @@ ci.Config.set_library_path(_hipconfig.get_rocm_path("llvm", "lib"))
 
 from . import cparser as _cparser
 
-_cparser.CParser.set_clang_res_dir(
-    _hipconfig.get_rocm_path(
-        "llvm",
-        "lib",
-        "clang",
-        f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
-    )
-)
+try: 
+  _cparser.CParser.set_clang_res_dir(
+      _hipconfig.get_rocm_path(
+          "llvm",
+          "lib",
+          "clang",
+          f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
+      )
+  )
+except FileNotFoundError:
+  # ROCm 6.1 does not include minor version/patch version into subdir path
+  _cparser.CParser.set_clang_res_dir(
+      _hipconfig.get_rocm_path(
+          "llvm",
+          "lib",
+          "clang",
+          f"{_LLVM_VERSION_MAJOR}",
+      )
+  )
 
 from .hipdevicelib import DEVICE_FUN_PREFIX
 from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
