@@ -26,15 +26,22 @@ import logging
 
 _log = logging.getLogger(__name__)
 
-ENABLE_MIDEND_OPT=bool(os.environ.get("NUMBA_HIP_MIDEND_OPT",False))
-OPT_LEVEL=int(os.environ.get("NUMBA_HIP_OPT_LEVEL",3))
+ENABLE_MIDEND_OPT = bool(os.environ.get("NUMBA_HIP_MIDEND_OPT", False))
+OPT_LEVEL = int(os.environ.get("NUMBA_HIP_OPT_LEVEL", 3))
+
 
 def get_rocm_path(*subdirs):
     """Get paths of ROCM_PATH.
 
     Args:
         subdirs (optional):
-            The subdirectory name to be appended in the resulting path.
+            Either:
+
+            * Parts (`str`) of a subdirectory path:
+              Example: 'get_rocm_path("llvm","lib")' gives '<ROCM_PATH>/llvm/lib'.
+            * A list of `tuple` / `list` objects, which each describe parts of a subdirectory path.
+              In this case, all of the subdirectories are checked and the first existing one is returned.
+
     """
     rocm_path = os.environ.get("ROCM_HOME", os.environ.get("ROCM_PATH"))
     if rocm_path is None:
@@ -46,9 +53,24 @@ def get_rocm_path(*subdirs):
         msg = "no ROCm installation found, checked 'ROCM_PATH' and 'ROCM_HOME' and tried '/opt/rocm'"
         _log.error(msg)
         raise FileNotFoundError(msg)
-    rocm_subdir = os.path.join(rocm_path, *subdirs)
-    if not os.path.exists(rocm_subdir):
-        msg = f"found ROCm installation at '{rocm_path}' but not subdirectory '{rocm_subdir}'"
-        _log.error(msg)
-        raise FileNotFoundError(msg)
-    return rocm_subdir
+
+    if all((isinstance(s, str) for s in subdirs)):
+        subdirs = [subdirs]
+    elif all((isinstance(s, (tuple, list)) for s in subdirs)):
+        pass
+    else:
+        raise TypeError(
+            "inputs to 'get_rocm_path' must be all of type `str` or all of type 'tuple' or 'list'"
+        )
+
+    rocm_subdirs = []
+    for subdir in subdirs:
+        rocm_subdir = os.path.join(rocm_path, *subdir)
+        if os.path.exists(rocm_subdir):
+            return rocm_subdir
+        rocm_subdirs.append(rocm_subdir)
+
+    rocm_subdirs = ", ".join(f"'{f}'" for f in rocm_subdirs)
+    msg = f"found ROCm installation at '{rocm_path}' but none of the subdirectories: {rocm_subdirs}"
+    _log.error(msg)
+    raise FileNotFoundError(msg)
