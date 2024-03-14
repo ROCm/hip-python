@@ -722,7 +722,7 @@ class HIPDeviceLib:
         )
 
     @property
-    def llvm_bc(self):
+    def bitcode(self):
         """Returns the bitcode-version of the HIPRTC device lib"""
         if self.amdgpu_arch == None:
             raise ValueError("cannot generate bitcode for AMDGPU architecture 'None'")
@@ -761,6 +761,6 @@ class HIPDeviceLib:
             hip_version_tuple=HIP_VERSION_TUPLE,
             comgr_logging=False,
             source=hipdevicelib_src,
-            to_llvm_ir=True,
+            to_llvm_ir=False,
         )  # TODO logbuf, diagnosticbuf not accessible currently due to error check method in rocm.amd_comgr.amd_comgr.ext
         return bcbuf

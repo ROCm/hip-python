@@ -34,15 +34,23 @@ Attributes (Controllable via Environment Variables ``NUMBA_HIP_<attribute>``):
         instead of 'gfx90a'. Note that features
         enabled for Numba-generated IR must match those of all
         external dependencies that should be linked in.
-        As external dependencies are usually compiled with 
+        As external dependencies are usually compiled with
         no additional features, e.g. with a simple `--offload-arch=gfx90a`,
         this option defaults to ``False``.
         (Note that `hipcc` per default also specifies the first device's
         architecture without an appended feature set as offload arch.)
+    USE_DEVICE_LIB_CACHE (`bool`):
+        Store architecture-dependent device library LLVM IR files in a filesystem cache, so that
+        the next Numba program can reuse the files from this cache. This caching
+        has a significant impact on programs with short runtime, e.g., on
+        tests and mini benchmarks. Defaults to ``True``.
+    CLEAR_DEVICE_LIB_CACHE (`bool`):
+        Clear the filesystem cache used for storing architecture-dependent device library LLVM IR.
+        Defaults to ``False``.
 
 Note:
-    We currently don't want to break out of subfolder 
-    ``numba/hip``with the changes that we apply to an 
+    We currently don't want to break out of subfolder
+    ``numba/hip``with the changes that we apply to an
     Numba installation in order to make patching
     and upgrading as frictionless as possible.
 """
@@ -54,7 +62,7 @@ import logging
 _log = logging.getLogger(__name__)
 
 ENABLE_MIDEND_OPT = bool(
-    os.environ.get("NUMBA_HIP_MIDEND_OPT", False)
+    int(os.environ.get("NUMBA_HIP_MIDEND_OPT", False))
 )  # enable midend optimizations
 OPT_LEVEL = int(os.environ.get("NUMBA_HIP_OPT_LEVEL", 3))  # default optimization level
 DEFAULT_ARCH_WITH_FEATURES = int(
@@ -66,6 +74,15 @@ DEFAULT_ARCH_WITH_FEATURES = int(
 # As external dependencies are usually compiled with `gfx90a`.
 # this option defaults to `False`.
 
+USE_DEVICE_LIB_CACHE = bool(
+    int(os.environ.get("NUMBA_HIP_USE_DEVICE_LIB_CACHE", True))
+)  # Store architecture-dependent device library LLVM IR files in a filesystem cache, so that
+# the next Numba program can reuse the files from this cache. Defaults to True.
+
+CLEAR_DEVICE_LIB_CACHE = bool(
+    int(os.environ.get("NUMBA_HIP_CLEAR_DEVICE_LIB_CACHE", False))
+)  # Clear the filesystem cache used for storing architecture-dependent device library LLVM IR.
+# Defaults to False.
 
 def get_rocm_path(*subdirs):
     """Get paths of ROCM_PATH.
