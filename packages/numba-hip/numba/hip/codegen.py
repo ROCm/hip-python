@@ -710,40 +710,56 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 bundle_file_contents(linker_inputs),
             )
 
-        linked_llvm = llvmutils.link_modules(linker_inputs, to_bc=True)
-        # 2 identify numba hip helper functions
-        used_hipdevicelib_declares = llvmutils.get_function_names(
-            linked_llvm, defines=False
-        )
-        # 2. apply mid-end optimizations if requested
-        if hipconfig.ENABLE_MIDEND_OPT and self._options.get("opt", False):
+        if not hipconfig.MINIMIZE_IR:
+            linker_inputs.append(hipdevicelib.get_llvm_bc(amdgpu_arch))
+            linked_llvm = llvmutils.link_modules(linker_inputs, to_bc)
 
-            linked_llvm = amdgcn.AMDGPUTargetMachine(amdgpu_arch).optimize_module(
-                linked_llvm
-            )
-            if config.DUMP_LLVM:
-                self._dump_ir(
-                    "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)",
-                    llvmutils.to_ir(linked_llvm).decode("utf-8"),
+            # apply mid-end optimizations if requested
+            if hipconfig.ENABLE_MIDEND_OPT and self._options.get("opt", False):
+
+                linked_llvm = amdgcn.AMDGPUTargetMachine(amdgpu_arch).optimize_module(
+                    linked_llvm
                 )
+                if config.DUMP_LLVM:
+                    self._dump_ir(
+                        "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)",
+                        llvmutils.to_ir(linked_llvm).decode("utf-8"),
+                    )
+        else:
+            linked_llvm = llvmutils.link_modules(linker_inputs, to_bc=True)
+            # 2 identify numba hip helper functions
+            used_hipdevicelib_declares = llvmutils.get_function_names(
+                linked_llvm, defines=False
+            )
+            # apply mid-end optimizations if requested
+            if hipconfig.ENABLE_MIDEND_OPT and self._options.get("opt", False):
 
-        # 3. now link the hip device lib
-        linked_llvm = llvmutils.link_modules(
-            [linked_llvm, hipdevicelib.get_llvm_bc(amdgpu_arch)], to_bc
-        )
+                linked_llvm = amdgcn.AMDGPUTargetMachine(amdgpu_arch).optimize_module(
+                    linked_llvm
+                )
+                if config.DUMP_LLVM:
+                    self._dump_ir(
+                        "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)",
+                        llvmutils.to_ir(linked_llvm).decode("utf-8"),
+                    )
 
-        # 4. remove unused hip device lib function definitions
-        def delete_matcher_(name: str):
-            nonlocal used_hipdevicelib_declares
-            if hipdevicelib.DEVICE_FUN_PREFIX in name:
-                return not name in used_hipdevicelib_declares
-            return False
+            # 3. now link the hip device lib
+            linked_llvm = llvmutils.link_modules(
+                [linked_llvm, hipdevicelib.get_llvm_bc(amdgpu_arch)], to_bc
+            )
 
-        linked_llvm = llvmutils.delete_functions(
-            linked_llvm, matcher=delete_matcher_, defines=True
-        )
-        # 5. link a last time to get rid of unused third-order function declarations
-        linked_llvm = llvmutils.link_modules([linked_llvm], to_bc=to_bc)
+            # 4. remove unused hip device lib function definitions
+            def delete_matcher_(name: str):
+                nonlocal used_hipdevicelib_declares
+                if hipdevicelib.DEVICE_FUN_PREFIX in name:
+                    return not name in used_hipdevicelib_declares
+                return False
+
+            linked_llvm = llvmutils.delete_functions(
+                linked_llvm, matcher=delete_matcher_, defines=True
+            )
+            # 5. link a last time to get rid of unused third-order function declarations
+            linked_llvm = llvmutils.link_modules([linked_llvm], to_bc=to_bc)
 
         if config.DUMP_LLVM:
             self._dump_ir(

@@ -47,6 +47,10 @@ Attributes (Controllable via Environment Variables ``NUMBA_HIP_<attribute>``):
     CLEAR_DEVICE_LIB_CACHE (`bool`):
         Clear the filesystem cache used for storing architecture-dependent device library LLVM IR.
         Defaults to ``False``.
+    MINIMIZE_IR (`bool`):
+        Apply a couple of steps to minimize the produced LLVM IR.
+        Warning enabling this feature can have significant impact on performance.
+        Defaults to ``False``.
 
 Note:
     We currently don't want to break out of subfolder
@@ -83,6 +87,12 @@ CLEAR_DEVICE_LIB_CACHE = bool(
     int(os.environ.get("NUMBA_HIP_CLEAR_DEVICE_LIB_CACHE", False))
 )  # Clear the filesystem cache used for storing architecture-dependent device library LLVM IR.
 # Defaults to False.
+
+MINIMIZE_IR = bool(
+    int(os.environ.get("NUMBA_HIP_MINIMIZE_IR", False))
+) # Apply a couple of steps to minimize the produced LLVM IR.
+# Warning enabling this feature can have significant impact on performance.
+# Defaults to ``False``.
 
 def get_rocm_path(*subdirs):
     """Get paths of ROCM_PATH.
