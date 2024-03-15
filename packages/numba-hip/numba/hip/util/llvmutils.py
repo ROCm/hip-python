@@ -608,3 +608,55 @@ def split_human_readable_clang_offload_bundle(bundle):
             if target_id != None:
                 result[target_id] += line
     return result
+
+
+def split_human_readable_clang_offload_bundle(bundle):
+    """Splits a human-readable LLVM IR bundle into its parts.
+
+    Example:
+
+        ```llvm
+        ; __CLANG_OFFLOAD_BUNDLE____START__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
+        ; ...
+        ; __CLANG_OFFLOAD_BUNDLE____END__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
+        ; __CLANG_OFFLOAD_BUNDLE____START__ host-x86_64-unknown-linux-gnu-
+        ; ...
+        ; __CLANG_OFFLOAD_BUNDLE____END__ host-x86_64-unknown-linux-gnu-
+        ```
+
+        will reproduce a dictionary with the two keys 'hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-'
+        and 'host-x86_64-unknown-linux-gnu-'.
+
+    Note:
+        Does not check if "; __CLANG_OFFLOAD_BUNDLE____END__ " is followed by the correct label.
+
+    Returns:
+        `dict`:
+            A `dict` that holds an IR module per detected target ID.
+    """
+    result = {}
+    if isinstance(bundle, bytes):
+        bundle = bundle.decode("utf-8")
+    else:
+        RuntimeError("expected `str` or `bytes`")
+    assert isinstance(bundle, str)
+
+    p_begin = "; __CLANG_OFFLOAD_BUNDLE____START__ "
+    p_end = "; __CLANG_OFFLOAD_BUNDLE____END__ "
+
+    cursor: int = 0
+    while True:
+        begin: int = bundle.find(p_begin, cursor)  # note: returns -1 on failure
+        if begin < 0:
+            break
+        else:
+            next_newline: int = bundle.find("\n", begin)
+            target_id: str = bundle[begin + len(p_begin) : next_newline]
+            begin = next_newline + 1  # move at begin of next line
+            end: int = bundle.find(p_end, begin)  # note: returns -1 on failure
+            if end == -1:
+                raise RuntimeError("no matching __CLANG_OFFLOAD_BUNDLE____END__ found")
+            else:
+                result[target_id] = bundle[begin:end]  # note: exclusive upper bound
+                cursor = end
+    return result
