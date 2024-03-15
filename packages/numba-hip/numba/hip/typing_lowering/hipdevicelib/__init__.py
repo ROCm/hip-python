@@ -29,10 +29,6 @@ Attributes:
         TODO document 'unsupported_stubs'
 """
 
-import os
-from pathlib import Path
-import shutil
-import tempfile
 import threading
 import logging
 
@@ -47,6 +43,7 @@ from rocm.llvm.config.llvm_config import (
 )
 
 from numba.hip import hipconfig as _hipconfig
+from numba.hip.util import fscache as _fscache
 
 ci.Config.set_library_path(_hipconfig.get_rocm_path("llvm", "lib"))
 
@@ -54,13 +51,13 @@ from . import cparser as _cparser
 
 _cparser.CParser.set_clang_res_dir(
     _hipconfig.get_rocm_path(
-        ( # variant 1
+        (  # variant 1
             "llvm",
             "lib",
             "clang",
             f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
         ),
-        ( # variant 2
+        (  # variant 2
             "llvm",
             "lib",
             "clang",
@@ -148,58 +145,11 @@ def reload():
     # reload the HIPDeviceLib input source and
     hipdevicelib.HIPDeviceLib.reload()
     # finally clean the filesystem cache
-    _clear_cache()
-
-
-## Caching
-
-
-def _get_cache_dir() -> str:
-    """Returns the cache directory."""
-    return os.path.join(tempfile.gettempdir(), "numba", "hip")
+    _fscache.clear_cache()
 
 
 _HIPDEVICELIB = "hipdevicelib"
 _EXT = "bc"
-
-
-def _get_cached_file_path(amdgpu_arch: str, prefix=_HIPDEVICELIB, ext=_EXT) -> str:
-    """Returns a (to be) cached file's name given an AMD GPU architecture."""
-    amdgpu_arch = amdgpu_arch.replace(" ", "")
-    return os.path.join(_get_cache_dir(), f"{prefix}_{amdgpu_arch}.{ext}")
-
-
-def _read_cached_file(amdgpu_arch: str, prefix="hipdevicelib", ext=_EXT):
-    """Loads a cached file or throws FileNotFoundError if file doesn't exist.
-
-    See:
-        `_write_cached_file`.
-    """
-    with open(_get_cached_file_path(amdgpu_arch, prefix, ext), "rb") as infile:
-        content = infile.read()
-    return content
-
-
-def _write_cached_file(content: str, amdgpu_arch: str, prefix=_HIPDEVICELIB, ext=_EXT):
-    """
-    Loads a cached file or throws FileNotFoundError if file doesn't exist.
-
-    Note:
-        We apply a write-replace/rename strategy to ensure that
-        different processes do not write into the same file at the same time.
-
-        We use `os.replace(src, dest, ...)` as [it has the following properties](https://docs.python.org/3/library/os.html#os.replace):
-
-        > If dst exists and is a file, it will be replaced silently if the user has permission.[...]
-        > If successful, the renaming will be an atomic operation (this is a POSIX requirement).
-    Note:
-        Caller is reponsible for locking this operation with a threading lock if necessary.
-    """
-    dest = _get_cached_file_path(amdgpu_arch, prefix, ext)
-    tmp_dest = f"{dest}-{os.getpid()}"
-    with open(tmp_dest, "wb") as outfile:
-        outfile.write(content)
-    os.replace(tmp_dest, dest)
 
 
 def get_llvm_bc(amdgpu_arch: str):
@@ -225,10 +175,14 @@ def get_llvm_bc(amdgpu_arch: str):
     instance = _HIPDeviceLib(amdgpu_arch)
     if _hipconfig.USE_DEVICE_LIB_CACHE:
         # file system caching
-        if instance._bitcode == None: # ! uses hidden attribute
+        if instance._bitcode == None:  # ! uses hidden attribute '_bitcode'
             try:
                 with _lock:
-                    instance._bitcode = _read_cached_file(amdgpu_arch) # ! uses hidden attribute
+                    instance._bitcode = _fscache.read_cached_file(
+                        amdgpu_arch,
+                        prefix=_HIPDEVICELIB,
+                        ext=_EXT,
+                    )  # ! uses hidden attribute '_bitcode'
                 found_cached_file = True
             except FileNotFoundError:
                 pass
@@ -236,22 +190,8 @@ def get_llvm_bc(amdgpu_arch: str):
     bc = instance.bitcode
     if not found_cached_file and _hipconfig.USE_DEVICE_LIB_CACHE:
         with _lock:
-            _write_cached_file(bc, amdgpu_arch)
+            _fscache.write_cached_file(bc, amdgpu_arch, prefix=_HIPDEVICELIB, ext=_EXT)
     return bc
-
-
-def _clear_cache():
-    cache_dir = _get_cache_dir()
-    _log.info(f"clear Numba HIP cache directory '{cache_dir}'")
-    shutil.rmtree(cache_dir, ignore_errors=True)
-
-if _hipconfig.CLEAR_DEVICE_LIB_CACHE:
-    _clear_cache()
-
-if _hipconfig.USE_DEVICE_LIB_CACHE:
-    cache_dir = _get_cache_dir()
-    Path(cache_dir).mkdir(parents=True, exist_ok=True)
-    _log.info(f"created/reuse Numba HIP cache directory '{cache_dir}'")
 
 __all__ = [
     "thestubs",

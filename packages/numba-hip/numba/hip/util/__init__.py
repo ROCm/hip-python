@@ -22,3 +22,4 @@
 
 from . import llvmutils
 from . import comgrutils
+from . import fscache
