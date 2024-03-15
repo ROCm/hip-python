@@ -631,7 +631,8 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if self._entry_name != None:
             assert self._original_entry_name != None
             llvm_str = llvm_str.replace(self._original_entry_name, self._entry_name)
-        llvm_str = _TYPED_PTR.sub(string=llvm_str, repl="ptr")
+        if "*" in llvm_str: # note: significant optimization as _TYPED_PTR.sub is costly
+            llvm_str = _TYPED_PTR.sub(string=llvm_str, repl="ptr")
         llvm_str = llvm_str.replace("sext ptr null to i", "ptrtoint ptr null to i")
         return self._alloca_addrspace_correction(llvm_str)
 
