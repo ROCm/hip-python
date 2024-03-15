@@ -38,6 +38,7 @@ llvm_amdgpu_device_fun_visibility = "hidden"
 llvm_amdgpu_kernel_address_significance = "local_unnamed_addr"
 llvm_amdgpu_device_fun_address_significance = llvm_amdgpu_kernel_address_significance
 
+
 def compile_hip_source_to_llvm(
     source: str,
     amdgpu_arch: str,
@@ -87,6 +88,10 @@ extern "C" __attribute__((device)) void MYFUNC ({args}) {{
 }}
 """
 
+# CACHING
+_DUMMY_KERNEL_IR = {}
+_DUMMY_DEVICE_FUN_IR = {}
+
 
 def _compile_dummy_snippet_to_llvm_ir(source: str, amdgpu_arch: str, args: str):
     (llvm_ir, _, _) = compile_hip_source_to_llvm(
@@ -106,7 +111,12 @@ def get_dummy_kernel_llvm_ir(amdgpu_arch: str, args: str):
     args (str, optional):
         Arguments to specify for the kernel. Defaults to "".
     """
-    return _compile_dummy_snippet_to_llvm_ir(_DUMMY_KERNEL, amdgpu_arch, args)
+    key = (amdgpu_arch + args).replace(" ", "")
+    if not key in _DUMMY_KERNEL_IR:
+        _DUMMY_KERNEL_IR[key] = _compile_dummy_snippet_to_llvm_ir(
+            _DUMMY_KERNEL, amdgpu_arch, args
+        )
+    return _DUMMY_KERNEL_IR[key]
 
 
 def get_dummy_device_fun_llvm_ir(amdgpu_arch: str, args: str):
@@ -117,7 +127,12 @@ def get_dummy_device_fun_llvm_ir(amdgpu_arch: str, args: str):
     args (str, optional):
         Arguments to specify for the kernel. Defaults to "".
     """
-    return _compile_dummy_snippet_to_llvm_ir(_DUMMY_DEVICE_FUN, amdgpu_arch, args)
+    key = (amdgpu_arch + args).replace(" ", "")
+    if not key in _DUMMY_DEVICE_FUN_IR:
+        _DUMMY_DEVICE_FUN_IR[key] = _compile_dummy_snippet_to_llvm_ir(
+            _DUMMY_DEVICE_FUN, amdgpu_arch, args
+        )
+    return _DUMMY_DEVICE_FUN_IR[key]
 
 
 def parse_llvm_attributes_line(
@@ -221,7 +236,7 @@ def get_llvm_kernel_attributes(
             * ``raw==True``: a `list` that contains simple attributes (if ``only_kv==False``)
               plus key-value attributes in their raw '"<key>"="<value>"' form.
     """
-    llvm_ir = _compile_dummy_snippet_to_llvm_ir(_DUMMY_KERNEL, amdgpu_arch, args)
+    llvm_ir = get_dummy_kernel_llvm_ir(amdgpu_arch, args)
     attributes_0_line = next(
         line for line in llvm_ir.splitlines() if "attributes #0" in line
     )
@@ -344,7 +359,7 @@ def get_llvm_device_fun_attributes(
             * ``raw==True``: a `list` that contains simple attributes (if ``only_kv==False``)
               plus key-value attributes in their raw '"<key>"="<value>"' form.
     """
-    llvm_ir = _compile_dummy_snippet_to_llvm_ir(_DUMMY_DEVICE_FUN, amdgpu_arch, args)
+    llvm_ir = get_dummy_device_fun_llvm_ir(amdgpu_arch, args)
     attributes_0_line = next(
         line for line in llvm_ir.splitlines() if "attributes #0" in line
     )
