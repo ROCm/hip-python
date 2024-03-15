@@ -338,7 +338,6 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         unprocessed_result = []
         for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
             if isinstance(dependency, HIPCodeLibrary):
-                # TODO get unlinked_llvm_ir but with attribute modifications
                 if link_time:
                     add_(dependency.get_unlinked_llvm_ir(amdgpu_arch))
                 else:
@@ -631,7 +630,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if self._entry_name != None:
             assert self._original_entry_name != None
             llvm_str = llvm_str.replace(self._original_entry_name, self._entry_name)
-        if "*" in llvm_str: # note: significant optimization as _TYPED_PTR.sub is costly
+        if (
+            "*" in llvm_str
+        ):  # note: significant optimization as _TYPED_PTR.sub is costly
             llvm_str = _TYPED_PTR.sub(string=llvm_str, repl="ptr")
         llvm_str = llvm_str.replace("sext ptr null to i", "ptrtoint ptr null to i")
         return self._alloca_addrspace_correction(llvm_str)
@@ -662,27 +663,6 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         print((title % self._entry_name).center(80, "-"))
         print(body)
         print("=" * 80)
-
-    def _postprocess_unlinked_llvm_strs(self, llvm_strs):
-        """Preprocess Numba *and* third-party LLVM assembly.
-
-        See:
-            _postprocess_llvm_ir
-        """
-        if config.DUMP_LLVM:
-            self._dump_ir(
-                "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, unpostprocessed)",
-                bundle_file_contents(llvm_strs),
-            )
-
-        for i in range(len(llvm_strs)):
-            llvm_strs[i] = self._postprocess_llvm_ir(llvm_strs[i])
-
-        if config.DUMP_LLVM:
-            self._dump_ir(
-                "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, postprocessed)",
-                bundle_file_contents(llvm_strs),
-            )
 
     def get_linked_llvm_ir(
         self,
@@ -723,7 +703,13 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         linker_inputs = self.get_unlinked_llvm_strs(
             amdgpu_arch=amdgpu_arch,
         )
-        self._postprocess_unlinked_llvm_strs(linker_inputs)
+
+        if config.DUMP_LLVM:
+            self._dump_ir(
+                "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, postprocessed)",
+                bundle_file_contents(linker_inputs),
+            )
+
         linked_llvm = llvmutils.link_modules(linker_inputs, to_bc=True)
         # 2 identify numba hip helper functions
         used_hipdevicelib_declares = llvmutils.get_function_names(
@@ -758,6 +744,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         )
         # 5. link a last time to get rid of unused third-order function declarations
         linked_llvm = llvmutils.link_modules([linked_llvm], to_bc=to_bc)
+
         if config.DUMP_LLVM:
             self._dump_ir(
                 "AMD GPU LLVM for pyfunc '%s' (final LLVM IR, HIP device library linked)",
