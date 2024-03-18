@@ -292,7 +292,7 @@ class AMDGPUTargetMachine:
         return self._data_layout
 
     def optimize_module(
-        self, mod, mod_len: int = -1, passes: str = "default<O3>", **pass_builder_opts
+        self, mod, mod_len: int = -1, passes: str = "default<O3>", to_bc: bool=False, **pass_builder_opts
     ):
         r"""Optimizes LLVM IR, bitcode, or `rocm.llvm.c.types.LLVMOpaqueModule`.
 
@@ -346,7 +346,6 @@ class AMDGPUTargetMachine:
         else:
             gm_res = llvmutils._get_module(mod, mod_len)
             optimized = gm_res[0]
-            from_bc = gm_res[-1]
 
         # As LLVMRunPasses aborts the process, we need to run it in a separate process
         # stderr_post = sys.stderr
@@ -372,7 +371,7 @@ class AMDGPUTargetMachine:
             result = optimized
         else:
             result = (
-                llvmutils.to_bc(optimized) if from_bc else llvmutils.to_ir(optimized)
+                llvmutils.to_bc(optimized) if to_bc else llvmutils.to_ir(optimized)
             )
 
         # clean up

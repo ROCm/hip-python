@@ -163,11 +163,14 @@ def _get_module(ir, ir_len: int = -1):
             Defaults to ``-1``.
     Returns:
         `tuple`:
-            A `tuple` ``(mod, bc_buf)`` that contains (in that order):
+            A `tuple` ``(mod, )`` that contains (in that order):
 
             * mod - The loaded LLVM module.
-            * buf - An LLVM IR/BC buffer, or None.
-            * from_bc - A flag indicating that the input is bitcode.
+    Note:
+        Return list might need to be extended,
+        hence the tuple result.
+    See:
+        _get_module_dispose_all
     """
     (status, mod, err_cstr) = _parse_llvm_ir(ir, ir_len)
     if status > 0:  # failure
@@ -181,20 +184,22 @@ def _get_module(ir, ir_len: int = -1):
             f"Reason: {errmsg}"
         )
     else:
-        return (mod, None, False)
+        return (mod,)
 
 
-def _get_module_dispose_all(mod, buf, _):
+def _get_module_dispose_all(mod):
     """Clean up the results of `_get_module`.
 
     Args:
         mod: A module.
-        bc_buf: A bitcode buffer or None.
-        context: A LLVM context that was used for parsing IR, or None.
+
+    Note:
+        Arg list might need to be extended,
+        hence the name `_get_module_dispose_all`.
+    See:
+        _get_module_dispose_all
     """
     LLVMDisposeModule(mod)
-    if buf:
-        LLVMDisposeMemoryBuffer(buf)
 
 
 def _print_module(mod: LLVMOpaqueModule):
