@@ -38,7 +38,7 @@ _log = logging.getLogger(__name__)
 
 def get_cache_dir() -> str:
     """Returns the cache directory."""
-    return os.path.join(tempfile.gettempdir(), "numba", "hip")
+    return os.path.join(tempfile.gettempdir(), "numba", "hip", f"uid_{os.getuid()}")
 
 
 def get_cached_file_path(amdgpu_arch: str, prefix: str, ext: str) -> str:
