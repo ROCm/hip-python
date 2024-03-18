@@ -293,6 +293,31 @@ def to_ir(mod, mod_len: int = -1):
         return result
 
 
+def to_ir_fast(mod, mod_len: int = -1):
+    """Convert human-readable LLVM IR or LLVM bitcode to human-readable LLVM IR.
+
+    Fast version of `to_ir` that does not return a copy
+    if the input is already human-readable LLVM assembly.
+    This routines assumes that the input is human-readable
+    IR if the first two bytes of the input 'mod' are not the
+    ASCII chars "BC".
+
+    Returns:
+        `bytes` or `str`:
+            Returns the result as
+    """
+    try:
+        if isinstance(mod, str):
+            as_bytes = bytes(mod, encoding="utf-8")
+        else:
+            as_bytes = bytes(mod)
+        if as_bytes[0:2] != b"BC":
+            return as_bytes
+    except TypeError:
+        pass
+    return to_ir(mod, mod_len)
+
+
 def to_bc(mod, mod_len: int = -1):
     """Convert human-readable LLVM IR or LLVM bitcode to LLVM bitcode.
 
@@ -316,6 +341,27 @@ def to_bc(mod, mod_len: int = -1):
         result = _to_bc(mod=gm_res[0])
         _get_module_dispose_all(*gm_res)
         return result
+
+
+def to_bc_fast(mod, mod_len: int = -1):
+    """Convert human-readable LLVM IR or LLVM bitcode to LLVM bitcode.
+
+    Fast version of `to_bc` that does not return a copy
+    if the input is already human-readable LLVM assembly.
+    This routines assumes that the input is LLVM bitcode
+    if the first two bytes of the input 'mod' are the
+    ASCII chars "BC".
+    """
+    try:
+        if isinstance(mod, str):
+            as_bytes = bytes(mod, encoding="utf-8")
+        else:
+            as_bytes = bytes(mod)
+        if as_bytes[0:2] == b"BC":
+            return as_bytes
+    except TypeError:
+        pass
+    return to_bc(mod, mod_len)
 
 
 def _verify(mod: LLVMOpaqueModule):

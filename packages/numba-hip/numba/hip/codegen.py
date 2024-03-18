@@ -306,7 +306,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 ]
                 buf_len = len(buf)
             if force_ir:
-                return llvmutils.to_ir(buf, buf_len).decode("utf-8")
+                return llvmutils.to_ir_fast(buf, buf_len).decode("utf-8")
             else:
                 try:  # check if the buffer length can be obtained via `len(buf)`
                     len(buf)
@@ -315,7 +315,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                         raise RuntimeError(
                             f"buffer size cannot be obtained for input {str(buf)}"
                         )
-                    return llvmutils.to_bc(buf, buf_len).decode("utf-8")
+                    return llvmutils.to_bc_fast(buf, buf_len).decode("utf-8")
                 else:  # if `len(buf)` works, return `buf`
                     return buf
 
@@ -456,7 +456,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             `HIPCodeLibrary.get_raw_source_strs`
         """
         if linked:
-            return llvmutils.to_ir(self.get_linked_llvm_ir(amdgpu_arch))
+            return llvmutils.to_ir_fast(self.get_linked_llvm_ir(amdgpu_arch)).decode("utf-8")
         else:
             return bundle_file_contents(self.get_unlinked_llvm_strs(amdgpu_arch))
 
@@ -723,7 +723,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 if config.DUMP_LLVM:
                     self._dump_ir(
                         "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)",
-                        llvmutils.to_ir(linked_llvm).decode("utf-8"),
+                        llvmutils.to_ir_fast(linked_llvm).decode("utf-8"),
                     )
         else:
             linked_llvm = llvmutils.link_modules(linker_inputs, to_bc=True)
@@ -740,7 +740,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 if config.DUMP_LLVM:
                     self._dump_ir(
                         "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)",
-                        llvmutils.to_ir(linked_llvm).decode("utf-8"),
+                        llvmutils.to_ir_fast(linked_llvm).decode("utf-8"),
                     )
 
             # 3. now link the hip device lib
@@ -764,7 +764,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if config.DUMP_LLVM:
             self._dump_ir(
                 "AMD GPU LLVM for pyfunc '%s' (final LLVM IR, HIP device library linked)",
-                llvmutils.to_ir(linked_llvm).decode("utf-8"),
+                llvmutils.to_ir_fast(linked_llvm).decode("utf-8"),
             )
         self._linked_amdgpu_llvm_ir_cache[amdgpu_arch] = linked_llvm
         return linked_llvm
