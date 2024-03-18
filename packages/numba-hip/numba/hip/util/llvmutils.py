@@ -397,7 +397,7 @@ def link_modules(
     cloned_modules = []
     for entry in modules:
         if isinstance(entry, LLVMOpaqueModule):
-            cloned_modules.append((entry, None))
+            cloned_modules.append((LLVMCloneModule(entry), None))
         else:
             if isinstance(entry, tuple):
                 ir = entry[0]

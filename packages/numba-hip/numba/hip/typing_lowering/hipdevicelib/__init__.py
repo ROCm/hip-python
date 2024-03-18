@@ -193,10 +193,35 @@ def get_llvm_bc(amdgpu_arch: str):
             _fscache.write_cached_file(bc, amdgpu_arch, prefix=_HIPDEVICELIB, ext=_EXT)
     return bc
 
+
+def get_llvm_module(amdgpu_arch: str):
+    """Returns the ROCm LLVM module derived from the HIP device lib.
+
+    Note:
+        If `numba.hip.hipconfig.USE_DEVICE_LIB_CACHE` is ``True``,
+        this routine first tries to lookup a cached file for the
+        given AMD GPU architecture, which it expects to be stored at location
+        `os.path.join(tempfile.gettempdir(), "numba","hip")`.
+        If there is no such file, the LLVM BC library is compiled
+        from the HIP C++ source of the HIP device library. Before returning
+        the result, it is stored into the aforementioned directory
+        so that the next lookup (by a different process) will find it.
+
+     Args:
+        amdgpu_arch (`str`):
+            An AMD GPU arch identifier such as `gfx90a` (MI200 series) or `gfx942` (MI300 series).
+            Can also have target features appended that are separated via ":".
+            These are stripped away where not needed.
+    """
+    _ = get_llvm_bc(amdgpu_arch)  # initializes/loads cached bitcode if not already done
+    return _HIPDeviceLib(amdgpu_arch).module
+
+
 __all__ = [
     "thestubs",
     "unsupported_stubs",
     "reload",
     "get_llvm_bc",
+    "get_llvm_module",
     "DEVICE_FUN_PREFIX",
 ]

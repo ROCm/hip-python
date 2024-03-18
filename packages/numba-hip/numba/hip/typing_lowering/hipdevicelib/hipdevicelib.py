@@ -52,7 +52,7 @@ import numba.core.imputils as imputils
 
 from numba.hip.amdgcn import ISA_INFOS
 from numba.hip.typing_lowering import stubs as numba_hip_stubs
-from numba.hip.util import comgrutils
+from numba.hip.util import comgrutils, llvmutils
 
 from .hipsource import *
 from . import typemaps
@@ -85,20 +85,15 @@ class HIPDeviceLib:
     _HIPDEVICELIB_SOURCE: HIPSource = None
 
     def reload(cls):
-        """Rewrite the input HIP source and clear the BC cache.
-        """
-        cls._HIPDEVICELIB_SOURCE = (
-            HIPDeviceLib._create_hipdevicelib_source()
-        )
+        """Rewrite the input HIP source and clear the BC cache."""
+        cls._HIPDEVICELIB_SOURCE = HIPDeviceLib._create_hipdevicelib_source()
         cls.__INSTANCES.clear()
 
     def __new__(cls, amdgpu_arch: str = None):
         """Creates/returns the singleton per AMD GPU architecture."""
         with _lock:
             if not cls._HIPDEVICELIB_SOURCE:
-                cls._HIPDEVICELIB_SOURCE = (
-                    HIPDeviceLib._create_hipdevicelib_source()
-                )
+                cls._HIPDEVICELIB_SOURCE = HIPDeviceLib._create_hipdevicelib_source()
             if amdgpu_arch not in cls.__INSTANCES:
                 cls.__INSTANCES[amdgpu_arch] = object.__new__(cls)
         return cls.__INSTANCES[amdgpu_arch]
@@ -157,7 +152,7 @@ class HIPDeviceLib:
                 + USER_HIP_EXTENSIONS
             ),
             filter=cursor_filter_,
-            append_cflags=["-D__HIPCC_RTC__"]+USER_HIP_CFLAGS,
+            append_cflags=["-D__HIPCC_RTC__"] + USER_HIP_CFLAGS,
         )
         hiprtc_runtime_source.check_for_duplicates(log_errors=True)
         return hiprtc_runtime_source
@@ -353,6 +348,7 @@ class HIPDeviceLib:
         self._amdgpu_arch: str = None
         self._set_amdgpu_arch(amdgpu_arch)
         self._bitcode = None  # lazily
+        self._module = None  # lazily
 
     @property
     def amdgpu_arch(self):
@@ -722,8 +718,30 @@ class HIPDeviceLib:
         )
 
     @property
+    def module(self):
+        """Returns the ROCm LLVM module derived from the HIP device lib.
+
+        Returns:
+            `rocm.llvm.c.types.LLVMOpaqueModule`:
+                The ROCm LLVM module wrapper.
+        """
+        if self._module == None:
+            self._module = llvmutils._get_module(self._bitcode)[0]
+        return self._module
+
+    @module.deleter
+    def module(self):
+        if self._module != None:
+            llvmutils._get_module_dispose_all(self._module)
+            self._module = None
+
+    def __del__(self):
+        """Destroys the ROCm LLVM Python module if allocated."""
+        del self.module
+
+    @property
     def bitcode(self):
-        """Returns the bitcode-version of the HIPRTC device lib"""
+        """Returns the bitcode-version of the HIP device lib"""
         if self.amdgpu_arch == None:
             raise ValueError("cannot generate bitcode for AMDGPU architecture 'None'")
         if self._bitcode == None:

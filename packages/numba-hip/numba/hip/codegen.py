@@ -711,7 +711,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             )
 
         if not hipconfig.MINIMIZE_IR:
-            linker_inputs.append(hipdevicelib.get_llvm_bc(amdgpu_arch))
+            linker_inputs.append(hipdevicelib.get_llvm_module(amdgpu_arch))
             linked_llvm = llvmutils.link_modules(linker_inputs, to_bc)
 
             # apply mid-end optimizations if requested
@@ -745,7 +745,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
 
             # 3. now link the hip device lib
             linked_llvm = llvmutils.link_modules(
-                [linked_llvm, hipdevicelib.get_llvm_bc(amdgpu_arch)], to_bc
+                [linked_llvm, hipdevicelib.get_llvm_module(amdgpu_arch)], to_bc
             )
 
             # 4. remove unused hip device lib function definitions
