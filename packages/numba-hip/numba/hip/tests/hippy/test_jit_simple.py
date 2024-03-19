@@ -53,7 +53,11 @@ Note:
     per test.
 """
 import os
-from numba.hip.testing import unittest, HIPTestCase as CUDATestCase
+
+from numba import hip
+hip.pose_as_cuda()
+from numba import cuda
+from numba.cuda.testing import unittest, CUDATestCase
 
 DUMP_IR = bool(os.environ.get("NUMBA_HIP_TESTS_DUMP_IR", False))
 
