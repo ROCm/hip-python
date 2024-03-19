@@ -72,8 +72,7 @@ from numba.hip import typing_lowering
 module_hip_attributes = {}
 module_hip_attributes.update(typing_lowering.hipdevicelib.thestubs)
 module_hip_attributes.update(typing_lowering.hip.thestubs)
-# TODO HIP continue working on intrinsics
-# del module_hip_attributes["warpsize"]
+
 stubs.resolve_attributes(
     typing_lowering.registries.typing_registry, hip, module_hip_attributes
 )
