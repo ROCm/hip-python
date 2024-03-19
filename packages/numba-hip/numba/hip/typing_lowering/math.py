@@ -57,30 +57,33 @@ Attributes:
 
 import math
 
-from numba.core import imputils, types, typing
+from numba.core import types, typing
 
 from numba.hip.typing_lowering.registries import (
     typing_registry,
     impl_registry,
 )
-from numba.hip.typing_lowering import hipdevicelib
+from numba.hip.typing_lowering import hipdevicelib, stubs as numba_hip_stubs
 
 thestubs = {}
 for _name, _mathobj in vars(math).items():
-    _stub = hipdevicelib.thestubs.get(_name, None)
-    if _stub != None:
-        # register hipdevicelib typing template for this math object
-        # NOTE:
-        #     We use an existing stub and hence
-        #     specify keyword argument 'typing_key=_stub._template_'.
-        #     It is further not necessart to register any additional
-        #     lowering implementations. The `typing_key` suffices
-        #     to identify the correct lowering implementations.
-        # NOTE:
-        #     We still collect the stubs to inform the `math` module
-        #     attribute resolution in `numba/hip/target.py`.
-        typing_registry.register_global(val=_mathobj, typing_key=_stub._template_)
-        thestubs[_name] = _stub
+    if callable(_mathobj):  # only consider functions
+        _stub = hipdevicelib.thestubs.get(_name, None)
+        if _stub != None:
+            # register hipdevicelib typing template and implementation/lowering procedures
+            # for this math object
+            # NOTE:
+            #     We still collect the stubs to inform the `math` module
+            #     attribute resolution in `numba/hip/target.py`.
+            thestubs[_name] = numba_hip_stubs.Stub.from_other(
+                _stub,
+                _mathobj,
+                f"NUMBA_HIP_MATH_STUB_{_mathobj.__name__}",
+                template_prefix="NUMBA_HIP_MATH_TEMPLATE_",
+                register=True,
+                typing_registry=typing_registry,
+                impl_registry=impl_registry,
+            )
 
 #
 # HIP: Below code unrelated to above, just to support import `ufuncs` module in __init__.py file.
