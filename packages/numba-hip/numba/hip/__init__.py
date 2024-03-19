@@ -51,9 +51,9 @@ from . import hipdrv
 cudadrv = hipdrv
 
 sys.modules["numba.hip.hipdrv"] = hipdrv
-for name, mod in list(sys.modules.items()):
-    if name.startswith("numba.hip.hipdrv"):
-        sys.modules[name.replace("numba.hip.hipdrv", "numba.hip.cudadrv")] = mod
+for _name, _mod in list(sys.modules.items()):
+    if _name.startswith("numba.hip.hipdrv"):
+        sys.modules[_name.replace("numba.hip.hipdrv", "numba.hip.cudadrv")] = _mod
 
 
 errors = _mr.create_and_register_derived_module(
