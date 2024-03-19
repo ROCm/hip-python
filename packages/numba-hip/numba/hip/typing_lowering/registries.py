@@ -28,7 +28,7 @@ in package 'numba.hip.typing_lowering'
 share the same registries.
 """
 
-from numba.core import imputils, types, typing
+from numba.core import imputils
 import numba.core.typing.templates as typing_templates
 
 typing_registry = typing_templates.Registry()
