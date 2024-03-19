@@ -45,11 +45,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import numpy as np
-from collections import defaultdict
 import functools
-import itertools
-from inspect import Signature, Parameter
 
 from numba.core import types
 
