@@ -49,15 +49,74 @@ import functools
 
 from numba.core import types
 
+from numba.core import imputils
+import numba.core.typing.templates as typing_templates
+
 
 class Stub(object):
+
+    @staticmethod
+    def from_other(
+        other_stub,
+        key: object,
+        typename: str,
+        template_prefix="NUMBA_HIP_FROM_OTHER_",
+        register: bool = False,
+        typing_registry=None,
+        impl_registry=None,
+    ):
+        """Derive a stub from an existing one.
+
+        This routine is useful if you want to associate
+        typing templates and implementations that are associated
+        with one Python object with a second Python object.
+
+        Example:
+            Take a look at `numba.hip.typing_lowering.math` for
+            an application of this routine.
+
+        Args:
+            key (`object`):
+                Globally reachable Python function that serves
+                as key to lookup typing templates and the
+                matching implementations.
+            register (`bool`):
+                Also register the new stub with the given typing
+                and implementation/lowering registry.
+
+        """
+        assert issubclass(other_stub, Stub)
+        assert hasattr(other_stub, "_signatures_")
+        assert hasattr(other_stub, "_call_generators_")
+
+        stub = type(typename, (Stub,), {})
+        stub._signatures_ = other_stub._signatures_
+        stub._template_ = typing_templates.make_concrete_template(
+            name=f"{template_prefix}{key.__name__}",
+            key=key,
+            signatures=other_stub._signatures_,
+        )
+        stub._call_generators_ = other_stub._call_generators_
+
+        if register:
+            assert isinstance(typing_registry, typing_templates.Registry)
+            assert isinstance(impl_registry, imputils.Registry)
+            typing_registry.register_global(val=key)(stub._template_)
+            for impl, parm_types_numba in stub._call_generators_:
+                impl_registry.lower(key, *parm_types_numba)(impl)
+        return stub
+
     """Numba HIP stub object
 
     A stub object to represent special objects that are meaningless
     outside the context of a AMD GPU kernel.
 
-    Numba typing signatures can be registered with this module.
-    Numba call generators can be registered with this module.
+    Note:
+        Numba typing signatures can be registered with subclasses of this type
+        (subclass member: '_signatures_').
+    Note:
+        Numba call generators can be registered with subclasses of this type
+        (subclass member: '_call_generators_').
     """
 
     _description_ = "<numba.hip special value>"
