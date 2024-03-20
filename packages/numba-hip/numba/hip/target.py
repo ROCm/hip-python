@@ -76,9 +76,6 @@ module_hip_attributes.update(typing_lowering.hip.thestubs)
 stubs.resolve_attributes(
     typing_lowering.registries.typing_registry, hip, module_hip_attributes
 )
-stubs.resolve_attributes(
-    typing_lowering.registries.typing_registry, math, typing_lowering.math.thestubs
-)
 
 
 class HIPTypingContext(typing.BaseContext):
