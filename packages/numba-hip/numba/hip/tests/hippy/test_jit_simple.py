@@ -149,6 +149,9 @@ class TestJitSimple(CUDATestCase):
             cuda.cos(5.0)
             math.cos(5)
             sin(6)
+            math.gamma(2)
+            math.radians(2)
+            math.degrees(2)
             x = cuda.threadIdx.x
             lA = cuda.local.array(shape=(4, 4), dtype=np.float32)
             sA = cuda.shared.array(shape=(4, 4), dtype=np.int64)

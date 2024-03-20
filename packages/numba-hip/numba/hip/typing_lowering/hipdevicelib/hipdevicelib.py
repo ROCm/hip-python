@@ -147,8 +147,8 @@ class HIPDeviceLib:
             filename=filename,
             source=(
                 comgr.ext.HIPRTC_RUNTIME_HEADER
-                + HIPDeviceLib._create_overloads()
                 + HIPDeviceLib._create_extensions()
+                + HIPDeviceLib._create_overloads()
                 + USER_HIP_EXTENSIONS
             ),
             filter=cursor_filter_,
@@ -245,7 +245,8 @@ class HIPDeviceLib:
             'acos', 'acosh', 'asin', 'asinh', 'atan', 'atanh', 'ceil', 'cos',
             'cosh', 'erf', 'erfc', 'exp', 'expm1', 'fabs', 'floor', "frexp",
             'lgamma', 'log', 'log10', 'log1p', 'log2', "modf", 'sin', 'sinh',
-            'sqrt', 'tan', 'tanh', 'trunc'
+            'sqrt', 'tan', 'tanh', 'trunc',
+            'radians', 'degrees', 'gamma',
         ]:
             # fmt: on
             if fun in ("modf","frexp"):
@@ -318,6 +319,38 @@ class HIPDeviceLib:
             f"""
             int __attribute__((device)) {_GET}warpsize() {{
                 return warpSize;
+            }}
+            """
+        )
+        # radians, degrees, and gamma (unaries)
+        extensions += textwrap.dedent(
+            """
+            // radians
+            double __attribute__((device)) radians(double _0) {{
+                return _0 * (HIP_PI / 180.0);
+            }}
+            float __attribute__((device)) radiansf(float _0) {{
+                return _0 * (HIP_PI_F / 180.0f);
+            }}
+            float __attribute__((device)) radians(float _0) {{
+                return radiansf(_0);
+            }}
+            // degrees
+            double __attribute__((device)) degrees(double _0) {{
+                return _0 * (180.0 / HIP_PI);
+            }}
+            float __attribute__((device)) degreesf(float _0) {{
+                return _0 * (180.0f / HIP_PI_F);
+            }}
+            float __attribute__((device)) degrees(float _0) {{
+                return degreesf(_0);
+            }}
+            // gamma (Python uses name 'gamma' instead of 'tgamma')
+            double __attribute__((device)) gamma(double _0) {{
+                return tgamma(_0);
+            }}
+            float __attribute__((device)) gamma(float _0) {{
+                return tgammaf(_0);
             }}
             """
         )
