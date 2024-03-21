@@ -238,7 +238,7 @@ class HIPDeviceLib:
                 }}
                 """
             )
-        # 2.b) Unary functions
+        # 2.b) Unary functions (real)
         # <fun>(double)->double): <fun>(ull)->double), <fun>(ll)->double)
         # fmt: off
         for fun in [
@@ -260,7 +260,7 @@ class HIPDeviceLib:
                     return {fun}(static_cast<double>(_0));
                 }}
                 """)
-        # 2.c) Binary functions
+        # 2.c) Binary functions (real)
         # <fun>(double,double) -> double: <fun>(ull,ull) -> double, <fun>(ll,ll) -> double
         for fun in [ 'atan2', 'copysign', 'fmod', 'hypot', 'remainder']:
             overloads += textwrap.dedent(f"""\
@@ -273,12 +273,13 @@ class HIPDeviceLib:
                 }}
                 """)
         # NOTE: function pow(*,*) already has all required overloads.
+        fun="ldexp"
         overloads += textwrap.dedent(f"""\
             // ldexp
-            float __attribute__((device)) ldexp(float _0, float _1) {{
+            float __attribute__((device)) {fun}(float _0, float _1) {{
                 return {fun}(_0,static_cast<int>(_1));
             }}
-            double __attribute__((device)) ldexp(double _0, double _1) {{
+            double __attribute__((device)) {fun}(double _0, double _1) {{
                 return {fun}(_0,static_cast<int>(_1));
             }}
             """)
