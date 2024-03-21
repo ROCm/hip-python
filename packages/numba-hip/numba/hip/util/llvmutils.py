@@ -347,7 +347,7 @@ def to_bc_fast(mod, mod_len: int = -1):
     """Convert human-readable LLVM IR or LLVM bitcode to LLVM bitcode.
 
     Fast version of `to_bc` that does not return a copy
-    if the input is already human-readable LLVM assembly.
+    if the input is already LLVM bitcode.
     This routines assumes that the input is LLVM bitcode
     if the first two bytes of the input 'mod' are the
     ASCII chars "BC".
