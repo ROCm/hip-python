@@ -275,6 +275,11 @@ def pose_as_cuda():
         sys.modules[mod.replace("numba.hip", "numba.cuda")] = sys.modules[mod]
     setattr(sys.modules["numba"], "cuda", sys.modules["numba.hip"])
 
+    # compatibility with dependencies (such as RMM memory allocator for Numba)
+    from numba import config
+
+    config.CUDA_USE_NVIDIA_BINDING = True
+
 
 # clean up
 # del _preprocess

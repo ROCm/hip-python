@@ -1814,13 +1814,28 @@ class MemoryPointer(object):
     :type owner: NoneType
     :param finalizer: A function that is called when the buffer is to be freed.
     :type finalizer: function
+
+    Note (Numba HIP vs RMM):
+
+        RMM might be configured as memory allocator for Numba.
+        RMM checks `numba.config.CUDA_USE_NVIDIA_BINDING` to determine
+        the result type of the `rmm.allocators.numba.memalloc` routine.
+        If you don't use `numba.hip.pose_as_cuda()`, that config value defaults
+        to `False` and the RMM `memalloc` routine returns a `ctypes.c_uint64`.
+        Therefore, we added special treatment for this case to the
+        constructor of this type.
     """
 
     __cuda_memory__ = True
 
     def __init__(self, context, pointer, size, owner=None, finalizer=None):
         self.context = context
-        self.device_pointer = pointer
+        if isinstance(
+            pointer, ctypes.c_uint64
+        ):  #: see fun 'memalloc' in rmm/allocators/numba.py
+            self.device_pointer = pointer.value
+        else:
+            self.device_pointer = pointer
         self.size = size
         self._cuda_memsize_ = size
         self.is_managed = finalizer is not None
