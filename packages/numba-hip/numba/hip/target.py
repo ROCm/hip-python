@@ -63,7 +63,6 @@ from numba import hip
 from numba.hip import codegen  # , nvvmutils, ufuncs
 from numba.hip.typing_lowering import stubs, ufuncs
 from numba.hip.typing_lowering.models import hip_data_manager
-import math
 from numba.hip import typing_lowering
 
 # -----------------------------------------------------------------------------

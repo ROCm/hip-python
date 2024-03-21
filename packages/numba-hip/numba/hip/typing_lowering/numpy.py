@@ -66,7 +66,10 @@ from numba.core.typing.npydecl import (
     bit_twiddling_functions,
 )
 
-from numba.hip.typing_lowering.registries import typing_registry
+from numba.hip.typing_lowering.registries import (
+    typing_registry,
+    impl_registry
+)
 
 for func in trigonometric_functions:
     register_numpy_ufunc(func, typing_registry.register_global)
@@ -84,11 +87,4 @@ from numba.core import imputils
 from numba.np.npyimpl import register_ufuncs
 from numba.np import ufunc_db
 
-impl_registry = imputils.Registry()
-
 register_ufuncs(ufunc_db.get_ufuncs(), impl_registry.lower)
-
-__all__ = [
-    "typing_registry",
-    "impl_registry",
-]
