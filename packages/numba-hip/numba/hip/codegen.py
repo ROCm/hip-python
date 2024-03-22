@@ -179,7 +179,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         self._codeobj_cache = {}
         # Maps GPU arch -> linker info output for AMD GPU codeobj
         self._linkerinfo_cache = {}
-        # Maps Device numeric ID -> cufunc
+        # Maps Device numeric ID -> hipfunc
         self._hipfunc_cache = {}
 
         self._max_registers = max_registers
@@ -816,6 +816,15 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         self._linkerinfo_cache[amdgpu_arch] = linker.info_log
         return codeobj
 
+    def get_cufunc(self):
+        """Simply refers to `get_hipfunc`.
+
+        Note:
+            Added for compatibility reasons
+            to codes that use Numba CUDA.
+        """
+        return self.get_hipfunc()
+
     def get_hipfunc(self):
         if self._device:
             msg = (
@@ -843,10 +852,11 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         return hipfunc
 
     def get_linkerinfo(self, cc):
-        try:
-            return self._linkerinfo_cache[cc]
-        except KeyError:
-            raise KeyError(f"No linkerinfo for CC {cc}")
+        # try:
+        #     return self._linkerinfo_cache[cc]
+        # except KeyError:
+        #     raise KeyError(f"No linkerinfo for CC {cc}")
+        raise NotImplementedError()
 
     # @abstractmethod (1/6)
     def add_ir_module(self, mod):
