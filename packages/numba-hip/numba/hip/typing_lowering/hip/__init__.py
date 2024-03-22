@@ -54,5 +54,5 @@ for k, v in vars(hipstubs).items():
         pass
 globals().update(thestubs)
 
-from . import typingdecls
-from . import loweringimpls
+from . import typing
+from . import lowering
