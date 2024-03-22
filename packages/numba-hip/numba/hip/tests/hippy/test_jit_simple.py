@@ -55,6 +55,7 @@ Note:
 import os
 
 from numba import hip
+
 hip.pose_as_cuda()
 from numba import cuda
 from numba.cuda.testing import unittest, CUDATestCase
@@ -85,9 +86,7 @@ class TestJitSimple(CUDATestCase):
         ir, restype = cuda.compile_llvm_ir_for_current_device(
             pyfunc=empty, sig=(), device=True, to_bc=False
         )
-        self.assertIn(
-            "test_00_compile_llvm_ir_for_empty_device_fun", ir
-        )
+        self.assertIn("test_00_compile_llvm_ir_for_empty_device_fun", ir)
         # with open("empty.ll","w") as outfile:
         #     outfile.write(ir)
 
@@ -155,6 +154,7 @@ class TestJitSimple(CUDATestCase):
             x = cuda.threadIdx.x
             lA = cuda.local.array(shape=(4, 4), dtype=np.float32)
             sA = cuda.shared.array(shape=(4, 4), dtype=np.int64)
+            lA[x] = 5
 
         ir, restype = cuda.compile_llvm_ir_for_current_device(
             pyfunc=mydevicefun, sig=(), device=True, to_bc=False, name="mydevicefun"
@@ -173,12 +173,37 @@ class TestJitSimple(CUDATestCase):
             sig="void(float64[:],float64)",
             device=True,
             to_bc=False,
-            name="mydevicefun", # TODO Fix this again
+            name="mydevicefun",  # TODO Fix this again
         )
         self.assertIn("device_fun_with_args", ir)
         if DUMP_IR:
             with open("device_fun_with_args.ll", "w") as outfile:
                 outfile.write(ir)
+
+    def test_07_reduction_like(self):
+        import numpy as np
+        from numba.types import int32
+
+        a = cuda.to_device(np.arange(1024))
+        nelem = len(a)
+
+        def array_sum(data):
+            tid = cuda.threadIdx.x  # TODO that's the issue
+            # tid = cuda.get_threadIdx.x()
+            size = len(data)
+            i = cuda.grid(1)
+            shr = cuda.shared.array(nelem, int32)
+            # below lines must both present to create the error
+            if tid < size:
+                shr[tid] = data[i]  #: trouble maker
+
+        ir, restype = cuda.compile_llvm_ir_for_current_device(
+            pyfunc=array_sum,
+            sig="void(float64[:])",
+            device=True,
+            to_bc=False,
+            name="mydevicefun",
+        )
 
 
 if __name__ == "__main__":

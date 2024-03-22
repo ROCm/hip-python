@@ -48,12 +48,11 @@
 """Lowering implementations for HIP types such as dim3 and arrays in GPU address spaces.
 
 Note:
-    This module is derived from `numba/HIP/HIPimpl.py`.
+    This module is derived from `numba/cuda/cudaimpl.py`.
 TODO:
     * Support cooperative groups.
     * Support fp16/half precision floats.
     * Support atomics for arrays types.
-    * Support other math functions such as round/radians -> Best via hipdevicelib C++ extension.
 
 Attributes:
     typing_registry (`numba.core.typing.templates.Registry`):
@@ -98,6 +97,12 @@ def _call_first(stub, context, builder, sig, args):
 
 
 def initialize_dim3(name, context, builder, sig, args):
+    """Initialize a dim3 struct.
+
+    Args:
+        name (`str`):
+            A dim3 name like 'threadIdx'.
+    """
     from numba.hip.typing_lowering import hipdevicelib
 
     stub = getattr(hipdevicelib, "get_" + name)

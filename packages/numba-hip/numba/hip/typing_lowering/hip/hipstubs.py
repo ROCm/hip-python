@@ -56,7 +56,7 @@ from collections import defaultdict
 import itertools
 from inspect import Signature, Parameter
 
-from numba.core import types
+from numba.hip import typing_lowering
 
 # --------------------------------------------------------------------------------
 # HIP
@@ -69,11 +69,10 @@ class Dim3(Stub):
     """A triple, (x, y, z)"""
 
     _description_ = "<Dim3>"
-    _typed_attributes_ = dict(
-        x=types.int32,
-        y=types.int32,
-        z=types.int32,
-    )
+
+    # NOTE: The below class attribute is used
+    # by typing_registry.stubs.resolve_attributes
+    _type_ = typing_lowering.types.dim3
 
     @property
     def x(self):

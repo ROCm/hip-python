@@ -79,6 +79,20 @@ register_global = typing_registry.register_global
 register_number_classes(register_global)
 
 
+@register_attr
+class Dim3_attrs(AttributeTemplate):
+    key = dim3
+
+    def resolve_x(self, mod):
+        return types.int32
+
+    def resolve_y(self, mod):
+        return types.int32
+
+    def resolve_z(self, mod):
+        return types.int32
+
+
 class Hip_array_decl(CallableTemplate):
     def generic(self):
         def typer(shape, dtype):

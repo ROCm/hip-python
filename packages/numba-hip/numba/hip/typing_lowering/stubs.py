@@ -117,6 +117,14 @@ class Stub(object):
     Note:
         Numba call generators can be registered with subclasses of this type
         (subclass member: '_call_generators_').
+    Note:
+        A Numba type can be registered with subclasses of this type
+        (subclass member: '_type_').
+        See `~.resolve_attributes` for more details.
+    Note:
+        Typed attributes can be registered with subclasses of this type
+        (subclass member: '_typed_attributes_').
+        See `~.resolve_attributes` for more details.
     """
 
     _description_ = "<numba.hip special value>"
@@ -216,7 +224,7 @@ def resolve_attributes(
 
     Example:
         Lets Numba know what an expression such as 'hip.syncthreads()' means
-        given the object `hip`.
+        given the Python object `hip`.
 
     Args:
         stub_attributes (`dict`):
@@ -252,7 +260,9 @@ def resolve_attributes(
                 # 2. check stub attributes
                 childstub: Stub = self._stub_attributes.get(attr, None)
                 if childstub != None:
-                    if childstub.is_supported():
+                    if hasattr(childstub,"_type_"):
+                        return lambda value: childstub._type_
+                    elif childstub.is_supported():
                         if childstub.has_attributes():
                             assert not hasattr(
                                 childstub, "_signatures_"
