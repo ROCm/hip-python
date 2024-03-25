@@ -45,22 +45,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# from numba.core import config
+from numba.hip import hipconfig
 from numba.hip.hipdrv.error import (
     HiprtcError,
     HiprtcCompilationError,
 )
 
-import ctypes
+import os
 import functools
 import threading
 import warnings
-
-# Opaque handle for compilation unit
-hiprtc_program = ctypes.c_void_p
-
-# Result code
-hiprtc_result = ctypes.c_int
 
 _hiprtc_lock = threading.Lock()
 
@@ -119,7 +113,6 @@ class HIPRTC:
         "hiprtcLinkDestroy",
     ]
 
-    @classmethod
     def __new__(cls):
         """Get/return singleton instance.
 
@@ -140,7 +133,8 @@ class HIPRTC:
 
                     @functools.wraps(func)
                     def checked_call(*args, func=func, name=name):
-                        error = func(*args)
+                        result = func(*args)
+                        error = result[0]
                         if error == hiprtc.hiprtcResult.HIPRTC_ERROR_COMPILATION:
                             raise HiprtcCompilationError()
                         elif error != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
@@ -148,10 +142,14 @@ class HIPRTC:
                                 error_name = error.name
                             except ValueError:
                                 error_name = (
-                                    "Unknown hiprtc_result " f"(error code: {error})"
+                                    "Unknown hiprtc result " f"(error code: {error})"
                                 )
                             msg = f"Failed to call {name}: {error_name}"
                             raise HiprtcError(msg)
+                        if len(result) == 2:  # (error, result) -> result
+                            return result[1]
+                        else:  # (error, result1, result2, ...) -> (result1, result2, ...)
+                            return result[1:]
 
                     setattr(inst, name, checked_call)
 
@@ -197,18 +195,22 @@ class HIPRTC:
         """
         Destroy an HIPRTC program.
         """
-        self.hiprtcDestroyProgram(program.handle)
+        self.hiprtcDestroyProgram(
+            program.handle.createRef()
+        )  # NOTE: `createRef()` required for hiprtcDestroyProgram as it takes hiprtcProgram*.
+        program._handle = None
 
     def get_compile_log(self, program):
         """
         Get the compile log as a Python string.
         """
         log_size = self.hiprtcGetProgramLogSize(program.handle)
-
-        log = bytes(log_size)
-        self.hiprtcGetProgramLog(program.handle, log)
-
-        return log.decode()
+        if log_size > 0:
+            log = bytes(log_size)
+            self.hiprtcGetProgramLog(program.handle, log)
+            return log.decode()
+        else:
+            return ""
 
     def get_llvm_bc(self, program):
         """
@@ -247,12 +249,12 @@ def compile(src, name, amdgpu_arch):
     # - Relocatable Device Code (-fgpu-rdc) is needed to prevent device functions
     #   being optimized away, further will generate LLVM bitcode for AMD GPUs.
     amdgpu_arch = f"--offload-arch={amdgpu_arch}"
-    # include = f"-I{config.CUDA_INCLUDE_PATH}"
+    include = f"-I{hipconfig.get_rocm_inc_dir()}"
 
-    # hipdrv_path = os.path.dirname(os.path.abspath(__file__))
-    # numba_hip = os.path.dirname(hipdrv_path)
-    # numba_include = f"-I{numba_hip}"
-    options = [amdgpu_arch, "-fgpu-rdc"]
+    hipdrv_path = os.path.dirname(os.path.abspath(__file__))
+    numba_hip = os.path.dirname(hipdrv_path)
+    numba_include = f"-I{numba_hip}"
+    options = [amdgpu_arch, "-fgpu-rdc", include, numba_include]
 
     # Compile the program
     compile_error = hiprtc.compile_program(program, options)

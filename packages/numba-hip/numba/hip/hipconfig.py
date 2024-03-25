@@ -90,9 +90,10 @@ CLEAR_DEVICE_LIB_CACHE = bool(
 
 MINIMIZE_IR = bool(
     int(os.environ.get("NUMBA_HIP_MINIMIZE_IR", False))
-) # Apply a couple of steps to minimize the produced LLVM IR.
+)  # Apply a couple of steps to minimize the produced LLVM IR.
 # Warning enabling this feature can have significant impact on performance.
 # Defaults to ``False``.
+
 
 def get_rocm_path(*subdirs):
     """Get paths of ROCM_PATH.
@@ -138,3 +139,8 @@ def get_rocm_path(*subdirs):
     msg = f"found ROCm installation at '{rocm_path}' but none of the subdirectories: {rocm_subdirs}"
     _log.error(msg)
     raise FileNotFoundError(msg)
+
+
+def get_rocm_inc_dir():
+    """Path to ROCm include directory."""
+    return get_rocm_path("include")

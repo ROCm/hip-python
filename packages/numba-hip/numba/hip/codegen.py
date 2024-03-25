@@ -322,7 +322,8 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         def compile_hiprtc_program_(source, name):
             nonlocal amdgpu_arch
             nonlocal process_buf_
-            return process_buf_(hiprtc.compile(source, name, amdgpu_arch))
+            llvm_bc, _ = hiprtc.compile(source, name, amdgpu_arch)
+            return process_buf_(llvm_bc)
 
         def add_(llvm_buf, dep_id=None):
             nonlocal unprocessed_result

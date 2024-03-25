@@ -434,7 +434,9 @@ def compile_llvm_ir_for_current_device(
         name=name,
     )
 
+
 compile_ptx_for_current_device = compile_llvm_ir_for_current_device
+
 
 def compile_ptx(
     pyfunc,
@@ -449,7 +451,7 @@ def compile_ptx(
     ir_as_str: bool = True,
     name: str = None,
 ):
-    """Same as compile_llvm_ir wit CUDA-like argumnet names.
+    """Same as compile_llvm_ir wit CUDA-like argument names.
     Same as compile_llvm_ir but argument
     `amdgpu_arch` is renamed to `cc` for
     compatibility reasons.
@@ -469,12 +471,10 @@ def compile_ptx(
     )
 
 
-# TODO check if this is relevant for HIP as no HSA device functions can be linked, only LLVM IR ones
 def declare_device_function(name, restype, argtypes):
     return declare_device_function_template(name, restype, argtypes).key
 
 
-# TODO check if this is relevant for HIP as no HSA device functions can be linked, only LLVM IR ones
 def declare_device_function_template(name, restype, argtypes):
     from .descriptor import hip_target
 
