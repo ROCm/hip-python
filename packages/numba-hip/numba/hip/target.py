@@ -68,7 +68,7 @@ from numba.hip import typing_lowering
 # -----------------------------------------------------------------------------
 # Typing
 
-# TODO(HIP) must be reloaded in case C++ extensions are added
+# TODO(HIP/AMD): Must be reloaded in case C++ extensions (experimental Numba-HIP-only feature under development) are added.
 module_hip_attributes = {}
 module_hip_attributes.update(typing_lowering.hipdevicelib.thestubs)
 module_hip_attributes.update(typing_lowering.hip.thestubs)
