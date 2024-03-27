@@ -62,6 +62,8 @@ ufuncs = _mr.create_and_register_derived_module(
     ),  # NOTE the preprocess_all has converted numba.cuda.mathimpl -> numba.hip.mathimpl
 )  # make this a submodule of the package
 
+from . import vector_types
+
 from .registries import (
     typing_registry,
     impl_registry,

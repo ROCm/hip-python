@@ -114,6 +114,9 @@ class TestFFI(CUDATestCase):
         ffi = cffi.FFI()
 
         @cuda.jit(link=[functions_cu])
+        #@cuda.jit(link=[(functions_cu, "hip")])
+        #@cuda.jit(link=[(functions_cu, "hip", "-ffast-math")])
+        #@cuda.jit(link=[(functions_cu, "hip", ["-ffast-math"])])
         def reduction_caller(result, array):
             array_ptr = ffi.from_buffer(array)
             result[()] = sum_reduce(array_ptr, len(array))

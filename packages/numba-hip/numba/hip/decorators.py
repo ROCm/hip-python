@@ -45,16 +45,25 @@ def jit(
             Indicates whether this is a device function.
             Defaults to ``False``.
         link (`list`, optional):
-            This list contains entries of the following kind:
-            
-            1) LLVM IR/BC buffers to link with the
-               generated LLVM IR. These are linked using the Driver API at
-               link time. Such buffers must be inserted as 2-tuple ``(buffer,buffer_len)``.
-               The buffer length can be specified as ``None`` or `-1` if it can be derived
-               via ``len(buffer)``.
-            2) Files to link with the generated LLVM IR. These are linked using the
-               Driver API at link time.
-            3) ROCm LLVM Python module types.
+            This list can contain entries of the following kind:
+                library:`HIPCodeLibrary`:
+                    A `HIPCodelibrary` object.
+                filepath:`str`:
+                    A file path. The file extension decides if the file is interpreted
+                    as LLVM IR/BC or as HIP C++ input. See `LLVM_IR_EXT` for file extensions that get interpreted as LLVM IR/BC files
+                    (default: 'll', 'bc', 'ptx'). Files with other extensions are assumed to be HIP C++ files.
+                A `tuple` (filepath:`str`, kind: "ll"):
+                    LLVM IR/BC file (#0), e.g., with unconventional file extension.
+                A `tuple` (filepath:`str`, kind: "hip")
+                    HIP C++ file (#0).
+                A `tuple` (filepath:`str`, kind: "hip", opts: opts:`str`|`list`)
+                    HIP C++ file (#0) with compile options (#2).
+                A `tuple` (buffer:`str`|bytes-like, len:`int`|None)
+                    LLVM IR/BC buffer (#0) with len (#1).
+                A `tuple` (buffer:`str`|bytes-like, len:`int`|None, kind:"hip")
+                    HIP C++ buffer (#0) with len (#1).
+                A `tuple`(buffer:`str`|bytes-like, len:`int`|None, kind:"hip", opts:`str`|`list`)
+                    HIP C++ buffer (#0) with len (#1) and compile options (#3).
             
             Defaults to ``[]``.
         debug (`bool` or ``None``, optional):

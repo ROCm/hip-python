@@ -48,6 +48,8 @@
 import os
 import re
 import textwrap
+import logging
+import shlex
 
 from llvmlite import ir
 
@@ -60,6 +62,8 @@ from . import hipconfig
 from .util import llvmutils, comgrutils
 from .typing_lowering import hipdevicelib
 from .hipdrv import hiprtc
+
+_log = logging.getLogger(__file__)
 
 # TODO replace by AMD COMGR based disasm
 # def run_nvdisasm(cubin, flags):
@@ -86,7 +90,7 @@ _p_alloca = re.compile(
 
 
 def _read_file(filepath: str, mode="r"):
-    """Helper routine for reading files in bytes or ASCII mode."""
+    """Helper routine for reading files."""
     with open(filepath, mode) as infile:
         return infile.read()
 
@@ -103,14 +107,15 @@ def _get_amdgpu_arch(amdgpu_arch: str):
     return amdgpu_arch
 
 
+# NOTE: 'ptx' is interpreted as 'll' to ease some porting
+LLVM_IR_EXT = ("ll", "bc", "ptx")
+
+
 class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
     """
     The HIPCodeLibrary generates LLVM IR and AMD GPU code objects
     for multiple different AMD GPU architectures.
     """
-
-    # NOTE: 'ptx' is interpreted as 'll' to ease some porting
-    LLVM_IR_EXT = ("ll", "bc", "ptx")
 
     def __init__(
         self,
@@ -256,9 +261,8 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             is of HIP C++ kind and argument ``link_time==False``.
 
         Note:
-            Simple HIP C++ files that can be compiled via
-            HIPRTC and do not require additional includes
-            can be specified as dependencies too.
+            HIP C++ files that can be compiled via
+            HIPRTC can be specified as dependencies too.
             If compilation of a HIP C++ file is more complicated,
             it is better to use the `numba.hip.hipdrv.hiprtc`
             or `numba.hip.util.comgrutils` APIs directly.
@@ -291,6 +295,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 A string representation (human-readable LLVM IR) of this instance's LLVM module
                 and recursively that of all its dependencies.
         """
+        global LLVM_IR_EXT
         amdgpu_arch = _get_amdgpu_arch(amdgpu_arch)
 
         # helper routines
@@ -319,10 +324,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 else:  # if `len(buf)` works, return `buf`
                     return buf
 
-        def compile_hiprtc_program_(source, name):
+        def compile_hiprtc_program_(source, name, opts=[]):
             nonlocal amdgpu_arch
             nonlocal process_buf_
-            llvm_bc, _ = hiprtc.compile(source, name, amdgpu_arch)
+            llvm_bc, _ = hiprtc.compile(source, name, amdgpu_arch, opts)
             return process_buf_(llvm_bc)
 
         def add_(llvm_buf, dep_id=None):
@@ -335,9 +340,96 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             else:
                 unprocessed_result.append(llvm_buf)
 
+        def handle_tuple_(dep):
+            """Parses a `tuple` link-time dependency specification.
+
+            Options:
+
+            * (filepath:<str>, kind: "ll")                      -> LLVM IR/BC file (#0), e.g., with unconventional file extension.
+            * (filepath:<str>, kind: "hip")                     -> HIP C++ file (#0)
+            * (filepath:<str>, kind: "hip", opts: <str>|<list>) -> HIP C++ file (#0) with compile options (#2)
+            * (buffer:<str>|bytes-like, len:<int>|None)                                -> LLVM IR/BC buffer (#0) with len (#1)
+            * (buffer:<str>|bytes-like, len:<int>|None, kind:"hip")                    -> HIP C++ buffer (#0) with len (#1)
+            * (buffer:<str>|bytes-like, len:<int>|None, kind:"hip", opts:<str>|<list>) -> HIP C++ buffer (#0) with len (#1) and compile options (#3)
+
+            Note:
+                We use the second entry to identify if we deal with a buffer (`int` or ``None``)
+                vs. a filepath (`str`).
+            """
+            err_begin = (
+                f"while processing link-time dependency specification '{str(dep)}'"
+            )
+
+            valid_formats = textwrap.indent(
+                textwrap.dedent(
+                    """\
+            (filepath:<str>, kind: "ll")
+            (filepath:<str>, kind: "hip")
+            (filepath:<str>, kind: "hip", opts: opts:<str>|<list>)
+            (buffer:<str>|bytes-like, len:<int>|None)
+            (buffer:<str>|bytes-like, len:<int>|None, kind:"hip")
+            (buffer:<str>|bytes-like, len:<int>|None, kind:"hip", opts:<str>|<list>)
+            """
+                ),
+                " " * 2,
+            )
+            valid_formats = f"\n\nValid tuple specification formats:\n\n{valid_formats}"
+
+            if len(dep) < 2:
+                raise ValueError(
+                    f"{err_begin}: must provide tuple with at least two entries."
+                )
+
+            input_kind = "ll"
+            hip_opts = None
+            is_filepath = isinstance(dep[1], str) and dep[1] in ("ll", "hip")
+            if is_filepath:
+                err_begin = f"{err_begin} (interpreted as file specification): "
+                filepath = dep[0]
+                buf = _read_file(filepath=filepath, mode="rb")
+                buf_len = None  # can be derived from 'buf'
+                input_kind = dep[1]
+                if input_kind == "hip":
+                    max_len = 3
+                    if len(dep) >= max_len:
+                        hip_opts = dep[2]
+                else:
+                    max_len = 2
+            else:  # (buf, buf_len ,...)
+                err_begin = f"{err_begin} (interpreted as buffer specification): "
+                buf = dep[0]
+                buf_len = dep[1]
+                if buf_len != None and not isinstance(buf_len, int):
+                    raise ValueError(
+                        f"{err_begin}tuple entry with index == 1 must be an 'int' (or 'None').{valid_formats}"
+                    )
+                if len(dep) > 2:
+                    if dep[2] != "hip":
+                        raise ValueError(
+                            f'{err_begin}tuple entry with index == 2 must be the literal "hip".{valid_formats}'
+                        )
+                    if len(dep) > 3:
+                        hip_opts = dep[3]
+                        max_len = 4
+                else:
+                    max_len = 2
+            if hip_opts:
+                if not isinstance(hip_opts, (list, str)):
+                    raise ValueError(
+                        f"{err_begin}tuple entry with index=={max_len} must be passed as 'str' or 'list'.{valid_formats}"
+                    )
+                if isinstance(hip_opts, str):
+                    hip_opts = shlex.split(hip_opts)
+            if len(dep) > max_len:
+                raise ValueError(
+                    f"{err_begin}too many tuple entries, expected: {max_len}.{valid_formats}"
+                )
+
+            return ((buf, buf_len), input_kind, hip_opts)
+
         # pre-order walk
         unprocessed_result = []
-        for dependency in HIPCodeLibrary._walk_linking_dependencies(self):
+        for i, dependency in enumerate(HIPCodeLibrary._walk_linking_dependencies(self)):
             if isinstance(dependency, HIPCodeLibrary):
                 if link_time:
                     add_(dependency.get_unlinked_llvm_ir(amdgpu_arch))
@@ -345,7 +437,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                     add_(str(dependency._module))
             elif isinstance(dependency, str):  # an LLVM IR/BC file
                 fileext = os.path.basename(dependency).split(os.path.extsep)[-1]
-                if fileext in self.LLVM_IR_EXT:  # 'ptx' is interpreted as 'll'.
+                if fileext in LLVM_IR_EXT:  # 'ptx' is interpreted as 'll'.
                     mode = "rb" if fileext == "bc" else "r"
                     add_(process_buf_(_read_file(dependency, mode)), dep_id=dependency)
                 elif link_time:  # assumes HIP C++
@@ -358,19 +450,12 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 else:  # assumes HIP C++
                     add_(_read_file(dependency, "r"), dep_id=dependency)
             elif isinstance(dependency, tuple):  # an LLVM IR/BC buffer
-                if len(dependency) == 2:  # always assume LLVM IR/BC
-                    add_(process_buf_(*dependency))
-                elif len(dependency) == 3:
-                    fileext = dependency[2]
-                    if fileext in self.LLVM_IR_EXT:
-                        add_(process_buf_(*dependency[:2]))
-                    else:  # assumes HIP C++
-                        add_(
-                            compile_hiprtc_program_(dependency[0], name=dependency),
-                        )
+                ((buf, buf_len), input_kind, hip_opts) = handle_tuple_(dependency)
+                if input_kind == "ll":  # always assume LLVM IR/BC
+                    add_(process_buf_(buf, buf_len))
                 else:
-                    raise RuntimeError(
-                        "tuple dependency specifications must have length 2 '(buffer, buffer-len or None)' or 3 '(buffer, buffer-len or None, file-ext)'"
+                    add_(
+                        compile_hiprtc_program_(buf, name=dependency[0], opts=hip_opts),
                     )
             else:
                 raise RuntimeError(
@@ -457,7 +542,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             `HIPCodeLibrary.get_raw_source_strs`
         """
         if linked:
-            return llvmutils.to_ir_fast(self.get_linked_llvm_ir(amdgpu_arch)).decode("utf-8")
+            return llvmutils.to_ir_fast(self.get_linked_llvm_ir(amdgpu_arch)).decode(
+                "utf-8"
+            )
         else:
             return bundle_file_contents(self.get_unlinked_llvm_strs(amdgpu_arch))
 
@@ -895,73 +982,46 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         # because our linked libraries are modified by the finalization, and we
         # won't be able to finalize again after adding new ones
         self._raise_if_finalized()
-
         self._linking_dependencies.append(library)
-
-    def add_linking_ir(self, mod, mod_len: int = -1):
-        """Add LLVM IR/BC buffers or ROCm LLVM Python module types as link-time dependency.
-
-        Args:
-            mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-                Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
-            mod_len (`int`, optional):
-                Length of the LLVM IR/BC buffer. Must be supplied if it cannot
-                be obtained via ``len(mod)``. Not used at all if ``mod`` is an instance of
-                `rocm.llvm.c.types.LLVMOpaqueModule`.
-        Note:
-            Only append an IR linking dependency once.
-            This is an API that must be used explicitly
-            by users. The users must ensure correct order
-            of inputs.
-        """
-        self._linking_dependencies.append((mod, mod_len))
-
-    def add_linking_file(self, filepath: str):
-        """Add files in formats such as HIP C++ or LLVM IR/BC as link-time dependency.
-
-        Note:
-            Simple HIP C++ files that can be compiled via HIPRTC and do not
-            require additional includes or compiler arguments can be
-            specified as dependencies too.
-
-            If compilation of a HIP C++ file is more complicated,
-            it is better to use the `numba.hip.hipdrv.hiprtc`
-            or `numba.hip.util.comgrutils` APIs directly to
-            create an LLVM IR/BC buffer that can then be specified
-            as dependency to this `HIPCodeLibrary` via `HIPCodeLibrary.add_linking_ir`
-            or `HIPCodeLibrary.add_linking_dependency`.
-
-        Note:
-            Only append an IR linking dependency once.
-            This is an API that must be used explicitly
-            by users. The users must ensure correct order
-            of inputs.
-        """
-        self._linking_dependencies.append(filepath)
 
     def add_linking_dependency(self, dependency):
         """Adds linking dependency in one of the supported formats.
 
-        Args:
-            dependency (`object`):
-                1. HIPCodeLibrary objects that will be "linked" into this library. The
-                   modules within them are compiled to LLVM IR along with the
-                   IR from this module - in that sense they are "linked" by LLVM IR
-                   generation time, rather than at link time.
-                   See `add_linking_library` for more details.
-                2. LLVM IR/BC or ROCm LLVM Python module types to link with the
-                   generated LLVM IR. These are linked using the Driver API at
-                   link time. See `add_linking_ir` for more details.
-                3. Files to link with the generated LLVM IR. These are linked using the
-                   Driver API at link time. See `HIPCodeLibrary.add_linking_file` for more details.
+        The 'dependency' argument can have one of the following types:
+
+            library:`HIPCodeLibrary`:
+                A `HIPCodelibrary` object.
+            filepath:`str`:
+                A file path. The file extension decides if the file is interpreted
+                as LLVM IR/BC or as HIP C++ input. See `LLVM_IR_EXT` for file extensions that get interpreted as LLVM IR/BC files
+                (default: 'll', 'bc', 'ptx'). Files with other extensions are assumed to be HIP C++ files.
+            A `tuple` (filepath:`str`, kind: "ll"):
+                LLVM IR/BC file (#0), e.g., with unconventional file extension.
+            A `tuple` (filepath:`str`, kind: "hip")
+                HIP C++ file (#0).
+            A `tuple` (filepath:`str`, kind: "hip", opts: opts:`str`|`list`)
+                HIP C++ file (#0) with compile options (#2).
+            A `tuple` (buffer:`str`|bytes-like, len:`int`|None)
+                LLVM IR/BC buffer (#0) with len (#1).
+            A `tuple` (buffer:`str`|bytes-like, len:`int`|None, kind:"hip")
+                HIP C++ buffer (#0) with len (#1).
+            A `tuple`(buffer:`str`|bytes-like, len:`int`|None, kind:"hip", opts:`str`|`list`)
+                HIP C++ buffer (#0) with len (#1) and compile options (#3).
+
+        Note:
+            Objects of type 'HIPCodeLibrary' can only be added if this instance's linking has not
+            been finalized yet. We don't want to allow linking more libraries
+            in after finalization because our linked libraries are modified by
+            the finalization, and we won't be able to finalize again after adding new ones.
         """
         if isinstance(dependency, HIPCodeLibrary):
-            self._raise_if_finalized()
+            self.add_linking_library(dependency)
+            return
         elif isinstance(dependency, str):  # this is a filepath
             pass
         elif isinstance(dependency, tuple):  # this is a
-            if len(dependency) not in (2, 3):
-                raise TypeError("expected tuple of length 2 or 3")
+            if len(dependency) not in (2, 3, 4):
+                raise TypeError("expected tuple of length 2, 3, or 4")
         else:
             raise TypeError(f"unexpected input of type {type(dependency)}")
         self._linking_dependencies.append(dependency)
@@ -1024,12 +1084,12 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             if (
                 isinstance(dependency, str)
                 and os.path.basename(dependency).split(os.path.extsep)[-1]
-                not in self.LLVM_IR_EXT
+                not in LLVM_IR_EXT
             )
             or (
                 isinstance(dependency, tuple)
                 and len(dependency) == 3
-                and dependency[2] not in self.LLVM_IR_EXT
+                and dependency[2] not in LLVM_IR_EXT
             )
         ]
         if any(

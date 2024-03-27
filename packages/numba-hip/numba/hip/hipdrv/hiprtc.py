@@ -55,6 +55,7 @@ import os
 import functools
 import threading
 import warnings
+import shlex
 
 _hiprtc_lock = threading.Lock()
 
@@ -227,7 +228,7 @@ class HIPRTC:
         return llvm_bc
 
 
-def compile(src, name, amdgpu_arch):
+def compile(src, name, amdgpu_arch, opts):
     """
     Compile a HIP C/C++ source to LLVM BC for a given architecture.
 
@@ -237,6 +238,8 @@ def compile(src, name, amdgpu_arch):
     :type name: str
     :param amdgpu_arch: The AMD GPU architecture string.
     :type name: str
+    :param opts: Additional compilation options. Inputs of type 'str' are split via `shlex.split`.
+    :type name: str or list
     :return: The compiled LLVM BC (`bytes`) and compilation log (`str`)
     :rtype: tuple
     """
@@ -254,7 +257,16 @@ def compile(src, name, amdgpu_arch):
     hipdrv_path = os.path.dirname(os.path.abspath(__file__))
     numba_hip = os.path.dirname(hipdrv_path)
     numba_include = f"-I{numba_hip}"
+
     options = [amdgpu_arch, "-fgpu-rdc", include, numba_include]
+
+    # Append user options
+    if isinstance(opts, str):
+        options += shlex.split(opts)
+    elif isinstance(opts, list):
+        options += opts
+    elif opts:  # does not apply to "", [], None
+        raise ValueError("argument 'opts' must be 'str' or 'list'")
 
     # Compile the program
     compile_error = hiprtc.compile_program(program, options)
