@@ -56,7 +56,7 @@ for _name, _mod in list(sys.modules.items()):
 
 errors = _mr.create_and_register_derived_module(
     "errors",
-    preprocess=lambda content: content.replace("CudaLoweringError", "HipLoweringError"),
+    preprocess=lambda content: content.replace("Cuda", "Hip"),
 )  # make this a submodule of the package
 
 api = _mr.create_and_register_derived_module(

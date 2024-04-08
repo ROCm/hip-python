@@ -56,7 +56,7 @@ from numba.core.extending import make_attribute_wrapper, models, register_model
 from numba.core.typing.templates import ConcreteTemplate
 from numba.core.typing.templates import signature
 from numba.hip.typing_lowering.hip import hipstubs as stubs
-from numba.hip.errors import CudaLoweringError
+from numba.hip.errors import HipLoweringError
 
 from numba.hip.typing_lowering.registries import (
     typing_registry,
@@ -178,7 +178,7 @@ def enable_vector_type_ctor(
                     source_list.append(actual_args[argidx])
 
             if len(source_list) != vector_type.num_elements:
-                raise CudaLoweringError(
+                raise HipLoweringError(
                     f"Unmatched number of source elements ({len(source_list)}) "
                     "and target elements ({vector_type.num_elements})."
                 )
