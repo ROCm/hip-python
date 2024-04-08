@@ -20,8 +20,6 @@ from numba.core import config
 
 # ^ based on original code
 
-from . import _modulerepl  # ! must come before subpackages that may use it
-
 # -----------------------------------------------
 # Derived modules, make local packages submodules
 # -----------------------------------------------
@@ -33,7 +31,7 @@ import re
 from . import hipconfig
 from . import util
 
-_mr = _modulerepl.ModuleReplicator(
+_mr = util.modulerepl.ModuleReplicator(
     "numba.hip",
     os.path.join(os.path.dirname(__file__), "..", "cuda"),
     base_context=globals(),

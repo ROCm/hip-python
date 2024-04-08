@@ -14,7 +14,7 @@ assert not config.ENABLE_CUDASIM, "Cannot use real driver API with simulator"
 # Now follow the modules
 #-----------------------
 
-import numba.hip._modulerepl as _modulerepl
+import numba.hip.util.modulerepl as _modulerepl
 import os
 import re
 

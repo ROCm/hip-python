@@ -23,7 +23,7 @@
 import os
 import re
 
-import numba.hip._modulerepl as _modulerepl
+import numba.hip.util.modulerepl as _modulerepl
 
 _mr = _modulerepl.ModuleReplicator(
     "numba.hip.typing_lowering",
