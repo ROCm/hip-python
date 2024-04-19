@@ -47,6 +47,14 @@ pipeline {
         string defaultValue: 'codegen/base', description: 'The base branch from which to derive the new development branch.', name: 'BASE_BRANCH'
         editableChoice(
             choices: [
+                "mirror.math.ucdavis.edu",
+                "archive.ubuntu.com",
+            ],
+            description: 'Use a different Ubuntu mirror; see https://launchpad.net/ubuntu/+archivemirrors. First is default.',
+            name: 'APT_MIRROR'
+        )
+        editableChoice(
+            choices: [
                 'develop',
             ],
             description: 'The branch name will be constructed as `${DEVELOP_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
@@ -74,7 +82,10 @@ pipeline {
         }
         stage('get-release-repo') {
             steps {
-                sh 'apt-get update && apt-get -y install sudo'
+                sh '''#!/usr/bin/env bash
+                sed -i "s,archive.ubuntu.com,${APT_MIRROR},g" /etc/apt/sources.list
+                apt-get update && apt-get -y install sudo
+                '''
                 dir('recipes/python_cython/hip') {
                     sh 'bash ci/0-checkout-release-repo.sh'
                 }
