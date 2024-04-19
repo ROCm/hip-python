@@ -32,6 +32,7 @@ pipeline {
     parameters {
         editableChoice(
             choices: [
+                '6.0.1',
                 '6.0.0',
                 '5.7.1',
                 '5.7.0',
@@ -129,7 +130,7 @@ pipeline {
                sh '''#!/usr/bin/env bash
                set -x
                apt-get update && apt-get -y install docker.io
-               tag="build-${BUILD_ID}
+               tag="build-${BUILD_ID}"
                tmp=$(basename $(cat /proc/1/cpuset))
                container_hash=$(echo $tmp | sed -e 's/docker-//' -e 's/.scope//')
                docker commit ${container_hash} jenkins/debug_rocm_llvm_python:${tag}
