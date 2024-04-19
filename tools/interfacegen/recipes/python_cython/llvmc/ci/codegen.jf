@@ -127,6 +127,14 @@ pipeline {
                 }
             }
             steps {
+               dir('.') {
+                  sh '''#!/usr/bin/env bash
+                  # copy build folder content to /build so that it will be 
+                  # on the docker image and we can continue working on it
+                  mkdir /build
+                  cp -r * /build/
+                  '''
+               }
                sh '''#!/usr/bin/env bash
                set -x
                apt-get update && apt-get -y install docker.io
