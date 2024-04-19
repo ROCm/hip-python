@@ -59,6 +59,14 @@ pipeline {
             description: 'The codegenerator branch to use.',
             name: 'CODEGENERATOR_BRANCH'
         )
+        editableChoice(
+            choices: [
+                "mirror.math.ucdavis.edu",
+                "archive.ubuntu.com",
+            ],
+            description: 'Use a different Ubuntu mirror; see https://launchpad.net/ubuntu/+archivemirrors. First is default.',
+            name: 'UBUNTU_APT_MIRROR'
+        )
     }
     stages {
         stage('clean-ws') {
@@ -73,7 +81,10 @@ pipeline {
         }
         stage('get-release-repo') {
             steps {
-                sh 'apt-get update && apt-get -y install sudo'
+                sh '''#!/usr/bin/env bash
+                sed -i "s,archive.ubuntu.com,${UBUNTU_APT_MIRROR},g" /etc/apt/sources.list
+                apt-get update && apt-get -y install sudo
+                '''
                 withCredentials([
                     usernamePassword(credentialsId: 'ROCM_LLVM_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
                     string(credentialsId: 'ROCM_LLVM_PYTHON_DEV_EMAIL', variable: 'GITHUB_EMAIL')
