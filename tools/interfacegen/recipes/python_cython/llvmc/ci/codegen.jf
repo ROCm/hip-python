@@ -58,6 +58,13 @@ pipeline {
         )
         editableChoice(
             choices: [
+                "origin/main",
+            ],
+            description: 'Obtain release repo CI scripts from this branch. First entry is default.',
+            name: 'CI_BRANCH'
+        )
+        editableChoice(
+            choices: [
                 'main',
             ],
             description: 'The codegenerator branch to use.',
