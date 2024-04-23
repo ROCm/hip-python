@@ -58,7 +58,7 @@ pipeline {
         )
         editableChoice(
             choices: [
-                "origin/main",
+                "main",
             ],
             description: 'Obtain release repo CI scripts from this branch. First entry is default.',
             name: 'CI_BRANCH'
@@ -175,7 +175,10 @@ pipeline {
                     '''
                 }
                 dir('recipes/python_cython/llvmc') {
-                    sh 'git branch --set-upstream-to=origin/main main' // seems to be sometimes required
+                    // sh '''
+                    // git branch main
+                    // git branch --set-upstream-to=origin/main main
+                    // ''' // seems to be sometimes required
                     sh 'bash ci/2-generate-code.sh'
                     sh 'bash ci/3-generate-hiprtc-runtime.sh'
                     sh 'bash ci/4-get-rocm-llvm-project-clang-bindings.sh'
