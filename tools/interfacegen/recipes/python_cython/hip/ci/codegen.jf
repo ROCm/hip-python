@@ -132,6 +132,7 @@ pipeline {
                   sh '''#!/usr/bin/env bash
                   # copy build folder content to /build so that it will be 
                   # on the docker image and we can continue working on it
+                  rm -rf /build
                   mkdir /build
                   cp -r * /build/
                   '''
@@ -142,10 +143,10 @@ pipeline {
                tag="build-${BUILD_ID}"
                tmp=$(basename $(cat /proc/1/cpuset))
                container_hash=$(echo $tmp | sed -e 's/docker-//' -e 's/.scope//')
-               docker commit ${container_hash} jenkins/debug_rocm_llvm_python:${tag}
+               docker commit ${container_hash} jenkins/debug_hip_python:${tag}
                # This is a workaround for image automatically getting deleted on the hpe server
-               docker run -d -it --network=host --device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --name debug_rocm_llvm_python_${tag} --security-opt seccomp=unconfined -v $HOME:/home/ jenkins/debug_rocm_llvm_python:${tag} /bin/bash
-               docker stop debug_rocm_llvm_python_${tag}
+               docker run -d -it --network=host --device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --name debug_hip_python_${tag} --security-opt seccomp=unconfined -v $HOME:/home/ jenkins/debug_hip_python:${tag} /bin/bash
+               docker stop debug_hip_python_${tag}
                '''
             }
         }
@@ -189,6 +190,35 @@ pipeline {
                     sh 'bash ci/1-install-conda.sh'
                     sh 'bash ci/2-create-conda-envs.sh'
                 }
+            }
+        }
+        stage('save-image') {
+            when {
+               allOf {
+                    environment name: 'SAVE_IMAGE', value: 'true'
+                }
+            }
+            steps {
+               dir('.') {
+                  sh '''#!/usr/bin/env bash
+                  # copy build folder content to /build so that it will be 
+                  # on the docker image and we can continue working on it
+                  rm -rf /build
+                  mkdir /build
+                  cp -r * /build/
+                  '''
+               }
+               sh '''#!/usr/bin/env bash
+               set -x
+               apt-get update && apt-get -y install docker.io
+               tag="build-${BUILD_ID}"
+               tmp=$(basename $(cat /proc/1/cpuset))
+               container_hash=$(echo $tmp | sed -e 's/docker-//' -e 's/.scope//')
+               docker commit ${container_hash} jenkins/debug_hip_python:${tag}
+               # This is a workaround for image automatically getting deleted on the hpe server
+               docker run -d -it --network=host --device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --name debug_hip_python_${tag} --security-opt seccomp=unconfined -v $HOME:/home/ jenkins/debug_hip_python:${tag} /bin/bash
+               docker stop debug_hip_python_${tag}
+               '''
             }
         }
         stage('build-and-test') {
