@@ -29,6 +29,9 @@ pipeline {
             args '--device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
         }
     }
+    environment {
+        CONDA_DIR = '/opt/conda'
+    }
     parameters {
         editableChoice(
             choices: [
