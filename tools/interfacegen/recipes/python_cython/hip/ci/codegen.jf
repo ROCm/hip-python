@@ -121,7 +121,7 @@ pipeline {
                 }
             }
         }
-        stage('save-image') {
+        stage('save-image-1') {
             when {
                allOf {
                     environment name: 'SAVE_IMAGE', value: 'true'
@@ -192,7 +192,7 @@ pipeline {
                 }
             }
         }
-        stage('save-image') {
+        stage('save-image-2') {
             when {
                allOf {
                     environment name: 'SAVE_IMAGE', value: 'true'
