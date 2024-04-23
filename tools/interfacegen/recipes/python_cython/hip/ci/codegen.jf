@@ -32,6 +32,7 @@ pipeline {
     parameters {
         editableChoice(
             choices: [
+                '6.1.0',
                 '6.0.0',
                 '5.7.1',
                 '5.7.0',
@@ -67,6 +68,11 @@ pipeline {
             ],
             description: 'Use a different Ubuntu mirror; see https://launchpad.net/ubuntu/+archivemirrors. First is default.',
             name: 'UBUNTU_APT_MIRROR'
+        )
+        booleanParam (
+            defaultValue: false,
+            description: 'Save built docker container as image into local host docker registry.',
+            name: 'SAVE_IMAGE'
         )
     }
     stages {
@@ -113,6 +119,34 @@ pipeline {
                 dir('recipes/python_cython/hip') {
                     sh 'SET_TIMEZONE=1 bash ci/1-install-rocm.sh'
                 }
+            }
+        }
+        stage('save-image') {
+            when {
+               allOf {
+                    environment name: 'SAVE_IMAGE', value: 'true'
+                }
+            }
+            steps {
+               dir('.') {
+                  sh '''#!/usr/bin/env bash
+                  # copy build folder content to /build so that it will be 
+                  # on the docker image and we can continue working on it
+                  mkdir /build
+                  cp -r * /build/
+                  '''
+               }
+               sh '''#!/usr/bin/env bash
+               set -x
+               apt-get update && apt-get -y install docker.io
+               tag="build-${BUILD_ID}"
+               tmp=$(basename $(cat /proc/1/cpuset))
+               container_hash=$(echo $tmp | sed -e 's/docker-//' -e 's/.scope//')
+               docker commit ${container_hash} jenkins/debug_rocm_llvm_python:${tag}
+               # This is a workaround for image automatically getting deleted on the hpe server
+               docker run -d -it --network=host --device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --name debug_rocm_llvm_python_${tag} --security-opt seccomp=unconfined -v $HOME:/home/ jenkins/debug_rocm_llvm_python:${tag} /bin/bash
+               docker stop debug_rocm_llvm_python_${tag}
+               '''
             }
         }
         stage('generate-code') {
