@@ -29,6 +29,9 @@ pipeline {
             args '--device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined'
         }
     }
+    environment {
+        CONDA_DIR = '/opt/conda'
+    }
     parameters {
         editableChoice(
             choices: [
@@ -52,6 +55,13 @@ pipeline {
             ],
             description: 'The branch name will be constructed as `${DEVELOP_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}`. `develop` is first to make it default.',
             name: 'DEVELOP_BRANCH_PREFIX'
+        )
+        editableChoice(
+            choices: [
+                "origin/main",
+            ],
+            description: 'Obtain release repo CI scripts from this branch. First entry is default.',
+            name: 'CI_BRANCH'
         )
         editableChoice(
             choices: [
