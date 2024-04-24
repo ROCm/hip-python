@@ -31,7 +31,8 @@ fi
 set -e
 set -o xtrace
 
-source ~/miniconda3/etc/profile.d/conda.sh
+CONDA_DIR=${CONDA_DIR:-~/miniconda3}
+source ${CONDA_DIR}/etc/profile.d/conda.sh
 pyver=38
 conda activate py${pyver}
 ./build_hip_python_pkgs.sh --pre-clean --post-clean --hip --cuda --run-tests -j ${NUM_JOBS:-16}
