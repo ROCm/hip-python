@@ -29,8 +29,9 @@ fi
 set -e
 set -o xtrace
 
-mkdir -p ~/miniconda3
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-rm -rf ~/miniconda3/miniconda.sh
-~/miniconda3/bin/conda init bash
+CONDA_DIR=${CONDA_DIR:-~/miniconda3}
+mkdir -p ${CONDA_DIR}
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ${CONDA_DIR}/miniconda.sh
+bash ${CONDA_DIR}/miniconda.sh -b -u -p ${CONDA_DIR}
+rm -rf ${CONDA_DIR}/miniconda.sh
+${CONDA_DIR}/bin/conda init bash
