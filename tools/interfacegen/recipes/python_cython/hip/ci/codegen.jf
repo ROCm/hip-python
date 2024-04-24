@@ -224,7 +224,7 @@ pipeline {
                tag="build-${BUILD_ID}"
                tmp=$(basename $(cat /proc/1/cpuset))
                container_hash=$(echo $tmp | sed -e 's/docker-//' -e 's/.scope//')
-               docker image -f ${container_hash} jenkins/debug_hip_python:${tag} || true # ATT: remove stage 'save-image-1' image
+               docker image rm -f ${container_hash} jenkins/debug_hip_python:${tag} || true # ATT: remove stage 'save-image-1' image
                docker commit ${container_hash} jenkins/debug_hip_python:${tag}
                # This is a workaround for image automatically getting deleted on the hpe server
                docker run -d -it --network=host --device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --name debug_hip_python_${tag} --security-opt seccomp=unconfined -v $HOME:/home/ jenkins/debug_hip_python:${tag} /bin/bash
