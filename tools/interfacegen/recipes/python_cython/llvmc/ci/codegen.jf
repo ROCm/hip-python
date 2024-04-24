@@ -230,6 +230,7 @@ pipeline {
                docker image rm -f ${container_hash} jenkins/debug_rocm_llvm_python:${tag} || true # ATT: remove stage 'save-image-1' image
                docker commit ${container_hash} jenkins/debug_rocm_llvm_python:${tag}
                # This is a workaround for image automatically getting deleted on the hpe server
+               docker rm -f debug_rocm_llvm_python_${tag} || true # ATT: remove 'save-image-1' container
                docker run -d -it --network=host --device=/dev/kfd --device=/dev/dri --group-add=video --ipc=host --cap-add=SYS_PTRACE --name debug_rocm_llvm_python_${tag} --security-opt seccomp=unconfined -v $HOME:/home/ jenkins/debug_rocm_llvm_python:${tag} /bin/bash
                docker stop debug_rocm_llvm_python_${tag}
                '''
