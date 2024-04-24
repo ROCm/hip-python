@@ -58,7 +58,7 @@ pipeline {
         )
         editableChoice(
             choices: [
-                "origin/main",
+                "main",
             ],
             description: 'Obtain release repo CI scripts from this branch. First entry is default.',
             name: 'CI_BRANCH'
