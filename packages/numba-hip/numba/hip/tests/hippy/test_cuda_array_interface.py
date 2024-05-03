@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -108,8 +108,6 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         # Flush
         deallocs.clear()
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_kernel_arg(self):
         h_arr = np.arange(10)
         d_arr = cuda.to_device(h_arr)
@@ -139,7 +137,7 @@ class TestCudaArrayInterface(ContextResettingTestCase):
     # File "/root/miniconda3/envs/py39/lib/python3.9/site-packages/numba/core/registry.py", line 100, in __getitem__
     #     return super(DelayedRegistry, self).__getitem__(item)
     # KeyError: 'hip'
-    @unittest.skip("TODO HIP requires JIT + target hip must be supported")
+    #@unittest.skip("TODO HIP requires JIT + target hip must be supported")
     def test_ufunc_arg(self):
         @vectorize(["f8(f8, f8)"], target="hip")
         def vadd(a, b):
