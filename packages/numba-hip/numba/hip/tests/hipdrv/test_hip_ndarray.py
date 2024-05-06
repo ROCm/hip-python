@@ -239,15 +239,11 @@ class TestCudaNDArray(CUDATestCase):
             " of the last axis of the array.",
             str(e.exception))
 
-    # TODO(HIP/AMD) requires JIT
-    @unittest.skip("TODO(HIP/AMD) requires JIT + numba.hip.kernels")
     def test_devicearray_transpose_ok(self):
         original = np.array(np.arange(12)).reshape(3, 4)
         array = np.transpose(cuda.to_device(original)).copy_to_host()
         self.assertTrue(np.all(array == original.T))
 
-    # TODO(HIP/AMD) requires JIT
-    @unittest.skip("TODO(HIP/AMD) requires JIT + numba.hip.kernels")
     def test_devicearray_transpose_T(self):
         original = np.array(np.arange(12)).reshape(3, 4)
         array = cuda.to_device(original).T.copy_to_host()
@@ -508,8 +504,6 @@ class TestCudaNDArray(CUDATestCase):
 
 
 class TestRecarray(CUDATestCase):
-    # TODO(HIP/AMD) requires JIT
-    @unittest.skip("TODO(HIP/AMD) requires JIT")
     def test_recarray(self):
         # From issue #4111
         a = np.recarray((16,), dtype=[
@@ -551,8 +545,6 @@ class TestCoreContiguous(CUDATestCase):
         d_a = cuda.device_array((10, 12), order='C')
         self._test_against_array_core(d_a)
 
-    # TODO(HIP/AMD) requires JIT
-    @unittest.skip("TODO(HIP/AMD) requires JIT")
     def test_device_array_like_2d_transpose(self):
         d_a = cuda.device_array((10, 12), order='C')
         self._test_against_array_core(d_a.T)
@@ -569,8 +561,6 @@ class TestCoreContiguous(CUDATestCase):
         d_a = cuda.device_array((10, 12), order='F')
         self._test_against_array_core(d_a)
 
-    # TODO(HIP/AMD) requires JIT
-    @unittest.skip("TODO(HIP/AMD) requires JIT")
     def test_device_array_like_2d_f_transpose(self):
         d_a = cuda.device_array((10, 12), order='F')
         self._test_against_array_core(d_a.T)

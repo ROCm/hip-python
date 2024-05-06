@@ -132,6 +132,7 @@ from . import decorators
 from . import descriptor
 from . import dispatcher
 from . import target
+from . import kernels
 from . import testing
 from . import tests
 
