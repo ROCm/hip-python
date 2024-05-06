@@ -31,12 +31,14 @@ from rocm.amd_comgr import amd_comgr as comgr
 
 
 def test_00_print_datalayout():
-    pprint.pprint(comgr.ext.get_isa_metadata_all())
+    # pprint.pprint(comgr.ext.get_isa_metadata_all())
     # pprint.pprint(ISA_INFOS)
     machine = AMDGPUTargetMachine(target_cpu="gfx90a")
     assert (
-        machine.data_layout
-        == "e-p:64:64-p1:64:64-p2:32:32-p3:32:32-p4:64:64-p5:32:32-p6:32:32-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64-S32-A5-G1-ni:7"
+        machine.data_layout in (
+          "e-p:64:64-p1:64:64-p2:32:32-p3:32:32-p4:64:64-p5:32:32-p6:32:32-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64-S32-A5-G1-ni:7",
+          "e-p:64:64-p1:64:64-p2:32:32-p3:32:32-p4:64:64-p5:32:32-p6:32:32-p7:160:256:256:32-p8:128:128-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64-S32-A5-G1-ni:7:8",
+        )
     )
 
 
@@ -59,7 +61,7 @@ def test_01_verify_module():
         """\
         ; ModuleID = 'dep.hip'
         source_filename = "dep.hip"
-        target datalayout = "e-p:64:64-p1:64:64-p2:32:32-p3:32:32-p4:64:64-p5:32:32-p6:32:32-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64-S32-A5-G1-ni:7"
+        target datalayout = "DATA_LAYOUT"
         target triple = "amdgcn-amd-amdhsa"
 
         ; Function Attrs: mustprogress nofree nosync nounwind willreturn memory(argmem: readwrite)
@@ -85,7 +87,7 @@ def test_01_verify_module():
         !3 = !{!"float", !4, i64 0}
         !4 = !{!"omnipotent char", !5, i64 0}
         !5 = !{!"Simple C++ TBAA"}
-        """
+        """.replace("DATA_LAYOUT",machine.data_layout)
     )
     machine.optimize_module(dep_llvm_ir, passes="default<O3>").decode("utf-8")
     # machine.verify_module(dep_llvm_ir) # TODO get strange error 'Attribute does not match Module context!'
