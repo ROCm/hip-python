@@ -127,13 +127,13 @@ def skip_if_external_memmgr(reason):
 def skip_under_hip_memcheck(reason):
     return unittest.skipIf(os.environ.get('CUDA_MEMCHECK') is not None, _hipify_reason(reason))
 
-# TODO HIP not supported
+# TODO(HIP/AMD) not supported
 # def skip_without_nvdisasm(reason):
 #     nvdisasm_path = shutil.which('nvdisasm')
 #     return unittest.skipIf(nvdisasm_path is None, reason)
 
 
-# TODO HIP not supported
+# TODO(HIP/AMD) not supported
 # def skip_with_nvdisasm(reason):
 #     nvdisasm_path = shutil.which('nvdisasm')
 #     return unittest.skipIf(nvdisasm_path is not None, reason)
@@ -155,13 +155,13 @@ def skip_if_hip_includes_missing(fn):
 
 skip_if_cuda_includes_missing = skip_if_hip_includes_missing
 
-# TODO HIP not supported
+# TODO(HIP/AMD) not supported
 # def skip_if_mvc_enabled(reason):
 #     """Skip a test if Minor Version Compatibility is enabled"""
 #     return unittest.skipIf(config.CUDA_ENABLE_MINOR_VERSION_COMPATIBILITY,
 #                            reason)
 
-# TODO HIP not supported
+# TODO(HIP/AMD) not supported
 # def skip_if_mvc_libraries_unavailable(fn):
 #     libs_available = False
 #     try:
@@ -174,7 +174,7 @@ skip_if_cuda_includes_missing = skip_if_hip_includes_missing
 #     return unittest.skipUnless(libs_available,
 #                                "Requires cubinlinker and ptxcompiler")(fn)
 
-# TODO HIP not supported
+# TODO(HIP/AMD) not supported
 # def cc_X_or_above(major, minor):
 #     if not config.ENABLE_CUDASIM:
 #         cc = devices.get_context().device.compute_capability
@@ -198,7 +198,7 @@ skip_if_cuda_includes_missing = skip_if_hip_includes_missing
 # def skip_unless_cc_75(fn):
 #     return unittest.skipUnless(cc_X_or_above(7, 5), "requires cc >= 7.5")(fn)
 
-# TODO HIP not supported
+# TODO(HIP/AMD) not supported
 # def xfail_unless_hipsim(fn):
 #     if config.ENABLE_CUDASIM:
 #         return fn
@@ -208,7 +208,7 @@ skip_if_cuda_includes_missing = skip_if_hip_includes_missing
 def skip_with_cuda_python(reason):
     return unittest.skipIf(driver.USE_NV_BINDING, reason)
 
-# TODO HIP not supported
+# TODO(HIP/AMD) not supported
 # def hipdevrt_missing():
 #     if config.ENABLE_CUDASIM:
 #         return False

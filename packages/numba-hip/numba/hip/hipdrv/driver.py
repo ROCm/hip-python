@@ -105,7 +105,7 @@ if USE_NV_BINDING:
 
     # HIP (via hip/hip_runtime_api.h)
     HIP_STREAM_LEGACY = (
-        0  # TODO HIP check if legacy stream can be replaced by default stream
+        0  # TODO(HIP/AMD) check if legacy stream can be replaced by default stream
     )
     HIP_STREAM_PER_THREAD = 2
 
@@ -1235,10 +1235,10 @@ class Context(object):
         b2d_cb = ctypes.CFUNCTYPE(c_size_t, c_int)(b2d_func)
         ptr = int.from_bytes(b2d_cb, byteorder="little")
 
-        # driver_b2d_cb = binding.CUoccupancyB2DSize(ptr) # TODO HIP arg not necessary; why?
+        # driver_b2d_cb = binding.CUoccupancyB2DSize(ptr) # TODO(HIP/AMD) arg not necessary; why?
         args = [
             func.handle,
-            # driver_b2d_cb,  # TODO HIP arg not necessary; why?
+            # driver_b2d_cb,  # TODO(HIP/AMD) arg not necessary; why?
             memsize,
             blocksizelimit,
         ]
@@ -2534,7 +2534,7 @@ class CudaPythonLinker(Linker):
         linkerinfo = bytearray(logsz)
         linkererrors = bytearray(logsz)
 
-        # TODO HIP/AMD: as of ROCM 6.0, all options HIPRTC_JIT* options except *_EXT_* are ignored by HIPRTC.
+        # TODO(HIP/AMD)/AMD: as of ROCM 6.0, all options HIPRTC_JIT* options except *_EXT_* are ignored by HIPRTC.
         options = dict(
             HIPRTC_JIT_INFO_LOG_BUFFER=linkerinfo,
             HIPRTC_JIT_INFO_LOG_BUFFER_SIZE_BYTES=logsz,

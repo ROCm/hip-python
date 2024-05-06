@@ -201,7 +201,7 @@ class HIPTargetContext(BaseContext):
         """
         from numba import hip
 
-        nonconsts = (  # TODO HIP check this
+        nonconsts = (  # TODO(HIP/AMD) check this
             "threadIdx",
             "blockDim",
             "blockIdx",

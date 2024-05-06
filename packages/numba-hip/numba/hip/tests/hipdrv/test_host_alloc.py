@@ -54,7 +54,7 @@ from numba.hip.testing import unittest, ContextResettingTestCase
 class TestHostAlloc(ContextResettingTestCase):
 
     @unittest.skip(
-        "TODO HIP hipHostMalloc with CU_MEMHOSTALLOC_DEVICEMAP seems to not have any effect"
+        "TODO(HIP/AMD) hipHostMalloc with CU_MEMHOSTALLOC_DEVICEMAP seems to not have any effect"
     )
     def test_host_alloc_driver(self):
         n = 32
@@ -67,7 +67,7 @@ class TestHostAlloc(ContextResettingTestCase):
 
         magic = 0xAB
         driver.device_memset(mem, magic, n)
-        # TODO HIP mapped=True implies that this should be done by the runtime
+        # TODO(HIP/AMD) mapped=True implies that this should be done by the runtime
         self.assertTrue(np.all(ary == magic))
 
         ary.fill(n)
@@ -79,7 +79,7 @@ class TestHostAlloc(ContextResettingTestCase):
         self.assertTrue(np.all(ary == recv))
         self.assertTrue(np.all(recv == n))
 
-    @unittest.skip("TODO HIP memcpyD2H to pinned array seems not to have any effect")
+    @unittest.skip("TODO(HIP/AMD) memcpyD2H to pinned array seems not to have any effect")
     def test_host_alloc_pinned(self):
         ary = cuda.pinned_array(10, dtype=np.uint32)
         ary.fill(123)
@@ -91,7 +91,7 @@ class TestHostAlloc(ContextResettingTestCase):
         self.assertTrue(all(ary == 0))
 
     @unittest.skip(
-        "TODO HIP hipHostMalloc with CU_MEMHOSTALLOC_DEVICEMAP seems to not have any effect"
+        "TODO(HIP/AMD) hipHostMalloc with CU_MEMHOSTALLOC_DEVICEMAP seems to not have any effect"
     )
     def test_host_alloc_mapped(self):
         ary = cuda.mapped_array(10, dtype=np.uint32)

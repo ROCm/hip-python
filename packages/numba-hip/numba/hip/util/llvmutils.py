@@ -147,7 +147,7 @@ def _parse_llvm_ir(ir, ir_len: int = -1):
         0,
     )
     # (status, mod, message)
-    # TODO HIP check memory, mod seems to take ownership of the buffer
+    # TODO(HIP/AMD) check memory, mod seems to take ownership of the buffer
     return LLVMParseIRInContext(LLVMGetGlobalContext(), buf)
 
 
@@ -178,7 +178,7 @@ def _get_module(ir, ir_len: int = -1):
         LLVMDisposeMessage(err_cstr)
         if mod:
             LLVMDisposeModule(mod)
-        # LLVMDisposeMemoryBuffer(ir_buf) mod seems to take ownership of the buffer # TODO HIP check memory
+        # LLVMDisposeMemoryBuffer(ir_buf) mod seems to take ownership of the buffer # TODO(HIP/AMD) check memory
         raise ValueError(
             "input 'buf' seems to be neither valid LLVM bitcode nor LLVM assembly.\n\n"
             f"Reason: {errmsg}"

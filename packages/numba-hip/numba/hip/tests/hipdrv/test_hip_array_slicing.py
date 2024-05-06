@@ -53,7 +53,7 @@ from numba import hip as cuda
 from numba.hip.testing import (
     unittest,
     HIPTestCase as CUDATestCase,
-)  # , skip_on_cudasim TODO HIP enable simulator
+)  # , skip_on_cudasim TODO(HIP/AMD) enable simulator
 from unittest.mock import patch
 
 
@@ -200,7 +200,7 @@ class CudaArraySlicing(CUDATestCase):
         # print(a[0,0,:])
         da = cuda.to_device(a)
 
-        ## TODO HIP non-contiguous memcopy fails
+        ## TODO(HIP/AMD) non-contiguous memcopy fails
         # for i in range(a.shape[0]):
         #     for j in range(a.shape[1]):
         #         suba = a[i, j, :]
@@ -208,7 +208,7 @@ class CudaArraySlicing(CUDATestCase):
         #         print(f"a[{i},{j},:] size={suba.size*suba.itemsize}")
         #         self.assertTrue(np.array_equal(da[i, j, :].copy_to_host(),
         #                                        a[i, j, :]))
-        ## TODO HIP non-contiguous memcopy fails
+        ## TODO(HIP/AMD) non-contiguous memcopy fails
         # for j in range(a.shape[2]):
         #     self.assertTrue(np.array_equal(da[i, :, j].copy_to_host(),
         #                                    a[i, :, j]))
@@ -233,13 +233,13 @@ class CudaArraySlicing(CUDATestCase):
                 # z-y slice, x stride is 1 (8 B, double)
                 # print(f"\nNEW {i},{j}\n")
                 self.assertTrue(np.array_equal(da[i, j, :].copy_to_host(), a[i, j, :]))
-            ## TODO HIP non-contiguous memcopy fails
+            ## TODO(HIP/AMD) non-contiguous memcopy fails
             # for j in range(a.shape[2]):
             #     # z-x slice, y stride is 7 (56 B, 7x double), size of a z-x-slice is 6 (48 B).
             #     # print(f"\nNEW {i},{j}\n")
             #     self.assertTrue(np.array_equal(da[i, :, j].copy_to_host(),
             #                                    a[i, :, j]))
-        ## TODO HIP non-contiguous memcopy fails
+        ## TODO(HIP/AMD) non-contiguous memcopy fails
         # for i in range(a.shape[1]):
         #     for j in range(a.shape[2]):
         #         self.assertTrue(np.array_equal(da[:, i, j].copy_to_host(),
@@ -306,8 +306,8 @@ class CudaArraySetting(CUDATestCase):
         darr[2] = 500
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP segmentation fault
-    @unittest.skip("TODO HIP segmentation fault")
+    # TODO(HIP/AMD) segmentation fault
+    @unittest.skip("TODO(HIP/AMD) segmentation fault")
     def test_broadcast(self):
         arr = np.arange(5 * 7).reshape(5, 7)
         darr = cuda.to_device(arr)
@@ -323,8 +323,8 @@ class CudaArraySetting(CUDATestCase):
         darr[2] = _400
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP segmentation fault
-    @unittest.skip("TODO HIP segmentation fault")
+    # TODO(HIP/AMD) segmentation fault
+    @unittest.skip("TODO(HIP/AMD) segmentation fault")
     def test_array_assign_row(self):
         arr = np.arange(5 * 7).reshape(5, 7)
         darr = cuda.to_device(arr)
@@ -341,8 +341,8 @@ class CudaArraySetting(CUDATestCase):
         darr[2] = _400
         np.testing.assert_array_equal(darr.copy_to_host(), arr)
 
-    # TODO HIP segmentation fault
-    @unittest.skip("TODO HIP segmentation fault")
+    # TODO(HIP/AMD) segmentation fault
+    @unittest.skip("TODO(HIP/AMD) segmentation fault")
     def test_array_assign_deep_subarray(self):
         arr = np.arange(5 * 6 * 7 * 8).reshape(5, 6, 7, 8)
         darr = cuda.to_device(arr)

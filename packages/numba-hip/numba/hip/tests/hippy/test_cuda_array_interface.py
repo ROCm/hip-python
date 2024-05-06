@@ -127,7 +127,7 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         np.testing.assert_array_equal(wrapped.copy_to_host(), h_arr + val)
         np.testing.assert_array_equal(d_arr.copy_to_host(), h_arr + val)
 
-    # TODO HIP requires JIT
+    # TODO(HIP/AMD) requires JIT
     # ======================================================================
     # ERROR: test_ufunc_arg (__main__.TestCudaArrayInterface)
     # ----------------------------------------------------------------------
@@ -137,7 +137,7 @@ class TestCudaArrayInterface(ContextResettingTestCase):
     # File "/root/miniconda3/envs/py39/lib/python3.9/site-packages/numba/core/registry.py", line 100, in __getitem__
     #     return super(DelayedRegistry, self).__getitem__(item)
     # KeyError: 'hip'
-    #@unittest.skip("TODO HIP requires JIT + target hip must be supported")
+    @unittest.skip("TODO(HIP/AMD) target 'hip' must be supported")
     def test_ufunc_arg(self):
         @vectorize(["f8(f8, f8)"], target="hip")
         def vadd(a, b):
@@ -155,7 +155,7 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         returned = vadd(h_arr, val, out=out)
         np.testing.assert_array_equal(returned.copy_to_host(), h_arr + val)
 
-    # TODO HIP requires JIT
+    # TODO(HIP/AMD) requires JIT
     # ======================================================================
     # ERROR: test_gufunc_arg (__main__.TestCudaArrayInterface)
     # ----------------------------------------------------------------------
@@ -165,7 +165,7 @@ class TestCudaArrayInterface(ContextResettingTestCase):
     #   File "/root/miniconda3/envs/py39/lib/python3.9/site-packages/numba/core/registry.py", line 100, in __getitem__
     #     return super(DelayedRegistry, self).__getitem__(item)
     # KeyError: 'hip'
-    @unittest.skip("TODO HIP requires JIT + target hip must be supported")
+    @unittest.skip("TODO(HIP/AMD) target 'hip' must be supported")
     def test_gufunc_arg(self):
         @guvectorize(["(f8, f8, f8[:])"], "(),()->()", target="hip")
         def vadd(inp, val, out):
@@ -184,8 +184,6 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         np.testing.assert_array_equal(returned.copy_to_host(), h_arr + val)
         self.assertPointersEqual(returned, out._arr)
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_array_views(self):
         """Views created via array interface support:
         - Strided slices
@@ -294,19 +292,6 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         expected_msg = "Masked arrays are not supported"
         self.assertIn(expected_msg, str(raises.exception))
 
-    # TODO HIP requires JIT
-    # ======================================================================
-    # ERROR: test_zero_size_array (__main__.TestCudaArrayInterface)
-    # ----------------------------------------------------------------------
-    # Traceback (most recent call last):
-    # File "/home/mohammad/docharri/rocnumba2/numba/hip/tests/test_hip_array_interface.py", line 261, in test_zero_size_array
-    #     add_one[1, 10](d_arr)  # this should pass
-    # File "/root/miniconda3/envs/py39/lib/python3.9/site-packages/numba/hip/dispatcher.py", line 587, in __call__
-    #     return self.dispatcher.call(
-    # File "/root/miniconda3/envs/py39/lib/python3.9/site-packages/numba/hip/dispatcher.py", line 724, in call
-    #     kernel = _dispatcher.Dispatcher._hip_call(self, *args)
-    # AttributeError: type object '_dispatcher.Dispatcher' has no attribute '_hip_call'
-    @unittest.skip("TODO HIP requires JIT")
     def test_zero_size_array(self):
         # for #4175
         c_arr = cuda.device_array(0)
@@ -442,8 +427,6 @@ class TestCudaArrayInterface(ContextResettingTestCase):
             # Ensure the synchronize method of a stream was not called
             mock_sync.assert_not_called()
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_launch_no_sync(self):
         # Create a foreign array with no stream
         f_arr = ForeignArray(cuda.device_array(10))
@@ -460,8 +443,6 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         # Ensure the synchronize method of a stream was not called
         mock_sync.assert_not_called()
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_launch_sync(self):
         # Create a foreign array with a stream
         s = cuda.stream()
@@ -479,8 +460,6 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         # Ensure the synchronize method of a stream was called
         mock_sync.assert_called_once_with()
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_launch_sync_two_streams(self):
         # Create two foreign arrays with streams
         s1 = cuda.stream()
@@ -500,8 +479,6 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         # Ensure that synchronize was called twice
         mock_sync.assert_has_calls([call(), call()])
 
-    # TODO HIP requires JIT
-    @unittest.skip("TODO HIP requires JIT")
     def test_launch_sync_disabled(self):
         # Create two foreign arrays with streams
         s1 = cuda.stream()

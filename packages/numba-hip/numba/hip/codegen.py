@@ -167,7 +167,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         #    Driver API at link time.
         # NOTE: list maintains insertion order
         self._linking_dependencies = []
-        # TODO HIP add TBC HipProgram with user-configurable input as accepted dependency type
+        # TODO(HIP/AMD) add TBC HipProgram with user-configurable input as accepted dependency type
 
         # The raw LLVM IR strs as generated via Numba or
         # added as LLVM IR/BC buffers/files or HIP C++ files to this
@@ -632,7 +632,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                     fn.linkage = fun_linkage
                     fn.calling_convention = fun_call_conv
                     # Abuse attributes to specify address significance
-                    # set.add(fn.attributes, "local_unnamed_addr") # TODO HIP disabled for now, causes error
+                    # set.add(fn.attributes, "local_unnamed_addr") # TODO(HIP/AMD) disabled for now, causes error
                     for attrib in fun_attributes:
                         # We bypass the known-attribute check performed by ir.FunctionAttributes
                         # by calling the `add` method of the super class `set`
@@ -1094,7 +1094,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         ]
         if any(
             non_llvm_linking_files
-        ):  # TODO HIP understand why files are not supported
+        ):  # TODO(HIP/AMD) understand why files are not supported
             msg = "Cannot pickle HIPCodeLibrary with linking files and buffers"
             raise RuntimeError(msg)
         if not self._finalized:

@@ -140,7 +140,7 @@ class TestCudaStream(CUDATestCase):
         self.assertTrue(done1.cancelled())
         self.assertTrue(done2.done())
 
-@unittest.skip("TODO HIP implement similar test")
+@unittest.skip("TODO(HIP/AMD) implement similar test")
 @skip_on_cudasim("CUDA Driver API unsupported in the simulator")
 class TestFailingStream(CUDATestCase):
     # This test can only be run in isolation because it corrupts the CUDA

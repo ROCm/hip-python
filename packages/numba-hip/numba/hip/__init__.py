@@ -203,11 +203,11 @@ def set_hip_extensions(
     Limitation:
         Currently, only functions that take scalar attributes of primitive type can be added.
         Any pointer arguments are interpreted as scalar return values.
-        (TODO HIP workaround this limitation by allowing to supply a pointer intent callback/map.
+        (TODO(HIP/AMD) workaround this limitation by allowing to supply a pointer intent callback/map.
         Alternatively, user could cast pointers to 64-bit integers in Numba HIP Python code and manually cast
         back to pointer types in user function body.)
-        (TODO HIP support arrays by providing intrinsic that gets pointer as 64-bit int from (array|struct)( element)?)
-        (TODO HIP add some sort of filtering, likely not all functions in a translation unit should be wrapped.
+        (TODO(HIP/AMD) support arrays by providing intrinsic that gets pointer as 64-bit int from (array|struct)( element)?)
+        (TODO(HIP/AMD) add some sort of filtering, likely not all functions in a translation unit should be wrapped.
         Alternatively, only accept the functions directly in the specified source and not
         those in any dependencies? File association can be checked via clang cursor
         location metadata.)

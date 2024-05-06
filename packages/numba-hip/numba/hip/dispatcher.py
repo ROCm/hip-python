@@ -172,7 +172,7 @@ class _Kernel(serialize.ReduceMixin):
         if not link:
             link = []
 
-        # TODO HIP supports cooperative groups
+        # TODO(HIP/AMD) supports cooperative groups
         # # A kernel needs cooperative launch if grid_sync is being used.
         self.cooperative = False
         # self.cooperative = "hipCGGetIntrinsicHandle" in lib.get_asm_str()
@@ -180,7 +180,7 @@ class _Kernel(serialize.ReduceMixin):
         # if self.cooperative:
         #     lib.needs_hipdevrt = True
 
-        # TODO HIP support fp16 functions, note that CUDA fp16 code license is not permissive
+        # TODO(HIP/AMD) support fp16 functions, note that CUDA fp16 code license is not permissive
         # res = [
         #     fn
         #     for fn in hip_fp16_math_funcs
@@ -400,7 +400,7 @@ class _Kernel(serialize.ReduceMixin):
 
         if self.debug:
             pass
-            # TODO HIP enable debug
+            # TODO(HIP/AMD) enable debug
             # excname = cufunc.name + "__errcode__"
             # excmem, excsz = cufunc.module.get_global_symbol(excname)
             # assert excsz == ctypes.sizeof(ctypes.c_int)
@@ -434,7 +434,7 @@ class _Kernel(serialize.ReduceMixin):
 
         if self.debug:
             pass
-            # TODO HIP enable debug
+            # TODO(HIP/AMD) enable debug
             # driver.device_to_host(ctypes.addressof(excval), excmem, excsz)
             # if excval.value != 0:
             #     # An error occurred
@@ -616,7 +616,7 @@ class _LaunchConfiguration:
         self.stream = stream
         self.sharedmem = sharedmem
 
-        if config.CUDA_LOW_OCCUPANCY_WARNINGS:  # TODO HIP reuse CUDA config
+        if config.CUDA_LOW_OCCUPANCY_WARNINGS:  # TODO(HIP/AMD) reuse CUDA config
             # Warn when the grid has fewer than 128 blocks. This number is
             # chosen somewhat heuristically - ideally the minimum is 2 times
             # the number of SMs, but the number of SMs varies between devices -
@@ -986,7 +986,7 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                 inline = self.targetoptions.get("inline")
                 fastmath = self.targetoptions.get("fastmath")
 
-                options = {  # TODO HIP options for COMGR / HIPRTC
+                options = {  # TODO(HIP/AMD) options for COMGR / HIPRTC
                     "opt": 3 if self.targetoptions.get("opt") else 0,
                     "fastmath": fastmath,
                 }
@@ -1001,7 +1001,7 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                     lineinfo=lineinfo,
                     inline=inline,
                     fastmath=fastmath,
-                    options=options,  # TODO HIP options for COMGR / HIPRTC
+                    options=options,  # TODO(HIP/AMD) options for COMGR / HIPRTC
                     amdgpu_arch=amdgpu_arch,
                 )
                 self.overloads[args] = cres

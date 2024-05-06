@@ -311,11 +311,11 @@ def compile_llvm_ir(
             Whether to compile a device function. Defaults to ``False``,
             to compile global kernel functions.
         fastmath (`bool`):
-            Whether to enable fast math flags (ftz=1, prec_sqrt=0, prec_div=, and fma=1) TODO HIP enable
+            Whether to enable fast math flags (ftz=1, prec_sqrt=0, prec_div=, and fma=1) TODO(HIP/AMD) enable
         amdgpu_arch (`str`):
             AMD GPU architecture, e.g. ``gfx90a``.
         opt (`bool`):
-            Enable optimizations. Defaults to ``True``. TODO HIP enable
+            Enable optimizations. Defaults to ``True``. TODO(HIP/AMD) enable
         to_bc (`bool`)
             Compile the result to bitcode. Defaults to 'False'.
         ir_as_str (`bool`)

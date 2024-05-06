@@ -194,7 +194,7 @@ class TestDeviceFunc(CUDATestCase):
         self.assertIn(fname, ptx)
 
     @skip_on_cudasim('not supported in cudasim')
-    @unittest.skip("todo(hip/amd): inspect_sass not supported")
+    @unittest.skip("TODO(HIP/AMD): inspect_sass not supported")
     def test_inspect_sass_disallowed(self):
         @cuda.jit(device=True)
         def foo(x, y):

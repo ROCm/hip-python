@@ -129,10 +129,10 @@ def jit(
             the ABI requires a greater number of registers than that requested.
             Useful for increasing occupancy.
             Defaults to ``False``.
-        opt (`bool`, optional): # TODO HIP enable
+        opt (`bool`, optional): # TODO(HIP/AMD) enable
             Set optimization level to 3 (``True``) or 0 (``False``).
             Defaults to ``True``.
-        lineinfo (`bool`, optional): # TODO HIP enable
+        lineinfo (`bool`, optional): # TODO(HIP/AMD) enable
             If ``True``, generate a line mapping between source code and
             assembly code. This enables inspection of the source code in AMD GPU
             profiling tools and correlation with program counter sampling.
@@ -184,7 +184,7 @@ def jit(
             NumbaInvalidConfigWarning(msg)
         )  # TODO check if that's also the case for HIP
 
-    # TODO HIP reassess that
+    # TODO(HIP/AMD) reassess that
     if device and kws.get("link"):
         raise ValueError("link keyword invalid for device function")
 

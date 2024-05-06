@@ -55,7 +55,7 @@ from numba.hip.hipdrv.driver import (host_to_device, device_to_host, driver,
                                        launch_kernel)
 from numba.hip.hipdrv import devices, driver as _driver
 from numba.hip.testing import unittest, HIPTestCase
-# from numba.hip.testing import skip_on_cudasim # TODO HIP enable simulator
+# from numba.hip.testing import skip_on_cudasim # TODO(HIP/AMD) enable simulator
 
 def hip_check(call_result):
     err = call_result[0]
