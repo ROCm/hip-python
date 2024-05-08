@@ -26,7 +26,6 @@ default_role = "py:obj"  # this means that `test` will be expanded to :py:obj`te
 
 autodoc_default_options = {
     "members": True,
-    "member-order": "bysource",
     "undoc-members": True,
     "special-members": "__init__, __getitem__",
     "inherited-members": True,
