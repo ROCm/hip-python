@@ -28,8 +28,8 @@ autodoc_default_options = {
     "members": True,
     "undoc-members": True,
     "special-members": "__init__, __getitem__",
-    "inherited-members": True,
-    "show-inheritance": True,
+    "inherited-members": False,
+    "show-inheritance": False,
     "imported-members": False,
     "member-order": "bysource",  # bysource: seems unfortunately not to work for Cython modules
 }
