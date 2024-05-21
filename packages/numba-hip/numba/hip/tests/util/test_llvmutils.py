@@ -1,3 +1,4 @@
+#!/usr/bin/env -S python3 -m pytest -v -s
 # MIT License
 #
 # Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
