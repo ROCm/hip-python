@@ -41,24 +41,24 @@ def get_cache_dir() -> str:
     return os.path.join(tempfile.gettempdir(), "numba", "hip", f"uid_{os.getuid()}")
 
 
-def get_cached_file_path(amdgpu_arch: str, prefix: str, ext: str) -> str:
+def get_cached_file_path(arch: str, prefix: str, ext: str) -> str:
     """Returns a (to be) cached file's name given an AMD GPU architecture."""
-    amdgpu_arch = amdgpu_arch.replace(" ", "")
-    return os.path.join(get_cache_dir(), f"{prefix}_{amdgpu_arch}.{ext}")
+    arch = arch.replace(" ", "")
+    return os.path.join(get_cache_dir(), f"{prefix}_{arch}.{ext}")
 
 
-def read_cached_file(amdgpu_arch: str, prefix: str, ext: str):
+def read_cached_file(arch: str, prefix: str, ext: str):
     """Loads a cached file or throws FileNotFoundError if file doesn't exist.
 
     See:
         `_write_cached_file`.
     """
-    with open(get_cached_file_path(amdgpu_arch, prefix, ext), "rb") as infile:
+    with open(get_cached_file_path(arch, prefix, ext), "rb") as infile:
         content = infile.read()
     return content
 
 
-def write_cached_file(content: str, amdgpu_arch: str, prefix: str, ext: str):
+def write_cached_file(content: str, arch: str, prefix: str, ext: str):
     """
     Loads a cached file or throws FileNotFoundError if file doesn't exist.
 
@@ -73,7 +73,7 @@ def write_cached_file(content: str, amdgpu_arch: str, prefix: str, ext: str):
     Note:
         Caller is reponsible for locking this operation with a threading lock if necessary.
     """
-    dest = get_cached_file_path(amdgpu_arch, prefix, ext)
+    dest = get_cached_file_path(arch, prefix, ext)
     tmp_dest = f"{dest}-{os.getpid()}"
     with open(tmp_dest, "wb") as outfile:
         outfile.write(content)
