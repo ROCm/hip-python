@@ -74,6 +74,7 @@ def test_00_make_cache_key():
 
 
 def test_01_insert_get_delete_entry_for_buffer():
+    linkercache.clear()
     assert len(linkercache._cache) == 0
     #
     for buf in BUFS:
@@ -113,6 +114,7 @@ def test_01_insert_get_delete_entry_for_buffer():
 
 
 def test_02_insert_get_delete_entry_for_file():
+    linkercache.clear()
     assert len(linkercache._cache) == 0
     #
     files = []
