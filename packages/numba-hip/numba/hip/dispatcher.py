@@ -327,7 +327,6 @@ class _Kernel(serialize.ReduceMixin):
         """
         Returns the LLVM IR for this kernel.
         """
-        raise NotImplementedError()
         return self._codelibrary.get_llvm_str()
 
     def inspect_asm(self, cc):
@@ -1068,7 +1067,12 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
 
     def inspect_llvm(self, signature=None):
         """
-        Return the LLVM IR for this kernel.
+        Return the LLVM IR for this kernel for the device in the
+        current context.
+
+        Note:
+            The generated LLVM IR contains target-specific parts.
+            This routine assumes the current context's device's architecture.
 
         :param signature: A tuple of argument types.
         :return: The LLVM IR for the given signature, or a dict of LLVM IR
