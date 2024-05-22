@@ -304,7 +304,7 @@ def to_ir_fast(mod, mod_len: int = -1):
 
     Returns:
         `bytes` or `str`:
-            Returns the result as
+            Always returns the result as bytes.
     """
     try:
         if isinstance(mod, str):
@@ -398,8 +398,66 @@ def verify(mod, mod_len: int = -1):
         _get_module_dispose_all(*gm_res)
 
 
+class LLVMModuleWrapper:
+    """Wrapper class for handling LLVMOpaqueModule instances.
+
+    If LLVM IR/BC is supplied, creates the module at startup and
+    disposes it at destruction of the wrapper.
+    """
+
+    def __init__(self, mod, ir_len: int = -1):
+        """LLVM module wrapper.
+
+        Args:
+            mod (`rocm.llvm.c.types.LLVMOpaqueModule`, `LLVMModuleWrapper`, or UTF-8 `str`, or Python buffer like `bytes`):
+                An 'rocm.llvm.c.types.LLVMOpaqueModule', `LLVMModuleWrapper`,  or a buffer that contains LLVM IR or LLVM BC.
+            mod_len (`int`, optional):
+                Length of the LLVM IR/BC buffer. Callers can specify numbers smaller than 1
+                or ``None`` to indicate that the buffer length should be derived via ``len(ir)``.
+                Defaults to ``-1``.
+        Raises:
+            KeyError: _description_
+        """
+        if isinstance(mod, LLVMModuleWrapper):
+            self._mod = mod.mod
+            self._owner = False
+            self._ir_or_bc = None
+        elif isinstance(mod, LLVMOpaqueModule):
+            self._mod = mod
+            self._owner = False
+            self._ir_or_bc = None
+        else:
+            gm_res = _get_module(mod, ir_len)
+            self._mod = gm_res[0]
+            self._owner = True
+            self._ir_or_bc = mod
+
+    @property
+    def mod(self):
+        return self._mod
+
+    @property
+    def ir(self) -> bytes:
+        """ """
+        if not self._ir_or_bc:
+            """Convert the LLVM Module to IR, return a copy."""
+            ir = LLVMPrintModuleToString(self._mod)
+            self._ir_or_bc = copy.deepcopy(bytes(ir))  # copies into new buffer
+            LLVMDisposeMessage(ir)
+        return to_ir_fast(self._ir_or_bc)
+
+    def __str__(self):
+        return self.ir.decode(encoding="utf-8")
+
+    def __dealloc__(self):
+        if self._owner:
+            LLVMDisposeModule(self._mod)
+
+
 def link_modules(
-    modules, to_bc: bool = True, name: str = "link-modules-result"
+    modules,
+    to_bc: bool = True,
+    name: str = "link-modules-result",
 ) -> bytes:
     """Links the LLVM modules in the list together.
 
@@ -416,18 +474,20 @@ def link_modules(
             A list that contains entries of the following kind:
 
             1. Instance of `rocm.llvm.c.types.LLVMOpaqueModule`:
-                    ROCm LLVM Python module type.
-            2. ir (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`):
-                    Buffer that contains LLVM IR or LLVM BC.
-                    Buffer size must be obtainable via `len(...)`.
-            3. or a `tuple` that contains:
-              * ir (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`):
-                    Buffer that contains LLVM IR or LLVM BC.
-              * ir_len (`int`):
-                    Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
-                    or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-                    Defaults to ``-1``. Not used at all if ``mod`` is an instance of
-                    `rocm.llvm.c.types.LLVMOpaqueModule`.
+                 ROCm LLVM Python module type.
+            2. Instance of `numba.hip.util.llvmutils.LLVMModuleWrapper`:
+                 Numba HIP wrapper for ROCm LLVM Python modules.
+            3. ir (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`):
+                 Buffer that contains LLVM IR or LLVM BC.
+                 Buffer size must be obtainable via `len(...)`.
+            4. or a `tuple` that contains:
+               * ir (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`):
+                   Buffer that contains LLVM IR or LLVM BC.
+               * ir_len (`int`):
+                   Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
+                   or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
+                   Defaults to ``-1``. Not used at all if ``mod`` is an instance of
+                   `rocm.llvm.c.types.LLVMOpaqueModule`.
         to_bc (`bool`, optional):
             If the result should be LLVM bitcode instead of human-readable LLVM IR.
             Defaults to `True`.
@@ -444,6 +504,8 @@ def link_modules(
     for entry in modules:
         if isinstance(entry, LLVMOpaqueModule):
             cloned_modules.append((LLVMCloneModule(entry), None))
+        elif isinstance(entry, LLVMModuleWrapper):
+            cloned_modules.append((LLVMCloneModule(entry.mod), None))
         else:
             if isinstance(entry, tuple):
                 ir = entry[0]
