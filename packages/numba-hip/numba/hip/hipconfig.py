@@ -39,7 +39,10 @@ Attributes (Controllable via Environment Variables ``NUMBA_HIP_<attribute>``):
         this option defaults to ``False``.
         (Note that `hipcc` per default also specifies the first device's
         architecture without an appended feature set as offload arch.)
-    USE_DEVICE_LIB_CACHE (`bool`):
+    USE_LINKER_CACHE (`bool`):
+        Enable the caching of link-time dependencies that are files or file buffers in a dictionary.
+        Defaults to ``True``.
+    USE_DEVICE_LIB_FILE_CACHE (`bool`):
         Store architecture-dependent device library LLVM IR files in a filesystem cache, so that
         the next Numba program can reuse the files from this cache. This caching
         has a significant impact on programs with short runtime, e.g., on
@@ -77,6 +80,10 @@ DEFAULT_ARCH_WITH_FEATURES = int(
 # external dependencies that should be linked in.
 # As external dependencies are usually compiled with `gfx90a`.
 # this option defaults to `False`.
+
+USE_LINKER_CACHE = bool(
+    int(os.environ.get("NUMBA_HIP_USE_LINKER_CACHE", True))
+)  # Enable the caching of link-time dependencies that are files or file buffers in a dictionary. Defaults to ``True``.
 
 USE_DEVICE_LIB_CACHE = bool(
     int(os.environ.get("NUMBA_HIP_USE_DEVICE_LIB_CACHE", True))
