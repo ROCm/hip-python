@@ -261,7 +261,9 @@ class _LinkerDependencyHandler:
             dep_id = None
 
             if isinstance(dependency, HIPCodeLibrary):
-                dep_mod = self._process_buf(dependency.get_unlinked_llvm_ir(self.amdgpu_arch))
+                dep_mod = self._process_buf(
+                    dependency.get_unlinked_llvm_ir(self.amdgpu_arch)
+                )
             elif isinstance(dependency, str):  # an LLVM IR/BC or HIP file
                 fileext = os.path.basename(dependency).split(os.path.extsep)[-1]
                 dep_id = dependency
@@ -548,6 +550,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         # constructed by converting all files to LLVM IR/BC
         # and linking them together into a single LLVM module
         self._linked_amdgpu_llvm_ir_cache = {}
+        # The entries of the below cache are similar to those of
+        # `self._linked_amdgpu_llvm_ir_cache` but the HIP device lib has been
+        # linked in.
+        self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache = {}
         # Maps GPU arch -> AMD GPU code object
         self._codeobj_cache = {}
         # Maps GPU arch -> linker info output for AMD GPU codeobj
@@ -628,7 +634,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         return _LinkerDependencyHandler(
             library=self,
             amdgpu_arch=None,
-            use_cache=False, # no effect here
+            use_cache=False,  # no effect here
             remove_duplicates=True,
         ).get_raw_source_strs()
 
@@ -914,10 +920,39 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         print(body)
         print("=" * 80)
 
+    def _lookup_linked_llvm_ir(self, amdgpu_arch, link_in_hipdevicelib: bool):
+        """Looks up linked LLVM IR and links in the HIP device lib if requested and no such cache entry has been found.
+
+        If it is requested, that the HIP device lib is linked in and linked LLVM IR has been found
+        that has not been linked with the HIP device lib yet, the former linked LLVM IR
+        is linked with the HIP device lib. The result is then returned and inserted
+        into the cache `self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache`.
+        """
+        if link_in_hipdevicelib:
+            # check for llvm ir with hipdevicelib linked in
+            result = self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache.get(
+                amdgpu_arch, None
+            )
+            if result:
+                return result
+            # check for llvm ir without hipdevicelib linked in
+            result = self._linked_amdgpu_llvm_ir_cache.get(amdgpu_arch, None)
+            if result:
+                result = llvmutils.link_modules(
+                    result, hipdevicelib.get_llvm_module(amdgpu_arch)
+                )
+                self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache[amdgpu_arch] = (
+                    result
+                )
+        else:
+            result = self._linked_amdgpu_llvm_ir_cache.get(amdgpu_arch, None)
+        return result
+
     def get_linked_llvm_ir(
         self,
         amdgpu_arch: str = None,
         to_bc: bool = True,
+        link_in_hipdevicelib: bool = True,
     ):
         """Returns/Creates single module from linking in all link-time dependencies.
 
@@ -938,12 +973,15 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 Remove unused helper functions. Can reduce generated IR by a factor
                 of approx. 5x but has small performance impact at codegen time.
                 Defaults to ``True``.
+            link_in_hipdevicelib (`bool`, optional):
+                Link in the HIP device lib. This makes the result
+                compatible with HIPRTC. Defaults to ``True``.
         Returns:
             `bytes`:
                 The result of the linking as LLVM bitcode or human-readable LLVM IR depending on argument ``to_bc``.
         """
         amdgpu_arch = _get_amdgpu_arch(amdgpu_arch)
-        linked_llvm = self._linked_amdgpu_llvm_ir_cache.get(amdgpu_arch, None)
+        linked_llvm = self._lookup_linked_llvm_ir(amdgpu_arch, link_in_hipdevicelib)
         if linked_llvm:
             return linked_llvm
 
@@ -966,7 +1004,8 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 bundle_file_contents(unlinked_llvm_strs),
             )
 
-        linker_inputs.append(hipdevicelib.get_llvm_module(amdgpu_arch))
+        if link_in_hipdevicelib:
+            linker_inputs.append(hipdevicelib.get_llvm_module(amdgpu_arch))
         linked_llvm = llvmutils.link_modules(linker_inputs, to_bc)
 
         # apply mid-end optimizations if requested
@@ -986,7 +1025,10 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 "AMD GPU LLVM for pyfunc '%s' (final LLVM IR, HIP device library linked)",
                 llvmutils.to_ir_fast(linked_llvm).decode("utf-8"),
             )
-        self._linked_amdgpu_llvm_ir_cache[amdgpu_arch] = linked_llvm
+        if link_in_hipdevicelib:
+            self._linked_amdgpu_llvm_ir_cache[amdgpu_arch] = linked_llvm
+        else:
+            self._linked_amdgpu_llvm_ir_cache[amdgpu_arch] = linked_llvm
         return linked_llvm
 
     def get_codeobj(self, amdgpu_arch=None):
@@ -1026,8 +1068,22 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         linker = driver.Linker.new(
             max_registers=self._max_registers, amdgpu_arch=amdgpu_arch
         )
-        linker.add_llvm_ir(self.get_linked_llvm_ir(amdgpu_arch, to_bc=True))
+        if amdgpu_arch in self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache:
+            linker.add_llvm_ir(
+                self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache[amdgpu_arch]
+            )
+        elif amdgpu_arch in self._linked_amdgpu_llvm_ir_cache:
+            linker.add_llvm_ir(self._linked_amdgpu_llvm_ir_cache[amdgpu_arch])
+            linker.add_llvm_ir(hipdevicelib.get_llvm_bc(amdgpu_arch))
+        else:
+            linker.add_llvm_ir(
+                self.get_linked_llvm_ir(
+                    amdgpu_arch=amdgpu_arch, to_bc=True, link_in_hipdevicelib=False
+                )
+            )
+            linker.add_llvm_ir(hipdevicelib.get_llvm_bc(amdgpu_arch))
         codeobj = linker.complete()
+
         # for inspecting the code object
         # import rocm.amd_comgr.amd_comgr as comgr
         # import pprint
@@ -1239,6 +1295,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             raw_source_strs=self._raw_source_strs,
             unlinked_llvm_strs_cache=self._unlinked_amdgpu_llvm_strs_cache,
             linked_llvm_ir_cache=self._linked_amdgpu_llvm_ir_cache,
+            linked_amdgpu_llvm_ir_with_hipdevicelib_cache=self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache,
             codeobj_cache=self._codeobj_cache,
             linkerinfo_cache=self._linkerinfo_cache,
             max_registers=self._max_registers,
@@ -1255,6 +1312,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         raw_source_strs,
         unlinked_llvm_strs_cache,
         linked_llvm_ir_cache,
+        linked_amdgpu_llvm_ir_with_hipdevicelib_cache,
         codeobj_cache,
         linkerinfo_cache,
         max_registers,
@@ -1269,6 +1327,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         instance._raw_source_strs = raw_source_strs
         instance._unlinked_amdgpu_llvm_strs_cache = unlinked_llvm_strs_cache
         instance._linked_amdgpu_llvm_ir_cache = linked_llvm_ir_cache
+        instance._linked_amdgpu_llvm_ir_with_hipdevicelib_cache = (
+            linked_amdgpu_llvm_ir_with_hipdevicelib_cache
+        )
         instance._codeobj_cache = codeobj_cache
         instance._linkerinfo_cache = linkerinfo_cache
 
