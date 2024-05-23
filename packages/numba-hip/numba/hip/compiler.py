@@ -289,6 +289,7 @@ def compile_llvm_ir(
     to_bc: bool = False,
     ir_as_str: bool = True,
     name: str = None,
+    link_in_hipdevicelib: bool = True,
 ):
     """Compile a Python function to LLVM IR for a given set of argument types.
 
@@ -326,6 +327,9 @@ def compile_llvm_ir(
         name (`str` or `None`, optional):
             If not set to ``None``, gives this name to
             the compiled function.
+        link_in_hipdevicelib (`bool`, optional):
+            Link in the HIP device lib. This makes the result
+            compatible with HIPRTC. Defaults to ``True``.
 
     Returns:
         `tuple`:
@@ -390,7 +394,11 @@ def compile_llvm_ir(
             linenum,
         )
     assert isinstance(lib, codegen.HIPCodeLibrary)
-    llvm_ir = lib.get_linked_llvm_ir(amdgpu_arch=amdgpu_arch, to_bc=to_bc)
+    llvm_ir = lib.get_linked_llvm_ir(
+        amdgpu_arch=amdgpu_arch,
+        to_bc=to_bc,
+        link_in_hipdevicelib=link_in_hipdevicelib,
+    )
     if ir_as_str:
         llvm_ir = llvm_ir.decode("utf-8")
     return llvm_ir, resty
@@ -407,6 +415,7 @@ def compile_llvm_ir_for_current_device(
     to_bc: bool = False,
     ir_as_str: bool = True,
     name: str = None,
+    link_in_hipdevicelib: bool = True,
 ):
     """Compile a Python function to AMD GPU LLVM IR for a given set of argument types for
     the current device's compute capabilility. This calls :func:`compile_llvm_ir`
@@ -416,6 +425,9 @@ def compile_llvm_ir_for_current_device(
         name (`str` or `None`, optional):
             If not set to ``None``, gives this name to
             the compiled function.
+        link_in_hipdevicelib (`bool`, optional):
+            Link in the HIP device lib. This makes the result
+            compatible with HIPRTC. Defaults to ``True``.
 
     See:
         compile_llvm_ir
@@ -432,6 +444,7 @@ def compile_llvm_ir_for_current_device(
         to_bc=to_bc,
         ir_as_str=ir_as_str,
         name=name,
+        link_in_hipdevicelib=link_in_hipdevicelib,
     )
 
 
@@ -450,6 +463,7 @@ def compile_ptx(
     to_bc: bool = False,
     ir_as_str: bool = True,
     name: str = None,
+    link_in_hipdevicelib: bool = True,
 ):
     """Same as compile_llvm_ir wit CUDA-like argument names.
     Same as compile_llvm_ir but argument
@@ -468,6 +482,7 @@ def compile_ptx(
         to_bc=to_bc,
         ir_as_str=ir_as_str,
         name=name,
+        link_in_hipdevicelib=link_in_hipdevicelib,
     )
 
 
