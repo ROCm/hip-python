@@ -405,7 +405,7 @@ class LLVMModuleWrapper:
     disposes it at destruction of the wrapper.
     """
 
-    def __init__(self, mod, ir_len: int = -1):
+    def __init__(self, mod, mod_len: int = -1):
         """LLVM module wrapper.
 
         Args:
@@ -419,38 +419,55 @@ class LLVMModuleWrapper:
             KeyError: _description_
         """
         if isinstance(mod, LLVMModuleWrapper):
-            self._mod = mod.mod
+            self._mod = mod._mod
             self._owner = False
             self._ir_or_bc = None
+            self._ir_or_bc_len = None
         elif isinstance(mod, LLVMOpaqueModule):
             self._mod = mod
             self._owner = False
             self._ir_or_bc = None
+            self._ir_or_bc_len = None
         else:
-            gm_res = _get_module(mod, ir_len)
-            self._mod = gm_res[0]
-            self._owner = True
+            self._mod = None
             self._ir_or_bc = mod
+            self._ir_or_bc_len = mod_len
 
     @property
     def mod(self):
+        """Lazily creates LLVM module if not already available."""
+        if not self._mod:
+            gm_res = _get_module(self._ir_or_bc, self._ir_or_bc_len)
+            self._mod = gm_res[0]
+            self._owner = True
         return self._mod
 
     @property
     def ir(self) -> bytes:
-        """ """
+        """Lazily produces human-readable LLVM IR."""
         if not self._ir_or_bc:
-            """Convert the LLVM Module to IR, return a copy."""
-            ir = LLVMPrintModuleToString(self._mod)
-            self._ir_or_bc = copy.deepcopy(bytes(ir))  # copies into new buffer
-            LLVMDisposeMessage(ir)
+            self._ir_or_bc = _to_ir(self._mod)
         return to_ir_fast(self._ir_or_bc)
+
+    @property
+    def bc(self) -> bytes:
+        """Lazily produces LLVM BC if not already available."""
+        if not self._ir_or_bc:
+            self._ir_or_bc = _to_bc(self._mod)
+        return to_bc_fast(self._ir_or_bc)
+
+    @property
+    def bc_or_ir(self) -> bytes:
+        """Lazily produces LLVM BC if not already LLVM BC/IR available."""
+        if not self._ir_or_bc:
+            return self.bc
+        return to_bc_fast(self._ir_or_bc)
 
     def __str__(self):
         return self.ir.decode(encoding="utf-8")
 
     def __dealloc__(self):
-        if self._owner:
+        if self._owner and self._mod:
             LLVMDisposeModule(self._mod)
 
 
