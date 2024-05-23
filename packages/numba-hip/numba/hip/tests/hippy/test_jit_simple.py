@@ -205,6 +205,38 @@ class TestJitSimple(CUDATestCase):
             name="mydevicefun",
         )
 
+    def test_08_compile_ptx_for_simple_device_fun_no_device_lib(self):
+
+        def simple():
+            cuda.syncthreads()
+
+        ir, restype = cuda.compile_ptx_for_current_device(
+            pyfunc=simple,
+            sig=(),
+            device=True,
+            to_bc=False,
+            link_in_hipdevicelib=False,
+        )
+        self.assertIn("declare ptr @NUMBA_HIP__Z13__syncthreadsv()", ir)
+
+        ir, restype = cuda.compile_ptx_for_current_device(
+            pyfunc=simple,
+            sig=(),
+            device=True,
+            to_bc=False,
+            link_in_hipdevicelib=True,
+        )
+        self.assertIn("define hidden void @NUMBA_HIP__Z13__syncthreadsv()", ir)
+
+        ir, restype = cuda.compile_ptx_for_current_device(
+            pyfunc=simple,
+            sig=(),
+            device=True,
+            to_bc=False,
+            link_in_hipdevicelib=False,
+        )
+        self.assertIn("declare ptr @NUMBA_HIP__Z13__syncthreadsv()", ir)
+
 
 if __name__ == "__main__":
     unittest.main()
