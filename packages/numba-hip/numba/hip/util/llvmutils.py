@@ -303,8 +303,7 @@ def to_ir_fast(mod, mod_len: int = -1):
     ASCII chars "BC".
 
     Returns:
-        `bytes` or `str`:
-            Always returns the result as bytes.
+        `bytes`: Always returns the result as bytes.
     """
     try:
         if isinstance(mod, str):
