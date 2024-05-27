@@ -118,7 +118,7 @@ class _LinkerDependencyHandler:
 
     Note:
         Supports caching of linker dependencies. The caching always uses an easily obtainable representation of a file
-        to compute the cache key in order to mitigate expensive steps. For exmaple, the content of an HIP C++ file/buffer
+        to compute the cache key in order to mitigate expensive steps. For example, the content of an HIP C++ file/buffer
         plus architecture and compiler options not the corresponding LLVM IR/BC representation is used as
         key as the latter requires a potentially expensive compilation step.
     """
