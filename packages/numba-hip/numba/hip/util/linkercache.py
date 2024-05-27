@@ -26,11 +26,8 @@ This module contains a simple cache that records arbitrary objects for triples o
 file content, compiler options, and target architecture. 
 The cache is intended for caching linker dependencies for Numba HIP.
 
-The cache does compute a cache key from file names but always the file content
-so that 
-
-This module delegates all calls that cannot be resolved via ``__getattribute__``
-to the `LinkerCache` singleton.
+The cache does not compute a cache key from a file's name but always from the file's content
+so that different paths to the same file do not yield different cache entries.
 """
 
 import hashlib
