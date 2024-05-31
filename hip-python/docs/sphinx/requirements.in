@@ -1,4 +1,4 @@
-rocm-docs-core==1.1.1
+rocm-docs-core==1.2.0
 --extra-index-url https://test.pypi.org/simple/
 autodoc
 hip-python
