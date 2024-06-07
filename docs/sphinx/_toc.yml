@@ -1,10 +1,3 @@
-# Variables of the form ${<variable>} are substituted, currently the following
-# list is supported:
-#   - ${branch} (or {branch}) the name of the current branch
-#   - ${url} (or {url}) github url of the current project
-#   - ${project:<project_name>} base url of the documentation of <project_name>
-#     based on intersphinx_mapping.
-# These comments will also be removed.
 defaults:
   numbered: False
   maxdepth: 6
@@ -36,5 +29,3 @@ subtrees:
       - file: python_api/cuda
       - file: python_api/cudart
       - file: python_api/nvrtc
-  - caption: Developer Guide
-    entries:

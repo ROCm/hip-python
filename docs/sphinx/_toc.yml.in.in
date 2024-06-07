@@ -26,5 +26,3 @@ subtrees:
   - caption: "CUDA Python Interoperability: Python API"
     entries:
 {PYTHON_API_FILE_NAMES_CUDA}
-  - caption: Developer Guide
-    entries:
