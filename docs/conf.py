@@ -84,6 +84,8 @@ article_pages = [
     },
 ]
 
+external_toc_path = "./sphinx/_toc.yml"
+
 docs_core = ROCmDocs(project)
 docs_core.setup()
 
