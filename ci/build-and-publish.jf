@@ -65,8 +65,8 @@ pipeline {
             choices: [
                 'new_main',
             ],
-            description: 'The main branch where the ci scripts, docs and other files imported by `init.sh` are located.',
-            name: 'MAIN_BRANCH'
+            description: 'The branch where the ci scripts, docs and other files imported by `init.sh` are located.',
+            name: 'CI_BRANCH'
         )
         editableChoice(
             choices: [
@@ -89,8 +89,8 @@ pipeline {
                 sed -i "s,archive.ubuntu.com,${UBUNTU_APT_MIRROR},g" /etc/apt/sources.list
                 apt-get update && apt-get -y install git sudo
                 '''
-                // TODO Below `git branch: 'main' ...` can likely be removed via non-lightweight checkout
-                git branch: 'main', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/ROCmSoftwarePlatform/hip-python'
+                # NOTE: In the below `git` step, we pass 'codegen/base' as it is a stable branch name.
+                git branch: 'codegen/base', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/ROCmSoftwarePlatform/hip-python'
                 dir('.') {
                     withCredentials([
                         usernamePassword(credentialsId: 'HIP_PYTHON_DEV', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER'),
@@ -109,7 +109,7 @@ pipeline {
                         sh '''#!/usr/bin/env bash
                         set -e
                         set -o xtrace
-                        git checkout ${MAIN_BRANCH} # create local version of $MAIN_BRANCH
+                        git checkout ${CI_BRANCH} # create local version of $CI_BRANCH
                         export BASE_BRANCH="${BASE_BRANCH_PREFIX}/rocm-rel-${ROCM_VER}"
                         git checkout ${BASE_BRANCH}
                         bash init.sh
