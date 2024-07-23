@@ -89,7 +89,7 @@ pipeline {
                 sed -i "s,archive.ubuntu.com,${UBUNTU_APT_MIRROR},g" /etc/apt/sources.list
                 apt-get update && apt-get -y install git sudo
                 '''
-                # NOTE: In the below `git` step, we pass 'codegen/base' as it is a stable branch name.
+                // NOTE: In the below `git` step, we pass 'codegen/base' as it is a stable branch name.
                 git branch: 'codegen/base', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/ROCmSoftwarePlatform/hip-python'
                 dir('.') {
                     withCredentials([
