@@ -68,8 +68,8 @@ pipeline {
                 'main',
                 'dev',
             ],
-            description: 'The codegenerator branch to use.',
-            name: 'CODEGENERATOR_BRANCH'
+            description: 'The codegenerator branch to use. Not to confuse with variable CODEGEN_BRANCH, which is a branch of the release repository.',
+            name: 'INTERFACEGEN_BRANCH'
         )
         editableChoice(
             choices: [
@@ -93,7 +93,7 @@ pipeline {
         }
         stage('get-code-generator') {
             steps {
-                git branch: '${CODEGENERATOR_BRANCH}', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/AMD-AI/hip-python'
+                git branch: '${INTERFACEGEN_BRANCH}', credentialsId: 'HIP_PYTHON_DEV', url: 'https://github.com/AMD-AI/hip-python'
             }
         }
         stage('get-release-repo') {
@@ -176,7 +176,8 @@ pipeline {
                     '''
                 }
                 dir('recipes/python_cython/hip') {
-                    sh 'git branch --set-upstream-to=origin/main main' // seems to be sometimes required
+                    // seems to be sometimes required to get the git revision counting done by the code generator working
+                    sh 'git branch --set-upstream-to=origin/${INTERFACEGEN_BRANCH} ${INTERFACEGEN_BRANCH}'
                     sh 'bash ci/2-generate-code.sh'
                 }
                 dir ('recipes/python_cython/hip/hip-python-release-repo') {
