@@ -1,6 +1,6 @@
-*****************
-Numba HIP backend
-*****************
+*********
+Numba HIP
+*********
 
 This repository provides a HIP backend for Numba that can be patched into
 an existing Numba installation.
@@ -24,8 +24,8 @@ https://numba.readthedocs.io/en/stable/index.html
 Numba HIP: Basic Usage
 ======================
 
-Numba HIP's programming interfaces follow Numba CUDA's design very closely. 
-Aside from the module name ``hip``, there is often no difference between 
+Numba HIP's programming interfaces follow Numba CUDA's design very closely.
+Aside from the module name ``hip``, there is often no difference between
 Numba CUDA to Numba HIP code.
 
 **Example 1 (Numba HIP):**
@@ -63,7 +63,7 @@ Numba HIP: Posing As Numba CUDA
 ===============================
 
 As Numba HIP allows to use syntax that is so similar to that of Numba CUDA and
-there are already so many projects that use Numba CUDA, we have introduced a 
+there are already many projects that use Numba CUDA, we have introduced a
 feature to the Numba HIP backend that allows it to pose as the Numba CUDA
 backend to dependent applications. We demonstrate the usage of this feature in
 the example below:
@@ -73,7 +73,7 @@ the example below:
 .. code-block:: python
 
    from numba import hip
-   hip.pose_as_cuda() # now 'from numba import cuda' 
+   hip.pose_as_cuda() # now 'from numba import cuda'
                       # and `numba.cuda` delegate to Numba HIP.
 
    # unchanged Numba CUDA snippet (Example 2)
@@ -88,17 +88,17 @@ the example below:
 
       if tid < size:
           c[tid] = a[tid] + b[tid]
-    
+
 
 Numba HIP: Limitations
 ======================
 
 Generally, we aim for feature parity with Numba CUDA.
 
-As of May 2024, the following Numba CUDA features are missing in 
+As of May 2024, the following Numba CUDA features are missing in
 Numba HIP:
 
-* Cooperative groups support (ex: ``cg.this_grid()``, 
+* Cooperative groups support (ex: ``cg.this_grid()``,
   ``cg.this_grid().sync()``)
 * Atomic operations for tuple and array types,
 * Runtime kernel debugging functionality,
@@ -107,7 +107,7 @@ Numba HIP:
   potentially reuse CUDA simulator),
 * Half precision (fp16) operations.
 
-Note that so far only limited effort has been spent on optimizing the 
+Note that so far only limited effort has been spent on optimizing the
 performance of the just-in-time compilation infrastructure.
 
 Numba HIP: Design Differences vs. Numba CUDA
@@ -119,65 +119,103 @@ Numba HIP: Design Differences vs. Numba CUDA
   this needs to be done only once for a given session. The presence of such an
   additional caching mechanism must be considered when benchmarking.
 
-* While Numba CUDA manually/semi-automatically creates basic device function signatures and the respective lowering 
+* While Numba CUDA manually/semi-automatically creates basic device function signatures and the respective lowering
   procedures, Numba HIP does this fully-automatically from the aforementioned HIP C++ header file via the LLVM ``clang`` Python bindings.
 
-* Furthermore, Numba HIP automatically links the HIP device library functions with the ``math`` module and uses a 
+* Furthermore, Numba HIP automatically links the HIP device library functions with the ``math`` module and uses a
   mechanism for recursive attribute resolution.
 
-Numba HIP Installation Instructions
-===================================
+Installation
+============
 
 .. note:: Supported Numba versions
 
-   This patch has been tested with the following Numba versions:
+   The Numba HIP backend has been tested with the following Numba versions:
 
    * 0.58.*
    * 0.59.*
+   * 0.60.0
 
-   Other versions have not been tested; patching these versions might work or not.
+   Other versions have not been tested; using the Numba HIP Backend with these versions might work or not.
 
-In this section, we describe how to patch an
-existing Numba installation with the Numba HIP backend.
-For the upstream Numba installation instructions, see
-:ref:`Installation`.
+Preliminaries
+-------------
 
-1. For HIP on AMD GPUs, we currently recommend to patch a Numba version 
-   that has been installed into a ``conda`` environment and then apply the
-   ``patch-active-conda-env.sh`` ``bash`` script to patch the
-   ``numba/hip`` subfolder into that ``conda`` environment.
-2. You currently further need to install a couple of Python
-   packages that are distributed via ``test.pypi.org``.
-   The packages are listed in file ``numba-hip-examples.txt``
-   and can be installed via ``pip install -r numba-hip-examples.txt``.
-
-Example steps (rename ``myenv`` as you wish):
+Make sure that your ``pip`` is upgraded by running
 
 .. code-block:: bash
 
-   conda activate myenv
-   (myenv) $ conda install numba==<NUMBA_VERSION>
-   (myenv) $ bash ./patch-active-conda-env
-   (myenv) $ pip install -r numba-hip-requirements.txt
-   # IMPORTANT: Don't try to import numba when your working directory
-   #            is the root of the numba repository!
-   (myenv) $ cd "out/of/directory"
-   # Test the import
-   (myenv) $ python3 -c "from numba import hip"
+   pip install --upgrade pip
 
-Numba Installation
-==================
+Dependencies of Numba HIP are currently partially distributed via Test PyPI.
+Therefore, you need to specify it as extra index URL in your ``pip`` config as
+shown below:
 
-Please follow the instructions:
+.. code-block:: bash
 
-https://numba.readthedocs.io/en/stable/user/installing.html
+   pip config set global.extra-index-url https://test.pypi.org/simple
 
-Demo
-====
+Install via Github URL
+----------------------
 
-Please have a look and the demo notebooks via the mybinder service:
+The easiest way to install Numba HIP is by passing the repository URL and
+optionally the branch that you want to build directly to ``pip``:
 
-https://mybinder.org/v2/gh/numba/numba-examples/master?filepath=notebooks
+.. code-block:: bash
+
+   pip install --upgrade pip
+   pip config set global.extra-index-url https://test.pypi.org/simple
+   # syntax: pip install git+<URL>@<branch>
+   pip install git+https://github.com/ROCm/numba-hip.git
+     # alternatively: checkout a branch like 'dev':
+     # pip install git+https://github.com/ROCm/numba-hip.git@dev
+
+Install with optional test dependencies:
+
+.. code-block:: bash
+
+   pip install --upgrade pip
+   pip config set global.extra-index-url https://test.pypi.org/simple
+   # syntax: pip install git+<URL>@<branch>[test]
+   pip install git+https://github.com/ROCm/numba-hip.git[test]
+     # alternatively: checkout a branch like 'dev':
+     # pip install git+https://github.com/ROCm/numba-hip.git@dev[test]
+
+Install via pip install
+-----------------------
+
+After cloning the repository, you can also install the package via ``pip install``:
+
+.. code-block:: bash
+
+   git clone https://github.com/ROCm/numba-hip.git
+     # alternatively: checkout a branch like 'dev':
+     # pip clone https://github.com/ROCm/numba-hip.git -b branch
+   pip install --upgrade pip
+   pip config set global.extra-index-url https://test.pypi.org/simple
+   python3 -m pip install .
+     # alternatively: install optional test dependencies:
+     # python3 -m pip install .[test]
+
+Create a wheel via PyPA build
+-----------------------------
+
+After cloning the repository, you can also build a Python wheel
+and then distribute it (or install it):
+
+.. code-block:: bash
+
+   git clone https://github.com/ROCm/numba-hip.git
+     # alternatively: checkout a branch like 'dev':
+     # pip clone https://github.com/ROCm/numba-hip.git -b branch
+   pip install --upgrade pip
+   pip config set global.extra-index-url https://test.pypi.org/simple
+   pip install build venv # install PyPA build and venv
+   python3 -m build install .
+     # alternatively: install optional test dependencies:
+     # python3 -m build install .[test]
+   # optional: install the wheel:
+   pip install dist/*.whl
 
 Contact
 =======
@@ -185,4 +223,3 @@ Contact
 Numba has a discourse forum for discussions:
 
 * https://numba.discourse.group
-
