@@ -1,4 +1,0 @@
--i https://test.pypi.org/simple/
-hip-python
-hip-python-as-cuda
-rocm-llvm-python
