@@ -1,0 +1,35 @@
+[project]
+name = "numba-hip"
+version = "0.1"
+description = "Numba HIP - Numba backend for AMD GPUs"
+readme = { file = "README.rst", content-type = "text/rst" }
+authors = [
+    { name = "Advanced Micro Devices, Inc." },
+]
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dynamic = ["dependencies", "optional-dependencies"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+optional-dependencies = { test = { file = ["requirements-dev.txt"] }, dev = { file = ["requirements-dev.txt"] } }
+
+[project.urls]
+Homepage = "https://github.com/rocm/numba-hip"
+Documentation = "https://github.com/rocm/numba-hip"
+
+[tool.setuptools]
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["numba.*"]
+exclude = ["numba.hip.tests"]
