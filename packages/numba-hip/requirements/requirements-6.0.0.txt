@@ -1,0 +1,4 @@
+# --extra-index-url https://test.pypi.org/simple/
+hip-python==6.0.0.*
+hip-python-as-cuda==6.0.0.*
+rocm-llvm-python==6.0.0.*

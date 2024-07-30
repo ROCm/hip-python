@@ -19,8 +19,12 @@ classifiers = [
 ]
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-optional-dependencies = { test = { file = ["requirements-dev.txt"] }, dev = { file = ["requirements-dev.txt"] } }
+dependencies = { file = ["requirements/requirements.txt"] }
+optional-dependencies.test = { file = ["requirements/requirements-dev.txt"] }
+optional-dependencies.dev = { file = ["requirements/requirements-dev.txt"] }
+optional-dependencies.rocm_6_1_2 = { file = ["requirements/requirements-6.1.2.txt"] }
+optional-dependencies.rocm_6_1_0 = { file = ["requirements/requirements-6.1.0.txt"] }
+optional-dependencies.rocm_6_0_0 = { file = ["requirements/requirements-6.0.0.txt"] }
 
 [project.urls]
 Homepage = "https://github.com/rocm/numba-hip"

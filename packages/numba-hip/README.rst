@@ -2,8 +2,23 @@
 Numba HIP
 *********
 
-This repository provides a HIP backend for Numba that can be patched into
-an existing Numba installation.
+This repository provides a ROCm(TM) HIP backend for Numba.
+
+.. note:: Only for AMD MI series GPUs on Linux systems
+
+    So far the Numba HIP backend has only been used and tested with AMD MI series GPUs
+    on Linux systems. CUDA(R) devices are not supported.
+
+.. note:: Experimental project to inform Numba developers
+    With this replease, we primarily want to do two things:
+
+    1. Support internal projects that require a Numba backend for AMD GPUs.
+       All features that have been implemented so far were driven by the
+       requirements of those internal projects.
+    2. Give Numba developers additional context on how to create infrastructure that
+       supports multiple accelerator targets.
+       (See also: `RFC: Moving the CUDA target to a new package maintained by NVIDIA <https://numba.discourse.group/t/rfc-moving-the-cuda-target-to-a-new-package-maintained-by-nvidia/2628/2>`_)
+
 
 About Numba: A Just-In-Time Compiler for Numerical Functions in Python
 ######################################################################
@@ -95,8 +110,7 @@ Numba HIP: Limitations
 
 Generally, we aim for feature parity with Numba CUDA.
 
-As of May 2024, the following Numba CUDA features are missing in
-Numba HIP:
+The following Numba CUDA features are not available via Numba HIP:
 
 * Cooperative groups support (ex: ``cg.this_grid()``,
   ``cg.this_grid().sync()``)
@@ -107,7 +121,7 @@ Numba HIP:
   potentially reuse CUDA simulator),
 * Half precision (fp16) operations.
 
-Note that so far only limited effort has been spent on optimizing the
+Note further that so far only limited effort has been spent on optimizing the
 performance of the just-in-time compilation infrastructure.
 
 Numba HIP: Design Differences vs. Numba CUDA
@@ -136,10 +150,10 @@ Installation
    * 0.59.*
    * 0.60.0
 
-   Other versions have not been tested; using the Numba HIP Backend with these versions might work or not.
+   Other versions have not been tested; using the Numba HIP backend with these versions might work or not.
 
-Preliminaries
--------------
+Important things to know before installing
+------------------------------------------
 
 Make sure that your ``pip`` is upgraded by running
 
@@ -148,12 +162,23 @@ Make sure that your ``pip`` is upgraded by running
    pip install --upgrade pip
 
 Dependencies of Numba HIP are currently partially distributed via Test PyPI.
-Therefore, you need to specify it as extra index URL in your ``pip`` config as
-shown below:
+Therefore, you need to specify an extra index URL in your ``pip`` config
+as shown below:
 
 .. code-block:: bash
 
    pip config set global.extra-index-url https://test.pypi.org/simple
+
+Those dependencies further are depending on a particular ROCm release.
+We use optional dependency lists to make this configurable; see the
+``pyproject.toml`` file for more details.
+To install dependencies for a ROCm release of a particular version, you need
+to specify an dependency key in the format
+``rocm_{major}_{minor}_{patch}`` (example: ``rocm_6_1_2``) when building
+the Numba HIP package. If you leave the key aside, ``pip`` will either use
+already installed versions of the dependencies or install the latest release
+of these dependencies, which are compatible with the most recent release of ROCm
+but potentially not with older ROCm releases.
 
 Install via Github URL
 ----------------------
@@ -165,10 +190,18 @@ optionally the branch that you want to build directly to ``pip``:
 
    pip install --upgrade pip
    pip config set global.extra-index-url https://test.pypi.org/simple
-   # syntax: pip install git+<URL>@<branch>
-   pip install git+https://github.com/ROCm/numba-hip.git
+   # syntax 1: pip install git+<URL>@<branch>
+   # syntax 2: pip install git+<URL>@<branch>[rocm_{major}_{minor}_{patch}]
+   pip install git+https://github.com/ROCm/numba-hip.git[rocm_6_1_2]
      # alternatively: checkout a branch like 'dev':
      # pip install git+https://github.com/ROCm/numba-hip.git@dev
+
+.. note:: ROCm key must agree with your environment
+
+   Do not forget to change the ROCm version ``rocm_6_1_2``
+   (format: ``rocm_{major}_{minor}_{patch}``) to a key that agrees with your
+   ROCm installation so that dependencies versions compatible with your
+   ROCm installation are installed by ``pip``.
 
 Install with optional test dependencies:
 
@@ -176,10 +209,11 @@ Install with optional test dependencies:
 
    pip install --upgrade pip
    pip config set global.extra-index-url https://test.pypi.org/simple
-   # syntax: pip install git+<URL>@<branch>[test]
-   pip install git+https://github.com/ROCm/numba-hip.git[test]
+   # syntax 1: pip install git+<URL>@<branch>[test]
+   # syntax 2: pip install git+<URL>@<branch>[rocm_{major}_{minor}_{patch},test]
+   pip install git+https://github.com/ROCm/numba-hip.git[rocm_6_1_2,test]
      # alternatively: checkout a branch like 'dev':
-     # pip install git+https://github.com/ROCm/numba-hip.git@dev[test]
+     # pip install git+https://github.com/ROCm/numba-hip.git@dev[rocm_6_1_2,test]
 
 Install via pip install
 -----------------------
@@ -193,9 +227,17 @@ After cloning the repository, you can also install the package via ``pip install
      # pip clone https://github.com/ROCm/numba-hip.git -b branch
    pip install --upgrade pip
    pip config set global.extra-index-url https://test.pypi.org/simple
-   python3 -m pip install .
+   python3 -m pip install .[rocm_6_1_2]
      # alternatively: install optional test dependencies:
-     # python3 -m pip install .[test]
+     # variant 1: python3 -m pip install .[test]
+     # variant 2: python3 -m pip install .[rocm_6_1_2,test]
+
+.. note:: ROCm key must agree with your environment
+
+   Do not forget to change the ROCm version ``rocm_6_1_2``
+   (format: ``rocm_{major}_{minor}_{patch}``) to a key that agrees with your
+   ROCm installation so that dependencies versions compatible with your
+   ROCm installation are installed by ``pip``.
 
 Create a wheel via PyPA build
 -----------------------------
@@ -211,11 +253,20 @@ and then distribute it (or install it):
    pip install --upgrade pip
    pip config set global.extra-index-url https://test.pypi.org/simple
    pip install build venv # install PyPA build and venv
-   python3 -m build install .
+   # syntax 1: python3 -m build install .
+   # syntax 2: pip install -m build install .[rocm_{major}_{minor}_{patch}]
+   python3 -m build install .[rocm_6_1_2]
      # alternatively: install optional test dependencies:
-     # python3 -m build install .[test]
+     # python3 -m build install .[rocm_6_1_2,test]
    # optional: install the wheel:
    pip install dist/*.whl
+
+.. note:: ROCm key must agree with your environment
+
+   Do not forget to change the ROCm version ``rocm_6_1_2``
+   (format: ``rocm_{major}_{minor}_{patch}``) to a key that agrees with your
+   ROCm installation so that dependencies versions compatible with your
+   ROCm installation are installed by ``pip``.
 
 Contact
 =======
