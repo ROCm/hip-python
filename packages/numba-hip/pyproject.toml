@@ -31,5 +31,5 @@ license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["numba.*"]
+include = ["numba.hip.*"]
 exclude = ["numba.hip.tests"]
