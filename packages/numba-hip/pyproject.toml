@@ -25,17 +25,17 @@ dependencies = [
 [project.optional-dependencies]
 test = ["pytest"]
 dev = ["pytest"]
-rocm_6_1_2 = [
+rocm-6-1-2 = [
     "hip-python==6.1.2.*",
     "hip-python-as-cuda==6.1.2.*",
     "rocm-llvm-python==6.1.2.*",
 ]
-rocm_6_1_0 = [
+rocm-6-1-0 = [
     "hip-python==6.1.0.*",
     "hip-python-as-cuda==6.1.0.*",
     "rocm-llvm-python==6.1.0.*",
 ]
-rocm_6_0_0 = [
+rocm-6-0-0 = [
     "hip-python==6.0.0.*",
     "hip-python-as-cuda==6.0.0.*",
     "rocm-llvm-python==6.0.0.*",

@@ -179,7 +179,7 @@ We use optional dependency lists to make this configurable; see the
 ``pyproject.toml`` file for more details.
 To install dependencies for a ROCm release of a particular version, you need
 to specify an dependency key in the format
-``rocm_<major>_<minor>_<patch>`` (example: ``rocm_6_1_2``) when building
+``rocm-<major>-<minor>-<patch>`` (example: ``rocm-6-1-2``) when building
 the Numba HIP package. If you leave the key aside, ``pip`` will either use
 already installed versions of the dependencies or install the latest release
 of these dependencies, which are compatible with the most recent release of ROCm
@@ -196,15 +196,15 @@ optionally the branch that you want to build directly to ``pip``:
    pip install --upgrade pip
    pip config set global.extra-index-url https://test.pypi.org/simple
    # syntax 1: pip install git+<URL>@<branch>
-   # syntax 2: pip install "numba-hip[rocm_<major>_<minor>_<patch>] @ git+<URL>@<branch>"
-   pip install "numba-hip[rocm_6_1_2] @ git+https://github.com/ROCm/numba-hip.git"
+   # syntax 2: pip install "numba-hip[rocm-<major>-<minor>-<patch>] @ git+<URL>@<branch>"
+   pip install "numba-hip[rocm-6-1-2] @ git+https://github.com/ROCm/numba-hip.git"
      # alternatively: checkout a branch like 'dev':
-     # pip install "numba-hip[rocm_6_1_2] @ git+https://github.com/ROCm/numba-hip.git@dev"
+     # pip install "numba-hip[rocm-6-1-2] @ git+https://github.com/ROCm/numba-hip.git@dev"
 
 .. note:: ROCm key must agree with your environment
 
-   Do not forget to change the ROCm version ``rocm_6_1_2``
-   (format: ``rocm_<major>_<minor>_<patch>``) to a key that agrees with your
+   Do not forget to change the ROCm version ``rocm-6-1-2``
+   (format: ``rocm-<major>-<minor>-<patch>``) to a key that agrees with your
    ROCm installation so that dependency versions compatible with your
    ROCm installation are installed by ``pip``.
 
@@ -215,10 +215,10 @@ Install with optional test dependencies:
    pip install --upgrade pip
    pip config set global.extra-index-url https://test.pypi.org/simple
    # syntax 1: pip install "numba-hip[test] @  git+<URL>@<branch>"
-   # syntax 2: pip install "numba-hip[rocm_<major>_<minor>_<patch>,test] @ git+<URL>@<branch>"
-   pip install "numba-hip[rocm_6_1_2,test] @ git+https://github.com/ROCm/numba-hip.git"
+   # syntax 2: pip install "numba-hip[rocm-<major>-<minor>-<patch>,test] @ git+<URL>@<branch>"
+   pip install "numba-hip[rocm-6-1-2,test] @ git+https://github.com/ROCm/numba-hip.git"
      # alternatively: checkout a branch like 'dev':
-     # pip install "numba-hip[rocm_6_1_2,test] @ git+https://github.com/ROCm/numba-hip.git@dev"
+     # pip install "numba-hip[rocm-6-1-2,test] @ git+https://github.com/ROCm/numba-hip.git@dev"
 
 Install via pip install
 -----------------------
@@ -232,15 +232,15 @@ After cloning the repository, you can also install the package via ``pip install
      # pip clone https://github.com/ROCm/numba-hip.git -b branch
    pip install --upgrade pip
    pip config set global.extra-index-url https://test.pypi.org/simple
-   python3 -m pip install .[rocm_6_1_2]
+   python3 -m pip install .[rocm-6-1-2]
      # alternatively: install optional test dependencies:
      # variant 1: python3 -m pip install .[test]
-     # variant 2: python3 -m pip install .[rocm_6_1_2,test]
+     # variant 2: python3 -m pip install .[rocm-6-1-2,test]
 
 .. note:: ROCm key must agree with your environment
 
-   Do not forget to change the ROCm version ``rocm_6_1_2``
-   (format: ``rocm_<major>_<minor>_<patch>``) to a key that agrees with your
+   Do not forget to change the ROCm version ``rocm-6-1-2``
+   (format: ``rocm-<major>-<minor>-<patch>``) to a key that agrees with your
    ROCm installation so that dependency versions compatible with your
    ROCm installation are installed by ``pip``.
 
@@ -259,17 +259,17 @@ and then distribute it (or install it):
    pip config set global.extra-index-url https://test.pypi.org/simple
    pip install build venv # install PyPA build and venv
    # syntax 1: python3 -m build install .
-   # syntax 2: pip install -m build install .[rocm_<major>_<minor>_<patch>]
-   python3 -m build install .[rocm_6_1_2]
+   # syntax 2: pip install -m build install .[rocm-<major>-<minor>-<patch>]
+   python3 -m build install .[rocm-6-1-2]
      # alternatively: install optional test dependencies:
-     # python3 -m build install .[rocm_6_1_2,test]
+     # python3 -m build install .[rocm-6-1-2,test]
    # optional: install the wheel:
    pip install dist/*.whl
 
 .. note:: ROCm key must agree with your environment
 
-   Do not forget to change the ROCm version ``rocm_6_1_2``
-   (format: ``rocm_<major>_<minor>_<patch>``) to a key that agrees with your
+   Do not forget to change the ROCm version ``rocm-6-1-2``
+   (format: ``rocm-<major>-<minor>-<patch>``) to a key that agrees with your
    ROCm installation so that dependency versions compatible with your
    ROCm installation are installed by ``pip``.
 
