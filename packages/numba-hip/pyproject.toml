@@ -3,12 +3,9 @@ name = "numba-hip"
 version = "0.1"
 description = "Numba HIP - Numba backend for AMD GPUs"
 readme = { file = "README.rst", content-type = "text/rst" }
-authors = [
-    { name = "Advanced Micro Devices, Inc." },
-]
+authors = [{ name = "Advanced Micro Devices, Inc." }]
 license = { text = "MIT" }
 requires-python = ">=3.9"
-dynamic = ["dependencies", "optional-dependencies"]
 classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Scientific/Engineering",
@@ -18,13 +15,31 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 
-[tool.setuptools.dynamic]
-dependencies = { file = ["requirements/requirements.txt"] }
-optional-dependencies.test = { file = ["requirements/requirements-dev.txt"] }
-optional-dependencies.dev = { file = ["requirements/requirements-dev.txt"] }
-optional-dependencies.rocm_6_1_2 = { file = ["requirements/requirements-6.1.2.txt"] }
-optional-dependencies.rocm_6_1_0 = { file = ["requirements/requirements-6.1.0.txt"] }
-optional-dependencies.rocm_6_0_0 = { file = ["requirements/requirements-6.0.0.txt"] }
+dependencies = [
+    "numba>=0.58",
+    "hip-python>=5.6.0",
+    "hip-python-as-cuda>=5.6.0",
+    "rocm-llvm-python>=5.6.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+dev = ["pytest"]
+rocm_6_1_2 = [
+    "hip-python==6.1.2.*",
+    "hip-python-as-cuda==6.1.2.*",
+    "rocm-llvm-python==6.1.2.*",
+]
+rocm_6_1_0 = [
+    "hip-python==6.1.0.*",
+    "hip-python-as-cuda==6.1.0.*",
+    "rocm-llvm-python==6.1.0.*",
+]
+rocm_6_0_0 = [
+    "hip-python==6.0.0.*",
+    "hip-python-as-cuda==6.0.0.*",
+    "rocm-llvm-python==6.0.0.*",
+]
 
 [project.urls]
 Homepage = "https://github.com/rocm/numba-hip"

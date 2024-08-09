@@ -1,5 +1,0 @@
-# --extra-index-url https://test.pypi.org/simple/
-numba>=0.58
-hip-python
-hip-python-as-cuda
-rocm-llvm-python
