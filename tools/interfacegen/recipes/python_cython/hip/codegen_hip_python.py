@@ -885,7 +885,7 @@ def render_toc_yml_in(
     hip_python_lib_names,
     cuda_python_lib_names,
 ):
-    toc_yml_in = os.path.join(hip_python_docs_dir, ".sphinx", "_toc.yml.in")
+    toc_yml_in = os.path.join(hip_python_docs_dir, "sphinx", "_toc.yml.in")
     python_api_file_names = [
         f"      - file: python_api/{lib}" for lib in hip_python_lib_names
     ]
@@ -1099,7 +1099,7 @@ if __name__ == "__main__":
         rocm_version_name,
     )
     # _toc.yml.in from _toc.yml.in.in
-    Path(os.path.join(hip_python_docs_dir, ".sphinx")).mkdir(
+    Path(os.path.join(hip_python_docs_dir, "sphinx")).mkdir(
         parents=False, exist_ok=True
     )
     render_toc_yml_in(hip_python_docs_dir, hip_python_lib_names, cuda_python_lib_names)
