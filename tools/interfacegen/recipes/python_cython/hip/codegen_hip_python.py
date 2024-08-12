@@ -512,6 +512,7 @@ def generate_hipsolver_module_files():
     from .hipblas import _hipblasSideMode_t__Base
     from .hipblas import _hipblasFillMode_t__Base
     from .hipblas import _hipblasOperation_t__Base
+    from .hip import _hipDataType__Base
     """
     )
     return generator
