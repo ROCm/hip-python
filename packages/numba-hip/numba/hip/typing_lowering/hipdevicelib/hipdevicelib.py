@@ -43,7 +43,7 @@ import rocm.clang.cindex as ci
 
 from rocm.amd_comgr import amd_comgr as comgr
 
-from hip import HIP_VERSION_TUPLE
+from hip import HIP_VERSION_TUPLE, ROCM_VERSION_TUPLE
 
 from numba.core import cgutils, types
 
@@ -274,15 +274,25 @@ class HIPDeviceLib:
                 """)
         # NOTE: function pow(*,*) already has all required overloads.
         fun="ldexp"
-        overloads += textwrap.dedent(f"""\
-            // ldexp
-            float __attribute__((device)) {fun}(float _0, float _1) {{
-                return {fun}(_0,static_cast<int>(_1));
-            }}
-            double __attribute__((device)) {fun}(double _0, double _1) {{
-                return {fun}(_0,static_cast<int>(_1));
-            }}
-            """)
+        # TODO(HIP/AMD): ROCm 6.2.0 AMD COMGR (not hipcc and not HIPRTC) translates the
+        #                calls in the body of the below functions into @llvm.ldexp.f32.f32 and
+        #                and @llvm.ldexp.f64.f64 for some reason while only
+        #                @llvm.ldexp.f*.i32 variants are defined.
+        #                This then causes linker errors.
+        #                Workarounds such as replacing the function calls with
+        #                __builtin_amdgcn_ldexp* and __ocml_ldexp_f* did not change
+        #               anything. Therefore, we check the ROCm version and disable
+        #               these overloads for the time being.
+        if ROCM_VERSION_TUPLE not in ((6,2,0),):
+            overloads += textwrap.dedent(f"""\
+                // {fun}
+                float __attribute__((device)) {fun}(float _0, float _1) {{
+                    return {fun}(_0,static_cast<int>(_1));
+                }}
+                double __attribute__((device)) {fun}(double _0, double _1) {{
+                    return {fun}(_0,static_cast<int>(_1));
+                }}
+                """)
         return overloads
 
     @staticmethod
