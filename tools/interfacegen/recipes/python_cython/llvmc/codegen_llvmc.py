@@ -267,6 +267,16 @@ if __name__ == "__main__":
     interfacegen.cython.FunctionMixin.python_interface_always_return_tuple = (
         False  # same for all modules, unlike callbacks
     )
+
+    # Patch missing includes-of-includes
+    # lljitutils was introduced in ROCm 6.2.0
+    lljitutils = INCTREE.find_node(py_name="lljitutils")
+    if lljitutils:
+        lljitutils.includes += [
+          INCTREE.find_node(py_name="types"),
+          INCTREE.find_node(py_name="error"),
+        ]
+
     create_generators(INCTREE)
 
     support.generate_all_rocm_package_files(
@@ -283,7 +293,7 @@ if __name__ == "__main__":
 
             import sys
             import os
-        
+
             for module_name, module in sys.modules.items():
                 if module_name.startswith("rocm.llvm.c."):
                     if "DLL" in vars(module):
