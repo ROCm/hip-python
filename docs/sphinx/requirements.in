@@ -1,5 +1,5 @@
 --extra-index-url https://test.pypi.org/simple/
-rocm-docs-core==1.8.0
+rocm-docs-core==1.8.2
 autodoc
 hip-python
 hip-python-as-cuda
