@@ -274,7 +274,7 @@ class HIPDeviceLib:
                 """)
         # NOTE: function pow(*,*) already has all required overloads.
         fun="ldexp"
-        # TODO(HIP/AMD): ROCm 6.2.0 AMD COMGR (not hipcc and not HIPRTC) translates the
+        # TODO(HIP/AMD): ROCm 6.2.x & ROCm 6.3.0 AMD COMGR (not hipcc and not HIPRTC) translates the
         #                calls in the body of the below functions into @llvm.ldexp.f32.f32 and
         #                and @llvm.ldexp.f64.f64 for some reason while only
         #                @llvm.ldexp.f*.i32 variants are defined.
@@ -283,7 +283,7 @@ class HIPDeviceLib:
         #                __builtin_amdgcn_ldexp* and __ocml_ldexp_f* did not change
         #               anything. Therefore, we check the ROCm version and disable
         #               these overloads for the time being.
-        if ROCM_VERSION_TUPLE not in ((6,2,0),):
+        if ROCM_VERSION_TUPLE < (6,2,0):
             overloads += textwrap.dedent(f"""\
                 // {fun}
                 float __attribute__((device)) {fun}(float _0, float _1) {{
