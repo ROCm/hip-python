@@ -25,25 +25,50 @@ dependencies = [
 [project.optional-dependencies]
 test = ["pytest"]
 dev = ["pytest"]
+rocm-6-3-0 = [
+    "hip-python~=6.3.0.0",
+    "hip-python-as-cuda~=6.3.0.0",
+    "rocm-llvm-python~=6.3.0.0",
+]
+rocm-6-2-4 = [
+    "hip-python~=6.2.0.0",
+    "hip-python-as-cuda~=6.2.0.0",
+    "rocm-llvm-python~=6.2.0.0",
+]
+rocm-6-2-3 = [
+    "hip-python~=6.2.0.0",
+    "hip-python-as-cuda~=6.2.0.0",
+    "rocm-llvm-python~=6.2.0.0",
+]
+rocm-6-2-2 = [
+    "hip-python~=6.2.0.0",
+    "hip-python-as-cuda~=6.2.0.0",
+    "rocm-llvm-python~=6.2.0.0",
+]
+rocm-6-2-1 = [
+    "hip-python~=6.2.0.0",
+    "hip-python-as-cuda~=6.2.0.0",
+    "rocm-llvm-python~=6.2.0.0",
+]
 rocm-6-2-0 = [
-    "hip-python==6.2.0.*",
-    "hip-python-as-cuda==6.2.0.*",
-    "rocm-llvm-python==6.2.0.*",
+    "hip-python~=6.2.0.0",
+    "hip-python-as-cuda~=6.2.0.0",
+    "rocm-llvm-python~=6.2.0.0",
 ]
 rocm-6-1-2 = [
-    "hip-python==6.1.2.*",
-    "hip-python-as-cuda==6.1.2.*",
-    "rocm-llvm-python==6.1.2.*",
+    "hip-python~=6.1.2.0",
+    "hip-python-as-cuda~=6.1.2.0",
+    "rocm-llvm-python~=6.1.2.0",
 ]
 rocm-6-1-0 = [
-    "hip-python==6.1.0.*",
-    "hip-python-as-cuda==6.1.0.*",
-    "rocm-llvm-python==6.1.0.*",
+    "hip-python~=6.1.0.0",
+    "hip-python-as-cuda~=6.1.0.0",
+    "rocm-llvm-python~=6.1.0.0",
 ]
 rocm-6-0-0 = [
-    "hip-python==6.0.0.*",
-    "hip-python-as-cuda==6.0.0.*",
-    "rocm-llvm-python==6.0.0.*",
+    "hip-python~=6.0.0.0",
+    "hip-python-as-cuda~=6.0.0.0",
+    "rocm-llvm-python~=6.0.0.0",
 ]
 
 [project.urls]
