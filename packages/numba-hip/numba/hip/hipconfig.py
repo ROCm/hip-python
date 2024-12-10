@@ -120,7 +120,7 @@ def get_rocm_path(*subdirs):
         _log.info(
             "neither 'ROCM_PATH' nor 'ROCM_HOME' environment variable specified, trying default path '/opt/rocm'"
         )
-    rocm_path = "/opt/rocm/"
+        rocm_path = "/opt/rocm/"
     if not os.path.exists(rocm_path):
         msg = "no ROCm installation found, checked 'ROCM_PATH' and 'ROCM_HOME' and tried '/opt/rocm'"
         _log.error(msg)
