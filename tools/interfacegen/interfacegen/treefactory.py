@@ -225,7 +225,7 @@ def from_libclang_translation_unit(
                 pass  # do not append typedef node
         else:
             _log.warning(
-                f"<{backend.Node.render_cursor_location(cursor)}> Did not handle {cursor.type.kind} with typedef name '{cursor.spelling}'"
+                f"<{backend.tree.Node.render_cursor_location(cursor)}> Did not handle {cursor.type.kind} with typedef name '{cursor.spelling}'"
             )
 
     def handle_nested_record_or_enum_cursor_(
