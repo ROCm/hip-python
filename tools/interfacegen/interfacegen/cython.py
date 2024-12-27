@@ -498,7 +498,7 @@ class Root(tree.Root, CythonMixin):
 
 class MacroDefinition(tree.MacroDefinition, CythonMixin):
     def __init__(self, *args, **kwargs):
-        tree.MacroDefinition(self, *args, **kwargs)
+        tree.MacroDefinition.__init__(self, *args, **kwargs)
         CythonMixin.__init__(self)
         self.macro_type = DEFAULT_MACRO_TYPE
 
@@ -670,7 +670,7 @@ class Typed:
 
 class Field(tree.Field, CythonMixin, Typed):
     def __init__(self, *args, **kwargs):
-        tree.Field(self, *args, **kwargs)
+        tree.Field.__init__(self, *args, **kwargs)
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
         self.ptr_complicated_type_handler = (
@@ -694,7 +694,7 @@ class Field(tree.Field, CythonMixin, Typed):
     def render_python_property(self, record_cname: str):
 
         attr = self.renamer(self.name)
-        template = CythonMixin.Tempita.Template(
+        template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_record_property_template
         )
 
@@ -771,7 +771,7 @@ class Record(tree.Record, CythonMixin):
     def render_python_interface_decl(self, cprefix: str) -> str:
 
         name = self.renamer(self.global_name(self.sep))
-        template = CythonMixin.Tempita.Template(
+        template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_decl_template
         )
         return template.substitute(
@@ -787,7 +787,7 @@ class Record(tree.Record, CythonMixin):
 
         global python_interface_record_properties_name
         name = self.cython_global_name
-        template = CythonMixin.Tempita.Template(
+        template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_impl_base_template.rstrip("\n")
             + "\n\n"
             + cythontemplates.wrapper_class_record_init_template
@@ -1137,7 +1137,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
     def render_python_interface_decl(self, cprefix: str) -> str:
 
         name = self.cython_global_name
-        template = CythonMixin.Tempita.Template(
+        template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_decl_template
         )
         return template.substitute(
@@ -1150,7 +1150,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
     def render_python_interface_impl(self, cprefix: str) -> str:
         global indent
         name = self.cython_global_name
-        template = CythonMixin.Tempita.Template(
+        template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_impl_base_template.rstrip("\n")
             + "\n"
             + cythontemplates.wrapper_class_constantarray_get_element_template
@@ -1181,7 +1181,7 @@ class FunctionPointer(CythonMixin):
 
         name = self.cython_global_name
         cname = cprefix + name
-        template = CythonMixin.Tempita.Template(
+        template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_decl_template
         )
         return template.substitute(
@@ -1196,7 +1196,7 @@ class FunctionPointer(CythonMixin):
 
         name = self.cython_global_name
         cname = cprefix + name
-        template = CythonMixin.Tempita.Template(
+        template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_impl_base_template
         )
         self.all.append(name)
