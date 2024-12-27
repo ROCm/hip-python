@@ -37,7 +37,7 @@ from interfacegen.tree import (
     Record,
 )
 
-from interfacegen.control import ParmIntent
+from interfacegen.support.recipes.control import ParmIntent
 
 # HIP
 
