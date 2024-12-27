@@ -327,7 +327,7 @@ def generate_hip_module_files():
         return interfacegen.cython.DEFAULT_RENAMER(controls.hip.renamer(name))
 
     generator = CythonModuleGenerator(
-        "hipfort_hip",
+        "hip.hip",
         ROCM_INC,
         "hip/hip_runtime.h",
         runtime_linking=RUNTIME_LINKING,
@@ -410,7 +410,7 @@ def generate_hiprtc_module_files():
                 node.modifiers_lazy_loader = " noexcept nogil"
 
     generator = CythonModuleGenerator(
-        "hipfort_hiprtc",
+        "hip.hiprtc",
         ROCM_INC,
         "hip/hiprtc.h",
         runtime_linking=RUNTIME_LINKING,
@@ -444,7 +444,7 @@ def generate_hipblas_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipfort_hipblas",
+        "hip.hipblas",
         ROCM_INC,
         "hipblas/hipblas.h",
         runtime_linking=RUNTIME_LINKING,
@@ -482,7 +482,7 @@ def generate_hipsolver_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipfort_hipsolver",
+        "hip.hipsolver",
         ROCM_INC,
         "hipsolver/hipsolver.h",
         runtime_linking=RUNTIME_LINKING,
@@ -525,7 +525,7 @@ def generate_rccl_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipfort_rccl",
+        "hip.rccl",
         ROCM_INC,
         "rccl/rccl.h",
         runtime_linking=RUNTIME_LINKING,
@@ -558,7 +558,7 @@ def generate_hiprand_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipfort_hiprand",
+        "hip.hiprand",
         ROCM_INC,
         "hiprand/hiprand.h",
         runtime_linking=RUNTIME_LINKING,
@@ -591,7 +591,7 @@ def generate_hipfft_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipfort_hipfft",
+        "hip.hipfft",
         ROCM_INC,
         "hipfft/hipfft.h",
         runtime_linking=RUNTIME_LINKING,
@@ -624,7 +624,7 @@ def generate_hipsparse_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipfort_hipsparse",
+        "hip.hipsparse",
         ROCM_INC,
         "hipsparse/hipsparse.h",
         runtime_linking=RUNTIME_LINKING,
@@ -663,7 +663,7 @@ def generate_roctx_module_files():
     global RUNTIME_LINKING
 
     generator = CythonModuleGenerator(
-        "hipfort_roctx",
+        "hip.roctx",
         ROCM_INC,
         "roctracer/roctx.h",
         runtime_linking=RUNTIME_LINKING,
