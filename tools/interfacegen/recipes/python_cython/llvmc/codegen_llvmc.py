@@ -300,6 +300,7 @@ if __name__ == "__main__":
                         module.DLL = os.path.join(os.path.dirname(__file__),"{pkg_opts.dll}").encode("utf-8")
             del sys
             del os
-        """
+        """,
         ),
+        year_start="2023",
     )
