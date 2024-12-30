@@ -51,10 +51,12 @@ MIT_LICENSE_AMD = """\
 """
 
 def render_license_MIT(
-    year_end: str = THIS_YEAR_YYYY,
-    year_start: str = THIS_YEAR_YYYY,
+    year_end = THIS_YEAR_YYYY,
+    year_start = THIS_YEAR_YYYY,
     comment_char=COMMENT_CHAR_PY,
 ):
+    year_end = str(year_end)
+    year_start = str(year_start)
     if year_end == year_start:
         copyright_year = year_end
     else:
@@ -62,7 +64,6 @@ def render_license_MIT(
     return MIT_LICENSE_AMD.format(
         copyright_year=copyright_year, comment_char=comment_char
     )
-
 
 def versions(rocm_version_major: int, rocm_version_minor: int, rocm_version_patch: int):
     rocm_version_name: str = (
@@ -79,21 +80,6 @@ def versions(rocm_version_major: int, rocm_version_minor: int, rocm_version_patc
         f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
     )
     return (rocm_version, rocm_version_name, version, long_version)
-
-def render_license_MIT(
-    year_end = THIS_YEAR_YYYY,
-    year_start = THIS_YEAR_YYYY,
-    comment_char=COMMENT_CHAR_PY,
-):
-    year_end = str(year_end)
-    year_start = str(year_start)
-    if year_end == year_start:
-        copyright_year = year_end
-    else:
-        copyright_year = f"{year_start}-{year_end}"
-    return MIT_LICENSE_AMD.format(
-        copyright_year=copyright_year, comment_char=comment_char
-    )
 
 def create_rocm_package_cli_parser(
     env_var_prefix: str, libs_example: str, *args, **kwargs
