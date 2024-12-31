@@ -64,7 +64,7 @@ def from_libclang_translation_unit(
         clang.cindex.CursorKind.ENUM_DECL: backend.AnonymousEnum,
     }
 
-    def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root: backend.Root):
+    def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root):  # t: backend.Root
         """Handle cursors whose parent is the cursor of kind TRANSLATION_UNIT."""
         nonlocal structure_types
         nonlocal warn_mode
@@ -95,7 +95,7 @@ def from_libclang_translation_unit(
             root.append(node)
 
     def handle_top_level_record_or_enum_cursor_(
-        cursor: clang.cindex.Cursor, root: backend.Root
+        cursor: clang.cindex.Cursor, root  # t: backend.Root
     ):
         """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
         Other cursors are ignored.
@@ -118,7 +118,7 @@ def from_libclang_translation_unit(
             descend_into_child_cursors_(node)
             root.append(node)
 
-    def handle_typedef_cursor_(cursor: clang.cindex.Cursor, root: backend.Root):
+    def handle_typedef_cursor_(cursor: clang.cindex.Cursor, root):  # t: backend.Root
         """Handle typedef cursors with respect to their children and type.
 
         Checks if the typedef has any STRUCT_DECL, UNION_DECL, ENUM_DECL, or TYPE_REF child cursor, which
@@ -229,7 +229,7 @@ def from_libclang_translation_unit(
             )
 
     def handle_nested_record_or_enum_cursor_(
-        cursor: clang.cindex.Cursor, parent: backend.Node
+        cursor: clang.cindex.Cursor, parent  # t: backend.Node
     ):
         """Handle a STRUCT_DECL/UNION_DECL cursor's STRUCT_DECL/UNION_DECL/ENUM_DECL child cursor.
         Other cursors are ignored.
@@ -250,7 +250,7 @@ def from_libclang_translation_unit(
             parent.append(node)
 
     def handle_param_or_field_decl_cursor_(
-        cursor: clang.cindex.Cursor, parent: backend.Node
+        cursor: clang.cindex.Cursor, parent  # t: backend.Node
     ):
         """Handle PARAM_DECL/FIELD_DECL cursors.
 
@@ -311,7 +311,7 @@ def from_libclang_translation_unit(
         ):
             handle_param_or_field_decl_cursor_(cursor, parent)
 
-    def descend_into_child_cursors_(node: backend.Node):
+    def descend_into_child_cursors_(node):  # t: backend.Node
         for child_cursor in node.cursor.get_children():
             descend_(child_cursor, node)
 
