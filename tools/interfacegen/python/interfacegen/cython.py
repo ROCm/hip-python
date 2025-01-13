@@ -374,6 +374,7 @@ class DoxygenMixin:
             docstring_addition += body
         return docstring_addition
 
+
 class CythonMixin(DoxygenMixin):
     def __init__(self):
         global DOXYGEN_CONV
@@ -488,7 +489,9 @@ class CythonMixin(DoxygenMixin):
     def to_sphinx_pyobj(expr: str):
         return python_interface_pyobj_role_template.format(name=expr)
 
-Node = CythonMixin # alias so that it can be used in treefactory
+
+Node = CythonMixin  # alias so that it can be used in treefactory
+
 
 class Root(tree.Root, CythonMixin):
     def __init__(self, *args, **kwargs):
@@ -726,7 +729,14 @@ class Field(tree.Field, CythonMixin, Typed):
         )
 
 
-class Record(tree.Record, CythonMixin):
+class ParentIsRecordMixin:
+
+    @property
+    def parent_is_record(self):  # type: (Record|Enum) -> bool
+        return isinstance(self.parent, tree.Record)
+
+
+class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
     def __init__(self):
         raise RuntimeError("cannot be instantiated")
 
@@ -771,9 +781,7 @@ class Record(tree.Record, CythonMixin):
     def render_python_interface_decl(self, cprefix: str) -> str:
 
         name = self.renamer(self.global_name(self.sep))
-        template = Cython.Tempita.Template(
-            cythontemplates.wrapper_class_decl_template
-        )
+        template = Cython.Tempita.Template(cythontemplates.wrapper_class_decl_template)
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
@@ -896,7 +904,7 @@ class AnonymousUnion(tree.AnonymousUnion, Record):
         CythonMixin.__init__(self)
 
 
-class Enum(tree.Enum, CythonMixin):
+class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
     def __init__(self, *args, **kwargs):
         tree.Enum.__init__(self, *args, **kwargs)
         CythonMixin.__init__(self)
@@ -1137,9 +1145,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
     def render_python_interface_decl(self, cprefix: str) -> str:
 
         name = self.cython_global_name
-        template = Cython.Tempita.Template(
-            cythontemplates.wrapper_class_decl_template
-        )
+        template = Cython.Tempita.Template(cythontemplates.wrapper_class_decl_template)
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
@@ -1181,9 +1187,7 @@ class FunctionPointer(CythonMixin):
 
         name = self.cython_global_name
         cname = cprefix + name
-        template = Cython.Tempita.Template(
-            cythontemplates.wrapper_class_decl_template
-        )
+        template = Cython.Tempita.Template(cythontemplates.wrapper_class_decl_template)
         return template.substitute(
             name=name,
             cname=cname,
@@ -1220,6 +1224,7 @@ class AnonymousFunctionPointer(tree.AnonymousFunctionPointer, FunctionPointer):
     def __init__(self, *args, **kwargs):
         tree.AnonymousFunctionPointer.__init__(self, *args, **kwargs)
         CythonMixin.__init__(self)
+
 
 class Parm(tree.Parm, CythonMixin, Typed):
     def __init__(self, *args, **kwargs):
@@ -1986,10 +1991,12 @@ class CythonBackend:
     ):
         """See `CythonBackend.__init__` for further details."""
         from interfacegen import treefactory
+
         root = treefactory.from_libclang_translation_unit(
-            backend=sys.modules[__name__], # this module is the backend
-            translation_unit=translation_unit, 
-            warn_mode=warn_mode)
+            backend=sys.modules[__name__],  # this module is the backend
+            translation_unit=translation_unit,
+            warn_mode=warn_mode,
+        )
         return CythonBackend(
             root,
             filename,
@@ -2207,6 +2214,8 @@ class CythonBackend:
             block as entities listed within the body of the construct,
             are assumed by Cython to be present in C code whenever
             the respective header is included.
+            The same holds true for records (struct, union) and enum types that
+            are nested inside of another record.
 
             Moving those entities out of the `extern from` block
             ensures that Cython creates a proper C type on its own.
@@ -2228,6 +2237,8 @@ class CythonBackend:
                     )
                     and node.is_cursor_anonymous
                 )
+                or isinstance(node, ParentIsRecordMixin)
+                and node.parent_is_record
                 or (
                     isinstance(node, MacroDefinition)
                     and (
@@ -2242,8 +2253,11 @@ class CythonBackend:
                 curr_indent = ""
                 last_was_extern = False
             else:
+                # NOTE: these declarations must be in `cdef extern from ...` environment
                 if not last_was_extern:
                     result.append(f'cdef extern from "{self.filename}":')
+                else:
+                    pass  # NOTE: already in 'cdef extern from ...' environment
                 curr_indent = indent
                 contrib = node.render_c_interface()
                 last_was_extern = True
