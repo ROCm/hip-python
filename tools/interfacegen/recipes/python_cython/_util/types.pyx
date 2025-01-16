@@ -1777,7 +1777,7 @@ cdef class ListOfInt(Pointer):
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(int))
             for i,entry in enumerate(pyobj):
                 if isinstance(entry,int):
-                    (<int*>self._ptr)[i] = <int>cpython.long.PyLong_AsLongLong(pyobj)
+                    (<int*>self._ptr)[i] = <int>cpython.long.PyLong_AsLongLong(entry)
                 elif isinstance(entry,(
                     ctypes.c_bool,
                     ctypes.c_short,
@@ -1920,7 +1920,7 @@ cdef class ListOfUnsigned(Pointer):
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(unsigned int))
             for i,entry in enumerate(pyobj):
                 if isinstance(entry,int):
-                    (<unsigned int*>self._ptr)[i] = <unsigned int>cpython.long.PyLong_AsUnsignedLongLong(pyobj)
+                    (<unsigned int*>self._ptr)[i] = <unsigned int>cpython.long.PyLong_AsUnsignedLongLong(entry)
                 elif isinstance(entry,(
                     ctypes.c_bool,
                     ctypes.c_short,
@@ -2065,7 +2065,7 @@ cdef class ListOfUnsignedLong(Pointer):
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(unsigned long))
             for i,entry in enumerate(pyobj):
                 if isinstance(entry,int):
-                    (<unsigned long*>self._ptr)[i] = <unsigned long>cpython.long.PyLong_AsUnsignedLongLong(pyobj)
+                    (<unsigned long*>self._ptr)[i] = <unsigned long>cpython.long.PyLong_AsUnsignedLongLong(entry)
                 elif isinstance(entry,(
                     ctypes.c_bool,
                     ctypes.c_short,
