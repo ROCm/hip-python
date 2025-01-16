@@ -45,7 +45,7 @@ from interfacegen.support import gitversion
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
 
-import controls
+from interfacegen.support.recipes import hip as controls
 import cuda_interop_layer_gen
 
 # configure codegen
