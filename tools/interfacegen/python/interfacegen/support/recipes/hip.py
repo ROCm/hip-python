@@ -181,27 +181,6 @@ class hip:
         return values that are created internally by the respective function.
         """
         func_name, parm_idx = parm.parent.name, parm.parm_index
-        if (
-            parm.is_pointer_to_record(degree=2)
-            or (
-                parm.is_pointer_to_basic_type(degree=1)
-                and not parm.is_pointer_to_char(degree=1)
-            )
-        ):
-            return ParmIntent.OUT
-        if parm.is_pointer_to_enum(degree=1):
-            if (func_name, parm_idx) in (
-                ("hipDrvPointerGetAttributes", 1),
-                ("hipMemRangeGetAttributes", 2),
-                ("hipMemPoolGetAccess", 0),
-                ("hipModuleLoadDataEx", 3),
-                ("hipThreadExchangeStreamCaptureMode", 0),
-            ):
-                return ParmIntent.IN
-            return ParmIntent.OUT
-        if parm.is_pointer_to_void(degree=2):
-            if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
-                return ParmIntent.OUT
         if (func_name, parm_idx) in (
             ("hipDeviceGetName", 0),
             ("hipIpcGetMemHandle", 0),
@@ -212,29 +191,51 @@ class hip:
             ("hipDrvGetErrorString",1),
         ):
             return ParmIntent.OUT
-        if (func_name, parm_idx) in ("hipPointerGetAttribute", 0):
+        if (func_name, parm_idx) in (
+            ("hipPointerGetAttribute", 0),
+            ("hipExtStreamGetCUMask", 2),
+        ):
             return ParmIntent.INOUT
+        if (func_name, parm_idx) in (
+            ("hipExtStreamCreateWithCUMask", 2),
+        ):
+            return ParmIntent.IN
+
+        if parm.is_pointer_to_void(degree=2):
+            if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
+                return ParmIntent.OUT
+        if parm.is_pointer_to_enum(degree=1):
+            return ParmIntent.OUT
+        if (
+            parm.is_pointer_to_record(degree=2)
+            or (
+                parm.is_pointer_to_basic_type(degree=1)
+                and not parm.is_pointer_to_char(degree=1)
+            )
+        ):
+            return ParmIntent.OUT
         return ParmIntent.IN
 
     @staticmethod
     def ptr_rank(node: Node):
         """Actual rank of the variables underlying pointer indirections."""
         if isinstance(node, Parm):
+            func_name, parm_idx = node.parent.name, node.parm_index
+            if (func_name, parm_idx) in (
+                ("hipDrvPointerGetAttributes", 1),
+                ("hipMemRangeGetAttributes", 2),
+                ("hipMemPoolGetAccess", 0),
+                ("hipModuleLoadDataEx", 3),
+                ("hipExtStreamCreateWithCUMask", 2),
+                ("hipExtStreamGetCUMask", 2),
+            ):
+                return 1
             if (
                 (node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1))
+                or node.is_pointer_to_enum(degree=1)
                 or node.is_pointer_to_record(degree=1)
                 or node.is_pointer_to_record(degree=2)
             ):
-                return 0
-            func_name, parm_idx = node.parent.name, node.parm_index
-            if node.is_pointer_to_enum(degree=1):
-                if (func_name, parm_idx) in (
-                    ("hipDrvPointerGetAttributes", 1),
-                    ("hipMemRangeGetAttributes", 2),
-                    ("hipMemPoolGetAccess", 0),
-                    ("hipModuleLoadDataEx", 3),
-                ):
-                    return 1
                 return 0
         elif isinstance(node, Field):
             pass  # nothing to do
