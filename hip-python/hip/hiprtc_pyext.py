@@ -87,6 +87,24 @@ class HiprtcLinkCreateOpts:
                 | HIPRTC_JIT_IR_TO_ISA_OPT_EXT           | ...                                                               |
                 | HIPRTC_JIT_INFO_LOG_BUFFER             | See `~._types.Pointer`.                                           |
                 | HIPRTC_JIT_ERROR_LOG_BUFFER            | ...                                                               |
+
+        Implementation details:
+            This object can be unrolled, which yields three elements that can be passed
+            as arguments to `~.hiprtc.hiprtcLinkCreate`
+            * Element #0 is the number of options that should be passed to ``hiprtcLinkCreate``.
+            * Element #1 are the option keys, a list of enum constant values that specify what
+              options the user should set. It is important that the type is accepted as valid
+              constructor argument for `~.hip._hiprtc_helpers.HiprtcLinkCreate_option_ptr` as this
+              type is used adapter for argument #1 of ``hiprtcLinkCreate``.
+            * Element #2 are the option values. Here, ``hiprtcLinkCreate`` expects
+              a type that is accepted by the `~.hip._util.types.ListOfPointer` adapter used for
+              argument #2. This adapter takes a list of objects that must be in turn accepted
+              by the `~.hip._util.types.Pointer` adapter type. Aside from the other `~.hip._util.types.*`
+              adapter types and `ctypes.c_void_p`, the latter can be constructed
+              from an `int` value, which is then interpreted as pointer address.
+              Therefore, we see expressions alike ``self.values.append(int(ctypes.c_uint(value).value))``
+              in the body of this function.
+
         """
         if not kwargs:
             self.num_opts = 0
@@ -108,7 +126,7 @@ class HiprtcLinkCreateOpts:
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_NEW_SM3X_OPT,
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_FAST_COMPILE,
             ):
-                self.values.append(ctypes.addressof(ctypes.c_bool(value)))
+                self.values.append(int(ctypes.c_bool(value).value))
             if key in (
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_MAX_REGISTERS,
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_THREADS_PER_BLOCK,
@@ -119,7 +137,7 @@ class HiprtcLinkCreateOpts:
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_CACHE_MODE,
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_GLOBAL_SYMBOL_COUNT,
             ):
-                self.values.append(ctypes.addressof(ctypes.c_uint(value)))
+                self.values.append(int(ctypes.c_uint(value).value))
             elif key in (
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_GENERATE_DEBUG_INFO,
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_GENERATE_LINE_INFO,
@@ -129,7 +147,7 @@ class HiprtcLinkCreateOpts:
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_PREC_SQRT,
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_FMA,
             ):
-                self.values.append(ctypes.addressof(ctypes.c_int(value)))
+                self.values.append(int(ctypes.c_int(value).value))
             elif key in (
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_INFO_LOG_BUFFER_SIZE_BYTES,  # size_t
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_ERROR_LOG_BUFFER_SIZE_BYTES,  # size_t
