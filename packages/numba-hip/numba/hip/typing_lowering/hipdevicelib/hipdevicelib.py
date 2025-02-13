@@ -819,7 +819,7 @@ class HIPDeviceLib:
         ]  # TODO check how to pass the features in
         (bcbuf, logbuf, diagnosticbuf) = comgrutils.compile_hip_source_to_llvm(
             amdgpu_arch=amdgpu_arch,
-            extra_opts=" -D__HIPCC_RTC__",
+            extra_opts=["-D__HIPCC_RTC__"],
             hip_version_tuple=HIP_VERSION_TUPLE,
             comgr_logging=False,
             source=hipdevicelib_src,

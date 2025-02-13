@@ -44,7 +44,7 @@ def compile_hip_source_to_llvm(
     amdgpu_arch: str,
     hip_version_tuple: tuple,
     to_llvm_ir: bool = False,
-    extra_opts: str = "",
+    extra_opts: list[str] = [],
     comgr_logging: bool = False,
 ):
     """Compiles a HIP C++ source file to LLVM bitcode or human-readable LLVM IR.
@@ -54,7 +54,7 @@ def compile_hip_source_to_llvm(
         amdgpu_arch (`str`): An AMD GPU arch identifier such as `gfx90a` (MI200 series) or `gfx942` (MI300 series).
         hip_version_tuple (`tuple`): A tuple of `int` values that contains HIP version major, minor, and patch.
         to_llvm_ir (`bool`): If the compilation result should be LLVM IR (versus LLVM BC). Defaults to `False`.
-        extra_opts (`str`, optional): Additional opts to append to the compiler command. Defaults to `""`.
+        extra_opts (`list[str]`, optional): List of additional opts to append to the compiler command. Defaults to `[]`.
         comgr_logging (`bool`, optional): Enable AMD COMGR logging. Defaults to `False`.
 
     Returns:
