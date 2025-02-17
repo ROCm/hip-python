@@ -48,6 +48,7 @@ interfacegen.cython.python_interface_pyobj_role_template = (
 
 from interfacegen.cython import (
     CythonModuleGenerator,
+    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
 )
 
 from interfacegen.tree import Node, Parm, Typed
@@ -69,6 +70,8 @@ def create_generator(
 
     def ptr_parm_intent(parm: Parm):
         func_name, parm_index = parm.parent.name, parm.parm_index
+        if (func_name, parm_index) in (("amd_comgr_action_info_set_option_list", 1),):
+            return ParmIntent.IN
         if func_name in (
             "amd_comgr_get_isa_count",
             "amd_comgr_get_version",
@@ -103,6 +106,17 @@ def create_generator(
         # amd_comgr_get_metadata_string
         # amd_comgr_iterate_map_metadata
         return ParmIntent.INOUT
+
+    def ptr_complicated_type_handler(node: Node):
+        if isinstance(node, Parm):
+            func_name, parm_index = node.parent.name, node.parm_index
+            if (func_name, parm_index) in (
+                ("amd_comgr_action_info_set_option_list", 1),
+            ):
+                return f"{pkg_opts.util_types_prefix}ListOfBytes"
+        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(pkg_opts.util_types_prefix)(
+            node
+        )
 
     def node_filter(node: Node):
         return (
@@ -140,6 +154,7 @@ def create_generator(
         node_init=node_init,
         ptr_rank=ptr_rank,
         ptr_parm_intent=ptr_parm_intent,
+        ptr_complicated_type_handler=ptr_complicated_type_handler,
         modifiers_lazy_loader=" except? AMD_COMGR_STATUS_ERROR nogil",
         error_return_value_lazy_loader="AMD_COMGR_STATUS_ERROR",
     )
@@ -198,5 +213,5 @@ if __name__ == "__main__":
         setattr(amd_comgr,"ext",amd_comgr_pyext)
         """
         ),
-        year_start="2023"
+        year_start="2023",
     )
