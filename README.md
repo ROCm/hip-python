@@ -85,7 +85,7 @@ python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda~=$rocm
 
 ### Via Wheel in Local Filesystem
 
-If you have HIP Python package wheels n your filesystem, you can run:
+If you have HIP Python package wheels on your filesystem, you can run:
 
 ```shell
 python3 -m pip install <path/to/hip_python>.whl
@@ -116,7 +116,7 @@ python3 -m pip install <path/to/hip_python_as_cuda>.whl
    ```
 1. Finally run:
    ```bash
-   ./build_hip_python_pkgs.sh --hip --cuda --post-clean
+   ./build.sh --hip --cuda --post-clean
    ```
 
 The build process will produce Python binary wheels in the subdirectories
@@ -130,7 +130,7 @@ as discussed in the previous section.
 ### Build Options
 
 ```text
-Usage: ./build_hip_python_pkgs.sh [OPTIONS]
+Usage: ./build.sh [OPTIONS]
 
 Options:
   --rocm-path          Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
@@ -168,7 +168,7 @@ HIPSPARSE_ORDER_COLUMN [[deprecated("Please use HIPSPARSE_ORDER_COL instead")]] 
 #### Workaround 1: Disable Build of 'hipsparse' Module
 
 Disabling the build of the `hipsparse` HIP python module can, e.g.,
-be achieved by supplying `--libs "^hipsparse"` to `build_hip_python_pkgs.sh`.
+be achieved by supplying `--libs "^hipsparse"` to `build.sh`.
 
 #### Workaround 2 (Requires Access to Header File): Edit Header File
 
@@ -201,7 +201,7 @@ typedef rocrand_generator_base_type hiprandGenerator_st;
 #### Workaround 1: Disable Build of Hiprand Module
 
 Disabling the build of the `hiprand` HIP python module can, e.g.,
-be achieved by supplying `--libs "^hiprand"` to `build_hip_python_pkgs.sh`.
+be achieved by supplying `--libs "^hiprand"` to `build.sh`.
 
 #### Workaround 2 (Requires Access to Header File): Edit Header File
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # MIT License
 # 
-# Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
+# Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ set -e
 set -o xtrace
 
 HELP_MSG="
-Usage: ./build_hip_python_pkgs.sh [OPTIONS]
+Usage: ./build.sh [OPTIONS]
 
 Options:   
   -c,--checkout        The 'release/rocm-rel-X.Y.Z' branch to checkout out the package source files from. If this option is not used,
