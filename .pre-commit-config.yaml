@@ -1,0 +1,38 @@
+repos:
+- repo: https://github.com/psf/black
+  rev: 25.1.0
+  hooks:
+  - id: black
+- repo: https://github.com/pycqa/flake8
+  rev: 7.1.2
+  hooks:
+  - id: flake8
+- repo: https://github.com/MarcoGorelli/cython-lint
+  rev: v0.16.6
+  hooks:
+  - id: cython-lint
+    # - id: double-quote-cython-strings
+- repo: https://github.com/pycqa/isort
+  rev: 6.0.0
+  hooks:
+  - id: isort
+    name: isort (python)
+    args: ["--profile", "black"]
+  - id: isort
+    name: isort (cython)
+    types: [ cython ]
+    args: ["--profile", "black"]
+  - id: isort
+    name: isort (pyi)
+    types: [ pyi ]
+    args: ["--profile", "black"]
+- repo: https://github.com/igorshubovych/markdownlint-cli
+  rev: v0.41.0
+  hooks:
+  - id: markdownlint
+    exclude: |
+      (?x)(
+        ^.gitea/ISSUE_TEMPLATE/|
+        ^build/premake/|
+        ^source/third_party/
+      )
