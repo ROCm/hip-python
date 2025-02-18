@@ -97,3 +97,15 @@ license-files = ["LICENSE"]
 where = ["."]
 include = ["numba.hip", "numba.hip.*"]
 exclude = ["numba.hip.tests"]
+
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | _build
+  | build
+  | dist
+)/
+'''
