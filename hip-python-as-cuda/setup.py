@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,11 +28,11 @@ files in the `cuda` subfolder.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-import os
 import enum
+import os
 
-from setuptools import setup, Extension
 from Cython.Build import cythonize
+from setuptools import Extension, setup
 
 
 class HipPlatform(enum.IntEnum):
@@ -82,8 +82,8 @@ def parse_options():
 
     rocm_path = os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME", None))
     platform = os.environ.get("HIP_PLATFORM", "amd")
-    verbose = os.environ.get("HIP_PYTHON_VERBOSE", "amd")
-    HIP_PYTHON_CUDA_LIBS=os.environ.get("HIP_PYTHON_CUDA_LIBS", "*")
+    # verbose = os.environ.get("HIP_PYTHON_VERBOSE", "amd")
+    HIP_PYTHON_CUDA_LIBS = os.environ.get("HIP_PYTHON_CUDA_LIBS", "*")
 
     if not rocm_path:
         raise RuntimeError("ROCm path is not set")
@@ -93,7 +93,9 @@ def parse_options():
     if platform not in ("amd", "hcc"):
         raise RuntimeError("Currently only platform 'amd' is supported")
 
-    EXTRA_COMPILE_ARGS = HipPlatform.from_string(platform).cflags + [f"-I{ROCM_INC}"]
+    EXTRA_COMPILE_ARGS = HipPlatform.from_string(platform).cflags + [
+        f"-I{ROCM_INC}"
+    ]
 
 
 def create_extension(name, sources):
@@ -105,7 +107,7 @@ def create_extension(name, sources):
         sources=sources,
         include_dirs=[ROCM_INC],
         library_dirs=[ROCM_LIB],
-        #libraries=[mod.lib for mod in HIP_MODULES],
+        # libraries=[mod.lib for mod in HIP_MODULES],
         language="c",
         extra_compile_args=EXTRA_COMPILE_ARGS + ["-D", "__half=uint16_t"],
     )
@@ -117,7 +119,7 @@ class Module:
 
     def __init__(self, module, lib=None, helpers=[]):
         self.name = module
-        if lib == None:
+        if lib is None:
             self.lib = self.name
         else:
             self.lib = lib
@@ -126,7 +128,10 @@ class Module:
     @property
     def ext_modules(self):
         return self._helpers + [
-            (f"{self.PKG_NAME}.{self.name}", [f"./{self.PKG_NAME}/{self.name}.pyx"]),
+            (
+                f"{self.PKG_NAME}.{self.name}",
+                [f"./{self.PKG_NAME}/{self.name}.pyx"],
+            ),
         ]
 
 
@@ -143,32 +148,36 @@ def gather_ext_modules():
             "cudart",
             lib="amdhip64",
         ),
-        Module("nvrtc",
-               lib="hiprtc"),
+        Module("nvrtc", lib="hiprtc"),
     ]
-    
+
     # process and check user-provided library names
     module_names = [mod.name for mod in HIP_MODULES]
     if HIP_PYTHON_CUDA_LIBS == "*":
         selected_libs = module_names
     else:
-        processed_libs = HIP_PYTHON_CUDA_LIBS.replace(" ","")
+        processed_libs = HIP_PYTHON_CUDA_LIBS.replace(" ", "")
         if processed_libs.startswith("^"):
             processed_libs = processed_libs[1:].split(",")
-            selected_libs = [name for name in module_names if name not in processed_libs]
+            selected_libs = [
+                name for name in module_names if name not in processed_libs
+            ]
         else:
             processed_libs = processed_libs.split(",")
             selected_libs = processed_libs
         for name in processed_libs:
             if name not in module_names:
-                raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(module_names)}")
-            
+                raise ValueError(
+                    f"library name '{name}' is not valid, use one of: {', '.join(module_names)}"
+                )
+
     for mod in HIP_MODULES:
         if mod.name in selected_libs:
             CYTHON_EXT_MODULES += mod.ext_modules
 
+
 if __name__ == "__main__":
-    HIP_PYTHON_CUDA_LIBS=None
+    HIP_PYTHON_CUDA_LIBS = None
     ROCM_INC = None
     ROCM_LIB = None
     EXTRA_COMPILE_ARGS = None
@@ -192,7 +201,7 @@ if __name__ == "__main__":
 
     # load _version.py
     ns = {}
-    exec(open(os.path.join(Module.PKG_NAME,"_version.py"),"r").read(), ns)
+    exec(open(os.path.join(Module.PKG_NAME, "_version.py"), "r").read(), ns)
 
     matching_hip_python = f"hip-python=={ns['__version__']}"
     setup(
