@@ -62,3 +62,15 @@ license-files = ["LICENSE"]
 where = ["python"]
 # include = []
 # exclude = []
+
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | _build
+  | build
+  | dist
+)/
+'''
