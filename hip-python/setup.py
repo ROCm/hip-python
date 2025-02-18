@@ -28,12 +28,11 @@ files in the `hip` subfolder.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-import os
-import argparse
 import enum
+import os
 
-from setuptools import setup, Extension
 from Cython.Build import cythonize
+from setuptools import Extension, setup
 
 
 class HipPlatform(enum.IntEnum):
@@ -83,7 +82,7 @@ def parse_options():
 
     rocm_path = os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME", None))
     platform = os.environ.get("HIP_PLATFORM", "amd")
-    verbose = os.environ.get("HIP_PYTHON_VERBOSE", "amd")
+    # verbose = os.environ.get("HIP_PYTHON_VERBOSE", "amd")
     HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS", "*")
     HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var(
         "HIP_PYTHON_RUNTIME_LINKING", "yes"
@@ -97,7 +96,9 @@ def parse_options():
     if platform not in ("amd", "hcc"):
         raise RuntimeError("Currently only platform 'amd' is supported")
 
-    EXTRA_COMPILE_ARGS = HipPlatform.from_string(platform).cflags + [f"-I{ROCM_INC}"]
+    EXTRA_COMPILE_ARGS = HipPlatform.from_string(platform).cflags + [
+        f"-I{ROCM_INC}"
+    ]
 
 
 def create_extension(name, sources):
@@ -110,9 +111,11 @@ def create_extension(name, sources):
         sources=sources,
         include_dirs=[ROCM_INC],
         library_dirs=[ROCM_LIB],
-        libraries=[]
-        if HIP_PYTHON_RUNTIME_LINKING
-        else [mod.lib for mod in HIP_MODULES],
+        libraries=(
+            []
+            if HIP_PYTHON_RUNTIME_LINKING
+            else [mod.lib for mod in HIP_MODULES]
+        ),
         language="c",
         extra_compile_args=EXTRA_COMPILE_ARGS + ["-D", "__half=uint16_t"],
     )
@@ -123,7 +126,7 @@ class Module:
 
     def __init__(self, module, lib=None, helpers=[]):
         self.name = module
-        if lib == None:
+        if lib is None:
             self.lib = self.name
         else:
             self.lib = lib
@@ -132,8 +135,14 @@ class Module:
     @property
     def ext_modules(self):
         return self._helpers + [
-            (f"{self.PKG_NAME}.c{self.name}", [f"./{self.PKG_NAME}/c{self.name}.pyx"]),
-            (f"{self.PKG_NAME}.{self.name}", [f"./{self.PKG_NAME}/{self.name}.pyx"]),
+            (
+                f"{self.PKG_NAME}.c{self.name}",
+                [f"./{self.PKG_NAME}/c{self.name}.pyx"],
+            ),
+            (
+                f"{self.PKG_NAME}.{self.name}",
+                [f"./{self.PKG_NAME}/{self.name}.pyx"],
+            ),
         ]
 
 

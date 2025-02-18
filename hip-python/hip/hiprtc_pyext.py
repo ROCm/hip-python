@@ -47,7 +47,7 @@ class HiprtcLinkCreateOpts:
     """
 
     def __init__(self, **kwargs):
-        """Constructor.
+        r"""Constructor.
 
         Construct hiprtcLinkCreate argument list via keyword arguments.
 
@@ -161,7 +161,10 @@ class HiprtcLinkCreateOpts:
                     )  # actually size_t/long types but hiprtcLinkCreate `values`
                     # arg will be handled by `_types.ListOfPointer` adapter
                 )
-            elif key == _hiprtc.hiprtcJIT_option.HIPRTC_JIT_GLOBAL_SYMBOL_ADDRESS:
+            elif (
+                key
+                == _hiprtc.hiprtcJIT_option.HIPRTC_JIT_GLOBAL_SYMBOL_ADDRESS
+            ):
                 self.values.append(_types.ListOfPointer(value))
             elif key in (
                 _hiprtc.hiprtcJIT_option.HIPRTC_JIT_GLOBAL_SYMBOL_NAMES,
@@ -201,7 +204,7 @@ class HiprtcLinkCreateOpts:
 
 
 def hiprtcLinkCreate2(**kwargs):
-    """Variant of `~.hiprtc.hiprtcLinkCreate` that takes link options via keyword args.
+    r"""Variant of `~.hiprtc.hiprtcLinkCreate` that takes link options via keyword args.
 
     Variant of `~.hiprtc.hiprtcLinkCreate` that takes link options via keyword args:
 
