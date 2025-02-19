@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,35 +30,32 @@ by Cython users of this project.
 
 __author__ = "Advanced Micro Devices, Inc. <rocm-hsa.maintainer@amd.com>"
 
-import os
-import warnings
-import enum
-import textwrap
 import argparse
+import os
+import textwrap
 
-import interfacegen.gitversion
 import interfacegen.cython
+import interfacegen.gitversion
+from interfacegen.cparser import TypeHandler
+from interfacegen.cython import (
+    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+    CythonModuleGenerator,
+)
+from interfacegen.tree import (
+    MacroDefinition,
+    Node,
+)
 
 interfacegen.enable_logging()
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
-interfacegen.cython.python_interface_pyobj_role_template = r"`~.{name}`" # ~: removes the qualifier from the link text
-
-from interfacegen.cython import (
-    CythonModuleGenerator,
-    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+interfacegen.cython.python_interface_pyobj_role_template = (
+    r"`~.{name}`"  # ~: removes the qualifier from the link text
 )
-
-from interfacegen.cparser import TypeHandler
 
 TypeCategory = TypeHandler.TypeCategory
 
-from interfacegen.tree import (
-    Node,
-    MacroDefinition,
-    Parm,
-)
 
 def parse_options():
     global OUTPUT_DIR
@@ -87,7 +84,7 @@ def parse_options():
         description=textwrap.dedent(
             """\
         Generator for ROCm HSA Python package 'rocm-hsa'.
-    
+
         NOTE:
             You can also use the environment variables 'ROCM_PATH' (or 'ROCM_HOME'),
             'ROCM_HSA_CLANG_RES_DIR', 'ROCM_HSA_LIBS',
@@ -144,10 +141,14 @@ def parse_options():
         help="Verbose output.",
     )
     parser.set_defaults(
-        rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME", None)),
+        rocm_path=os.environ.get(
+            "ROCM_PATH", os.environ.get("ROCM_HOME", None)
+        ),
         clang_resource_dir=os.environ.get("ROCM_HSA_CLANG_RES_DIR", None),
         libs=os.environ.get("ROCM_HSA_LIBS", "*"),
-        runtime_linking=get_bool_environ_var("ROCM_HSA_RUNTIME_LINKING", "true"),
+        runtime_linking=get_bool_environ_var(
+            "ROCM_HSA_RUNTIME_LINKING", "true"
+        ),
         verbose=False,
     )
     args = parser.parse_args()
@@ -158,7 +159,7 @@ def parse_options():
 
     if not args.rocm_path:
         raise RuntimeError("ROCm path is not set")
-    ROCM_HSA_INC = os.path.join(args.rocm_path,"include")
+    ROCM_HSA_INC = os.path.join(args.rocm_path, "include")
 
     GENERATOR_ARGS = [f"-I{ROCM_HSA_INC}"]
     if not args.clang_resource_dir:
@@ -166,14 +167,14 @@ def parse_options():
             textwrap.dedent(
                 """\
             Clang resource directory is not set.
-            
-            Hint: If `clang` is in the PATH, you can 
+
+            Hint: If `clang` is in the PATH, you can
             run `clang -print-resource-dir` to obtain the path to
             the resource directory.
 
             Hint: If you have the HIP SDK installed, you have `amdclang` installed in
             `ROCM_PATH/bin/`. You can use it to run the above command too.
-            
+
             Hint: If you have the HIP SDK installed, the last include folder listed in ``hipconfig --cpp_config``
             points to the `amdclang` compiler's resource dir too.
             """
@@ -202,7 +203,9 @@ def generate_hsa_module_files():
         return False
 
     def hsa_ptr_complicated_type_handler(parm: Node):
-        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm) # FIXME outdated
+        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(
+            parm
+        )  # FIXME outdated
 
     generator = CythonModuleGenerator(
         "hsa",
@@ -212,17 +215,17 @@ def generate_hsa_module_files():
         util_pkg="rocm.hsa._util",
         dll="libhsa-runtime64.so",
         node_filter=node_filter,
-        #ptr_parm_intent=_controls.hip.ptr_parm_intent,
-        #ptr_rank=_controls.hip.ptr_rank,
-        #ptr_complicated_type_handler=hsa_ptr_complicated_type_handler,
-        #macro_type=_controls.hip.macro_type,
+        # ptr_parm_intent=_controls.hip.ptr_parm_intent,
+        # ptr_rank=_controls.hip.ptr_rank,
+        # ptr_complicated_type_handler=hsa_ptr_complicated_type_handler,
+        # macro_type=_controls.hip.macro_type,
         cflags=GENERATOR_ARGS,
     )
     ROCM_HSA_VERSION_MAJOR = 0
     ROCM_HSA_VERSION_MINOR = 0
     ROCM_HSA_VERSION_PATCH = 0
     ROCM_HSA_VERSION_GITHASH = ""
-    #for node in generator.backend.root.walk():
+    # for node in generator.backend.root.walk():
     #    if isinstance(node, MacroDefinition):
     #        last_token = list(node.cursor.get_tokens())[-1].spelling
     #        if node.name == "ROCM_HSA_VERSION_MAJOR":
@@ -257,25 +260,31 @@ if __name__ == "__main__":
 
     # process and check user-provided library names
     avail_lib_names = AVAILABLE_GENERATORS.keys()
-    processed_libs = LIBS.replace(" ","")
+    processed_libs = LIBS.replace(" ", "")
     if processed_libs == "*":
         lib_names = avail_lib_names
     else:
         if processed_libs.startswith("^"):
             processed_libs = processed_libs[1:].split(",")
-            lib_names = [name for name in avail_lib_names if name not in processed_libs]
+            lib_names = [
+                name for name in avail_lib_names if name not in processed_libs
+            ]
         else:
             processed_libs = processed_libs.split(",")
             lib_names = processed_libs
         for name in processed_libs:
             if name not in avail_lib_names:
-                raise ValueError(f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}")
+                raise ValueError(
+                    f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}"
+                )
 
     hsa_output_dir = os.path.join(OUTPUT_DIR, "rocm", "hsa")
     for entry in avail_lib_names:
         libname = entry.strip()
         if libname not in AVAILABLE_GENERATORS:
-            available_libs = ", ".join([f"'{a}'" for a in AVAILABLE_GENERATORS.keys()])
+            available_libs = ", ".join(
+                [f"'{a}'" for a in AVAILABLE_GENERATORS.keys()]
+            )
             msg = f"no codegenerator found for library '{libname}'; please choose from: {available_libs}, or '*', which implies that all code generators will be used."
             raise KeyError(msg)
         generator = AVAILABLE_GENERATORS[libname]()
@@ -283,25 +292,27 @@ if __name__ == "__main__":
 
     ROCM_HSA_VERSION_NAME = f"{ROCM_HSA_VERSION_MAJOR}.{ROCM_HSA_VERSION_MINOR}.{ROCM_HSA_VERSION_PATCH}-{ROCM_HSA_VERSION_GITHASH}"
     ROCM_HSA_VERSION = (
-        ROCM_HSA_VERSION_MAJOR * 10000000 + ROCM_HSA_VERSION_MINOR * 100000 + ROCM_HSA_VERSION_PATCH
+        ROCM_HSA_VERSION_MAJOR * 10000000
+        + ROCM_HSA_VERSION_MINOR * 100000
+        + ROCM_HSA_VERSION_PATCH
     )
 
     VERSION = f"{ROCM_HSA_VERSION_MAJOR}.{ROCM_HSA_VERSION_MINOR}.{ROCM_HSA_VERSION_PATCH}.{interfacegen.gitversion.version()}"
-    LONG_VERSION = (
-        f"{ROCM_HSA_VERSION_NAME}.{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
-    )
-    
-    with open(os.path.join("..","LICENSE"),"r") as licensefile:
-        LICENSE_TEXT = "".join([f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()])
+    LONG_VERSION = f"{ROCM_HSA_VERSION_NAME}.{interfacegen.gitversion.version(append_hash=True,append_date=True)}"
+
+    with open(os.path.join("..", "LICENSE"), "r") as licensefile:
+        LICENSE_TEXT = "".join(
+            [f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()]
+        )
     # rocm/hsa/_version.py
     with open(os.path.join(hsa_output_dir, "_version.py.in"), "w") as f:
         f.write(
             LICENSE_TEXT
             + textwrap.dedent(
-            f"""\
-            
+                f"""\
+
             # This file has been autogenerated, do not modify.
-            
+
             __author__ = "Advanced Micro Devices, Inc. <rocm-hsa.maintainer@amd.com>"
 
             VERSION = __version__ = "{VERSION}.{{ROCM_HSA_VERSION_SHORT}}"
@@ -320,13 +331,11 @@ if __name__ == "__main__":
     ROCM_HSA_LIB_NAMES = AVAILABLE_GENERATORS.keys()
 
     with open(os.path.join(hsa_output_dir, "__init__.py"), "w") as f:
-        init_content = (
-            LICENSE_TEXT
-            + textwrap.dedent(
-                f"""\
-            
+        init_content = LICENSE_TEXT + textwrap.dedent(
+            f"""\
+
                 # This file has been autogenerated, do not modify.
-                
+
                 __author__ = "Advanced Micro Devices, Inc. <rocm-hsa.maintainer@amd.com>"
 
                 from ._version import *
@@ -335,25 +344,26 @@ if __name__ == "__main__":
                 ROCM_HSA_VERSION_TUPLE = hsa_version_tuple = ({ROCM_HSA_VERSION_MAJOR},{ROCM_HSA_VERSION_MINOR},{ROCM_HSA_VERSION_PATCH},"{ROCM_HSA_VERSION_GITHASH}")
 
                 """
-            )
         )
         init_content += "\nfrom . import _util"
         for module_name in ROCM_HSA_LIB_NAMES:
-            init_content += textwrap.dedent(f"""
+            init_content += textwrap.dedent(
+                f"""
             try:
                 from . import {module_name}
             except ImportError:
-                pass # may have been excluded from build""")
+                pass # may have been excluded from build"""
+            )
         f.write(init_content)
     # rocm-hsa docs
     # files per api
 
-    #def write_module_markdown_file_(module,lib,extra=""):
+    # def write_module_markdown_file_(module,lib,extra=""):
     #    with open(os.path.join(ROCM_HSA_DOCS, "python_api", f"{lib}.md"),"w") as outfile:
     #        outfile.write(textwrap.dedent(
     #            f"""\
     #            # {module}.{lib}
-    #            
+    #
     #            <!-- This file has been autogenerated, do not modify. -->
 
     #            <!-- global automodule options are set in conf.py -->
@@ -364,30 +374,30 @@ if __name__ == "__main__":
     #            ```"""
     #        ))
 
-    #ROCM_HSA_DOCS = os.path.join(OUTPUT_DIR,"rocm-hsa","docs")
-    #for lib in ROCM_HSA_LIB_NAMES:
+    # ROCM_HSA_DOCS = os.path.join(OUTPUT_DIR,"rocm-hsa","docs")
+    # for lib in ROCM_HSA_LIB_NAMES:
     #    write_module_markdown_file_("hip",lib)
-    ## index.md from index.md.in
-    #index_md = os.path.join(
+    # # index.md from index.md.in
+    # index_md = os.path.join(
     #    ROCM_HSA_DOCS, "index.md"
-    #)
-    #PYTHON_API_DOC_NAMES = [f"- {{doc}}`python_api/{lib}`" for lib in ROCM_HSA_LIB_NAMES]
-    #with open(index_md + ".in","r"
+    # )
+    # PYTHON_API_DOC_NAMES = [f"- {{doc}}`python_api/{lib}`" for lib in ROCM_HSA_LIB_NAMES]
+    # with open(index_md + ".in","r"
     #     ) as infile, open(index_md, "w") as outfile:
-    #    
+    #
     #    for key in AVAILABLE_GENERATORS:
     #        rendered = infile.read()
     #        rendered = rendered.replace("{PYTHON_API_DOC_NAMES}","\n".join(PYTHON_API_DOC_NAMES))
     #        rendered = rendered.replace("{ROCM_HSA_VERSION_NAME}", ROCM_HSA_VERSION_NAME)
     #        outfile.write(rendered)
-    ## _toc.yml.in from _toc.yml.in.in
-    #toc_yml_md_in = os.path.join(
+    # # _toc.yml.in from _toc.yml.in.in
+    # toc_yml_md_in = os.path.join(
     #    ROCM_HSA_DOCS, ".sphinx", "_toc.yml.in"
-    #)
-    #PYTHON_API_FILE_NAMES = [f"      - file: python_api/{lib}" for lib in ROCM_HSA_LIB_NAMES]
-    #with open(toc_yml_md_in + ".in","r"
+    # )
+    # PYTHON_API_FILE_NAMES = [f"      - file: python_api/{lib}" for lib in ROCM_HSA_LIB_NAMES]
+    # with open(toc_yml_md_in + ".in","r"
     #     ) as infile, open(toc_yml_md_in, "w") as outfile:
-    #    
+    #
     #    for key in AVAILABLE_GENERATORS:
     #        rendered = infile.read()
     #        rendered = rendered.replace("{PYTHON_API_FILE_NAMES}","\n".join(PYTHON_API_FILE_NAMES))

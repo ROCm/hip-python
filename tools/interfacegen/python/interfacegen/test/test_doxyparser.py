@@ -121,7 +121,9 @@ def test_grammar():
         print(mtch)
 
     grammar.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
-    grammar.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
+    grammar.with_word.setParseAction(
+        doxyparser.format.PythonDocstrings.with_word
+    )
     grammar.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
 
     for node in grammar.parse_structure(doxygen_input).walk():
@@ -134,15 +136,15 @@ def test_grammar():
         elif isinstance(node, doxyparser.VerbatimBlock):
             print(textwrap.indent('"""' + node.text + '"""', indent))
         elif isinstance(node, doxyparser.TextBlock):
-            print(textwrap.indent('"""' + node.transformed_text + '"""', indent))
+            print(
+                textwrap.indent('"""' + node.transformed_text + '"""', indent)
+            )
 
 
 #
 
 
 def test_comments():
-    import pyparsing as pyp
-
     comments = r"""\
 
     /// My /// docu line 1

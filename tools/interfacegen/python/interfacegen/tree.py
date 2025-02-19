@@ -23,16 +23,16 @@
 __author__ = "Advanced Micro Devices, Inc."
 
 import collections
-
 import logging
-
-_log = logging.getLogger("interfacegen")
 
 import clang.cindex
 
 from . import cparser
 
+_log = logging.getLogger("interfacegen")
+
 indent = " " * 4
+
 
 # TODO dynamically create a tree module for backend in (cython, fortran)
 # and make it available via __init__ package
@@ -92,7 +92,7 @@ class Node:
         while not isinstance(curr, Root):
             name_parts.append(curr.name)
             curr = curr.parent
-        if sep == None:
+        if sep is None:
             return name_parts
         else:
             return f"{sep.join(reversed(name_parts))}"
@@ -109,7 +109,7 @@ class Node:
     @property
     def file(self):
         """Returns the filename, or None for macro definitions."""
-        if self.cursor.location.file != None:
+        if self.cursor.location.file is not None:
             return self.cursor.location.file.name
         else:
             return None
@@ -126,7 +126,7 @@ class Node:
 
     def get_root(self):
         curr = self
-        while curr.parent != None:
+        while curr.parent is not None:
             curr = curr.parent
         assert isinstance(curr, Root)
         return curr
@@ -141,8 +141,8 @@ class Node:
             cls:    A class or a tuple of classes to include in the counting. Defaults to the Node type, i.e.
                     all children are considered.
         """
-        assert self.parent != None
-        if cls == None:
+        assert self.parent is not None
+        if cls is None:
             cls = Node
         num = 0
         for child in self.parent.child_nodes:
@@ -150,11 +150,13 @@ class Node:
                 if child == self:
                     return num
                 num += 1
-        raise RuntimeError("Node must be present in parent's `child_nodes` list")
+        raise RuntimeError(
+            "Node must be present in parent's `child_nodes` list"
+        )
 
     @property
     def index(self):
-        assert self.parent != None
+        assert self.parent is not None
         return self._index()
 
     def walk(self, postorder=True):
@@ -239,7 +241,7 @@ class Root(Node):
 
     def append_type(self, node):
         canonical_typename = self._canonical_typename(node)
-        if not canonical_typename in self.types:
+        if canonical_typename not in self.types:
             self.types[canonical_typename] = []
         _log.debug(
             f" append_type: {type(node)} for canonical typename '{self._canonical_typename(node)}' from {node.cursor.kind} '{node.cursor.spelling}' ({node.render_location()})"
@@ -309,12 +311,14 @@ class Typed:
         """
 
         # FIXME(interfacegen.cython.tree.canonical_typename,0,docharri) Revise method; may not be robust as "name" in "name_" would be regarded das match, better do regex search with word boundaries
-        canonical_type_to_modify = typehandler.clang_type.get_canonical().spelling
-        if repl_typename == None:
+        canonical_type_to_modify = (
+            typehandler.clang_type.get_canonical().spelling
+        )
+        if repl_typename is None:
             return canonical_type_to_modify
         else:
             assert (
-                type(repl_typename) == str and repl_typename.isidentifier()
+                type(repl_typename) is str and repl_typename.isidentifier()
             ), repl_typename
             for clang_type_layer in typehandler.walk_clang_type_layers(
                 postorder=True,  # must be post-order to go from inside to outside
@@ -329,14 +333,18 @@ class Typed:
                     searched_canonical_typename  # other (canonical!) type with optional preceding modifiers
                 ):
                     assert (
-                        layer_canonical_type_spelling in canonical_type_to_modify
+                        layer_canonical_type_spelling
+                        in canonical_type_to_modify
                     ), f"Types (searched typename, canonical type, canonical type of layer): '{searched_canonical_typename}', '{canonical_type_to_modify}', '{layer_canonical_type_spelling}'"
                     start_incl = canonical_type_to_modify.index(
                         layer_canonical_type_spelling
                     )
                     end_excl = len(layer_canonical_type_spelling)
                     if start_incl > 0:
-                        preceding = canonical_type_to_modify[0 : start_incl - 1]
+                        # flake8: noqa: E203
+                        preceding = canonical_type_to_modify[
+                            0 : start_incl - 1
+                        ]
                     else:
                         preceding = ""
                     return f"{preceding}{repl_typename}{canonical_type_to_modify[start_incl+end_excl:]}"
@@ -373,31 +381,41 @@ class Typed:
             raise ValueError("argument 'sep' must be a string.")
         if self.typeref is not None and not use_canonical:
             # print(f"[pre] {type(self.typeref)} <{self.typeref.render_location()}>")
-            searched_typename = self.typeref.cursor.type.get_canonical().spelling
+            searched_typename = (
+                self.typeref.cursor.type.get_canonical().spelling
+            )
             repl_typename = renamer(self.typeref.global_name(sep))
             # print(f"[post] {type(self.typeref)} <{self.typeref.render_location()}>")
         else:
             searched_typename = None
             repl_typename = None
         return renamer(
-            Typed.canonical_typename(self.typehandler, searched_typename, repl_typename)
+            Typed.canonical_typename(
+                self.typehandler, searched_typename, repl_typename
+            )
         )
 
     def typename(
-        self, renamer: callable = lambda name: name, prefer_canonical: bool = False
+        self,
+        renamer: callable = lambda name: name,
+        prefer_canonical: bool = False,
     ):
         use_canonical = (
             prefer_canonical
             and self.is_innermost_canonical_type_layer_of_basic_type_or_void
         )
         if self.typeref is not None and not use_canonical:
-            searched_typename = self.typeref.cursor.type.get_canonical().spelling
+            searched_typename = (
+                self.typeref.cursor.type.get_canonical().spelling
+            )
             repl_typename = renamer(self.typeref.name)
         else:
             searched_typename = None
             repl_typename = None
         return renamer(
-            Typed.canonical_typename(self.typehandler, searched_typename, repl_typename)
+            Typed.canonical_typename(
+                self.typehandler, searched_typename, repl_typename
+            )
         )
 
     def clang_type_layer_kinds(self, postorder=False, canonical=False):
@@ -406,7 +424,10 @@ class Typed:
         )
 
     def categorized_type_layer_kinds(
-        self, postorder=False, consider_const=False, subdivide_basic_types: bool = False
+        self,
+        postorder=False,
+        consider_const=False,
+        subdivide_basic_types: bool = False,
     ):
         return self.typehandler.categorized_type_layer_kinds(
             postorder=postorder,
@@ -436,11 +457,9 @@ class Typed:
         Returns:
             bool: If this type is referencing any other typedef, record, or enum.
         """
-        return self.typeref != None
+        return self.typeref is not None
 
     def lookup_innermost_type(self):
-        from . import tree
-
         curr = self
         while isinstance(curr, Typed) and curr.has_typeref:
             curr = curr.typeref
@@ -451,7 +470,9 @@ class Typed:
         Args:
             incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
         """
-        return self.typehandler.get_pointer_degree(incomplete_array=incomplete_array)
+        return self.typehandler.get_pointer_degree(
+            incomplete_array=incomplete_array
+        )
 
     @property
     def is_void(self):
@@ -543,7 +564,9 @@ class Typed:
         if self.typehandler.compare_pointer_degree(pointer_degree, degree):
             (success, _) = self.typehandler.create_from_layer(
                 pointer_degree, canonical=True
-            ).is_constantarray_of_kind_or_category(type_category=TypeCategory.BASIC)
+            ).is_constantarray_of_kind_or_category(
+                type_category=TypeCategory.BASIC
+            )
             return success
         return False
 
@@ -607,31 +630,9 @@ class Typed:
             TypeKind.FUNCTIONPROTO, degree, incomplete_array=incomplete_array
         )
 
-    def is_pointer_to_function_proto(
-        self,
-        degree: int = 1,
-        incomplete_array: bool = False,
-    ):
-        """If this is a void pointer of the given degree.
-
-        Args:
-            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
-            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
-
-        Note:
-            Does not check for any const modifiers.
-        """
-        from clang.cindex import TypeKind
-
-        return self.typehandler.is_pointer_to_kind(
-            TypeKind.FUNCTIONPROTO, degree, incomplete_array=incomplete_array
-        )
-
     @property
     def is_any_pointer(self):
         """If this is any form of pointer, i.e. the outer most type layer must be a pointer."""
-        from clang.cindex import TypeKind
-
         return (
             self.typehandler.get_rank(
                 constant_array=False, incomplete_array=False, pointer=True
@@ -644,7 +645,8 @@ class Typed:
         """If this is any form of array."""
         TypeCategory = cparser.TypeHandler.TypeCategory
         return (
-            next(self.typehandler.categorized_type_layer_kinds()) == TypeCategory.ARRAY
+            next(self.typehandler.categorized_type_layer_kinds())
+            == TypeCategory.ARRAY
         )
 
     @property
@@ -663,7 +665,9 @@ class Typed:
         # TODO multi-dim arrays
         from clang.cindex import TypeKind
 
-        return list(self.typehandler.clang_type_layer_kinds(canonical=True)) == [
+        return list(
+            self.typehandler.clang_type_layer_kinds(canonical=True)
+        ) == [
             TypeKind.CONSTANTARRAY,
             TypeKind.RECORD,
         ]
@@ -684,7 +688,9 @@ class Typed:
         # TODO multi-dim arrays
         from clang.cindex import TypeKind
 
-        return list(self.typehandler.clang_type_layer_kinds(canonical=True)) == [
+        return list(
+            self.typehandler.clang_type_layer_kinds(canonical=True)
+        ) == [
             TypeKind.CONSTANTARRAY,
             TypeKind.ENUM,
         ]
@@ -717,7 +723,9 @@ class Typed:
         """If this is an incomplete array of chars."""
         from clang.cindex import TypeKind
 
-        return list(self.typehandler.clang_type_layer_kinds(canonical=True)) in [
+        return list(
+            self.typehandler.clang_type_layer_kinds(canonical=True)
+        ) in [
             [TypeKind.INCOMPLETEARRAY, TypeKind.CHAR_S],
         ]
 
@@ -753,7 +761,9 @@ class Typed:
     @property
     def is_innermost_canonical_type_layer_of_basic_type_or_void(self):
         """If the innermost type layer is of basic type or void type."""
-        return self.typehandler.is_innermost_canonical_type_layer_of_basic_type_or_void
+        return (
+            self.typehandler.is_innermost_canonical_type_layer_of_basic_type_or_void
+        )
 
 
 class Field(Node, Typed):
@@ -790,11 +800,11 @@ class Type(Node):
         """If this type is anonymous, i.e. the
         cursor's spelling is anonymous while the `_name` member has
         not been overwritten."""
-        return self.is_cursor_anonymous and self._name == None
+        return self.is_cursor_anonymous and self._name is None
 
     @property
     def name(self):
-        if self._name == None:
+        if self._name is None:
             return Node.name.fget(self)
         else:
             return self._name
@@ -824,7 +834,7 @@ class Record(Type):
     @property
     def is_incomplete(self):
         """If the type does not have any fields."""
-        return next(self.fields, None) == None
+        return next(self.fields, None) is None
 
     @property
     def is_opague(self):
@@ -881,7 +891,7 @@ class AnonymousStruct(Struct, Anonymous):
 
     @property
     def name(self):
-        if self._name == None:
+        if self._name is None:
             if self.is_cursor_anonymous:
                 return f"struct_{self.struct_index}"
             else:
@@ -904,7 +914,7 @@ class AnonymousUnion(Union, Anonymous):
 
     @property
     def name(self):
-        if self._name == None:
+        if self._name is None:
             if self.is_cursor_anonymous:
                 return f"union_{self.union_index}"
             else:
@@ -927,7 +937,7 @@ class AnonymousEnum(Enum, Anonymous):
 
     @property
     def name(self):
-        if self._name == None:
+        if self._name is None:
             if self.is_cursor_anonymous:
                 return f"enum_{self.enum_index}"
             else:
@@ -940,7 +950,9 @@ class Typedef(Type, Typed):
     @staticmethod
     def match_typedefed_enum(clang_type: clang.cindex.Type):
         """If the type is a typedef of an enum."""
-        return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == [
+        return list(
+            cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()
+        ) == [
             clang.cindex.TypeKind.TYPEDEF,
             clang.cindex.TypeKind.ELABORATED,
             clang.cindex.TypeKind.ENUM,
@@ -949,7 +961,9 @@ class Typedef(Type, Typed):
     @staticmethod
     def match_typedefed_record(clang_type: clang.cindex.Type):
         """If the type is a typedef of an record (struct or union)."""
-        return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()) == [
+        return list(
+            cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()
+        ) == [
             clang.cindex.TypeKind.TYPEDEF,
             clang.cindex.TypeKind.ELABORATED,
             clang.cindex.TypeKind.RECORD,
@@ -958,9 +972,9 @@ class Typedef(Type, Typed):
     @staticmethod
     def match_typedefed_record_or_enum(clang_type: clang.cindex.Type):
         """If the type is a typedef of an record (struct or union)."""
-        return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds())[
-            :2
-        ] == [
+        return list(
+            cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()
+        )[:2] == [
             clang.cindex.TypeKind.TYPEDEF,
             clang.cindex.TypeKind.ELABORATED,
         ]
@@ -970,7 +984,8 @@ class Typedef(Type, Typed):
         """If the type is a typedef of a basic type."""
         typehandler = cparser.TypeHandler.get(clang_type)
         return (
-            next(typehandler.clang_type_layer_kinds()) == clang.cindex.TypeKind.TYPEDEF
+            next(typehandler.clang_type_layer_kinds())
+            == clang.cindex.TypeKind.TYPEDEF
             and next(typehandler.categorized_type_layer_kinds())
             == cparser.TypeHandler.TypeCategory.BASIC
         )
@@ -981,16 +996,20 @@ class Typedef(Type, Typed):
         return (
             next(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds())
             == clang.cindex.TypeKind.TYPEDEF
-            and next(cparser.TypeHandler.get(clang_type).categorized_type_layer_kinds())
+            and next(
+                cparser.TypeHandler.get(
+                    clang_type
+                ).categorized_type_layer_kinds()
+            )
             == cparser.TypeHandler.TypeCategory.VOID
         )
 
     @staticmethod
     def match_typedefed_pointer(clang_type: clang.cindex.Type):
         """If the type is a typedef of a pointer type of arbitrary degree."""
-        return list(cparser.TypeHandler.get(clang_type).clang_type_layer_kinds())[
-            :2
-        ] == [clang.cindex.TypeKind.TYPEDEF, clang.cindex.TypeKind.POINTER]
+        return list(
+            cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()
+        )[:2] == [clang.cindex.TypeKind.TYPEDEF, clang.cindex.TypeKind.POINTER]
 
     def __init__(
         self,
@@ -1004,10 +1023,15 @@ class Typedef(Type, Typed):
 
 class ConstantArray(Type, Typed):
     @staticmethod
-    def match_typedefed_constantarray_of_basic_type(clang_type: clang.cindex.Type):
+    def match_typedefed_constantarray_of_basic_type(
+        clang_type: clang.cindex.Type,
+    ):
         """If the type is a typedef of a basic type."""
         typehandler = cparser.TypeHandler.get(clang_type)
-        if next(typehandler.clang_type_layer_kinds()) == clang.cindex.TypeKind.TYPEDEF:
+        if (
+            next(typehandler.clang_type_layer_kinds())
+            == clang.cindex.TypeKind.TYPEDEF
+        ):
             (success, _) = typehandler.is_constantarray_of_kind_or_category(
                 type_category=cparser.TypeHandler.TypeCategory.BASIC
             )
@@ -1086,13 +1110,17 @@ class FunctionPointer(Type):  # TODO handle result type
 class TypedefedFunctionPointer(FunctionPointer):
     @staticmethod
     def match(clang_type: clang.cindex.Type):
-        return list(cparser.TypeHandler(clang_type).clang_type_layer_kinds()) == [
+        return list(
+            cparser.TypeHandler(clang_type).clang_type_layer_kinds()
+        ) == [
             clang.cindex.TypeKind.TYPEDEF,
             clang.cindex.TypeKind.POINTER,
             clang.cindex.TypeKind.FUNCTIONPROTO,
         ]
 
-    def __init__(self, cursor: clang.cindex.Cursor, parent: Node):  # TYPEDEF_DECL
+    def __init__(
+        self, cursor: clang.cindex.Cursor, parent: Node
+    ):  # TYPEDEF_DECL
         result_type = cursor.underlying_typedef_type.get_pointee().get_result()
         FunctionPointer.__init__(self, cursor, parent, result_type)
 
@@ -1100,13 +1128,17 @@ class TypedefedFunctionPointer(FunctionPointer):
 class AnonymousFunctionPointer(FunctionPointer, Anonymous):
     @staticmethod
     def match(clang_type: clang.cindex.Type):
-        return list(cparser.TypeHandler(clang_type).clang_type_layer_kinds()) == [
+        return list(
+            cparser.TypeHandler(clang_type).clang_type_layer_kinds()
+        ) == [
             clang.cindex.TypeKind.POINTER,
             clang.cindex.TypeKind.FUNCTIONPROTO,
         ]
 
     def __init__(
-        self, cursor: clang.cindex.Cursor, parent: Node  # PARM_DECL, FIELD_DECL
+        self,
+        cursor: clang.cindex.Cursor,
+        parent: Node,  # PARM_DECL, FIELD_DECL
     ):
         result_type = cursor.type.get_pointee().get_result()
         FunctionPointer.__init__(self, cursor, parent, result_type)
@@ -1135,7 +1167,7 @@ class Parm(Node, Typed):
     @property
     def parm_index(self):
         """Index of the parameter in the argument list."""
-        assert self.parent != None
+        assert self.parent is not None
         return self._index(cls=Parm)
 
     @property
@@ -1145,7 +1177,9 @@ class Parm(Node, Typed):
         """
         given_name = Node.name.fget(self)
         if not len(given_name):
-            return Parm.unnamed_parm_template.format(parm_index=self.parm_index)
+            return Parm.unnamed_parm_template.format(
+                parm_index=self.parm_index
+            )
         return given_name
 
 

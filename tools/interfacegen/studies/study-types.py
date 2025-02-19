@@ -1,8 +1,26 @@
-import tempfile
+# MIT License
+#
+# Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-from interfacegen.cparser import CParser, Analysis
-
-import clang.cindex
+from interfacegen.cparser import Analysis, CParser
 
 types = """
 struct mystruct {
@@ -11,16 +29,16 @@ struct mystruct {
   char c[5];
 };
 
-union myunion { 
-  int a[2]; 
-  double f; 
+union myunion {
+  int a[2];
+  double f;
 };
 
-enum myenum { 
-  a = 0 
+enum myenum {
+  a = 0
 };
 
-enum { 
+enum {
   b = 1
 }; // unnamed enum
 
@@ -53,7 +71,7 @@ typedef struct {
   int a;
 } anon_inner_t; // no inner type name, legal
 
-typedef struct same_name { 
+typedef struct same_name {
   int a;
 } same_name; // same name, legal
 
@@ -91,7 +109,7 @@ typedef union
 typedef const int cint;
 cint a;
 
-typedef enum { 
+typedef enum {
   HSA_STATUS_SUCCESS = 0x0,
 } hsa_status_t;
 
@@ -128,7 +146,7 @@ file_content = types
 file_content = typedefs
 file_content = functions
 
-parser = CParser("input.h",unsaved_files=[("input.h",file_content)])
+parser = CParser("input.h", unsaved_files=[("input.h", file_content)])
 parser.parse()
 
-print(Analysis.subtree_as_csv(parser.cursor,None,5))
+print(Analysis.subtree_as_csv(parser.cursor, None, 5))

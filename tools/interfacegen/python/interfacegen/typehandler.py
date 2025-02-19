@@ -26,13 +26,14 @@ import enum
 
 import clang.cindex
 
+
 class TypeHandler:
 
     _INSTANCE = None
 
     @classmethod
-    def get(cls,clang_type: clang.cindex.Type):
-        if cls._INSTANCE == None:
+    def get(cls, clang_type: clang.cindex.Type):
+        if cls._INSTANCE is None:
             cls._INSTANCE = TypeHandler(None)
         cls._INSTANCE.clang_type = clang_type
         return cls._INSTANCE
@@ -82,11 +83,11 @@ class TypeHandler:
 
     @staticmethod
     def get_type_kind(obj):
-        if isinstance(obj,clang.cindex.TypeKind):
+        if isinstance(obj, clang.cindex.TypeKind):
             return obj
-        elif isinstance(obj,clang.cindex.Type):
+        elif isinstance(obj, clang.cindex.Type):
             return obj.kind
-        elif isinstance(obj,clang.cindex.Cursor):
+        elif isinstance(obj, clang.cindex.Cursor):
             return obj.type.kind
         else:
             raise RuntimeError("expected obj of type ")
@@ -286,7 +287,9 @@ class TypeHandler:
             result = TypeHandler.TypeCategory.INVALID
         elif TypeHandler.match_void_type(type_kind):
             result = TypeHandler.TypeCategory.VOID
-        elif not subdivide_basic_types and TypeHandler.match_basic_datatype(type_kind):
+        elif not subdivide_basic_types and TypeHandler.match_basic_datatype(
+            type_kind
+        ):
             result = TypeHandler.TypeCategory.BASIC
         elif TypeHandler.match_bool_type(type_kind):
             result = TypeHandler.TypeCategory.BOOL
@@ -309,7 +312,9 @@ class TypeHandler:
         elif TypeHandler.match_function_type(type_kind):
             result = TypeHandler.TypeCategory.FUNCTION
         else:
-            raise ValueError(f"type kind '{type_kind}' could not be Categorized")
+            raise ValueError(
+                f"type kind '{type_kind}' could not be Categorized"
+            )
         if is_const:
             return TypeHandler.TypeCategory(
                 result.value + TypeHandler.TypeCategory.CONST_VOID.value
@@ -320,6 +325,8 @@ class TypeHandler:
     def __init__(self, clang_type: clang.cindex.Type):
         self.clang_type = clang_type
 
+    # flake8: noqa: C901
+    # TODO break function apart to reduce complexity
     def walk_clang_type_layers(self, postorder=False, canonical=False):
         """Walks through the constitutents of a Clang type.
 
@@ -337,12 +344,11 @@ class TypeHandler:
             type_kind = clang_type.kind
             if TypeHandler.match_invalid_type(type_kind):
                 yield clang_type
-            elif TypeHandler.match_void_type(type_kind) or TypeHandler.match_basic_datatype(
+            elif TypeHandler.match_void_type(
                 type_kind
-            ):
+            ) or TypeHandler.match_basic_datatype(type_kind):
                 yield clang_type
             elif TypeHandler.match_pointer_type(type_kind):
-                pointee = clang_type.get_pointee()
                 if postorder:
                     yield from descend_(clang_type.get_pointee())
                 yield clang_type
@@ -361,7 +367,9 @@ class TypeHandler:
             elif TypeHandler.match_record_or_enum_type(type_kind):
                 yield clang_type
             elif TypeHandler.match_typedef_type(type_kind):
-                underlying_type = clang_type.get_declaration().underlying_typedef_type
+                underlying_type = (
+                    clang_type.get_declaration().underlying_typedef_type
+                )
                 if postorder:
                     yield from descend_(underlying_type)
                 yield clang_type
@@ -400,8 +408,7 @@ class TypeHandler:
         for clang_type in self.walk_clang_type_layers(postorder, canonical):
             yield clang_type.kind
 
-    def create_from_layer(self,layer: int,
-                          canonical: bool = False):
+    def create_from_layer(self, layer: int, canonical: bool = False):
         """Create a new TypeHandler instance from the specified layer.
 
         Args:
@@ -416,14 +423,16 @@ class TypeHandler:
         """
         layers = list(self.walk_clang_type_layers(canonical=canonical))
         if layer >= len(layers):
-            raise ValueError("argument 'layer' was chosen larger than the number of available layers")
+            raise ValueError(
+                "argument 'layer' was chosen larger than the number of available layers"
+            )
         elif layer < -1:
-            raise ValueError("argument 'layer' must be chosen greater than '-1'")
+            raise ValueError(
+                "argument 'layer' must be chosen greater than '-1'"
+            )
         return TypeHandler(layers[layer])
 
-    def const_qualifiers(
-        self, postorder = False, canonical=False
-    ):
+    def const_qualifiers(self, postorder=False, canonical=False):
         """Yields a flag per type layer that constitute this type if
         the layer is const qualified.
 
@@ -438,7 +447,10 @@ class TypeHandler:
             yield clang_type.is_const_qualified()
 
     def categorized_type_layer_kinds(
-        self, postorder=False, consider_const=False, subdivide_basic_types: bool = False
+        self,
+        postorder=False,
+        consider_const=False,
+        subdivide_basic_types: bool = False,
     ):
         """Yields the Clang type kinds that constitute this type.
         Always uses the canonical type.
@@ -453,7 +465,9 @@ class TypeHandler:
             Note that this is by default a pre-order walk, e.g., if we have a type `void *`,
             we will obtain first the pointer type and then the `void` type.
         """
-        for clang_type in self.walk_clang_type_layers(postorder, canonical=True):
+        for clang_type in self.walk_clang_type_layers(
+            postorder, canonical=True
+        ):
             yield TypeHandler.categorize_clang_type_kind(
                 clang_type.kind,
                 is_const=consider_const and clang_type.is_const_qualified(),
@@ -534,8 +548,7 @@ class TypeHandler:
 
     @property
     def is_innermost_canonical_type_layer_of_basic_type_or_void(self):
-        """If the innermost type layer is of basic type or void type.
-        """
+        """If the innermost type layer is of basic type or void type."""
         return next(self.categorized_type_layer_kinds(postorder=True)) in (
             TypeHandler.TypeCategory.BASIC,
             TypeHandler.TypeCategory.VOID,
@@ -579,16 +592,18 @@ class TypeHandler:
                 break
         return rank_counted
 
-    def get_pointer_degree(self,incomplete_array=False) -> int:
+    def get_pointer_degree(self, incomplete_array=False) -> int:
         """Returns number of outer type layers which are of TypeKind.POINTER.
         Args:
             incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
         """
-        return self.get_rank(constant_array=False,
-                             incomplete_array=incomplete_array,
-                             pointer=True)
+        return self.get_rank(
+            constant_array=False,
+            incomplete_array=incomplete_array,
+            pointer=True,
+        )
 
-    def compare_pointer_degree(self,found_degree,expected_degree):
+    def compare_pointer_degree(self, found_degree, expected_degree):
         """Checks if the found degree equals one of the expected degrees.
 
         If a positive expected degree is provided, e.g. ``1``, then the found degree
@@ -597,7 +612,7 @@ class TypeHandler:
         greater than or equal to the absolute value of the expected degree, e.g. ``found_degree>=1``.
         A tuple consisting of multiple of the above expressions can be provided.
         The function returns ``True`` if there is a match for at least one of the expressions.
-        
+
         Args:
             found_degree (`int`): The found degree. Assumed to be non-negative.
             expected_degree (`int` or `tuple`): A single expected degree expression or a tuple thereof.
@@ -605,10 +620,12 @@ class TypeHandler:
         Returns:
             `bool`: ``True`` if there is a match for one of the expected degree expressions.
         """
-        if isinstance(expected_degree,int):
+        if isinstance(expected_degree, int):
             degrees = (expected_degree,)
         else:
-            assert isinstance(expected_degree,tuple), "degree: expected int or tuple of int"
+            assert isinstance(
+                expected_degree, tuple
+            ), "degree: expected int or tuple of int"
             degrees = expected_degree
 
         for d in degrees:
@@ -620,10 +637,9 @@ class TypeHandler:
                     return True
         return False
 
-    def is_pointer_to_kind(self,
-                           type_kind,
-                           degree = 1,
-                           incomplete_array: bool=False):
+    def is_pointer_to_kind(
+        self, type_kind, degree=1, incomplete_array: bool = False
+    ):
         """If this is a pointerof the given ``degree`` to the given type kind. Always uses the canonical type.
 
         Note:
@@ -636,23 +652,25 @@ class TypeHandler:
         Note:
             Does not check for any const modifiers.
         """
-        if isinstance(type_kind,tuple):
+        if isinstance(type_kind, tuple):
             type_kinds = type_kind
         else:
-            assert isinstance(type_kind,clang.cindex.TypeKind)
+            assert isinstance(type_kind, clang.cindex.TypeKind)
             type_kinds = (type_kind,)
 
         layers = list(self.clang_type_layer_kinds(canonical=True))
         found_pointer_degree = self.get_pointer_degree(incomplete_array)
         if layers[found_pointer_degree] in type_kinds:
-            return self.compare_pointer_degree(found_pointer_degree,degree)
+            return self.compare_pointer_degree(found_pointer_degree, degree)
         return False
 
-    def is_pointer_to_category(self,
-                               type_category,
-                               degree = 1,
-                               incomplete_array: bool=False,
-                               subdivide_categories:bool = False):
+    def is_pointer_to_category(
+        self,
+        type_category,
+        degree=1,
+        incomplete_array: bool = False,
+        subdivide_categories: bool = False,
+    ):
         """If this is a pointerof the given ``degree`` to the given type category.
 
         Args:
@@ -662,19 +680,25 @@ class TypeHandler:
         Note:
             Does not check for any const modifiers.
         """
-        if isinstance(type_category,tuple):
+        if isinstance(type_category, tuple):
             type_categories = type_category
         else:
-            assert isinstance(type_category,self.TypeCategory)
+            assert isinstance(type_category, self.TypeCategory)
             type_categories = (type_category,)
 
-        layers = list(self.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))
+        layers = list(
+            self.categorized_type_layer_kinds(
+                subdivide_basic_types=subdivide_categories
+            )
+        )
         found_pointer_degree = self.get_pointer_degree(incomplete_array)
         if layers[found_pointer_degree] in type_categories:
-            return  self.compare_pointer_degree(found_pointer_degree,degree)
+            return self.compare_pointer_degree(found_pointer_degree, degree)
         return False
 
-    def is_constantarray_of_kind_or_category(self,type_category=None,type_kind=None):
+    def is_constantarray_of_kind_or_category(
+        self, type_category=None, type_kind=None
+    ):
         """Checks if the type is an (mult-dim) array of a certain category or kind. Always uses the canonical type.
 
         Args:
@@ -689,7 +713,7 @@ class TypeHandler:
             Only one of type_category or type_kind must be specified.
 
         Return:
-            
+
             A tuple that consists of a bool indicating if a multi-dimensional const array of the searched category/kind has been found
             plus the dimension of that array.
 
@@ -702,24 +726,28 @@ class TypeHandler:
             [TypeKind.CONSTANTARRAY,TypeKind.CONSTANTARRAY,TypeKind.INT];
             [TypeCategory.ARRAY,TypeCategory.ARRAY,TypeCategory.BASIC]
         """
-        assert type_category or type_kind, "One of type_category or type_kind must be specified."
-        assert not type_category or not type_kind, "Only one of type_category or type_kind must be specified."
+        assert (
+            type_category or type_kind
+        ), "One of type_category or type_kind must be specified."
+        assert (
+            not type_category or not type_kind
+        ), "Only one of type_category or type_kind must be specified."
         from clang.cindex import TypeKind
 
         if not type_category:
             type_categories = None
-        elif isinstance(type_category,tuple):
+        elif isinstance(type_category, tuple):
             type_categories = type_category
         else:
-            assert isinstance(type_category,self.TypeCategory)
+            assert isinstance(type_category, self.TypeCategory)
             type_categories = (type_category,)
-        
+
         if not type_kind:
             type_kinds = None
-        elif isinstance(type_kind,tuple):
+        elif isinstance(type_kind, tuple):
             type_kinds = type_kind
         else:
-            assert isinstance(type_kind,clang.cindex.TypeKind)
+            assert isinstance(type_kind, clang.cindex.TypeKind)
             type_kinds = (type_kind,)
 
         found_rank = 0

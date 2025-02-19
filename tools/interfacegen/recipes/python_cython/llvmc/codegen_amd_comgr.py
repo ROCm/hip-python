@@ -28,34 +28,28 @@ it generates Cython files.
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import logging
 import os
-
 import textwrap
 
-import logging
-
 import interfacegen
+from interfacegen.cython import (
+    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+    CythonModuleGenerator,
+)
+from interfacegen.support import cython as support
+from interfacegen.support import includetree as it
+from interfacegen.support.recipes.control import ParmIntent
+from interfacegen.tree import Node, Parm, Typed
 
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
-from interfacegen.support import includetree as it
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
 interfacegen.cython.python_interface_pyobj_role_template = (
     r"`~.{name}`"  # ~: removes the qualifier from the link text
 )
-
-from interfacegen.cython import (
-    CythonModuleGenerator,
-    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
-)
-
-from interfacegen.tree import Node, Parm, Typed
-
-from interfacegen.support.recipes.control import ParmIntent
-
-from interfacegen.support import cython as support
 
 
 def create_generator(
@@ -70,7 +64,9 @@ def create_generator(
 
     def ptr_parm_intent(parm: Parm):
         func_name, parm_index = parm.parent.name, parm.parm_index
-        if (func_name, parm_index) in (("amd_comgr_action_info_set_option_list", 1),):
+        if (func_name, parm_index) in (
+            ("amd_comgr_action_info_set_option_list", 1),
+        ):
             return ParmIntent.IN
         if func_name in (
             "amd_comgr_get_isa_count",
@@ -114,9 +110,9 @@ def create_generator(
                 ("amd_comgr_action_info_set_option_list", 1),
             ):
                 return f"{pkg_opts.util_types_prefix}ListOfBytes"
-        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(pkg_opts.util_types_prefix)(
-            node
-        )
+        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(
+            pkg_opts.util_types_prefix
+        )(node)
 
     def node_filter(node: Node):
         return (
@@ -159,7 +155,9 @@ def create_generator(
         error_return_value_lazy_loader="AMD_COMGR_STATUS_ERROR",
     )
     # generator.c_interface_decl_prolog += cython_c_preamble
-    generator.python_interface_decl_prolog += f"cimport {pkg_opts.util_pkg}.types\n"
+    generator.python_interface_decl_prolog += (
+        f"cimport {pkg_opts.util_pkg}.types\n"
+    )
 
     return generator
 
@@ -176,16 +174,18 @@ def create_generators(root: it.Root):
 if __name__ == "__main__":
     interfacegen.cython.Function.python_interface_always_return_tuple = True
 
-    pkg_opts: support.RocmPackageOpts = support.create_rocm_package_opts_from_cli(
-        project="AMD Code Object Manager (Comgr) Python",
-        env_var_prefix="AMD_COMGR_PYTHON",
-        libs_example="amd_comgr",
-        package="rocm-llvm-python",
-        rel_inc_dir="include",
-        util_pkg="rocm.llvm._util",  # is part of rocm-llvm-python
-        dll="libamd_comgr.so",
-        author="Advanced Micro Devices, Inc.",
-        email="hip-python.maintainer@amd.com",
+    pkg_opts: support.RocmPackageOpts = (
+        support.create_rocm_package_opts_from_cli(
+            project="AMD Code Object Manager (Comgr) Python",
+            env_var_prefix="AMD_COMGR_PYTHON",
+            libs_example="amd_comgr",
+            package="rocm-llvm-python",
+            rel_inc_dir="include",
+            util_pkg="rocm.llvm._util",  # is part of rocm-llvm-python
+            dll="libamd_comgr.so",
+            author="Advanced Micro Devices, Inc.",
+            email="hip-python.maintainer@amd.com",
+        )
     )
 
     INCTREE = (

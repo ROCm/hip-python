@@ -24,6 +24,7 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 cimport posix.dlfcn
 
+
 cdef int open_library(void** lib_handle, const char* path) except 1 nogil:
     """Opens a shared object and returns a handle for it via out parameter.
 
@@ -51,7 +52,7 @@ cdef int close_library(void* lib_handle) except 1 nogil:
         Positive number if something has gone wrong, '0' otherwise.
     """
     if lib_handle == NULL:
-        raise RuntimeError(f"handle is NULL")
+        raise RuntimeError("handle is NULL")
     cdef int rtype = posix.dlfcn.dlclose(lib_handle)
     cdef char* reason = NULL
     if rtype != 0:

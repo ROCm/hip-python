@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # MIT License
 #
 # Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
@@ -22,7 +21,6 @@
 # SOFTWARE.
 
 from . import _base
-from ._base import *
 
 
 def create_rocm_package_opts_from_cli(

@@ -22,19 +22,19 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
-import sys
-
 import logging
-
-_log = logging.getLogger("interfacegen")
+import sys
 
 import clang.cindex
 
+from . import cython
 from .support.recipes import control
 
-from . import cython
+_log = logging.getLogger("interfacegen")
 
 
+# flake8: noqa: C901
+# TODO break function apart to reduce complexity
 def from_libclang_translation_unit(
     translation_unit: clang.cindex.TranslationUnit,
     warn_mode=control.Warnings.WARN,
@@ -42,7 +42,9 @@ def from_libclang_translation_unit(
 ):
     """Create a tree from a libclang translation unit."""
 
-    def first_child_cursor_of_kinds_(cursor: clang.cindex.Cursor, kinds: tuple):
+    def first_child_cursor_of_kinds_(
+        cursor: clang.cindex.Cursor, kinds: tuple
+    ):
         """Returns the first typeref child or None. Not recursive."""
         return next(
             (
@@ -64,7 +66,9 @@ def from_libclang_translation_unit(
         clang.cindex.CursorKind.ENUM_DECL: backend.AnonymousEnum,
     }
 
-    def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root):  # t: backend.Root
+    def handle_top_level_cursor_(
+        cursor: clang.cindex.Cursor, root
+    ):  # t: backend.Root
         """Handle cursors whose parent is the cursor of kind TRANSLATION_UNIT."""
         nonlocal structure_types
         nonlocal warn_mode
@@ -75,9 +79,7 @@ def from_libclang_translation_unit(
             handle_typedef_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
             if warn_mode in (control.Warnings.WARN, control.Warnings.ERROR):
-                msg = (
-                    f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
-                )
+                msg = f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
                 if warn_mode == control.Warnings.WARN:
                     _log.warning(msg)
                 else:
@@ -113,12 +115,16 @@ def from_libclang_translation_unit(
         if cursor.kind in structure_types:
             cls = structure_types[cursor.kind]
             node = cls(
-                cursor, root, from_typedef_with_anon_child=(cursor.spelling == "")
+                cursor,
+                root,
+                from_typedef_with_anon_child=(cursor.spelling == ""),
             )
             descend_into_child_cursors_(node)
             root.append(node)
 
-    def handle_typedef_cursor_(cursor: clang.cindex.Cursor, root):  # t: backend.Root
+    def handle_typedef_cursor_(
+        cursor: clang.cindex.Cursor, root
+    ):  # t: backend.Root
         """Handle typedef cursors with respect to their children and type.
 
         Checks if the typedef has any STRUCT_DECL, UNION_DECL, ENUM_DECL, or TYPE_REF child cursor, which
@@ -192,7 +198,9 @@ def from_libclang_translation_unit(
         elif backend.Typedef.match_typedefed_record_or_enum(
             cursor.type
         ):  # typedef of struct or union
-            type_decl_cursor = cursor.underlying_typedef_type.get_declaration()  # FIX
+            type_decl_cursor = (
+                cursor.underlying_typedef_type.get_declaration()
+            )  # FIX
             if not len(
                 type_decl_cursor.spelling
             ):  # found anonymous struct/union/enum child
@@ -201,7 +209,9 @@ def from_libclang_translation_unit(
                 )
                 # in case of anon enum, replace the original node with the given one
                 type_decl = root.lookup_type_from_cursor(type_decl_cursor)
-                assert type_decl != None, backend.Node.render_cursor_location(cursor)
+                assert (
+                    type_decl is not None
+                ), backend.Node.render_cursor_location(cursor)
                 assert isinstance(type_decl, (backend.Enum, backend.Record))
                 assert type_decl._from_typedef_with_anon_child
                 type_decl.overwrite_name(cursor.spelling)

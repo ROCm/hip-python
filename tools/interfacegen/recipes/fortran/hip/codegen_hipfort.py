@@ -28,28 +28,27 @@ it generates Fortran module files.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-import os
 import logging
+import os
 
 import interfacegen
-
-interfacegen.enable_logging(logging.INFO)
-_log = logging.getLogger("interfacegen")
-from interfacegen.support import includetree as it
-
-from interfacegen.support import fortran as support
-from interfacegen.support.recipes import hip as controls
-from interfacegen.support.recipes.hipify import parse_hipify_perl
-
-from interfacegen.fortran import FortranModuleGenerator
-
 from interfacegen.cparser import TypeHandler
-
-TypeCategory = TypeHandler.TypeCategory
-
+from interfacegen.fortran import FortranModuleGenerator
+from interfacegen.support import fortran as support
+from interfacegen.support import includetree as it
+from interfacegen.support.recipes import hip as controls
 from interfacegen.tree import (
     MacroDefinition,
 )
+
+# from interfacegen.support.recipes.hipify import parse_hipify_perl
+
+
+interfacegen.enable_logging(logging.INFO)
+
+_log = logging.getLogger("interfacegen")
+
+TypeCategory = TypeHandler.TypeCategory
 
 HIPFORT_FILE_EXT = "f"
 
@@ -260,7 +259,7 @@ SPECIALIZED_GENERATORS = dict(
 
 
 def resolve_dependencies(node: it.File):
-    assert node.codegen != None, "no codegenerator set"
+    assert node.codegen is not None, "no codegenerator set"
     codegen: FortranModuleGenerator = node.codegen
     for dep in node.includes:
         assert isinstance(dep, it.File)
@@ -287,7 +286,7 @@ def create_default_generator(node: it.File):
 def create_generators(root: it.Root):
     global SPECIALIZED_GENERATORS
     for node in root.walk_files():
-        key = node.basename_no_ext.replace("hip_runtime","hip")
+        key = node.basename_no_ext.replace("hip_runtime", "hip")
         if key in SPECIALIZED_GENERATORS:
             node.codegen = SPECIALIZED_GENERATORS[key]()
         else:
@@ -300,14 +299,16 @@ def create_generators(root: it.Root):
 if __name__ == "__main__":
     HIP_2_CUDA = None
 
-    pkg_opts: support.RocmPackageOpts = support.create_rocm_package_opts_from_cli(
-        project="HIPFORT",
-        env_var_prefix="HIPFORT_",
-        libs_example="hip,hiprtc",
-        package="hipfort",
-        rel_inc_dir="include",
-        author="Advanced Micro Devices, Inc.",
-        email="hipfort.maintainer@amd.com",
+    pkg_opts: support.RocmPackageOpts = (
+        support.create_rocm_package_opts_from_cli(
+            project="HIPFORT",
+            env_var_prefix="HIPFORT_",
+            libs_example="hip,hiprtc",
+            package="hipfort",
+            rel_inc_dir="include",
+            author="Advanced Micro Devices, Inc.",
+            email="hipfort.maintainer@amd.com",
+        )
     )
 
     def filter(filepath: str):
@@ -340,11 +341,19 @@ if __name__ == "__main__":
 
     root = it.build_include_tree(incdir=pkg_opts.abs_inc_dir, filter=filter)
     # patch some of the includes
-    root.find_node(name="hipsolver.h").includes.append(root.find_node(name="hipblas.h"))
-    root.find_node(name="rocsolver.h").includes.append(root.find_node(name="rocblas.h"))
+    root.find_node(name="hipsolver.h").includes.append(
+        root.find_node(name="hipblas.h")
+    )
+    root.find_node(name="rocsolver.h").includes.append(
+        root.find_node(name="rocblas.h")
+    )
     # create_generators(INCTREE)
     # _log.info(root.file_tree_to_str())
-    _log.info("\nBEGIN INCLUDES\n" + root.includes_to_str().rstrip() + "\nEND INCLUDES")
+    _log.info(
+        "\nBEGIN INCLUDES\n"
+        + root.includes_to_str().rstrip()
+        + "\nEND INCLUDES"
+    )
 
     create_generators(root)
 

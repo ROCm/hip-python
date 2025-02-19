@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,16 +22,17 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import logging
 import textwrap
 
 import pyparsing as pyp
 
-import logging
 _log = logging.getLogger("interfacegen")
 
 # TODO implement: https://www.doxygen.nl/manual/htmlcmds.html
 
-pyp.ParserElement.setDefaultWhitespaceChars(' \t')
+pyp.ParserElement.setDefaultWhitespaceChars(" \t")
+
 
 def remove_doxygen_comment_chars(text: str, dedent=True):
     """Strip away doxygen C++ comment delimiters.
@@ -45,33 +46,40 @@ def remove_doxygen_comment_chars(text: str, dedent=True):
     result = ""
     last_end = 0
 
-    for _,start,end in pyp.cppStyleComment.scanString(text):
+    for _, start, end in pyp.cppStyleComment.scanString(text):
         result += text[last_end:start]
         comment = text[start:end]
         if comment.lstrip().startswith("//"):
-            comment = comment.replace("//!<","",1) # TODO improve with regex
-            comment = comment.replace("///<","",1)
-            comment = comment.replace("///","",1)
-            comment = comment.replace("//!","",1)
+            comment = comment.replace("//!<", "", 1)  # TODO improve with regex
+            comment = comment.replace("///<", "", 1)
+            comment = comment.replace("///", "", 1)
+            comment = comment.replace("//!", "", 1)
             result += comment
-        elif comment.lstrip()[0:3] in ("/**","/*!"):
+        elif comment.lstrip()[0:3] in ("/**", "/*!"):
             lines = comment.splitlines(keepends=True)
-            for i,ln in enumerate(lines):
+            for i, ln in enumerate(lines):
                 has_linebreak = ln.endswith("\n")
                 result_line = ln.rstrip()
                 if i == 0:
                     idx = result_line.find("/*")
-                    result_line = result_line.replace(result_line[idx:idx+3]," "*3,1) # preserve indentation, note: /** or /*!
-                elif i == len(lines)-1:
+                    # flake8: noqa: E203
+                    result_line = result_line.replace(
+                        result_line[idx : idx + 3],
+                        " " * 3,
+                        1,
+                    )  # preserve indentation, note: /** or /*!
+                elif i == len(lines) - 1:
                     idx = result_line.rfind("*/")
                     if idx >= 0:
                         result_line = result_line[:idx]
                 if result_line.lstrip().startswith("*"):
-                    result_line = result_line.replace("*"," ",1) # preserve indentation
+                    result_line = result_line.replace(
+                        "*", " ", 1
+                    )  # preserve indentation
                 result += result_line
                 if has_linebreak:
                     result += "\n"
-        else: # other comment
+        else:  # other comment
             result += comment
         last_end = end
     result += text[last_end:]
@@ -80,8 +88,8 @@ def remove_doxygen_comment_chars(text: str, dedent=True):
     else:
         return result
 
-class format:
 
+class format:
     """Collection of basic styles that users can base their custom
     style on.
     """
@@ -115,10 +123,9 @@ class format:
 
         @staticmethod
         def fdollar(tokens):
-            r"""\f$ .. \f$
-            """
+            r"""\f$ .. \f$"""
             return f":math:`{tokens[1]}`"
-        
+
         @staticmethod
         def frnd(tokens):
             r"""\f( ... \f)
@@ -126,18 +133,20 @@ class format:
                 No explicit latex mode in sphinxdoc.
             """
             return f"`{tokens[1]}`"
-        
+
         @staticmethod
         def reference(tokens):
-            reference: str = tokens[0].replace("#",".")
-            reference = reference.replace("::",".")
+            reference: str = tokens[0].replace("#", ".")
+            reference = reference.replace("::", ".")
             return f":py:obj:`{reference.lstrip('.')}`"
+
 
 # for structuring the input
 
+
 class Node:
 
-    def __init__(self,s,loc,tokens):
+    def __init__(self, s, loc, tokens):
         """Pyparsing parse action compatible constructor.
 
         Note:
@@ -155,44 +164,44 @@ class Node:
     @property
     def root(self):
         curr = self
-        while curr.parent != None:
+        while curr.parent is not None:
             curr = curr.parent
-        assert isinstance(curr,Root)
+        assert isinstance(curr, Root)
         return curr
-    
+
     @property
     def input_string(self):
         return self.root._input_string
-    
-    def get_text(self,transform_formatting=False,transform_other=False):
+
+    def get_text(self, transform_formatting=False, transform_other=False):
         """Returns the text contained by this node.
 
         Args:
-            transforma_formatting (bool): Apply the ``DoxygenParser`` 
-               instance's ``formatting`` pyparser's ``transformString`` 
+            transforma_formatting (bool): Apply the ``DoxygenParser``
+               instance's ``formatting`` pyparser's ``transformString``
                routine to the result. Defaults to False.
             transform_other (bool): Apply the ``DoxygenParser`` instance's
               ``other`` pyparser's ``transformString`` routine to the result.
               Defaults to False.
         """
-        if self.end != None:
+        if self.end is not None:
             assert isinstance(self.parser, DoxygenGrammar)
-            text = self.input_string[self.begin:self.end]
-            return self.parser.transform_text_block(text,transform_formatting,transform_other)
+            text = self.input_string[self.begin : self.end]
+            return self.parser.transform_text_block(
+                text, transform_formatting, transform_other
+            )
         else:
             raise RuntimeError("'end' must not be `None`")
-    
+
     @property
     def text(self):
-        r"""Shortcut for ```self.get_text(transform_formatting=False,transform_other=False)```.
-        """
+        r"""Shortcut for ```self.get_text(transform_formatting=False,transform_other=False)```."""
         return self.get_text()
 
     @property
     def transformed_text(self):
-        r"""Shortcut for ```self.get_text(transform_formatting=True,transform_other=True)```.
-        """
-        return self.get_text(transform_formatting=True,transform_other=True)
+        r"""Shortcut for ```self.get_text(transform_formatting=True,transform_other=True)```."""
+        return self.get_text(transform_formatting=True, transform_other=True)
 
     @property
     def parser(self):
@@ -202,13 +211,13 @@ class Node:
     def level(self):
         curr = self
         level = 0
-        while curr.parent != None:
+        while curr.parent is not None:
             curr = curr.parent
             level += 1
-        assert isinstance(self,Root) or level > 0, f"{str(self)}"
+        assert isinstance(self, Root) or level > 0, f"{str(self)}"
         return level
-    
-    def walk(self,postorder=False):
+
+    def walk(self, postorder=False):
         if not postorder:
             yield self
         for child in self.children:
@@ -218,24 +227,25 @@ class Node:
 
     def __len__(self):
         return len(self.children)
-    
-    def __getitem__(self,key):
+
+    def __getitem__(self, key):
         return self.children[key]
-        
+
+
 class Root(Node):
 
-    def __init__(self,input_string,parser):
+    def __init__(self, input_string, parser):
         self.parent = None
         self.children = []
         self._parser = parser
         self._input_string = input_string
 
-    def add_details_section(self,start,end):
+    def add_details_section(self, start, end):
         self.children.append(
             Section(
                 self._input_string,
                 start,
-                [ r"\details*", self._input_string[start:end] ]
+                [r"\details*", self._input_string[start:end]],
             )
         )
         self.children[-1].parent = self
@@ -243,15 +253,17 @@ class Root(Node):
         self.children[-1].add_body()
         return self.children[-1]
 
+
 class TextBlock(Node):
-    
-    def __init__(self,s,loc,tokens):
-        Node.__init__(self,s,loc,tokens)
+
+    def __init__(self, s, loc, tokens):
+        Node.__init__(self, s, loc, tokens)
+
 
 class Section(Node):
-    
-    def __init__(self,s,loc,tokens):
-        Node.__init__(self,s,loc,tokens)
+
+    def __init__(self, s, loc, tokens):
+        Node.__init__(self, s, loc, tokens)
         self.kind = tokens[0][1:]
         self.end = None
 
@@ -271,7 +283,7 @@ class Section(Node):
     @property
     def body(self):
         result = self.children[0]
-        assert isinstance(result,SectionBody)
+        assert isinstance(result, SectionBody)
         return result
 
     @property
@@ -281,26 +293,27 @@ class Section(Node):
     @property
     def blocks(self):
         return self.body.children
-    
+
     def set_body_from_tokens(self):
         body = self.tokens[-1]
         body.end = self.end
-        assert isinstance(body,SectionBody)
+        assert isinstance(body, SectionBody)
         self.children.append(body)
         self.children[-1].parent = self
 
     def sync_with_root(self):
-        assert self.parent != None
-        assert self.body != None
+        assert self.parent is not None
+        assert self.body is not None
         self.body.sync_with_root()
+
 
 class SectionBody(Node):
 
-    def __init__(self,s,loc,tokens):
-        Node.__init__(self,s,loc,tokens)
+    def __init__(self, s, loc, tokens):
+        Node.__init__(self, s, loc, tokens)
         self.end = None
 
-    def add_text_block(self,s,start,tokens,end):
+    def add_text_block(self, s, start, tokens, end):
         self.children.append(
             TextBlock(
                 s,
@@ -310,62 +323,65 @@ class SectionBody(Node):
         )
         self.children[-1].end = end
         return self.children[-1]
-    
+
     def sync_with_root(self):
         """Write the root's input text to the token."""
-        assert self.parent != None
-        assert self.end != None
-        self.tokens[-1] = self.input_string[self.begin:self.end]
+        assert self.parent is not None
+        assert self.end is not None
+        self.tokens[-1] = self.input_string[self.begin : self.end]
+
 
 class VerbatimBlock(Node):
     r"""Verbatim text block expression such
     as \verbatim ... \endverbatim, \code ... \endcode, ...
     """
-    
-    def __init__(self,s,loc,tokens):
-        Node.__init__(self,s,loc,tokens)
+
+    def __init__(self, s, loc, tokens):
+        Node.__init__(self, s, loc, tokens)
         self.kind = tokens[0][1:]
 
     @property
     def code(self):
         return self.tokens[-2]
-    
+
     @property
     def head(self):
         return self.tokens[:-2]
-    
+
     @property
     def tail(self):
         return self.tokens[-1]
 
-class MathBlock(Node):
 
+class MathBlock(Node):
     r"""Math block expression such
     as \f[ ... \f], \f{eqnarray} ... \f}, ...
     """
-    
-    def __init__(self,s,loc,tokens):
-        Node.__init__(self,s,loc,tokens)
+
+    def __init__(self, s, loc, tokens):
+        Node.__init__(self, s, loc, tokens)
         self.kind = tokens[0][1:]
         if len(tokens) == 6:
             # '\f{' 'env' '}' '{' '...' '\f}'
             self.env = tokens[2]
         else:
             self.env = None
-    
+
     @property
     def code(self):
         return self.tokens[-2]
-    
+
     @property
     def head(self):
         return self.tokens[:-2]
-    
+
     @property
     def tail(self):
         return self.tokens[-1]
 
+
 # Parser
+
 
 class DoxygenGrammar:
 
@@ -389,17 +405,17 @@ class DoxygenGrammar:
             "quot",
         ],
         "verbatim_end": [
-            "endcode", # yes
-            "enddocbookonly", # yes
-            "enddot", # yes
-            "endhtmlonly", # yes
-            "endlatexonly", # yes
-            "endmanonly", # yes
-            "endmsc", # yes
-            "endrtfonly", # yes
-            "enduml", # yes
-            "endverbatim", # yes
-            "endxmlonly", # yes
+            "endcode",  # yes
+            "enddocbookonly",  # yes
+            "enddot",  # yes
+            "endhtmlonly",  # yes
+            "endlatexonly",  # yes
+            "endmanonly",  # yes
+            "endmsc",  # yes
+            "endrtfonly",  # yes
+            "enduml",  # yes
+            "endverbatim",  # yes
+            "endxmlonly",  # yes
         ],
         "docbookonly": ["docbookonly"],
         "latexonly": ["latexonly"],
@@ -411,11 +427,11 @@ class DoxygenGrammar:
             "callergraph",
             "callgraph",
             "else",
-            "endcond", # no
-            "endif", # no
-            "endinternal", # no
-            "endparblock", # no
-            "endsecreflist", # no
+            "endcond",  # no
+            "endif",  # no
+            "endinternal",  # no
+            "endparblock",  # no
+            "endsecreflist",  # no
             "hidecallergraph",
             "hidecallgraph",
             "hideinitializer",
@@ -456,10 +472,15 @@ class DoxygenGrammar:
             "var",
         ],
         "cond": ["cond"],
-        "page_section": ["paragraph", "section", "subsection", "subsubsection"],
+        "page_section": [
+            "paragraph",
+            "section",
+            "subsection",
+            "subsubsection",
+        ],
         "section_no_args": [
-            "alpha", # custom
-            "beta", # custom
+            "alpha",  # custom
+            "beta",  # custom
             "arg",
             "attention",
             "author",
@@ -528,8 +549,7 @@ class DoxygenGrammar:
         "with_file_caption": ["diafile", "dotfile", "mscfile"],
         "dot": ["dot"],
         "msc": ["msc"],
-        "with_linkobject": ["copybrief", "copydetails", "copydoc", 
-                            "link"],
+        "with_linkobject": ["copybrief", "copydetails", "copydoc", "link"],
         "with_name_title": ["addtogroup", "weakgroup"],
         "with_name_text": ["ref", "subpage"],
         "with_filename_blockid": ["snippetdoc", "snippetlineno"],
@@ -564,7 +584,7 @@ class DoxygenGrammar:
         "retval": ["retval"],
         "showdate": ["showdate"],
         "snippet": ["snippet"],
-        "startuml": ["startuml"], # yes
+        "startuml": ["startuml"],  # yes
         "tableofcontents": ["tableofcontents"],
         "tilde": ["tilde"],
         "tparam": ["tparam"],
@@ -590,7 +610,7 @@ class DoxygenGrammar:
         "xmlonly",
     ]
 
-    def __init__(self,cmd_prefix_chars=r"\\@"):
+    def __init__(self, cmd_prefix_chars=r"\\@"):
         self.cmd_prefix_chars = cmd_prefix_chars
         self._construct_grammer()
         # __tree: private instance that is not exposed to the user
@@ -604,10 +624,12 @@ class DoxygenGrammar:
         else:
             cmds = [cmd]
         if words:
-            expr = r"["+self.cmd_prefix_chars+"](" + "|".join(cmds) + r")\b"
+            expr = (
+                r"[" + self.cmd_prefix_chars + "](" + "|".join(cmds) + r")\b"
+            )
         else:
-            expr = r"["+self.cmd_prefix_chars+"](" + "|".join(cmds) + r")"
-        #print(expr)
+            expr = r"[" + self.cmd_prefix_chars + "](" + "|".join(cmds) + r")"
+        # print(expr)
         return pyp.Regex(expr)
 
     def _construct_grammer(self):
@@ -624,52 +646,68 @@ class DoxygenGrammar:
         BLANK_LINE = pyp.Regex("\n[ \t]*\n")
         # pyp.Optional(pyp.LineEnd()) + pyp.LineStart()
         UNTIL_LINE_END = pyp.SkipTo(pyp.LineEnd())
-        OPT_UNTIL_LINE_END = pyp.Optional(UNTIL_LINE_END,default=None)
+        OPT_UNTIL_LINE_END = pyp.Optional(UNTIL_LINE_END, default=None)
         section = pyp.Forward()
         SECTION_TERMINATOR = BLANK_LINE | section | pyp.StringEnd()
-        section_body = pyp.SkipTo(
-            SECTION_TERMINATOR
-        )
+        section_body = pyp.SkipTo(SECTION_TERMINATOR)
         WORD_OF_PRINTABLES = pyp.Word(pyp.printables, pyp.printables)
-        OPT_WORD_OF_PRINTABLES = pyp.Optional(WORD_OF_PRINTABLES,default=None)
+        OPT_WORD_OF_PRINTABLES = pyp.Optional(WORD_OF_PRINTABLES, default=None)
 
         # ex: \&
         CHARS = (
-            r"&",#"amp"
-            r"@",#"at"
-            r"\\",#"backslash"
-            r"\.",#"chardot"
-            r"\$",#"dollar"
-            r"=",#"eq"
-            r">",#"gt"
-            r"#",#"hash"
-            r"<",#"lt"
-            r"n",#"n"
-            r"%",#"perc"
-            r"\|",#"pipe"
-            r"\"",#"quot"
+            r"&",  # "amp"
+            r"@",  # "at"
+            r"\\",  # "backslash"
+            r"\.",  # "chardot"
+            r"\$",  # "dollar"
+            r"=",  # "eq"
+            r">",  # "gt"
+            r"#",  # "hash"
+            r"<",  # "lt"
+            r"n",  # "n"
+            r"%",  # "perc"
+            r"\|",  # "pipe"
+            r"\"",  # "quot"
         )
-        escaped = pyp.Regex(r"\\(::|---?|["+ "".join(CHARS) + r"])").setParseAction(
-            lambda tk: tk[0][1:] if tk != "\\n" else "\n"
-        )
+        escaped = pyp.Regex(
+            r"\\(::|---?|[" + "".join(CHARS) + r"])"
+        ).setParseAction(lambda tk: tk[0][1:] if tk != "\\n" else "\n")
         del CHARS
         self._pyp_cmd(self.kinds["escaped"])
         # ex: \callergraph
         no_args = self._pyp_cmd(self.kinds["no_args"])
         ENDDOCBOOKONLY = self._pyp_cmd("enddocbookonly")
-        ENDLATEXONLY   = self._pyp_cmd("endlatexonly")
-        ENDMANONLY     = self._pyp_cmd("endmanonly")
-        ENDRTFONLY     = self._pyp_cmd("endrtfonly")
-        ENDVERBATIM    = self._pyp_cmd("endverbatim")
-        ENDXMLONLY     = self._pyp_cmd("endxmlonly")
+        ENDLATEXONLY = self._pyp_cmd("endlatexonly")
+        ENDMANONLY = self._pyp_cmd("endmanonly")
+        ENDRTFONLY = self._pyp_cmd("endrtfonly")
+        ENDVERBATIM = self._pyp_cmd("endverbatim")
+        ENDXMLONLY = self._pyp_cmd("endxmlonly")
 
-        docbookonly = self._pyp_cmd("docbookonly") + pyp.SkipTo(ENDDOCBOOKONLY) + ENDDOCBOOKONLY
-        latexonly = self._pyp_cmd("latexonly") + pyp.SkipTo(ENDLATEXONLY) + ENDLATEXONLY
-        manonly = self._pyp_cmd("manonly") + pyp.SkipTo(ENDMANONLY) + ENDMANONLY
-        rtfonly = self._pyp_cmd("rtfonly") + pyp.SkipTo(ENDRTFONLY) + ENDRTFONLY
-        verbatim = self._pyp_cmd("verbatim") + pyp.SkipTo(ENDVERBATIM) + ENDVERBATIM
-        xmlonly = self._pyp_cmd("xmlonly") + pyp.SkipTo(ENDXMLONLY) + ENDXMLONLY
-        verbatim_no_args = docbookonly | latexonly | manonly | rtfonly | verbatim | xmlonly
+        docbookonly = (
+            self._pyp_cmd("docbookonly")
+            + pyp.SkipTo(ENDDOCBOOKONLY)
+            + ENDDOCBOOKONLY
+        )
+        latexonly = (
+            self._pyp_cmd("latexonly")
+            + pyp.SkipTo(ENDLATEXONLY)
+            + ENDLATEXONLY
+        )
+        manonly = (
+            self._pyp_cmd("manonly") + pyp.SkipTo(ENDMANONLY) + ENDMANONLY
+        )
+        rtfonly = (
+            self._pyp_cmd("rtfonly") + pyp.SkipTo(ENDRTFONLY) + ENDRTFONLY
+        )
+        verbatim = (
+            self._pyp_cmd("verbatim") + pyp.SkipTo(ENDVERBATIM) + ENDVERBATIM
+        )
+        xmlonly = (
+            self._pyp_cmd("xmlonly") + pyp.SkipTo(ENDXMLONLY) + ENDXMLONLY
+        )
+        verbatim_no_args = (
+            docbookonly | latexonly | manonly | rtfonly | verbatim | xmlonly
+        )
 
         verbatim_end = self._pyp_cmd(self.kinds["verbatim_end"])
         # ex: # \addindex (text)
@@ -682,15 +720,16 @@ class DoxygenGrammar:
         )
         # ex: \arg { item-description }
         section_no_args = (
-            self._pyp_cmd(self.kinds["section_no_args"])
-            + section_body
+            self._pyp_cmd(self.kinds["section_no_args"]) + section_body
         )
         # ex: \a <word>
         with_word = self._pyp_cmd(self.kinds["with_word"]) + WORD_OF_PRINTABLES
         # ex: \concept <name>
         with_name = self._pyp_cmd(self.kinds["with_name"]) + IDENT
         # ex: \docbookinclude <file-name>
-        with_filename = self._pyp_cmd(self.kinds["with_filename"]) + WORD_OF_PRINTABLES
+        with_filename = (
+            self._pyp_cmd(self.kinds["with_filename"]) + WORD_OF_PRINTABLES
+        )
         # ex: \category <name> [<header-file>] [<header-name>]
         with_headerfile_headername = (
             self._pyp_cmd(self.kinds["with_headerfile_headername"])
@@ -723,28 +762,36 @@ class DoxygenGrammar:
             self._pyp_cmd("dot")
             + opt_caption
             + opt_size_indications
-            + pyp.SkipTo(ENDDOT) + ENDDOT
+            + pyp.SkipTo(ENDDOT)
+            + ENDDOT
             + ENDDOT
         )
         msc = (
             self._pyp_cmd("msc")
             + opt_caption
             + opt_size_indications
-            + pyp.SkipTo(ENDMSC) + ENDMSC
+            + pyp.SkipTo(ENDMSC)
+            + ENDMSC
             + ENDMSC
         )
         verbatim_with_caption = ENDDOT | ENDMSC
-        
+
         # ex: \copybrief <link-object>
         LINK_OBJECT = pyp.Regex(r"\w+\s*(\(\))?")
-        with_linkobject = self._pyp_cmd(self.kinds["with_linkobject"]) + LINK_OBJECT
+        with_linkobject = (
+            self._pyp_cmd(self.kinds["with_linkobject"]) + LINK_OBJECT
+        )
         # ex: \addtogroup <name> [(title)]
         with_name_title = (
-            self._pyp_cmd(self.kinds["with_name_title"]) + IDENT + OPT_UNTIL_LINE_END
+            self._pyp_cmd(self.kinds["with_name_title"])
+            + IDENT
+            + OPT_UNTIL_LINE_END
         )
         # ex: \ref <name> ["(text)"]
         with_name_text = (
-            self._pyp_cmd(self.kinds["with_name_text"]) + IDENT + pyp.Optional(pyp.QuotedString('"'),default=None)
+            self._pyp_cmd(self.kinds["with_name_text"])
+            + IDENT
+            + pyp.Optional(pyp.QuotedString('"'), default=None)
         )
         # ex: \snippetdoc <file-name> ( block_id )
         with_filename_blockid = (
@@ -766,7 +813,9 @@ class DoxygenGrammar:
         # \code['{'<word>'}']
         # ex: \code{.py}
         ENDCODE = self._pyp_cmd("endcode")
-        CODE = self._pyp_cmd("code") + pyp.Optional(LBRACE + pyp.Regex(r"\.\w+") + RBRACE, default=[None,None,None])
+        CODE = self._pyp_cmd("code") + pyp.Optional(
+            LBRACE + pyp.Regex(r"\.\w+") + RBRACE, default=[None, None, None]
+        )
         code = CODE + pyp.SkipTo(ENDCODE) + ENDCODE
 
         # \cond [(section-label)]
@@ -785,30 +834,37 @@ class DoxygenGrammar:
         emoji = self._pyp_cmd("emoji") + pyp.QuotedString('"')
 
         # \f]
-        FBRCLOSE = self._pyp_cmd(r"f\]",words=False)
+        FBRCLOSE = self._pyp_cmd(r"f\]", words=False)
         # \f[
-        FBROPEN = self._pyp_cmd(r"f\[",words=False)
+        FBROPEN = self._pyp_cmd(r"f\[", words=False)
         # \f}
-        FCURLYCLOSE = self._pyp_cmd(r"f\}",words=False)
+        FCURLYCLOSE = self._pyp_cmd(r"f\}", words=False)
         # \f{environment}{
-        FCURLYOPEN = self._pyp_cmd(r"f\{",words=False)
+        FCURLYOPEN = self._pyp_cmd(r"f\{", words=False)
         # \f$
-        FDOLLAR = self._pyp_cmd(r"f\$",words=False)
+        FDOLLAR = self._pyp_cmd(r"f\$", words=False)
         # \f)
-        FRNDCLOSE = self._pyp_cmd(r"f\)",words=False)
+        FRNDCLOSE = self._pyp_cmd(r"f\)", words=False)
         # \f(
-        FRNDOPEN = self._pyp_cmd(r"f\(",words=False)
+        FRNDOPEN = self._pyp_cmd(r"f\(", words=False)
 
-        fdollar = FDOLLAR +  pyp.SkipTo(FDOLLAR) + FDOLLAR
-        fbr = FBROPEN +  pyp.SkipTo(FBRCLOSE) + FBRCLOSE
-        frnd = FRNDOPEN +  pyp.SkipTo(FRNDCLOSE) + FRNDCLOSE
-        fcurly = FCURLYOPEN + IDENT + RBRACE + pyp.Optional(LBRACE,default=None) + pyp.SkipTo(FCURLYCLOSE) + FCURLYCLOSE
+        fdollar = FDOLLAR + pyp.SkipTo(FDOLLAR) + FDOLLAR
+        fbr = FBROPEN + pyp.SkipTo(FBRCLOSE) + FBRCLOSE
+        frnd = FRNDOPEN + pyp.SkipTo(FRNDCLOSE) + FRNDCLOSE
+        fcurly = (
+            FCURLYOPEN
+            + IDENT
+            + RBRACE
+            + pyp.Optional(LBRACE, default=None)
+            + pyp.SkipTo(FCURLYCLOSE)
+            + FCURLYCLOSE
+        )
 
         # \{
-        groupopen = self._pyp_cmd(r"\{",words=False)
-        
+        groupopen = self._pyp_cmd(r"\{", words=False)
+
         # \}
-        groupclose = self._pyp_cmd(r"\}",words=False)
+        groupclose = self._pyp_cmd(r"\}", words=False)
 
         # object reference:
         # class
@@ -828,7 +884,9 @@ class DoxygenGrammar:
 
         # \headerfile <header-file> [<header-name>]
         headerfile = (
-            self._pyp_cmd("headerfile") + WORD_OF_PRINTABLES + OPT_WORD_OF_PRINTABLES
+            self._pyp_cmd("headerfile")
+            + WORD_OF_PRINTABLES
+            + OPT_WORD_OF_PRINTABLES
         )
 
         # \htmlinclude ["[block]"] <file-name>
@@ -839,10 +897,14 @@ class DoxygenGrammar:
         )
 
         # \htmlonly ["[block]"]
-        htmlonly = self._pyp_cmd("htmlonly") + pyp.Optional(LBPAR + IDENT + RBPAR)
+        htmlonly = self._pyp_cmd("htmlonly") + pyp.Optional(
+            LBPAR + IDENT + RBPAR
+        )
 
         # \image['{'option[,option]'}'] <format> <file> ["caption"] [<sizeindication>=<size>]
-        image_options = pyp.Group(pyp.Optional(LBRACE + pyp.delimitedList(IDENT) + RBRACE))
+        image_options = pyp.Group(
+            pyp.Optional(LBRACE + pyp.delimitedList(IDENT) + RBRACE)
+        )
         image = (
             self._pyp_cmd("image")
             + image_options
@@ -872,11 +934,7 @@ class DoxygenGrammar:
         page = self._pyp_cmd("page") + IDENT + UNTIL_LINE_END
 
         # \par [(paragraph title)] { paragraph }
-        par = (
-            self._pyp_cmd("par")
-            + OPT_UNTIL_LINE_END
-            + section_body
-        )
+        par = self._pyp_cmd("par") + OPT_UNTIL_LINE_END + section_body
 
         # \param '['dir']' <parameter-name> { parameter description }
         PARAM_DIR = pyp.Regex(r"\[\s*(in|out|inout|(\s*in,\s*out))\s*\]")
@@ -884,7 +942,7 @@ class DoxygenGrammar:
         param = (
             self._pyp_cmd("param")
             + pyp.Optional("\n").suppress()
-            + pyp.Optional(PARAM_DIR,default=None)
+            + pyp.Optional(PARAM_DIR, default=None)
             + pyp.Optional("\n").suppress()
             + PARAM_NAMES
             + section_body
@@ -898,12 +956,12 @@ class DoxygenGrammar:
         )
 
         # \retval <return value> { description }
-        retval = (
-            self._pyp_cmd("retval") + IDENT + section_body
-        )
+        retval = self._pyp_cmd("retval") + IDENT + section_body
 
         # \showdate "<format>" [ <date_time> ]
-        showdate = self._pyp_cmd("showdate") + pyp.QuotedString('"') + UNTIL_LINE_END
+        showdate = (
+            self._pyp_cmd("showdate") + pyp.QuotedString('"') + UNTIL_LINE_END
+        )
 
         # \snippet['{'option'}'] <file-name> ( block_id )
         snippet = (
@@ -926,12 +984,10 @@ class DoxygenGrammar:
         tableofcontents = self._pyp_cmd("tableofcontents")
 
         # \~[LanguageId]
-        tilde = self._pyp_cmd("\~[a-z]*")
+        tilde = self._pyp_cmd(r"\~[a-z]*")
 
         # \tparam <template-parameter-name> { description }
-        tparam = (
-            self._pyp_cmd("tparam") + IDENT + section_body
-        )
+        tparam = self._pyp_cmd("tparam") + IDENT + section_body
 
         # \vhdlflow [(title for the flow chart)]
         vhdlflow = self._pyp_cmd("vhdlflow") + OPT_UNTIL_LINE_END
@@ -945,45 +1001,53 @@ class DoxygenGrammar:
             + section_body
         )
 
-        section <<= section_no_args | param | tparam | retval | xrefitem | par | with_exceptionobject
+        section <<= (
+            section_no_args
+            | param
+            | tparam
+            | retval
+            | xrefitem
+            | par
+            | with_exceptionobject
+        )
         verbatim = code | verbatim_no_args | verbatim_with_caption | startuml
         math_block = fbr | fcurly
         formatting = escaped | with_word | fdollar | frnd | in_text_reference
         other = (
             no_args
-            |with_single_line_text
-            |cond
-            |page_section
-            |with_name
-            |with_filename
-            |with_headerfile_headername
-            |with_file_caption
-            |with_linkobject
-            |with_name_title
-            |with_name_text
-            |with_filename_blockid
-            |with_lineno_filename
-            |cite
-            |defgroup
-            |dir
-            |doxyconfig
-            |emoji
-            |file
-            |fileinfo
-            |headerfile
-            |htmlinclude
-            |image
-            |include
-            |mainpage
-            |name
-            |overload
-            |page
-            |qualifier
-            |showdate
-            |snippet
-            |tableofcontents
-            |tilde
-            |vhdlflow
+            | with_single_line_text
+            | cond
+            | page_section
+            | with_name
+            | with_filename
+            | with_headerfile_headername
+            | with_file_caption
+            | with_linkobject
+            | with_name_title
+            | with_name_text
+            | with_filename_blockid
+            | with_lineno_filename
+            | cite
+            | defgroup
+            | dir
+            | doxyconfig
+            | emoji
+            | file
+            | fileinfo
+            | headerfile
+            | htmlinclude
+            | image
+            | include
+            | mainpage
+            | name
+            | overload
+            | page
+            | qualifier
+            | showdate
+            | snippet
+            | tableofcontents
+            | tilde
+            | vhdlflow
         )
         all = section | verbatim | math_block | formatting | other
         self.__dict__.update(locals())
@@ -992,7 +1056,7 @@ class DoxygenGrammar:
         for kind in self.kinds:
             yield self.__dict__[kind]
 
-    def parse_structure(self,original: str) -> Root:
+    def parse_structure(self, original: str) -> Root:
         r"""Parses a snippet of doxygen documentation and
         returns a high-level tree structure:
 
@@ -1003,21 +1067,21 @@ class DoxygenGrammar:
                 |---(TextBlock|VerbatimBlock|MathBlock)[]
         ```
 
-        where ``Root`` resembles the root of the tree and 
+        where ``Root`` resembles the root of the tree and
         each ``Section`` corresponds to a doxygen section
         such as `\param ...`, `\note`, ... .
         The ``SectionBody` nodes contain the section body text, e.g.
         for ``\note texttext`` it contains `texttext`.
         `VerbatimBlock` and `MathBlock` instances contain
         command tokens and text associated with the respective verbatim/math
-        environment. 
+        environment.
         ``TextBlock` instances contain normal text, which may also
         contain further untranslated doxygen commands.
-        
+
         Such ``TextBlock`` content can then be further processed
         by specifying a parse action for the respective
         commands and then calling the ``<this_doxygenparser>.<pyparser>.transformString(text)``
-        routine. The former can be done individually, or collectively via the command groups ``<this_doxygenparser>.formatting`` 
+        routine. The former can be done individually, or collectively via the command groups ``<this_doxygenparser>.formatting``
         and ``<this_doxygenparser>.other``. Returning ``None`` implies no action, ``[]`` that all
         tokens get removed.
 
@@ -1036,12 +1100,18 @@ class DoxygenGrammar:
         tree.section_body.setParseAction(SectionBody)
         tree.verbatim.setParseAction(VerbatimBlock)
         tree.math_block.setParseAction(MathBlock)
-        verbatim_or_math = tree.verbatim|tree.math_block
-        verbatim_or_math_ext = verbatim_or_math|tree.fdollar|tree.frnd # include inline math
+        verbatim_or_math = tree.verbatim | tree.math_block
+        verbatim_or_math_ext = (
+            verbatim_or_math | tree.fdollar | tree.frnd
+        )  # include inline math
 
-        preprocessed = "".join(original) # copy the text
+        preprocessed = "".join(original)  # copy the text
         for tokens, start, end in verbatim_or_math_ext.scanString(original):
-            preprocessed = preprocessed[0:start] + " "*(end-start) + preprocessed[end:]
+            preprocessed = (
+                preprocessed[0:start]
+                + " " * (end - start)
+                + preprocessed[end:]
+            )
         assert len(original) == len(preprocessed)
 
         def scan_for_verbatim_or_math_(section_body: SectionBody):
@@ -1051,32 +1121,43 @@ class DoxygenGrammar:
             body_start = section_body.begin
             body_end = section_body.end
             previous_end = 0
-            #print(f"{section_text=}")
-            for tokens, start, end in verbatim_or_math.scanString(body_text[body_start:body_end]):
-                #print(tokens)
+            # print(f"{section_text=}")
+            for tokens, start, end in verbatim_or_math.scanString(
+                body_text[body_start:body_end]
+            ):
+                # print(tokens)
                 if start != previous_end:
-                    block = section_body.add_text_block(body_text,body_start+previous_end,tokens,body_start+start)
+                    block = section_body.add_text_block(
+                        body_text,
+                        body_start + previous_end,
+                        tokens,
+                        body_start + start,
+                    )
                     block.parent = section_body
                 block = tokens[0]
-                assert isinstance(block,(TextBlock,VerbatimBlock,MathBlock))
+                assert isinstance(block, (TextBlock, VerbatimBlock, MathBlock))
                 block.s = body_text
                 block.begin = body_start + start
                 block.end = body_start + end
                 block.parent = section_body
                 section_body.children.append(block)
                 previous_end = end
-                #print(f"{block=}")
+                # print(f"{block=}")
             if not len(section_body.children):
-                block = section_body.add_text_block(body_text,body_start,[section_body.tokens[-1]],body_end)
+                block = section_body.add_text_block(
+                    body_text, body_start, [section_body.tokens[-1]], body_end
+                )
                 block.parent = section_body
 
-        root = Root(original,self) # note; the use of original instead of preprocessed
+        root = Root(
+            original, self
+        )  # note; the use of original instead of preprocessed
         previous_end = 0
         for tokens, start, end in tree.section.scanString(preprocessed):
-            #print(f"{(start,end)=}")
+            # print(f"{(start,end)=}")
             if start != previous_end:
                 # insert fake details section
-                section = root.add_details_section(previous_end,start)
+                section = root.add_details_section(previous_end, start)
                 scan_for_verbatim_or_math_(section.body)
             section = tokens[0]
             section.parent = root
@@ -1088,14 +1169,18 @@ class DoxygenGrammar:
             previous_end = end
         if previous_end < len(original):
             # insert fake details section
-            section = root.add_details_section(previous_end,len(original))
+            section = root.add_details_section(previous_end, len(original))
             scan_for_verbatim_or_math_(section.body)
         return root
-    
-            
-    def transform_text_block(self,text: str,transform_formatting: bool=True,transform_other: bool=True) -> str:
+
+    def transform_text_block(
+        self,
+        text: str,
+        transform_formatting: bool = True,
+        transform_other: bool = True,
+    ) -> str:
         """Transforms a simple text block, i.e. text that is assumed to not contain any doxygen sections and no verbatim *blocks*.
-        
+
         Transforms a simple text block by applying the `self.formatting` and `self.other`
         parse actions to the input text.
         The input text is assumed to not contain any doxygen sections and no verbatim blocks.

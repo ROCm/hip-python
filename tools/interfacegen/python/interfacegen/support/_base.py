@@ -1,11 +1,33 @@
+# MIT License
+#
+# Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
+import argparse
+import datetime
 import os
 import re
-import datetime
-import argparse
 import textwrap
 
 from . import gitversion
+
 
 def get_bool_environ_var(env_var, default):
     yes_vals = ("true", "1", "t", "y", "yes")
@@ -16,10 +38,13 @@ def get_bool_environ_var(env_var, default):
     elif value in no_vals:
         return False
     else:
-        allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals) + list(no_vals))])
+        allowed_vals = ", ".join(
+            [f"'{a}'" for a in (list(yes_vals) + list(no_vals))]
+        )
         raise RuntimeError(
             f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}"
         )
+
 
 THIS_YEAR_YYYY = datetime.date.today().strftime("%Y")
 
@@ -50,9 +75,10 @@ MIT_LICENSE_AMD = """\
 {comment_char} SOFTWARE.
 """
 
+
 def render_license_MIT(
-    year_end = THIS_YEAR_YYYY,
-    year_start = THIS_YEAR_YYYY,
+    year_end=THIS_YEAR_YYYY,
+    year_start=THIS_YEAR_YYYY,
     comment_char=COMMENT_CHAR_PY,
 ):
     year_end = str(year_end)
@@ -65,12 +91,17 @@ def render_license_MIT(
         copyright_year=copyright_year, comment_char=comment_char
     )
 
-def versions(rocm_version_major: int, rocm_version_minor: int, rocm_version_patch: int):
+
+def versions(
+    rocm_version_major: int, rocm_version_minor: int, rocm_version_patch: int
+):
     rocm_version_name: str = (
         f"{rocm_version_major}.{rocm_version_minor}.{rocm_version_patch}"
     )
     rocm_version: int = (
-        rocm_version_major * 10000000 + rocm_version_minor * 100000 + rocm_version_patch
+        rocm_version_major * 10000000
+        + rocm_version_minor * 100000
+        + rocm_version_patch
     )
 
     version: str = (
@@ -80,6 +111,7 @@ def versions(rocm_version_major: int, rocm_version_minor: int, rocm_version_patc
         f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
     )
     return (rocm_version, rocm_version_name, version, long_version)
+
 
 def create_rocm_package_cli_parser(
     env_var_prefix: str, libs_example: str, *args, **kwargs
@@ -122,7 +154,7 @@ def create_rocm_package_cli_parser(
         "--clang-resource-dir",
         required=False,
         dest="clang_resource_dir",
-        help=f"The clang resource directory. Can also be set via environment variable 'CLANG_RES_DIR'.",
+        help="The clang resource directory. Can also be set via environment variable 'CLANG_RES_DIR'.",
     )
     parser.add_argument(
         "--libs",
@@ -142,12 +174,15 @@ def create_rocm_package_cli_parser(
     )
 
     parser.set_defaults(
-        rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME", None)),
-        clang_resource_dir=os.environ.get(f"CLANG_RES_DIR", None),
+        rocm_path=os.environ.get(
+            "ROCM_PATH", os.environ.get("ROCM_HOME", None)
+        ),
+        clang_resource_dir=os.environ.get("CLANG_RES_DIR", None),
         libs=os.environ.get(f"{env_var_prefix}_LIBS", "*"),
         verbose=False,
     )
     return parser
+
 
 class PackageOpts:
     def __init__(self):
@@ -161,6 +196,7 @@ class PackageOpts:
         self.libs_user_spec: str = None
         self.author: str = None
         self.email: str = None
+
 
 class RocmPackageOpts(PackageOpts):
     def __init__(self):
@@ -201,7 +237,9 @@ def user_specified_lib_names(avail_lib_names: list, user_spec: str):
     else:
         if processed_libs.startswith("^"):
             processed_libs = processed_libs[1:].split(",")
-            lib_names = [name for name in avail_lib_names if name not in processed_libs]
+            lib_names = [
+                name for name in avail_lib_names if name not in processed_libs
+            ]
         else:
             processed_libs = processed_libs.split(",")
             lib_names = processed_libs
@@ -218,6 +256,7 @@ def lstrip_all_lines(text: str, lstrip_chars: str = " "):
         [line.lstrip(lstrip_chars) for line in text.splitlines(keepends=True)]
     )
 
+
 def _create_rocm_package_opts_from_cli(
     rocm_package_opts_type,
     project: str,
@@ -229,7 +268,7 @@ def _create_rocm_package_opts_from_cli(
     email: str,
     dll: str = None,
     util_pkg: str = None,
-    parser_builder = create_rocm_package_cli_parser,
+    parser_builder=create_rocm_package_cli_parser,
 ):
     rocm_package_opts = rocm_package_opts_type()
     try:
@@ -247,7 +286,7 @@ def _create_rocm_package_opts_from_cli(
         description=textwrap.dedent(
             f"""\
         Generator for {project} package '{package}'.
-    
+
         NOTE:
             You can also use the environment variables 'ROCM_PATH' (or 'ROCM_HOME'),
             'CLANG_RES_DIR', '{env_var_prefix}_LIBS',
@@ -277,14 +316,14 @@ def _create_rocm_package_opts_from_cli(
             textwrap.dedent(
                 """\
             Clang resource directory is not set.
-            
-            Hint: If `clang` is in the PATH, you can 
+
+            Hint: If `clang` is in the PATH, you can
             run `clang -print-resource-dir` to obtain the path to
             the resource directory.
 
             Hint: If you have the HIP SDK installed, you have `amdclang` installed in
             `ROCM_PATH/bin/`. You can use it to run the above command too.
-            
+
             Hint: If you have the HIP SDK installed, the last include folder listed in ``hipconfig --cpp_config``
             points to the `amdclang` compiler's resource dir too.
             """

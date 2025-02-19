@@ -20,10 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import logging
 import os
 import textwrap
 
-import logging
 _log = logging.getLogger("interfacegen")
 
 python_interface_pyobj_role_template = r":py:obj:`~.{name}`"
@@ -31,15 +31,14 @@ python_interface_pyobj_role_template = r":py:obj:`~.{name}`"
 from interfacegen.cython import (
     CythonModuleGenerator,
 )
-
 from interfacegen.tree import (
-    MacroDefinition,
-    Function,
-    Typedef,
-    Enum,
     AnonymousEnum,
-    Record,
+    Enum,
+    Function,
     FunctionPointer,
+    MacroDefinition,
+    Record,
+    Typedef,
 )
 
 try:
@@ -50,6 +49,9 @@ try:
 except ImportError:
     HAVE_LEVENSHTEIN = False
 
+
+# flake8: noqa: C901
+# TODO break function apart to reduce complexity
 def generate_cuda_interop_module_files(
     output_dir: str,
     cuda_module_name: str,
@@ -57,9 +59,9 @@ def generate_cuda_interop_module_files(
     hip2cuda: dict,
     license_text: str,
     warn: bool = True,
-    extra_cimports = "",
-    extra_imports = "",
-    extra_cmodule_cimports = "",
+    extra_cimports="",
+    extra_imports="",
+    extra_cmodule_cimports="",
 ):
     """Renders the Cython and Python module files that delegate CUDA Python
     API expressions to HIP Python.
@@ -93,7 +95,7 @@ def generate_cuda_interop_module_files(
     """
     global HAVE_LEVENSHTEIN
     module_dir = "cuda"
-    output_dir = os.path.join(output_dir,"hip-python-as-cuda",module_dir)
+    output_dir = os.path.join(output_dir, "hip-python-as-cuda", module_dir)
     indent = " " * 4
     module_name = generator.module_name
     cmodule_name = f"hip.c{module_name}"
@@ -107,7 +109,8 @@ def generate_cuda_interop_module_files(
 
             cimport {cmodule_name}
             """
-        ) + extra_cmodule_cimports,
+        )
+        + extra_cmodule_cimports,
     ]
     python_interface_decl_part = [
         license_text,
@@ -119,7 +122,8 @@ def generate_cuda_interop_module_files(
             cimport {cmodule_name}
             cimport {module_cimport_name}
             """
-        ) + extra_cimports,
+        )
+        + extra_cimports,
         f"cimport {module_dir}.c{cuda_module_name}",  # for checking compiler errors
     ]
 
@@ -145,7 +149,8 @@ def generate_cuda_interop_module_files(
             hip_python_mod = {module_name}
             globals()["HIP_PYTHON"] = True
             """
-        ) + extra_imports
+        )
+        + extra_imports
     )
     python_interface_impl_part = [
         textwrap.dedent(
@@ -183,14 +188,17 @@ def generate_cuda_interop_module_files(
                     > 0
                 ):
                     candidates.append(other_hip_name)
-            candidates_formatted = ", ".join(["'" + c + "'" for c in candidates])
+            candidates_formatted = ", ".join(
+                ["'" + c + "'" for c in candidates]
+            )
             msg += f"; most similar hipify-perl HIP symbols (Levenshtein ratio > {cutoff}): [{candidates_formatted}]"
         _log.warning(msg)
 
-    all = ["HIP_PYTHON","hip_python_mod",module_name]
+    all = ["HIP_PYTHON", "hip_python_mod", module_name]
     docstring_attributes = []
-    docstring_attributes.append(textwrap.dedent(
-        f"""\
+    docstring_attributes.append(
+        textwrap.dedent(
+            f"""\
         HIP_PYTHON ({python_interface_pyobj_role_template.format(name="bool")}):
             `True`.
         hip_python_mod (module):
@@ -198,7 +206,8 @@ def generate_cuda_interop_module_files(
         {module_name} (module):
             A reference to the module {python_interface_pyobj_role_template.format(name=f"hip.{module_name}")}.
         """
-    ))
+        )
+    )
 
     def handle_enum_(node, hip_name, cuda_name, cuda_idx):
         nonlocal indent
@@ -230,7 +239,9 @@ def generate_cuda_interop_module_files(
                 warn_(hip_constant_name)
         if isinstance(node, AnonymousEnum):  # cannot be typedefed
             python_interface_impl_part += python_constants
-            all += [ln.split("=")[0].strip() for ln in python_constants] # recover cuda names
+            all += [
+                ln.split("=")[0].strip() for ln in python_constants
+            ]  # recover cuda names
         else:
             python_enum_metaclass_name = f"_{cuda_name}_EnumMeta"
             python_enum_hallucinate_var_name = (
@@ -238,7 +249,8 @@ def generate_cuda_interop_module_files(
             )
             all.append(python_enum_metaclass_name)
 
-            attribute = textwrap.dedent(f"""\
+            attribute = textwrap.dedent(
+                f"""\
                  {python_enum_hallucinate_var_name}:
                      Make {python_interface_pyobj_role_template.format(name=cuda_name)} hallucinate values for non-existing enum constants. Disabled by default
                      if default is not modified via environment variable.
@@ -247,7 +259,8 @@ def generate_cuda_interop_module_files(
 
                      * Environment variable values that result in `True` are: ``yes``, ``1``, ``y``, ``true``
                      * Those that result in `False` are: ``no``, ``0``, ``n``, ``false``.
-                 """)
+                 """
+            )
             all.append(python_enum_hallucinate_var_name)
             docstring_attributes.append(attribute)
 
@@ -322,13 +335,15 @@ def generate_cuda_interop_module_files(
                 """
             )
             all.append(cuda_name)
-            python_enum_class += textwrap.indent("\n".join(python_constants), indent)
+            python_enum_class += textwrap.indent(
+                "\n".join(python_constants), indent
+            )
 
             python_interface_impl_part.append(python_enum_metaclass)
             python_interface_impl_part.append(python_enum_class)
 
         if isinstance(node, Enum) and cuda_idx == 0:
-            if not isinstance(node,AnonymousEnum):
+            if not isinstance(node, AnonymousEnum):
                 c_interface_decl_part.append(
                     f"from {cmodule_name} cimport {hip_name} as {cuda_name}"
                 )
@@ -339,7 +354,9 @@ def generate_cuda_interop_module_files(
                 cuda_underlying_type_name = hip2cuda[hip_underlying_type_name][
                     0
                 ]  # take first
-                cython_enum = f"ctypedef {cuda_underlying_type_name} {cuda_name}"
+                cython_enum = (
+                    f"ctypedef {cuda_underlying_type_name} {cuda_name}"
+                )
                 c_interface_decl_part.append(cython_enum)
             else:
                 warn_(hip_underlying_type_name)
@@ -349,7 +366,9 @@ def generate_cuda_interop_module_files(
         hip_name = node.renamer(node.name)
         if isinstance(node, AnonymousEnum):
             # Anonymous enums won't have a different CUDA name but their constants might
-            handle_enum_(node, hip_name, hip_name)  # hip_name is auto_generated in this case
+            handle_enum_(
+                node, hip_name, hip_name
+            )  # hip_name is auto_generated in this case
         if hip_name in hip2cuda:
             cuda_names = hip2cuda[hip_name]
             for cuda_idx, cuda_name in enumerate(cuda_names):
@@ -370,9 +389,9 @@ def generate_cuda_interop_module_files(
                     )
                     or isinstance(node, Typedef)
                     and (
-                        node.is_pointer_to_record(degree=(0, -1)) or
-                        node.is_pointer_to_basic_type(degree=-1) or
-                        node.is_pointer_to_void(degree=-1)
+                        node.is_pointer_to_record(degree=(0, -1))
+                        or node.is_pointer_to_basic_type(degree=-1)
+                        or node.is_pointer_to_void(degree=-1)
                     )
                 ):
                     # These are Python objects/functions in the Python interface
@@ -409,9 +428,15 @@ def generate_cuda_interop_module_files(
         elif warn:
             warn_(hip_name)
 
-    python_interface_decl_path = os.path.join(output_dir, f"{cuda_module_name}.pxd")
-    python_interface_impl_path = os.path.join(output_dir, f"{cuda_module_name}.pyx")
-    c_interface_decl_path = os.path.join(output_dir, f"c{cuda_module_name}.pxd")
+    python_interface_decl_path = os.path.join(
+        output_dir, f"{cuda_module_name}.pxd"
+    )
+    python_interface_impl_path = os.path.join(
+        output_dir, f"{cuda_module_name}.pyx"
+    )
+    c_interface_decl_path = os.path.join(
+        output_dir, f"c{cuda_module_name}.pxd"
+    )
     with open(c_interface_decl_path, "w") as outfile:
         outfile.write("\n".join(c_interface_decl_part))
     with open(python_interface_decl_path, "w") as outfile:
@@ -419,21 +444,23 @@ def generate_cuda_interop_module_files(
     with open(python_interface_impl_path, "w") as outfile:
         DOCSTRING_ATTRIBS = ""
         for attribute in docstring_attributes:
-            if isinstance(attribute,tuple):
+            if isinstance(attribute, tuple):
                 cuda_name, module_name, hip_name = attribute
                 docstring_attrib = textwrap.dedent(
-                        f"""\
+                    f"""\
                         {cuda_name}:
                             Alias of {python_interface_pyobj_role_template.format(name=hip_name)}
                         """
-                    )
-            else: # raw string
+                )
+            else:  # raw string
                 docstring_attrib = attribute
-            DOCSTRING_ATTRIBS += textwrap.indent(docstring_attrib," "*4)
+            DOCSTRING_ATTRIBS += textwrap.indent(docstring_attrib, " " * 4)
 
         python_interface_impl_part.insert(
             0,
-            python_interface_impl_part_preamble.replace("[ATTRIBUTES]",DOCSTRING_ATTRIBS)
+            python_interface_impl_part_preamble.replace(
+                "[ATTRIBUTES]", DOCSTRING_ATTRIBS
+            ),
         )
         outfile.write(
             "\n".join(python_interface_impl_part).rstrip()

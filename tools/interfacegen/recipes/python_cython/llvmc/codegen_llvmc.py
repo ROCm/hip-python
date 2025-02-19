@@ -28,37 +28,32 @@ it generates Cython files.
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import logging
 import os
 import textwrap
 
-import logging
-
 import interfacegen
+from interfacegen.cython import (
+    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+    CythonModuleGenerator,
+)
+from interfacegen.support import cython as support
+from interfacegen.support import includetree as it
+from interfacegen.support.recipes.control import ParmIntent
+from interfacegen.tree import (
+    MacroDefinition,
+    Node,
+    Parm,
+)
 
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
-from interfacegen.support import includetree as it
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
 interfacegen.cython.python_interface_pyobj_role_template = (
     r"`~.{name}`"  # ~: removes the qualifier from the link text
 )
-
-from interfacegen.cython import (
-    CythonModuleGenerator,
-    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
-)
-
-from interfacegen.tree import (
-    Node,
-    MacroDefinition,
-    Parm,
-)
-
-from interfacegen.support.recipes.control import ParmIntent
-
-from interfacegen.support import cython as support
 
 
 def create_generator(
@@ -119,21 +114,24 @@ def create_generator(
         return ParmIntent.IN
 
     def ptr_complicated_type_handler(node: Node):
-        if (node.parent.cursor.spelling, node.cursor.spelling) in ( # parameters
+        if (
+            node.parent.cursor.spelling,
+            node.cursor.spelling,
+        ) in (  # parameters
             ("LLVMFunctionType", "ParamTypes"),
             ("LLVMGetParams", "Params"),
             ("LLVMGetParamTypes", "Dest"),
             ("LLVMRunFunction", "Args"),
-            ("LLVMGetBufferStart")
+            ("LLVMGetBufferStart"),
         ):
             return f"{pkg_opts.util_types_prefix}ListOfPointer"
-        elif node.cursor.spelling in ( # function return values
+        elif node.cursor.spelling in (  # function return values
             "LLVMGetBufferStart",
         ):
             return f"{pkg_opts.util_types_prefix}NDBuffer"
-        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(pkg_opts.util_types_prefix)(
-            node
-        )
+        return CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(
+            pkg_opts.util_types_prefix
+        )(node)
 
     generator = CythonModuleGenerator(
         global_module_name,
@@ -149,7 +147,9 @@ def create_generator(
         **opts,
     )
     # generator.c_interface_decl_prolog += cython_c_preamble
-    generator.python_interface_decl_prolog += f"cimport {pkg_opts.util_pkg}.types\n"
+    generator.python_interface_decl_prolog += (
+        f"cimport {pkg_opts.util_pkg}.types\n"
+    )
 
     return generator
 
@@ -213,13 +213,15 @@ def create_generators(root: it.Root):
 
             def node_filter(node: Node):
                 if isinstance(node, MacroDefinition):
-                    return macro_type(node) != None
+                    return macro_type(node) is not None
                 return False
 
             opts.update(macro_type=macro_type, node_filter=node_filter)
         else:
 
-            def create_node_filter(header: str):  # we need to value-capture 'header'
+            def create_node_filter(
+                header: str,
+            ):  # we need to value-capture 'header'
                 def inner(node: Node):
                     # print(f"{header}")
                     if not isinstance(node, MacroDefinition):
@@ -241,16 +243,18 @@ def create_generators(root: it.Root):
 
 
 if __name__ == "__main__":
-    pkg_opts: support.RocmPackageOpts = support.create_rocm_package_opts_from_cli(
-        project="ROCm LLVM Python",
-        env_var_prefix="ROCM_LLVM_PYTHON",
-        libs_example="cores,types",
-        package="rocm-llvm-python",
-        rel_inc_dir=os.path.join("llvm", "include"),
-        util_pkg="rocm.llvm._util",
-        dll="librocmllvm.so",
-        author="Advanced Micro Devices, Inc.",
-        email="hip-python.maintainer@amd.com",
+    pkg_opts: support.RocmPackageOpts = (
+        support.create_rocm_package_opts_from_cli(
+            project="ROCm LLVM Python",
+            env_var_prefix="ROCM_LLVM_PYTHON",
+            libs_example="cores,types",
+            package="rocm-llvm-python",
+            rel_inc_dir=os.path.join("llvm", "include"),
+            util_pkg="rocm.llvm._util",
+            dll="librocmllvm.so",
+            author="Advanced Micro Devices, Inc.",
+            email="hip-python.maintainer@amd.com",
+        )
     )
 
     def filter(filepath: str):
@@ -273,8 +277,8 @@ if __name__ == "__main__":
     lljitutils = INCTREE.find_node(py_name="lljitutils")
     if lljitutils:
         lljitutils.includes += [
-          INCTREE.find_node(py_name="types"),
-          INCTREE.find_node(py_name="error"),
+            INCTREE.find_node(py_name="types"),
+            INCTREE.find_node(py_name="error"),
         ]
 
     create_generators(INCTREE)
@@ -282,7 +286,7 @@ if __name__ == "__main__":
     support.generate_all_rocm_package_files(
         INCTREE,
         pkg_opts,
-        main_dir=os.path.join(pkg_opts.package_dir,"rocm","llvm"),
+        main_dir=os.path.join(pkg_opts.package_dir, "rocm", "llvm"),
         main_child_modules=[],
         main_init_file_epilog=textwrap.dedent(
             f"""

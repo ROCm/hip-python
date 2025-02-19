@@ -22,8 +22,12 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import typing
+
 import clang.cindex
+
 from .typehandler import TypeHandler
+
 
 def walk_cursors(root: clang.cindex.Cursor, postorder=False):
     """Yields a triple of cursor, level, parents per traversed cursor.
@@ -73,7 +77,7 @@ class CParser:
 
     @property
     def cursor(self):
-        assert self.translation_unit != None
+        assert self.translation_unit is not None
         return self.translation_unit.cursor
 
     def parse(self):
@@ -114,14 +118,17 @@ class CParser:
         if cursor is None:
             cursor = self.cursor
         result = ""
-        for (cursor, level, _) in self.walk_cursors_preorder(cursor):
+        for cursor, level, _ in self.walk_cursors_preorder(cursor):
             indent = "-" * (level)
             result += f"{indent}{str(cursor.kind).replace('CursorKind.','')} '{cursor.spelling}' '{cursor.displayname}' [TYPE-INFO {str(cursor.type.kind).replace('TypeKind.','')} '{cursor.type.spelling}' '{cursor.type.get_canonical().spelling}']"
             if cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
                 underlying_typedef_type = cursor.underlying_typedef_type
-                result += f" [TYPEDEF-INFO '{underlying_typedef_type.spelling}']"
+                result += (
+                    f" [TYPEDEF-INFO '{underlying_typedef_type.spelling}']"
+                )
             result += "\n"
         return result
+
 
 class Analysis:
     """Collection of routines for analyzing the contents of a C translation unit."""
@@ -158,7 +165,12 @@ class Analysis:
             ]
         )
         categorized_canonical_type_layer_kinds = ",".join(
-            [str(t) for t in typehandler.categorized_type_layer_kinds(postorder=False)]
+            [
+                str(t)
+                for t in typehandler.categorized_type_layer_kinds(
+                    postorder=False
+                )
+            ]
         )
         categorized_canonical_type_layer_kinds_w_const = ",".join(
             [
@@ -172,7 +184,9 @@ class Analysis:
             [
                 str(t)
                 for t in typehandler.categorized_type_layer_kinds(
-                    postorder=False, consider_const=True, subdivide_basic_types=True
+                    postorder=False,
+                    consider_const=True,
+                    subdivide_basic_types=True,
                 )
             ]
         )
@@ -200,7 +214,7 @@ class Analysis:
         """
         result = ""
         header = ["Location"]
-        header += [f"Level {l}" for l in range(0, maxlevel + 1)]
+        header += [f"Level {lvl}" for lvl in range(0, maxlevel + 1)]
         header += ["cursor.spelling"] + Analysis._type_analysis_part_header()
 
         result += sep.join(header) + "\n"
@@ -213,15 +227,13 @@ class Analysis:
             nonlocal maxlevel
             nonlocal sep
             if cursor.location is not None:
-                if cursor.location.file != None:
-                    if spelling == None or cursor.spelling == spelling:
+                if cursor.location.file is not None:
+                    if spelling is None or cursor.spelling == spelling:
                         activate_printing = True
                     if activate_printing:
                         result += f"{cursor.location.file}:{cursor.location.line}:{cursor.location.column}{sep}"
                         indent = f"{sep}" * (level)
-                        result += (
-                            f"{indent}{str(cursor.kind).replace('CursorKind.','')}"
-                        )
+                        result += f"{indent}{str(cursor.kind).replace('CursorKind.','')}"
                         result += (maxlevel - level) * f"{sep}"
 
                         result += f"{sep}{cursor.spelling}"
@@ -241,7 +253,7 @@ class Analysis:
     @staticmethod
     def type_declarations_as_csv(
         root: clang.cindex.Cursor,
-        cursor_filter: callable = lambda cursor: True,
+        cursor_filter: typing.Callable = lambda cursor: True,
         maxlevel: int = 8,
         include_fields=True,
         sep: str = ";",
@@ -255,10 +267,10 @@ class Analysis:
         """
         result = ""
         header = ["Location"]
-        header += [f"Level {l}" for l in range(0, maxlevel + 1)]
+        header += [f"Level {lvl}" for lvl in range(0, maxlevel + 1)]
         header += ["cursor.spelling"] + Analysis._type_analysis_part_header()
         result += sep.join(header) + "\n"
-        for (cursor, level, _) in walk_cursors(root):
+        for cursor, level, _ in walk_cursors(root):
             if level > maxlevel:
                 continue
             if cursor.kind in (
@@ -279,13 +291,11 @@ class Analysis:
                 ):
                     continue
                 if cursor.location is not None:
-                    if cursor.location.file != None:
+                    if cursor.location.file is not None:
                         if cursor_filter(cursor):
                             result += f"{cursor.location.file}:{cursor.location.line}:{cursor.location.column}{sep}"
                             indent = f"{sep}" * (level)
-                            result += (
-                                f"{indent}{str(cursor.kind).replace('CursorKind.','')}"
-                            )
+                            result += f"{indent}{str(cursor.kind).replace('CursorKind.','')}"
                             result += (maxlevel - level) * f"{sep}"
                             result += f"{sep}{cursor.spelling}"
 
@@ -309,9 +319,12 @@ class Analysis:
             sep (str,optional): CSV column separator
         """
         result = ""
-        header = ["cursor.spelling", "Tokens (contains macro name and arguments)"]
+        header = [
+            "cursor.spelling",
+            "Tokens (contains macro name and arguments)",
+        ]
         result += sep.join(header) + "\n"
-        for (cursor, _, parent_stack) in walk_cursors(root):
+        for cursor, _, parent_stack in walk_cursors(root):
             if cursor.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
                 if cursor_filter(cursor):
                     result += f"{cursor.spelling}"
@@ -344,15 +357,18 @@ class Analysis:
             "cursor.spelling",
         ] + Analysis._type_analysis_part_header()
         result += sep.join(header) + "\n"
-        for (cursor, _, parent_stack) in walk_cursors(root):
+        for cursor, _, parent_stack in walk_cursors(root):
             if cursor.kind in (
                 clang.cindex.CursorKind.PARM_DECL,
                 clang.cindex.CursorKind.FUNCTION_DECL,
             ):
                 if cursor.location is not None:
-                    if cursor.location.file != None:
+                    if cursor.location.file is not None:
                         if cursor_filter(cursor):
-                            if cursor.kind == clang.cindex.CursorKind.PARM_DECL:
+                            if (
+                                cursor.kind
+                                == clang.cindex.CursorKind.PARM_DECL
+                            ):
                                 func = parent_stack[1].spelling
                                 kind = "Parameter"
                                 clang_type = cursor.type
@@ -363,9 +379,7 @@ class Analysis:
 
                             result += f"{cursor.location.file}:{cursor.location.line}:{cursor.location.column}"
                             result += f"{sep}{func}{sep}{kind}"
-                            result += (
-                                f"{sep}{str(cursor.kind).replace('CursorKind.','')}"
-                            )
+                            result += f"{sep}{str(cursor.kind).replace('CursorKind.','')}"
                             result += f"{sep}{cursor.spelling}"
 
                             result += sep + sep.join(

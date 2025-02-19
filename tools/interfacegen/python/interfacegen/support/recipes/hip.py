@@ -25,21 +25,20 @@ import re
 import pyparsing as pyp
 
 from interfacegen.cparser import TypeHandler
-
-TypeCategory = TypeHandler.TypeCategory
-
+from interfacegen.support.recipes.control import ParmIntent
 from interfacegen.tree import (
-    Node,
-    MacroDefinition,
-    Function,
-    Parm,
     Field,
+    Function,
+    MacroDefinition,
+    Node,
+    Parm,
     Record,
 )
 
-from interfacegen.support.recipes.control import ParmIntent
+TypeCategory = TypeHandler.TypeCategory
 
 # HIP
+
 
 class hip:
 
@@ -187,8 +186,8 @@ class hip:
             ("hipMemGetAddressRange", 0),
             ("hipDeviceGetUuid", 0),
             ("hipDeviceGetPCIBusId", 0),
-            ("hipDrvGetErrorName",1),
-            ("hipDrvGetErrorString",1),
+            ("hipDrvGetErrorName", 1),
+            ("hipDrvGetErrorString", 1),
         ):
             return ParmIntent.OUT
         if (func_name, parm_idx) in (
@@ -196,9 +195,7 @@ class hip:
             ("hipExtStreamGetCUMask", 2),
         ):
             return ParmIntent.INOUT
-        if (func_name, parm_idx) in (
-            ("hipExtStreamCreateWithCUMask", 2),
-        ):
+        if (func_name, parm_idx) in (("hipExtStreamCreateWithCUMask", 2),):
             return ParmIntent.IN
 
         if parm.is_pointer_to_void(degree=2):
@@ -206,12 +203,9 @@ class hip:
                 return ParmIntent.OUT
         if parm.is_pointer_to_enum(degree=1):
             return ParmIntent.OUT
-        if (
-            parm.is_pointer_to_record(degree=2)
-            or (
-                parm.is_pointer_to_basic_type(degree=1)
-                and not parm.is_pointer_to_char(degree=1)
-            )
+        if parm.is_pointer_to_record(degree=2) or (
+            parm.is_pointer_to_basic_type(degree=1)
+            and not parm.is_pointer_to_char(degree=1)
         ):
             return ParmIntent.OUT
         return ParmIntent.IN
@@ -231,7 +225,10 @@ class hip:
             ):
                 return 1
             if (
-                (node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1))
+                (
+                    node.is_pointer_to_basic_type(degree=1)
+                    and not node.is_pointer_to_char(degree=1)
+                )
                 or node.is_pointer_to_enum(degree=1)
                 or node.is_pointer_to_record(degree=1)
                 or node.is_pointer_to_record(degree=2)
@@ -248,8 +245,11 @@ class hip:
         * Removes '@}', '@{', and dash sequences of more than three dashes.
         * Removes other strings associated with groups.
         """
-        result = re.sub(r"@{|@}|----+","",raw_comment)
-        result = result.replace("This section describes the event management functions of HIP runtime API.","")
+        result = re.sub(r"@{|@}|----+", "", raw_comment)
+        result = result.replace(
+            "This section describes the event management functions of HIP runtime API.",
+            "",
+        )
         return result
 
     @staticmethod
@@ -264,9 +264,11 @@ class hip:
         #define hipChooseDevice hipChooseDeviceR0600
         ```
         """
-        return name.replace("R0600","")
+        return name.replace("R0600", "")
+
 
 # HIPRTC
+
 
 class hiprtc:
 
@@ -321,7 +323,9 @@ class hiprtc:
             pass  # nothing to do
         return 1
 
+
 # HIPBLAS
+
 
 class hipblas:
 
@@ -395,12 +399,23 @@ class hipblas:
             ):
                 categories = list(node.categorized_type_layer_kinds())
                 if categories in (
-                    [TypeCategory.ARRAY, TypeCategory.POINTER, TypeCategory.BASIC],
-                    [TypeCategory.ARRAY, TypeCategory.POINTER, TypeCategory.VOID],
+                    [
+                        TypeCategory.ARRAY,
+                        TypeCategory.POINTER,
+                        TypeCategory.BASIC,
+                    ],
+                    [
+                        TypeCategory.ARRAY,
+                        TypeCategory.POINTER,
+                        TypeCategory.VOID,
+                    ],
                 ):
                     return 2
                 return 1
-            elif len(node.name) == 1 and node.name in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+            elif (
+                len(node.name) == 1
+                and node.name in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            ):
                 return 2
         elif isinstance(node, Field):
             pass  # nothing to do
@@ -412,7 +427,11 @@ class hipblas:
 
         Removes the ******************************************************************
         """
-        return raw_comment.replace("******************************************************************","")
+        return raw_comment.replace(
+            "******************************************************************",
+            "",
+        )
+
 
 class hipsolver:
 
@@ -456,7 +475,9 @@ class hipsolver:
     def raw_comment_cleaner(raw_comment: str):
         return raw_comment
 
+
 # RCCL
+
 
 class rccl:
 
@@ -536,6 +557,7 @@ class rccl:
                 return 0
         return 1
 
+
 # HIPRAND
 class hiprand:
 
@@ -576,8 +598,7 @@ class hiprand:
 
     @staticmethod
     def ptr_rank(node: Node):
-        """Actual rank of the variables underlying pointer indirections.
-        """
+        """Actual rank of the variables underlying pointer indirections."""
         if isinstance(node, Parm):
             if node.is_pointer_to_record(degree=1):
                 return 0
@@ -589,7 +610,9 @@ class hiprand:
             pass  # nothing to do
         return 1
 
+
 # HIPFFT
+
 
 class hipfft:
 
@@ -630,7 +653,9 @@ class hipfft:
                 return 0
         return 1
 
+
 # HIPSPARSE
+
 
 class hipsparse:
 
@@ -688,7 +713,9 @@ class hipsparse:
         """
         parts = []
         for tokens, _, __ in pyp.cppStyleComment.scanString(raw_comment):
-            stripped = tokens[0].replace(" ","").replace("\n","").replace("!","")
+            stripped = (
+                tokens[0].replace(" ", "").replace("\n", "").replace("!", "")
+            )
             if stripped != "/**@{*/":
                 parts.append(tokens[0])
                 if "@}" in stripped or "@{" in stripped:
@@ -696,7 +723,9 @@ class hipsparse:
 
         return "\n".join(parts)
 
+
 # ROCTX
+
 
 class roctx:
 
@@ -732,6 +761,5 @@ class roctx:
 
     @staticmethod
     def raw_comment_cleaner(raw_comment: str):
-        """Cleans roctx doxygen documentation strings.
-        """
+        """Cleans roctx doxygen documentation strings."""
         return raw_comment

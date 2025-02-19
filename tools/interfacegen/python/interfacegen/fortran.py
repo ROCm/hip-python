@@ -22,29 +22,19 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
-import sys
-import os
-import re
 import keyword
-import textwrap
-
-from datetime import datetime
-
 import logging
-
-_log = logging.getLogger("interfacegen")
+import os
+import sys
+import textwrap
 
 import clang.cindex
 
-import Cython.Tempita
-
-from . import tree
-
-from . import cparser
-from . import doxyparser
+from . import cparser, doxyparser, tree
 from .support import cython as support
-
 from .support.recipes import control
+
+_log = logging.getLogger("interfacegen")
 
 # import original tree nodes so that the treefactory can use them via backend.
 for name, attr in vars(tree).items():
@@ -85,7 +75,9 @@ def C_TO_FORTRAN(canonical_ctype: str):
         https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fC_005fBINDING.html
     """
     tokens = [
-        tk for tk in canonical_ctype.split(" ") if tk not in ("const", "unsigned")
+        tk
+        for tk in canonical_ctype.split(" ")
+        if tk not in ("const", "unsigned")
     ]
     if tokens in [
         ["char", "*"],
@@ -112,7 +104,9 @@ def C_TO_FORTRAN(canonical_ctype: str):
     elif len(tokens) == 2 and tokens[0] in ("union", "struct", "enum"):
         raise NotImplementedError("struct, union, enum types are not handled")
     else:
-        raise NotImplementedError(f"unsure how to handle type '{canonical_ctype}'")
+        raise NotImplementedError(
+            f"unsure how to handle type '{canonical_ctype}'"
+        )
 
 
 def DEFAULT_RENAMER(name):  # backend-specific
@@ -167,7 +161,7 @@ class FortranMixin:
         from . import tree
 
         assert isinstance(self, tree.Node)
-        if self.raw_comment != None:
+        if self.raw_comment is not None:
             cleaned_raw_comment = self.raw_comment_cleaner(self.raw_comment)
             return doxyparser.remove_doxygen_comment_chars(cleaned_raw_comment)
         else:
@@ -180,10 +174,13 @@ class FortranMixin:
         from . import tree
 
         assert isinstance(self, tree.Node)
-        if self.raw_comment != None:
+        if self.raw_comment is not None:
             comment = self._raw_comment_cleaned()
             return "".join(
-                [f"{comment_chars} " + l for l in comment.splitlines(keepends=True)]
+                [
+                    f"{comment_chars} " + ln
+                    for ln in comment.splitlines(keepends=True)
+                ]
             )
         else:
             return ""
@@ -205,7 +202,9 @@ class Typed:
         from . import tree
 
         assert isinstance(self, tree.Typed)
-        result = self.global_typename(self.sep, self.renamer, prefer_canonical=True)
+        result = self.global_typename(
+            self.sep, self.renamer, prefer_canonical=True
+        )
         # if "[]" in result: # Fortran does not like this in signatures
         #    result = result.replace("[]", "*")
         return result
@@ -244,11 +243,6 @@ class Typed:
         actual_rank = self.ptr_rank(self)
         assert isinstance(self, tree.Parm)
         return self.get_pointer_degree() > actual_rank
-
-    @property
-    def actual_rank(self):
-        """The actual rank of the parameter, if this is an indirection."""
-        return self.ptr_rank(self)
 
     @property
     def is_out_ptr(self):
@@ -392,7 +386,7 @@ class Function(tree.Function, FortranMixin, Typed):
             )
 
     def render_c_bindings(self, modifiers_front="", modifiers=""):
-        """
+        r"""
         Renders the C interface.
 
         Todos:
@@ -459,7 +453,9 @@ class Function(tree.Function, FortranMixin, Typed):
         fn_name = self.fortran_name
         binding = f"{fn_name}"
         parm_names = ",".join(parm.name for parm in self.parms)
-        parm_decls = "\n".join(parm.fortran_c_binding_decl for parm in self.parms)
+        parm_decls = "\n".join(
+            parm.fortran_c_binding_decl for parm in self.parms
+        )
         retval_decl = self._fortran_retval(fn_name)
 
         c_binding = textwrap.dedent(
@@ -492,13 +488,17 @@ class Function(tree.Function, FortranMixin, Typed):
             """
         ).format(
             doxygen=self._raw_comment_as_fortran_comment().rstrip(),
-            interface_members=textwrap.indent("\n".join(interface_members), indent),
+            interface_members=textwrap.indent(
+                "\n".join(interface_members), indent
+            ),
         )
         implementations = None
         return declarations, implementations
 
 
 class FortranBackend:
+
+    @staticmethod
     def from_libclang_translation_unit(
         translation_unit: clang.cindex.TranslationUnit,
         filename: str,
@@ -663,11 +663,15 @@ class FortranBackend:
                 try:
                     contrib = node.render_c_bindings()
 
-                    if contrib != None:
+                    if contrib is not None:
                         if isinstance(contrib, str):  # only declarations
-                            declarations.append(textwrap.indent(contrib, indent))
+                            declarations.append(
+                                textwrap.indent(contrib, indent)
+                            )
                         elif isinstance(contrib, tuple):
-                            declarations.append(textwrap.indent(contrib[0], indent))
+                            declarations.append(
+                                textwrap.indent(contrib[0], indent)
+                            )
                             if contrib[1]:
                                 implementations.append(
                                     textwrap.indent(contrib[1], indent)
@@ -688,7 +692,8 @@ class FortranBackend:
             """
         ).format(
             preamble=textwrap.indent(
-                self.enum_module_preamble if enums else self.module_preamble, indent
+                self.enum_module_preamble if enums else self.module_preamble,
+                indent,
             ),
             declarations="\n\n".join(declarations),
             implementations="\n\n".join(implementations),
@@ -747,7 +752,7 @@ class FortranModuleGenerator:
         else:
             raise ValueError("type of 'headers' must be str or tuple")
         _log.info(" " + filename)
-        if include_dir != None:
+        if include_dir is not None:
             abspath = os.path.join(include_dir, filename)
         else:
             abspath = filename
@@ -757,8 +762,10 @@ class FortranModuleGenerator:
         )
         parser.parse()
 
-        self.backend: FortranBackend = FortranBackend.from_libclang_translation_unit(
-            parser.translation_unit, header, **opts
+        self.backend: FortranBackend = (
+            FortranBackend.from_libclang_translation_unit(
+                parser.translation_unit, header, **opts
+            )
         )
 
     def write_module_files(self, output_dir: str = None):
@@ -771,11 +778,19 @@ class FortranModuleGenerator:
         # enums, types
         enum_module_name = f"{self.module_name}_enums"
         fileext = self.module_ext.lstrip(".")
-        with open(f"{output_dir}/{enum_module_name}.{fileext}", "w") as outfile:
+        with open(
+            f"{output_dir}/{enum_module_name}.{fileext}", "w"
+        ) as outfile:
             outfile.write(default_module_prolog)
-            outfile.write(self.backend.render_module(enum_module_name, enums=True))
+            outfile.write(
+                self.backend.render_module(enum_module_name, enums=True)
+            )
 
         # functions, other
-        with open(f"{output_dir}/{self.module_name}.{fileext}", "w") as outfile:
+        with open(
+            f"{output_dir}/{self.module_name}.{fileext}", "w"
+        ) as outfile:
             outfile.write(default_module_prolog)
-            outfile.write(self.backend.render_module(self.module_name, enums=False))
+            outfile.write(
+                self.backend.render_module(self.module_name, enums=False)
+            )

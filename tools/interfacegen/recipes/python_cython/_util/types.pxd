@@ -27,7 +27,7 @@ cdef class Pointer:
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
 
-    # Camel-case used by intent to make this orthogonal to array get_<property>(self,i)
+    # Camel-case used by intent to make this orthogonal to get_<property>(self, i)
     # of auto-generated subclasses.
     cdef void* getPtr(self)
 
@@ -59,7 +59,7 @@ cdef class CStr(Pointer):
 
     cdef const char* getElementPtr(self)
 
-    cpdef void malloc(self,Py_ssize_t size_bytes)
+    cpdef void malloc(self, Py_ssize_t size_bytes)
 
     cpdef void free(self)
 
@@ -72,11 +72,10 @@ cdef class ImmortalCStr(CStr):
     cdef ImmortalCStr fromPyobj(object pyobj)
 
 cdef class NDBuffer(Pointer):
-    cdef size_t _itemsize # itemsize is not part of the CUDA array interface
+    cdef size_t _itemsize  # itemsize is not part of the CUDA array interface
     cdef dict __dict__
-    cdef Py_ssize_t* _py_buffer_shape # for providing shape information
-                                      # to viewers of this Python buffer
-    cdef int __view_count # For counting the current number of views
+    cdef Py_ssize_t* _py_buffer_shape  # shape info for this Python buffer
+    cdef int __view_count  # For counting the current number of views
 
     @staticmethod
     cdef NDBuffer fromPtr(void* ptr)
@@ -84,13 +83,13 @@ cdef class NDBuffer(Pointer):
     @staticmethod
     cdef NDBuffer fromPyobj(object pyobj)
 
-    cdef _set_ptr(self,void* ptr)
+    cdef _set_ptr(self, void* ptr)
 
     cdef int _numpy_typestr_to_bytes(self, str typestr)
 
-    cdef tuple _handle_int(self,size_t subscript, size_t shape_dim)
+    cdef tuple _handle_int(self, size_t subscript, size_t shape_dim)
 
-    cdef tuple _handle_slice(self,slice subscript,size_t shape_dim)
+    cdef tuple _handle_slice(self, slice subscript, size_t shape_dim)
 
 cdef class DeviceArray(NDBuffer):
 

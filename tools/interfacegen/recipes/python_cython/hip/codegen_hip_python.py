@@ -30,23 +30,33 @@ by Cython users of this project.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+import argparse
+import enum
+import logging
 import os
 import re
-from pathlib import Path
-import enum
 import textwrap
-import argparse
-import logging
+from pathlib import Path
+
+import cuda_interop_layer_gen
+from parse_hipify_perl import parse_hipify_perl
 
 import interfacegen
-
+from interfacegen.cparser import TypeHandler
+from interfacegen.cython import (
+    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+    CythonModuleGenerator,
+)
 from interfacegen.support import gitversion
+from interfacegen.support.recipes import hip as controls
+from interfacegen.tree import (
+    MacroDefinition,
+    Node,
+    Parm,
+)
 
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
-
-from interfacegen.support.recipes import hip as controls
-import cuda_interop_layer_gen
 
 # configure codegen
 # see: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#role-py-obj
@@ -57,26 +67,11 @@ cuda_interop_layer_gen.python_interface_pyobj_role_template = (
     r"`.{name}`"  # note: here we want to keep the qualifier
 )
 
-from interfacegen.cython import (
-    CythonModuleGenerator,
-    CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
-)
-
 HIP_PYTHON_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER = (
     CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER("hip._util.types.")
 )
 
-from interfacegen.cparser import TypeHandler
-
 TypeCategory = TypeHandler.TypeCategory
-
-from interfacegen.tree import (
-    Node,
-    MacroDefinition,
-    Parm,
-)
-
-from parse_hipify_perl import parse_hipify_perl
 
 
 def parse_options():
@@ -189,11 +184,15 @@ def parse_options():
         help="Verbose output.",
     )
     parser.set_defaults(
-        rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME", None)),
+        rocm_path=os.environ.get(
+            "ROCM_PATH", os.environ.get("ROCM_HOME", None)
+        ),
         platform=os.environ.get("HIP_PLATFORM", "amd"),
         clang_resource_dir=os.environ.get("HIP_PYTHON_CLANG_RES_DIR", None),
         libs=os.environ.get("HIP_PYTHON_LIBS", "*"),
-        runtime_linking=get_bool_environ_var("HIP_PYTHON_RUNTIME_LINKING", "true"),
+        runtime_linking=get_bool_environ_var(
+            "HIP_PYTHON_RUNTIME_LINKING", "true"
+        ),
         verbose=False,
     )
     args = parser.parse_args()
@@ -202,7 +201,9 @@ def parse_options():
     RUNTIME_LINKING = args.runtime_linking
     LIBS = args.libs
 
-    (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR, ROCM_VERSION_PATCH) = args.rocm_version
+    (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR, ROCM_VERSION_PATCH) = (
+        args.rocm_version
+    )
 
     if not args.rocm_path:
         raise RuntimeError("ROCm path is not set")
@@ -277,7 +278,9 @@ def generate_hip_module_files():
 
     def hip_ptr_complicated_type_handler(parm: Node):
         if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel", "extra"):
-            return f"hip._hip_helpers.{toclassname(parm.parent.name)}_{parm.name}"
+            return (
+                f"hip._hip_helpers.{toclassname(parm.parent.name)}_{parm.name}"
+            )
         if (parm.parent.name, parm.name) in (
             ("hipMalloc", "ptr"),
             ("hipExtMallocWithFlags", "ptr"),
@@ -388,9 +391,15 @@ def generate_hiprtc_module_files():
                 ("hiprtcCreateProgram", "includeNames"),
             ):
                 return "hip._util.types.ListOfBytes"
-            if (node.parent.name, node.name) == ("hiprtcLinkCreate", "option_ptr"):
+            if (node.parent.name, node.name) == (
+                "hiprtcLinkCreate",
+                "option_ptr",
+            ):
                 return "hip._hiprtc_helpers.HiprtcLinkCreate_option_ptr"
-            if (node.parent.name, node.name) == ("hiprtcLinkCreate", "option_vals_pptr"):
+            if (node.parent.name, node.name) == (
+                "hiprtcLinkCreate",
+                "option_vals_pptr",
+            ):
                 return "hip._util.types.ListOfPointer"
             if (node.parent.name, node.parm_index) in (
                 ("hiprtcLinkComplete", 1),
@@ -782,7 +791,7 @@ def write_package_init_file(
         for module_name in lib_names:
             if module_name == "hiprtc":
                 init_content += textwrap.dedent(
-                    f"""
+                    """\
                 try:
                     from . import hiprtc
                 except ImportError:
@@ -793,7 +802,7 @@ def write_package_init_file(
                 )
             else:
                 init_content += textwrap.dedent(
-                    f"""
+                    """\
                 try:
                     from . import {module_name}
                 except ImportError:
@@ -893,13 +902,16 @@ def render_toc_yml_in(
     python_api_file_names_cuda = [
         f"      - file: python_api/{lib}" for lib in cuda_python_lib_names
     ]
-    with open(toc_yml_in + ".in", "r") as infile, open(toc_yml_in, "w") as outfile:
+    with open(toc_yml_in + ".in", "r") as infile, open(
+        toc_yml_in, "w"
+    ) as outfile:
         rendered = infile.read()
         rendered = rendered.replace(
             "{PYTHON_API_FILE_NAMES}", "\n".join(python_api_file_names)
         )
         rendered = rendered.replace(
-            "{PYTHON_API_FILE_NAMES_CUDA}", "\n".join(python_api_file_names_cuda)
+            "{PYTHON_API_FILE_NAMES_CUDA}",
+            "\n".join(python_api_file_names_cuda),
         )
         outfile.write(rendered)
 
@@ -913,7 +925,7 @@ def generate_cuda_interop_layer_files(license_text: str):
     global HIPRTC_GENERATOR
     global HIP_GENERATOR
 
-    if HIPRTC_GENERATOR == None or HIP_GENERATOR == None:
+    if HIPRTC_GENERATOR is None or HIP_GENERATOR is None:
         _log.warning(
             "No CUDA runtime layer generated as 'hip' and/or 'hiprtc' have not been specified as libraries to parse."
         )
@@ -1006,7 +1018,9 @@ if __name__ == "__main__":
     else:
         if processed_libs.startswith("^"):
             processed_libs = processed_libs[1:].split(",")
-            lib_names = [name for name in avail_lib_names if name not in processed_libs]
+            lib_names = [
+                name for name in avail_lib_names if name not in processed_libs
+            ]
         else:
             processed_libs = processed_libs.split(",")
             lib_names = processed_libs
@@ -1016,7 +1030,9 @@ if __name__ == "__main__":
                     f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}"
                 )
 
-    Path(os.path.join(OUTPUT_DIR, "hip-python")).mkdir(parents=False, exist_ok=True)
+    Path(os.path.join(OUTPUT_DIR, "hip-python")).mkdir(
+        parents=False, exist_ok=True
+    )
     Path(os.path.join(OUTPUT_DIR, "hip-python-as-cuda")).mkdir(
         parents=False, exist_ok=True
     )
@@ -1029,7 +1045,9 @@ if __name__ == "__main__":
     for entry in lib_names:
         libname = entry.strip()
         if libname not in AVAILABLE_GENERATORS:
-            available_libs = ", ".join([f"'{a}'" for a in AVAILABLE_GENERATORS.keys()])
+            available_libs = ", ".join(
+                [f"'{a}'" for a in AVAILABLE_GENERATORS.keys()]
+            )
             msg = f"no codegenerator found for library '{libname}'; please choose from: {available_libs}, or '*', which implies that all code generators will be used."
             raise KeyError(msg)
         generator = AVAILABLE_GENERATORS[libname]()
@@ -1049,9 +1067,7 @@ if __name__ == "__main__":
     )
 
     version = f"{rocm_version_name}.{gitversion.git_branch_rev_count(gitversion.git_current_branch())}"
-    long_version = (
-        f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
-    )
+    long_version = f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
 
     hip_python_lib_names = AVAILABLE_GENERATORS.keys()
     cuda_python_lib_names = ["cuda", "cudart", "nvrtc"]
@@ -1066,7 +1082,11 @@ if __name__ == "__main__":
             output_dir,
             license_text,
             for_hip_python_package,
-            hip_python_lib_names if for_hip_python_package else cuda_python_lib_names,
+            (
+                hip_python_lib_names
+                if for_hip_python_package
+                else cuda_python_lib_names
+            ),
             ROCM_VERSION_MAJOR,
             ROCM_VERSION_MINOR,
             ROCM_VERSION_PATCH,
@@ -1080,7 +1100,9 @@ if __name__ == "__main__":
     requirements_file = os.path.join(
         OUTPUT_DIR, "hip-python-as-cuda", "requirements.txt.in"
     )
-    write_hip_python_as_cuda_requirements_file(requirements_file, license_text, version)
+    write_hip_python_as_cuda_requirements_file(
+        requirements_file, license_text, version
+    )
 
     # hip-python docs
     hip_python_docs_dir = os.path.join(OUTPUT_DIR, "docs")
@@ -1103,4 +1125,6 @@ if __name__ == "__main__":
     Path(os.path.join(hip_python_docs_dir, "sphinx")).mkdir(
         parents=False, exist_ok=True
     )
-    render_toc_yml_in(hip_python_docs_dir, hip_python_lib_names, cuda_python_lib_names)
+    render_toc_yml_in(
+        hip_python_docs_dir, hip_python_lib_names, cuda_python_lib_names
+    )
