@@ -19,7 +19,7 @@ def git_branch_rev_count(branch):
 
 def git_current_branch():
     """Return the name of the current branch."""
-    return subprocess.check_output(["git","branch","--show-current"]).decode("utf-8").strip()
+    return subprocess.check_output(["git","rev-parse","--abbrev-ref", "HEAD"]).decode("utf-8").strip()
 
 def replace_version_placeholders(file_content: str) -> str:
     return file_content.format(
