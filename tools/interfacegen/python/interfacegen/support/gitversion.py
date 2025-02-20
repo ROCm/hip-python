@@ -63,7 +63,7 @@ def git_head_rev_count():
 def git_current_branch():
     """Return the name of the current branch."""
     return (
-        subprocess.check_output(["git", "branch", "--show-current"])
+        subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
         .decode("utf-8")
         .strip()
     )
