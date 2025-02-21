@@ -789,6 +789,7 @@ def write_package_init_file(
             init_content += "\nfrom . import _util"
 
         for module_name in lib_names:
+            init_content += "\n"
             if module_name == "hiprtc":
                 init_content += textwrap.dedent(
                     """\
@@ -802,7 +803,7 @@ def write_package_init_file(
                 )
             else:
                 init_content += textwrap.dedent(
-                    """\
+                    f"""\
                 try:
                     from . import {module_name}
                 except ImportError:
