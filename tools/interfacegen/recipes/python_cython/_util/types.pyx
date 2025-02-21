@@ -274,8 +274,8 @@ cdef class Pointer:
                 raise ValueError("offset='{offset}' must be non-negative")
             return Pointer.fromPtr(<void*>(<unsigned long>self._ptr
                                    + cpython.long.PyLong_AsUnsignedLong(offset)))
-        raise NotImplementedError("'__getitem__': not implemented for other "
-                                  + "'offset' types than 'int'")
+        raise NotImplementedError("'__getitem__': not implemented for other"
+                                  + " 'offset' types than 'int'")
 
     def __init__(self, object pyobj = None):
         """Constructor.
@@ -410,8 +410,8 @@ cdef class CStr(Pointer):
                          if pyobj.value is not None else NULL)
             self.get_or_determine_len()
         elif isinstance(pyobj, str):
-            raise RuntimeError("CStr.init_from_pyobj: currently no support for Python
-                               + "`str` objects.")
+            raise RuntimeError("CStr.init_from_pyobj: currently no support for Python"
+                               + " `str` objects.")
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):  # handles 'bytes' too
             err = cpython.buffer.PyObject_GetBuffer(
                 pyobj,
@@ -419,8 +419,8 @@ cdef class CStr(Pointer):
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
             if err == -1:
-                raise RuntimeError("failed to create simple, contiguous Py_buffer from
-                                   + "Python object")
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from"
+                                   + " Python object")
             self._py_buffer_acquired = True
             self._ptr = self._py_buffer.buf
             self._shape[0] = self._py_buffer.len
@@ -731,10 +731,10 @@ cdef class NDBuffer(Pointer):
     # C members declared in declaration part ``types.pxd``
 
     def __repr__(self):
-        return (f"<NDBuffer object, _ptr={int(self)}, "
-                + f"typestr={self.typestr}, itemsize={self.itemsize}, "
-                + f"shape={str(self.shape)}, is_read_only={self.is_read_only}, "
-                + f"stream={self.stream_as_int}>")
+        return (f"<NDBuffer object, _ptr={int(self)},"
+                + f" typestr={self.typestr}, itemsize={self.itemsize},"
+                + f" shape={str(self.shape)}, is_read_only={self.is_read_only},"
+                + f" stream={self.stream_as_int}>")
 
     NUMPY_CHAR_CODES = (
         "?", "=?", "<?", ">?", "bool", "bool_", "bool8",
@@ -1018,8 +1018,8 @@ cdef class NDBuffer(Pointer):
         cdef str typestr = None
 
         if self.__view_count > 0:
-            raise RuntimeError("cannot re-configure this NDBuffer while it is viewed
-                               + "by other objects via the Python buffer protocol")
+            raise RuntimeError("cannot re-configure this NDBuffer while it is viewed"
+                               + " by other objects via the Python buffer protocol")
 
         for k in kwargs:
             if k not in (supported_keys + extra_keys):
@@ -1041,13 +1041,13 @@ cdef class NDBuffer(Pointer):
             itemsize = self._numpy_typestr_to_bytes(typestr)
             if itemsize < 0:
                 if typestr not in self.NUMPY_CHAR_CODES:
-                    raise ValueError(f""typestr": value "{typestr}" is not a valid
-                                     + "numpy char code. See class attributes"
-                                     + "'NUMPY_CHAR_CODES' for valid expressions.")
+                    raise ValueError(f"typestr: value '{typestr}' is not a valid"
+                                     + " numpy char code. See class attribute"
+                                     + " 'NUMPY_CHAR_CODES' for valid expressions.")
                 elif "itemsize" not in kwargs:
                     raise ValueError(f"'typestr': value '{typestr}' could not be"
-                                     + "mapped to a number of bytes. Please also"
-                                     + "specify 'itemsize'.")
+                                     + " mapped to a number of bytes. Please also"
+                                     + " specify 'itemsize'.")
         if "itemsize" in kwargs:
             itemsize = kwargs["itemsize"]
             if not isinstance(itemsize, int):
@@ -1060,8 +1060,8 @@ cdef class NDBuffer(Pointer):
             if isinstance(stream, int):
                 if stream == 0:
                     return ValueError("'stream': value '0' is disallowed as it would be"
-                                      + "ambiguous between None and the default"
-                                      + "stream, more details: https://numba."
+                                      + " ambiguous between None and the default"
+                                      + " stream, more details: https://numba."
                                       + "readthedocs.io/en/stable/cuda/"
                                       +"cuda_array_interface.html")
                 elif stream < 0:
@@ -1086,9 +1086,9 @@ cdef class NDBuffer(Pointer):
                 self._itemsize = itemsize
                 self.__dict__["__cuda_array_interface__"]["shape"] = shape
             else:
-                raise ValueError("new shape would change buffer size information:
-                                 + "{old_num_bytes} B -> {new_num_bytes} B."
-                                 + "Specify `_force=True` if this is intended.")
+                raise ValueError("new shape would change buffer size information:"
+                                 + " {old_num_bytes} B -> {new_num_bytes} B."
+                                 + " Specify `_force=True` if this is intended.")
 
         return self
 
@@ -1118,7 +1118,7 @@ cdef class NDBuffer(Pointer):
             )
             if err == -1:
                 raise RuntimeError("failed to create simple, contiguous Py_buffer from"
-                                   + "Python object")
+                                   + " Python object")
             self._py_buffer_acquired = True
             self._set_ptr(self._py_buffer.buf)
 
@@ -1142,8 +1142,8 @@ cdef class NDBuffer(Pointer):
             self.__dict__["__pybuffer_obj"] = self._py_buffer.obj
         elif cuda_array_interface is not None:
             if "data" not in cuda_array_interface:
-                raise ValueError("input object has "__cuda_array_interface__" attribute
-                                 + "but the dict has no 'data' key")
+                raise ValueError("input object has '__cuda_array_interface__'"
+                                 + " attribute but the dict has no 'data' key")
             if cuda_array_interface["strides"] is not None:
                 raise RuntimeError("CUDA array interface is not contiguous")
             ptr_as_int = cuda_array_interface["data"][0]
@@ -1195,7 +1195,7 @@ cdef class NDBuffer(Pointer):
             raise ValueError(f"subscript='{subscript}' must be non-negative.")
         if subscript >= shape_dim:
             raise ValueError(f"subscript='{subscript}' must be smaller than"
-                             + "axis' exclusive upper bound ('{shape_dim}')")
+                             + " axis' exclusive upper bound ('{shape_dim}')")
         return (subscript, subscript+1)
 
     cdef tuple _handle_slice(self, slice subscript, size_t shape_dim):
@@ -1205,33 +1205,33 @@ cdef class NDBuffer(Pointer):
 
         if subscript.step not in (None, 1):
             raise ValueError(f"subscript's step='{subscript.step}'"
-                             + "must be 'None' or '1'.")
+                             + " must be 'None' or '1'.")
         if subscript.stop is not None:
             if subscript.stop <= 0:
                 raise ValueError(f"subscript's stop='{subscript.stop}'"
-                                 + "must be greater than zero.")
+                                 + " must be greater than zero.")
             if subscript.stop > shape_dim:
-                raise ValueError(f"subscript"s stop="{subscript.stop}' must not be
-                                 + "greater than axis' exclusive upper bound"
-                                 + f"({shape_dim}).")
+                raise ValueError(f"subscript's stop='{subscript.stop}' must not be"
+                                 +" greater than axis' exclusive upper bound"
+                                 + f" ({shape_dim}).")
             stop = subscript.stop
         else:
             stop = shape_dim
         if subscript.start is not None:
             if subscript.start < 0:
                 raise ValueError(f"subscript's start='{subscript.start}'"
-                                 + "must be non-negative.")
+                                 + " must be non-negative.")
             if subscript.start >= shape_dim:
-                raise ValueError(f"subscript"s start="{subscript.start}' must be
-                                 + "smaller than axis' exclusive upper bound"
-                                 + "({shape_dim}).")
+                raise ValueError(f"subscript's start='{subscript.start}' must be"
+                                 + " smaller than axis' exclusive upper bound"
+                                 + " ({shape_dim}).")
             start = subscript.start
         else:
             start = 0
 
         if start >= stop:
-            raise ValueError(f"subscript"s stop="{subscript.stop}' must be greater
-                             + f"than subscript's start='{subscript.start}'")
+            raise ValueError(f"subscript's stop='{subscript.stop}' must be greater"
+                             + f" than subscript's start='{subscript.start}'")
 
         extract_full_dim = (
             start == 0
@@ -1283,8 +1283,8 @@ cdef class NDBuffer(Pointer):
         # check len and pad ':' slices if the subscript tuple's size is smaller than
         # the array's shape dimensions.
         if len_shape < len_subscript:
-            raise IndexError("too many indices specified, maximum number of "
-                             + "indices that can be specified is {len_shape}")
+            raise IndexError("too many indices specified, maximum number of"
+                             + " indices that can be specified is {len_shape}")
         if len_shape > len_subscript:
             expanded_subscript += [slice(None)]*(len_shape-len_subscript)
         for _i, spec in enumerate(reversed(expanded_subscript)):  # row major
@@ -1295,16 +1295,16 @@ cdef class NDBuffer(Pointer):
             elif isinstance(spec, slice):
                 if not next_slice_yields_contiguous:
                     raise ValueError(
-                        f"subscript='{expanded_subscript}' "
-                        + "yields no contiguous subarray"
+                        f"subscript='{expanded_subscript}'"
+                        + " yields no contiguous subarray"
                     )
                 (start, stop, extract_full_dim) = self._handle_slice(spec, shape[i])
                 next_slice_yields_contiguous = extract_full_dim
                 # extract_full_dim => start == 0
             else:
                 raise TypeError(
-                    f"subscript tuple entry type='{type(spec)}' is none of: "
-                    + "'slice', 'int'"
+                    f"subscript tuple entry type='{type(spec)}' is none of:"
+                    + " 'slice', 'int'"
                 )
             result_shape.append(stop-start)
             offset += start*stride
