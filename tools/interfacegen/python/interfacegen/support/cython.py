@@ -27,6 +27,8 @@ from pathlib import Path
 from . import _base, gitversion
 from . import includetree as it
 
+render_license_MIT = _base.render_license_MIT
+
 
 def create_rocm_package_cli_parser(
     env_var_prefix: str, libs_example: str, *args, **kwargs
