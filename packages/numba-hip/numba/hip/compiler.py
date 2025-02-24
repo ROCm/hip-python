@@ -45,27 +45,40 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from numba.core.typing.templates import ConcreteTemplate
-from numba.core import types, typing, funcdesc, config, compiler, sigutils
+from warnings import warn
+
+from numba.core import config  # noqa: F401
+from numba.core import (
+    compiler,
+    funcdesc,
+    sigutils,
+    types,
+    typing,
+)
 from numba.core.compiler import (
-    sanitize_compile_result_entries,
     CompilerBase,
+    CompileResult,
     DefaultPassBuilder,
     Flags,
     Option,
-    CompileResult,
+    sanitize_compile_result_entries,
 )
 from numba.core.compiler_lock import global_compiler_lock
-from numba.core.compiler_machinery import LoweringPass, PassManager, register_pass
+from numba.core.compiler_machinery import (
+    LoweringPass,
+    PassManager,
+    register_pass,
+)
 from numba.core.errors import NumbaInvalidConfigWarning
-from numba.core.typed_passes import IRLegalization, NativeLowering, AnnotateTypes
-from warnings import warn
+from numba.core.typed_passes import (
+    AnnotateTypes,
+    IRLegalization,
+    NativeLowering,
+)
+from numba.core.typing.templates import ConcreteTemplate
 
+from numba.hip import codegen, hipconfig, target
 from numba.hip.api import get_current_device
-
-from numba.hip import target
-from numba.hip import codegen
-from numba.hip import hipconfig
 
 
 def _options_type(x):

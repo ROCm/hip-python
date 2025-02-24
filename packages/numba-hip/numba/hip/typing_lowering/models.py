@@ -48,12 +48,11 @@
 import functools
 
 from llvmlite import ir
-
+from numba.core import types
 from numba.core.datamodel.registry import DataModelManager, register
 from numba.core.extending import models
-from numba.core import types
-from numba.hip.typing_lowering.types import Dim3, HIPDispatcher
 
+from numba.hip.typing_lowering.types import Dim3, HIPDispatcher
 
 hip_data_manager = DataModelManager()
 
@@ -63,11 +62,7 @@ register_model = functools.partial(register, hip_data_manager)
 @register_model(Dim3)
 class Dim3Model(models.StructModel):
     def __init__(self, dmm, fe_type):
-        members = [
-            ('x', types.int32),
-            ('y', types.int32),
-            ('z', types.int32)
-        ]
+        members = [("x", types.int32), ("y", types.int32), ("z", types.int32)]
         super().__init__(dmm, fe_type, members)
 
 

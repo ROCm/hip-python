@@ -59,17 +59,18 @@ import math
 
 from numba.core import types, typing
 
+from numba.hip.typing_lowering import hipdevicelib
+from numba.hip.typing_lowering import stubs as numba_hip_stubs
 from numba.hip.typing_lowering.registries import (
-    typing_registry,
     impl_registry,
+    typing_registry,
 )
-from numba.hip.typing_lowering import hipdevicelib, stubs as numba_hip_stubs
 
 thestubs = {}
 for _name, _mathobj in vars(math).items():
     if callable(_mathobj):  # only consider functions
         _stub = hipdevicelib.thestubs.get(_name, None)
-        if _stub != None:
+        if _stub is not None:
             # register hipdevicelib typing template and implementation/lowering procedures
             # for this math object
             # NOTE:
@@ -130,7 +131,9 @@ def get_lower_unary_impl(key, ty, libfunc):
         # if fast_replacement is not None:
         #     actual_libfunc = getattr(libdevice, fast_replacement)
 
-        libfunc_impl = context.get_function(actual_libfunc, typing.signature(ty, ty))
+        libfunc_impl = context.get_function(
+            actual_libfunc, typing.signature(ty, ty)
+        )
         return libfunc_impl(builder, args)
 
     return lower_unary_impl

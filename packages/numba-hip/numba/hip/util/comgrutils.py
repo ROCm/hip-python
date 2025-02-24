@@ -29,6 +29,7 @@ that are shipped with the ROCm LLVM Python project.
 """
 
 import shlex
+
 from rocm.amd_comgr import amd_comgr as comgr
 
 from . import llvmutils
@@ -37,7 +38,9 @@ llvm_amdgpu_kernel_visibility = "protected"
 llvm_amdgpu_kernel_calling_convention = "amdgpu_kernel"
 llvm_amdgpu_device_fun_visibility = "hidden"
 llvm_amdgpu_kernel_address_significance = "local_unnamed_addr"
-llvm_amdgpu_device_fun_address_significance = llvm_amdgpu_kernel_address_significance
+llvm_amdgpu_device_fun_address_significance = (
+    llvm_amdgpu_kernel_address_significance
+)
 
 
 def compile_hip_source_to_llvm(
@@ -75,10 +78,12 @@ def compile_hip_source_to_llvm(
         # NOTE: older versions of ROCm LLVM Python expect a `str` for `extra_opts`.
         kwargs["extra_opts"] = shlex.join(extra_opts)
         result = comgr.ext.compile_hip_to_bc(**kwargs)
-    ( llvm_bc_or_ir, log, diagnostic ) = result
+    (llvm_bc_or_ir, log, diagnostic) = result
 
     if to_llvm_ir:
-        llvm_bc_or_ir = llvmutils.to_ir_from_bc(llvm_bc_or_ir, len(llvm_bc_or_ir))
+        llvm_bc_or_ir = llvmutils.to_ir_from_bc(
+            llvm_bc_or_ir, len(llvm_bc_or_ir)
+        )
     return (llvm_bc_or_ir, log, diagnostic)
 
 
@@ -99,7 +104,9 @@ _DUMMY_KERNEL_IR = {}
 _DUMMY_DEVICE_FUN_IR = {}
 
 
-def _compile_dummy_snippet_to_llvm_ir(source: str, amdgpu_arch: str, args: str):
+def _compile_dummy_snippet_to_llvm_ir(
+    source: str, amdgpu_arch: str, args: str
+):
     (llvm_ir, _, _) = compile_hip_source_to_llvm(
         source=source.format(args=args),
         amdgpu_arch=amdgpu_arch,
@@ -118,7 +125,7 @@ def get_dummy_kernel_llvm_ir(amdgpu_arch: str, args: str):
         Arguments to specify for the kernel. Defaults to "".
     """
     key = (amdgpu_arch + args).replace(" ", "")
-    if not key in _DUMMY_KERNEL_IR:
+    if key not in _DUMMY_KERNEL_IR:
         _DUMMY_KERNEL_IR[key] = _compile_dummy_snippet_to_llvm_ir(
             _DUMMY_KERNEL, amdgpu_arch, args
         )
@@ -134,7 +141,7 @@ def get_dummy_device_fun_llvm_ir(amdgpu_arch: str, args: str):
         Arguments to specify for the kernel. Defaults to "".
     """
     key = (amdgpu_arch + args).replace(" ", "")
-    if not key in _DUMMY_DEVICE_FUN_IR:
+    if key not in _DUMMY_DEVICE_FUN_IR:
         _DUMMY_DEVICE_FUN_IR[key] = _compile_dummy_snippet_to_llvm_ir(
             _DUMMY_DEVICE_FUN, amdgpu_arch, args
         )
@@ -177,7 +184,9 @@ def parse_llvm_attributes_line(
             * ``raw==True``: a `list` that contains simple attributes (if ``only_kv==False``)
               plus key-value attributes in their raw '"<key>"="<value>"' form.
     """
-    values_part = attributes_line.split("=", 1)[1]  # remove 'attributes #<num> = '
+    values_part = attributes_line.split("=", 1)[
+        1
+    ]  # remove 'attributes #<num> = '
     values_part = values_part.strip(
         " {}"
     )  # remove braces and trailing/leading whitespace
@@ -285,7 +294,10 @@ def get_llvm_target_features(
 
 
 def compare_llvm_target_features(
-    amdgpu_arch: str, amdgpu_arch_base: str, sort: bool = False, as_list: bool = False
+    amdgpu_arch: str,
+    amdgpu_arch_base: str,
+    sort: bool = False,
+    as_list: bool = False,
 ):
     """Compare LLVM target features between two AMD GPU architectures.
 

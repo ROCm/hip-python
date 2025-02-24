@@ -45,12 +45,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import numpy as np
-import os
-import sys
 import ctypes
 import functools
+import sys
+from warnings import warn
 
+import numpy as np
 from numba.core import config, serialize, sigutils, types, typing, utils
 from numba.core.caching import Cache, CacheImpl
 from numba.core.compiler_lock import global_compiler_lock
@@ -58,19 +58,18 @@ from numba.core.dispatcher import Dispatcher
 from numba.core.errors import NumbaPerformanceWarning
 from numba.core.typing.typeof import Purpose, typeof
 
+from numba import _dispatcher, hip
 from numba.hip.api import get_current_device
 from numba.hip.args import wrap_arg
-from numba.hip.compiler import compile_hip, HIPCompiler
+from numba.hip.compiler import HIPCompiler, compile_hip
+from numba.hip.descriptor import hip_target
+from numba.hip.errors import (
+    missing_launch_config_msg,
+    normalize_kernel_dimensions,
+)
 from numba.hip.hipdrv import driver
 from numba.hip.hipdrv.devices import get_context
-from numba.hip.descriptor import hip_target
-from numba.hip.errors import missing_launch_config_msg, normalize_kernel_dimensions
 from numba.hip.typing_lowering import types as hip_types
-
-from numba import hip
-from numba import _dispatcher
-
-from warnings import warn
 
 hip_fp16_math_funcs = [
     "hsin",
@@ -472,7 +471,8 @@ class _Kernel(serialize.ReduceMixin):
         for wb in retr:
             wb()
 
-    def _prepare_args(self, ty, val, stream, retr, kernelargs):
+    # TODO function too complex (C901)
+    def _prepare_args(self, ty, val, stream, retr, kernelargs):  # noqa: C901
         """
         Convert arguments to ctypes and append to kernelargs
         """
@@ -553,7 +553,9 @@ class _Kernel(serialize.ReduceMixin):
 
         elif isinstance(ty, types.EnumMember):
             try:
-                self._prepare_args(ty.dtype, val.value, stream, retr, kernelargs)
+                self._prepare_args(
+                    ty.dtype, val.value, stream, retr, kernelargs
+                )
             except NotImplementedError:
                 raise NotImplementedError(ty, val)
 
@@ -584,7 +586,9 @@ class ForAll(object):
         blockdim = self._compute_thread_per_block(specialized)
         griddim = (self.ntasks + blockdim - 1) // blockdim
 
-        return specialized[griddim, blockdim, self.stream, self.sharedmem](*args)
+        return specialized[griddim, blockdim, self.stream, self.sharedmem](
+            *args
+        )
 
     def _compute_thread_per_block(self, dispatcher):
         tpb = self.thread_per_block
@@ -615,7 +619,9 @@ class _LaunchConfiguration:
         self.stream = stream
         self.sharedmem = sharedmem
 
-        if config.CUDA_LOW_OCCUPANCY_WARNINGS:  # TODO(HIP/AMD) reuse CUDA config
+        if (
+            config.CUDA_LOW_OCCUPANCY_WARNINGS
+        ):  # TODO(HIP/AMD) reuse CUDA config
             # Warn when the grid has fewer than 128 blocks. This number is
             # chosen somewhat heuristically - ideally the minimum is 2 times
             # the number of SMs, but the number of SMs varies between devices -
@@ -737,7 +743,9 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
         :return: A configured dispatcher, ready to launch on a set of
                  arguments."""
 
-        return ForAll(self, ntasks, tpb=tpb, stream=stream, sharedmem=sharedmem)
+        return ForAll(
+            self, ntasks, tpb=tpb, stream=stream, sharedmem=sharedmem
+        )
 
     @property
     def extensions(self):
@@ -801,7 +809,9 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
             if hip.is_cuda_array(val):
                 # When typing, we don't need to synchronize on the array's
                 # stream - this is done when the kernel is launched.
-                return typeof(hip.as_cuda_array(val, sync=False), Purpose.argument)
+                return typeof(
+                    hip.as_cuda_array(val, sync=False), Purpose.argument
+                )
             else:
                 raise
 
@@ -811,7 +821,9 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
         *args*.
         """
         amdgpu_arch = get_current_device().amdgpu_arch
-        argtypes = tuple([self.typingctx.resolve_argument_type(a) for a in args])
+        argtypes = tuple(
+            [self.typingctx.resolve_argument_type(a) for a in args]
+        )
         if self.specialized:
             raise RuntimeError("Dispatcher already specialized")
 
@@ -820,7 +832,9 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
             return specialization
 
         targetoptions = self.targetoptions
-        specialization = HIPDispatcher(self.py_func, targetoptions=targetoptions)
+        specialization = HIPDispatcher(
+            self.py_func, targetoptions=targetoptions
+        )
         specialization.compile(argtypes)
         specialization.disable_compile()
         specialization._specialized = True
@@ -873,7 +887,8 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
             return next(iter(self.overloads.values())).const_mem_size
         else:
             return {
-                sig: overload.const_mem_size for sig, overload in self.overloads.items()
+                sig: overload.const_mem_size
+                for sig, overload in self.overloads.items()
             }
 
     def get_shared_mem_per_block(self, signature=None):
@@ -1146,7 +1161,8 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
             return self.overloads[signature].inspect_sass_cfg()
         else:
             return {
-                sig: defn.inspect_sass_cfg() for sig, defn in self.overloads.items()
+                sig: defn.inspect_sass_cfg()
+                for sig, defn in self.overloads.items()
             }
 
     def inspect_sass(self, signature=None):
@@ -1169,7 +1185,10 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
         if signature is not None:
             return self.overloads[signature].inspect_sass()
         else:
-            return {sig: defn.inspect_sass() for sig, defn in self.overloads.items()}
+            return {
+                sig: defn.inspect_sass()
+                for sig, defn in self.overloads.items()
+            }
 
     def inspect_types(self, file=None):
         """

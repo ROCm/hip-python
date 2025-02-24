@@ -34,29 +34,25 @@ Note:
     uint64 and int64 for math functions.
 """
 
-import threading
 import logging
+import re
+import textwrap
+import threading
 
-from llvmlite import ir
-
-import rocm.clang.cindex as ci
-
-from rocm.amd_comgr import amd_comgr as comgr
-
-from hip import HIP_VERSION_TUPLE, ROCM_VERSION_TUPLE
-
-from numba.core import cgutils, types
-
-import numba.core.typing.templates as typing_templates
 import numba.core.imputils as imputils
+import numba.core.typing.templates as typing_templates
+import rocm.clang.cindex as ci
+from hip import HIP_VERSION_TUPLE, ROCM_VERSION_TUPLE
+from llvmlite import ir
+from numba.core import cgutils, types
+from rocm.amd_comgr import amd_comgr as comgr
 
 from numba.hip.amdgcn import ISA_INFOS
 from numba.hip.typing_lowering import stubs as numba_hip_stubs
 from numba.hip.util import comgrutils, llvmutils
 
-from .hipsource import *
-from . import typemaps
-
+from . import cparser, typemaps
+from .hipsource import HIPDeviceFunction, HIPSource
 
 _lock = threading.Lock()
 
@@ -93,7 +89,9 @@ class HIPDeviceLib:
         """Creates/returns the singleton per AMD GPU architecture."""
         with _lock:
             if not cls._HIPDEVICELIB_SOURCE:
-                cls._HIPDEVICELIB_SOURCE = HIPDeviceLib._create_hipdevicelib_source()
+                cls._HIPDEVICELIB_SOURCE = (
+                    HIPDeviceLib._create_hipdevicelib_source()
+                )
             if amdgpu_arch not in cls.__INSTANCES:
                 cls.__INSTANCES[amdgpu_arch] = object.__new__(cls)
         return cls.__INSTANCES[amdgpu_arch]
@@ -119,7 +117,9 @@ class HIPDeviceLib:
 
         def cursor_filter_(cursor: ci.Cursor):
             """Filter what cursors to consider when parsing device functions."""
-            if cursor.location.file and cursor.location.file.name.endswith(filename):
+            if cursor.location.file and cursor.location.file.name.endswith(
+                filename
+            ):
                 if cursor.kind == ci.CursorKind.FUNCTION_DECL:
                     # print(cursor.displayname)
                     for parm_type_kind_layers in HIPDeviceFunction(
@@ -138,7 +138,9 @@ class HIPDeviceLib:
                         return False
                     if cursor.spelling.startswith("__ldg"):
                         return False
-                    if cursor.spelling.startswith("operator"):  # TODO activate later on
+                    if cursor.spelling.startswith(
+                        "operator"
+                    ):  # TODO activate later on
                         return False
                     return True
             return False
@@ -249,8 +251,8 @@ class HIPDeviceLib:
             'radians', 'degrees', 'gamma',
         ]:
             # fmt: on
-            if fun in ("modf","frexp"):
-                continue # these are not further overloaded for integers; see numba/cuda/cudamath.py
+            if fun in ("modf", "frexp"):
+                continue  # these are not further overloaded for integers; see numba/cuda/cudamath.py
             overloads += textwrap.dedent(f"""\
                 // {fun}
                 double __attribute__((device)) {fun}(unsigned long long _0) {{
@@ -262,7 +264,7 @@ class HIPDeviceLib:
                 """)
         # 2.c) Binary functions (real)
         # <fun>(double,double) -> double: <fun>(ull,ull) -> double, <fun>(ll,ll) -> double
-        for fun in [ 'atan2', 'copysign', 'fmod', 'hypot', 'remainder']:
+        for fun in ['atan2', 'copysign', 'fmod', 'hypot', 'remainder']:
             overloads += textwrap.dedent(f"""\
                 // {fun}
                 double __attribute__((device)) {fun}(unsigned long long _0, unsigned long long _1) {{
@@ -273,7 +275,7 @@ class HIPDeviceLib:
                 }}
                 """)
         # NOTE: function pow(*,*) already has all required overloads.
-        fun="ldexp"
+        fun = "ldexp"
         # TODO(HIP/AMD): ROCm 6.2.x & ROCm 6.3.0 AMD COMGR (not hipcc and not HIPRTC) translates the
         #                calls in the body of the below functions into @llvm.ldexp.f32.f32 and
         #                and @llvm.ldexp.f64.f64 for some reason while only
@@ -283,7 +285,7 @@ class HIPDeviceLib:
         #                __builtin_amdgcn_ldexp* and __ocml_ldexp_f* did not change
         #               anything. Therefore, we check the ROCm version and disable
         #               these overloads for the time being.
-        if ROCM_VERSION_TUPLE < (6,2,0):
+        if ROCM_VERSION_TUPLE < (6, 2, 0):
             overloads += textwrap.dedent(f"""\
                 // {fun}
                 float __attribute__((device)) {fun}(float _0, float _1) {{
@@ -399,7 +401,7 @@ class HIPDeviceLib:
         return self._amdgpu_arch
 
     def _set_amdgpu_arch(self, arch: str):
-        if arch != None and arch.split(":")[0] not in ISA_INFOS:
+        if arch is not None and arch.split(":")[0] not in ISA_INFOS:
             supported_archs = ", ".join((f"{a}" for a in ISA_INFOS.keys()))
             raise ValueError(
                 f"{self._amdgpu_arch} must be `None` or one of: {supported_archs} (features may be appended after ':')"
@@ -574,7 +576,9 @@ class HIPDeviceLib:
         for i, parm_type in enumerate(device_fun.parm_types(canonical=True)):
             if parm_is_ptr[i]:
                 parm_types_numba.append(
-                    typemaps.map_clang_to_numba_core_type(parm_type.get_pointee())
+                    typemaps.map_clang_to_numba_core_type(
+                        parm_type.get_pointee()
+                    )
                 )
             else:
                 parm_types_numba.append(
@@ -654,14 +658,18 @@ class HIPDeviceLib:
             lmod = builder.module
             fretty = context.get_value_type(result_type_numba)
             fargtys = [
-                context.get_value_type(parm_type) for parm_type in parm_types_numba
+                context.get_value_type(parm_type)
+                for parm_type in parm_types_numba
             ]
             fnty = ir.FunctionType(fretty, fargtys)
             fn = cgutils.get_or_insert_function(lmod, fnty, func_name)
             return builder.call(fn, args)
 
         # NOTE: 'impl_registry.lower(...)' is expanded: 'HIPDeviceLib.impl_registry.functions.append((core, key, *numba_parm_types))' and returns 'core'
-        return (impl_registry.lower(key, *parm_types_numba)(callgen), parm_types_numba)
+        return (
+            impl_registry.lower(key, *parm_types_numba)(callgen),
+            parm_types_numba,
+        )
 
     @staticmethod
     def register_call_generator_for_function_with_ptr_parms(
@@ -769,13 +777,13 @@ class HIPDeviceLib:
             `rocm.llvm.c.types.LLVMOpaqueModule`:
                 The ROCm LLVM module wrapper.
         """
-        if self._module == None:
+        if self._module is None:
             self._module = llvmutils._get_module(self._bitcode)[0]
         return self._module
 
     @module.deleter
     def module(self):
-        if self._module != None:
+        if self._module is not None:
             llvmutils._get_module_dispose_all(self._module)
             self._module = None
 
@@ -786,9 +794,11 @@ class HIPDeviceLib:
     @property
     def bitcode(self):
         """Returns the bitcode-version of the HIP device lib"""
-        if self.amdgpu_arch == None:
-            raise ValueError("cannot generate bitcode for AMDGPU architecture 'None'")
-        if self._bitcode == None:
+        if self.amdgpu_arch is None:
+            raise ValueError(
+                "cannot generate bitcode for AMDGPU architecture 'None'"
+            )
+        if self._bitcode is None:
             self._bitcode = self._create_hiprtc_runtime_bitcode()
         return self._bitcode
 
@@ -807,8 +817,10 @@ class HIPDeviceLib:
         The prefix is prepended to prevent conflicts with the types/functions declared/defined by the HIPRTC runtime header.
         """
         global DEVICE_FUN_PREFIX
-        wrappers = HIPDeviceLib._HIPDEVICELIB_SOURCE.render_device_function_wrappers(
-            prefix=DEVICE_FUN_PREFIX
+        wrappers = (
+            HIPDeviceLib._HIPDEVICELIB_SOURCE.render_device_function_wrappers(
+                prefix=DEVICE_FUN_PREFIX
+            )
         )
 
         hipdevicelib_src = self._HIPDEVICELIB_SOURCE.source + wrappers

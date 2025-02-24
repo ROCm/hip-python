@@ -22,8 +22,8 @@
 
 """Cache for link-time dependencies.
 
-This module contains a simple cache that records arbitrary objects for triples of 
-file content, compiler options, and target architecture. 
+This module contains a simple cache that records arbitrary objects for triples of
+file content, compiler options, and target architecture.
 The cache is intended for caching linker dependencies for Numba HIP.
 
 The cache does not compute a cache key from a file's name but always from the file's content
@@ -47,7 +47,9 @@ class LinkerCache:
         self._cache = {}
 
     @staticmethod
-    def _make_cache_key(buffer, arch, opts, clean_str_key_components: bool = True):
+    def _make_cache_key(
+        buffer, arch, opts, clean_str_key_components: bool = True
+    ):
         """Make a key from the input triple '`buffer`'-``arch``-``opts``.
 
         Args:
@@ -102,8 +104,10 @@ class LinkerCache:
         Raises:
             `KeyError`: If argument ``entry`` is ``None`` and no entry is specified.
         """
-        key = self._make_cache_key(buffer, arch, opts, clean_str_key_components)
-        if entry == None:
+        key = self._make_cache_key(
+            buffer, arch, opts, clean_str_key_components
+        )
+        if entry is None:
             return self._cache[key]  # may fail with key error
         else:
             self._cache[key] = entry
@@ -112,7 +116,9 @@ class LinkerCache:
     def get_or_insert_entry_for_file(self, filepath: str, *args, **kwargs):
         """Variant of get_or_insert_entry_for_buffer that takes a file path instead of a buffer."""
         with open(filepath, "r") as infile:
-            return self.get_or_insert_entry_for_buffer(infile.read(), *args, **kwargs)
+            return self.get_or_insert_entry_for_buffer(
+                infile.read(), *args, **kwargs
+            )
 
     def delete_entry_for_buffer(
         self, buffer, arch, opts, clean_str_key_components: bool = True
@@ -131,7 +137,9 @@ class LinkerCache:
 
 _cache = LinkerCache.get()._cache
 _make_cache_key = LinkerCache.get()._make_cache_key
-get_or_insert_entry_for_buffer = LinkerCache.get().get_or_insert_entry_for_buffer
+get_or_insert_entry_for_buffer = (
+    LinkerCache.get().get_or_insert_entry_for_buffer
+)
 get_or_insert_entry_for_file = LinkerCache.get().get_or_insert_entry_for_file
 delete_entry_for_buffer = LinkerCache.get().delete_entry_for_buffer
 delete_entry_for_file = LinkerCache.get().delete_entry_for_file

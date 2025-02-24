@@ -60,28 +60,24 @@ Attributes:
         for functions, attributes and globals.
 """
 
-from functools import reduce
 import operator
-import math
+from functools import reduce
 
-from llvmlite import ir
 import llvmlite.binding as ll
-
-from numba.core.typing.npydecl import parse_dtype
+from llvmlite import ir
+from numba.core import cgutils, types
 from numba.core.datamodel import models
-from numba.core import types, cgutils
-from numba.np import ufunc_db
-from numba.np.npyimpl import register_ufuncs
+from numba.core.typing.npydecl import parse_dtype
 
-from numba import hip
 import numba.hip.amdgcn as amdgcn
-from . import hipstubs
+from numba import hip
+from numba.hip.typing_lowering.registries import impl_registry
 
 # from numba import HIP
 # from numba.HIP import nvvmutils, stubs, errors
-from numba.hip.typing_lowering.types import dim3, HIPDispatcher
+from numba.hip.typing_lowering.types import HIPDispatcher, dim3
 
-from numba.hip.typing_lowering.registries import impl_registry
+from . import hipstubs
 
 lower = impl_registry.lower
 lower_attr = impl_registry.lower_getattr
@@ -107,7 +103,9 @@ def initialize_dim3(name, context, builder, sig, args):
 
     stub = getattr(hipdevicelib, "get_" + name)
     cfargs = (context, builder, sig, ())
-    components = [_call_first(stub, *cfargs) for stub in (stub.x, stub.y, stub.z)]
+    components = [
+        _call_first(stub, *cfargs) for stub in (stub.x, stub.y, stub.z)
+    ]
     return cgutils.pack_struct(builder, components)
 
 
@@ -264,7 +262,9 @@ def _generic_array(
         lmod = builder.module
 
         # Create global variable in the requested address space
-        gvmem = cgutils.add_global_variable(lmod, laryty, symbol_name, addrspace)
+        gvmem = cgutils.add_global_variable(
+            lmod, laryty, symbol_name, addrspace
+        )
         # Specify alignment to avoid misalignment bug
         align = context.get_abi_sizeof(lldtype)
         # Alignment is required to be a power of 2 for shared memory. If it is
@@ -274,16 +274,18 @@ def _generic_array(
         if dynamic_smem:
             gvmem.linkage = "external"
         else:
-            ## Comment out the following line to workaround a NVVM bug
-            ## which generates a invalid symbol name when the linkage
-            ## is internal and in some situation.
-            ## See _get_unique_smem_id()
+            # # Comment out the following line to workaround a NVVM bug
+            # # which generates a invalid symbol name when the linkage
+            # # is internal and in some situation.
+            # # See _get_unique_smem_id()
             # gvmem.linkage = lc.LINKAGE_INTERNAL
 
             gvmem.initializer = ir.Constant(laryty, ir.Undefined)
 
         # Convert to generic address-space
-        dataptr = builder.addrspacecast(gvmem, ir.PointerType(ir.IntType(8)), "generic")
+        dataptr = builder.addrspacecast(
+            gvmem, ir.PointerType(ir.IntType(8)), "generic"
+        )
 
     targetdata = ll.create_target_data(
         amdgcn.DATA_LAYOUT

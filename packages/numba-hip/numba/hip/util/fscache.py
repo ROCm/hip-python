@@ -25,10 +25,10 @@ __author__ = "Advanced Micro Devices, Inc."
 """Filesystem cache for architecture-specific temporary compilation results.
 """
 
-import os
-import tempfile
-import shutil
 import logging
+import os
+import shutil
+import tempfile
 from pathlib import Path
 
 from numba.hip import hipconfig as _hipconfig
@@ -38,7 +38,9 @@ _log = logging.getLogger(__name__)
 
 def get_cache_dir() -> str:
     """Returns the cache directory."""
-    return os.path.join(tempfile.gettempdir(), "numba", "hip", f"uid_{os.getuid()}")
+    return os.path.join(
+        tempfile.gettempdir(), "numba", "hip", f"uid_{os.getuid()}"
+    )
 
 
 def get_cached_file_path(arch: str, prefix: str, ext: str) -> str:
@@ -58,7 +60,12 @@ def read_cached_file(arch: str, prefix: str, ext: str):
     return content
 
 
-def write_cached_file(content: str, arch: str, prefix: str, ext: str):
+def write_cached_file(
+    content,  # type: bytes
+    arch,  # type: str
+    prefix,  # type: str
+    ext,  # type: str
+):
     """
     Loads a cached file or throws FileNotFoundError if file doesn't exist.
 

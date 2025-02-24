@@ -46,8 +46,10 @@
 # SOFTWARE.
 
 from warnings import warn
-from numba.core import types, config, sigutils
+
+from numba.core import config, sigutils, types
 from numba.core.errors import DeprecationError, NumbaInvalidConfigWarning
+
 from numba.hip.compiler import declare_device_function
 from numba.hip.dispatcher import HIPDispatcher
 
@@ -60,7 +62,8 @@ _msg_deprecated_signature_arg = (
 )
 
 
-def jit(
+# TODO function too complex (C901)
+def jit(  # noqa: C901
     func_or_sig=None,
     device=False,
     inline=False,
@@ -69,7 +72,7 @@ def jit(
     opt=True,
     lineinfo=False,
     cache=False,
-    **kws
+    **kws,
 ):
     """
     JIT compile a Python function for AMD GPUs.
@@ -111,7 +114,7 @@ def jit(
                     HIP C++ buffer (#0) with len (#1).
                 A `tuple`(buffer:`str`|bytes-like, len:`int`|None, kind:"hip", opts:`str`|`list`)
                     HIP C++ buffer (#0) with len (#1) and compile options (#3).
-            
+
             Defaults to ``[]``.
         debug (`bool` or ``None``, optional):
             If True, check for exceptions thrown when executing the
@@ -258,7 +261,7 @@ def jit(
                         lineinfo=lineinfo,
                         link=link,
                         cache=cache,
-                        **kws
+                        **kws,
                     )
 
             return autojitwrapper

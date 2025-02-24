@@ -62,16 +62,17 @@ Note:
     and upgrading as frictionless as possible.
 """
 
-import os
-
 import logging
+import os
 
 _log = logging.getLogger(__name__)
 
 ENABLE_MIDEND_OPT = bool(
     int(os.environ.get("NUMBA_HIP_MIDEND_OPT", False))
 )  # enable midend optimizations
-OPT_LEVEL = int(os.environ.get("NUMBA_HIP_OPT_LEVEL", 3))  # default optimization level
+OPT_LEVEL = int(
+    os.environ.get("NUMBA_HIP_OPT_LEVEL", 3)
+)  # default optimization level
 DEFAULT_ARCH_WITH_FEATURES = int(
     os.environ.get("NUMBA_HIP_DEFAULT_ARCH_WITH_FEATURES", 0)
 )  # Use a device's default arch with features, e.g. 'gfx90a:xnack-'

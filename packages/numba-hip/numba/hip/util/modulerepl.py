@@ -20,18 +20,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import ast
 import os
 import sys
 import types
-import ast
+import typing  # noqa: F401
 
 AST_VERBOSE = False  # Verbose output when doing AST comparison
 
 
 def create_module_from_snippet(
-    module_content: str,
-    context: dict = {},  # in
-    preprocess: callable = lambda content: content,
+    module_content,  # type: str
+    context={},  # type: dict
+    preprocess=lambda content: content,  # type: typing.Callable
 ):
     """Executes the module code in the given module context and then returns the module's dict.
 
@@ -44,15 +45,16 @@ def create_module_from_snippet(
     content_preprocessed = preprocess(module_content)
     # if isinstance(content_derived,str): print(content_derived)
     exec(
-        compile(content_preprocessed, f"<string> <modified>", "exec"), module_dict
+        compile(content_preprocessed, "<string> <modified>", "exec"),
+        module_dict,
     )  # populates module_context
     return module_dict
 
 
 def load_module(
-    module_path: str,
-    context: dict = dict(),  # in
-    preprocess: callable = lambda content: content,
+    module_path,  # type: str
+    context={},  # type: dict
+    preprocess=lambda content: content,  # type: typing.Callable
 ):
     """Executes the module code in the given module context and then returns the module's dict.
 
@@ -70,16 +72,18 @@ def load_module(
 
 
 def create_derived_module(
-    new_global_name: str,
-    module_path_or_content: str,
-    is_file_path: bool = True,
-    context: dict = {},  # in
-    preprocess: callable = lambda content: content,
+    new_global_name,  # type: str
+    module_path_or_content,  # type: str
+    is_file_path=True,  # type: bool
+    context={},  # type: dict
+    preprocess=lambda content: content,  # type: typing.Callable
 ):
     """Wraps result of `load_module`/`create_module_from_snippet` into a `types.ModuleType` with the given name."""
     new_module = types.ModuleType(new_global_name)
     if is_file_path:
-        source_module_dict = load_module(module_path_or_content, context, preprocess)
+        source_module_dict = load_module(
+            module_path_or_content, context, preprocess
+        )
     else:
         source_module_dict = create_module_from_snippet(
             module_path_or_content, context, preprocess
@@ -101,7 +105,11 @@ def create_and_register_derived_module(
             f"there is already a module with name '{new_global_name}' in 'sys.modules'."
         )
     new_module = create_derived_module(
-        new_global_name, module_path_or_content, is_file_path, context, preprocess
+        new_global_name,
+        module_path_or_content,
+        is_file_path,
+        context,
+        preprocess,
     )
     sys.modules[new_global_name] = new_module
     return new_module
@@ -121,7 +129,8 @@ def to_ast_node(expr: str, **kwattribs):
     return expr
 
 
-def compare_ast_nodes(node: ast.AST, other: ast.AST):
+# TODO: function too complex (C901)
+def compare_ast_nodes(node: ast.AST, other: ast.AST):  # noqa: C901
     """Checks if the fields of the two nodes match, recursively.
     Does not compare any metadata such as location information.
 
@@ -135,7 +144,9 @@ def compare_ast_nodes(node: ast.AST, other: ast.AST):
                 b = second[i]
             except IndexError:
                 return False  # lists have not the same size
-            mask = 2 * int(isinstance(a, ast.AST)) + int(isinstance(b, ast.AST))
+            mask = 2 * int(isinstance(a, ast.AST)) + int(
+                isinstance(b, ast.AST)
+            )
             if mask == 0b11:
                 if not compare_ast_nodes(a, b):
                     return False
@@ -163,7 +174,9 @@ def compare_ast_nodes(node: ast.AST, other: ast.AST):
             return False  # other tree is smaller
         if n_k != o_k:
             return False  # keys do not match
-        mask = 2 * int(isinstance(n_v, ast.AST)) + int(isinstance(o_v, ast.AST))
+        mask = 2 * int(isinstance(n_v, ast.AST)) + int(
+            isinstance(o_v, ast.AST)
+        )
         if mask == 0b11:
             if AST_VERBOSE:
                 print(f"{n_k}:{type(n_v)} vs {o_k}:{type(o_v)}")
@@ -302,13 +315,13 @@ class ModuleReplicator:
         Returns:
             types.ModuleType: The new module object.
         """
-        if orig_name == None:
+        if orig_name is None:
             orig_name = new_name
         final_context = dict(self.base_context)
         final_context.update(extra_context)
         preprocess_all = (
             self.preprocess_all
-            if (self.preprocess_all != None and self.enable_preprocess_all)
+            if (self.preprocess_all is not None and self.enable_preprocess_all)
             else (lambda content: content)
         )
         if not from_file and not isinstance(module_content, str):
@@ -362,13 +375,13 @@ class ModuleReplicator:
         Returns:
             types.ModuleType: The new module object.
         """
-        if orig_name == None:
+        if orig_name is None:
             orig_name = new_name
         final_context = dict(self.base_context)
         final_context.update(extra_context)
         preprocess_all = (
             self.preprocess_all
-            if (self.preprocess_all != None and self.enable_preprocess_all)
+            if (self.preprocess_all is not None and self.enable_preprocess_all)
             else (lambda content: content)
         )
         if not from_file and not isinstance(module_content, str):

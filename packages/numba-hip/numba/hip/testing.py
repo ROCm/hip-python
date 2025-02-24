@@ -47,18 +47,20 @@
 
 import os
 import platform
+import unittest
+from pathlib import Path
+
+from numba.core import config
+from numba.tests.support import SerialMixin, TestCase
+
+# from numba.hip.rocmpaths import get_rocm_path
+from numba.hip.hipdrv import driver  # , devices, libs
+
 # import shutil
 
-from numba.tests.support import SerialMixin
-# from numba.hip.rocmpaths import get_rocm_path
-from numba.hip.hipdrv import driver # , devices, libs
-from numba.core import config
-from numba.tests.support import TestCase
-from pathlib import Path
-import unittest
 
 numba_hip_dir = Path(__file__).parent
-test_data_dir = numba_hip_dir / 'tests' / 'data'
+test_data_dir = numba_hip_dir / "tests" / "data"
 
 
 class HIPTestCase(SerialMixin, TestCase):
@@ -82,6 +84,7 @@ class HIPTestCase(SerialMixin, TestCase):
         config.CUDA_LOW_OCCUPANCY_WARNINGS = self._low_occupancy_warnings
         config.CUDA_WARN_ON_IMPLICIT_COPY = self._warn_on_implicit_copy
 
+
 # CUDA interoperability
 CUDATestCase = HIPTestCase
 
@@ -97,21 +100,27 @@ class ContextResettingTestCase(HIPTestCase):
     def tearDown(self):
         super().tearDown()
         from numba.hip.hipdrv.devices import reset
+
         reset()
 
+
 def _hipify_reason(reason: str):
-    return reason.replace("CUDA","HIP")
+    return reason.replace("CUDA", "HIP")
+
 
 def skip_on_hipsim(reason):
     """Skip this test if running on the HIP simulator"""
     return unittest.skipIf(config.ENABLE_CUDASIM, _hipify_reason(reason))
 
+
 # CUDA interoperability
 skip_on_cudasim = skip_on_hipsim
+
 
 def skip_unless_hipsim(reason):
     """Skip this test if running on HIP hardware"""
     return unittest.skipUnless(config.ENABLE_CUDASIM, _hipify_reason(reason))
+
 
 # HIP not supported
 # def skip_unless_conda_hiptoolkit(reason):
@@ -121,11 +130,16 @@ def skip_unless_hipsim(reason):
 
 def skip_if_external_memmgr(reason):
     """Skip test if an EMM Plugin is in use"""
-    return unittest.skipIf(config.CUDA_MEMORY_MANAGER != 'default', _hipify_reason(reason))
+    return unittest.skipIf(
+        config.CUDA_MEMORY_MANAGER != "default", _hipify_reason(reason)
+    )
 
 
 def skip_under_hip_memcheck(reason):
-    return unittest.skipIf(os.environ.get('CUDA_MEMCHECK') is not None, _hipify_reason(reason))
+    return unittest.skipIf(
+        os.environ.get("CUDA_MEMCHECK") is not None, _hipify_reason(reason)
+    )
+
 
 # TODO(HIP/AMD) not supported
 # def skip_without_nvdisasm(reason):
@@ -141,17 +155,20 @@ def skip_under_hip_memcheck(reason):
 
 def skip_on_arm(reason):
     cpu = platform.processor()
-    is_arm = cpu.startswith('arm') or cpu.startswith('aarch')
+    is_arm = cpu.startswith("arm") or cpu.startswith("aarch")
     return unittest.skipIf(is_arm, reason)
 
 
 def skip_if_hip_includes_missing(fn):
     # Skip when hip/hip_runtime.h is not available - generally this should indicate
     # whether the HIP includes are available or not
-    hip_runtime_h = os.path.join(config.CUDA_INCLUDE_PATH, 'hip/hip_runtime.h')
-    hip_runtime_h_file = (os.path.exists(hip_runtime_h) and os.path.isfile(hip_runtime_h))
-    reason = 'HIP include dir not available on this system'
+    hip_runtime_h = os.path.join(config.CUDA_INCLUDE_PATH, "hip/hip_runtime.h")
+    hip_runtime_h_file = os.path.exists(hip_runtime_h) and os.path.isfile(
+        hip_runtime_h
+    )
+    reason = "HIP include dir not available on this system"
     return unittest.skipUnless(hip_runtime_h_file, reason)(fn)
+
 
 skip_if_cuda_includes_missing = skip_if_hip_includes_missing
 
@@ -205,8 +222,10 @@ skip_if_cuda_includes_missing = skip_if_hip_includes_missing
 #     else:
 #         return unittest.expectedFailure(fn)
 
+
 def skip_with_cuda_python(reason):
     return unittest.skipIf(driver.USE_NV_BINDING, reason)
+
 
 # TODO(HIP/AMD) not supported
 # def hipdevrt_missing():

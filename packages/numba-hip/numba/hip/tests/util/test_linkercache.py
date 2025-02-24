@@ -23,10 +23,8 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
-import textwrap
-import pprint
-import tempfile
 import os
+import tempfile
 
 from numba.hip.util import linkercache
 

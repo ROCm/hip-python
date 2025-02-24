@@ -46,8 +46,6 @@
 # SOFTWARE.
 
 # Re export
-import sys
-
 #: from .stubs import (threadIdx, blockIdx, blockDim, gridDim, laneid, warpsize,
 #:                     syncwarp, shared, local, const, atomic,
 #:                     shfl_sync_intrinsic, vote_sync_intrinsic, match_any_sync, #: TODO: HIP/AMD: provide the correct intrinsics, support trivial _sync intrinsics
@@ -55,38 +53,39 @@ import sys
 #:                     threadfence, selp, popc, brev, clz, ffs, fma, cbrt, cg,
 #:                     activemask, lanemask_lt, nanosleep, fp16,
 #:                     _vector_type_stubs)
-from .typing_lowering import hip as _hip, hipdevicelib as _hipdevicelib
+from .typing_lowering import hip as _hip
+from .typing_lowering import hipdevicelib as _hipdevicelib
 
 globals().update(_hipdevicelib.thestubs)
 globals().update(_hip.thestubs)
 
-#: from .intrinsics import (grid, gridsize, syncthreads, syncthreads_and,
-#:                          syncthreads_count, syncthreads_or)
-from .intrinsics import grid, gridsize
-from .hipdrv.error import HipSupportError
-from .hipdrv.error import HipSupportError as CudaSupportError
-from .hipdrv.driver import (
-    BaseHIPMemoryManager,
-    HostOnlyHIPMemoryManager,
-    HostOnlyCUDAMemoryManager,
-    GetIpcHandleMixin,
-    MemoryPointer,
-    MappedMemory,
-    PinnedMemory,
-    MemoryInfo,
-    IpcHandle,
-    set_memory_manager,
-)
-from numba.cuda.cudadrv.runtime import runtime
+from numba.cuda.cudadrv.runtime import runtime  # noqa: E402
 
 #: from .cudadrv import nvvm #: FIXME: HIP/AMD: not supported
-from numba.hip import initialize
-from .errors import KernelRuntimeError
+from numba.hip import initialize  # noqa: E402
 
-from .decorators import jit, declare_device
-from .api import *
-from .api import _auto_device
-from .args import In, Out, InOut
+from .api import *  # noqa: F403, E402
+from .api import _auto_device  # noqa: F401, E402
+from .args import In, InOut, Out  # noqa: F401, E402
+from .decorators import declare_device, jit  # noqa: F401, E402
+from .errors import KernelRuntimeError  # noqa: F401, E402
+from .hipdrv.driver import BaseHIPMemoryManager  # noqa: F401, E402
+from .hipdrv.driver import GetIpcHandleMixin  # noqa: F401, E402
+from .hipdrv.driver import HostOnlyCUDAMemoryManager  # noqa: F401, E402
+from .hipdrv.driver import HostOnlyHIPMemoryManager  # noqa: F401, E402
+from .hipdrv.driver import IpcHandle  # noqa: F401, E402
+from .hipdrv.driver import MappedMemory  # noqa: F401, E402
+from .hipdrv.driver import MemoryInfo  # noqa: F401, E402
+from .hipdrv.driver import MemoryPointer  # noqa: F401, E402
+from .hipdrv.driver import PinnedMemory  # noqa: F401, E402
+from .hipdrv.driver import set_memory_manager  # noqa: F401, E402
+from .hipdrv.error import HipSupportError  # noqa: E402
+
+CudaSupportError = HipSupportError
+
+#: from .intrinsics import (grid, gridsize, syncthreads, syncthreads_and,
+#:                          syncthreads_count, syncthreads_or)
+from .intrinsics import grid, gridsize  # noqa: F401, E402
 
 #: from .kernels import reduction #: FIXME: HIP/AMD: not supported yet
 
@@ -105,11 +104,11 @@ def is_available():
     # below is to handle this case.
     driver_is_available = False
     try:
-        driver_is_available = driver.driver.is_available
+        driver_is_available = driver.driver.is_available  # noqa: F405
     except HipSupportError:
         pass
 
-    return driver_is_available  #:  and nvvm.is_available() #: TODO: HIP/AMD: not supported yet
+    return driver_is_available  # and nvvm.is_available() TODO(HIP/AMD): check if required
 
 
 def is_supported_version():
@@ -134,7 +133,9 @@ def cuda_error():
     If there was an error initializing the driver, a string describing the
     error is returned.
     """
-    return driver.driver.initialization_error  # driver avail via 'from api import *'
+    return (
+        driver.driver.initialization_error  # noqa: F405
+    )  # driver avail via 'from api import *'
 
 
 # make all cuda names also available via hip name

@@ -48,20 +48,16 @@
 # CUDA built-in Vector Types
 # https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#built-in-vector-types
 
-from typing import List, Tuple, Dict
+from typing import Dict, List, Tuple
 
-from numba import types
 from numba.core import cgutils
 from numba.core.extending import make_attribute_wrapper, models, register_model
-from numba.core.typing.templates import ConcreteTemplate
-from numba.core.typing.templates import signature
-from numba.hip.typing_lowering.hip import hipstubs as stubs
-from numba.hip.errors import HipLoweringError
+from numba.core.typing.templates import ConcreteTemplate, signature
 
-from numba.hip.typing_lowering.registries import (
-    typing_registry,
-    impl_registry
-)
+from numba import types
+from numba.hip.errors import HipLoweringError
+from numba.hip.typing_lowering.hip import hipstubs as stubs
+from numba.hip.typing_lowering.registries import impl_registry, typing_registry
 
 register = typing_registry.register
 register_attr = typing_registry.register_attr
@@ -97,7 +93,7 @@ def make_vector_type(
     name: str,
     base_type: types.Type,
     attr_names: Tuple[str, ...],
-    user_facing_object
+    user_facing_object,
 ) -> types.Type:
     """Create a vector type.
 
@@ -196,39 +192,41 @@ def enable_vector_type_ctor(
         lower(ctor, *arglist)(lowering)
 
 
-vector_types : Dict[str, VectorType] = {}
+vector_types: Dict[str, VectorType] = {}
 
 
-def build_constructor_overloads(base_type, vty_name, num_elements, arglists, l):
+def build_constructor_overloads(
+    base_type, vty_name, num_elements, arglists, lst
+):
     """
     For a given vector type, build a list of overloads for its constructor.
     """
 
     # TODO: speed up with memoization
     if num_elements == 0:
-        arglists.append(l[:])
+        arglists.append(lst[:])
 
     for i in range(1, num_elements + 1):
         if i == 1:
             # For 1-element component, it can construct with either a
             # primitive type or other 1-element component.
-            l.append(base_type)
+            lst.append(base_type)
             build_constructor_overloads(
-                base_type, vty_name, num_elements - i, arglists, l
+                base_type, vty_name, num_elements - i, arglists, lst
             )
-            l.pop(-1)
+            lst.pop(-1)
 
-            l.append(vector_types[f"{vty_name[:-1]}1"])
+            lst.append(vector_types[f"{vty_name[:-1]}1"])
             build_constructor_overloads(
-                base_type, vty_name, num_elements - i, arglists, l
+                base_type, vty_name, num_elements - i, arglists, lst
             )
-            l.pop(-1)
+            lst.pop(-1)
         else:
-            l.append(vector_types[f"{vty_name[:-1]}{i}"])
+            lst.append(vector_types[f"{vty_name[:-1]}{i}"])
             build_constructor_overloads(
-                base_type, vty_name, num_elements - i, arglists, l
+                base_type, vty_name, num_elements - i, arglists, lst
             )
-            l.pop(-1)
+            lst.pop(-1)
 
 
 def _initialize():
@@ -246,9 +244,9 @@ def _initialize():
         vector_types[type_name] = vector_type
 
     for vty in vector_types.values():
-        arglists, l = [], []
+        arglists, lst = [], []
         build_constructor_overloads(
-            vty.base_type, vty.name, vty.num_elements, arglists, l
+            vty.base_type, vty.name, vty.num_elements, arglists, lst
         )
         enable_vector_type_ctor(vty, arglists)
 

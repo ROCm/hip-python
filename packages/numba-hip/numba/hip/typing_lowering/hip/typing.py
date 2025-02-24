@@ -59,18 +59,22 @@ Attributes:
 """
 
 from numba.core import types
-from numba.core.typing.npydecl import parse_dtype, parse_shape, register_number_classes
+from numba.core.typing.npydecl import (
+    parse_dtype,
+    parse_shape,
+    register_number_classes,
+)
 from numba.core.typing.templates import (
     AttributeTemplate,
     CallableTemplate,
-    Registry,
 )
+
+from numba.hip.typing_lowering.registries import typing_registry
 
 #: from numba.hip.types import dim3, grid_group
 from numba.hip.typing_lowering.types import dim3
-from . import hipstubs
 
-from numba.hip.typing_lowering.registries import typing_registry
+from . import hipstubs
 
 register = typing_registry.register
 register_attr = typing_registry.register_attr
@@ -102,7 +106,9 @@ class Hip_array_decl(CallableTemplate):
                 if not isinstance(shape, types.IntegerLiteral):
                     return None
             elif isinstance(shape, (types.Tuple, types.UniTuple)):
-                if any([not isinstance(s, types.IntegerLiteral) for s in shape]):
+                if any(
+                    [not isinstance(s, types.IntegerLiteral) for s in shape]
+                ):
                     return None
             else:
                 return None

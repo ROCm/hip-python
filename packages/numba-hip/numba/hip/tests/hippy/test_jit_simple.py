@@ -49,7 +49,7 @@
 
 Note:
     If you run this test via `pytest -v --durations=0 <test-file-name>.py`,
-    the rest results will be listed together with the execution time 
+    the rest results will be listed together with the execution time
     per test.
 """
 import os
@@ -57,21 +57,23 @@ import os
 from numba import hip
 
 hip.pose_as_cuda()
-from numba import cuda
-from numba.cuda.testing import unittest, CUDATestCase
+from numba.cuda.testing import CUDATestCase, unittest  # noqa: E402
+
+from numba import cuda  # noqa: E402
 
 DUMP_IR = bool(os.environ.get("NUMBA_HIP_TESTS_DUMP_IR", False))
 
 # Disable low occupancy warnings for our simple kernels
-from numba import config
+from numba import config  # noqa: E402
 
 config.CUDA_LOW_OCCUPANCY_WARNINGS = False
 
 # Numba user code imports
 
-import numpy as np
-import math
-from math import sin
+import math  # noqa: E402
+from math import sin  # noqa: E402
+
+import numpy as np  # noqa: E402
 
 runtimes = ""
 
@@ -140,10 +142,10 @@ class TestJitSimple(CUDATestCase):
 
         def mydevicefun():
             x, y = cuda.grid(2)
-            dim_x, dim_y = cuda.gridsize(2)
+            dim_x, dim_y = cuda.gridsize(2)  # noqa: F841
             cuda.syncthreads()
-            ws = cuda.warpsize
-            lane = cuda.laneid
+            ws = cuda.warpsize  # noqa: F841
+            lane = cuda.laneid  # noqa: F841
             cuda.cos(5)
             cuda.cos(5.0)
             math.cos(5)
@@ -153,11 +155,15 @@ class TestJitSimple(CUDATestCase):
             math.degrees(2)
             x = cuda.threadIdx.x
             lA = cuda.local.array(shape=(4, 4), dtype=np.float32)
-            sA = cuda.shared.array(shape=(4, 4), dtype=np.int64)
+            sA = cuda.shared.array(shape=(4, 4), dtype=np.int64)  # noqa: F841
             lA[x] = 5
 
         ir, restype = cuda.compile_llvm_ir_for_current_device(
-            pyfunc=mydevicefun, sig=(), device=True, to_bc=False, name="mydevicefun"
+            pyfunc=mydevicefun,
+            sig=(),
+            device=True,
+            to_bc=False,
+            name="mydevicefun",
         )
         self.assertIn("mydevicefun", ir)
         if DUMP_IR:

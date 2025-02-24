@@ -46,8 +46,13 @@
 # SOFTWARE.
 
 import numpy as np
+
 from numba import hip as cuda
-from numba.hip.testing import unittest, HIPTestCase as CUDATestCase, skip_on_hipsim as skip_on_cudasim
+from numba.hip.testing import HIPTestCase as CUDATestCase
+from numba.hip.testing import skip_on_hipsim as skip_on_cudasim
+from numba.hip.testing import (
+    unittest,
+)
 
 
 class TestArrayAttr(CUDATestCase):
@@ -91,7 +96,7 @@ class TestArrayAttr(CUDATestCase):
     def test_ravel_1d(self):
         ary = np.arange(60)
         dary = cuda.to_device(ary)
-        for order in 'CFA':
+        for order in "CFA":
             expect = ary.ravel(order=order)
             dflat = dary.ravel(order=order)
             flat = dflat.copy_to_host()
@@ -99,14 +104,14 @@ class TestArrayAttr(CUDATestCase):
             self.assertEqual(flat.ndim, 1)
             self.assertPreciseEqual(expect, flat)
 
-    @skip_on_cudasim('CUDA Array Interface is not supported in the simulator')
+    @skip_on_cudasim("CUDA Array Interface is not supported in the simulator")
     def test_ravel_stride_1d(self):
         ary = np.arange(60)
         dary = cuda.to_device(ary)
         # No-copy stride device array
         darystride = dary[::2]
-        dary_data = dary.__cuda_array_interface__['data'][0]
-        ddarystride_data = darystride.__cuda_array_interface__['data'][0]
+        dary_data = dary.__cuda_array_interface__["data"][0]
+        ddarystride_data = darystride.__cuda_array_interface__["data"][0]
         self.assertEqual(dary_data, ddarystride_data)
         # Fail on ravel on non-contiguous array
         with self.assertRaises(NotImplementedError):
@@ -116,7 +121,7 @@ class TestArrayAttr(CUDATestCase):
         ary = np.arange(60)
         reshaped = ary.reshape(2, 5, 2, 3)
 
-        expect = reshaped.ravel(order='C')
+        expect = reshaped.ravel(order="C")
         dary = cuda.to_device(reshaped)
         dflat = dary.ravel()
         flat = dflat.copy_to_host()
@@ -125,7 +130,7 @@ class TestArrayAttr(CUDATestCase):
         self.assertPreciseEqual(expect, flat)
 
         # explicit order kwarg
-        for order in 'CA':
+        for order in "CA":
             expect = reshaped.ravel(order=order)
             dary = cuda.to_device(reshaped)
             dflat = dary.ravel(order=order)
@@ -134,15 +139,15 @@ class TestArrayAttr(CUDATestCase):
             self.assertEqual(flat.ndim, 1)
             self.assertPreciseEqual(expect, flat)
 
-    @skip_on_cudasim('CUDA Array Interface is not supported in the simulator')
+    @skip_on_cudasim("CUDA Array Interface is not supported in the simulator")
     def test_ravel_stride_c(self):
         ary = np.arange(60)
         reshaped = ary.reshape(2, 5, 2, 3)
 
         dary = cuda.to_device(reshaped)
         darystride = dary[::2, ::2, ::2, ::2]
-        dary_data = dary.__cuda_array_interface__['data'][0]
-        ddarystride_data = darystride.__cuda_array_interface__['data'][0]
+        dary_data = dary.__cuda_array_interface__["data"][0]
+        ddarystride_data = darystride.__cuda_array_interface__["data"][0]
         self.assertEqual(dary_data, ddarystride_data)
         with self.assertRaises(NotImplementedError):
             darystride.ravel()
@@ -150,7 +155,7 @@ class TestArrayAttr(CUDATestCase):
     def test_ravel_f(self):
         ary = np.arange(60)
         reshaped = np.asfortranarray(ary.reshape(2, 5, 2, 3))
-        for order in 'FA':
+        for order in "FA":
             expect = reshaped.ravel(order=order)
             dary = cuda.to_device(reshaped)
             dflat = dary.ravel(order=order)
@@ -159,14 +164,14 @@ class TestArrayAttr(CUDATestCase):
             self.assertEqual(flat.ndim, 1)
             self.assertPreciseEqual(expect, flat)
 
-    @skip_on_cudasim('CUDA Array Interface is not supported in the simulator')
+    @skip_on_cudasim("CUDA Array Interface is not supported in the simulator")
     def test_ravel_stride_f(self):
         ary = np.arange(60)
         reshaped = np.asfortranarray(ary.reshape(2, 5, 2, 3))
         dary = cuda.to_device(reshaped)
         darystride = dary[::2, ::2, ::2, ::2]
-        dary_data = dary.__cuda_array_interface__['data'][0]
-        ddarystride_data = darystride.__cuda_array_interface__['data'][0]
+        dary_data = dary.__cuda_array_interface__["data"][0]
+        ddarystride_data = darystride.__cuda_array_interface__["data"][0]
         self.assertEqual(dary_data, ddarystride_data)
         with self.assertRaises(NotImplementedError):
             darystride.ravel()
@@ -181,12 +186,12 @@ class TestArrayAttr(CUDATestCase):
 
     def test_reshape_f(self):
         ary = np.arange(10)
-        expect = ary.reshape(2, 5, order='F')
+        expect = ary.reshape(2, 5, order="F")
         dary = cuda.to_device(ary)
-        dary_reshaped = dary.reshape(2, 5, order='F')
+        dary_reshaped = dary.reshape(2, 5, order="F")
         got = dary_reshaped.copy_to_host()
         self.assertPreciseEqual(expect, got)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

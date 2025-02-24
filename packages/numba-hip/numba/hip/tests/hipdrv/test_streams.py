@@ -48,12 +48,14 @@
 import asyncio
 import functools
 import threading
+
 import numpy as np
+
 from numba import hip as cuda
+from numba.hip.testing import HIPTestCase as CUDATestCase
+from numba.hip.testing import skip_on_hipsim as skip_on_cudasim
 from numba.hip.testing import (
     unittest,
-    HIPTestCase as CUDATestCase,
-    skip_on_hipsim as skip_on_cudasim,
 )
 
 
@@ -139,6 +141,7 @@ class TestCudaStream(CUDATestCase):
         await done2
         self.assertTrue(done1.cancelled())
         self.assertTrue(done2.done())
+
 
 @unittest.skip("TODO(HIP/AMD) implement similar test")
 @skip_on_cudasim("CUDA Driver API unsupported in the simulator")

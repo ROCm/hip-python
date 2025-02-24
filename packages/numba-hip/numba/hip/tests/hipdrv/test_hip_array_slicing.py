@@ -46,15 +46,17 @@
 # SOFTWARE.
 
 from itertools import product
+from unittest.mock import patch
 
 import numpy as np
 
 from numba import hip as cuda
 from numba.hip.testing import (
+    HIPTestCase as CUDATestCase,  # , skip_on_cudasim TODO(HIP/AMD) enable simulator
+)
+from numba.hip.testing import (
     unittest,
-    HIPTestCase as CUDATestCase,
-)  # , skip_on_cudasim TODO(HIP/AMD) enable simulator
-from unittest.mock import patch
+)
 
 
 class CudaArrayIndexing(CUDATestCase):
@@ -133,7 +135,8 @@ class CudaArrayStridedSlice(CUDATestCase):
             for j in range(arr.shape[1]):
                 for k in range(arr.shape[2]):
                     np.testing.assert_equal(
-                        arr[i::2, j::2, k::2], darr[i::2, j::2, k::2].copy_to_host()
+                        arr[i::2, j::2, k::2],
+                        darr[i::2, j::2, k::2].copy_to_host(),
                     )
 
 
@@ -200,7 +203,7 @@ class CudaArraySlicing(CUDATestCase):
         # print(a[0,0,:])
         da = cuda.to_device(a)
 
-        ## TODO(HIP/AMD) non-contiguous memcopy fails
+        # # TODO(HIP/AMD) non-contiguous memcopy fails
         # for i in range(a.shape[0]):
         #     for j in range(a.shape[1]):
         #         suba = a[i, j, :]
@@ -208,13 +211,15 @@ class CudaArraySlicing(CUDATestCase):
         #         print(f"a[{i},{j},:] size={suba.size*suba.itemsize}")
         #         self.assertTrue(np.array_equal(da[i, j, :].copy_to_host(),
         #                                        a[i, j, :]))
-        ## TODO(HIP/AMD) non-contiguous memcopy fails
+        # # TODO(HIP/AMD) non-contiguous memcopy fails
         # for j in range(a.shape[2]):
         #     self.assertTrue(np.array_equal(da[i, :, j].copy_to_host(),
         #                                    a[i, :, j]))
         for i in range(a.shape[1]):
             for j in range(a.shape[2]):
-                self.assertTrue(np.array_equal(da[:, i, j].copy_to_host(), a[:, i, j]))
+                self.assertTrue(
+                    np.array_equal(da[:, i, j].copy_to_host(), a[:, i, j])
+                )
 
     def test_select_c(self):
         """
@@ -232,14 +237,16 @@ class CudaArraySlicing(CUDATestCase):
             for j in range(a.shape[1]):
                 # z-y slice, x stride is 1 (8 B, double)
                 # print(f"\nNEW {i},{j}\n")
-                self.assertTrue(np.array_equal(da[i, j, :].copy_to_host(), a[i, j, :]))
-            ## TODO(HIP/AMD) non-contiguous memcopy fails
+                self.assertTrue(
+                    np.array_equal(da[i, j, :].copy_to_host(), a[i, j, :])
+                )
+            # # TODO(HIP/AMD) non-contiguous memcopy fails
             # for j in range(a.shape[2]):
             #     # z-x slice, y stride is 7 (56 B, 7x double), size of a z-x-slice is 6 (48 B).
             #     # print(f"\nNEW {i},{j}\n")
             #     self.assertTrue(np.array_equal(da[i, :, j].copy_to_host(),
             #                                    a[i, :, j]))
-        ## TODO(HIP/AMD) non-contiguous memcopy fails
+        # # TODO(HIP/AMD) non-contiguous memcopy fails
         # for i in range(a.shape[1]):
         #     for j in range(a.shape[2]):
         #         self.assertTrue(np.array_equal(da[:, i, j].copy_to_host(),
@@ -261,7 +268,9 @@ class CudaArraySlicing(CUDATestCase):
         arr = np.arange(12).reshape(3, 4)
         darr = cuda.to_device(arr)
         for x, y, w, s in product(range(-4, 4), repeat=4):
-            np.testing.assert_array_equal(arr[x:y, w:s], darr[x:y, w:s].copy_to_host())
+            np.testing.assert_array_equal(
+                arr[x:y, w:s], darr[x:y, w:s].copy_to_host()
+            )
 
     def test_empty_slice_1d(self):
         arr = np.arange(5)
@@ -272,7 +281,9 @@ class CudaArraySlicing(CUDATestCase):
         self.assertFalse(darr[:0][:0].copy_to_host())
         # out-of-bound slice just produces empty slices
         np.testing.assert_array_equal(darr[:0][:1].copy_to_host(), arr[:0][:1])
-        np.testing.assert_array_equal(darr[:0][-1:].copy_to_host(), arr[:0][-1:])
+        np.testing.assert_array_equal(
+            darr[:0][-1:].copy_to_host(), arr[:0][-1:]
+        )
 
     def test_empty_slice_2d(self):
         arr = np.arange(5 * 7).reshape(5, 7)
@@ -283,7 +294,9 @@ class CudaArraySlicing(CUDATestCase):
         self.assertFalse(darr[:0][:0].copy_to_host())
         # out-of-bound slice just produces empty slices
         np.testing.assert_array_equal(darr[:0][:1].copy_to_host(), arr[:0][:1])
-        np.testing.assert_array_equal(darr[:0][-1:].copy_to_host(), arr[:0][-1:])
+        np.testing.assert_array_equal(
+            darr[:0][-1:].copy_to_host(), arr[:0][-1:]
+        )
 
 
 class CudaArraySetting(CUDATestCase):

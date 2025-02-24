@@ -48,7 +48,7 @@
 """
 
 Note:
-    In contrast to Numba CUDA, the following implementations are already provided 
+    In contrast to Numba CUDA, the following implementations are already provided
     via hipdevicelib (vs. Numba CUDA libdevice):
 
     * ``syncthreads``
@@ -57,21 +57,20 @@ Note:
     * ``syncthreads_or``
 """
 
-from llvmlite import ir
-
-from numba import hip, types
 from numba.core import cgutils
 from numba.core.errors import RequireLiteralValue
-from numba.core.typing import signature
 from numba.core.extending import overload_attribute
+from numba.core.typing import signature
+
+from numba import hip, types
+from numba.hip import typing_lowering
 
 #: from numba.cuda import nvvmutils # TODO: HIP/AMD: not supported
 from numba.hip.extending import intrinsic
-
-from numba.hip import typing_lowering
-
 from numba.hip.typing_lowering.hipdevicelib import (
     get_global_id as _get_global_id,  # these stubs are created at runtime,
+)
+from numba.hip.typing_lowering.hipdevicelib import (
     get_gridsize as _get_gridsize,  # see numba.hip.hipdevicelib.HIPDeviceLib._create_extensions,
 )
 
@@ -128,9 +127,11 @@ def grid(typingctx, ndim):
         elif isinstance(restype, types.UniTuple):
             ids = [
                 _call_first(stub, *cfargs)
-                for stub in (_get_global_id.x, _get_global_id.y, _get_global_id.z)[
-                    : restype.count
-                ]
+                for stub in (
+                    _get_global_id.x,
+                    _get_global_id.y,
+                    _get_global_id.z,
+                )[: restype.count]
             ]
             # print(ids)
             return cgutils.pack_array(builder, ids)
@@ -169,9 +170,11 @@ def gridsize(typingctx, ndim):
             # ids = nvvmutils.get_global_id(builder, dim=restype.count)
             ids = [
                 _call_first(stub, *cfargs)
-                for stub in (_get_gridsize.x, _get_gridsize.y, _get_gridsize.z)[
-                    : restype.count
-                ]
+                for stub in (
+                    _get_gridsize.x,
+                    _get_gridsize.y,
+                    _get_gridsize.z,
+                )[: restype.count]
             ]
             return cgutils.pack_array(builder, ids)
 

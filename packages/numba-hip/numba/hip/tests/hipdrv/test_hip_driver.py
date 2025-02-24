@@ -46,16 +46,23 @@
 # SOFTWARE.
 
 import textwrap
+from ctypes import c_int, c_void_p, sizeof
 
-from ctypes import byref, c_int, c_void_p, sizeof
+from hip import hip as _hip  # via 'hip-python'
+from hip import hiprtc as _hiprtc
 
-from hip import hip as _hip, hiprtc as _hiprtc # via 'hip-python'
+from numba.hip.hipdrv import devices
+from numba.hip.hipdrv import driver as _driver
+from numba.hip.hipdrv.driver import (
+    device_to_host,
+    driver,
+    host_to_device,
+    launch_kernel,
+)
+from numba.hip.testing import HIPTestCase, unittest
 
-from numba.hip.hipdrv.driver import (host_to_device, device_to_host, driver,
-                                       launch_kernel)
-from numba.hip.hipdrv import devices, driver as _driver
-from numba.hip.testing import unittest, HIPTestCase
 # from numba.hip.testing import skip_on_cudasim # TODO(HIP/AMD) enable simulator
+
 
 def hip_check(call_result):
     err = call_result[0]
@@ -71,11 +78,15 @@ def hip_check(call_result):
         raise RuntimeError(str(err))
     return result
 
-kernel_hip = textwrap.dedent("""\
+
+kernel_hip = textwrap.dedent(
+    """\
 extern "C" __global__ void set_thread_idx(int* arr) {
   arr[threadIdx.x] = threadIdx.x;
 }
-""").encode("utf-8")
+"""
+).encode("utf-8")
+
 
 class HipProgram:
     def __init__(self, name: str, source: bytes):
@@ -85,7 +96,7 @@ class HipProgram:
         self.code = None
         self.code_size = None
 
-    def compile(self,amdgpu_arch: str):
+    def compile(self, amdgpu_arch: str):
         self.prog = hip_check(
             _hiprtc.hiprtcCreateProgram(self.source, self.name, 0, [], [])
         )
@@ -105,8 +116,9 @@ class HipProgram:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self.prog != None:
+        if self.prog is not None:
             hip_check(_hiprtc.hiprtcDestroyProgram(self.prog.createRef()))
+
 
 # @skip_on_cudasim('CUDA Driver API unsupported in the simulator')
 class TestCudaDriver(HIPTestCase):
@@ -115,7 +127,7 @@ class TestCudaDriver(HIPTestCase):
         self.assertTrue(len(devices.gpus) > 0)
         self.context = devices.get_context()
         device: _driver.Device = self.context.device
-        with HipProgram("kernel.hip",kernel_hip) as prog:
+        with HipProgram("kernel.hip", kernel_hip) as prog:
             self.amdgpu_codeobj = prog.compile(device.amdgpu_arch)
 
     def tearDown(self):
@@ -126,7 +138,7 @@ class TestCudaDriver(HIPTestCase):
         # TODO do something similar wih HIP
 
         module = self.context.create_module_from_codeobj(self.amdgpu_codeobj)
-        function = module.get_function('set_thread_idx')
+        function = module.get_function("set_thread_idx")
 
         array = (c_int * 100)()
 
@@ -140,12 +152,18 @@ class TestCudaDriver(HIPTestCase):
             ptr = c_void_p(int(ptr))
             stream = _driver.binding.CUstream(stream)
 
-        launch_kernel(function.handle,  # Kernel
-                      1,   1, 1,        # gx, gy, gz
-                      100, 1, 1,        # bx, by, bz
-                      0,                # dynamic shared mem
-                      stream,           # stream
-                      [ptr])            # arguments
+        launch_kernel(
+            function.handle,  # Kernel
+            1,
+            1,
+            1,  # gx, gy, gz
+            100,
+            1,
+            1,  # bx, by, bz
+            0,  # dynamic shared mem
+            stream,  # stream
+            [ptr],
+        )  # arguments
 
         device_to_host(array, memory, sizeof(array))
         for i, v in enumerate(array):
@@ -169,12 +187,18 @@ class TestCudaDriver(HIPTestCase):
             if _driver.USE_NV_BINDING:
                 ptr = c_void_p(int(ptr))
 
-            launch_kernel(function.handle,  # Kernel
-                          1,   1, 1,        # gx, gy, gz
-                          100, 1, 1,        # bx, by, bz
-                          0,                # dynamic shared mem
-                          stream.handle,    # stream
-                          [ptr])            # arguments
+            launch_kernel(
+                function.handle,  # Kernel
+                1,
+                1,
+                1,  # gx, gy, gz
+                100,
+                1,
+                1,  # bx, by, bz
+                0,  # dynamic shared mem
+                stream.handle,  # stream
+                [ptr],
+            )  # arguments
 
         device_to_host(array, memory, sizeof(array), stream=stream)
 
@@ -240,17 +264,19 @@ class TestCudaDriver(HIPTestCase):
 
     def test_cuda_driver_occupancy(self):
         module = self.context.create_module_from_codeobj(self.amdgpu_codeobj)
-        function = module.get_function('set_thread_idx')
+        function = module.get_function("set_thread_idx")
 
-        value = self.context.get_active_blocks_per_multiprocessor(function,
-                                                                  128, 128)
+        value = self.context.get_active_blocks_per_multiprocessor(
+            function, 128, 128
+        )
         self.assertTrue(value > 0)
 
-        def b2d(bs): # is ignored
+        def b2d(bs):  # is ignored
             return bs
 
-        grid, block = self.context.get_max_potential_block_size(function, b2d,
-                                                                128, 128)
+        grid, block = self.context.get_max_potential_block_size(
+            function, b2d, 128, 128
+        )
         self.assertTrue(grid > 0)
         self.assertTrue(block > 0)
 
@@ -268,15 +294,15 @@ class TestDevice(HIPTestCase):
         # 4122) pertaining to versions and variants, so we do not extract and
         # validate the values of these bits.
 
-        h = '[0-9a-f]{%d}'
+        h = "[0-9a-f]{%d}"
         h4 = h % 4
         h8 = h % 8
         h12 = h % 12
-        uuid_format = f'^GPU-{h8}-{h4}-{h4}-{h4}-{h12}$'
+        uuid_format = f"^GPU-{h8}-{h4}-{h4}-{h4}-{h12}$"
 
         dev: _driver.Device = devices.get_context().device
         self.assertRegex(dev.uuid, uuid_format)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -45,11 +45,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from _ast import ImportFrom
+import os
+import re
+import sys
 import textwrap
-from typing import Any
-from numba import runtests
-from numba.core import config
+
+from . import hipconfig, util  # noqa: F401
+
+# from numba import runtests
+
+
+# from numba.core import config
+
 
 #: if config.ENABLE_CUDASIM:
 #:     from .simulator_init import *
@@ -71,18 +78,12 @@ from numba.core import config
 # Derived modules, make local packages submodules
 # -----------------------------------------------
 
-import sys
-import os
-import re
-
-from . import hipconfig
-from . import util
 
 _mr = util.modulerepl.ModuleReplicator(
     "numba.hip",
     os.path.join(os.path.dirname(__file__), "..", "cuda"),
     base_context=globals(),
-    preprocess_all=lambda content: re.sub(
+    preprocess_all=lambda content: re.sub(  # noqa: F405
         r"\bnumba.cuda\b", "numba.hip", content
     ).replace("cudadrv", "hipdrv"),
 )
@@ -91,14 +92,16 @@ api_util = _mr.create_and_register_derived_module(
     "api_util"
 )  # make this a submodule of the package
 
-from . import hipdrv
+from . import hipdrv  # noqa: E402
 
 cudadrv = hipdrv
 
 sys.modules["numba.hip.hipdrv"] = hipdrv
 for _name, _mod in list(sys.modules.items()):
     if _name.startswith("numba.hip.hipdrv"):
-        sys.modules[_name.replace("numba.hip.hipdrv", "numba.hip.cudadrv")] = _mod
+        sys.modules[_name.replace("numba.hip.hipdrv", "numba.hip.cudadrv")] = (
+            _mod
+        )
 
 
 errors = _mr.create_and_register_derived_module(
@@ -114,27 +117,23 @@ args = _mr.create_and_register_derived_module(
     "args"
 )  # make this a submodule of the package
 
+from . import codegen  # noqa: F401, E402
+from . import compiler  # noqa: F401, E402
+from . import decorators  # noqa: F401, E402
+from . import descriptor  # noqa: F401, E402
+from . import dispatcher  # noqa: F401, E402
+from . import kernels  # noqa: F401, E402
+from . import target  # noqa: F401, E402
+from . import testing  # noqa: F401, E402
+from . import tests  # noqa: F401, E402
+from .compiler import compile_llvm_ir  # noqa: F401, E402
+from .compiler import compile_llvm_ir_for_current_device  # noqa: F401, E402
+from .compiler import compile_ptx  # noqa: F401, E402
+from .compiler import compile_ptx_for_current_device  # noqa: F401, E402
+
 # Other
-from .device_init import *
-from .device_init import _auto_device
-
-from . import codegen
-from . import compiler
-
-from .compiler import (
-    compile_llvm_ir,
-    compile_llvm_ir_for_current_device,
-    compile_ptx,
-    compile_ptx_for_current_device,
-)
-
-from . import decorators
-from . import descriptor
-from . import dispatcher
-from . import target
-from . import kernels
-from . import testing
-from . import tests
+from .device_init import *  # noqa: F403, E402
+from .device_init import _auto_device  # noqa: F401, E402
 
 hipdecl = _mr.create_and_register_derived_module(
     "hipdecl",
@@ -259,8 +258,8 @@ def set_hip_extensions(
     from numba.hip.typing_lowering import hipdevicelib
 
     if extra_cflags:
-        hipdevicelib.hipdevicelib.USER_HIP_CFLAGS.clear()
-        hipdevicelib.hipdevicelib.USER_HIP_CFLAGS += extra_cflags
+        hipdevicelib._hipdevicelib.USER_HIP_CFLAGS.clear()
+        hipdevicelib._hipdevicelib.USER_HIP_CFLAGS += extra_cflags
     if code and filepath:
         raise KeyError("only one of 'code' and 'filepath' must be specified")
     elif not code and not filepath:
@@ -268,7 +267,7 @@ def set_hip_extensions(
     if filepath:
         with open(filepath, "r") as infile:
             code = infile.read()
-    hipdevicelib.hipdevicelib.USER_HIP_EXTENSIONS = code
+    hipdevicelib._hipdevicelib.USER_HIP_EXTENSIONS = code
 
     # remove the previously registered stubs from the globals
     for k, _ in hipdevicelib.thestubs:

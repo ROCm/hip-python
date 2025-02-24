@@ -28,35 +28,34 @@ This module contains tools for working with LLVM IR files
 in human-readable and bitcode format.
 """
 
-import sys
 import copy
 
-from rocm.llvm.c.types import LLVMOpaqueModule
-from rocm.llvm.c.core import (
-    LLVMCreateMemoryBufferWithMemoryRange,
-    LLVMDisposeMemoryBuffer,
-    LLVMGetBufferSize,
-    LLVMGetBufferStart,
-    LLVMDisposeModule,
-    LLVMPrintModuleToString,
-    LLVMDisposeMessage,
-    LLVMGetGlobalContext,
-    LLVMCloneModule,
-    LLVMModuleCreateWithName,
-    LLVMIsDeclaration,
-    LLVMGetValueName2,
-    LLVMGetFirstFunction,
-    LLVMGetNextFunction,
-    LLVMDeleteFunction,
+from rocm.llvm.c.analysis import (
+    LLVMVerifierFailureAction,
+    LLVMVerifyModule,
 )
 from rocm.llvm.c.bitreader import LLVMParseBitcode
 from rocm.llvm.c.bitwriter import LLVMWriteBitcodeToMemoryBuffer
+from rocm.llvm.c.core import (
+    LLVMCloneModule,
+    LLVMCreateMemoryBufferWithMemoryRange,
+    LLVMDeleteFunction,
+    LLVMDisposeMemoryBuffer,
+    LLVMDisposeMessage,
+    LLVMDisposeModule,
+    LLVMGetBufferSize,
+    LLVMGetBufferStart,
+    LLVMGetFirstFunction,
+    LLVMGetGlobalContext,
+    LLVMGetNextFunction,
+    LLVMGetValueName2,
+    LLVMIsDeclaration,
+    LLVMModuleCreateWithName,
+    LLVMPrintModuleToString,
+)
 from rocm.llvm.c.irreader import LLVMParseIRInContext
 from rocm.llvm.c.linker import LLVMLinkModules2
-from rocm.llvm.c.analysis import (
-    LLVMVerifyModule,
-    LLVMVerifierFailureAction,
-)
+from rocm.llvm.c.types import LLVMOpaqueModule
 
 
 def llvm_check(status, message):
@@ -93,7 +92,7 @@ def _parse_llvm_bc(bc, bc_len: int = -1):
     """
     if isinstance(bc, str):
         bc = bc.encode("utf-8")
-    if bc_len == None or bc_len < 1:
+    if bc_len is None or bc_len < 1:
         bc_len = len(bc)
 
     buf = LLVMCreateMemoryBufferWithMemoryRange(
@@ -137,7 +136,7 @@ def _parse_llvm_ir(ir, ir_len: int = -1):
     """
     if isinstance(ir, str):
         ir = ir.encode("utf-8")
-    if ir_len == None or ir_len < 1:
+    if ir_len is None or ir_len < 1:
         ir_len = len(ir)
 
     buf = LLVMCreateMemoryBufferWithMemoryRange(
@@ -221,7 +220,9 @@ def _to_bc(mod: LLVMOpaqueModule):
     """Convert this LLVM Module to IR, return a copy."""
     bc_buf = LLVMWriteBitcodeToMemoryBuffer(mod)
     bc_buf_len = LLVMGetBufferSize(bc_buf)
-    bc_ndbuffer = LLVMGetBufferStart(bc_buf).configure(_force=True, shape=(bc_buf_len,))
+    bc_ndbuffer = LLVMGetBufferStart(bc_buf).configure(
+        _force=True, shape=(bc_buf_len,)
+    )
     result = copy.deepcopy(bytes(bc_ndbuffer))  # copies into new buffer
     LLVMDisposeMemoryBuffer(bc_buf)
     return result
@@ -544,7 +545,9 @@ def link_modules(
     LLVMDisposeModule(dest)
     for _, gm_res in cloned_modules[:]:
         # the cloned modules have been consumed by the linker
-        if gm_res:  # might be None if one input is instance of LLVMOpaqueModule
+        if (
+            gm_res
+        ):  # might be None if one input is instance of LLVMOpaqueModule
             _get_module_dispose_all(*gm_res)
     return result
 
@@ -681,7 +684,8 @@ def is_human_readable_clang_offload_bundle(filecontent: str):
         if isinstance(filecontent, bytes):
             filecontent = filecontent.decode("utf-8")
         return "; __CLANG_OFFLOAD_BUNDLE____END__" in filecontent
-    except:
+    # TODO: specialize error type
+    except Exception:
         return False
 
 
@@ -692,51 +696,6 @@ def amdgpu_target_id(amdgpu_arch: str):
     for results of `split_human_readable_clang_offload_bundle`.
     """
     return f"hip-amdgcn-amd-amdhsa--{amdgpu_arch}"
-
-
-def split_human_readable_clang_offload_bundle(bundle):
-    """Splits a human-readable LLVM IR bundle into its parts.
-
-    Example:
-
-        ```llvm
-        ; __CLANG_OFFLOAD_BUNDLE____START__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
-        ; ...
-        ; __CLANG_OFFLOAD_BUNDLE____END__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
-        ; __CLANG_OFFLOAD_BUNDLE____START__ host-x86_64-unknown-linux-gnu-
-        ; ...
-        ; __CLANG_OFFLOAD_BUNDLE____END__ host-x86_64-unknown-linux-gnu-
-        ```
-
-        will reproduce a dictionary with the two keys 'hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-'
-        and 'host-x86_64-unknown-linux-gnu-'.
-
-    Returns:
-        `dict`:
-            A `dict` that holds an IR module per detected target ID.
-    """
-    result = {}
-    if isinstance(bundle, bytes):
-        bundle = bundle.decode("utf-8")
-    else:
-        RuntimeError("expected `str` or `bytes`")
-    assert isinstance(bundle, str)
-
-    p_begin = "; __CLANG_OFFLOAD_BUNDLE____START__ "
-    p_end = "; __CLANG_OFFLOAD_BUNDLE____END__ "
-    target_id = None
-    for line in bundle.splitlines(keepends=True):
-        if line.lstrip().startswith(p_begin):
-            assert target_id == None
-            target_id = line.replace(p_begin, "").strip()
-            result[target_id] = ""
-        elif line.lstrip().startswith(p_end):
-            assert target_id != None
-            target_id = None
-        else:
-            if target_id != None:
-                result[target_id] += line
-    return result
 
 
 def split_human_readable_clang_offload_bundle(bundle):
@@ -775,17 +734,25 @@ def split_human_readable_clang_offload_bundle(bundle):
 
     cursor: int = 0
     while True:
-        begin: int = bundle.find(p_begin, cursor)  # note: returns -1 on failure
+        begin: int = bundle.find(
+            p_begin, cursor
+        )  # note: returns -1 on failure
         if begin < 0:
             break
         else:
             next_newline: int = bundle.find("\n", begin)
-            target_id: str = bundle[begin + len(p_begin) : next_newline]
+            target_id: str = bundle[
+                begin + len(p_begin) : next_newline  # noqa: E203
+            ]
             begin = next_newline + 1  # move at begin of next line
             end: int = bundle.find(p_end, begin)  # note: returns -1 on failure
             if end == -1:
-                raise RuntimeError("no matching __CLANG_OFFLOAD_BUNDLE____END__ found")
+                raise RuntimeError(
+                    "no matching __CLANG_OFFLOAD_BUNDLE____END__ found"
+                )
             else:
-                result[target_id] = bundle[begin:end]  # note: exclusive upper bound
+                result[target_id] = bundle[
+                    begin:end
+                ]  # note: exclusive upper bound
                 cursor = end
     return result

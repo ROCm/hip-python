@@ -49,11 +49,12 @@ import ctypes
 
 import numpy as np
 
-from numba.hip.hipdrv import driver, devices
+from numba.hip.hipdrv import devices, driver
+from numba.hip.testing import ContextResettingTestCase
+from numba.hip.testing import skip_on_hipsim as skip_on_cudasim
+from numba.hip.testing import unittest
 
 drvapi = None  # HIP: driver.USE_NV_BINDING is always True
-from numba.hip.testing import unittest, ContextResettingTestCase
-from numba.hip.testing import skip_on_hipsim as skip_on_cudasim
 
 
 @skip_on_cudasim("CUDA Memory API unsupported in the simulator")
@@ -72,7 +73,7 @@ class TestCudaMemory(ContextResettingTestCase):
         if driver.USE_NV_BINDING:
             expected_class = driver.CUdeviceptr
         else:
-            expected_class = drvapi.cu_device_ptr
+            pass  # expected_class = drvapi.cu_device_ptr
         self.assertTrue(isinstance(obj.device_ctypes_pointer, expected_class))
 
     def test_device_memory(self):

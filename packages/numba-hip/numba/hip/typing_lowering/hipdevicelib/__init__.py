@@ -30,24 +30,37 @@ Attributes:
 """
 
 import threading
-import logging
-
-_lock = threading.Lock()
-_log = logging.getLogger(__name__)
 
 import rocm.clang.cindex as ci
+
+# isort: off
 from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_MAJOR as _LLVM_VERSION_MAJOR,
+)
+from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_MINOR as _LLVM_VERSION_MINOR,
+)
+from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_PATCH as _LLVM_VERSION_PATCH,
 )
 
+# isort: on
+
 from numba.hip import hipconfig as _hipconfig
+from numba.hip.typing_lowering.registries import (
+    impl_registry,
+    typing_registry,
+)
 from numba.hip.util import fscache as _fscache
 
-ci.Config.set_library_path(_hipconfig.get_rocm_path("llvm", "lib"))
-
 from . import cparser as _cparser
+from . import hipdevicelib as _hipdevicelib
+from .hipdevicelib import DEVICE_FUN_PREFIX
+from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
+
+_lock = threading.Lock()
+
+ci.Config.set_library_path(_hipconfig.get_rocm_path("llvm", "lib"))
 
 _cparser.CParser.set_clang_res_dir(
     _hipconfig.get_rocm_path(
@@ -66,18 +79,12 @@ _cparser.CParser.set_clang_res_dir(
     )
 )
 
-from .hipdevicelib import DEVICE_FUN_PREFIX
-from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
-
 
 def _create_stubs():
 
-    from numba.hip.typing_lowering.registries import (
-        typing_registry,
-        impl_registry,
+    all_stubs = _HIPDeviceLib().create_stubs_decls_impls(
+        typing_registry, impl_registry
     )
-
-    all_stubs = _HIPDeviceLib().create_stubs_decls_impls(typing_registry, impl_registry)
 
     unsupported_stubs = {}
     thestubs = {}
@@ -124,8 +131,8 @@ def reload():
     global thestubs
     global unsupported_stubs
     from numba.hip.typing_lowering.registries import (
-        typing_registry,
         impl_registry,
+        typing_registry,
     )
 
     del globals()["unsupported_stubs"]
@@ -143,7 +150,7 @@ def reload():
     unsupported_stubs.update(_unsupported_stubs)
     globals().update(thestubs)
     # reload the HIPDeviceLib input source and
-    hipdevicelib.HIPDeviceLib.reload()
+    _hipdevicelib.HIPDeviceLib.reload()
     # finally clean the filesystem cache
     _fscache.clear_cache()
 
@@ -175,7 +182,7 @@ def get_llvm_bc(amdgpu_arch: str):
     instance = _HIPDeviceLib(amdgpu_arch)
     if _hipconfig.USE_DEVICE_LIB_CACHE:
         # file system caching
-        if instance._bitcode == None:  # ! uses hidden attribute '_bitcode'
+        if instance._bitcode is None:  # ! uses hidden attribute '_bitcode'
             try:
                 with _lock:
                     instance._bitcode = _fscache.read_cached_file(
@@ -190,7 +197,9 @@ def get_llvm_bc(amdgpu_arch: str):
     bc = instance.bitcode
     if not found_cached_file and _hipconfig.USE_DEVICE_LIB_CACHE:
         with _lock:
-            _fscache.write_cached_file(bc, amdgpu_arch, prefix=_HIPDEVICELIB, ext=_EXT)
+            _fscache.write_cached_file(
+                bc, amdgpu_arch, prefix=_HIPDEVICELIB, ext=_EXT
+            )
     return bc
 
 
@@ -213,7 +222,9 @@ def get_llvm_module(amdgpu_arch: str):
             Can also have target features appended that are separated via ":".
             These are stripped away where not needed.
     """
-    _ = get_llvm_bc(amdgpu_arch)  # initializes/loads cached bitcode if not already done
+    _ = get_llvm_bc(
+        amdgpu_arch
+    )  # initializes/loads cached bitcode if not already done
     return _HIPDeviceLib(amdgpu_arch).module
 
 

@@ -57,19 +57,21 @@ Attributes:
 
 # typing/decls
 
-import numba.core.typing.templates as typing_templates
-
 from numba.core.typing.npydecl import (
+    bit_twiddling_functions,
+    comparison_functions,
     register_numpy_ufunc,
     trigonometric_functions,
-    comparison_functions,
-    bit_twiddling_functions,
 )
+from numba.np import ufunc_db
+from numba.np.npyimpl import register_ufuncs
 
-from numba.hip.typing_lowering.registries import (
-    typing_registry,
-    impl_registry
-)
+from numba.hip.typing_lowering.registries import impl_registry, typing_registry
+
+# code generators/impls
+
+
+# typing/decls
 
 for func in trigonometric_functions:
     register_numpy_ufunc(func, typing_registry.register_global)
@@ -81,10 +83,5 @@ for func in bit_twiddling_functions:
     register_numpy_ufunc(func, typing_registry.register_global)
 
 # code generators/impls
-
-from numba.core import imputils
-
-from numba.np.npyimpl import register_ufuncs
-from numba.np import ufunc_db
 
 register_ufuncs(ufunc_db.get_ufuncs(), impl_registry.lower)

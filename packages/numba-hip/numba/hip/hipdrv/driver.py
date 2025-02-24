@@ -58,40 +58,41 @@ system to freeze in some cases.
 
 """
 
-import sys
-import os
-import ctypes
-import weakref
-import functools
-import warnings
-import logging
-import threading
 import asyncio
-from itertools import product
+import contextlib
+import ctypes
+import functools
+import importlib
+import logging
+import os
+import sys
+import threading
+import warnings
+import weakref
 from abc import ABCMeta, abstractmethod
+from collections import deque, namedtuple
 from ctypes import (
+    CFUNCTYPE,
+    addressof,
     c_int,
     c_size_t,
-    addressof,
     c_void_p,
-    CFUNCTYPE,
     py_object,
 )
-import contextlib
-import importlib
+from itertools import product
+
 import numpy as np
-from collections import namedtuple, deque
+from numba.core import config, serialize, utils
 
 from numba import mviewbuf
-from numba.core import utils, serialize, config
-from .error import HipSupportError, HipRuntimeError
+from numba.hip import hipconfig
+from numba.hip.hipdrv import hiprtc
+
+from .error import HipRuntimeError, HipSupportError
 
 cu_device_ptr = c_size_t  # defined as unsigned long long
 cu_stream = c_void_p  # an opaque handle
 cu_stream_callback_pyobj = CFUNCTYPE(None, cu_stream, c_int, py_object)
-
-from numba.hip import hipconfig
-from numba.hip.hipdrv import hiprtc
 
 USE_NV_BINDING = True  #: HIP/AMD: always use HIP Python bindings
 
@@ -104,9 +105,7 @@ if USE_NV_BINDING:
     HIP_STREAM_DEFAULT = 0
 
     # HIP (via hip/hip_runtime_api.h)
-    HIP_STREAM_LEGACY = (
-        0  # TODO(HIP/AMD) check if legacy stream can be replaced by default stream
-    )
+    HIP_STREAM_LEGACY = 0  # TODO(HIP/AMD) check if legacy stream can be replaced by default stream
     HIP_STREAM_PER_THREAD = 2
 
     # HIP: we need to
@@ -189,7 +188,9 @@ def locate_runtime_and_loader():  #: HIP/AMD: modified body
         try:
             envpath = os.path.abspath(envpath)
         except ValueError:
-            raise ValueError("NUMBA_CUDA_DRIVER %s is not a valid path" % envpath)
+            raise ValueError(
+                "NUMBA_CUDA_DRIVER %s is not a valid path" % envpath
+            )
         if not os.path.isfile(envpath):
             raise ValueError(
                 "NUMBA_CUDA_DRIVER %s is not a valid file "
@@ -200,7 +201,9 @@ def locate_runtime_and_loader():  #: HIP/AMD: modified body
     else:
         # First search for the name in the default library path.
         # If that is not found, try the specific path.
-        candidates = dlnames + [os.path.join(x, y) for x, y in product(dldir, dlnames)]
+        candidates = dlnames + [
+            os.path.join(x, y) for x, y in product(dldir, dlnames)
+        ]
 
     return dlloader, candidates
 
@@ -598,7 +601,9 @@ class Device(object):
 
     def __getattr__(self, attr):
         """Read attributes lazily"""
-        code = getattr(binding.CUdevice_attribute, f"CU_DEVICE_ATTRIBUTE_{attr}")
+        code = getattr(
+            binding.CUdevice_attribute, f"CU_DEVICE_ATTRIBUTE_{attr}"
+        )
         value = driver.cuDeviceGetAttribute(code, self.id)
 
         setattr(self, attr, value)
@@ -849,7 +854,9 @@ class HostOnlyHIPMemoryManager(BaseHIPMemoryManager):
 
             alloc_key = pointer.value
 
-        finalizer = _hostalloc_finalizer(self, pointer, alloc_key, size, mapped)
+        finalizer = _hostalloc_finalizer(
+            self, pointer, alloc_key, size, mapped
+        )
         ctx = weakref.proxy(self.context)
 
         if mapped:
@@ -890,11 +897,15 @@ class HostOnlyHIPMemoryManager(BaseHIPMemoryManager):
         ctx = weakref.proxy(self.context)
 
         if mapped:
-            mem = MappedMemory(ctx, pointer, size, owner=owner, finalizer=finalizer)
+            mem = MappedMemory(
+                ctx, pointer, size, owner=owner, finalizer=finalizer
+            )
             self.allocations[alloc_key] = mem
             return mem.own()
         else:
-            return PinnedMemory(ctx, pointer, size, owner=owner, finalizer=finalizer)
+            return PinnedMemory(
+                ctx, pointer, size, owner=owner, finalizer=finalizer
+            )
 
     def memallocmanaged(self, size, attach_global):
         if USE_NV_BINDING:
@@ -962,7 +973,9 @@ class GetIpcHandleMixin:
             raise NotImplementedError()
         source_info = self.context.device.get_device_identity()
 
-        return IpcHandle(memory, ipchandle, memory.size, source_info, offset=offset)
+        return IpcHandle(
+            memory, ipchandle, memory.size, source_info, offset=offset
+        )
 
 
 class NumbaHIPMemoryManager(GetIpcHandleMixin, HostOnlyHIPMemoryManager):
@@ -1232,8 +1245,8 @@ class Context(object):
     def _cuda_python_max_potential_block_size(
         self, func, b2d_func, memsize, blocksizelimit, flags
     ):
-        b2d_cb = ctypes.CFUNCTYPE(c_size_t, c_int)(b2d_func)
-        ptr = int.from_bytes(b2d_cb, byteorder="little")
+        # b2d_cb = ctypes.CFUNCTYPE(c_size_t, c_int)(b2d_func)
+        # ptr = int.from_bytes(b2d_cb, byteorder="little")
 
         # driver_b2d_cb = binding.CUoccupancyB2DSize(ptr) # TODO(HIP/AMD) arg not necessary; why?
         args = [
@@ -1304,7 +1317,9 @@ class Context(object):
             raise NotImplementedError()
 
         # wrap it
-        return MemoryPointer(context=weakref.proxy(self), pointer=dptr, size=size)
+        return MemoryPointer(
+            context=weakref.proxy(self), pointer=dptr, size=size
+        )
 
     def enable_peer_access(self, peer_context, flags=0):
         """Enable peer access between the current context and the peer context"""
@@ -1317,7 +1332,9 @@ class Context(object):
         """
         if USE_NV_BINDING:
             peer_device = binding.CUdevice(peer_device)
-            can_access_peer = driver.cuDeviceCanAccessPeer(self.device.id, peer_device)
+            can_access_peer = driver.cuDeviceCanAccessPeer(
+                self.device.id, peer_device
+            )
         else:
             raise NotImplementedError()
 
@@ -1378,11 +1395,15 @@ class Context(object):
             # default stream, which we define also as CU_STREAM_DEFAULT when
             # the NV binding is in use).
             flags = _hip.hip.hipStreamDefault
-            handle = driver.cuStreamCreate(flags)  # alias of hipStreamCreateWithFlags
+            handle = driver.cuStreamCreate(
+                flags
+            )  # alias of hipStreamCreateWithFlags
         else:
             raise NotImplementedError()
         return Stream(
-            weakref.proxy(self), handle, _stream_finalizer(self.deallocations, handle)
+            weakref.proxy(self),
+            handle,
+            _stream_finalizer(self.deallocations, handle),
         )
 
     def create_external_stream(self, ptr):
@@ -1481,7 +1502,10 @@ def load_module_image_cuda_python(context, image):
     info_log = jitinfo.decode("utf-8")
 
     return CudaPythonModule(
-        weakref.proxy(context), handle, info_log, _module_finalizer(context, handle)
+        weakref.proxy(context),
+        handle,
+        info_log,
+        _module_finalizer(context, handle),
     )
 
 
@@ -1780,7 +1804,11 @@ class IpcHandle(object):
         else:
             raise NotImplementedError()
         return cls(
-            base=None, handle=handle, size=size, source_info=source_info, offset=offset
+            base=None,
+            handle=handle,
+            size=size,
+            source_info=source_info,
+            offset=offset,
         )
 
 
@@ -1866,7 +1894,9 @@ class MemoryPointer(object):
     def memset(self, byte, count=None, stream=0):
         count = self.size if count is None else count
         if stream:
-            driver.cuMemsetD8Async(self.device_pointer, byte, count, stream.handle)
+            driver.cuMemsetD8Async(
+                self.device_pointer, byte, count, stream.handle
+            )
         else:
             driver.cuMemsetD8(self.device_pointer, byte, count)
 
@@ -1960,7 +1990,9 @@ class MappedMemory(AutoFreePointer):
             raise NotImplementedError()
 
         self.device_pointer = devptr
-        super(MappedMemory, self).__init__(context, devptr, size, finalizer=finalizer)
+        super(MappedMemory, self).__init__(
+            context, devptr, size, finalizer=finalizer
+        )
         self.handle = self.host_pointer
 
         # For buffer interface
@@ -2306,7 +2338,9 @@ class CudaPythonModule(Module):
         return MemoryPointer(self.context, ptr, size), size
 
 
-FuncAttr = namedtuple("FuncAttr", ["regs", "shared", "local", "const", "maxthreads"])
+FuncAttr = namedtuple(
+    "FuncAttr", ["regs", "shared", "local", "const", "maxthreads"]
+)
 
 
 class Function(metaclass=ABCMeta):
@@ -2329,7 +2363,9 @@ class Function(metaclass=ABCMeta):
         return self.module.context.device
 
     @abstractmethod
-    def cache_config(self, prefer_equal=False, prefer_cache=False, prefer_shared=False):
+    def cache_config(
+        self, prefer_equal=False, prefer_cache=False, prefer_shared=False
+    ):
         """Set the cache configuration for this function."""
 
     @abstractmethod
@@ -2348,7 +2384,9 @@ class CtypesFunction(Function):
 
 
 class CudaPythonFunction(Function):
-    def cache_config(self, prefer_equal=False, prefer_cache=False, prefer_shared=False):
+    def cache_config(
+        self, prefer_equal=False, prefer_cache=False, prefer_shared=False
+    ):
         prefer_equal = prefer_equal or (prefer_cache and prefer_shared)
         attr = binding.CUfunction_attribute
         if prefer_equal:
@@ -2370,14 +2408,26 @@ class CudaPythonFunction(Function):
         cmem = self.read_func_attr(attr.CU_FUNC_ATTRIBUTE_CONST_SIZE_BYTES)
         lmem = self.read_func_attr(attr.CU_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES)
         smem = self.read_func_attr(attr.CU_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES)
-        maxtpb = self.read_func_attr(attr.CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
+        maxtpb = self.read_func_attr(
+            attr.CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
+        )
         return FuncAttr(
             regs=nregs, const=cmem, local=lmem, shared=smem, maxthreads=maxtpb
         )
 
 
 def launch_kernel(
-    cufunc_handle, gx, gy, gz, bx, by, bz, sharedmem, hstream, args, cooperative=False
+    cufunc_handle,
+    gx,
+    gy,
+    gz,
+    bx,
+    by,
+    bz,
+    sharedmem,
+    hstream,
+    args,
+    cooperative=False,
 ):
     param_ptrs = [addressof(arg) for arg in args]
     params = (c_void_p * len(param_ptrs))(*param_ptrs)
@@ -2390,7 +2440,16 @@ def launch_kernel(
 
     if cooperative:
         driver.hipModuleLaunchCooperativeKernel(
-            cufunc_handle, gx, gy, gz, bx, by, bz, sharedmem, hstream, params_for_launch
+            cufunc_handle,
+            gx,
+            gy,
+            gz,
+            bx,
+            by,
+            bz,
+            sharedmem,
+            hstream,
+            params_for_launch,
         )
     else:
         driver.hipModuleLaunchKernel(
@@ -2586,10 +2645,7 @@ class CudaPythonLinker(Linker):
         if isinstance(buf, str):
             buf = buf.encode("utf-8")
         elif not isinstance(buf, bytes):
-            try:
-                buf = bytes(buf)
-            except:
-                raise TypeError("argument 'buf' must be bytes-like")
+            buf = bytes(buf)
         namebuf = name.encode("utf8")
         self._keep_alive += [buf, namebuf]
         try:
@@ -2624,7 +2680,9 @@ class CudaPythonLinker(Linker):
         assert code_size > 0, "linker returned a zero sized binary"
         del self._keep_alive[:]
         # We return a copy of the code obj because it's owned by the linker
-        code_ptr = ctypes.cast(code_buf.as_c_void_p(), ctypes.POINTER(ctypes.c_char))
+        code_ptr = ctypes.cast(
+            code_buf.as_c_void_p(), ctypes.POINTER(ctypes.c_char)
+        )
         return bytes(np.ctypeslib.as_array(code_ptr, shape=(code_size,)))
 
 

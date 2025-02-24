@@ -45,21 +45,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 def initialize_all():
     """Register the HIP extension."""
     # todo FIXME
     # Import models to register them with the data model manager
+    from numba.core.target_extension import (
+        GPU,
+        dispatcher_registry,
+        jit_registry,
+        target_registry,
+    )
+
     import numba.hip.typing_lowering.models  # noqa: F401
 
     #
     from numba.hip.decorators import jit
     from numba.hip.dispatcher import HIPDispatcher
-    from numba.core.target_extension import (
-        target_registry,
-        dispatcher_registry,
-        jit_registry,
-        GPU,
-    )
 
     class HIP(GPU):
         pass

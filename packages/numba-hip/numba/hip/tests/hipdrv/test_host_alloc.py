@@ -46,9 +46,10 @@
 # SOFTWARE.
 
 import numpy as np
-from numba.hip.hipdrv import driver
+
 from numba import hip as cuda
-from numba.hip.testing import unittest, ContextResettingTestCase
+from numba.hip.hipdrv import driver
+from numba.hip.testing import ContextResettingTestCase, unittest
 
 
 class TestHostAlloc(ContextResettingTestCase):
@@ -79,7 +80,9 @@ class TestHostAlloc(ContextResettingTestCase):
         self.assertTrue(np.all(ary == recv))
         self.assertTrue(np.all(recv == n))
 
-    @unittest.skip("TODO(HIP/AMD) memcpyD2H to pinned array seems not to have any effect")
+    @unittest.skip(
+        "TODO(HIP/AMD) memcpyD2H to pinned array seems not to have any effect"
+    )
     def test_host_alloc_pinned(self):
         ary = cuda.pinned_array(10, dtype=np.uint32)
         ary.fill(123)

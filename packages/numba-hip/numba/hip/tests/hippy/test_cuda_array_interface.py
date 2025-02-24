@@ -45,22 +45,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import numpy as np
-
-from numba import vectorize, guvectorize
-from numba import hip as cuda
-from numba.hip.hipdrv import driver
-from numba.hip.testing import unittest, ContextResettingTestCase, ForeignArray
-from numba.hip.testing import skip_on_hipsim as skip_on_cudasim, skip_if_external_memmgr
-from numba.tests.support import linux_only, override_config
 from unittest.mock import call, patch
+
+import numpy as np
+from numba.tests.support import linux_only, override_config
+
+from numba import guvectorize
+from numba import hip as cuda
+from numba import vectorize
+from numba.hip.hipdrv import driver
+from numba.hip.testing import (
+    ContextResettingTestCase,
+    ForeignArray,
+    skip_if_external_memmgr,
+)
+from numba.hip.testing import skip_on_hipsim as skip_on_cudasim
+from numba.hip.testing import (
+    unittest,
+)
 
 
 @skip_on_cudasim("CUDA Array Interface is not supported in the simulator")
 class TestCudaArrayInterface(ContextResettingTestCase):
     def assertPointersEqual(self, a, b):
         if driver.USE_NV_BINDING:
-            self.assertEqual(int(a.device_ctypes_pointer), int(b.device_ctypes_pointer))
+            self.assertEqual(
+                int(a.device_ctypes_pointer), int(b.device_ctypes_pointer)
+            )
 
     def test_as_cuda_array(self):
         h_arr = np.arange(10)
@@ -216,14 +227,17 @@ class TestCudaArrayInterface(ContextResettingTestCase):
         self.assertEqual(arr[::2].strides, arr_strided.strides)
         self.assertEqual(arr[::2].dtype.itemsize, arr_strided.dtype.itemsize)
         self.assertEqual(arr[::2].alloc_size, arr_strided.alloc_size)
-        self.assertEqual(arr[::2].nbytes, arr_strided.size * arr_strided.dtype.itemsize)
+        self.assertEqual(
+            arr[::2].nbytes, arr_strided.size * arr_strided.dtype.itemsize
+        )
 
         # __setitem__ interface propagates into external array
 
         # Writes to a slice
         arr[:5] = np.pi
         np.testing.assert_array_equal(
-            c_arr.copy_to_host(), np.concatenate((np.full(5, np.pi), h_arr[5:]))
+            c_arr.copy_to_host(),
+            np.concatenate((np.full(5, np.pi), h_arr[5:])),
         )
 
         # Writes to a slice from a view

@@ -47,23 +47,30 @@
 
 import re
 from functools import cached_property
+
 import llvmlite.binding as ll
 from llvmlite import ir
-
-from numba.core import typing, types, debuginfo, itanium_mangler, cgutils
-from numba.core.dispatcher import Dispatcher
+from numba.core import (
+    cgutils,
+    datamodel,
+    debuginfo,
+    itanium_mangler,
+    types,
+    typing,
+)
 from numba.core.base import BaseContext
 from numba.core.callconv import MinimalCallConv
+from numba.core.dispatcher import Dispatcher
 from numba.core.typing import cmathdecl
-from numba.core import datamodel
+
+from numba import hip
+from numba.hip import codegen  # , nvvmutils, ufuncs
+from numba.hip import typing_lowering
+from numba.hip.typing_lowering import stubs, ufuncs
+from numba.hip.typing_lowering.models import hip_data_manager
 
 # from .hipdrv import nvvm
 from . import amdgcn
-from numba import hip
-from numba.hip import codegen  # , nvvmutils, ufuncs
-from numba.hip.typing_lowering import stubs, ufuncs
-from numba.hip.typing_lowering.models import hip_data_manager
-from numba.hip import typing_lowering
 
 # -----------------------------------------------------------------------------
 # Typing
@@ -80,8 +87,9 @@ stubs.resolve_attributes(
 
 class HIPTypingContext(typing.BaseContext):
     def load_additional_registries(self):
+        from numba.core.typing import cffi_utils, enumdecl
+
         from . import typing_lowering
-        from numba.core.typing import enumdecl, cffi_utils
 
         self.install_registry(cffi_utils.registry)
         self.install_registry(cmathdecl.registry)
@@ -134,7 +142,9 @@ class HIPTargetContext(BaseContext):
 
     def __init__(self, typingctx, target="hip"):
         super().__init__(typingctx, target)
-        self.data_model_manager = hip_data_manager.chain(datamodel.default_manager)
+        self.data_model_manager = hip_data_manager.chain(
+            datamodel.default_manager
+        )
 
     @property
     def DIBuilder(self):
@@ -157,21 +167,28 @@ class HIPTargetContext(BaseContext):
         # side effect of import needed for numba.cpython.*, the builtins
         # registry is updated at import time.
         # !! imports have side effects !!
-        from numba.cpython import numbers, tupleobj, slicing  # noqa: F401
-        from numba.cpython import rangeobj, iterators, enumimpl  # noqa: F401
-        from numba.cpython import unicode, charseq  # noqa: F401
-        from numba.cpython import cmathimpl
+        from numba.cpython import (  # noqa: F401
+            charseq,
+            cmathimpl,
+            enumimpl,
+            iterators,
+            numbers,
+            rangeobj,
+            slicing,
+            tupleobj,
+            unicode,
+        )
         from numba.misc import cffiimpl
         from numba.np import arrayobj  # noqa: F401
         from numba.np import npdatetime  # noqa: F401
+
+        # fix for #8940
+        from numba.np.unsafe import ndarray  # noqa F401
 
         # from . import (
         #     cudaimpl, printimpl, libdeviceimpl, mathimpl, vector_types
         # )
         from . import typing_lowering
-
-        # fix for #8940
-        from numba.np.unsafe import ndarray  # noqa F401
 
         self.install_registry(cffiimpl.registry)
         self.install_registry(cmathimpl.registry)
@@ -209,7 +226,9 @@ class HIPTargetContext(BaseContext):
             "laneid",
             "warpsize",
         )
-        nonconsts_with_mod = tuple([(types.Module(hip), nc) for nc in nonconsts])
+        nonconsts_with_mod = tuple(
+            [(types.Module(hip), nc) for nc in nonconsts]
+        )
         return nonconsts_with_mod
 
     @cached_property
@@ -217,7 +236,9 @@ class HIPTargetContext(BaseContext):
         return HIPCallConv(self)
 
     def mangler(self, name, argtypes, *, abi_tags=(), uid=None):
-        return itanium_mangler.mangle(name, argtypes, abi_tags=abi_tags, uid=uid)
+        return itanium_mangler.mangle(
+            name, argtypes, abi_tags=abi_tags, uid=uid
+        )
 
     def prepare_hip_kernel(
         self,
@@ -294,7 +315,8 @@ class HIPTargetContext(BaseContext):
         wrapfnty = ir.FunctionType(ir.VoidType(), argtys)
         wrapper_module = self.create_module("hip.kernel.wrapper")
         fnty = ir.FunctionType(
-            ir.IntType(32), [self.call_conv.get_return_type(types.pyobject)] + argtys
+            ir.IntType(32),
+            [self.call_conv.get_return_type(types.pyobject)] + argtys,
         )
         func = ir.Function(wrapper_module, fnty, fndesc.llvm_func_name)
 
@@ -324,11 +346,13 @@ class HIPTargetContext(BaseContext):
         # Define error handling variable
         def define_error_gv(postfix):
             name = wrapfn.name + postfix
-            gv = cgutils.add_global_variable(wrapper_module, ir.IntType(32), name)
+            gv = cgutils.add_global_variable(
+                wrapper_module, ir.IntType(32), name
+            )
             gv.initializer = ir.Constant(gv.type.pointee, None)
             return gv
 
-        gv_exc = define_error_gv("__errcode__")
+        gv_exc = define_error_gv("__errcode__")  # noqa: F841
         gv_tid = []
         gv_ctaid = []
         for i in "xyz":
@@ -336,7 +360,7 @@ class HIPTargetContext(BaseContext):
             gv_ctaid.append(define_error_gv("__ctaid%s__" % i))
 
         callargs = arginfo.from_arguments(builder, wrapfn.args)
-        status, _ = self.call_conv.call_function(
+        status, _ = self.call_conv.call_function(  # noqa: F841
             builder, func, types.void, argtypes, callargs
         )
 
@@ -395,7 +419,8 @@ class HIPTargetContext(BaseContext):
         lmod = builder.module
 
         constvals = [
-            self.get_constant(types.byte, i) for i in iter(arr.tobytes(order="A"))
+            self.get_constant(types.byte, i)
+            for i in iter(arr.tobytes(order="A"))
         ]
         constaryty = ir.ArrayType(ir.IntType(8), len(constvals))
         constary = ir.Constant(constaryty, constvals)
@@ -439,7 +464,9 @@ class HIPTargetContext(BaseContext):
         addrspace.
         """
         text = cgutils.make_bytearray(string.encode("utf-8") + b"\x00")
-        name = "$".join(["__conststring__", itanium_mangler.mangle_identifier(string)])
+        name = "$".join(
+            ["__conststring__", itanium_mangler.mangle_identifier(string)]
+        )
         # Try to reuse existing global
         global_var = mod.globals.get(name)
         if global_var is None:

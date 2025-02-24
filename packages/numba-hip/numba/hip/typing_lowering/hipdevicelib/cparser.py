@@ -54,19 +54,19 @@ def walk_cursors(root: ci.Cursor, postorder=False):
 
 
 def clang_type_kind(clang_type: ci.Type) -> ci.TypeKind:
-    """Works around missing entries in the `clang.cindex.TypeKind` enum list.
-    """
+    """Works around missing entries in the `clang.cindex.TypeKind` enum list."""
     if clang_type.spelling == "_Float16":
         return ci.TypeKind.HALF
     else:
         return clang_type.kind
+
 
 class TypeHandler:
     _INSTANCE = None
 
     @classmethod
     def get(cls, clang_type: ci.Type):
-        if cls._INSTANCE == None:
+        if cls._INSTANCE is None:
             cls._INSTANCE = TypeHandler(None)
         cls._INSTANCE.clang_type = clang_type
         return cls._INSTANCE
@@ -253,7 +253,10 @@ class TypeHandler:
     def __init__(self, clang_type: ci.Type):
         self.clang_type = clang_type
 
-    def walk_clang_type_layers(self, postorder=False, canonical=False):
+    # TODO function too complex (C901)
+    def walk_clang_type_layers(  # noqa: C901
+        self, postorder=False, canonical=False
+    ):
         """Walks through the constitutents of a Clang type.
 
         Args:
@@ -294,7 +297,9 @@ class TypeHandler:
             elif TypeHandler.match_record_or_enum_type(type_kind):
                 yield clang_type
             elif TypeHandler.match_typedef_type(type_kind):
-                underlying_type = clang_type.get_declaration().underlying_typedef_type
+                underlying_type = (
+                    clang_type.get_declaration().underlying_typedef_type
+                )
                 if postorder:
                     yield from descend_(underlying_type)
                 yield clang_type
@@ -339,12 +344,13 @@ class CParser:
 
     @classmethod
     def set_clang_res_dir(cls, clang_res_dir: str):
-        """Set the clang resource dir.
-        """
+        """Set the clang resource dir."""
         # TODO check path
         cls._CLANG_RES_DIR = clang_res_dir
 
-    def __init__(self, filename: str, append_cflags: list = [], unsaved_files=None):
+    def __init__(
+        self, filename: str, append_cflags: list = [], unsaved_files=None
+    ):
         """Parse the specified file.
 
         Args:
@@ -359,7 +365,7 @@ class CParser:
 
     @property
     def cursor(self):
-        assert self.translation_unit != None
+        assert self.translation_unit is not None
         return self.translation_unit.cursor
 
     def parse(self):
@@ -369,7 +375,8 @@ class CParser:
         # print(self._append_cflags)
         self.translation_unit = ci.TranslationUnit.from_source(
             self.filename,
-            args=["-x", "c","-resource-dir",CParser._CLANG_RES_DIR] + self.append_cflags,
+            args=["-x", "c", "-resource-dir", CParser._CLANG_RES_DIR]
+            + self.append_cflags,
             options=(
                 ci.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD  # keeps the macro defs as "fake" nodes without location
             ),

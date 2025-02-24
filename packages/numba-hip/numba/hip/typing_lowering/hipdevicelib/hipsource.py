@@ -24,16 +24,15 @@ __author__ = "Advanced Micro Devices, Inc."
 
 """Types for extracting information from HIP C++ sources.
 
-This module defines types for extracting information such 
+This module defines types for extracting information such
 as device function definitions from a HIP C++ source file.
-The `~.HIPSource` datatype allows to generate stubs and 
+The `~.HIPSource` datatype allows to generate stubs and
 render wrapper functions for all device function declarations/definitions
 in the file.
 """
 
-import re
-import textwrap
 import logging
+import textwrap
 
 import rocm.clang.cindex as ci
 
@@ -66,9 +65,9 @@ class HIPDeviceFunction:
         try:
             type = ".".join(
                 tl.spelling
-                for tl in cparser.TypeHandler(clang_type).clang_type_layer_kinds(
-                    canonical=True
-                )
+                for tl in cparser.TypeHandler(
+                    clang_type
+                ).clang_type_layer_kinds(canonical=True)
             )
             if type.endswith("Record"):
                 innermost = [
@@ -76,9 +75,11 @@ class HIPDeviceFunction:
                         canonical=True
                     )
                 ][-1]
-                type = type.replace("Record", f"<{innermost.get_canonical().spelling}>")
+                type = type.replace(
+                    "Record", f"<{innermost.get_canonical().spelling}>"
+                )
             return type
-        except Exception as e:
+        except Exception:
             return f"<{clang_type.get_canonical().spelling}>"
 
     TYPE_MAPPER = DEFAULT_TYPE_MAPPER
@@ -251,9 +252,14 @@ class HIPDeviceFunction:
         if not internal_ns.endswith("::"):
             internal_ns = internal_ns + "::"
         rettype = self._cursor.result_type.spelling
-        argnames = ",".join([f"_{i}" for i, p in enumerate(self.parm_cursors())])
+        argnames = ",".join(
+            [f"_{i}" for i, p in enumerate(self.parm_cursors())]
+        )
         arglist = ",".join(
-            [f"{p.type.spelling} _{i}" for i, p in enumerate(self.parm_cursors())]
+            [
+                f"{p.type.spelling} _{i}"
+                for i, p in enumerate(self.parm_cursors())
+            ]
         )
         return textwrap.dedent(
             f"""\
@@ -311,11 +317,13 @@ class HIPSource:
         for _, variants in self.device_functions.items():
             variants_copy = list(variants)  # shallow copy
             for i, device_fun1 in enumerate(variants_copy):
-                for device_fun2 in variants_copy[i + 1 :]:
+                for device_fun2 in variants_copy[i + 1 :]:  # noqa: E203
                     if (
                         device_fun1 != device_fun2
-                        and device_fun1.mangled_name == device_fun2.mangled_name
-                        and device_fun1.is_definition == device_fun2.is_definition
+                        and device_fun1.mangled_name
+                        == device_fun2.mangled_name
+                        and device_fun1.is_definition
+                        == device_fun2.is_definition
                     ):
                         found_duplicate = True
                         if log_errors:
@@ -351,7 +359,7 @@ class HIPSource:
             filename: str = cursor.location.file
             if filter(cursor):
                 if HIPDeviceFunction.match(cursor):
-                    if not cursor.spelling in hip_device_functions:
+                    if cursor.spelling not in hip_device_functions:
                         hip_device_functions[cursor.spelling] = []
                     hip_device_functions[cursor.spelling].append(
                         HIPDeviceFunction(cursor)
@@ -390,11 +398,17 @@ class HIPSource:
             cls = thedict.get(parts[i], type(parts[i], (stub_base_class,), {}))
             if i < len(parts) - 1:
                 member = descend_(
-                    parts, cls.__dict__, variants, i + 1, parent if parent else cls
+                    parts,
+                    cls.__dict__,
+                    variants,
+                    i + 1,
+                    parent if parent else cls,
                 )  # sets parent to top-most parent for i > 0
                 setattr(cls, parts[i + 1], member)
             else:  # i == len(parts)
-                _log.debug(f"created stub '{'.'.join(parts)}'")  # TODO warn -> debug
+                _log.debug(
+                    f"created stub '{'.'.join(parts)}'"
+                )  # TODO warn -> debug
                 stub_processor(cls, parent if parent else cls, variants, parts)
             return cls
 
@@ -445,13 +459,15 @@ class HIPSource:
                 existing_declaration = (
                     None  # we may have 1 declaration per mangled name
                 )
-                existing_definition = None  # we may have 1 definition per mangled name
+                existing_definition = (
+                    None  # we may have 1 definition per mangled name
+                )
                 for device_fun in [
                     v for v in variants if v.mangled_name == mangled_name
                 ]:
                     generate_wrapper = False
-                    neither_found_yet = (existing_declaration == None) and (
-                        existing_definition == None
+                    neither_found_yet = (existing_declaration is None) and (
+                        existing_definition is None
                     )
                     if neither_found_yet and device_fun.is_declaration:
                         existing_declaration = device_fun
@@ -476,6 +492,11 @@ class HIPSource:
                         )
         return result
 
+
+__all__ = [
+    "HIPDeviceFunction",
+    "HIPSource",
+]
 
 # if __name__ == "__main__":
 #     # TODO convert to test

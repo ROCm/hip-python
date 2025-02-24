@@ -46,12 +46,13 @@
 # SOFTWARE.
 
 from numba import hip
+
 hip.pose_as_cuda()
 
-import unittest
+import unittest  # noqa: E402
 
-from numba.cuda.testing import CUDATestCase, skip_on_cudasim
-from numba.tests.support import captured_stdout
+from numba.cuda.testing import CUDATestCase, skip_on_cudasim  # noqa: E402
+from numba.tests.support import captured_stdout  # noqa: E402
 
 
 @skip_on_cudasim("cudasim doesn't support cuda import at non-top-level")
@@ -74,10 +75,11 @@ class TestReduction(CUDATestCase):
     def test_ex_reduction(self):
         # ex_reduction.import.begin
         import numpy as np
-        from numba import cuda
         from numba.types import int32
-        # ex_reduction.import.end
 
+        from numba import cuda
+
+        # ex_reduction.import.end
         # ex_reduction.allocate.begin
         # generate data
         a = cuda.to_device(np.arange(1024))
@@ -111,11 +113,12 @@ class TestReduction(CUDATestCase):
                 # After the loop, the zeroth  element contains the sum
                 if tid == 0:
                     data[tid] = shr[tid]
+
         # ex_reduction.kernel.end
 
         # ex_reduction.launch.begin
         array_sum[1, nelem](a)
-        print(a[0])                  # 523776
+        print(a[0])  # 523776
         print(sum(np.arange(1024)))  # 523776
         # ex_reduction.launch.end
 

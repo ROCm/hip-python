@@ -47,10 +47,8 @@
 
 import functools
 
-from numba.core import types
-
-from numba.core import imputils
 import numba.core.typing.templates as typing_templates
+from numba.core import imputils, types
 
 
 class Stub(object):
@@ -259,8 +257,8 @@ def resolve_attributes(
                     return lambda value: numba_type
                 # 2. check stub attributes
                 childstub: Stub = self._stub_attributes.get(attr, None)
-                if childstub != None:
-                    if hasattr(childstub,"_type_"):
+                if childstub is not None:
+                    if hasattr(childstub, "_type_"):
                         return lambda value: childstub._type_
                     elif childstub.is_supported():
                         if childstub.has_attributes():

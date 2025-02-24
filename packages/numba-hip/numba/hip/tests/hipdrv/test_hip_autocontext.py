@@ -46,8 +46,10 @@
 # SOFTWARE.
 
 import numpy as np
+
 from numba import hip as cuda
-from numba.hip.testing import unittest, HIPTestCase as CUDATestCase
+from numba.hip.testing import HIPTestCase as CUDATestCase
+from numba.hip.testing import unittest
 
 
 class TestCudaAutoContext(CUDATestCase):
@@ -64,5 +66,5 @@ class TestCudaAutoContext(CUDATestCase):
         self.assertTrue(np.allclose(A, newA))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

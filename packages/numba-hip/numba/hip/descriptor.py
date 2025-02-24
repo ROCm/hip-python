@@ -48,6 +48,7 @@
 
 from numba.core.descriptors import TargetDescriptor
 from numba.core.options import TargetOptions
+
 from .target import HIPTargetContext, HIPTypingContext
 
 
@@ -78,4 +79,4 @@ class HIPTarget(TargetDescriptor):
         return self._targetctx
 
 
-hip_target = HIPTarget('hip')
+hip_target = HIPTarget("hip")

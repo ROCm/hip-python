@@ -22,14 +22,14 @@
 
 """Registries shared across libraries.
 
-This module ensures that all libraries, 
-'hip', 'hipdevicelib', 'math', 'numpy' 
+This module ensures that all libraries,
+'hip', 'hipdevicelib', 'math', 'numpy'
 in package 'numba.hip.typing_lowering'
 share the same registries.
 """
 
-from numba.core import imputils
 import numba.core.typing.templates as typing_templates
+from numba.core import imputils
 
 typing_registry = typing_templates.Registry()
 impl_registry = imputils.Registry()

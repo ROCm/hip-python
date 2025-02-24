@@ -46,14 +46,15 @@
 # SOFTWARE.
 
 from numba import hip
+
 hip.pose_as_cuda()
 
 # unchanged original unit Numba CUDA test code below:
 
-import unittest
+import unittest  # noqa: E402
 
-from numba.cuda.testing import CUDATestCase, skip_on_cudasim
-from numba.tests.support import captured_stdout
+from numba.cuda.testing import CUDATestCase, skip_on_cudasim  # noqa: E402
+from numba.tests.support import captured_stdout  # noqa: E402
 
 
 @skip_on_cudasim("cudasim doesn't support cuda import at non-top-level")
@@ -77,6 +78,7 @@ class TestUFunc(CUDATestCase):
     def test_ex_cuda_ufunc_call(self):
         # ex_cuda_ufunc.begin
         import numpy as np
+
         from numba import cuda
 
         # A kernel calling a ufunc (sin, in this case)
@@ -86,7 +88,9 @@ class TestUFunc(CUDATestCase):
             np.sin(x, r)
 
         # Declare input and output arrays
-        x = np.arange(10, dtype=np.float64) - 5 #: TODO(HIP): precision issue for np.float32
+        x = (
+            np.arange(10, dtype=np.float64) - 5
+        )  #: TODO(HIP): precision issue for np.float32
         r = np.zeros_like(x)
 
         # Launch kernel that calls the ufunc

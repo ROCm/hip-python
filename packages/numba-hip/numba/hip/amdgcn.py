@@ -44,25 +44,34 @@ Attributes:
 __author__ = "Advanced Micro Devices, Inc."
 
 import logging
-import threading
 import multiprocessing as mp
-import sys
+import threading
 
-from rocm.llvm.c.types import LLVMOpaqueModule
+from rocm.amd_comgr import amd_comgr as comgr
 from rocm.llvm.c.core import (
     LLVMDisposeMessage,
 )
 from rocm.llvm.c.error import (
-    LLVMGetErrorMessage,
     LLVMDisposeErrorMessage,
+    LLVMGetErrorMessage,
 )
-from rocm.llvm.c.bitwriter import LLVMWriteBitcodeToMemoryBuffer
-
-from rocm.llvm.c.target import *
-from rocm.llvm.c.targetmachine import *
+from rocm.llvm.c.target import (
+    LLVMInitializeAllTargetInfos,
+    LLVMInitializeAllTargetMCs,
+    LLVMInitializeAllTargets,
+)
+from rocm.llvm.c.targetmachine import (
+    LLVMCodeGenOptLevel,
+    LLVMCodeModel,
+    LLVMCopyStringRepOfTargetData,
+    LLVMCreateTargetDataLayout,
+    LLVMCreateTargetMachine,
+    LLVMDisposeTargetMachine,
+    LLVMGetTargetFromTriple,
+    LLVMRelocMode,
+)
 from rocm.llvm.c.transforms import passbuilder
-
-from rocm.amd_comgr import amd_comgr as comgr
+from rocm.llvm.c.types import LLVMOpaqueModule
 
 from numba.hip.util import llvmutils
 
@@ -202,7 +211,7 @@ class AMDGPUTargetInitError(Exception):
 _lock = threading.Lock()
 
 
-def _RUN_PASSES(M, P, TM, O):
+def _RUN_PASSES(M, P, TM, OPTS):
     """
     Note:
         As of ROCm 6.0.0 and LLVM 17.0.0, LLVMRunPasses raises
@@ -211,7 +220,7 @@ def _RUN_PASSES(M, P, TM, O):
         us to create a child process. We let the child process
         abort and let the main process report a runtime error.
     """
-    err = passbuilder.LLVMRunPasses(M, P, TM, O)
+    err = passbuilder.LLVMRunPasses(M, P, TM, OPTS)
     if err:
         # TODO dead code, never reached as LLVMRunPasses raises SIGABRT
         msg = LLVMGetErrorMessage(err)  # consumes the error
@@ -250,7 +259,9 @@ class AMDGPUTargetMachine:
                 cls.__INSTANCES[target_ident] = object.__new__(cls)
         return cls.__INSTANCES[target_ident]
 
-    def __init_target_machine(self, target_cpu: str, target_features: str = ""):
+    def __init_target_machine(
+        self, target_cpu: str, target_features: str = ""
+    ):
         global TRIPLE
 
         _log.debug(
@@ -292,7 +303,12 @@ class AMDGPUTargetMachine:
         return self._data_layout
 
     def optimize_module(
-        self, mod, mod_len: int = -1, passes: str = "default<O3>", to_bc: bool=False, **pass_builder_opts
+        self,
+        mod,
+        mod_len: int = -1,
+        passes: str = "default<O3>",
+        to_bc: bool = False,
+        **pass_builder_opts,
     ):
         r"""Optimizes LLVM IR, bitcode, or `rocm.llvm.c.types.LLVMOpaqueModule`.
 
@@ -351,7 +367,12 @@ class AMDGPUTargetMachine:
         # stderr_post = sys.stderr
         process = mp.Process(
             target=_RUN_PASSES,
-            args=(optimized, passes.encode("utf-8"), self._target_machine, opts),
+            args=(
+                optimized,
+                passes.encode("utf-8"),
+                self._target_machine,
+                opts,
+            ),
         )
         process.start()
         process.join()
@@ -371,7 +392,9 @@ class AMDGPUTargetMachine:
             result = optimized
         else:
             result = (
-                llvmutils.to_bc(optimized) if to_bc else llvmutils.to_ir(optimized)
+                llvmutils.to_bc(optimized)
+                if to_bc
+                else llvmutils.to_ir(optimized)
             )
 
         # clean up
@@ -415,7 +438,8 @@ __all__ = [
     "ADDRSPACE_LOCAL",
     "ISAInfo",
     "TRIPLE",
-    "ISA_INFOS" "AMDGPUTargetInitError",
+    "ISA_INFOS",
+    "AMDGPUTargetInitError",
     "AMDGPUTargetMachine",
     "DATA_LAYOUT",
 ]

@@ -46,8 +46,10 @@
 # SOFTWARE.
 
 import numpy as np
+
 from numba import hip as cuda
-from numba.hip.testing import unittest, HIPTestCase as CUDATestCase
+from numba.hip.testing import HIPTestCase as CUDATestCase
+from numba.hip.testing import unittest
 
 
 class TestCudaEvent(CUDATestCase):
@@ -81,5 +83,5 @@ class TestCudaEvent(CUDATestCase):
         evtstart.elapsed_time(evtend)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

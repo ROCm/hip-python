@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# flake8: noqa
+
 import os
 import re
 
@@ -34,8 +36,7 @@ _mr = _modulerepl.ModuleReplicator(
     ).replace("cudadrv", "hipdrv"),
 )
 
-from . import stubs
-from . import hipdevicelib
+from . import hipdevicelib, stubs
 
 # Gives us types
 #   Dim3(types.Type),
@@ -50,10 +51,7 @@ types = _mr.create_and_register_derived_module(
 delattr(types, "GridGroup")  # TODO cooperative groups
 delattr(types, "grid_group")  # TODO cooperative groups
 
-from . import models
-from . import hip
-from . import math
-from . import numpy
+from . import hip, math, models, numpy
 
 ufuncs = _mr.create_and_register_derived_module(
     "ufuncs",
@@ -63,8 +61,7 @@ ufuncs = _mr.create_and_register_derived_module(
 )  # make this a submodule of the package
 
 from . import vector_types
-
 from .registries import (
-    typing_registry,
     impl_registry,
+    typing_registry,
 )

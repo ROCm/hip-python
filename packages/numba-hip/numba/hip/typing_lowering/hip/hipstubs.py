@@ -45,18 +45,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import itertools
+from collections import defaultdict
+from inspect import Parameter, Signature
+
+import numpy as np
+
+from numba.hip import typing_lowering
 from numba.hip.typing_lowering.stubs import (
     Stub,
     StubResolveAlways,
     stub_function,
 )
-
-import numpy as np
-from collections import defaultdict
-import itertools
-from inspect import Signature, Parameter
-
-from numba.hip import typing_lowering
 
 # --------------------------------------------------------------------------------
 # HIP
@@ -254,11 +254,14 @@ def make_vector_type_stubs():
                     "_description_": f"<{type_name}>",
                     "__signature__": Signature(
                         parameters=[
-                            Parameter(name=attr_name, kind=Parameter.POSITIONAL_ONLY)
+                            Parameter(
+                                name=attr_name, kind=Parameter.POSITIONAL_ONLY
+                            )
                             for attr_name in attr_names[:nelem]
                         ]
                     ),
-                    "__doc__": f"A stub for {type_name} to be used in " "HIP kernels.",
+                    "__doc__": f"A stub for {type_name} to be used in "
+                    "HIP kernels.",
                 },
                 **{"aliases": []},
             },

@@ -45,23 +45,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import logging
 import os
 import re
-import textwrap
-import logging
 import shlex
+import textwrap
 
 from llvmlite import ir
-
 from numba.core import config, serialize
 from numba.core.codegen import Codegen, CodeLibrary
 
-from .hipdrv import devices, driver
-from . import amdgcn
-from . import hipconfig
-from .util import llvmutils, comgrutils, linkercache
+from . import amdgcn, hipconfig
+from .hipdrv import devices, driver, hiprtc
 from .typing_lowering import hipdevicelib
-from .hipdrv import hiprtc
+from .util import comgrutils, linkercache, llvmutils
 
 _log = logging.getLogger(__file__)
 
@@ -167,13 +164,17 @@ class _LinkerDependencyHandler:
             nonlocal result
             nonlocal dependency
             if self.remove_duplicates:
-                result.append((id(dependency) if dep_id == None else dep_id, entry))
+                result.append(
+                    (id(dependency) if dep_id is None else dep_id, entry)
+                )
             else:
                 result.append(entry)
 
         # pre-order walk
         result = []
-        for dependency in HIPCodeLibrary._walk_linking_dependencies(self.library):
+        for dependency in HIPCodeLibrary._walk_linking_dependencies(
+            self.library
+        ):
             dep_mod = None
             dep_id = None
 
@@ -181,7 +182,9 @@ class _LinkerDependencyHandler:
                 dep_mod = dependency.get_unlinked_llvm_ir(self.amdgpu_arch)
                 # dep_mod = str(dependency._module)
             elif isinstance(dependency, str):  # an LLVM IR/BC or HIP file
-                fileext = os.path.basename(dependency).split(os.path.extsep)[-1]
+                fileext = os.path.basename(dependency).split(os.path.extsep)[
+                    -1
+                ]
                 dep_id = dependency
                 mode = "rb" if fileext == "bc" else "r"
                 buf = _read_file(dependency, mode)
@@ -207,7 +210,9 @@ class _LinkerDependencyHandler:
         else:
             return result
 
-    def _extract_if_buffer_is_clang_offload_bundle(self, buf, buf_len, amdgpu_arch):
+    def _extract_if_buffer_is_clang_offload_bundle(
+        self, buf, buf_len, amdgpu_arch
+    ):
         """If the buffer is a Clang offload bundle, extract the architecture-specific part from it.
 
         Returns:
@@ -250,13 +255,17 @@ class _LinkerDependencyHandler:
             nonlocal result
             nonlocal dependency
             if self.remove_duplicates:
-                result.append((id(dependency) if dep_id == None else dep_id, entry))
+                result.append(
+                    (id(dependency) if dep_id is None else dep_id, entry)
+                )
             else:
                 result.append(entry)
 
         # pre-order walk
         result = []
-        for dependency in HIPCodeLibrary._walk_linking_dependencies(self.library):
+        for dependency in HIPCodeLibrary._walk_linking_dependencies(
+            self.library
+        ):
             dep_mod = None
             dep_id = None
 
@@ -265,16 +274,22 @@ class _LinkerDependencyHandler:
                     dependency.get_unlinked_llvm_ir(self.amdgpu_arch)
                 )
             elif isinstance(dependency, str):  # an LLVM IR/BC or HIP file
-                fileext = os.path.basename(dependency).split(os.path.extsep)[-1]
+                fileext = os.path.basename(dependency).split(os.path.extsep)[
+                    -1
+                ]
                 dep_id = dependency
                 mode = "rb" if fileext == "bc" else "r"
                 buf = _read_file(dependency, mode)
                 if fileext in LLVM_IR_EXT:  # 'ptx' is interpreted as 'll'.
                     dep_mod = self._process_buf(buf)
                 else:
-                    dep_mod = self._compile_hiprtc_program(buf, name=dependency)
+                    dep_mod = self._compile_hiprtc_program(
+                        buf, name=dependency
+                    )
             elif isinstance(dependency, tuple):  # an LLVM IR/BC buffer
-                ((buf, buf_len), fileext, hip_opts) = self._handle_tuple(dependency)
+                ((buf, buf_len), fileext, hip_opts) = self._handle_tuple(
+                    dependency
+                )
                 if fileext == "ll":  # always assume LLVM IR/BC
                     dep_mod = self._process_buf(buf, buf_len)
                 else:
@@ -364,9 +379,9 @@ class _LinkerDependencyHandler:
 
         try:  # check if the buffer length can be obtained via `len(buf)`
             len(buf)
-        except:  # otherwise, check if buf_len is specified
+        except TypeError:  # otherwise, check if buf_len is specified
             if not buf_len or buf_len < 1:
-                raise RuntimeError(
+                raise TypeError(
                     f"buffer size cannot be obtained for input {str(buf)}"
                 )
 
@@ -405,7 +420,9 @@ class _LinkerDependencyHandler:
             We use the second entry to identify if we deal with a buffer (`int` or ``None``)
             vs. a filepath (`str`).
         """
-        err_begin = f"while processing link-time dependency specification '{str(dep)}'"
+        err_begin = (
+            f"while processing link-time dependency specification '{str(dep)}'"
+        )
 
         valid_formats = textwrap.indent(
             textwrap.dedent(
@@ -420,7 +437,9 @@ class _LinkerDependencyHandler:
             ),
             " " * 2,
         )
-        valid_formats = f"\n\nValid tuple specification formats:\n\n{valid_formats}"
+        valid_formats = (
+            f"\n\nValid tuple specification formats:\n\n{valid_formats}"
+        )
 
         if len(dep) < 2:
             raise ValueError(
@@ -446,7 +465,7 @@ class _LinkerDependencyHandler:
             err_begin = f"{err_begin} (interpreted as buffer specification): "
             buf = dep[0]
             buf_len = dep[1]
-            if buf_len != None and not isinstance(buf_len, int):
+            if buf_len is not None and not isinstance(buf_len, int):
                 raise ValueError(
                     f"{err_begin}tuple entry with index == 1 must be an 'int' (or 'None').{valid_formats}"
                 )
@@ -510,7 +529,7 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 AMD GPU device function instead of an AMD GPU kernel.
                 Defaults to ``True``.
         """
-        if max_registers != None:
+        if max_registers is not None:
             raise NotImplementedError(
                 "arg 'max_registers' currently not supported due to HIPRTC limitations"
             )
@@ -579,9 +598,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         An assertion fails otherwise.
         """
         assert (
-            new_entry_name != None
-            and self._entry_name != None
-            and self._original_entry_name != None
+            new_entry_name is not None
+            and self._entry_name is not None
+            and self._original_entry_name is not None
         )
         self._original_entry_name = self._entry_name
         self._entry_name = new_entry_name
@@ -669,8 +688,12 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         if unlinked_llvm_strs:
             return unlinked_llvm_strs
         else:
-            unlinked_llvm_strs = [str(m) for m in self._get_linker_inputs(amdgpu_arch)]
-            self._unlinked_amdgpu_llvm_strs_cache[amdgpu_arch] = unlinked_llvm_strs
+            unlinked_llvm_strs = [
+                str(m) for m in self._get_linker_inputs(amdgpu_arch)
+            ]
+            self._unlinked_amdgpu_llvm_strs_cache[amdgpu_arch] = (
+                unlinked_llvm_strs
+            )
             return unlinked_llvm_strs
 
     def get_raw_source_str(self):
@@ -710,11 +733,13 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             `HIPCodeLibrary.get_raw_source_strs`
         """
         if linked:
-            return llvmutils.to_ir_fast(self.get_linked_llvm_ir(amdgpu_arch)).decode(
-                "utf-8"
-            )
+            return llvmutils.to_ir_fast(
+                self.get_linked_llvm_ir(amdgpu_arch)
+            ).decode("utf-8")
         else:
-            return bundle_file_contents(self.get_unlinked_llvm_strs(amdgpu_arch))
+            return bundle_file_contents(
+                self.get_unlinked_llvm_strs(amdgpu_arch)
+            )
 
     # @abstractmethod (5/6), added arch amdgpu_arch
     def get_asm_str(self, amdgpu_arch: str):
@@ -787,7 +812,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             fun_attributes = comgrutils.get_llvm_kernel_attributes(
                 amdgpu_arch, only_kv=True, raw=True
             )
-        self._module.data_layout = amdgcn.AMDGPUTargetMachine(amdgpu_arch).data_layout
+        self._module.data_layout = amdgcn.AMDGPUTargetMachine(
+            amdgpu_arch
+        ).data_layout
         for fn in self._module.functions:
             assert isinstance(fn, ir.Function)
             if not fn.is_declaration:
@@ -883,14 +910,18 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             in this case.
         """
         global _TYPED_PTR
-        if self._entry_name != None:
-            assert self._original_entry_name != None
-            llvm_str = llvm_str.replace(self._original_entry_name, self._entry_name)
+        if self._entry_name is not None:
+            assert self._original_entry_name is not None
+            llvm_str = llvm_str.replace(
+                self._original_entry_name, self._entry_name
+            )
         if (
             "*" in llvm_str
         ):  # note: significant optimization as _TYPED_PTR.sub is costly
             llvm_str = _TYPED_PTR.sub(string=llvm_str, repl="ptr")
-        llvm_str = llvm_str.replace("sext ptr null to i", "ptrtoint ptr null to i")
+        llvm_str = llvm_str.replace(
+            "sext ptr null to i", "ptrtoint ptr null to i"
+        )
         return self._alloca_addrspace_correction(llvm_str)
 
     def get_unlinked_llvm_ir(
@@ -941,9 +972,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 result = llvmutils.link_modules(
                     result, hipdevicelib.get_llvm_module(amdgpu_arch)
                 )
-                self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache[amdgpu_arch] = (
-                    result
-                )
+                self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache[
+                    amdgpu_arch
+                ] = result
         else:
             result = self._linked_amdgpu_llvm_ir_cache.get(amdgpu_arch, None)
         return result
@@ -981,7 +1012,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                 The result of the linking as LLVM bitcode or human-readable LLVM IR depending on argument ``to_bc``.
         """
         amdgpu_arch = _get_amdgpu_arch(amdgpu_arch)
-        linked_llvm = self._lookup_linked_llvm_ir(amdgpu_arch, link_in_hipdevicelib)
+        linked_llvm = self._lookup_linked_llvm_ir(
+            amdgpu_arch, link_in_hipdevicelib
+        )
         if linked_llvm:
             return linked_llvm
 
@@ -998,7 +1031,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
 
         if config.DUMP_LLVM:
             unlinked_llvm_strs = [str(m) for m in linker_inputs]
-            self._unlinked_amdgpu_llvm_strs_cache[amdgpu_arch] = unlinked_llvm_strs
+            self._unlinked_amdgpu_llvm_strs_cache[amdgpu_arch] = (
+                unlinked_llvm_strs
+            )
             self._dump_ir(
                 "AMD GPU LLVM for pyfunc '%s' (unlinked inputs, postprocessed)",
                 bundle_file_contents(unlinked_llvm_strs),
@@ -1011,9 +1046,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         # apply mid-end optimizations if requested
         if hipconfig.ENABLE_MIDEND_OPT and self._options.get("opt", False):
 
-            linked_llvm = amdgcn.AMDGPUTargetMachine(amdgpu_arch).optimize_module(
-                linked_llvm
-            )
+            linked_llvm = amdgcn.AMDGPUTargetMachine(
+                amdgpu_arch
+            ).optimize_module(linked_llvm)
             if config.DUMP_LLVM:
                 self._dump_ir(
                     "AMD GPU LLVM for pyfunc '%s' (mid-end optimizations)",
@@ -1070,7 +1105,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         )
         if amdgpu_arch in self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache:
             linker.add_llvm_ir(
-                self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache[amdgpu_arch]
+                self._linked_amdgpu_llvm_ir_with_hipdevicelib_cache[
+                    amdgpu_arch
+                ]
             )
         elif amdgpu_arch in self._linked_amdgpu_llvm_ir_cache:
             linker.add_llvm_ir(self._linked_amdgpu_llvm_ir_cache[amdgpu_arch])
@@ -1078,7 +1115,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
         else:
             linker.add_llvm_ir(
                 self.get_linked_llvm_ir(
-                    amdgpu_arch=amdgpu_arch, to_bc=True, link_in_hipdevicelib=False
+                    amdgpu_arch=amdgpu_arch,
+                    to_bc=True,
+                    link_in_hipdevicelib=False,
                 )
             )
             linker.add_llvm_ir(hipdevicelib.get_llvm_bc(amdgpu_arch))

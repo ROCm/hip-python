@@ -45,17 +45,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from numba.hip import hipconfig
-from numba.hip.hipdrv.error import (
-    HiprtcError,
-    HiprtcCompilationError,
-)
-
-import os
 import functools
+import os
+import shlex
 import threading
 import warnings
-import shlex
+
+from numba.hip import hipconfig
+from numba.hip.hipdrv.error import (
+    HiprtcCompilationError,
+    HiprtcError,
+)
 
 _hiprtc_lock = threading.Lock()
 
@@ -136,14 +136,18 @@ class HIPRTC:
                     def checked_call(*args, func=func, name=name):
                         result = func(*args)
                         error = result[0]
-                        if error == hiprtc.hiprtcResult.HIPRTC_ERROR_COMPILATION:
+                        if (
+                            error
+                            == hiprtc.hiprtcResult.HIPRTC_ERROR_COMPILATION
+                        ):
                             raise HiprtcCompilationError()
                         elif error != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
                             try:
                                 error_name = error.name
                             except ValueError:
                                 error_name = (
-                                    "Unknown hiprtc result " f"(error code: {error})"
+                                    "Unknown hiprtc result "
+                                    f"(error code: {error})"
                                 )
                             msg = f"Failed to call {name}: {error_name}"
                             raise HiprtcError(msg)
@@ -187,7 +191,9 @@ class HIPRTC:
         # prior to the call to hiprtcCompileProgram
         encoded_options = [opt.encode() for opt in options]
         try:
-            self.hiprtcCompileProgram(program.handle, len(options), encoded_options)
+            self.hiprtcCompileProgram(
+                program.handle, len(options), encoded_options
+            )
             return False
         except HiprtcCompilationError:
             return True

@@ -26,14 +26,15 @@ __author__ = "Advanced Micro Devices, Inc."
 import textwrap
 
 from numba.hip.util.llvmutils import (
-    verify,
-    to_ir,
-    to_bc,
-    link_modules,
-    is_human_readable_clang_offload_bundle,
     amdgpu_target_id,
+    is_human_readable_clang_offload_bundle,
+    link_modules,
     split_human_readable_clang_offload_bundle,
+    to_bc,
+    to_ir,
+    verify,
 )
+
 
 def test_00_to_bc_to_ir():
     llvm_ir = textwrap.dedent(
@@ -62,6 +63,7 @@ def test_00_to_bc_to_ir():
 
     # print(to_bc(llvm_ir))
     # print(to_bc(llvm_bc))
+
 
 def test_01_link_modules():
     main_llvm_ir = textwrap.dedent(
@@ -150,33 +152,38 @@ def test_01_link_modules():
         !5 = !{!"Simple C++ TBAA"}
         """
     )
-    
+
     verify(main_llvm_ir)
     # verify(dep_llvm_ir) # TODO get strange error 'Attribute does not match Module context!'
-    linked = link_modules([main_llvm_ir, dep_llvm_ir], to_bc=False).decode("utf-8")
-    # verify(linked)
-    # print(linked)
+    _ = link_modules([main_llvm_ir, dep_llvm_ir], to_bc=False).decode("utf-8")
+    # verify(_)
+    # print(_)
+
 
 def test_02_is_human_readable_clang_offload_bundle():
-    bundle = textwrap.dedent("""\
+    bundle = textwrap.dedent(
+        """\
     ; __CLANG_OFFLOAD_BUNDLE____START__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
     ; DEVICE PART
     ; __CLANG_OFFLOAD_BUNDLE____END__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
     ; __CLANG_OFFLOAD_BUNDLE____START__ host-x86_64-unknown-linux-gnu-
     ; HOST PART
     ; __CLANG_OFFLOAD_BUNDLE____END__ host-x86_64-unknown-linux-gnu-
-    """)
+    """
+    )
     assert is_human_readable_clang_offload_bundle(bundle)
 
 
 def test_03_split_human_readable_clang_offload_bundle():
-    bundle = textwrap.dedent("""\
+    bundle = textwrap.dedent(
+        """\
     ; __CLANG_OFFLOAD_BUNDLE____START__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
     ; DEVICE PART
     ; __CLANG_OFFLOAD_BUNDLE____END__ hip-amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-
     ; __CLANG_OFFLOAD_BUNDLE____START__ host-x86_64-unknown-linux-gnu-
     ; HOST PART
     ; __CLANG_OFFLOAD_BUNDLE____END__ host-x86_64-unknown-linux-gnu-
-    """)
+    """
+    )
     parts = split_human_readable_clang_offload_bundle(bundle)
     assert amdgpu_target_id("gfx90a:sramecc+:xnack-") in parts

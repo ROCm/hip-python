@@ -22,7 +22,7 @@
 
 """Typing declarations and lowering impls for HIP types
 
-Typing declarations and lowering impls for HIP types such as 
+Typing declarations and lowering impls for HIP types such as
 dim3 and arrays in GPU address spaces.
 
 Attributes:
@@ -35,7 +35,8 @@ Attributes:
 
 from numba.hip.typing_lowering.stubs import Stub
 
-from . import hipstubs
+# NOTE we cannot define `__all__` as `thestubs` entries are dynamically created
+from . import hipstubs, lowering, typing  # noqa: F401
 
 # Expose vector type constructors and aliases as module level attributes.
 thestubs = {}
@@ -43,7 +44,7 @@ for vector_type_stub in hipstubs._vector_type_stubs:
     thestubs[vector_type_stub.__name__] = vector_type_stub
     for alias in vector_type_stub.aliases:
         thestubs[alias] = vector_type_stub
-del vector_type_stub
+del vector_type_stub  # type: ignore
 # print(vars(hipstubs))
 for k, v in vars(hipstubs).items():
     try:
@@ -53,6 +54,3 @@ for k, v in vars(hipstubs).items():
         # 'v' must be a class to use 'issubclass'
         pass
 globals().update(thestubs)
-
-from . import typing
-from . import lowering

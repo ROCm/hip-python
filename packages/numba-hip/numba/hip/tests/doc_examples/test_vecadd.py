@@ -46,12 +46,14 @@
 # SOFTWARE.
 
 from numba import hip
+
 hip.pose_as_cuda()
 
-import unittest
+import unittest  # noqa: E402
 
-from numba.cuda.testing import CUDATestCase, skip_on_cudasim
-from numba.tests.support import captured_stdout
+from numba.cuda.testing import CUDATestCase, skip_on_cudasim  # noqa: E402
+from numba.tests.support import captured_stdout  # noqa: E402
+
 
 @skip_on_cudasim("cudasim doesn't support cuda import at non-top-level")
 class TestVecAdd(CUDATestCase):
@@ -74,9 +76,10 @@ class TestVecAdd(CUDATestCase):
     def test_ex_vecadd(self):
         # ex_vecadd.import.begin
         import numpy as np
-        from numba import cuda
-        # ex_vecadd.import.end
 
+        from numba import cuda
+
+        # ex_vecadd.import.end
         # ex_vecadd.kernel.begin
         @cuda.jit
         def f(a, b, c):
@@ -86,6 +89,7 @@ class TestVecAdd(CUDATestCase):
 
             if tid < size:
                 c[tid] = a[tid] + b[tid]
+
         # ex_vecadd.kernel.end
 
         # Seed RNG for test repeatability
@@ -113,8 +117,7 @@ class TestVecAdd(CUDATestCase):
         # ex_vecadd.launch.end
 
         np.testing.assert_equal(
-            c.copy_to_host(),
-            a.copy_to_host() + b.copy_to_host()
+            c.copy_to_host(), a.copy_to_host() + b.copy_to_host()
         )
 
 
