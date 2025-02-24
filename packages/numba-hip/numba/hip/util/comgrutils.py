@@ -28,6 +28,7 @@ Utitilies that make use of the `rocm.amd_comgr` interfaces
 that are shipped with the ROCm LLVM Python project.
 """
 
+import shlex
 from rocm.amd_comgr import amd_comgr as comgr
 
 from . import llvmutils
@@ -60,17 +61,22 @@ def compile_hip_source_to_llvm(
     Returns:
         tuple: A triple consisting of LLVM BC/IR, the log or None, diagnostic information or None.
     """
-    (
-        llvm_bc_or_ir,
-        log,
-        diagnostic,
-    ) = comgr.ext.compile_hip_to_bc(
+    kwargs = dict(
         source=source,
         isa_name=f"amdgcn-amd-amdhsa--{amdgpu_arch}",
         hip_version_tuple=hip_version_tuple[:3],
         logging=comgr_logging,
         extra_opts=extra_opts,
     )
+
+    try:
+        result = comgr.ext.compile_hip_to_bc(**kwargs)
+    except TypeError:
+        # NOTE: older versions of ROCm LLVM Python expect a `str` for `extra_opts`.
+        kwargs["extra_opts"] = shlex.join(extra_opts)
+        result = comgr.ext.compile_hip_to_bc(**kwargs)
+    ( llvm_bc_or_ir, log, diagnostic ) = result
+
     if to_llvm_ir:
         llvm_bc_or_ir = llvmutils.to_ir_from_bc(llvm_bc_or_ir, len(llvm_bc_or_ir))
     return (llvm_bc_or_ir, log, diagnostic)
