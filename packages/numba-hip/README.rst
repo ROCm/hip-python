@@ -257,14 +257,13 @@ and then distribute it (or install it):
      # pip clone https://github.com/ROCm/numba-hip.git -b branch
    pip install --upgrade pip
    pip config set global.extra-index-url https://test.pypi.org/simple
-   pip install build venv # install PyPA build and venv
-   # syntax 1: python3 -m build install .
-   # syntax 2: pip install -m build install .[rocm-<major>-<minor>-<patch>]
-   python3 -m build install .[rocm-6-1-2]
-     # alternatively: install optional test dependencies:
-     # python3 -m build install .[rocm-6-1-2,test]
+   pip install build # install PyPA build 
+   python3 -m build --wheel .
+
    # optional: install the wheel:
    pip install dist/*.whl
+   # alternatively: install optional test dependencies:
+   # pip3 install dist/numba_hip-0.1-py3-none-any.whl[rocm-6-1-2]
 
 .. note:: ROCm key must agree with your environment
 
