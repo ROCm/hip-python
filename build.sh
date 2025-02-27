@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # MIT License
-# 
+#
 # Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +31,7 @@ set -o xtrace
 HELP_MSG="
 Usage: ./build.sh [OPTIONS]
 
-Options:   
+Options:
   -c,--checkout        The 'release/rocm-rel-X.Y.Z' branch to checkout out the package source files from. If this option is not used,
                        the user is assumed to checkout the files by himself beforehand.
   --rocm-path          Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
@@ -166,6 +166,10 @@ if [ -z ${NO_VENV+x} ]; then
 fi
 shopt -s expand_aliases
 declare -x PYVER=$(PYTHON --version | grep -o "3\.[0-9]\+\." | tr -d '.')
+if [ -z ${NO_VENV+x} ]; then
+  # ensure pip is upgraded if venv is used
+  PYTHON -m pip install --upgrade pip
+fi
 
 if [ ! -z ${HIP+x} ]; then
   # build hip-python
@@ -185,7 +189,7 @@ if [ ! -z ${HIP+x} ]; then
   PYTHON setup.py clean --all build_ext -j ${NUM_JOBS} bdist_wheel
   cd ..
 fi
-  
+
 if [ ! -z ${CUDA+x} ]; then
   # build hip-python-as-cuda
   echo "building package hip-python-as-cuda"
@@ -220,19 +224,23 @@ if [ ! -z ${DOCS+x} ]; then
     PYTHON -m pip install --force-reinstall $(find . -path "*hip-python*/dist/hip_python*${PYVER}*whl")
   fi
   DOCS_DIR="docs"
-  PYTHON -m pip install -r ${DOCS_DIR}/requirements.txt
-  
+  PYTHON -m pip install -r ${DOCS_DIR}/sphinx/requirements.txt
+
+  PYTHON -m pip list
+
   if [ ! -z ${NO_API_DOCS+x} ]; then
      mv "${DOCS_DIR}/python_api" "./_python_api"
   fi
 
+  pushd ${DOCS_DIR}
   if [ -z ${NO_CLEAN_DOCS+x} ]; then
-    PYTHON -m sphinx -j ${NUM_JOBS} -T -E -b html -d _build/doctrees -D language=en ${DOCS_DIR} ${DOCS_DIR}/_build/html
+    SPHINX_EXTRA_ARGS="-E"
   else
-    echo "reuse saved sphinx environment" 
-    PYTHON -m sphinx -j ${NUM_JOBS} -T -b html -d _build/doctrees -D language=en ${DOCS_DIR} ${DOCS_DIR}/_build/html
+    echo "reuse saved sphinx environment"
   fi
-  
+  PYTHON -m sphinx -j ${NUM_JOBS} -T ${SPHINX_EXTRA_ARGS} -b html -d _build/doctrees -D language=en . _build/html
+  popd
+
   if [ ! -z ${NO_API_DOCS+x} ]; then
      mv "./_python_api" "${DOCS_DIR}/python_api"
   fi

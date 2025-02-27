@@ -3,19 +3,64 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+from datetime import datetime as _datetime
 
-# requires: pip install rocm-docs myst-parser
+_today = _datetime.today()
 
-from rocm_docs import ROCmDocs
+# Rocm-docs-core
+external_projects_remote_repository = ""
+external_projects = ["python", "rocm"]
+external_projects_current_project = "hip-python"
+
+setting_all_article_info = True
+all_article_info_os = ["linux"]
+all_article_info_author = (
+    "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
+)
+all_article_info_date = _today.strftime(r"%Y-%m-%d")
+
+# specific settings override any general settings (eg: all_article_info_<field>)
+article_pages = [
+    {
+        "file": "index",
+        "read-time": "1 min read",
+    },
+    {
+        "file": "user_guide/0_install",
+        "read-time": "5 min read",
+    },
+    {
+        "file": "user_guide/1_usage",
+        "read-time": "60 min read",
+    },
+    {
+        "file": "user_guide/2_cuda_python_interop",
+        "read-time": "20 min read",
+    },
+    {
+        "file": "user_guide/3_datatypes",
+        "read-time": "10 min read",
+    },
+    {
+        "file": "user_guide/4_report_bugs",
+        "read-time": "20 min read",
+    },
+]
+
+html_theme = "rocm_docs_theme"
+html_theme_options = {"flavor": "rocm"}
+
+external_toc_path = "./sphinx/_toc.yml"
+
+extensions = [
+    "rocm_docs",
+    "sphinx.ext.autodoc",  # Automatically create API documentation from Python docstrings
+]
+
 
 project = "HIP Python"
 author = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
-copyright = "Copyright (c) 2023-2025 Advanced Micro Devices, Inc."
-# article info
-os_support = ["linux"]
-date = "2023-06-23"
+copyright = f"Copyright (c) 2023-{_today.strftime(r'%Y')} Advanced Micro Devices, Inc. All rights reserved."
 
 default_role = (
     "py:obj"  # this means that `test` will be expanded to :py:obj`test`
@@ -27,7 +72,6 @@ default_role = (
 
 autodoc_default_options = {
     "members": True,
-    "member-order": "bysource",
     "undoc-members": True,
     "special-members": "__init__, __getitem__",
     "inherited-members": True,
@@ -35,64 +79,3 @@ autodoc_default_options = {
     "imported-members": False,
     "member-order": "bysource",  # bysource: seems unfortunately not to work for Cython modules
 }
-
-# Rocm-docs-core
-external_projects_remote_repository = ""
-external_projects_current_project = "hip"
-
-article_pages = [
-    {
-        "file": "index",
-        "os": os_support,
-        "author": author,
-        "date": date,
-        "read-time": "1 min read",
-    },
-    {
-        "file": "user_guide/0_install",
-        "os": os_support,
-        "author": author,
-        "date": date,
-        "read-time": "5 min read",
-    },
-    {
-        "file": "user_guide/1_usage",
-        "os": os_support,
-        "author": author,
-        "date": date,
-        "read-time": "60 min read",
-    },
-    {
-        "file": "user_guide/2_cuda_python_interop",
-        "os": os_support,
-        "author": author,
-        "date": date,
-        "read-time": "20 min read",
-    },
-    {
-        "file": "user_guide/3_datatypes",
-        "os": os_support,
-        "author": author,
-        "date": date,
-        "read-time": "10 min read",
-    },
-    {
-        "file": "user_guide/4_report_bugs",
-        "os": os_support,
-        "author": author,
-        "date": date,
-        "read-time": "20 min read",
-    },
-]
-
-external_toc_path = "./sphinx/_toc.yml"
-
-docs_core = ROCmDocs(project)
-docs_core.setup()
-
-for sphinx_var in ROCmDocs.SPHINX_VARS:
-    globals()[sphinx_var] = getattr(docs_core, sphinx_var)
-
-extensions = [
-    "sphinx.ext.autodoc",  # Automatically create API documentation from Python docstrings
-]
