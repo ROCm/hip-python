@@ -1,17 +1,17 @@
 <!-- MIT License
-  -- 
+  --
   -- Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
-  -- 
+  --
   -- Permission is hereby granted, free of charge, to any person obtaining a copy
   -- of this software and associated documentation files (the "Software"), to deal
   -- in the Software without restriction, including without limitation the rights
   -- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
   -- copies of the Software, and to permit persons to whom the Software is
   -- furnished to do so, subject to the following conditions:
-  -- 
+  --
   -- The above copyright notice and this permission notice shall be included in all
   -- copies or substantial portions of the Software.
-  -- 
+  --
   -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
   -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,8 +24,8 @@
 
 **Welcome to the documentation pages for HIP Python!**
 
-HIP Python provides low-level Cython and Python&reg; bindings for the HIP runtime, HIPRTC,
-multiple math libraries and the communication library RCCL,
+HIP Python provides low-level Cython and Python&reg; bindings for the HIP
+runtime, HIPRTC, multiple math libraries and the communication library RCCL,
 and further a CUDA&reg; Python Interoperability layer that aims to simplify
 the porting of CUDA Python Python and Cython programs.
 
@@ -40,8 +40,8 @@ This documentation has been generated based on ROCm&trade; version 5.7.1.
 
 :::{grid-item-card} How to Install HIP Python
 
-Learn how to identify the correct HIP Python packages 
-to install for your ROCm&trade; installation, 
+Learn how to identify the correct HIP Python packages
+to install for your ROCm&trade; installation,
 where to retrieve the packages and what options
 you have to install them.
 
@@ -58,8 +58,8 @@ you have to install them.
 :::{grid-item-card} How to Use HIP Python
 
 Learn how to use HIP Python's interfaces in your Python or Cython program.
-We present a large number of examples that cover 
-HIP and HIPRTC as well as multiple math libraries (HIPBLAS, HIPRAND, HIPFFT) 
+We present a large number of examples that cover
+HIP and HIPRTC as well as multiple math libraries (HIPBLAS, HIPRAND, HIPFFT)
 and the communication library RCCL.
 Learn how to launch your own kernels and how the different
 libraries interact.
@@ -92,7 +92,7 @@ on AMD GPUs. The chapter covers Python and Cython programs.
 
 :::{grid-item-card} HIP Python's Adapter Types
 
-Learn about the datatypes that HIP Python uses to translate between C and Python 
+Learn about the datatypes that HIP Python uses to translate between C and Python
 and that are designed to ease interoperability with other
 packages such as [NumPy](https://numpy.org) and [Numba](https://numba.pydata.org/).
 
@@ -127,4 +127,4 @@ and functions.
 - {doc}`python_api/nvrtc`
 :::
 
-::::
+:::
