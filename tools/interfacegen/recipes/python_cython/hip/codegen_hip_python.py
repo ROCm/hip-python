@@ -854,7 +854,8 @@ def write_docs_page_per_module(
                 .. automodule:: {module}.{lib}
                 {extra}
 
-                ```"""
+                ```
+                """
                 )
             )
 
