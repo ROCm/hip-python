@@ -29,14 +29,17 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 ## Requirements
 
 * Currently, only Linux is supported (prebuilt packages and code).
-  * Prebuilt packages distributed via PyPI (or Test PyPI) are only provided for Linux systems that agree with the `manylinux_2_28_x86_64` tag.
+  * Prebuilt packages distributed via PyPI (or Test PyPI) are only provided for
+  Linux systems that agree with the `manylinux_2_28_x86_64` tag.
 * Requires that a compatible ROCm&trade; HIP SDK is installed on your system.
   * Source code is provided only for particular ROCm versions.
     * See the `git` branches tagged with `release/rocm-rel-X.Y[.Z]`
   * Prebuilt packages are built only for particular ROCm versions.
 
 > [!NOTE]
-> You may find that packages for one ROCm&trade; release are compatible with the ROCm&trade; HIP SDK of another release as the HIP Python functions load HIP C functions in a lazy manner.
+> You may find that packages for one ROCm&trade; release are compatible with
+> the ROCm&trade; HIP SDK of another release as the HIP Python functions load
+> HIP C functions in a lazy manner.
 
 ### Build requirements
 
@@ -44,27 +47,31 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 * A C compiler
 * `bash`, `python3` + `venv`
 * The ROCm&trade; HIP SDK
-* All other Python build requirements are taken care of by installation scripts.
-  If you decide not to use these scripts, take a look into the `requirements.txt` file
-  in the top-level folder of the this repository and those
-  in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
+* All other Python build requirements are taken care of by installation
+  scripts. If you decide not to use these scripts, take a look into the
+  `requirements.txt` file in the top-level folder of the this repository and
+  those in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
 
 ## Install Prebuilt Package(s)
 
-<!--
-> **NOTE**: The prebuilt packages might not be available on PyPI directly after a ROCm release as this project is not an official part of the ROCm HIP SDK yet and thus is not fully integrated into the global ROCm HIP SDK build process. Check the `simple` lists to see if your operating system and Python version is supported: [hip-python](https://test.pypi.org/simple/hip-python/), [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
--->
-
 > [!NOTE]
-> Prebuilt packages for some ROCm releases are published to Test PyPI first. Check the `simple` lists to see if your operating system and Python version is supported: [hip-python](https://test.pypi.org/simple/hip-python/), [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
+> Prebuilt packages for some ROCm releases are published to Test PyPI first.
+> Check the `simple` lists to see if your operating system and Python version
+> is supported: [hip-python](https://test.pypi.org/simple/hip-python/),
+> [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
+
+***
 
 > [!WARNING]
-> Currently, we have not uploaded any HIP Python packages to PyPI yet. So far we have only uploaded packages to TestPyPI, mainly intended for internal testing purposes. If you find similar named packages on PyPI they may been provided by others, possibly with malicious intent.
+> Currently, we have not uploaded any HIP Python packages to PyPI yet. So far
+> we have only uploaded packages to TestPyPI, mainly intended for internal
+> testing purposes. If you find similar named packages on PyPI they may been
+> provided by others, possibly with malicious intent.
 
 ### Via TestPyPI
 
-First identify the first three digits of the version number of your ROCm&trade; installation.
-Then install the HIP Python package(s) as follows:
+First identify the first three digits of the version number of your
+ROCm&trade; installation. Then install the HIP Python package(s) as follows:
 
 ```shell
 python3 -m pip install -i https://test.pypi.org/simple hip-python~=$rocm_version
@@ -95,26 +102,26 @@ python3 -m pip install <path/to/hip_python_as_cuda>.whl
 
 > [!NOTE]
 > See the HIP Python user guide for more details:
-> https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html
+> <https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
 
 ## Build From Source
 
 > [!NOTE]
 > The `main` branch is used for tracking updates to the docs, examples and CI scripts.
-> The source code can be found on the release branches `relaese/rocm-rel-X.Y[.Z]`.
+> The source code can be found on the release branches `release/rocm-rel-X.Y[.Z]`.
 
 1. Install ROCM
 1. Install `pip`, virtual environment and development headers for Python 3:
+
    ```bash
    # Ubuntu:
    sudo apt install python3-pip python3-venv python3-dev
    ```
-1. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular ROCm&trade; installation:
-1. Initialize the branch:
-   ```bash
-   ./init.sh
-   ```
+
+1. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular
+   ROCm&trade; installation:
 1. Finally run:
+
    ```bash
    ./build.sh --hip --cuda --post-clean
    ```
@@ -125,9 +132,11 @@ as discussed in the previous section.
 
 > [!NOTE]
 > See the HIP Python developer guide for more details:
-> https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html
+> <https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
 
 ### Build Options
+
+<!-- markdownlint-disable  MD013 -->
 
 ```text
 Usage: ./build.sh [OPTIONS]
@@ -154,16 +163,23 @@ Options:
   -h, --help           Show this help message.
 ```
 
+<!-- markdownlint-enable  MD013 -->
+
 ## Known Compilation Issues
 
 ### The `hipsparse` Module won't Compile with Older GCC Release
 
-With all ROCm&trade; versions before version 5.6.0 (exclusive) and older GCC versions,
-compiling HIP Python's `hipsparse` module results in a compiler error caused by lines such as:
+With all ROCm&trade; versions before version 5.6.0 (exclusive) and older GCC
+versions, compiling HIP Python's `hipsparse` module results in a compiler
+error caused by lines such as:
+
+<!-- markdownlint-disable  MD013 -->
 
 ```c
 HIPSPARSE_ORDER_COLUMN [[deprecated("Please use HIPSPARSE_ORDER_COL instead")]] = 1,
 ```
+
+<!-- markdownlint-enable  MD013 -->
 
 #### Workaround 1: Disable Build of 'hipsparse' Module
 
@@ -175,20 +191,28 @@ be achieved by supplying `--libs "^hipsparse"` to `build.sh`.
 For this fix, you need write access to the ROCm&trade; header files.
 Then, e.g., modify file `<path_to_rocm>/hiprand/hiprand_hcc.h` such that:
 
+<!-- markdownlint-disable  MD013 -->
+
 ```c
 HIPSPARSE_ORDER_COLUMN [[deprecated("Please use HIPSPARSE_ORDER_COL instead")]] = 1,
 ```
 
+<!-- markdownlint-enable  MD013 -->
+
 becomes
+
+<!-- markdownlint-disable  MD013 -->
 
 ```c
 HIPSPARSE_ORDER_COLUMN = 1, // [[deprecated("Please use HIPSPARSE_ORDER_COL instead")]] = 1,
 ```
 
+<!-- markdownlint-enable  MD013 -->
+
 ### The `hiprand` module Won't Compile
 
-With all ROCm&trade; versions before and including version 5.6.0, compiling HIP Python's `hiprand`
-module results in a compiler error.
+With all ROCm&trade; versions before and including version 5.6.0, compiling
+HIP Python's `hiprand` module results in a compiler error.
 
 The error is caused by the following line in the C compilation
 path of `<path_to_rocm>/hiprand/hiprand_hcc.h`, which is not legal in C
@@ -203,7 +227,11 @@ typedef rocrand_generator_base_type hiprandGenerator_st;
 Disabling the build of the `hiprand` HIP python module can, e.g.,
 be achieved by supplying `--libs "^hiprand"` to `build.sh`.
 
-#### Workaround 2 (Requires Access to Header File): Edit Header File
+<!-- markdownlint-disable  MD024 -->
+
+#### Workaround 2: (Requires Access to Header File): Edit Header File
+
+<!-- markdownlint-enable  MD013 -->
 
 For this fix, you need write access to the ROCm&trade; header files.
 Then, modify file `<path_to_rocm>/hiprand/hiprand_hcc.h` such that
@@ -232,8 +260,8 @@ On systems with ROCm&trade; HIP SDK 5.5.0 or 5.5.1, the examples
 
 abort with errors.
 
-An upgrade to version HIP SDK 5.6 or later (or a downgrade to version 5.4) is advised if
-the showcased functionality is needed.
+An upgrade to version HIP SDK 5.6 or later (or a downgrade to version 5.4) is
+advised if the showcased functionality is needed.
 
 ### Unspecific
 
@@ -249,4 +277,4 @@ We could not identify the cause yet.
 For examples, guides and API reference, please take a
 look at the official HIP Python documentation pages:
 
-https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html
+<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
