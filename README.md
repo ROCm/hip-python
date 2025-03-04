@@ -47,12 +47,9 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 * A C compiler
 * `bash`, `python3` + `venv`
 * The ROCm&trade; HIP SDK
-* All other Python build requirements are taken care of by installation
-  scripts. If you decide not to use these scripts, take a look into the
-  `requirements.txt` file in the top-level folder of the this repository and
-  those in the repository's subfolders `hip-python` and `hip-python-as-cuda`.
+* Python 3.8+.
 
-## Install Prebuilt Package(s)
+## Install Prebuilt Packages
 
 > [!NOTE]
 > Prebuilt packages for some ROCm releases are published to Test PyPI first.
@@ -73,11 +70,15 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 First identify the first three digits of the version number of your
 ROCm&trade; installation. Then install the HIP Python package(s) as follows:
 
+<!-- markdownlint-disable  MD013 -->
+
 ```shell
-python3 -m pip install -i https://test.pypi.org/simple hip-python~=$rocm_version
+python3 -m pip install -i https://test.pypi.org/simple hip-python~=$rocm_version.0
 # if you want to install the CUDA Python interoperability package too, run:
-python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda~=$rocm_version
+python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda~=$rocm_version.0
 ```
+
+<!-- markdownlint-enable  MD013 -->
 
 <!--
 -- #### Via TestPyPI
@@ -95,34 +96,30 @@ python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda~=$rocm
 If you have HIP Python package wheels on your filesystem, you can run:
 
 ```shell
-python3 -m pip install <path/to/hip_python>.whl
+python3 -m pip install $path_to_hip_python.whl
 # if you want to install the CUDA Python interoperability package too, run:
-python3 -m pip install <path/to/hip_python_as_cuda>.whl
+python3 -m pip install $path_to_hip_python_as_cuda.whl
 ```
 
 > [!NOTE]
 > See the HIP Python user guide for more details:
 > <https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
 
-## Build From Source
+## Build from Source
 
-> [!NOTE]
-> The `main` branch is used for tracking updates to the docs, examples and CI scripts.
-> The source code can be found on the release branches `release/rocm-rel-X.Y[.Z]`.
+1. Install ROCM.
+2. Install `pip`, virtual environment and development headers for Python 3:
 
-1. Install ROCM
-1. Install `pip`, virtual environment and development headers for Python 3:
-
-   ```bash
+   ```shell
    # Ubuntu:
    sudo apt install python3-pip python3-venv python3-dev
    ```
 
-1. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular
+3. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular
    ROCm&trade; installation:
-1. Finally run:
+4. Finally run:
 
-   ```bash
+   ```shell
    ./build.sh --hip --cuda --post-clean
    ```
 
