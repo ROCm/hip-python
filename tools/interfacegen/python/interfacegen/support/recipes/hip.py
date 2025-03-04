@@ -156,7 +156,7 @@ class hip:
         if node.name in hip.int_macros:
             return "int"
         if node.name in hip.void_p_macros:
-            return "unsigned long"
+            return "unsigned long long"
         if node.name in hip.str_macros:
             return "char *"
         assert False, "Not implemented!"
