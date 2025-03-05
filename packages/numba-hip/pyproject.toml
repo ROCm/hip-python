@@ -23,8 +23,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest"]
-dev = ["pytest"]
+test = ["pytest", "cffi"]
+dev = ["pytest", "cffi"]
 rocm-6-3-3 = [
     "hip-python~=6.3.3.0",
     "hip-python-as-cuda~=6.3.3.0",
