@@ -25,6 +25,25 @@ import os
 import sys
 import types
 import typing  # noqa: F401
+from pathlib import Path
+
+MODULE_REPLICATOR_LOG = os.environ.get(
+    "MODULE_REPLICATOR_LOG", "false"
+).lower() in (
+    "1",
+    "true",
+    "y",
+    "yes",
+    "on",
+)  # Log the preprocessed module
+
+MODULE_REPLICATOR_WRITE_FILE = os.environ.get(
+    "MODULE_REPLICATOR_WRITE_FILE", "false"
+).lower() in ("1", "true", "y", "yes", "on")
+
+MODULE_REPLICATOR_OUTPUT_DIR = os.environ.get(
+    "MODULE_REPLICATOR_OUTPUT_DIR", None
+)
 
 AST_VERBOSE = False  # Verbose output when doing AST comparison
 
@@ -33,6 +52,7 @@ def create_module_from_snippet(
     module_content,  # type: str
     context={},  # type: dict
     preprocess=lambda content: content,  # type: typing.Callable
+    global_module_name=None,  # type: (str|None)
 ):
     """Executes the module code in the given module context and then returns the module's dict.
 
@@ -40,9 +60,43 @@ def create_module_from_snippet(
         preprocess (**callable**):
             Takes the file content of the original file and returns a modified file or
             the top AST node of the modified file.
+        global_module_name(str, optional):
+            The global module name.
     """
     module_dict = dict(context)
     content_preprocessed = preprocess(module_content)
+
+    if MODULE_REPLICATOR_LOG:
+        print(
+            f"[module-replicator] module content BEGIN\n{content_preprocessed}",
+            file=sys.stderr,
+        )
+        print("[module-replicator] module content END", file=sys.stderr)
+    if MODULE_REPLICATOR_WRITE_FILE:
+        if global_module_name is not None:
+            print(
+                "[module-replicator] [ERROR] argument 'global_module_name' may not be 'None'"
+            )
+            sys.exit(1)
+        if MODULE_REPLICATOR_OUTPUT_DIR is not None:
+            print(
+                "[module-replicator] [ERROR] MODULE_REPLICATOR_OUTPUT_DIR (environment variable) not set"
+            )
+            sys.exit(1)
+        path = (
+            os.path.join(
+                MODULE_REPLICATOR_OUTPUT_DIR, *global_module_name.split(".")
+            )
+            + ".py"
+        )
+        print(
+            f"[module-replicator] writing module '{global_module_name}' to file '{path}'",
+            file=sys.stderr,
+        )
+        Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
+        with open(path, "w") as outfile:
+            outfile.write(content_preprocessed)
+
     # if isinstance(content_derived,str): print(content_derived)
     exec(
         compile(content_preprocessed, "<string> <modified>", "exec"),
@@ -55,6 +109,7 @@ def load_module(
     module_path,  # type: str
     context={},  # type: dict
     preprocess=lambda content: content,  # type: typing.Callable
+    global_module_name=None,  # type: (None|str)
 ):
     """Executes the module code in the given module context and then returns the module's dict.
 
@@ -65,9 +120,7 @@ def load_module(
     """
     with open(module_path, "r") as infile:  # must be read and not openend
         return create_module_from_snippet(
-            infile.read(),
-            context,
-            preprocess,
+            infile.read(), context, preprocess, global_module_name
         )
 
 
@@ -79,25 +132,32 @@ def create_derived_module(
     preprocess=lambda content: content,  # type: typing.Callable
 ):
     """Wraps result of `load_module`/`create_module_from_snippet` into a `types.ModuleType` with the given name."""
+
+    if MODULE_REPLICATOR_LOG:
+        print(
+            f"[module-replicator] create module: {new_global_name}",
+            file=sys.stderr,
+        )
+
     new_module = types.ModuleType(new_global_name)
     if is_file_path:
         source_module_dict = load_module(
-            module_path_or_content, context, preprocess
+            module_path_or_content, context, preprocess, new_global_name
         )
     else:
         source_module_dict = create_module_from_snippet(
-            module_path_or_content, context, preprocess
+            module_path_or_content, context, preprocess, new_global_name
         )
     new_module.__dict__.update(source_module_dict)
     return new_module
 
 
 def create_and_register_derived_module(
-    new_global_name: str,
-    module_path_or_content: str,
-    is_file_path: bool = True,
-    context: dict = dict(),  # in
-    preprocess: callable = lambda content: content,
+    new_global_name,  # type: str
+    module_path_or_content,  # type: str
+    is_file_path=True,  # type: bool
+    context=dict(),  # type: dict
+    preprocess=lambda content: content,  # type: typing.Callable
 ):
     """Directly registers result of `create_derived_module` in `sys.modules`."""
     if new_global_name in sys.modules:
@@ -117,20 +177,23 @@ def create_and_register_derived_module(
 
 def get_loc(node: ast.AST):
     """Puts the 'lineno' and 'col_offset' attributes of 'node' into a dict."""
-    return dict(lineno=node.lineno, col_offset=node.col_offset)
+    return dict(lineno=node.lineno, col_offset=node.col_offset)  # type: ignore
 
 
 def to_ast_node(expr: str, **kwattribs):
     """Renders a Python string into an AST."""
-    expr: ast.AST = ast.parse(expr).body[0]
-    if isinstance(expr, ast.Expr):
-        expr: ast.AST = expr.value
-    expr.__dict__.update(**kwattribs)
+    ast_expr: ast.AST = ast.parse(expr).body[0]
+    if isinstance(ast_expr, ast.Expr):
+        ast_expr: ast.AST = ast_expr.value
+    ast_expr.__dict__.update(**kwattribs)
     return expr
 
 
 # TODO: function too complex (C901)
-def compare_ast_nodes(node: ast.AST, other: ast.AST):  # noqa: C901
+def compare_ast_nodes(  # noqa: C901
+    node,  # type: ast.AST
+    other,  # type: ast.AST
+):
     """Checks if the fields of the two nodes match, recursively.
     Does not compare any metadata such as location information.
 
@@ -180,7 +243,7 @@ def compare_ast_nodes(node: ast.AST, other: ast.AST):  # noqa: C901
         if mask == 0b11:
             if AST_VERBOSE:
                 print(f"{n_k}:{type(n_v)} vs {o_k}:{type(o_v)}")
-            if not compare_ast_nodes(n_k, o_k):
+            if not compare_ast_nodes(n_v, o_v):
                 return False
         elif mask == 0b00:
             list_mask = 2 * int(isinstance(n_v, (tuple, list))) + int(
@@ -238,10 +301,10 @@ class ModuleReplicator:
 
     def __init__(
         self,
-        new_global_pkg_name: str,
-        orig_pkg_path: str,
-        base_context: dict,
-        preprocess_all: callable = lambda content: content,
+        new_global_pkg_name,  # type: str
+        orig_pkg_path,  # type: str
+        base_context,  # type: dict
+        preprocess_all=lambda content: content,  # type: typing.Callable
     ):
         """Constructor.
 
@@ -290,12 +353,12 @@ class ModuleReplicator:
 
     def create_derived_module(
         self,
-        new_name: str,
-        orig_name: str = None,
-        from_file: bool = True,
-        module_content: str = None,
-        preprocess: callable = lambda content: content,
-        extra_context: dict = {},
+        new_name,  # type: str
+        orig_name=None,  # type: (None|str)
+        from_file=True,  # type: bool
+        module_content=None,  # type: (None|str)
+        preprocess=lambda content: content,  # type: typing.Callable
+        extra_context={},  # type: dict
     ):
         """Wraps result of `load_module` into a `types.ModuleType` with the given `new_name`.
 
@@ -330,7 +393,7 @@ class ModuleReplicator:
             )
         result = create_derived_module(
             f"{self.new_global_pkg_name}.{new_name}",
-            self._create_path(orig_name) if from_file else module_content,
+            self._create_path(orig_name) if from_file else module_content,  # type: ignore
             is_file_path=from_file,
             context=final_context,
             preprocess=lambda content: preprocess(preprocess_all(content)),
@@ -340,12 +403,12 @@ class ModuleReplicator:
 
     def create_and_register_derived_module(
         self,
-        new_name: str,
-        orig_name: str = None,
-        from_file: bool = True,
-        module_content: str = None,
-        preprocess: callable = lambda content: content,
-        extra_context: dict = {},
+        new_name,  # type: str
+        orig_name=None,  # type: (None|str)
+        from_file=True,  # type: bool
+        module_content=None,  # type: (None|str)
+        preprocess=lambda content: content,  # type: typing.Callable
+        extra_context={},  # type: dict
     ):
         """Directly registers result of `self.create_derived_module(...)` in `sys.modules`.
 
@@ -390,7 +453,7 @@ class ModuleReplicator:
             )
         result = create_and_register_derived_module(
             f"{self.new_global_pkg_name}.{new_name}",
-            self._create_path(orig_name) if from_file else module_content,
+            self._create_path(orig_name) if from_file else module_content,  # type: ignore
             is_file_path=from_file,
             context=final_context,
             preprocess=lambda content: preprocess(preprocess_all(content)),
