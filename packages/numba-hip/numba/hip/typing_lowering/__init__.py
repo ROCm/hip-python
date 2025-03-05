@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 # flake8: noqa
+# isort: skip_file
 
 import os
 import re
