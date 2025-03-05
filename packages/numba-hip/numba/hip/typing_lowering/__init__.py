@@ -22,47 +22,31 @@
 
 # flake8: noqa
 # isort: skip_file
+# fmt: off
 
-import os
-import re
-
-import numba.hip.util.modulerepl as _modulerepl
-
-_mr = _modulerepl.ModuleReplicator(
-    "numba.hip.typing_lowering",
-    os.path.join(os.path.dirname(__file__), "..", "..", "cuda"),
-    base_context=globals(),
-    preprocess_all=lambda content: re.sub(
-        r"\bnumba.cuda\b", "numba.hip", content
-    ).replace("cudadrv", "hipdrv"),
+# NOTE: order is important
+from . import (
+    stubs,
+    hipdevicelib,
+    types,
+    hip,
+    math,
+    models,
+    numpy,
+    ufuncs,
+    vector_types,
 )
-
-from . import hipdevicelib, stubs
-
-# Gives us types
-#   Dim3(types.Type),
-#   GridGroup(types.Type),
-#   CUDADispatcher(types.Dispatcher)->HIPDispatcher(types.Dispatcher)
-# Gives us global vars:
-#   dim3 = Dim3(),
-#   grid_group = GridGroup()
-types = _mr.create_and_register_derived_module(
-    "types", preprocess=lambda content: content.replace("CUDA", "HIP")
-)  # make this a submodule of the package
-delattr(types, "GridGroup")  # TODO cooperative groups
-delattr(types, "grid_group")  # TODO cooperative groups
-
-from . import hip, math, models, numpy
-
-ufuncs = _mr.create_and_register_derived_module(
-    "ufuncs",
-    preprocess=lambda content: content.replace(
-        "numba.hip.mathimpl", "numba.hip.typing_lowering.math"
-    ),  # NOTE the preprocess_all has converted numba.cuda.mathimpl -> numba.hip.mathimpl
-)  # make this a submodule of the package
-
-from . import vector_types
 from .registries import (
     impl_registry,
     typing_registry,
 )
+
+# `types` gives us types
+#   Dim3(types.Type),
+#   GridGroup(types.Type),
+#   CUDADispatcher(types.Dispatcher)->HIPDispatcher(types.Dispatcher)
+# `types` gives us global vars:
+#   dim3 = Dim3(),
+#   grid_group = GridGroup()
+delattr(types, "GridGroup")  # TODO cooperative groups
+delattr(types, "grid_group")  # TODO cooperative groups

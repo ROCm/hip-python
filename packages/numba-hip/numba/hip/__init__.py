@@ -45,11 +45,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-import re
 import sys
-import textwrap
 
+from . import api_util  # noqa: F401, E402
+from . import hipdrv  # noqa: E402
 from . import hipconfig, util  # noqa: F401
 
 # from numba import runtests
@@ -79,21 +78,6 @@ from . import hipconfig, util  # noqa: F401
 # -----------------------------------------------
 
 
-_mr = util.modulerepl.ModuleReplicator(
-    "numba.hip",
-    os.path.join(os.path.dirname(__file__), "..", "cuda"),
-    base_context=globals(),
-    preprocess_all=lambda content: re.sub(  # noqa: F405
-        r"\bnumba.cuda\b", "numba.hip", content
-    ).replace("cudadrv", "hipdrv"),
-)
-
-api_util = _mr.create_and_register_derived_module(
-    "api_util"
-)  # make this a submodule of the package
-
-from . import hipdrv  # noqa: E402
-
 cudadrv = hipdrv
 
 sys.modules["numba.hip.hipdrv"] = hipdrv
@@ -104,19 +88,6 @@ for _name, _mod in list(sys.modules.items()):
         )
 
 
-errors = _mr.create_and_register_derived_module(
-    "errors",
-    preprocess=lambda content: content.replace("Cuda", "Hip"),
-)  # make this a submodule of the package
-
-api = _mr.create_and_register_derived_module(
-    "api"
-)  # make this a submodule of the package
-
-args = _mr.create_and_register_derived_module(
-    "args"
-)  # make this a submodule of the package
-
 from . import codegen  # noqa: F401, E402
 from . import compiler  # noqa: F401, E402
 from . import decorators  # noqa: F401, E402
@@ -126,41 +97,16 @@ from . import kernels  # noqa: F401, E402
 from . import target  # noqa: F401, E402
 from . import testing  # noqa: F401, E402
 from . import tests  # noqa: F401, E402
+from . import api, args, errors, hipdecl, hipimpl  # noqa: F401, E402
 from .compiler import compile_llvm_ir  # noqa: F401, E402
 from .compiler import compile_llvm_ir_for_current_device  # noqa: F401, E402
 from .compiler import compile_ptx  # noqa: F401, E402
 from .compiler import compile_ptx_for_current_device  # noqa: F401, E402
 
 # Other
-from .device_init import *  # noqa: F403, E402
+from .device_init import *  # noqa: F401, F403, E402
 from .device_init import _auto_device  # noqa: F401, E402
 
-hipdecl = _mr.create_and_register_derived_module(
-    "hipdecl",
-    from_file=False,
-    module_content=textwrap.dedent(
-        """\
-        from numba.hip.typing_lowering.registries import (
-            typing_registry as registry
-        )
-        """
-    ),
-)
-
-hipimpl = _mr.create_and_register_derived_module(
-    "hipimpl",
-    from_file=False,
-    module_content=textwrap.dedent(
-        """\
-        from numba.hip.typing_lowering.registries import (
-            impl_registry as registry
-        )
-        lower = registry.lower
-        lower_attr = registry.lower_getattr
-        lower_constant = registry.lower_constant
-        """
-    ),
-)
 cudadecl = hipdecl
 cudaimpl = hipimpl
 sys.modules["numba.hip.cudadecl"] = hipdecl
@@ -327,7 +273,4 @@ def pose_as_cuda():
 
 
 # clean up
-# del _preprocess
 del sys
-del os
-del re

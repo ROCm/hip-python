@@ -20,34 +20,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-import re
-
-import numba.hip.util.modulerepl as _modulerepl
-
-_mr = _modulerepl.ModuleReplicator(
-    "numba.hip.kernels",
-    os.path.join(os.path.dirname(__file__), "..", "..", "cuda", "kernels"),
-    base_context=globals(),
-    preprocess_all=lambda content: re.sub(  # noqa: F821
-        r"from\s+numba\s+import\s+cuda",
-        "from numba import hip as cuda",
-        content,
-    ).replace("numba.cuda", "numba.hip"),
-)
-
-reduction = _mr.create_and_register_derived_module(
-    "reduction",
-    preprocess=lambda content: re.sub(  # noqa: F821
-        r"(_WARPSIZE\s*=\s*)[0-9]+", r"\g<1>64", content
-    ),
-)  # make this a submodule of the package
-
-transpose = _mr.create_and_register_derived_module(
-    "transpose"
-)  # make this a submodule of the package
-
-# clean up
-del re
-del os
-del _mr
+from . import reduction, transpose  # noqa: F401
