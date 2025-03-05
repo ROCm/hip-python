@@ -30,7 +30,8 @@ and further a CUDA&reg; Python Interoperability layer that aims to simplify
 the porting of CUDA Python Python and Cython programs.
 
 :::{note}
-This documentation has been generated based on ROCm&trade; version 5.7.1.
+
+This documentation has been generated based on ROCm&trade; version 6.3.3.
 :::
 
 ## Spotlight
