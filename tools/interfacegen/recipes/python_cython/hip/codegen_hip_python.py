@@ -39,8 +39,6 @@ import textwrap
 from pathlib import Path
 
 import cuda_interop_layer_gen
-from parse_hipify_perl import parse_hipify_perl
-
 import interfacegen
 from interfacegen.cparser import TypeHandler
 from interfacegen.cython import (
@@ -54,6 +52,7 @@ from interfacegen.tree import (
     Node,
     Parm,
 )
+from parse_hipify_perl import parse_hipify_perl
 
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
@@ -926,6 +925,8 @@ def generate_cuda_interop_layer_files(license_text: str):
     """
     global HIPRTC_GENERATOR
     global HIP_GENERATOR
+    global ROCM_VERSION_MAJOR
+    global ROCM_VERSION_MINOR
 
     if HIPRTC_GENERATOR is None or HIP_GENERATOR is None:
         _log.warning(
@@ -946,18 +947,39 @@ def generate_cuda_interop_layer_files(license_text: str):
                     contribs += f"{import_stmt} {cuda_name}\n"
         return contribs
 
-    extra_imports = collect_imports_(
-        "from cuda.nvrtc import",
-        HIPRTC_GENERATOR.backend.walk_entities_to_import(False),
+    # NOTE: hiprtc functions such as hiprtcLink* correspond to cuLink*
+    #       functions associated with cuda/cudart and not with nvrtc.
+    #       With the below trick we ensure that cuLink* symbols are present
+    #       in both cuda/cudart and the nvrtc interop layer.
+    cuda_extra_args = dict(
+        extra_imports=collect_imports_(
+            "from cuda.nvrtc import",
+            HIPRTC_GENERATOR.backend.walk_entities_to_import(False),
+        ),
+        extra_cimports=collect_imports_(
+            "from cuda.nvrtc cimport",
+            HIPRTC_GENERATOR.backend.walk_entities_to_cimport(False),
+        ),
+        extra_cmodule_cimports=collect_imports_(
+            "from cuda.cnvrtc cimport",
+            HIPRTC_GENERATOR.backend.walk_entities_to_cimport(True),
+        ),
     )
-    extra_cimports = collect_imports_(
-        "from cuda.nvrtc cimport",
-        HIPRTC_GENERATOR.backend.walk_entities_to_cimport(False),
-    )
-    extra_cmodule_cimports = collect_imports_(
-        "from cuda.cnvrtc cimport",
-        HIPRTC_GENERATOR.backend.walk_entities_to_cimport(True),
-    )
+
+    if (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR) >= (6, 4):
+        # NOTE: Hipify may lag behind the header files.
+        #       So we remove outdated keys and ensure
+        #       the values are equal to the new names.
+        for bad_name in ("hiprtcJITInputType", "hiprtcJIT_option"):
+            try:
+                del HIP_2_CUDA[bad_name]
+            except KeyError:
+                pass
+        HIP_2_CUDA["hipJitInputType"] = [
+            "CUjitInputType",
+            "CUjitInputType_enum",
+        ]
+        HIP_2_CUDA["hipJitOption"] = ["CUjit_option", "CUjit_option_enum"]
 
     cuda_interop_layer_gen.generate_cuda_interop_module_files(
         OUTPUT_DIR,
@@ -965,9 +987,7 @@ def generate_cuda_interop_layer_files(license_text: str):
         HIP_GENERATOR,
         HIP_2_CUDA,
         license_text,
-        extra_imports=extra_imports,
-        extra_cimports=extra_cimports,
-        extra_cmodule_cimports=extra_cmodule_cimports,
+        **cuda_extra_args,
     )
     cuda_interop_layer_gen.generate_cuda_interop_module_files(
         OUTPUT_DIR,
@@ -976,9 +996,7 @@ def generate_cuda_interop_layer_files(license_text: str):
         HIP_2_CUDA,
         license_text,
         warn=False,
-        extra_imports=extra_imports,
-        extra_cimports=extra_cimports,
-        extra_cmodule_cimports=extra_cmodule_cimports,
+        **cuda_extra_args,
     )  # NOTE: cudart is the same as cuda, but we generate it to have also the corresponding pxd/pyx files. Could be solved via symlinks & __init__.py mod too.
 
 
