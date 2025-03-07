@@ -275,10 +275,13 @@ class hiprtc:
     @staticmethod
     def node_filter(node: Node):
         if isinstance(node, MacroDefinition):
-            return node.name.startswith("hiprtc")
-        if node.file is None:
+            return False # NOTE: node.file is None for macros
+        elif node.file is None:
             print(f"node.file is None: {node.cursor.kind}")
+            return False
         if node.file.endswith("hiprtc.h"):
+            return True
+        if node.file.endswith("hip/linker_types.h"):
             return True
         return False
 
