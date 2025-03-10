@@ -490,17 +490,17 @@ def generate_hipblas_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-    from .chip cimport *
+    from hip.chip cimport *
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    from .hip cimport *
+    from hip.hip cimport *
     """
     )
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
-    from .hip import _hipDataType__Base
+    from hip.hip import _hipDataType__Base
     """
     )
     return generator
@@ -528,22 +528,22 @@ def generate_hipsolver_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-    # from .chip cimport * # via chipblas
-    from .chipblas cimport *
+    # from hip.chip cimport * # via chipblas
+    from hip.chipblas cimport *
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    # from .hip cimport * # via chipblas
-    from .hipblas cimport *
+    # from hip.hip cimport * # via chipblas
+    from hip.hipblas cimport *
     """
     )
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
-    from .hipblas import _hipblasSideMode_t__Base
-    from .hipblas import _hipblasFillMode_t__Base
-    from .hipblas import _hipblasOperation_t__Base
-    from .hip import _hipDataType__Base
+    from hip.hipblas import _hipblasSideMode_t__Base
+    from hip.hipblas import _hipblasFillMode_t__Base
+    from hip.hipblas import _hipblasOperation_t__Base
+    from hip.hip import _hipDataType__Base
     """
     )
     return generator
@@ -571,12 +571,12 @@ def generate_rccl_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-    from .chip cimport hipStream_t
+    from hip.chip cimport hipStream_t
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    from .hip cimport ihipStream_t
+    from hip.hip cimport ihipStream_t
     """
     )
     return generator
@@ -604,12 +604,12 @@ def generate_hiprand_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-    from .chip cimport hipStream_t
+    from hip.chip cimport hipStream_t
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    from .hip cimport ihipStream_t
+    from hip.hip cimport ihipStream_t
     """
     )
     return generator
@@ -637,12 +637,12 @@ def generate_hipfft_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-    from .chip cimport hipStream_t, float2, double2
+    from hip.chip cimport hipStream_t, float2, double2
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    from .hip cimport ihipStream_t, float2, double2
+    from hip.hip cimport ihipStream_t, float2, double2
     """
     )
     return generator
@@ -671,17 +671,17 @@ def generate_hipsparse_module_files():
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
-    from .chip cimport *
+    from hip.chip cimport *
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
-    from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
+    from hip.hip cimport ihipStream_t, float2, double2 # C import structs/union types
     """
     )
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
-    from .hip import hipError_t, _hipDataType__Base # PY import enums
+    from hip.hip import hipError_t, _hipDataType__Base # PY import enums
     """
     )
     return generator
@@ -797,7 +797,7 @@ def write_package_init_file(
 
                 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-                from ._version import *
+                from hip._version import *
                 ROCM_VERSION = {rocm_version}
                 ROCM_VERSION_NAME = rocm_version_name = "{rocm_version_name}"
                 ROCM_VERSION_TUPLE = rocm_version_tuple = ({rocm_version_major},{rocm_version_minor},{rocm_version_patch})
