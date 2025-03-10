@@ -378,6 +378,8 @@ def generate_hip_module_files():
 def generate_hiprtc_module_files():
     global OUTPUT_DIR
     global ROCM_INC
+    global ROCM_VERSION_MAJOR
+    global ROCM_VERSION_MAJOR
     global GENERATOR_ARGS
     global RUNTIME_LINKING
     global HIPRTC_GENERATOR
@@ -440,6 +442,27 @@ def generate_hiprtc_module_files():
         cimport hip._hiprtc_helpers
         """
     )
+
+    if (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR) >= (6, 4):
+        generator.c_interface_decl_prolog += textwrap.dedent(
+            """\
+            from hip.chip cimport hipJitOption
+            from hip.chip cimport hipJitOption as hiprtcJIT_option
+            from hip.chip cimport hipJitInputType
+            from hip.chip cimport hipJitInputType as hiprtcJITInputType
+            """
+        )
+
+        generator.python_interface_impl_prolog += textwrap.dedent(
+            """\
+            from hip.hip import _hipJitOption__Base
+            from hip.hip import hipJitOption
+            from hip.hip import hipJitOption as hiprtcJIT_option
+            from hip.hip import _hipJitInputType__Base
+            from hip.hip import hipJitInputType
+            from hip.hip import hipJitInputType as hiprtcJITInputType
+            """
+        )
 
     HIPRTC_GENERATOR = generator
     return generator

@@ -281,8 +281,6 @@ class hiprtc:
             return False
         if node.file.endswith("hiprtc.h"):
             return True
-        if node.file.endswith("hip/linker_types.h"):
-            return True
         return False
 
     @staticmethod
