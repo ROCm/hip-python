@@ -2469,10 +2469,17 @@ def launch_kernel(
 
 if USE_NV_BINDING:
     jitty = binding.CUjitInputType
-    FILE_EXTENSION_MAP = {
-        "ll": jitty.HIPRTC_JIT_INPUT_LLVM_BITCODE,
-        "bc": jitty.HIPRTC_JIT_INPUT_LLVM_BITCODE,
-    }
+
+    if hasattr(jitty, "HIPRTC_JIT_INPUT_LLVM_BITCODE"):
+        FILE_EXTENSION_MAP = dict(
+            ll=jitty.HIPRTC_JIT_INPUT_LLVM_BITCODE,
+            bc=jitty.HIPRTC_JIT_INPUT_LLVM_BITCODE,
+        )
+    else:
+        FILE_EXTENSION_MAP = dict(
+            ll=jitty.hipJitInputLLVMBitcode,
+            bc=jitty.hipJitInputLLVMBitcode,
+        )
 else:
     raise NotImplementedError
 
