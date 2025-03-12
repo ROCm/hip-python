@@ -2656,7 +2656,12 @@ class CudaPythonLinker(Linker):
         namebuf = name.encode("utf8")
         self._keep_alive += [buf, namebuf]
         try:
-            input_type = binding.CUjitInputType.HIPRTC_JIT_INPUT_LLVM_BITCODE
+            try:
+                input_type = (
+                    binding.CUjitInputType.HIPRTC_JIT_INPUT_LLVM_BITCODE
+                )
+            except AttributeError:
+                input_type = binding.CUjitInputType.hipJitInputLLVMBitcode
             driver.cuLinkAddData(
                 self.handle, input_type, buf, len(buf), namebuf, 0, None, None
             )
