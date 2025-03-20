@@ -115,10 +115,15 @@ def create_extension(name, sources):
 
 # differs between hip-python and hip-python-as-nv package
 class Module:
-    PKG_NAME = "cuda"
 
-    def __init__(self, module, lib=None, helpers=[]):
-        self.name = module
+    def __init__(self, global_module_name, lib=None, helpers=[]):
+        self.global_module_name = global_module_name
+
+        as_tuple = global_module_name.split(".")
+        self.name = as_tuple[-1]
+        self.pkg = ".".join(as_tuple[:-1])
+        self.outputfolder = "/".join(as_tuple[:-1])
+
         if lib is None:
             self.lib = self.name
         else:
@@ -129,8 +134,8 @@ class Module:
     def ext_modules(self):
         return self._helpers + [
             (
-                f"{self.PKG_NAME}.{self.name}",
-                [f"./{self.PKG_NAME}/{self.name}.pyx"],
+                self.global_module_name,
+                [f"./{self.outputfolder}/{self.name}.pyx"],
             ),
         ]
 
@@ -140,15 +145,12 @@ def gather_ext_modules():
     global HIP_MODULES
     global HIP_PYTHON_CUDA_LIBS
     HIP_MODULES += [
-        Module(
-            "cuda",
-            lib="amdhip64",
-        ),
-        Module(
-            "cudart",
-            lib="amdhip64",
-        ),
-        Module("nvrtc", lib="hiprtc"),
+        Module("cuda.cuda", lib="amdhip64"),
+        Module("cuda.cudart", lib="amdhip64"),
+        Module("cuda.nvrtc", lib="hiprtc"),
+        Module("cuda.bindings.driver", lib="amdhip64"),
+        Module("cuda.bindings.runtime", lib="amdhip64"),
+        Module("cuda.bindings.nvrtc", lib="hiprtc"),
     ]
 
     # process and check user-provided library names
@@ -201,7 +203,7 @@ if __name__ == "__main__":
 
     # load _version.py
     ns = {}
-    exec(open(os.path.join(Module.PKG_NAME, "_version.py"), "r").read(), ns)
+    exec(open(os.path.join("cuda", "_version.py"), "r").read(), ns)
 
     matching_hip_python = f"hip-python=={ns['__version__']}"
     setup(
