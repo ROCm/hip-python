@@ -1113,7 +1113,7 @@ if __name__ == "__main__":
     long_version = f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
 
     hip_python_lib_names = AVAILABLE_GENERATORS.keys()
-    cuda_python_lib_names = ["cuda", "cudart", "nvrtc"]
+    cuda_python_lib_names = ["cuda", "cudart", "nvrtc", "bindings"]
 
     for output_dir in (hip_output_dir, cuda_output_dir):
         # hip|cuda/_version.py
