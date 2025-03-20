@@ -65,6 +65,7 @@ if device_printf_works:
 if have_hip_python_as_cuda:
     python_examples += [
         "1_CUDA_Interop/cuda_stream.py",
+        "1_CUDA_Interop/cuda_stream_with_cuda_bindings.py",
         "1_CUDA_Interop/cuda_error_hallucinate_enums.py",
     ]
 
@@ -88,7 +89,13 @@ def test_python_examples(example):
 
 if have_hip_python_as_cuda:
 
-    @pytest.mark.parametrize("example", ["1_CUDA_Interop/ccuda_stream.pyx"])
+    @pytest.mark.parametrize(
+        "example",
+        [
+            "1_CUDA_Interop/ccuda_stream.pyx",
+            "1_CUDA_Interop/ccuda_stream_with_cuda_bindings.pyx",
+        ],
+    )
     def test_cython_examples(example):
         abspath = os.path.join(
             os.path.dirname(__file__), os.path.dirname(example)
