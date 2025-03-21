@@ -946,6 +946,8 @@ def generate_cuda_interop_layer_files(license_text: str):
     Note:
         Some CUDA Driver and Runtime routines, namely cuLink*, have been mapped to HIPRTC instead of the HIP runtime.
     """
+    global OUTPUT_DIR
+    global HIP_2_CUDA
     global HIPRTC_GENERATOR
     global HIP_GENERATOR
     global ROCM_VERSION_MAJOR
@@ -956,38 +958,6 @@ def generate_cuda_interop_layer_files(license_text: str):
             "No CUDA runtime layer generated as 'hip' and/or 'hiprtc' have not been specified as libraries to parse."
         )
         return
-
-    cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR, "nvrtc", HIPRTC_GENERATOR, HIP_2_CUDA, license_text
-    )
-
-    def collect_imports_(import_stmt: str, py_generator):
-        contribs = ""
-        for node in py_generator:
-            hip_name = node.cython_global_name
-            if hip_name in HIP_2_CUDA:
-                for cuda_name in HIP_2_CUDA[hip_name]:
-                    contribs += f"{import_stmt} {cuda_name}\n"
-        return contribs
-
-    # NOTE: hiprtc functions such as hiprtcLink* correspond to cuLink*
-    #       functions associated with cuda/cudart and not with nvrtc.
-    #       With the below trick we ensure that cuLink* symbols are present
-    #       in both cuda/cudart and the nvrtc interop layer.
-    cuda_extra_args = dict(
-        extra_imports=collect_imports_(
-            "from cuda.nvrtc import",
-            HIPRTC_GENERATOR.backend.walk_entities_to_import(False),
-        ),
-        extra_cimports=collect_imports_(
-            "from cuda.nvrtc cimport",
-            HIPRTC_GENERATOR.backend.walk_entities_to_cimport(False),
-        ),
-        extra_cmodule_cimports=collect_imports_(
-            "from cuda.cnvrtc cimport",
-            HIPRTC_GENERATOR.backend.walk_entities_to_cimport(True),
-        ),
-    )
 
     if (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR) >= (6, 4):
         # NOTE: Hipify may lag behind the header files.
@@ -1004,23 +974,79 @@ def generate_cuda_interop_layer_files(license_text: str):
         ]
         HIP_2_CUDA["hipJitOption"] = ["CUjit_option", "CUjit_option_enum"]
 
-    cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR,
-        "cuda",
-        HIP_GENERATOR,
-        HIP_2_CUDA,
-        license_text,
-        **cuda_extra_args,
-    )
-    cuda_interop_layer_gen.generate_cuda_interop_module_files(
-        OUTPUT_DIR,
-        "cudart",
-        HIP_GENERATOR,
-        HIP_2_CUDA,
-        license_text,
-        warn=False,
-        **cuda_extra_args,
-    )  # NOTE: cudart is the same as cuda, but we generate it to have also the corresponding pxd/pyx files. Could be solved via symlinks & __init__.py mod too.
+        def collect_imports_(import_stmt: str, py_generator):
+            contribs = ""
+            for node in py_generator:
+                hip_name = node.cython_global_name
+                if hip_name in HIP_2_CUDA:
+                    for cuda_name in HIP_2_CUDA[hip_name]:
+                        contribs += f"{import_stmt} {cuda_name}\n"
+            return contribs
+
+    for config in (
+        dict(
+            parent_package="cuda.bindings",
+            driver_name="driver",
+            runtime_name="runtime",
+            cmodule_prefix="cy",
+        ),
+        dict(
+            parent_package="cuda",
+            driver_name="cuda",
+            runtime_name="cudart",
+            cmodule_prefix="c",
+        ),
+    ):
+        # write nvrtcm module files
+        parent_package = config["parent_package"]
+        cuda_interop_layer_gen.generate_cuda_interop_module_files(
+            OUTPUT_DIR,
+            f"{parent_package}.nvrtc",
+            HIPRTC_GENERATOR,
+            HIP_2_CUDA,
+            license_text,
+        )
+
+        # NOTE: hiprtc functions such as hiprtcLink* correspond to cuLink*
+        #       functions associated with cuda/cudart and not with nvrtc.
+        #       With the below trick we ensure that cuLink* symbols are present
+        #       in both cuda/cudart and the nvrtc interop layer.
+        cuda_extra_args = dict(
+            extra_imports=collect_imports_(
+                f"from {parent_package}.nvrtc import",
+                HIPRTC_GENERATOR.backend.walk_entities_to_import(False),
+            ),
+            extra_cimports=collect_imports_(
+                f"from {parent_package}.nvrtc cimport",
+                HIPRTC_GENERATOR.backend.walk_entities_to_cimport(False),
+            ),
+            extra_cmodule_cimports=collect_imports_(
+                f"from {parent_package}.cnvrtc cimport",
+                HIPRTC_GENERATOR.backend.walk_entities_to_cimport(True),
+            ),
+            cuda_cmodule_prefix=config["cmodule_prefix"],
+        )
+
+        # writer driver module files
+        cuda_interop_layer_gen.generate_cuda_interop_module_files(
+            OUTPUT_DIR,
+            f"{parent_package}.{config['driver_name']}",
+            HIP_GENERATOR,
+            HIP_2_CUDA,
+            license_text,
+            **cuda_extra_args,
+        )
+
+        # write runtime module files
+        cuda_interop_layer_gen.generate_cuda_interop_module_files(
+            OUTPUT_DIR,
+            f"{parent_package}.{config['runtime_name']}",
+            HIP_GENERATOR,
+            HIP_2_CUDA,
+            license_text,
+            warn=False,
+            **cuda_extra_args,
+        )  # NOTE: cudart is the same as cuda, but we generate it to have also the corresponding pxd/pyx files. Could be solved via symlinks & __init__.py mod too.
 
 
 if __name__ == "__main__":
@@ -1072,19 +1098,14 @@ if __name__ == "__main__":
                 raise ValueError(
                     f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}"
                 )
-
-    Path(os.path.join(OUTPUT_DIR, "hip-python")).mkdir(
-        parents=False, exist_ok=True
-    )
-    Path(os.path.join(OUTPUT_DIR, "hip-python-as-cuda")).mkdir(
-        parents=False, exist_ok=True
-    )
     hip_output_dir = os.path.join(OUTPUT_DIR, "hip-python", "hip")
     cuda_output_dir = os.path.join(
         OUTPUT_DIR, "hip-python-as-cuda", "cuda"
     )  # must be here because of cuda interop codegen
-    Path(hip_output_dir).mkdir(parents=False, exist_ok=True)
-    Path(cuda_output_dir).mkdir(parents=False, exist_ok=True)
+    Path(hip_output_dir).mkdir(parents=True, exist_ok=True)
+    Path(os.path.join(cuda_output_dir, "bindings")).mkdir(
+        parents=True, exist_ok=True
+    )
     for entry in lib_names:
         libname = entry.strip()
         if libname not in AVAILABLE_GENERATORS:
@@ -1101,6 +1122,7 @@ if __name__ == "__main__":
             [f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()]
         )
 
+    # TODO forward cuda_output_dir
     generate_cuda_interop_layer_files(license_text)
 
     rocm_version_name = _version_as_str(
