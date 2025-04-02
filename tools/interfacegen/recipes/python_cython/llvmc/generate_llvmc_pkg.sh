@@ -107,7 +107,7 @@ fi
 [ -z ${PRE_CLEAN+x} ] || rm -rf venv
 
 alias PYTHON="python3"
-if [ -z ${NO_ENV+x} ]; then
+if [ -z ${NO_VENV+x} ]; then
   [ ! -d "venv" ] && python3 -m venv _venv
   alias PYTHON="_venv/bin/python3"
 fi
