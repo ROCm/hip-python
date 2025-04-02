@@ -54,7 +54,16 @@ Attributes (Controllable via Environment Variables ``NUMBA_HIP_<attribute>``):
         Apply a couple of steps to minimize the produced LLVM IR.
         Warning enabling this feature can have significant impact on performance.
         Defaults to ``False``.
-
+    LIBCLANG_PATH (`bool`):
+        Specify the path to the folder that contains
+        the libclang shared object. Per default
+        `${ROCM_PATH}/llvm/lib` is selected.
+    LIBCLANG_FILE (`bool`):
+        Specify the path to the libclang shared object.
+        Use this if the libclang shared object has
+        an unusual name. If this environment variable
+        is set, NUMBA_HIP_LIBCLANG_PATH will be
+        ignored.
 Note:
     We currently don't want to break out of subfolder
     ``numba/hip``with the changes that we apply to an
@@ -101,6 +110,9 @@ MINIMIZE_IR = bool(
 )  # Apply a couple of steps to minimize the produced LLVM IR.
 # Warning enabling this feature can have significant impact on performance.
 # Defaults to ``False``.
+
+LIBCLANG_PATH = os.environ.get("NUMBA_HIP_LIBCLANG_PATH", None)
+LIBCLANG_FILE = os.environ.get("NUMBA_HIP_LIBCLANG_FILE", None)
 
 
 def get_rocm_path(*subdirs):

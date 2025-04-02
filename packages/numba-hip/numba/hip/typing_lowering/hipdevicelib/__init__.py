@@ -60,7 +60,12 @@ from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
 
 _lock = threading.Lock()
 
-ci.Config.set_library_path(_hipconfig.get_rocm_path("llvm", "lib"))
+if _hipconfig.LIBCLANG_FILE:
+    ci.Config.set_library_file(_hipconfig.LIBCLANG_FILE)
+elif _hipconfig.LIBCLANG_PATH:
+    ci.Config.set_library_path(_hipconfig.LIBCLANG_PATH)
+else:
+    ci.Config.set_library_path(_hipconfig.get_rocm_path("llvm", "lib"))
 
 _cparser.CParser.set_clang_res_dir(
     _hipconfig.get_rocm_path(
