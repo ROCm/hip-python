@@ -29,6 +29,7 @@ Attributes:
         TODO document 'unsupported_stubs'
 """
 
+import os
 import threading
 
 import rocm.clang.cindex as ci
@@ -36,11 +37,7 @@ import rocm.clang.cindex as ci
 # isort: off
 from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_MAJOR as _LLVM_VERSION_MAJOR,
-)
-from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_MINOR as _LLVM_VERSION_MINOR,
-)
-from rocm.llvm.config.llvm_config import (
     LLVM_VERSION_PATCH as _LLVM_VERSION_PATCH,
 )
 
@@ -60,29 +57,49 @@ from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
 
 _lock = threading.Lock()
 
-if _hipconfig.LIBCLANG_FILE:
-    ci.Config.set_library_file(_hipconfig.LIBCLANG_FILE)
-elif _hipconfig.LIBCLANG_PATH:
-    ci.Config.set_library_path(_hipconfig.LIBCLANG_PATH)
-else:
-    ci.Config.set_library_path(_hipconfig.get_rocm_path("llvm", "lib"))
 
-_cparser.CParser.set_clang_res_dir(
-    _hipconfig.get_rocm_path(
-        (  # variant 1
-            "llvm",
-            "lib",
-            "clang",
-            f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
-        ),
-        (  # variant 2
-            "llvm",
-            "lib",
-            "clang",
-            f"{_LLVM_VERSION_MAJOR}",
-        ),
+def _setup_libclang():
+    """Initialize libclang."""
+    if _hipconfig.LIBCLANG_FILE:
+        ci.conf.set_library_file(_hipconfig.LIBCLANG_FILE)
+        _ = ci.conf.get_cindex_library()  # try to create binding
+    else:
+        if _hipconfig.LIBCLANG_PATH:
+            prefix = _hipconfig.LIBCLANG_PATH
+        else:
+            prefix = _hipconfig.get_rocm_path("llvm", "lib")
+        try:
+            ci.conf.set_library_path(prefix)
+            _ = ci.conf.get_cindex_library()  # try to create binding
+        except ci.LibclangError:
+            # Also check for filenames such as `libclang.so.19.0.0git`.
+            ci.conf.set_library_file(
+                os.path.join(
+                    prefix,
+                    f"libclang.so.{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}git",
+                )
+            )
+            _ = ci.conf.get_cindex_library()  # try to create binding
+
+    _cparser.CParser.set_clang_res_dir(
+        _hipconfig.get_rocm_path(
+            (  # variant 1
+                "llvm",
+                "lib",
+                "clang",
+                f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
+            ),
+            (  # variant 2
+                "llvm",
+                "lib",
+                "clang",
+                f"{_LLVM_VERSION_MAJOR}",
+            ),
+        )
     )
-)
+
+
+_setup_libclang()
 
 
 def _create_stubs():
