@@ -22,7 +22,7 @@
 
 # Python dependencies required for examples
 setuptools>=42
-Cython
+cython>=3.0,<3.1
 numpy
 # Python dependencies required for testing
 pytest

@@ -22,6 +22,5 @@
 
 # Python dependencies required for development
 setuptools>=42
-cython
+cython>=3.0,<3.1
 wheel
-build
