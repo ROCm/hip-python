@@ -847,7 +847,7 @@ def write_hip_python_as_cuda_requirements_file(
 
                 # Python dependencies required for development
                 setuptools>=42
-                cython
+                cython>=3.0,<3.1
                 wheel
                 build
                 hip-python=={version}.{{HIP_PYTHON_VERSION_SHORT}}"""

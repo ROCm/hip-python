@@ -42,7 +42,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "cython",
+    "cython >= 3.0, < 3.1",
     "pyparsing",
     "libclang >= 14.0.1, != 15.0.3, != 15.0.6, <= 15.0.6.1",
 ]
