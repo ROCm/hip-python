@@ -265,15 +265,6 @@ abort with errors.
 An upgrade to version HIP SDK 5.6 or later (or a downgrade to version 5.4) is
 advised if the showcased functionality is needed.
 
-### Unspecific
-
-On certain Ubuntu 20 systems, we encountered issues when running the examples:
-
-* hip-python/examples/0\_Basic\_Usage/hiprtc\_launch\_kernel\_args.py
-* hip-python/examples/0\_Basic\_Usage/rccl\_comminitall\_bcast.py
-
-We could not identify the cause yet.
-
 ## Documentation
 
 For examples, guides and API reference, please take a
