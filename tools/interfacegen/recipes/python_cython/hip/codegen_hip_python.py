@@ -443,7 +443,7 @@ def generate_hiprtc_module_files():
         """
     )
 
-    if (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR) >= (6, 4):
+    if (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR) == (6, 4):
         generator.c_interface_decl_prolog += textwrap.dedent(
             """\
             from hip.chip cimport hipJitOption
@@ -959,7 +959,7 @@ def generate_cuda_interop_layer_files(license_text: str):
         )
         return
 
-    if (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR) >= (6, 4):
+    if (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR) == (6, 4):
         # NOTE: Hipify may lag behind the header files.
         #       So we remove outdated keys and ensure
         #       the values are equal to the new names.
