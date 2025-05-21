@@ -30,7 +30,7 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 
 * Currently, only Linux is supported (prebuilt packages and code).
   * Prebuilt packages distributed via PyPI (or Test PyPI) are only provided for
-  Linux systems that agree with the `manylinux_2_28_x86_64` tag.
+    Linux systems that agree with the `manylinux_2_17_x86_64` tag.
 * Requires that a compatible ROCm&trade; HIP SDK is installed on your system.
   * Source code is provided only for particular ROCm versions.
     * See the `git` branches tagged with `release/rocm-rel-X.Y[.Z]`
@@ -56,6 +56,11 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 > Check the `simple` lists to see if your operating system and Python version
 > is supported: [hip-python](https://test.pypi.org/simple/hip-python/),
 > [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
+
+***
+
+> [!IMPORTANT]
+> Ensure that `pip` has at least version `24.0`, please upgrade it otherwise.
 
 ***
 
