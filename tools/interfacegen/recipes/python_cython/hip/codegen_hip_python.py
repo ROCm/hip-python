@@ -974,14 +974,14 @@ def generate_cuda_interop_layer_files(license_text: str):
         ]
         HIP_2_CUDA["hipJitOption"] = ["CUjit_option", "CUjit_option_enum"]
 
-        def collect_imports_(import_stmt: str, py_generator):
-            contribs = ""
-            for node in py_generator:
-                hip_name = node.cython_global_name
-                if hip_name in HIP_2_CUDA:
-                    for cuda_name in HIP_2_CUDA[hip_name]:
-                        contribs += f"{import_stmt} {cuda_name}\n"
-            return contribs
+    def collect_imports_(import_stmt: str, py_generator):
+        contribs = ""
+        for node in py_generator:
+            hip_name = node.cython_global_name
+            if hip_name in HIP_2_CUDA:
+                for cuda_name in HIP_2_CUDA[hip_name]:
+                    contribs += f"{import_stmt} {cuda_name}\n"
+        return contribs
 
     for config in (
         dict(
