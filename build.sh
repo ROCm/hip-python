@@ -200,7 +200,7 @@ if [ ! -z ${CUDA+x} ]; then
     mv ${PKG}/dist/*.whl ${PKG}/dist/archive/    2> /dev/null || true
     mv ${PKG}/dist/*.tar.gz ${PKG}/dist/archive/ 2> /dev/null || true
   fi
-  PYTHON -m pip install --force-reinstall $(find . -path "*hip-python/dist/hip_python*${PYVER}*whl")
+  PYTHON -m pip install --force-reinstall $(find . -path "*hip-python/dist/hip_python*-cp${PYVER}*-cp${PYVER}*whl")
   PYTHON _render_update_version.py
   PYTHON -m pip install -r ${PKG}/requirements.txt
   PYTHON _render_update_version.py
@@ -221,7 +221,7 @@ if [ ! -z ${DOCS+x} ]; then
     echo "docs: obtaining hip-python and hip-python-as-cuda from Test PyPI"
     PYTHON -m pip install -i https://test.pypi.org/simple --force-reinstall hip-python hip-python-as-cuda
   else
-    PYTHON -m pip install --force-reinstall $(find . -path "*hip-python*/dist/hip_python*${PYVER}*whl")
+    PYTHON -m pip install --force-reinstall $(find . -path "*hip-python*/dist/hip_python*-cp${PYVER}*-cp${PYVER}*whl")
   fi
   DOCS_DIR="docs"
   PYTHON -m pip install -r ${DOCS_DIR}/sphinx/requirements.txt
@@ -247,7 +247,7 @@ if [ ! -z ${DOCS+x} ]; then
 fi
 
 if [ ! -z ${RUN_TESTS+x} ]; then
-  PYTHON -m pip install --force-reinstall $(find . -path "*hip-python*/dist/hip_python*${PYVER}*whl")
+  PYTHON -m pip install --force-reinstall $(find . -path "*hip-python*/dist/hip_python*-cp${PYVER}*-cp${PYVER}*whl")
   PYTHON -m pip install -r examples/requirements.txt
   declare -x HIP_PYTHON_cudaError_t_HALLUCINATE=1
   PYTHON -m pytest -v examples
