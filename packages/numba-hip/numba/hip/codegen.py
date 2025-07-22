@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2025 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,7 @@ from numba.core.codegen import Codegen, CodeLibrary
 from . import amdgcn, hipconfig
 from .hipdrv import devices, driver, hiprtc
 from .typing_lowering import hipdevicelib
-from .util import comgrutils, linkercache, llvmutils
+from .util import comgrutils, linkercache, llvmutils, numbacompat
 
 _log = logging.getLogger(__file__)
 
@@ -834,56 +834,6 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
                         # (`ir.FunctionAttributes`->`ir.FunctionAttributes`->`set`)
                         set.add(fn.attributes, attrib)
 
-    @staticmethod
-    def _alloca_addrspace_correction(llvm_ir):
-        """Correct alloca statements without `addrspace(5)` parameter.
-
-        Rewrites llvm_ir such that `alloca`'s go into `addrspace(5)` (AMD GPU local address space)
-        and are then `addrspacecast` back to to `addrspace(0)`. Alloca into 5 is a requirement of
-        the datalayout specification.
-
-        Example:
-
-            ```llvm
-            %.34 = alloca { ptr, i32, i32 }, align 8
-            ```
-
-            is transformed to:
-
-            ```llvm
-            %.34__tmp =  alloca { ptr, i32, i32 }, align 8, addrspace(5)
-            %.34 = addrspacecast ptr addrspace(5) %.34__tmp to ptr addrspace(0)
-            ```
-        """
-        global _p_alloca
-        lines = llvm_ir.splitlines()
-        mangle = "__numba_hip_tmp"
-        new_ir = []
-        for line in lines:
-            # pluck lines containing alloca
-            if (
-                "alloca " in line and "addrspace(" not in line
-            ):  # inputs might be already in correct shape
-                result = _p_alloca.match(line)
-                if result:
-                    lhs: str = result.group("lhs")
-                    lhs_full: str = result.group("lhs_full")
-                    parms: str = result.group("parms")
-                    tmp_lhs = f"{lhs}_{mangle}"
-                    if lhs_full != lhs:  # quoted
-                        tmp_lhs = '"' + tmp_lhs + '"'
-                    new_ir.append(
-                        f"%{tmp_lhs} = alloca {parms}, addrspace(5)"
-                    )  # tmp_lhs is a ptr
-                    new_ir.append(
-                        f"%{lhs_full} = addrspacecast ptr addrspace(5) %{tmp_lhs} to ptr addrspace(0)"
-                    )
-                else:
-                    new_ir.append(line)
-            else:
-                new_ir.append(line)
-        return "\n".join(new_ir)
-
     def _postprocess_llvm_ir(self, llvm_str: str):
         """Postprocess Numba and third-party LLVM assembly.
 
@@ -909,20 +859,12 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             in the correct form. Transformations 2-4 must not have any effect
             in this case.
         """
-        global _TYPED_PTR
         if self._entry_name is not None:
             assert self._original_entry_name is not None
             llvm_str = llvm_str.replace(
                 self._original_entry_name, self._entry_name
             )
-        if (
-            "*" in llvm_str
-        ):  # note: significant optimization as _TYPED_PTR.sub is costly
-            llvm_str = _TYPED_PTR.sub(string=llvm_str, repl="ptr")
-        llvm_str = llvm_str.replace(
-            "sext ptr null to i", "ptrtoint ptr null to i"
-        )
-        return self._alloca_addrspace_correction(llvm_str)
+        return numbacompat.postprocess_numba_llvm_ir(llvm_str)
 
     def get_unlinked_llvm_ir(
         self,
