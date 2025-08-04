@@ -294,6 +294,7 @@ class HIPTargetContext(BaseContext):
         if name:
             library.change_entry_name(name)
             kernel_name = library._entry_name
+        # link the original lib containing the device function
         library.add_linking_library(codelib)
         wrapper = self.generate_kernel_wrapper(
             library, fndesc, kernel_name, debug, lineinfo, filename, linenum

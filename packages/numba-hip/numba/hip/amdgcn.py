@@ -49,6 +49,8 @@ import threading
 
 from rocm.amd_comgr import amd_comgr as comgr
 from rocm.llvm.c.core import (
+    LLVMContextCreate,
+    LLVMContextDispose,
     LLVMDisposeMessage,
 )
 from rocm.llvm.c.error import (
@@ -342,7 +344,7 @@ class AMDGPUTargetMachine:
             except AttributeError:
                 available_opts = ", ".join(
                     [
-                        f'{k.replace(option_setter_prefix,"")}'
+                        f'{k.replace(option_setter_prefix, "")}'
                         for k in vars(passbuilder).keys()
                         if k.startswith(option_setter_prefix)
                     ]
@@ -359,9 +361,12 @@ class AMDGPUTargetMachine:
 
         if isinstance(mod, LLVMOpaqueModule):
             optimized = mod
+            context = None
         else:
-            gm_res = llvmutils._get_module(mod, mod_len)
-            optimized = gm_res[0]
+            context = LLVMContextCreate()
+            (optimized,) = llvmutils._get_module_in_context(
+                context, mod, mod_len
+            )
 
         # As LLVMRunPasses aborts the process, we need to run it in a separate process
         # stderr_post = sys.stderr
@@ -399,7 +404,8 @@ class AMDGPUTargetMachine:
 
         # clean up
         if not isinstance(mod, LLVMOpaqueModule):
-            llvmutils._get_module_dispose_all(*gm_res)
+            # LLVMDisposeModule(optimized)  # note: context has owner ship
+            LLVMContextDispose(context)
         passbuilder.LLVMDisposePassBuilderOptions(opts)
         return result
 

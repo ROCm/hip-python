@@ -23,6 +23,8 @@ def test_postprocessing():
 %"$phi64.1" = alloca i64, align 8
 %val1 = sext ptr null to i32
 %val2 = sext ptr null to i64
+%".5" = alloca i8*
+%".17" = alloca i1
 """
 
     expected_llvm_ir = """\
@@ -46,6 +48,10 @@ def test_postprocessing():
 %"$phi64.1" = addrspacecast ptr addrspace(5) %"$phi64.1__numba_hip_tmp" to ptr addrspace(0)
 %val1 = ptrtoint ptr null to i32
 %val2 = ptrtoint ptr null to i64
+%".5__numba_hip_tmp" = alloca ptr, addrspace(5)
+%".5" = addrspacecast ptr addrspace(5) %".5__numba_hip_tmp" to ptr addrspace(0)
+%".17__numba_hip_tmp" = alloca i1, addrspace(5)
+%".17" = addrspacecast ptr addrspace(5) %".17__numba_hip_tmp" to ptr addrspace(0)
 """
 
     post_processed_llvm_ir = numbacompat.postprocess_numba_llvm_ir(

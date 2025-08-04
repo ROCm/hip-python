@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# flake8: noqa
+
 __author__ = "Advanced Micro Devices, Inc."
 
 """LLVM Utilities
@@ -29,33 +31,57 @@ in human-readable and bitcode format.
 """
 
 import copy
+import re
 
 from rocm.llvm.c.analysis import (
     LLVMVerifierFailureAction,
     LLVMVerifyModule,
 )
-from rocm.llvm.c.bitreader import LLVMParseBitcode
+from rocm.llvm.c.bitreader import LLVMGetBitcodeModuleInContext2
 from rocm.llvm.c.bitwriter import LLVMWriteBitcodeToMemoryBuffer
-from rocm.llvm.c.core import (
-    LLVMCloneModule,
+from rocm.llvm.c.core import (  # LLVMDeleteFunction,; LLVMDeleteGlobal,
+    LLVMAliasGetAliasee,
+    LLVMCallConv,
+    LLVMContextCreate,
+    LLVMContextDispose,
     LLVMCreateMemoryBufferWithMemoryRange,
-    LLVMDeleteFunction,
     LLVMDisposeMemoryBuffer,
     LLVMDisposeMessage,
     LLVMDisposeModule,
     LLVMGetBufferSize,
     LLVMGetBufferStart,
+    LLVMGetCalledValue,
+    LLVMGetFirstBasicBlock,
     LLVMGetFirstFunction,
-    LLVMGetGlobalContext,
+    LLVMGetFirstGlobalAlias,
+    LLVMGetFirstInstruction,
+    LLVMGetFunctionCallConv,
+    LLVMGetNextBasicBlock,
     LLVMGetNextFunction,
+    LLVMGetNextGlobalAlias,
+    LLVMGetNextInstruction,
     LLVMGetValueName2,
+    LLVMGetVisibility,
+    LLVMIsACallInst,
+    LLVMIsAFunction,
+    LLVMIsAGlobalAlias,
+    LLVMIsAInlineAsm,
     LLVMIsDeclaration,
-    LLVMModuleCreateWithName,
+    LLVMLinkage,
+    LLVMModuleCreateWithNameInContext,
     LLVMPrintModuleToString,
+    LLVMPrintValueToString,
+    LLVMSetLinkage,
+    LLVMSetVisibility,
+    LLVMVisibility,
 )
 from rocm.llvm.c.irreader import LLVMParseIRInContext
 from rocm.llvm.c.linker import LLVMLinkModules2
-from rocm.llvm.c.types import LLVMOpaqueModule
+from rocm.llvm.c.types import (
+    LLVMOpaqueContext,
+    LLVMOpaqueModule,
+    LLVMOpaqueValue,
+)
 
 
 def llvm_check(status, message):
@@ -72,10 +98,13 @@ def llvm_check(status, message):
         raise RuntimeError(f"{msg_str}")
 
 
-def _parse_llvm_bc(bc, bc_len: int = -1):
-    """Parse LLVM bitcode.
+def _parse_llvm_bc_in_context(
+    context: LLVMOpaqueContext, bc, bc_len: int = -1
+):
+    """Parse LLVM bitcode in the given context.
 
     Args:
+
         bc (implementor of the Python buffer protocol such as `bytes`):
             Buffer that contains LLVM BC.
         bc_len (`int`):
@@ -98,14 +127,16 @@ def _parse_llvm_bc(bc, bc_len: int = -1):
     buf = LLVMCreateMemoryBufferWithMemoryRange(
         bc,
         bc_len,
-        b"llvm-ir-buffer",
+        b"llvm-bc-buffer",
         0,
     )
-    # (status, mod, msg, buf)
-    return (*LLVMParseBitcode(buf), buf)
+    # (err_status, module, err_msg, buf)
+    res = LLVMGetBitcodeModuleInContext2(context, buf)
+    err_msg = "failed to parse LLVM BC buffer" if res[0] > 0 else None
+    return (*res, err_msg, buf)
 
 
-def _parse_llvm_ir(ir, ir_len: int = -1):
+def _parse_llvm_ir_in_context(context, ir, ir_len: int = -1):
     """Parse both human-readable LLVM IR or LLVM bitcode.
 
     Note:
@@ -146,11 +177,11 @@ def _parse_llvm_ir(ir, ir_len: int = -1):
         0,
     )
     # (status, mod, message)
-    # TODO(HIP/AMD) check memory, mod seems to take ownership of the buffer
-    return LLVMParseIRInContext(LLVMGetGlobalContext(), buf)
+    result = LLVMParseIRInContext(context, buf)
+    return result
 
 
-def _get_module(ir, ir_len: int = -1):
+def _get_module_in_context(context: LLVMOpaqueContext, ir, ir_len: int = -1):
     """Load LLVM module from human-readable LLVM IR or LLVM bitcode.
 
     Args:
@@ -171,7 +202,7 @@ def _get_module(ir, ir_len: int = -1):
     See:
         _get_module_dispose_all
     """
-    (status, mod, err_cstr) = _parse_llvm_ir(ir, ir_len)
+    (status, mod, err_cstr) = _parse_llvm_ir_in_context(context, ir, ir_len)
     if status > 0:  # failure
         errmsg = err_cstr.decode("utf-8")
         LLVMDisposeMessage(err_cstr)
@@ -184,21 +215,6 @@ def _get_module(ir, ir_len: int = -1):
         )
     else:
         return (mod,)
-
-
-def _get_module_dispose_all(mod):
-    """Clean up the results of `_get_module`.
-
-    Args:
-        mod: A module.
-
-    Note:
-        Arg list might need to be extended,
-        hence the name `_get_module_dispose_all`.
-    See:
-        _get_module_dispose_all
-    """
-    LLVMDisposeModule(mod)
 
 
 def _print_module(mod: LLVMOpaqueModule):
@@ -237,11 +253,13 @@ def to_ir_from_bc(bc, bc_len: int = -1):
         bcbuf_len (`int`):
             Length of the LLVM BC buffer.
     """
-    (status, mod, msg, buf) = _parse_llvm_bc(bc, bc_len)
+    context = LLVMContextCreate()
+    (status, mod, msg, _) = _parse_llvm_bc_in_context(context, bc, bc_len)
     llvm_check(status, msg)
     result = _to_ir(mod)
     LLVMDisposeModule(mod)
-    LLVMDisposeMemoryBuffer(buf)
+    # LLVMDisposeMemoryBuffer(_) # NOTE: module seems to have taken ownership
+    LLVMContextDispose(context)
     return result
 
 
@@ -256,11 +274,13 @@ def to_bc_from_ir(ir, ir_len: int = -1):
             or ``None`` to indicate that the buffer length should be derived via ``len(ir)``.
             Defaults to ``-1``.
     """
-    (status, mod, msg, ir_llvm_buf) = _parse_llvm_ir(ir, ir_len)
+    context = LLVMContextCreate()
+    (status, mod, msg) = _parse_llvm_ir_in_context(context, ir, ir_len)
     llvm_check(status, msg)  # disposes msg
     result = _to_bc(mod)
     LLVMDisposeModule(mod)
-    LLVMDisposeMemoryBuffer(ir_llvm_buf)
+    # LLVMDisposeMemoryBuffer(ir_buf) mod seems to take ownership of the buffer # TODO(HIP/AMD) check memory ownership
+    LLVMContextDispose(context)
     return result
 
 
@@ -288,9 +308,11 @@ def to_ir(mod, mod_len: int = -1):
     if isinstance(mod, LLVMOpaqueModule):
         return _to_ir(mod)
     else:
-        gm_res = _get_module(mod, mod_len)
-        result = _to_ir(mod=gm_res[0])
-        _get_module_dispose_all(*gm_res)
+        context = LLVMContextCreate()
+        (mod,) = _get_module_in_context(context, mod, mod_len)
+        result = _to_ir(mod)
+        LLVMDisposeModule(mod)
+        LLVMContextDispose(context)
         return result
 
 
@@ -337,9 +359,11 @@ def to_bc(mod, mod_len: int = -1):
     if isinstance(mod, LLVMOpaqueModule):
         return _to_bc(mod)
     else:
-        gm_res = _get_module(mod, mod_len)
+        context = LLVMContextCreate()
+        gm_res = _get_module_in_context(context, mod, mod_len)
         result = _to_bc(mod=gm_res[0])
-        _get_module_dispose_all(*gm_res)
+        LLVMDisposeModule(*gm_res)
+        LLVMContextDispose(context)
         return result
 
 
@@ -393,24 +417,29 @@ def verify(mod, mod_len: int = -1):
     if isinstance(mod, LLVMOpaqueModule):
         _verify(mod)
     else:
-        gm_res = _get_module(mod, mod_len)
+        context = LLVMContextCreate()
+        gm_res = _get_module_in_context(context, mod, mod_len)
         _verify(mod=gm_res[0])
-        _get_module_dispose_all(*gm_res)
+        LLVMDisposeModule(*gm_res)
+        LLVMContextDispose(context)
 
 
 class LLVMModuleWrapper:
-    """Wrapper class for handling LLVMOpaqueModule instances.
+    """Wrapper class for handling LLVM modules.
 
-    If LLVM IR/BC is supplied, creates the module at startup and
-    disposes it at destruction of the wrapper.
+    Stores all input formats in serialized form (LLVM IR or BC).
     """
 
     def __init__(self, mod, mod_len: int = -1):
         """LLVM module wrapper.
 
         Args:
+            context (`rocm.llvm.c.tpyes.LLVMOpaqueContext`):
+                The LLVM context to create modules in.
             mod (`rocm.llvm.c.types.LLVMOpaqueModule`, `LLVMModuleWrapper`, or UTF-8 `str`, or Python buffer like `bytes`):
-                An 'rocm.llvm.c.types.LLVMOpaqueModule', `LLVMModuleWrapper`,  or a buffer that contains LLVM IR or LLVM BC.
+                An 'rocm.llvm.c.types.LLVMOpaqueModule', `LLVMModuleWrapper`, or a buffer that contains LLVM IR or LLVM BC.
+                If you pass an `rocm.llvm.c.types.LLVMOpaqueModule`, then
+                code content is serialized to BC.
             mod_len (`int`, optional):
                 Length of the LLVM IR/BC buffer. Callers can specify numbers smaller than 1
                 or ``None`` to indicate that the buffer length should be derived via ``len(ir)``.
@@ -419,49 +448,39 @@ class LLVMModuleWrapper:
             KeyError: _description_
         """
         if isinstance(mod, LLVMModuleWrapper):
-            self._mod = mod._mod
-            self._owner = False
-            self._ir_or_bc = None
-            self._ir_or_bc_len = None
+            self._bc_or_ir = mod.bc_or_ir
+            self._bc_or_ir_len = len(self.bc_or_ir)
         elif isinstance(mod, LLVMOpaqueModule):
-            self._mod = mod
-            self._owner = False
-            self._ir_or_bc = None
-            self._ir_or_bc_len = None
+            self._bc_or_ir = to_bc(mod)
+            self._bc_or_ir_len = len(self._bc_or_ir)
         else:
-            self._mod = None
-            self._ir_or_bc = mod
-            self._ir_or_bc_len = mod_len
+            self._bc_or_ir = mod
+            self._bc_or_ir_len = mod_len
 
-    @property
-    def mod(self):
+    def create_mod_in_context(self, context):
         """Lazily creates LLVM module if not already available."""
-        if not self._mod:
-            gm_res = _get_module(self._ir_or_bc, self._ir_or_bc_len)
-            self._mod = gm_res[0]
-            self._owner = True
-        return self._mod
+        gm_res = _get_module_in_context(
+            context, self._bc_or_ir, self._bc_or_ir_len
+        )
+        mod = gm_res[0]
+        return mod
 
     @property
     def ir(self) -> bytes:
-        """Lazily produces human-readable LLVM IR."""
-        if not self._ir_or_bc:
-            self._ir_or_bc = _to_ir(self._mod)
-        return to_ir_fast(self._ir_or_bc)
+        """Return human-readable LLVM IR if not already available."""
+        return to_ir_fast(self._bc_or_ir)
 
     @property
     def bc(self) -> bytes:
-        """Lazily produces LLVM BC if not already available."""
-        if not self._ir_or_bc:
-            self._ir_or_bc = _to_bc(self._mod)
-        return to_bc_fast(self._ir_or_bc)
+        """Return LLVM BC if not already available."""
+        return to_bc_fast(self._bc_or_ir)
 
     @property
     def bc_or_ir(self) -> bytes:
         """Lazily produces LLVM BC if not already LLVM BC/IR available."""
-        if not self._ir_or_bc:
-            return self.bc
-        return to_bc_fast(self._ir_or_bc)
+        if not self._bc_or_ir:
+            return self._bc_or_ir
+        return to_bc_fast(self._bc_or_ir)
 
     def __str__(self):
         return self.ir.decode(encoding="utf-8")
@@ -517,155 +536,310 @@ def link_modules(
     if not len(modules):
         raise ValueError("argument 'modules' must have at least one entry")
     # create LLVM module from every input
-    cloned_modules = []
+    linker_inputs = []
+    context = LLVMContextCreate()
     for entry in modules:
-        if isinstance(entry, LLVMOpaqueModule):
-            cloned_modules.append((LLVMCloneModule(entry), None))
-        elif isinstance(entry, LLVMModuleWrapper):
-            cloned_modules.append((LLVMCloneModule(entry.mod), None))
+        if isinstance(entry, (tuple, list)):
+            wrapper = LLVMModuleWrapper(*entry)
         else:
-            if isinstance(entry, tuple):
-                ir = entry[0]
-                ir_len = entry[1]
-            else:
-                ir = entry
-                ir_len = len(entry)
-            gm_res = _get_module(ir, ir_len)
-            cloned_modules.append(
-                (LLVMCloneModule(gm_res[0]), gm_res)
-            )  # store the result of _get_module to dispose later
+            wrapper = LLVMModuleWrapper(entry)
+        linker_inputs.append(wrapper.create_mod_in_context(context))
+        # _verify(linker_inputs[-1])
 
     # LLVMLinkModules2(Dest, Src) "Links the source module into the destination module. The source module is destroyed."
-    dest = LLVMModuleCreateWithName(name.encode("utf-8"))
-    for src in reversed(cloned_modules):
-        if LLVMLinkModules2(dest, src[0]) > 0:
+    dest = LLVMModuleCreateWithNameInContext(name.encode(), context)
+    for src in reversed(linker_inputs):
+        if LLVMLinkModules2(dest, src) > 0:
             raise RuntimeError("An error has occurred")
     result = _to_bc(dest) if to_bc else _to_ir(dest)
     # clean up
+    # print("result")
+    # print(to_ir_fast(result))
     LLVMDisposeModule(dest)
-    for _, gm_res in cloned_modules[:]:
-        # the cloned modules have been consumed by the linker
-        if (
-            gm_res
-        ):  # might be None if one input is instance of LLVMOpaqueModule
-            _get_module_dispose_all(*gm_res)
+    LLVMContextDispose(context)
     return result
 
 
-def get_function_names(
+def _llvm_value_name_as_str(llvm_value):  # type: (LLVMOpaqueValue) -> str
+    """Gets LLVM value's name as Python 'str'."""
+    name_cstr = LLVMGetValueName2(llvm_value)[0]
+    if name_cstr:
+        return bytes(name_cstr).decode()
+    return None
+
+
+def _iter_functions(mod):
+    """Iterates all functions"""
+    fn = LLVMGetFirstFunction(mod)  # a value type
+    while fn:
+        yield (fn, _llvm_value_name_as_str(fn))
+        fn = LLVMGetNextFunction(fn)
+
+
+def _iter_global_function_aliases(mod):
+    """Iterates all global alias."""
+    alias = LLVMGetFirstGlobalAlias(mod)
+    while alias:
+        yield (alias, _llvm_value_name_as_str(alias))
+        alias = LLVMGetNextGlobalAlias(alias)
+
+
+def _get_function_aliases(
     mod,
-    mod_len: int = -1,
-    matcher=lambda name: True,
-    declares: bool = True,
-    defines: bool = True,
-):
-    """Gets the names of matching functions in a module.
+):  # type: (LLVMOpaqueModule) -> dict[str, LLVMOpaqueValue]
+    """Finds and completely expands function aliases.
 
     Args:
-        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
-        mod_len (`int`, optional):
-            Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
-            or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-            Defaults to ``-1``. Not used at all if ``mod`` is an instance of
-            `rocm.llvm.c.types.LLVMOpaqueModule`.
-        matcher (callable, optional):
-            Function describing what a match is.
-            Defaults to a lambda that returns ``True`` for any name.
-        declares (`bool`, optional):
-            Consider function declarations. Defaults to ``True``.
-        defines (`bool`, optional):
-            Consider function definitions. Defaults to ``True``.
+        mod (`~.LLVMOpaqueModule`):
+            An LLVM module.
+    Returns:
+        `dict` of `str` and `~.LLVMOpaqueValue`:
+            Maps function alias name to fully expanded aliasee.
     """
+    function_aliases = dict()
 
-    def function_names_(mod):
-        nonlocal declares
-        nonlocal defines
-        result = []
-        fn = LLVMGetFirstFunction(mod)
-        while fn:
-            name_cstr, _ = LLVMGetValueName2(fn)
-            if name_cstr:
-                name = name_cstr.decode("utf-8")
-                if matcher(name):
-                    is_declare = LLVMIsDeclaration(fn) > 0
-                    if is_declare and declares or not is_declare and defines:
-                        result.append(name)
-            fn = LLVMGetNextFunction(fn)
-        return result
-
-    if isinstance(mod, LLVMOpaqueModule):
-        result = function_names_(mod)
-    else:
-        gm_res = _get_module(mod, mod_len)
-        result = function_names_(mod=gm_res[0])
-        _get_module_dispose_all(*gm_res)
-    return result
-
-
-def delete_functions(
-    mod,
-    mod_len: int = -1,
-    matcher=lambda name: False,
-    declares: bool = True,
-    defines: bool = True,
-):
-    """Deletes all matching functions from a module.
-
-    Note:
-        With the default ``matcher``, no deletions are performed.
-
-    Note:
-        If the input is of type `rocm.llvm.c.types.LLVMOpaqueModule`,
-        the passed in module is modified and returned.
-        If the inputs are LLVM IR/BC buffers, the modified module
-        is returned in the respective input form.
-
-    Args:
-        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
-        mod_len (`int`, optional):
-            Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
-            or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
-            Defaults to ``-1``. Not used at all if ``mod`` is an instance of
-            `rocm.llvm.c.types.LLVMOpaqueModule`.
-        matcher (callable, optional):
-            Function describing what a match is.
-            Defaults to a lambda that returns ``False`` for any name.
-        declares (`bool`, optional):
-            Consider function declarations. Defaults to ``True``.
-        defines (`bool`, optional):
-            Consider function definitions. Defaults to ``True``.
-    """
-
-    def delete_functions_(mod):
-        nonlocal matcher
-        nonlocal declares
-        nonlocal defines
-        fn = LLVMGetFirstFunction(mod)
-        while fn:
-            name_cstr, _ = LLVMGetValueName2(fn)
-            fn_next = LLVMGetNextFunction(fn)
-            if name_cstr:
-                name = name_cstr.decode("utf-8")
-                if matcher(name):
-                    is_declare = LLVMIsDeclaration(fn) > 0
-                    if is_declare and declares or not is_declare and defines:
-                        # print(f"delete function {name}")
-                        LLVMDeleteFunction(fn)
-            fn = fn_next
-
-    if isinstance(mod, LLVMOpaqueModule):
-        delete_functions_(mod)
-        return mod
-    else:
-        (mod, buf, from_bc) = _get_module(mod, mod_len)
-        delete_functions_(mod=mod)
-        if from_bc:
-            result = _to_bc(mod)
+    def expand_aliases_(aliases, alias):
+        nonlocal function_aliases
+        aliasee = LLVMAliasGetAliasee(alias)
+        aliasee_name = _llvm_value_name_as_str(aliasee)
+        if LLVMIsAFunction(aliasee) is not None:
+            for alias in aliases:
+                function_aliases[alias] = aliasee
+        elif LLVMIsAGlobalAlias(aliasee):
+            expand_aliases_(aliases + [aliasee_name], aliasee)
         else:
-            result = _to_ir(mod)
-        _get_module_dispose_all(mod, buf, from_bc)
+            pass
+
+    # Collect and expand aliases
+    for alias, alias_name in _iter_global_function_aliases(mod):
+        expand_aliases_([alias_name], alias)
+
+    return function_aliases
+
+
+def _get_functions_called_by_amdgpu_kernel_hide_device_functions(
+    mod, function_aliases
+):
+    """
+
+    Identifies functions that care called by a function
+    with `amdgpu_kernel` (calling convention).
+    The call might be done directly or indirectly via
+    a global function alias.
+
+    Further changes the visibility and linkage of functions with
+    other calling convention so that they do not appear
+    as symbols in generated machine code or AMD GPU HSA assembly.
+
+    Warning:
+        Side effects: Visibility and linkage of functions
+        in input argument 'mod' is modified ('hidden', 'private')
+        to exclude them from compiled code objects and
+        generated HSA assembly.
+
+    Change visibility if
+    """
+    used_functions = set()
+
+    # now collect the used functions
+    def identify_callees_(name, fn):
+        nonlocal used_functions
+        used_functions.add(name)  # implicit copy
+        if LLVMIsDeclaration(fn) > 0:
+            return
+        bb = LLVMGetFirstBasicBlock(fn)
+        while bb:
+            instr = LLVMGetFirstInstruction(bb)
+            while instr:
+                if LLVMIsACallInst(instr) is not None:
+                    callee = LLVMGetCalledValue(instr)
+                    callee_name = _llvm_value_name_as_str(callee)
+                    # expand alias
+                    if LLVMIsAGlobalAlias(callee):
+                        callee = function_aliases[callee_name]
+                        callee_name = _llvm_value_name_as_str(callee)
+                    # only descend if the function is not inline assembly
+                    if LLVMIsAInlineAsm(callee) is None:
+                        identify_callees_(callee_name, callee)
+                instr = LLVMGetNextInstruction(instr)
+            bb = LLVMGetNextBasicBlock(bb)
+
+    # loop over all functions
+    for fn, name in _iter_functions(mod):
+        name = _llvm_value_name_as_str(fn)
+        call_conv = LLVMGetFunctionCallConv(fn)
+        if call_conv == LLVMCallConv.LLVMAMDGPUKERNELCallConv:
+            visibility = LLVMGetVisibility(fn)
+            assert visibility == LLVMVisibility.LLVMProtectedVisibility
+            identify_callees_(name, fn)
+        elif LLVMIsDeclaration(fn) == 0:
+            LLVMSetVisibility(fn, LLVMVisibility.LLVMHiddenVisibility)
+            LLVMSetLinkage(fn, LLVMLinkage.LLVMPrivateLinkage)
+    return used_functions
+
+
+# def _module_remove_unused_functions(
+#     mod, used_functions, function_aliases
+# ):  # type: (LLVMOpaqueModule, set[str], dict[str,str]) -> None
+#     """Remove unused functions from an LLVM module.
+
+#     Note:
+#         This causes segmentation fault.
+#         Need to investigate more carefully how this
+#         can be avoided. We use _module_remove_unused_functions_v2 instead.
+#     """
+#     for fn, name in _iter_functions(mod):
+#         if name not in used_functions:
+#             LLVMDeleteFunction(fn)
+
+#     for alias, alias_name in _iter_global_function_aliases(mod):
+#         if alias_name in function_aliases:
+#             fn_name = _llvm_value_name_as_str(function_aliases[alias_name])
+#             if fn_name not in used_functions:
+#                 LLVMDeleteGlobal(alias)
+
+
+def _tokenize_function_def_or_decl_header_line(line):
+    """Tokenize a function declaration/definition line.
+
+    Splits at whitespace as well as at '(', ')', and ','.
+    Only keeps the latter three.
+
+    Note:
+        Since `p.split(line)` produces some '' and None entries, we
+        need to remove those via the list comprehension that
+        is part of the return statement.
+    """
+    p = re.compile(r"\s+|([(),])")
+    return [tk for tk in p.split(line) if tk]
+
+
+def _module_remove_unused_functions_v2(
+    mod, used_functions, function_aliases
+):  # type: (LLVMOpaqueModule, set[str], dict[str,str]) -> str
+    ir_buf = _to_ir(mod)
+    used_attributes = set()
+
+    recording = True
+    recorded_lines = []
+    for line in ir_buf.decode().splitlines(keepends=True):
+        if line.startswith("define ") or line.startswith("declare "):
+            # example: define internal range(i64 0, 1024) i64 @__ockl_get_local_id(i32 noundef %0) local_unnamed_addr #22 {
+            tokens = _tokenize_function_def_or_decl_header_line(line)
+
+            name_tk = next((tk for tk in tokens if tk.startswith("@")), None)
+            assert name_tk
+            if name_tk[1:] in used_functions:
+                recorded_lines.append(line)
+                recording = True
+
+                attrib_tk = next(
+                    (tk for tk in tokens if tk.startswith("#")), None
+                )
+                if attrib_tk:
+                    used_attributes.add(int(attrib_tk[1:]))
+            else:
+                # Turn recording off when uncalled function is encountered
+                recording = False
+                if recorded_lines[-1].startswith("; Function Attrs:"):
+                    recorded_lines.pop()
+                    if recorded_lines[-1].strip() == "":
+                        recorded_lines.pop()
+        elif line.startswith("}"):
+            if recording:
+                recorded_lines.append(line)
+            else:
+                # Turn it back on when "}" after is encountered
+                # but do not record this line
+                recording = True
+        elif line.startswith("@") and "alias" in line:
+            # example: @__ocml_cvtrtz_f32_u32 = internal alias float (i32), ptr @__ocml_cvtrtn_f32_u32
+            alias_name = line[1:].split("=")[0].strip()
+            fn_name = bytes(function_aliases[alias_name]).decode()
+            if fn_name in used_functions:
+                recorded_lines.append(line)
+            else:
+                pass
+        elif line.startswith("attributes #"):
+            attrib_tk = next(
+                (tk for tk in line.split(" ") if tk.startswith("#")), None
+            )
+            if attrib_tk:
+                if int(attrib_tk[1:]) in used_attributes:
+                    recorded_lines.append(line)
+        else:
+            if recording:
+                recorded_lines.append(line)
+    return "".join(recorded_lines)
+
+
+def clean_up_kernel_module(
+    mod, mod_len: int = -1, to_bc: bool = False
+):  # noqa: C901
+    """
+
+    Deletes any function that is not called (directly or via alias) by a protected function or is a protected function itself.
+    Changes the visibility of all non-protected functions to 'hidden' and
+    their linkage to 'private' so that they will not be part of
+    any
+
+    Note:
+        We assume here that AMD `amdgpu_kernel` functions have protected
+        visibility and thus use this visibilty as indicator for identifying kernels.
+
+    Args:
+        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as
+            `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
+            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+        mod_len (`int`, optional):
+            Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
+            or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
+            Defaults to ``-1``. Not used at all if ``mod`` is an instance of
+            `rocm.llvm.c.types.LLVMOpaqueModule`.
+        to_bc (`bool`, optional):
+            Return LLVM bitcode (True) or LLVM IR (False).
+            Defaults to True.
+
+    Returns:
+
+
+    TODO:
+        We make implicit assumptions on the LLVM IR format here (function head in one line, attributes in one line, ...) that need
+        to be documented.
+    """
+
+    def clean_module_(mod, to_bc):  # type: (LLVMOpaqueModule, bool) -> bytes
+        """
+        We currently do not remove superfluous attributes as
+        we the attributes might actually be used by called functions.
+        """
+        function_aliases = _get_function_aliases(mod)
+        used_functions = (
+            _get_functions_called_by_amdgpu_kernel_hide_device_functions(
+                mod, function_aliases
+            )
+        )
+
+        result = _module_remove_unused_functions_v2(
+            mod, used_functions, function_aliases
+        )
+
+        # print(result)
+
+        if to_bc:
+            res = to_bc_from_ir(result.encode())
+            return res
+        else:
+            return result.encode()
+
+    if isinstance(mod, LLVMOpaqueModule):
+        return clean_module_(mod, to_bc)
+    else:
+        context = LLVMContextCreate()
+        (llvm_mod,) = _get_module_in_context(context, mod, mod_len)
+        result = clean_module_(llvm_mod, to_bc)
+        # LLVMDisposeModule(mod)  # NOTE: module seems to be owned by context
+        LLVMContextDispose(context)
         return result
 
 
@@ -742,8 +916,8 @@ def split_human_readable_clang_offload_bundle(bundle):
         else:
             next_newline: int = bundle.find("\n", begin)
             target_id: str = bundle[
-                begin + len(p_begin) : next_newline  # noqa: E203
-            ]
+                begin + len(p_begin) : next_newline
+            ]  # noqa: E203
             begin = next_newline + 1  # move at begin of next line
             end: int = bundle.find(p_end, begin)  # note: returns -1 on failure
             if end == -1:

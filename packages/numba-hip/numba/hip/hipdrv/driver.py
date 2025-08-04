@@ -2623,16 +2623,14 @@ class CudaPythonLinker(Linker):
 
         from hip import hiprtc as hiprtc_bindings
 
-        self.handle = driver.cuLinkCreate(
-            *hiprtc_bindings.ext.HiprtcLinkCreateOpts(**options)
-        )
+        args_handler = hiprtc_bindings.ext.HiprtcLinkCreateOpts(**options)
+        self.handle = driver.cuLinkCreate(*args_handler)
 
         weakref.finalize(self, driver.cuLinkDestroy, self.handle)
 
         self.linker_info_buf = linkerinfo
         self.linker_errors_buf = linkererrors
-
-        self._keep_alive = [linkerinfo, linkererrors, options]
+        self._keep_alive = [linkerinfo, linkererrors, options, args_handler]
 
     @property
     def info_log(self):

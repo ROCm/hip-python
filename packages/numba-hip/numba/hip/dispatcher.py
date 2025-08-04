@@ -322,36 +322,35 @@ class _Kernel(serialize.ReduceMixin):
         """
         return self._codelibrary.get_hipfunc().attrs.local
 
-    def inspect_llvm(self):
+    def inspect_llvm(self, linked=False):
         """
         Returns the LLVM IR for this kernel.
         """
-        return self._codelibrary.get_llvm_str()
+        return self._codelibrary.get_llvm_str(linked=linked)
 
-    def inspect_asm(self, cc):
+    def inspect_asm(self, amdgpu_arch=None, disassemble=False):
         """
-        Returns the PTX code for this kernel.
+        Returns AMD GPU assembly source code for this kernel.
         """
-        raise NotImplementedError()
-        return self._codelibrary.get_asm_str(cc=cc)
+        return self._codelibrary.get_asm_str(
+            amdgpu_arch=amdgpu_arch, disassemble=disassemble
+        )
 
     def inspect_sass_cfg(self):
-        """
-        Returns the CFG of the SASS for this kernel.
+        """(Not implemented)
 
-        Requires nvdisasm to be available on the PATH.
+        Returns the CFG of the SASS for this kernel.
         """
         raise NotImplementedError()
         return self._codelibrary.get_sass_cfg()
 
-    def inspect_sass(self):
-        """
-        Returns the SASS code for this kernel.
+    def inspect_sass(self, **kwargs):
+        """Calls method `inspect_asm` for current context's device.
 
-        Requires nvdisasm to be available on the PATH.
+        Note:
+            Function is kept for Numba CUDA compatiblity.
         """
-        raise NotImplementedError()
-        return self._codelibrary.get_sass()
+        return self.inspect_asm(**kwargs)
 
     def inspect_types(self, file=None):
         """
@@ -1080,7 +1079,7 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
 
         return kernel
 
-    def inspect_llvm(self, signature=None):
+    def inspect_llvm(self, signature=None, linked=False):
         """
         Return the LLVM IR for this kernel for the device in the
         current context.
@@ -1089,60 +1088,80 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
             The generated LLVM IR contains target-specific parts.
             This routine assumes the current context's device's architecture.
 
-        :param signature: A tuple of argument types.
-        :return: The LLVM IR for the given signature, or a dict of LLVM IR
-                 for all previously-encountered signatures.
+        Args:
+            signature (`tuple`):
+                A tuple of argument types.
+            linked (`bool`, optional`):
+                Return the string representation of the fully linked LLVM IR,
+                where all dependencies including the Numba HIP device library
+                have been linked in. This file can be quite large (10k+ lines
+                of code). Otherwise, bundles the string representation of this
+                instance's LLVM module and that of its dependencies. Defaults
+                to ``False``.
 
+        Returns:
+            The LLVM IR for the given signature, or a dict of LLVM IR for all
+            previously-encountered signatures.
         """
         device = self.targetoptions.get("device")
         if signature is not None:
             if device:
-                return self.overloads[signature].library.get_llvm_str()
+                return self.overloads[signature].library.get_llvm_str(
+                    linked=linked
+                )
             else:
-                return self.overloads[signature].inspect_llvm()
+                return self.overloads[signature].inspect_llvm(linked=linked)
         else:
             if device:
                 return {
-                    sig: overload.library.get_llvm_str()
+                    sig: overload.library.get_llvm_str(linked=linked)
                     for sig, overload in self.overloads.items()
                 }
             else:
                 return {
-                    sig: overload.inspect_llvm()
+                    sig: overload.inspect_llvm(linked=linked)
                     for sig, overload in self.overloads.items()
                 }
 
-    def inspect_asm(self, signature=None):
-        """
-        Return this kernel's PTX assembly code for for the device in the
+    def inspect_asm(self, signature=None, disassemble=False):
+        """Return AMD GPU kernel assembly code.
+
+        Return a kernel's AMD GPU assembly code for for the device in the
         current context.
 
-        :param signature: A tuple of argument types.
-        :return: The PTX code for the given signature, or a dict of PTX codes
-                 for all previously-encountered signatures.
+        Args:
+            signature (`tuple` or `None`, optional):
+                A tuple of argument types.
+            diassemble (`bool`, optional):
+                If the assmebly code should be obtained via disassembly
+                of the final code object instead of lowering the linked LLVM IR. Experimental feature.
+        Returns:
+            The AMD GPU assembly code for the given signature, or a dict
+            of codes for all previously-encountered signatures.
+
+        AMD GPU assembly code for the device in the current context is returned.
+
+        Note:
+
         """
-        raise NotImplementedError
-        cc = get_current_device().compute_capability
-        device = self.targetoptions.get("device")
+        if self.targetoptions.get("device"):
+            raise RuntimeError(
+                "Cannot inspect AMD GPU assmebly code of a device function"
+            )
+
         if signature is not None:
-            if device:
-                return self.overloads[signature].library.get_asm_str(cc)
-            else:
-                return self.overloads[signature].inspect_asm(cc)
+            return self.overloads[signature].inspect_asm(
+                disassemble=disassemble
+            )
         else:
-            if device:
-                return {
-                    sig: overload.library.get_asm_str(cc)
-                    for sig, overload in self.overloads.items()
-                }
-            else:
-                return {
-                    sig: overload.inspect_asm(cc)
-                    for sig, overload in self.overloads.items()
-                }
+            return {
+                sig: defn.inspect_asm(disassemble=disassemble)
+                for sig, defn in self.overloads.items()
+            }
 
     def inspect_sass_cfg(self, signature=None):
-        """
+        """(Not implemented)
+
         Return this kernel's CFG for the device in the current context.
 
         :param signature: A tuple of argument types.
@@ -1150,8 +1169,6 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                  for all previously-encountered signatures.
 
         The CFG for the device in the current context is returned.
-
-        Requires nvdisasm to be available on the PATH.
         """
         raise NotImplementedError()
         if self.targetoptions.get("device"):
@@ -1165,30 +1182,9 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
                 for sig, defn in self.overloads.items()
             }
 
-    def inspect_sass(self, signature=None):
-        """
-        Return this kernel's SASS assembly code for for the device in the
-        current context.
-
-        :param signature: A tuple of argument types.
-        :return: The SASS code for the given signature, or a dict of SASS codes
-                 for all previously-encountered signatures.
-
-        SASS for the device in the current context is returned.
-
-        Requires nvdisasm to be available on the PATH.
-        """
-        raise NotImplementedError()
-        if self.targetoptions.get("device"):
-            raise RuntimeError("Cannot inspect SASS of a device function")
-
-        if signature is not None:
-            return self.overloads[signature].inspect_sass()
-        else:
-            return {
-                sig: defn.inspect_sass()
-                for sig, defn in self.overloads.items()
-            }
+    def inspect_sass(self, signature=None, **kwargs):
+        """Calls method `inspect_asm`."""
+        return self.inspect_asm(self, signature, **kwargs)
 
     def inspect_types(self, file=None):
         """

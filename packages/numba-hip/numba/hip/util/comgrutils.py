@@ -34,6 +34,43 @@ from rocm.amd_comgr import amd_comgr as comgr
 
 from . import llvmutils
 
+if hasattr(comgr.ext, "disassemble_code_obj_function"):
+    disassemble_code_obj_function = comgr.ext.disassemble_code_obj_function
+
+    disassemble_amdhsa_code_obj_v6_kernel = (
+        comgr.ext.disassemble_amdhsa_code_obj_v6_kernel
+    )
+else:
+
+    def disassemble_code_obj_function(*args, **kwargs):
+        raise NotImplementedError(
+            "The installed version of rocm-llvm-python "
+            "does not provide function 'comgr.ext."
+            "disassemble_code_obj_function'."
+        )
+
+
+if hasattr(comgr.ext, "compile_bc_to_hsa"):
+    has_compile_bc = True
+
+    compile_bc = comgr.ext.compile_bc
+    compile_bc_to_hsa = comgr.ext.compile_bc_to_hsa
+    compile_hsa = comgr.ext.compile_hsa
+else:
+    has_compile_bc = False
+
+    def compile_bc_to_hsa(*args, **kwargs):
+        raise NotImplementedError(
+            "The installed version of rocm-llvm-python "
+            "does not provide function 'comgr.ext."
+            "compile_bc_to_hsa'."
+        )
+
+
+has_compile_bc_to_hsa = has_compile_bc
+has_compile_hsa = has_compile_bc
+
+
 llvm_amdgpu_kernel_visibility = "protected"
 llvm_amdgpu_kernel_calling_convention = "amdgpu_kernel"
 llvm_amdgpu_device_fun_visibility = "hidden"
@@ -116,7 +153,7 @@ def _compile_dummy_snippet_to_llvm_ir(
     return llvm_ir.decode("utf-8")
 
 
-def get_dummy_kernel_llvm_ir(amdgpu_arch: str, args: str):
+def _get_dummy_kernel_llvm_ir(amdgpu_arch: str, args: str):
     """Returns LLVM IR for an empty AMD GPU kernel.
 
     amdgpu_arch (`str`):
@@ -132,7 +169,7 @@ def get_dummy_kernel_llvm_ir(amdgpu_arch: str, args: str):
     return _DUMMY_KERNEL_IR[key]
 
 
-def get_dummy_device_fun_llvm_ir(amdgpu_arch: str, args: str):
+def _get_dummy_device_fun_llvm_ir(amdgpu_arch: str, args: str):
     """Returns LLVM IR for an empty AMD GPU device function.
 
     amdgpu_arch (`str`):
@@ -218,7 +255,7 @@ def parse_llvm_attributes_line(
         return (attribs, kwattribs)
 
 
-def get_llvm_kernel_attributes(
+def _get_dummy_kernel_attributes(
     amdgpu_arch: str,
     raw: bool = False,
     only_kv: bool = False,
@@ -226,6 +263,11 @@ def get_llvm_kernel_attributes(
     args: str = "",
 ):
     """Return kernel attributes.
+
+    Warning:
+        Many attributes are generated because of the
+        (empty) signature and (empty) body of the
+        dummy function that we compile.
 
     Args:
         attributes_line (`str`, optional):
@@ -251,7 +293,7 @@ def get_llvm_kernel_attributes(
             * ``raw==True``: a `list` that contains simple attributes (if ``only_kv==False``)
               plus key-value attributes in their raw '"<key>"="<value>"' form.
     """
-    llvm_ir = get_dummy_kernel_llvm_ir(amdgpu_arch, args)
+    llvm_ir = _get_dummy_kernel_llvm_ir(amdgpu_arch, args)
     attributes_0_line = next(
         line for line in llvm_ir.splitlines() if "attributes #0" in line
     )
@@ -279,7 +321,7 @@ def get_llvm_target_features(
             Return the features as `list` and not as `str`.
             Defaults to False.
     """
-    (_, kwattribs) = get_llvm_kernel_attributes(amdgpu_arch)
+    (_, kwattribs) = _get_dummy_kernel_attributes(amdgpu_arch)
     features_raw = kwattribs["target-features"]
     if sort:
         features_list_sorted = sorted(features_raw.split(","))
@@ -344,14 +386,19 @@ def compare_llvm_target_features(
     )
 
 
-def get_llvm_device_fun_attributes(
+def _get_dummy_device_fun_attributes(
     amdgpu_arch: str,
     raw: bool = False,
     only_kv: bool = False,
     exclude_patterns=["memory("],
     args: str = "",
 ):
-    """Return kernel attributes.
+    """Return device function attributes.
+
+    Warning:
+        Many attributes are generated because of the
+        (empty) signature and (empty) body of the
+        dummy function that we compile.
 
     Args:
         attributes_line (`str`, optional):
@@ -377,7 +424,7 @@ def get_llvm_device_fun_attributes(
             * ``raw==True``: a `list` that contains simple attributes (if ``only_kv==False``)
               plus key-value attributes in their raw '"<key>"="<value>"' form.
     """
-    llvm_ir = get_dummy_device_fun_llvm_ir(amdgpu_arch, args)
+    llvm_ir = _get_dummy_device_fun_llvm_ir(amdgpu_arch, args)
     attributes_0_line = next(
         line for line in llvm_ir.splitlines() if "attributes #0" in line
     )
@@ -387,3 +434,32 @@ def get_llvm_device_fun_attributes(
         only_kv=only_kv,
         exclude_patterns=exclude_patterns,
     )
+
+
+def get_target_specific_attributes(amdgpu_arch: str):
+    """
+
+    Returns target-specific attributes that are independent of the function
+    signature and body. Those are `target-cpu
+
+    Example result:
+
+    {
+        "target-cpu": "gfx942"
+        "target-features":
+          "+16-bit-insts,
+          +atomic-buffer-global-pk-add-f16-insts,
+          +atomic-ds-pk-add-16-insts,+atomic-fadd-rtn-insts,
+          +atomic-flat-pk-add-16-insts,+atomic-global-pk-add-bf16-inst,
+          +ci-insts,+cumode,+dl-insts,+dot1-insts,+dot10-insts,+dot2-insts,
+          +dot3-insts,+dot4-insts,+dot5-insts,+dot6-insts,+dot7-insts,+dpp,
+          +fp8-conversion-insts,+fp8-insts,+gfx8-insts,+gfx9-insts,
+          +gfx90a-insts,+gfx940-insts,+mai-insts,+s-memrealtime,+s-memtime-inst,
+          h+wavefrontsize64,+xf32-insts" "uniform-work-group-size"="true"
+    }
+    """
+
+    attributes = _get_dummy_device_fun_attributes(
+        amdgpu_arch, only_kv=True, raw=True
+    )
+    return [attr for attr in attributes if attr.startswith('"target-')]

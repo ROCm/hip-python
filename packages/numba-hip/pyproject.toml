@@ -74,3 +74,7 @@ exclude = '''
   | dist
 )/
 '''
+[tool.flake8]
+# ignore: E203 whitespace before ':' (conflicts with tool.black)
+# ignore: W503 line break before binary operator
+ignore = "E203, W503"
