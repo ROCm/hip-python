@@ -945,6 +945,17 @@ def generate_cuda_interop_layer_files(license_text: str):
 
     Note:
         Some CUDA Driver and Runtime routines, namely cuLink*, have been mapped to HIPRTC instead of the HIP runtime.
+
+    Note:
+        CUDA Python's `cudaRuntimeGetVersion(...)` returns the version of the
+        CUDA version that has been used to generate the bindings. This might
+        differ (at least in the patch version) from the version of the CUDA
+        runtime that a user might use the bindings for; more details:
+        <https://github.com/NVIDIA/cuda-python/issues/16>
+        HIP Python's `hipRuntimeGetVersion` has always been calling into the
+        loaded runtime so there is no need for a `getLocalRuntimeVersion`.
+        In the CUDA compatibility layer's modules, we make
+        `getLocalRuntimeVersion` an alias of `hipRuntimeGetVersion`.
     """
     global OUTPUT_DIR
     global HIP_2_CUDA
@@ -958,6 +969,10 @@ def generate_cuda_interop_layer_files(license_text: str):
             "No CUDA runtime layer generated as 'hip' and/or 'hiprtc' have not been specified as libraries to parse."
         )
         return
+
+    # See: https://github.com/NVIDIA/cuda-python/issues/16
+    assert "hipRuntimeGetVersion" in HIP_2_CUDA
+    HIP_2_CUDA["hipRuntimeGetVersion"].append("getLocalRuntimeVersion")
 
     if (ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR) >= (6, 4):
         # NOTE: Hipify may lag behind the header files.
