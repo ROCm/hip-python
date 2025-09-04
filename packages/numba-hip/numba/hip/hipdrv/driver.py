@@ -163,6 +163,7 @@ class HipAPIError(HipRuntimeError):
     def __str__(self):
         return "[%s] %s" % (self.code, self.msg)
 
+CudaAPIError = HipAPIError  #: HIP/AMD: alias
 
 def locate_runtime_and_loader():  #: HIP/AMD: modified body
     # envpath = config.CUDA_DRIVER
