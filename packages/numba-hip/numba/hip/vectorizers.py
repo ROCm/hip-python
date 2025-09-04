@@ -272,3 +272,12 @@ class CUDAGUFuncVectorize(deviceufunc.DeviceGUFuncVectorize):
         glbls.update({'__cuda__': cuda,
                       '__core__': corefn})
         return glbls
+
+# Make symbols available with hip naming
+for k, v in list(globals().items()):
+    if "cuda" in k or "CUDA" in k:
+        hip_name = k.replace("cuda", "hip")
+        hip_name = hip_name.replace("CUDA", "HIP")
+        if hip_name not in globals():
+            globals()[hip_name] = v
+
