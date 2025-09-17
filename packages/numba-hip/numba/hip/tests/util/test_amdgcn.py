@@ -24,6 +24,7 @@
 __author__ = "Advanced Micro Devices, Inc."
 
 import textwrap
+import warnings
 
 from numba.hip.amdgcn import AMDGPUTargetMachine
 
@@ -44,7 +45,11 @@ def test_00_print_datalayout():
 def test_01_verify_module():
     import faulthandler
 
-    faulthandler.enable()
+    try:
+      faulthandler.enable()
+    except Exception as e:
+      msg = "Failed to enable faulthandler due to:\n{err}"
+      warnings.warn(msg.format(err=e))
     machine = AMDGPUTargetMachine(target_cpu="gfx90a")
 
     dep_llvm_ir = textwrap.dedent(
