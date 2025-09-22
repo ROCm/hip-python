@@ -99,6 +99,7 @@ class TestCudaStream(CUDATestCase):
         stream = cuda.stream()
         await stream.async_done()
 
+    @unittest.skip("TODO(HIP/AMD) This test is presently not supported, internal issue 53.")
     @with_asyncio_loop
     async def test_parallel_tasks(self):
         async def async_cuda_fn(value_in: float) -> float:
