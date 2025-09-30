@@ -23,6 +23,8 @@
 import datetime
 import subprocess
 
+__MAIN_BRANCH__ = "amd-integration"
+
 
 def git_describe(always=True):
     """Call git describe.
@@ -70,8 +72,8 @@ def git_current_branch():
 
 
 def git_is_main_branch():
-    """If the current branch is 'main'."""
-    return git_current_branch() == "main"
+    """If the current branch is the main branch."""
+    return git_current_branch() == __MAIN_BRANCH__
 
 
 def git_upstream_commits_vs_local():
@@ -109,9 +111,9 @@ def git_is_clean():
 def version(append_hash=False, append_date=False):
     """Version number of the code generator.
 
-    Takes revision count of origin branch 'main' as version number.
-    Appends `.dev{num}` if the head of the current branch/local version of 'main'
-    deviates `{num}` revisions from origin 'main'.
+    Takes revision count of origin's main branch as version number.
+    Appends `.dev{num}` if the head of the current branch/local version of the
+    main branch deviates `{num}` revisions from origin's main branch.
     Further appends the revision hash in this case.
     Finally appends a date if the local repository is not clean.
     """
@@ -120,7 +122,7 @@ def version(append_hash=False, append_date=False):
     rev_hash = git_rev()
     branch = git_current_branch()
     is_main = git_is_main_branch()
-    main_rev_count = git_branch_rev_count("origin/main")
+    main_rev_count = git_branch_rev_count(f"origin/{__MAIN_BRANCH__}")
     if is_main:
         vs_local = git_upstream_commits_vs_local()
         vs_upstream = git_local_commits_vs_upstream()
