@@ -35,6 +35,26 @@ rocm-7-0-0 = [
     "hip-python-as-cuda~=7.0.0.0",
     "rocm-llvm-python~=7.0.0.0",
 ]
+rocm-6-4-4 = [
+    "hip-python~=6.4.4.0",
+    "hip-python-as-cuda~=6.4.4.0",
+    "rocm-llvm-python~=6.4.4.0",
+]
+rocm-6-4-3 = [
+    "hip-python~=6.4.3.0",
+    "hip-python-as-cuda~=6.4.3.0",
+    "rocm-llvm-python~=6.4.3.0",
+]
+rocm-6-4-2 = [
+    "hip-python~=6.4.2.0",
+    "hip-python-as-cuda~=6.4.2.0",
+    "rocm-llvm-python~=6.4.2.0",
+]
+rocm-6-4-1 = [
+    "hip-python~=6.4.1.0",
+    "hip-python-as-cuda~=6.4.1.0",
+    "rocm-llvm-python~=6.4.1.0",
+]
 rocm-6-4-0 = [
     "hip-python~=6.4.0.0",
     "hip-python-as-cuda~=6.4.0.0",
