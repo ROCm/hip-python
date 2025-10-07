@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Feedback and Reporting Issues — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/4_report_bugs';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="5_license.html" rel="next" title="License"/>
+<link href="3_datatypes.html" rel="prev" title="HIP Python’s Adapter Types"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-7.0.1</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_datatypes.html">HIP Python’s Adapter Types</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Feedback and Reporting Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HIP Python: Python API</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hip.html">hip.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hiprtc.html">hip.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipblas.html">hip.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rccl.html">hip.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hiprand.html">hip.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipfft.html">hip.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipsparse.html">hip.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/roctx.html">hip.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipsolver.html">hip.hipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api_manual/_hip_helpers.html">hip._hip_helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api_manual/_util_types.html">hip._util.types</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">CUDA Python Interoperability: Python API</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.html">cuda.cuda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cudart.html">cuda.cudart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/nvrtc.html">cuda.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/bindings.html">cuda.bindings</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">Feedback and Reporting Issues</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>Feedback and Reporting Issues</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reporting-issues">Reporting Issues</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bugs">Bugs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#enhancement-requests">Enhancement Requests</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-pull-requests">Creating Pull Requests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#responsibility-of-the-author">Responsibility of the Author</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#responsibility-of-the-reviewer">Responsibility of the Reviewer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#passing-ci">Passing CI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-review">The Review</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prs-affecting-autogenerated-code">PRs affecting autogenerated code</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-feedback-requests">Other Feedback/Requests</a></li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<!-- MIT License
+  --
+  -- Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
+  --
+  -- Permission is hereby granted, free of charge, to any person obtaining a copy
+  -- of this software and associated documentation files (the "Software"), to deal
+  -- in the Software without restriction, including without limitation the rights
+  -- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  -- copies of the Software, and to permit persons to whom the Software is
+  -- furnished to do so, subject to the following conditions:
+  --
+  -- The above copyright notice and this permission notice shall be included in all
+  -- copies or substantial portions of the Software.
+  --
+  -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  -- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  -- SOFTWARE.
+  -->
+<section class="tex2jax_ignore mathjax_ignore" id="feedback-and-reporting-issues">
+<h1>Feedback and Reporting Issues<a class="headerlink" href="#feedback-and-reporting-issues" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2025-03-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            20 min read
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>We are looking forward to get your positive or negative feedback — especially
+the negative feedback.</p>
+<p>In particular, we are interested to learn:</p>
+<ul class="simple">
+<li><p>What libraries that you need are missing?</p></li>
+<li><p>What changes to the existing interfaces would make your life easier?</p></li>
+<li><p>What else blocks you or could be improved?</p></li>
+</ul>
+<section id="reporting-issues">
+<h2>Reporting Issues<a class="headerlink" href="#reporting-issues" title="Link to this heading">#</a></h2>
+<!-- markdownlint-disable-next-line MD013 -->
+<p>We use <a class="reference external" href="https://github.com/ROCmSoftwarePlatform/hip-python/issues">GitHub Issues</a>
+to track public <strong>bugs</strong> and <strong>enhancement requests</strong>.</p>
+<!-- markdownlint-disable-next-line MD013 -->
+<p>If you have found an issue, please check the <a class="reference external" href="https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html">HIP Python documentation</a>
+to see if it hasn’t already been resolved in the latest version of HIP Python.</p>
+<section id="bugs">
+<h3>Bugs<a class="headerlink" href="#bugs" title="Link to this heading">#</a></h3>
+<p>Please follow the template below to report bugs that you found in HIP Python:</p>
+<ol class="arabic simple">
+<li><p>Description: <em><strong>Please be clear and descriptive</strong></em></p></li>
+<li><p>How to Reproduce the issue:</p>
+<ul class="simple">
+<li><p>Hardware Information:</p></li>
+<li><p>OS version/docker environment:</p></li>
+<li><p>HIP Python package version and/or release branch that you have used:</p></li>
+<li><p>Expected behavior:</p></li>
+<li><p>Actual behavior:</p></li>
+</ul>
+</li>
+<li><p>Any additional information:</p></li>
+</ol>
+</section>
+<section id="enhancement-requests">
+<h3>Enhancement Requests<a class="headerlink" href="#enhancement-requests" title="Link to this heading">#</a></h3>
+<p>Please follow the template below to request any enhancement for HIP Python:</p>
+<ol class="arabic simple">
+<li><p>Description: <em><strong>Please be clear and descriptive</strong></em></p></li>
+<li><p>Value and Motivation:</p>
+<ul class="simple">
+<li><p>Feature and functionalities enabled:</p></li>
+<li><p>Any alternatives:</p></li>
+</ul>
+</li>
+<li><p>Any additional information:</p>
+<ul class="simple">
+<li><p>Authors must set labels (and assign a milestone) according to their own understanding.</p></li>
+</ul>
+</li>
+</ol>
+<p>Other contributors can change these values if they disagree. That being said,
+adding a small comment explaining the motivation is highly recommended.
+In this way, we keep the process flexible while cultivating mutual understanding.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Most likely, labels like “bug”, “feature” or “complexity*”
+will not cause discussions while others like “value*” or “urgency*” might
+do so.</p>
+</div>
+</section>
+</section>
+<section id="creating-pull-requests">
+<h2>Creating Pull Requests<a class="headerlink" href="#creating-pull-requests" title="Link to this heading">#</a></h2>
+<p>No changes are allowed to be directly committed to the <code class="docutils literal notranslate"><span class="pre">dev</span></code> and release
+branches of the HIP Python repository. All authors are required to
+develop their change sets on a separate branch and then create
+a pull request (PR) to merge their changes into the respective branch.</p>
+<p>Once a PR has been created, a developer must choose two reviewers
+to review the changes made. The first reviewer should be a
+technical expert in the portion of the library that the changes
+are being made in. The second reviewer should be a peer reviewer. This reviewer
+can be any other HIP Python developer.</p>
+</section>
+<section id="responsibility-of-the-author">
+<h2>Responsibility of the Author<a class="headerlink" href="#responsibility-of-the-author" title="Link to this heading">#</a></h2>
+<p>The author of a PR is responsible for:</p>
+<ul class="simple">
+<li><p>Writing clear, well documented code</p></li>
+<li><p>Meeting expectations of code quality</p></li>
+<li><p>Verifying that the changes do not break current functionality</p></li>
+<li><p>Writing tests to ensure code coverage</p></li>
+<li><p>Report on the impact to performance</p></li>
+</ul>
+</section>
+<section id="responsibility-of-the-reviewer">
+<h2>Responsibility of the Reviewer<a class="headerlink" href="#responsibility-of-the-reviewer" title="Link to this heading">#</a></h2>
+<p>Each reviewer is responsible for verifying that the changes are
+clearly written in keeping with the coding styles of the library,
+are documented in a way that future developers will be able to
+understand the intent of the added functionality, and will
+maintain or improve the overall quality of the code base.</p>
+<p>Reviewer’s task checklist:</p>
+<ul class="simple">
+<li><p>[ ] Has the PR passed necessary CI?</p></li>
+<li><p>[ ] Does the PR consist of a well-organized sequence of small commits, each
+of which is designed to make one specific feature or fix (and ideally should
+be able to pass CI testing)?</p></li>
+<li><p>[ ] Does the PR only include a reviewable amount of changes? Or it is a
+consolidation of already reviewed small batches? e.g. break it into smaller
+testable and reviewable tasks instead of a huge chunk at once.</p></li>
+</ul>
+<!-- markdownlint-disable-next-line MD013 -->
+<ul class="simple">
+<li><p>[ ] Is PR sufficiently documented and it is easy to read and understand, is
+it feasible for test and future maintenance? Do related docs already exist in
+the <a class="reference external" href="https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html">HIP Python documentation</a>
+if API or functionality has changed?</p></li>
+<li><p>[ ] For bug fixes and new features, new regression test created and included
+in CI, or some other holistic test pipeline?</p></li>
+<li><p>[ ] Is every PR associated with a ticket or issue number for tracking
+purposes?</p></li>
+</ul>
+</section>
+<section id="passing-ci">
+<h2>Passing CI<a class="headerlink" href="#passing-ci" title="Link to this heading">#</a></h2>
+<p>The most critical component of the PR process is the CI testing.
+All PRs must pass the CI in order to be considered for merger.
+Reviewers may choose to defer their review until the CI testing
+has passed.</p>
+</section>
+<section id="the-review">
+<h2>The Review<a class="headerlink" href="#the-review" title="Link to this heading">#</a></h2>
+<p>During the review, reviewers will look over the changes and make
+suggestions or requests for changes.</p>
+<p>In order to assist the reviewer in prioritizing their efforts,
+authors can take the following actions:</p>
+<ul class="simple">
+<li><p>Set the urgency and value labels.</p></li>
+<li><p>Set the milestone where the changes need to be delivered.</p></li>
+<li><p>Describe the testing procedure and post the measured effect of
+the change.</p></li>
+<li><p>Remind reviewers via email if a PR needs attention.</p></li>
+<li><p>If a PR needs to be reviewed as soon as possible, explain to
+the reviewers why a review may need to take priority.</p></li>
+</ul>
+<section id="prs-affecting-autogenerated-code">
+<h3>PRs affecting autogenerated code<a class="headerlink" href="#prs-affecting-autogenerated-code" title="Link to this heading">#</a></h3>
+<p>In situations where your PR affects code that is autogenerated, the PR creation
+and review should take place as described above, however the reviewers should
+additionally appoint a HIP Python developer to integrate the fix or enhancement
+into the code generator of HIP Python.</p>
+</section>
+</section>
+<section id="other-feedback-requests">
+<h2>Other Feedback/Requests<a class="headerlink" href="#other-feedback-requests" title="Link to this heading">#</a></h2>
+<p>For other feedback or requests, please use this address:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>hip-python.maintainer@amd.com
+</pre></div>
+</div>
+</section>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="3_datatypes.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">HIP Python’s Adapter Types</p>
+</div>
+</a>
+<a class="right-next" href="5_license.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">License</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reporting-issues">Reporting Issues</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bugs">Bugs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#enhancement-requests">Enhancement Requests</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-pull-requests">Creating Pull Requests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#responsibility-of-the-author">Responsibility of the Author</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#responsibility-of-the-reviewer">Responsibility of the Reviewer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#passing-ci">Passing CI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-review">The Review</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prs-affecting-autogenerated-code">PRs affecting autogenerated code</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-feedback-requests">Other Feedback/Requests</a></li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>
