@@ -36,3 +36,4 @@ subtrees:
       - file: python_api/cuda
       - file: python_api/cudart
       - file: python_api/nvrtc
+      - file: python_api/bindings
