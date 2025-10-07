@@ -1,0 +1,913 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>CUDA® Python Interoperability — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/2_cuda_python_interop';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="3_datatypes.html" rel="next" title="HIP Python’s Adapter Types"/>
+<link href="1_usage.html" rel="prev" title="Basic Usage and Examples"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-6.4.3</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_datatypes.html">HIP Python’s Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_report_bugs.html">Feedback and Reporting Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HIP Python: Python API</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hip.html">hip.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hiprtc.html">hip.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipblas.html">hip.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rccl.html">hip.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hiprand.html">hip.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipfft.html">hip.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipsparse.html">hip.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/roctx.html">hip.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipsolver.html">hip.hipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api_manual/_hip_helpers.html">hip._hip_helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api_manual/_util_types.html">hip._util.types</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">CUDA Python Interoperability: Python API</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.html">cuda.cuda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cudart.html">cuda.cudart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/nvrtc.html">cuda.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/bindings.html">cuda.bindings</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">CUDA® Python Interoperability</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>CUDA® Python Interoperability</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-python">Basic Usage (Python)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-example">Python Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enum-constant-hallucination">Enum Constant Hallucination</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-cython">Basic Usage (Cython)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cython-example">Cython Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hip-python-specific-code-modifications">HIP Python-Specific Code Modifications</a></li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<!-- MIT License
+  --
+  -- Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
+  --
+  -- Permission is hereby granted, free of charge, to any person obtaining a copy
+  -- of this software and associated documentation files (the "Software"), to deal
+  -- in the Software without restriction, including without limitation the rights
+  -- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  -- copies of the Software, and to permit persons to whom the Software is
+  -- furnished to do so, subject to the following conditions:
+  --
+  -- The above copyright notice and this permission notice shall be included in all
+  -- copies or substantial portions of the Software.
+  --
+  -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  -- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  -- SOFTWARE.
+  -->
+<section class="tex2jax_ignore mathjax_ignore" id="cuda-python-interoperability">
+<h1>CUDA® Python Interoperability<a class="headerlink" href="#cuda-python-interoperability" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2025-03-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            20 min read
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>This chapter discusses HIP Python’s CUDA® Python interoperability layer
+that is shipped in a separate package with the name <code class="docutils literal notranslate"><span class="pre">hip-python-as-cuda</span></code>. In
+particular, we discuss how to run existing CUDA Python code on AMD GPUs, and if
+localized modifications are required, how to detect HIP Python and how to fall
+back to the underlying HIP Python Python and Cython modules. Moreover, a
+technique named “enum constant hallucination” is presented that allows HIP
+Python “invent” enum constants and their non-conflicting value on-the-fly for
+enum error types.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All examples in this chapter have been tested with ROCm™ 5.4.3 on Ubuntu 22.
+The <a class="reference internal" href="5_license.html#ch-license"><span class="std std-ref">License</span></a> applies to all examples in this chapter.</p>
+</div>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>HIP Python’s CUDA interoperability layer comes in a separate Python 3 package
+with the name <code class="docutils literal notranslate"><span class="pre">hip-python-as-cuda</span></code>. Its sole dependency is the <code class="docutils literal notranslate"><span class="pre">hip-python</span></code>
+package with the exact same version number.</p>
+<p>After having identified the correct package for your ROCm™ installation,
+type:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>hip-python-as-cuda-&lt;hip_version&gt;.&lt;hip_python_version&gt;
+</pre></div>
+</div>
+<p>or, if you have a HIP Python wheel somewhere in your filesystem, type:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>&lt;path/to/hip_python_as_cuda&gt;.whl
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The first option will only be available after the public release on PyPI.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="0_install.html#subsec-hip-python-versioning"><span class="std std-ref">HIP Python Versioning</span></a> for more details on the <code class="docutils literal notranslate"><span class="pre">hip-python</span></code>
+and <code class="docutils literal notranslate"><span class="pre">hip-python-as-cuda</span></code> version number.</p>
+</div>
+</section>
+<section id="basic-usage-python">
+<h2>Basic Usage (Python)<a class="headerlink" href="#basic-usage-python" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>How I can use HIP Python’s CUDA Python interoperability modules in my Python
+code.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Most links in this tutorial to the CUDA Python interoperability layer API are
+broken. Until we find a way to index the respective Python modules, you must
+unfortunately use the search function for CUDA Python interoperability layer
+symbols.</p>
+</div>
+<p>After installing the HIP Python package <code class="docutils literal notranslate"><span class="pre">hip-python-as-cuda</span></code>, you can import
+the individual modules that you need as shown below:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-number">Listing 15 </span><span class="caption-text">Importing HIP Python CUDA Interop Modules</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">cuda</span>
+<span class="linenos">2</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">cudart</span>
+<span class="linenos">3</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">nvrtc</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When writing this documentation, only Python and Cython modules for the
+libraries <code class="docutils literal notranslate"><span class="pre">cuda</span></code> (CUDA Driver), <code class="docutils literal notranslate"><span class="pre">cudart</span></code> (CUDA runtime), and <code class="docutils literal notranslate"><span class="pre">nvrtc</span></code> (NVRTC)
+were shipped by CUDA Python. Therefore, HIP Python only provides
+interoperability modules for them and no other CUDA library.</p>
+</div>
+</section>
+<section id="python-example">
+<h2>Python Example<a class="headerlink" href="#python-example" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<p>How I can run simple CUDA Python applications directly on AMD GPUs via HIP Python.</p>
+</div>
+<p>After installing the HIP Python package <code class="docutils literal notranslate"><span class="pre">hip-python-as-cuda</span></code>, you can run the
+<a class="reference internal" href="#cuda-stream"><span class="std std-ref">below example</span></a> directly on AMD GPUs. There is nothing else to
+do. This works because all CUDA Python functions, types and even enum
+constants are aliases of HIP objects.</p>
+<div class="admonition-see admonition">
+<p class="admonition-title">See</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaError_t</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaError_t</span></code>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaStreamCreate</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaMemcpyAsync</span></code>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaMemsetAsync</span></code>,<code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaStreamSynchronize</span></code>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaStreamDestroy</span></code>,<code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaFree</span></code></p>
+</div>
+<div class="literal-block-wrapper docutils container" id="cuda-stream">
+<div class="code-block-caption"><span class="caption-number">Listing 16 </span><span class="caption-text">CUDA Python Example</span><a class="headerlink" href="#cuda-stream" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">cuda</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">def</span><span class="w"> </span><span class="nf">cuda_check</span><span class="p">(</span><span class="n">call_result</span><span class="p">):</span>
+<span class="linenos"> 7</span>    <span class="n">err</span> <span class="o">=</span> <span class="n">call_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 8</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">call_result</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="linenos"> 9</span>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">10</span>        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">11</span>    <span class="k">if</span> <span class="p">(</span>
+<span class="linenos">12</span>        <span class="nb">isinstance</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">cuda</span><span class="o">.</span><span class="n">cudaError_t</span><span class="p">)</span>
+<span class="linenos">13</span>        <span class="ow">and</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaSuccess</span>
+<span class="linenos">14</span>    <span class="p">):</span>
+<span class="linenos">15</span>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+<span class="linenos">16</span>    <span class="k">return</span> <span class="n">result</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="c1"># inputs</span>
+<span class="linenos">20</span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="linenos">21</span><span class="n">x_h</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">"i"</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)])</span>
+<span class="linenos">22</span><span class="n">num_bytes</span> <span class="o">=</span> <span class="n">x_h</span><span class="o">.</span><span class="n">itemsize</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_h</span><span class="p">)</span>
+<span class="linenos">23</span><span class="n">x_d</span> <span class="o">=</span> <span class="n">cuda_check</span><span class="p">(</span><span class="n">cuda</span><span class="o">.</span><span class="n">cudaMalloc</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">))</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda_check</span><span class="p">(</span><span class="n">cuda</span><span class="o">.</span><span class="n">cudaStreamCreate</span><span class="p">())</span>
+<span class="linenos">26</span><span class="n">cuda_check</span><span class="p">(</span>
+<span class="linenos">27</span>    <span class="n">cuda</span><span class="o">.</span><span class="n">cudaMemcpyAsync</span><span class="p">(</span>
+<span class="linenos">28</span>        <span class="n">x_d</span><span class="p">,</span> <span class="n">x_h</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">cuda</span><span class="o">.</span><span class="n">cudaMemcpyKind</span><span class="o">.</span><span class="n">cudaMemcpyHostToDevice</span><span class="p">,</span> <span class="n">stream</span>
+<span class="linenos">29</span>    <span class="p">)</span>
+<span class="linenos">30</span><span class="p">)</span>
+<span class="linenos">31</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cuda</span><span class="o">.</span><span class="n">cudaMemsetAsync</span><span class="p">(</span><span class="n">x_d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">stream</span><span class="p">))</span>
+<span class="linenos">32</span><span class="n">cuda_check</span><span class="p">(</span>
+<span class="linenos">33</span>    <span class="n">cuda</span><span class="o">.</span><span class="n">cudaMemcpyAsync</span><span class="p">(</span>
+<span class="linenos">34</span>        <span class="n">x_h</span><span class="p">,</span> <span class="n">x_d</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">cuda</span><span class="o">.</span><span class="n">cudaMemcpyKind</span><span class="o">.</span><span class="n">cudaMemcpyDeviceToHost</span><span class="p">,</span> <span class="n">stream</span>
+<span class="linenos">35</span>    <span class="p">)</span>
+<span class="linenos">36</span><span class="p">)</span>
+<span class="linenos">37</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cuda</span><span class="o">.</span><span class="n">cudaStreamSynchronize</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">38</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cuda</span><span class="o">.</span><span class="n">cudaStreamDestroy</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="c1"># deallocate device data</span>
+<span class="linenos">41</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cuda</span><span class="o">.</span><span class="n">cudaFree</span><span class="p">(</span><span class="n">x_d</span><span class="p">))</span>
+<span class="linenos">42</span>
+<span class="linenos">43</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x_h</span><span class="p">):</span>
+<span class="linenos">44</span>    <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">45</span>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected '0' for element </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, is: '</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+<span class="linenos">46</span><span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-what-is-happening admonition">
+<p class="admonition-title">What is happening?</p>
+<p>See <a class="reference internal" href="1_usage.html#sec-hip-streams"><span class="std std-ref">HIP Streams</span></a> for an explanation of a similar HIP program’s
+steps.</p>
+</div>
+</section>
+<section id="enum-constant-hallucination">
+<h2>Enum Constant Hallucination<a class="headerlink" href="#enum-constant-hallucination" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>How I can let HIP Python’s enum error types in the CUDA Python
+interoperability layer “invent” values for undefined enum constants (that do
+not conflict with the values of the defined constants).</p></li>
+</ul>
+</div>
+<p>We use <a class="reference internal" href="#cuda-error-hallucinate-enums"><span class="std std-ref">the example below</span></a> to demonstrate how
+you can deal with scenarios where a CUDA Python program, which we want to run
+on AMD GPUs, performs an error check that involves enum constants that are
+not relevant for HIP programs and/or AMD GPUs. As HIP Python’s routines will
+never return these enum constants, it is safe to generate values for them on
+the fly. Such behavior can be enabled selectively for CUDA Python
+interoperability layer enums — either via the respective environment
+variable <code class="docutils literal notranslate"><span class="pre">HIP_PYTHON_{myenumtype}_HALLUCINATE</span></code> and/or at runtime via the
+module variable with the same name in <code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">cudart</span></code>, or
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">nvtrc</span></code>.</p>
+<p><a class="reference internal" href="#cuda-error-hallucinate-enums"><span class="std std-ref">The example below</span></a> fails because there are no
+HIP analogues to the following constants:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorStartupFailure</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaError_t.cudaErrorNotPermitted</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorSystemNotReady</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorSystemDriverMismatch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorCompatNotSupportedOnDevice</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorTimeout</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorApiFailureBase</span></code></p></li>
+</ul>
+<p>However, the example will run successfully if you set the environment
+variable <code class="docutils literal notranslate"><span class="pre">HIP_PYTHON_cudaError_t_HALLUCINATE</span></code> to <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">yes</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, or <code class="docutils literal notranslate"><span class="pre">true</span></code>
+(case does not matter). Alternatively, you could set the module variable
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.cudart.HIP_PYTHON_cudaError_t_HALLUCINATE</span></code> to <a class="reference external" href="https://docs.python.org/3/library/constants.html#True" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code></a>;
+see <a class="reference internal" href="#sec-hip-python-specific-code-modifications"><span class="std std-ref">HIP Python-Specific Code Modifications</span></a> on different ways
+to detect HIP Python in order to introduce such a modification to your code.</p>
+<div class="literal-block-wrapper docutils container" id="cuda-error-hallucinate-enums">
+<div class="code-block-caption"><span class="caption-number">Listing 17 </span><span class="caption-text">CUDA Python Enum Constant Hallucination</span><a class="headerlink" href="#cuda-error-hallucinate-enums" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.cudart</span><span class="w"> </span><span class="kn">import</span> <span class="n">cudaError_t</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">error_kinds</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># some of those do not exist in HIP</span>
+<span class="linenos"> 4</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInitializationError</span><span class="p">,</span>
+<span class="linenos"> 5</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInsufficientDriver</span><span class="p">,</span>
+<span class="linenos"> 6</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInvalidDeviceFunction</span><span class="p">,</span>
+<span class="linenos"> 7</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInvalidDevice</span><span class="p">,</span>
+<span class="hll"><span class="linenos"> 8</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorStartupFailure</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos"> 9</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInvalidKernelImage</span><span class="p">,</span>
+<span class="linenos">10</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorAlreadyAcquired</span><span class="p">,</span>
+<span class="linenos">11</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorOperatingSystem</span><span class="p">,</span>
+<span class="hll"><span class="linenos">12</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorNotPermitted</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos">13</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorNotSupported</span><span class="p">,</span>
+<span class="hll"><span class="linenos">14</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorSystemNotReady</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="hll"><span class="linenos">15</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorSystemDriverMismatch</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="hll"><span class="linenos">16</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorCompatNotSupportedOnDevice</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos">17</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorDeviceUninitialized</span><span class="p">,</span>
+<span class="hll"><span class="linenos">18</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorTimeout</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos">19</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorUnknown</span><span class="p">,</span>
+<span class="hll"><span class="linenos">20</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorApiFailureBase</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos">21</span><span class="p">)</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">error_kinds</span><span class="p">:</span>
+<span class="linenos">24</span>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">cudaError_t</span><span class="p">)</span>
+<span class="linenos">25</span>    <span class="k">assert</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaSuccess</span>
+<span class="linenos">26</span><span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Enum constant hallucination should only be used for
+error return values and not for enum constants that are passed
+as argument to one of the CUDA Python interoperability layer’s functions.</p>
+</div>
+</section>
+<section id="basic-usage-cython">
+<h2>Basic Usage (Cython)<a class="headerlink" href="#basic-usage-cython" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>How I can use the CUDA Python interoperability layer’s Cython and Python
+modules in my code.</p></li>
+</ul>
+</div>
+<p>You can import the Python objects that you need into your <code class="docutils literal notranslate"><span class="pre">*.pyx</span></code> file as shown below:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-number">Listing 18 </span><span class="caption-text">Importing HIP Python Modules into Cython <code class="xref py py-obj docutils literal notranslate"><span class="pre">*.pyx</span></code> file</span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="k">import</span> <span class="n">cuda</span> <span class="c"># enum types, enum aliases, fields</span>
+<span class="linenos">2</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="k">import</span> <span class="n">nvrtc</span>
+<span class="linenos">3</span><span class="c"># ...</span>
+</pre></div>
+</div>
+</div>
+<p>In the same file, you can <strong>also or alternatively</strong> <code class="docutils literal notranslate"><span class="pre">cimport</span></code> the <code class="docutils literal notranslate"><span class="pre">cdef</span></code> entities
+as shown below:</p>
+<!-- markdownlint-disable MD013 -->
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-number">Listing 19 </span><span class="caption-text">Importing HIP Python Cython declaration files (<code class="xref py py-obj docutils literal notranslate"><span class="pre">*.pxd</span></code>) into a Cython <code class="xref py py-obj docutils literal notranslate"><span class="pre">*.pxd</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">*.pyx</span></code> file</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="k">cimport</span> <span class="n">ccuda</span>   <span class="c"># direct access to C interfaces and lazy function loaders</span>
+<span class="linenos"> 2</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="k">cimport</span> <span class="n">ccudart</span>
+<span class="linenos"> 3</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="k">cimport</span> <span class="n">cnvrtc</span>
+<span class="linenos"> 4</span><span class="o">...</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="k">cimport</span> <span class="n">cuda</span> <span class="c"># access to `cdef class` and `ctypedef` types</span>
+<span class="linenos"> 7</span>                       <span class="c"># that have been created per C struct/union/typedef</span>
+<span class="linenos"> 8</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="k">cimport</span> <span class="n">cudart</span>
+<span class="linenos"> 9</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="k">cimport</span> <span class="n">nvrtc</span>
+<span class="linenos">10</span> <span class="c"># ...</span>
+</pre></div>
+</div>
+</div>
+<!-- markdownlint-enable MD013 -->
+</section>
+<section id="cython-example">
+<h2>Cython Example<a class="headerlink" href="#cython-example" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>That I can port CUDA Python Cython code to AMD GPUs with minor
+modifications.</p></li>
+<li><p>How I can introduce different compilation paths for HIP Python’s CUDA
+interoperability layer and CUDA Python.</p></li>
+</ul>
+</div>
+<p><a class="reference internal" href="#ccuda-stream-pyx"><span class="std std-ref">The example below</span></a> shows a CUDA Python example that can be
+compiled for and run on AMD GPUs. To do so, it is necessary to define the
+compiler flag <code class="docutils literal notranslate"><span class="pre">HIP_Python</span></code> from within the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script. (We will
+discuss how to do so in short). This will replace the qualified <code class="docutils literal notranslate"><span class="pre">C++</span></code>-like
+enum constant expression <code class="docutils literal notranslate"><span class="pre">ccudart.cudaError_t.cudaSuccess</span></code> by the <code class="docutils literal notranslate"><span class="pre">C</span></code>-like
+expression <code class="docutils literal notranslate"><span class="pre">ccudart.cudaSuccess</span></code>.</p>
+<!-- markdownlint-disable MD013 -->
+<p>In the example, the <code class="docutils literal notranslate"><span class="pre">DEF</span></code> statement and the <code class="docutils literal notranslate"><span class="pre">IF</span></code> and <code class="docutils literal notranslate"><span class="pre">ELSE</span></code> statements are
+Cython <a class="reference external" href="https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions">compile time definitions</a>
+and <a class="reference external" href="https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions">conditional statements</a>,
+respectively.</p>
+<!-- markdownlint-enable MD013 -->
+<div class="literal-block-wrapper docutils container" id="ccuda-stream-pyx">
+<div class="code-block-caption"><span class="caption-number">Listing 20 </span><span class="caption-text">CUDA Python Cython Program</span><a class="headerlink" href="#ccuda-stream-pyx" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>
+<span class="linenos"> 2</span><span class="n">cimport</span> <span class="n">cuda</span><span class="o">.</span><span class="n">ccudart</span> <span class="k">as</span> <span class="n">ccudart</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">cdef</span> <span class="n">ccudart</span><span class="o">.</span><span class="n">cudaError_t</span> <span class="n">err</span>
+<span class="linenos"> 6</span><span class="n">cdef</span> <span class="n">ccudart</span><span class="o">.</span><span class="n">cudaStream_t</span> <span class="n">stream</span>
+<span class="linenos"> 7</span><span class="n">DEF</span> <span class="n">num_bytes</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="mi">100</span>
+<span class="linenos"> 8</span><span class="n">cdef</span> <span class="n">char</span><span class="p">[</span><span class="n">num_bytes</span><span class="p">]</span> <span class="n">x_h</span>
+<span class="linenos"> 9</span><span class="n">cdef</span> <span class="n">void</span><span class="o">*</span> <span class="n">x_d</span>
+<span class="linenos">10</span><span class="n">cdef</span> <span class="nb">int</span> <span class="n">x</span>
+<span class="hll"><span class="linenos">11</span>
+</span><span class="hll"><span class="linenos">12</span>
+</span><span class="hll"><span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaError_t</span> <span class="n">err</span><span class="p">):</span>
+</span><span class="hll"><span class="linenos">14</span>    <span class="n">IF</span> <span class="n">HIP_PYTHON</span><span class="p">:</span>  <span class="c1"># HIP Python CUDA interop layer Cython interface is used like C API</span>
+</span><span class="linenos">15</span>        <span class="n">success_status</span> <span class="o">=</span> <span class="n">ccudart</span><span class="o">.</span><span class="n">cudaSuccess</span>
+<span class="linenos">16</span>    <span class="n">ELSE</span><span class="p">:</span>
+<span class="linenos">17</span>        <span class="n">success_status</span> <span class="o">=</span> <span class="n">ccudart</span><span class="o">.</span><span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaSuccess</span>
+<span class="linenos">18</span>    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">success_status</span><span class="p">:</span>
+<span class="linenos">19</span>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"reason: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="n">IF</span> <span class="n">HIP_PYTHON</span><span class="p">:</span>
+<span class="linenos">23</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">"using HIP Python wrapper for CUDA Python"</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaStreamCreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">26</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x_d</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">))</span>
+<span class="linenos">27</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaMemcpyAsync</span><span class="p">(</span><span class="n">x_d</span><span class="p">,</span> <span class="n">x_h</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">ccudart</span><span class="o">.</span><span class="n">cudaMemcpyHostToDevice</span><span class="p">,</span>
+<span class="linenos">28</span>           <span class="n">stream</span><span class="p">))</span>
+<span class="linenos">29</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaMemsetAsync</span><span class="p">(</span><span class="n">x_d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">stream</span><span class="p">))</span>
+<span class="linenos">30</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaMemcpyAsync</span><span class="p">(</span><span class="n">x_h</span><span class="p">,</span> <span class="n">x_d</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">ccudart</span><span class="o">.</span><span class="n">cudaMemcpyDeviceToHost</span><span class="p">,</span>
+<span class="linenos">31</span>           <span class="n">stream</span><span class="p">))</span>
+<span class="linenos">32</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaStreamSynchronize</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">33</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaStreamDestroy</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="c1"># deallocate device data</span>
+<span class="linenos">36</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">ccudart</span><span class="o">.</span><span class="n">cudaFree</span><span class="p">(</span><span class="n">x_d</span><span class="p">))</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">num_bytes</span><span class="o">/</span><span class="mi">4</span><span class="p">)):</span>
+<span class="linenos">39</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">*&gt;&amp;</span><span class="n">x_h</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">40</span>    <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">41</span>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected '0' for element </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, is: '</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+<span class="linenos">42</span><span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-what-is-happening admonition">
+<p class="admonition-title">What is happening?</p>
+<p>See <a class="reference internal" href="1_usage.html#sec-hip-streams"><span class="std std-ref">HIP Streams</span></a> for an explanation of a similar HIP Python
+program’s steps.</p>
+</div>
+<p>The example can be compiled for AMD GPUs via the following <a class="reference internal" href="#cuda-cython-setup-py"><span class="std std-ref">setup.py script</span></a>,
+which specifies <code class="docutils literal notranslate"><span class="pre">compile_time_env=dict(HIP_PYTHON=True)</span></code> as keyword parameter
+of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">cythonize</span></code> call in line</p>
+<div class="literal-block-wrapper docutils container" id="cuda-cython-setup-py">
+<div class="code-block-caption"><span class="caption-number">Listing 21 </span><span class="caption-text">Setup Script</span><a class="headerlink" href="#cuda-cython-setup-py" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">Cython.Build</span><span class="w"> </span><span class="kn">import</span> <span class="n">cythonize</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extension</span><span class="p">,</span> <span class="n">setup</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="n">ROCM_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ROCM_PATH"</span><span class="p">,</span> <span class="s2">"/opt/rocm"</span><span class="p">)</span>
+<span class="linenos"> 7</span><span class="n">HIP_PLATFORM</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HIP_PLATFORM"</span><span class="p">,</span> <span class="s2">"amd"</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="k">if</span> <span class="n">HIP_PLATFORM</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"amd"</span><span class="p">,</span> <span class="s2">"hcc"</span><span class="p">):</span>
+<span class="linenos">10</span>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Currently only HIP_PLATFORM=amd is supported"</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">create_extension</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sources</span><span class="p">):</span>
+<span class="linenos">14</span>    <span class="k">global</span> <span class="n">ROCM_PATH</span>
+<span class="linenos">15</span>    <span class="k">global</span> <span class="n">HIP_PLATFORM</span>
+<span class="linenos">16</span>    <span class="n">rocm_inc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ROCM_PATH</span><span class="p">,</span> <span class="s2">"include"</span><span class="p">)</span>
+<span class="linenos">17</span>    <span class="n">rocm_lib_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ROCM_PATH</span><span class="p">,</span> <span class="s2">"lib"</span><span class="p">)</span>
+<span class="linenos">18</span>    <span class="n">platform</span> <span class="o">=</span> <span class="n">HIP_PLATFORM</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="linenos">19</span>    <span class="n">cflags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"-D"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"__HIP_PLATFORM_</span><span class="si">{</span><span class="n">platform</span><span class="si">}</span><span class="s2">__"</span><span class="p">]</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>    <span class="k">return</span> <span class="n">Extension</span><span class="p">(</span>
+<span class="linenos">22</span>        <span class="n">name</span><span class="p">,</span>
+<span class="linenos">23</span>        <span class="n">sources</span><span class="o">=</span><span class="n">sources</span><span class="p">,</span>
+<span class="linenos">24</span>        <span class="n">include_dirs</span><span class="o">=</span><span class="p">[</span><span class="n">rocm_inc</span><span class="p">],</span>
+<span class="linenos">25</span>        <span class="n">library_dirs</span><span class="o">=</span><span class="p">[</span><span class="n">rocm_lib_dir</span><span class="p">],</span>
+<span class="linenos">26</span>        <span class="n">language</span><span class="o">=</span><span class="s2">"c"</span><span class="p">,</span>
+<span class="linenos">27</span>        <span class="n">extra_compile_args</span><span class="o">=</span><span class="n">cflags</span><span class="p">,</span>
+<span class="linenos">28</span>    <span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="n">setup</span><span class="p">(</span>
+<span class="linenos">32</span>    <span class="n">ext_modules</span><span class="o">=</span><span class="n">cythonize</span><span class="p">(</span>
+<span class="hll"><span class="linenos">33</span>        <span class="p">[</span>
+</span><span class="linenos">34</span>            <span class="n">create_extension</span><span class="p">(</span><span class="s2">"ccuda_stream"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"ccuda_stream.pyx"</span><span class="p">]),</span>
+<span class="linenos">35</span>        <span class="p">],</span>
+<span class="linenos">36</span>        <span class="n">compiler_directives</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">language_level</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+<span class="linenos">37</span>        <span class="n">compile_time_env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">HIP_PYTHON</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="linenos">38</span>    <span class="p">)</span>
+<span class="linenos">39</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>For your convenience, you can use the <a class="reference internal" href="#cuda-cython-makefile"><span class="std std-ref">Makefile below</span></a>
+to build a Cython module in-place (via <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">build</span></code>) and run the code (by
+importing the module via <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">run</span></code>).</p>
+<div class="literal-block-wrapper docutils container" id="cuda-cython-makefile">
+<div class="code-block-caption"><span class="caption-number">Listing 22 </span><span class="caption-text">Makefile</span><a class="headerlink" href="#cuda-cython-makefile" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">PYTHON</span> <span class="err">?</span><span class="o">=</span> <span class="n">python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="o">.</span><span class="n">PHONY</span><span class="p">:</span> <span class="n">build</span> <span class="n">run</span> <span class="n">clean</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">build</span><span class="p">:</span>
+<span class="linenos"> 6</span>	<span class="err">$</span><span class="p">(</span><span class="n">PYTHON</span><span class="p">)</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">build_ext</span> <span class="o">--</span><span class="n">inplace</span>
+<span class="linenos"> 7</span><span class="n">run</span><span class="p">:</span> <span class="n">build</span>
+<span class="linenos"> 8</span>	<span class="err">$</span><span class="p">(</span><span class="n">PYTHON</span><span class="p">)</span> <span class="o">-</span><span class="n">c</span> <span class="s2">"import ccuda_stream"</span>
+<span class="linenos"> 9</span><span class="n">clean</span><span class="p">:</span>
+<span class="linenos">10</span>	<span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">*.</span><span class="n">so</span> <span class="o">*.</span><span class="n">c</span> <span class="n">build</span><span class="o">/</span>
+</pre></div>
+</div>
+</div>
+<!-- markdownlint-disable MD022 -->
+</section>
+<section id="hip-python-specific-code-modifications">
+<span id="sec-hip-python-specific-code-modifications"></span><h2>HIP Python-Specific Code Modifications<a class="headerlink" href="#hip-python-specific-code-modifications" title="Link to this heading">#</a></h2>
+<!-- markdownlint-enable MD022 -->
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>That I can use HIP objects (via member variables) when <code class="docutils literal notranslate"><span class="pre">import</span></code>ing the CUDA
+Python interoperability layer’s Python modules.</p></li>
+<li><p>That I can access HIP enum constants also via their CUDA interoperability
+layer type.</p></li>
+<li><p>That I can directly use HIP definitions too when <code class="docutils literal notranslate"><span class="pre">cimport</span></code>ing the CUDA
+Python interoperability layer’s Cython modules.</p></li>
+</ul>
+</div>
+<p>In scenarios where the HIP Python Python or Cython code will need to diverge
+from the original CUDA Python code, e.g. due
+to differences in a signature, we can directly access the underlying HIP Python
+Python modules from the CUDA interoperability layer’s Python modules as shown
+in <a class="reference internal" href="#detecting-hip-python"><span class="std std-ref">the example below</span></a>.</p>
+<!-- markdownlint-disable MD013 -->
+<div class="literal-block-wrapper docutils container" id="detecting-hip-python">
+<div class="code-block-caption"><span class="caption-number">Listing 23 </span><span class="caption-text">Various ways to determine if we are working with HIP Python’s CUDA Python interoperability layer in Python code.</span><a class="headerlink" href="#detecting-hip-python" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">cuda</span> <span class="c1"># or cudart, or nvrtc</span>
+<span class="linenos"> 2</span><span class="c1"># [...]</span>
+<span class="linenos"> 3</span><span class="k">if</span> <span class="s2">"HIP_PYTHON"</span> <span class="ow">in</span> <span class="n">cuda</span><span class="p">:</span>
+<span class="linenos"> 4</span>   <span class="c1"># do something (with cuda.hip.&lt;...&gt; or cuda.hip_python_mod.&lt;...&gt;)</span>
+<span class="linenos"> 5</span><span class="k">if</span> <span class="s2">"hip"</span> <span class="ow">in</span> <span class="n">cuda</span><span class="p">:</span> <span class="c1"># or "hiprtc" for nvrtc</span>
+<span class="linenos"> 6</span>   <span class="c1"># do something with cuda.hip.&lt;...&gt; (or cuda.hip_python_mod.&lt;...&gt;)</span>
+<span class="linenos"> 7</span><span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cuda</span><span class="p">,</span><span class="s2">"hip"</span><span class="p">):</span> <span class="c1"># or "hiprtc" for nvrtc</span>
+<span class="linenos"> 8</span>   <span class="c1"># do something with cuda.hip.&lt;...&gt; (or cuda.hip_python_mod.&lt;...&gt;)</span>
+<span class="linenos"> 9</span><span class="k">if</span> <span class="s2">"hip_python_mod"</span> <span class="ow">in</span> <span class="n">cuda</span><span class="p">:</span>
+<span class="linenos">10</span>   <span class="c1"># do something with cuda.hip_python_mod.&lt;...&gt; (or cuda.hip.&lt;...&gt;) # or nvrtc.&lt;...&gt; for nvrtc</span>
+<span class="linenos">11</span><span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cuda</span><span class="p">,</span><span class="s2">"hip_python_mod"</span><span class="p">):</span>
+<span class="linenos">12</span>   <span class="c1"># do something with cuda.hip_python_mod.&lt;...&gt; (or cuda.hip.&lt;...&gt;) # or nvrtc.&lt;...&gt; for nvrtc</span>
+</pre></div>
+</div>
+</div>
+<!-- markdownlint-enable MD013 -->
+<p>Moreover, the interoperability layer’s Python enum types also contain all the
+enum constants of their HIP analogue as shown in the
+<a class="reference internal" href="#snippet-cuda-enum"><span class="std std-ref">snippet below</span></a>.</p>
+<div class="literal-block-wrapper docutils container" id="snippet-cuda-enum">
+<div class="code-block-caption"><span class="caption-number">Listing 24 </span><span class="caption-text">Python enum class in cuda.pyx</span><a class="headerlink" href="#snippet-cuda-enum" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># [...]</span>
+<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">CUmemorytype</span><span class="p">(</span><span class="n">hip</span><span class="o">.</span><span class="n">_hipMemoryType__Base</span><span class="p">,</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_CUmemorytype_EnumMeta</span><span class="p">):</span>
+<span class="hll"><span class="linenos"> 3</span>   <span class="n">hipMemoryTypeHost</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeHost</span>
+</span><span class="linenos"> 4</span>   <span class="n">CU_MEMORYTYPE_HOST</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeHost</span>
+<span class="hll"><span class="linenos"> 5</span>   <span class="n">cudaMemoryTypeHost</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeHost</span>
+</span><span class="linenos"> 6</span>   <span class="n">hipMemoryTypeDevice</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeDevice</span>
+<span class="hll"><span class="linenos"> 7</span>   <span class="n">CU_MEMORYTYPE_DEVICE</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeDevice</span>
+</span><span class="linenos"> 8</span>   <span class="n">cudaMemoryTypeDevice</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeDevice</span>
+<span class="hll"><span class="linenos"> 9</span>   <span class="n">hipMemoryTypeArray</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeArray</span>
+</span><span class="linenos">10</span>   <span class="n">CU_MEMORYTYPE_ARRAY</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeArray</span>
+<span class="hll"><span class="linenos">11</span>   <span class="n">hipMemoryTypeUnified</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeUnified</span>
+</span><span class="linenos">12</span>   <span class="n">CU_MEMORYTYPE_UNIFIED</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeUnified</span>
+<span class="hll"><span class="linenos">13</span>   <span class="n">hipMemoryTypeManaged</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeManaged</span>
+</span><span class="linenos">14</span>   <span class="n">cudaMemoryTypeManaged</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">hipMemoryTypeManaged</span>
+<span class="linenos">15</span><span class="c"># [...]</span>
+</pre></div>
+</div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">c</span></code>-prefixed Cython declaration files (<code class="docutils literal notranslate"><span class="pre">cuda.ccuda.pxd</span></code>,
+<code class="docutils literal notranslate"><span class="pre">cuda.ccudart.pxd</span></code>, and <code class="docutils literal notranslate"><span class="pre">cuda.cnvrtc.pxd</span></code>), you will further find that the</p>
+<!-- markdownlint-disable-next-line MD013 -->
+<p><a class="reference internal" href="#ccuda-hip-names"><span class="std std-ref">HIP functions and union/struct types are directly included too</span></a>:</p>
+<div class="literal-block-wrapper docutils container" id="ccuda-hip-names">
+<div class="code-block-caption"><span class="caption-number">Listing 25 </span><span class="caption-text">Excerpt from ccuda.pxd</span><a class="headerlink" href="#ccuda-hip-names" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c"># [...]</span>
+<span class="hll"><span class="linenos">2</span><span class="k">from</span><span class="w"> </span><span class="nn">hip.chip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipDeviceProp_t</span>
+</span><span class="linenos">3</span><span class="k">from</span><span class="w"> </span><span class="nn">hip.chip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipDeviceProp_t</span> <span class="k">as</span> <span class="n">cudaDeviceProp</span>
+<span class="linenos">4</span><span class="c"># [...]</span>
+<span class="hll"><span class="linenos">5</span><span class="k">from</span><span class="w"> </span><span class="nn">hip.chip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipMemcpy</span>
+</span><span class="linenos">6</span><span class="k">from</span><span class="w"> </span><span class="nn">hip.chip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipMemcpy</span> <span class="k">as</span> <span class="n">cudaMemcpy</span>
+<span class="linenos">7</span><span class="c"># [...]</span>
+</pre></div>
+</div>
+</div>
+<p>In the Cython declaration files without <code class="docutils literal notranslate"><span class="pre">c</span></code>-prefix (<code class="docutils literal notranslate"><span class="pre">cuda.cuda.pxd</span></code>,
+<code class="docutils literal notranslate"><span class="pre">cuda.cudart.pxd</span></code>, and <code class="docutils literal notranslate"><span class="pre">cuda.nvrtc.pxd</span></code>), you will discover that the original
+HIP types (only those derived from unions and structs) are <code class="docutils literal notranslate"><span class="pre">c</span></code>-imported too and
+that the CUDA interoperability layer types are made subclasses of the
+respective HIP type; see <a class="reference internal" href="#cuda-hip-names"><span class="std std-ref">the example below</span></a>. This allows to
+pass them to the CUDA interoperability layer’s Python functions, i.e., the
+aliased HIP Python functions.</p>
+<div class="literal-block-wrapper docutils container" id="cuda-hip-names">
+<div class="code-block-caption"><span class="caption-number">Listing 26 </span><span class="caption-text">Excerpt from cuda.pxd</span><a class="headerlink" href="#cuda-hip-names" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># [...]</span>
+<span class="hll"><span class="linenos"> 2</span><span class="k">from</span><span class="w"> </span><span class="nn">hip.hip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipKernelNodeParams</span> <span class="c"># here</span>
+</span><span class="hll"><span class="linenos"> 3</span><span class="k">cdef</span><span class="w"> </span><span class="k">class</span> <span class="nf">CUDA_KERNEL_NODE_PARAMS</span><span class="p">(</span><span class="n">hip</span><span class="o">.</span><span class="n">hip</span><span class="o">.</span><span class="n">hipKernelNodeParams</span><span class="p">):</span>
+</span><span class="linenos"> 4</span>   <span class="k">pass</span>
+<span class="hll"><span class="linenos"> 5</span><span class="k">cdef</span><span class="w"> </span><span class="k">class</span> <span class="nf">CUDA_KERNEL_NODE_PARAMS_st</span><span class="p">(</span><span class="n">hip</span><span class="o">.</span><span class="n">hip</span><span class="o">.</span><span class="n">hipKernelNodeParams</span><span class="p">):</span>
+</span><span class="linenos"> 6</span>   <span class="k">pass</span>
+<span class="hll"><span class="linenos"> 7</span><span class="k">cdef</span><span class="w"> </span><span class="k">class</span> <span class="nf">CUDA_KERNEL_NODE_PARAMS_v1</span><span class="p">(</span><span class="n">hip</span><span class="o">.</span><span class="n">hip</span><span class="o">.</span><span class="n">hipKernelNodeParams</span><span class="p">):</span>
+</span><span class="linenos"> 8</span>   <span class="k">pass</span>
+<span class="hll"><span class="linenos"> 9</span><span class="k">cdef</span><span class="w"> </span><span class="k">class</span> <span class="nf">cudaKernelNodeParams</span><span class="p">(</span><span class="n">hip</span><span class="o">.</span><span class="n">hip</span><span class="o">.</span><span class="n">hipKernelNodeParams</span><span class="p">):</span>
+</span><span class="linenos">10</span>   <span class="k">pass</span>
+<span class="linenos">11</span><span class="c"># [...]</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="1_usage.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Basic Usage and Examples</p>
+</div>
+</a>
+<a class="right-next" href="3_datatypes.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">HIP Python’s Adapter Types</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-python">Basic Usage (Python)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-example">Python Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enum-constant-hallucination">Enum Constant Hallucination</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-cython">Basic Usage (Cython)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cython-example">Cython Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hip-python-specific-code-modifications">HIP Python-Specific Code Modifications</a></li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

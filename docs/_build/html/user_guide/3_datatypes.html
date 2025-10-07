@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>HIP Python’s Adapter Types — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/3_datatypes';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="4_report_bugs.html" rel="next" title="Feedback and Reporting Issues"/>
+<link href="2_cuda_python_interop.html" rel="prev" title="CUDA® Python Interoperability"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-6.4.3</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">HIP Python’s Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_report_bugs.html">Feedback and Reporting Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HIP Python: Python API</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hip.html">hip.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hiprtc.html">hip.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipblas.html">hip.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rccl.html">hip.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hiprand.html">hip.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipfft.html">hip.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipsparse.html">hip.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/roctx.html">hip.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hipsolver.html">hip.hipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api_manual/_hip_helpers.html">hip._hip_helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api_manual/_util_types.html">hip._util.types</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">CUDA Python Interoperability: Python API</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.html">cuda.cuda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cudart.html">cuda.cudart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/nvrtc.html">cuda.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/bindings.html">cuda.bindings</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">HIP Python’s Adapter Types</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>HIP Python’s Adapter Types</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer-usage-in-hip-python">Pointer: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devicearray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devicearray-usage-in-hip-python">DeviceArray: Usage in HIP Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#list-types">List Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-types-usage-in-hip-python">List Types: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-type-for-hipmodulelaunchkernel">Helper type for <code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleLaunchKernel</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autogenerated-wrapper-types">Autogenerated Wrapper Types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-the-adapter-types">Properties of the Adapter Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implications">Implications</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<!-- MIT License
+  --
+  -- Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
+  --
+  -- Permission is hereby granted, free of charge, to any person obtaining a copy
+  -- of this software and associated documentation files (the "Software"), to deal
+  -- in the Software without restriction, including without limitation the rights
+  -- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  -- copies of the Software, and to permit persons to whom the Software is
+  -- furnished to do so, subject to the following conditions:
+  --
+  -- The above copyright notice and this permission notice shall be included in all
+  -- copies or substantial portions of the Software.
+  --
+  -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  -- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  -- SOFTWARE.
+  -->
+<!-- markdownlint-disable MD022 MD041 -->
+<section class="tex2jax_ignore mathjax_ignore" id="hip-python-s-adapter-types">
+<span id="ch-datatypes"></span><h1>HIP Python’s Adapter Types<a class="headerlink" href="#hip-python-s-adapter-types" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2025-03-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            10 min read
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- markdownlint-enable MD022 MD041 -->
+<p>This chapter highlights some of the datatypes that HIP Python’s Python
+interfaces use to convert various Python objects to the C datatypes expected
+by the routines of the HIP C API.</p>
+<p>While generic types are defined in module <a class="reference internal" href="../python_api_manual/_util_types.html#module-hip._util.types" title="hip._util.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hip._util.types</span></code></a>,
+specific helper types for <a class="reference internal" href="../python_api/hip.html#module-hip.hip" title="hip.hip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hip.hip</span></code></a> are defined in
+<a class="reference internal" href="../python_api_manual/_hip_helpers.html#module-hip._hip_helpers" title="hip._hip_helpers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hip._hip_helpers</span></code></a>.</p>
+<!-- markdownlint-disable MD022 -->
+<section id="pointer">
+<span id="sec-pointer"></span><h2><a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a><a class="headerlink" href="#pointer" title="Link to this heading">#</a></h2>
+<!-- markdownlint-disable MD022 -->
+<p>Whenever a C function signature argument of pointer type is too generic —
+e.g., already if it is a C <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code> pointer — HIP Python’s code generator
+uses the <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types.Pointer</span></code></a> adapter to convert a select list of Python
+objects to the pointer type expected by the C function:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>:</p>
+<p>This will set the adapter’s pointer attribute to <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</li>
+<li><p><a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>:</p>
+<p>The adapter copies the pointer attribute.
+Python buffer handle ownership, if the input object has acquired one, is not
+transferred.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</p>
+<p>The adapter interprets the <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> value as address and copies to its
+pointer attribute.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a>:</p>
+<p>Copies the <code class="docutils literal notranslate"><span class="pre">value</span></code> member.</p>
+</li>
+</ul>
+<!-- markdownlint-disable-next-line MD013 -->
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the <a class="reference external" href="https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html">CUDA Array Interface</a> protocol:</p>
+<p>Retrieves the address from the <code class="docutils literal notranslate"><span class="pre">"data"</span></code> tuple of the
+<code class="docutils literal notranslate"><span class="pre">__cuda_array_interface</span></code> member of the object.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the
+<a class="reference external" href="https://docs.python.org/3/c-api/buffer.html">Python buffer protocol</a>:</p>
+<p>If the object represents a simple contiguous array, the adapter acquires the
+buffer handle and retrieves the buffer. Releases the handle at time of
+destruction.</p>
+</li>
+</ul>
+<p>Type checks are performed in the above order.</p>
+<section id="pointer-usage-in-hip-python">
+<h3>Pointer: Usage in HIP Python<a class="headerlink" href="#pointer-usage-in-hip-python" title="Link to this heading">#</a></h3>
+<p>The type is typically used as argument in the following scenarios:</p>
+<ul class="simple">
+<li><p>When modeling generic first-degree pointers of basic type — however,
+typically not for (<code class="docutils literal notranslate"><span class="pre">const</span></code>) <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code> — or generic first-degree pointers of
+type <code class="docutils literal notranslate"><span class="pre">void</span></code> type.</p></li>
+<li><p>When modeling in-out scalar arguments, where the user supplies
+<code class="docutils literal notranslate"><span class="pre">ctypes.addressof(myscalar)</span></code> as argument.</p></li>
+<li><p>As place-holder whenever a complicated type expression of pointer type has
+not been analyzed yet.</p></li>
+</ul>
+</section>
+</section>
+<section id="devicearray">
+<span id="sec-device-array"></span><h2><a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.DeviceArray" title="hip._util.types.DeviceArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a><a class="headerlink" href="#devicearray" title="Link to this heading">#</a></h2>
+<p>This is a datatype for handling device buffers returned by <code class="docutils literal notranslate"><span class="pre">~.hipMalloc</span></code> and
+related device memory allocation routines. It implements the</p>
+<!-- markdownlint-disable-next-line MD013 -->
+<p><a class="reference external" href="https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html">CUDA Array Interface</a> protocol.</p>
+<p>In case it appears as the type of a function argument, it can also be
+initialized from the following Python objects that you can pass instead of it:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>:</p>
+<p>This will set the type’s pointer attribute to <code class="xref py py-obj docutils literal notranslate"><span class="pre">NULL</span></code>.
+No shape and type information is available in this case!</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that is accepted as input by the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> routine of
+<a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>:</p>
+<p>In this case, init code from <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> is used.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">Py_buffer</span></code> object ownership is not transferred
+See <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer.__init__" title="hip._util.types.Pointer.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a> for more information.
+No shape and type information is available in this case!</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</p>
+<p>The type interprets the <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> value as address and copies to its
+pointer attribute. No shape and type information is available in this case!</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a>:</p>
+<p>The type takes the pointer address from <code class="docutils literal notranslate"><span class="pre">pyobj.value</span></code>.
+No shape and type information is available in this case!</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> with <code class="docutils literal notranslate"><span class="pre">__cuda_array_interface__</span></code> member:</p>
+<p>The type takes the integer-valued pointer address, i.e. the first entry of
+the <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> tuple from <code class="xref py py-obj docutils literal notranslate"><span class="pre">pyobj</span></code>’s member
+<code class="docutils literal notranslate"><span class="pre">__cuda_array_interface__</span></code>. Copies shape and type information.</p>
+</li>
+</ul>
+<p>Type checks are performed in the above order.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Shape and type information and other metadata can be modified or overwritten
+after creation via the <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.DeviceArray.configure" title="hip._util.types.DeviceArray.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a> member function. be
+aware that you might need to pass the <code class="docutils literal notranslate"><span class="pre">_force=True</span></code> keyword argument — in
+particular if your instance was created from a type that does not implement the</p>
+<!-- markdownlint-disable-next-line MD013 -->
+<p><a class="reference external" href="https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html">CUDA Array Interface</a> protocol
+or via a HIP Python device memory allocation routine.</p>
+</div>
+<div class="admonition-see admonition">
+<p class="admonition-title">See</p>
+<p><a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.DeviceArray.configure" title="hip._util.types.DeviceArray.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a></p>
+</div>
+</section>
+<section id="devicearray-usage-in-hip-python">
+<h2>DeviceArray: Usage in HIP Python<a class="headerlink" href="#devicearray-usage-in-hip-python" title="Link to this heading">#</a></h2>
+<p>The type is used as return value of:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../python_api/hip.html#hip.hip.hipMalloc" title="hip.hip.hipMalloc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMalloc</span></code></a></p></li>
+<li><p><a class="reference internal" href="../python_api/hip.html#hip.hip.hipExtMallocWithFlags" title="hip.hip.hipExtMallocWithFlags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipExtMallocWithFlags</span></code></a></p></li>
+<li><p><a class="reference internal" href="../python_api/hip.html#hip.hip.hipMallocManaged" title="hip.hip.hipMallocManaged"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMallocManaged</span></code></a></p></li>
+<li><p><a class="reference internal" href="../python_api/hip.html#hip.hip.hipMallocAsync" title="hip.hip.hipMallocAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMallocAsync</span></code></a></p></li>
+<li><p><a class="reference internal" href="../python_api/hip.html#hip.hip.hipMallocFromPoolAsync" title="hip.hip.hipMallocFromPoolAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMallocFromPoolAsync</span></code></a></p></li>
+</ul>
+<p>It can be passed to functions that expect a <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> argument and
+where passing an instance of this type instead makes sense, e.g. you can pass
+it as copy destination or copy source in <a class="reference internal" href="../python_api/hip.html#hip.hip.hipMemcpy" title="hip.hip.hipMemcpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMemcpy</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The example <a class="reference internal" href="1_usage.html#sec-example-hip-python-device-arrays"><span class="std std-ref">HIP Python Device Arrays</span></a>
+showcases how to use <code class="docutils literal notranslate"><span class="pre">~.DeviceArray.configure</span></code> to change the shape and type
+of a <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.DeviceArray" title="hip._util.types.DeviceArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a> instance and how use the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operator
+to retrieve a subarray.</p>
+</div>
+</section>
+<section id="list-types">
+<span id="sec-list-types"></span><h2>List Types<a class="headerlink" href="#list-types" title="Link to this heading">#</a></h2>
+<p>The adapter types</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfBytes" title="hip._util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfPointer" title="hip._util.types.ListOfPointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfPointer</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfInt" title="hip._util.types.ListOfInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfInt</span></code></a>, <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfUnsigned" title="hip._util.types.ListOfUnsigned"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUnsigned</span></code></a>, <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfUnsignedLong" title="hip._util.types.ListOfUnsignedLong"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUnsignedLong</span></code></a>,</p></li>
+</ul>
+<p>are used for simple Python <code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">tuple</span></code> objects whose elements are</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>,</p></li>
+<li><p>can be used to construct a <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>,</p></li>
+<li><p>or can be converted to the C types <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">unsigned</span></code>, <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span></code>, respectively.</p></li>
+</ul>
+<p>The types can be initialized from the following Python objects:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> / <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of the respective element type:</p>
+<p>In this case, adapter type allocates an array of C values wherein it stores
+the addresses/values obtained from the <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>/<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>
+entries. Furthermore, the instance’s owner flag is set in this case.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that is accepted as input by the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> routine of
+<a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>:</p>
+<p>In this case, init code from <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> is used and the C owner flag
+remains unset. See <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> for more information.</p>
+</li>
+</ul>
+<section id="list-types-usage-in-hip-python">
+<h3>List Types: Usage in HIP Python<a class="headerlink" href="#list-types-usage-in-hip-python" title="Link to this heading">#</a></h3>
+<p>HIP Python employs the <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfBytes" title="hip._util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a> type in scenarios
+were a list of C <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> is expected,
+and the <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfPointer" title="hip._util.types.ListOfPointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfPointer</span></code></a> type where a list of C pointer types
+is expected.</p>
+<p>The type <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfBytes" title="hip._util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a> is for example used to convert input
+Python types in the following routines:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../python_api/hiprtc.html#hip.hiprtc.hiprtcCompileProgram" title="hip.hiprtc.hiprtcCompileProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCompileProgram</span></code></a> for argument <code class="docutils literal notranslate"><span class="pre">options</span></code>,</p></li>
+<li><p><a class="reference internal" href="../python_api/hiprtc.html#hip.hiprtc.hiprtcCreateProgram" title="hip.hiprtc.hiprtcCreateProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCreateProgram</span></code></a>for argument <code class="docutils literal notranslate"><span class="pre">headers</span></code>, and</p></li>
+<li><p><a class="reference internal" href="../python_api/hiprtc.html#hip.hiprtc.hiprtcCreateProgram" title="hip.hiprtc.hiprtcCreateProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCreateProgram</span></code></a> for argument <code class="docutils literal notranslate"><span class="pre">includeNames</span></code>.</p></li>
+</ul>
+<p>HIP Python functions that expect a C array of C <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">unsigned</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span></code> element type (<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span></code>, …) use <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfInt" title="hip._util.types.ListOfInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfInt</span></code></a>,
+<a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfUnsigned" title="hip._util.types.ListOfUnsigned"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUnsigned</span></code></a>, or <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfUnsignedLong" title="hip._util.types.ListOfUnsignedLong"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUnsignedLong</span></code></a>,
+respectively, to handle the conversion from appropriate Python input types.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the examples <a class="reference internal" href="1_usage.html#sec-launching-kernels"><span class="std std-ref">Launching Kernels</span></a> and <a class="reference internal" href="1_usage.html#sec-launching-kernels-with-args"><span class="std std-ref">Kernels with Arguments</span></a>,
+we can pass lists directly to <a class="reference internal" href="../python_api/hiprtc.html#hip.hiprtc.hiprtcCreateProgram" title="hip.hiprtc.hiprtcCreateProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCreateProgram</span></code></a> and <a class="reference internal" href="../python_api/hiprtc.html#hip.hiprtc.hiprtcCompileProgram" title="hip.hiprtc.hiprtcCompileProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCompileProgram</span></code></a>
+thanks to the type conversions performed by <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.ListOfBytes" title="hip._util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a>.</p>
+</div>
+</section>
+</section>
+<section id="helper-type-for-hipmodulelaunchkernel">
+<h2>Helper type for <a class="reference internal" href="../python_api/hip.html#hip.hip.hipModuleLaunchKernel" title="hip.hip.hipModuleLaunchKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleLaunchKernel</span></code></a><a class="headerlink" href="#helper-type-for-hipmodulelaunchkernel" title="Link to this heading">#</a></h2>
+<p>The type <a class="reference internal" href="../python_api_manual/_hip_helpers.html#hip._hip_helpers.HipModuleLaunchKernel_extra" title="hip._hip_helpers.HipModuleLaunchKernel_extra"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HipModuleLaunchKernel_extra</span></code></a> is a datatype for handling
+Python list or tuple objects with entries that are either ctypes datatypes or
+that can be converted to type Pointer. This adapter type is used for
+converting Python objects into a shape that is expected by the <code class="docutils literal notranslate"><span class="pre">extra</span></code> argument
+of <code class="xref py py-obj docutils literal notranslate"><span class="pre">HipModuleLaunchKernel</span></code>.</p>
+<p>The type <a class="reference internal" href="../python_api_manual/_hip_helpers.html#hip._hip_helpers.HipModuleLaunchKernel_extra" title="hip._hip_helpers.HipModuleLaunchKernel_extra"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HipModuleLaunchKernel_extra</span></code></a> used as similar init procedure
+as the types presented in <a class="reference internal" href="#sec-list-types"><span class="std std-ref">List Types</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the example <a class="reference internal" href="1_usage.html#sec-launching-kernels-with-args"><span class="std std-ref">Kernels with Arguments</span></a>,
+we can pass lists of <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes</span></code></a> types and <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.DeviceArray" title="hip._util.types.DeviceArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a>
+directly to <a class="reference internal" href="../python_api/hip.html#hip.hip.hipModuleLaunchKernel" title="hip.hip.hipModuleLaunchKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleLaunchKernel</span></code></a> thanks to the type conversions
+performed by <a class="reference internal" href="../python_api_manual/_hip_helpers.html#hip._hip_helpers.HipModuleLaunchKernel_extra" title="hip._hip_helpers.HipModuleLaunchKernel_extra"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HipModuleLaunchKernel_extra</span></code></a>.</p>
+</div>
+</section>
+<section id="autogenerated-wrapper-types">
+<h2>Autogenerated Wrapper Types<a class="headerlink" href="#autogenerated-wrapper-types" title="Link to this heading">#</a></h2>
+<p>HIP Python’s code generator autogenerates Python wrapper types
+for records (C <code class="docutils literal notranslate"><span class="pre">struct</span></code> and <code class="docutils literal notranslate"><span class="pre">union</span></code>) and C function pointers.</p>
+<p>As the other types presented in this chapter, these types
+can be initialized from different Python objects — but only if and only if
+they serve as input adapter for a HIP Python function.</p>
+<p>Their initialization from within Python code differs with respect to
+the other discussed types. Instead of passing a Python object, you can pass
+initial values of their properties — either as positional arguments,
+keyword arguments, or a combination of both — to the constructor.</p>
+<div class="admonition-example-initialization-of-dim3-in-python-code admonition">
+<p class="admonition-title">Example (Initialization of <code class="docutils literal notranslate"><span class="pre">dim3</span></code> in Python code)</p>
+<p>In the example <a class="reference internal" href="1_usage.html#sec-launching-kernels-with-args"><span class="std std-ref">Kernels with Arguments</span></a>, the autogenerated
+type <a class="reference internal" href="../python_api/hip.html#hip.hip.dim3" title="hip.hip.dim3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dim3</span></code></a> is initialized using keyword arguments and positional
+arguments, respectively, as shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">block</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">dim3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">dim3</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">block</span><span class="o">.</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>If autogenerated types are used as adapter for a function argument, the following
+input types are also accepted instead of passing an instance of the type:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>:</p>
+<p>This will set the type’s pointer attribute to <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</p>
+<p>The type interprets the <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> value as address and copies to its
+pointer attribute.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a>:</p>
+<p>Takes the pointer address <code class="docutils literal notranslate"><span class="pre">pyobj.value</span></code> and writes it to its pointer attribute.</p>
+</li>
+</ul>
+<!-- markdownlint-disable-next-line MD013 -->
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the <a class="reference external" href="https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html">CUDA Array Interface</a> protocol:</p>
+<p>Takes the integer-valued pointer address, i.e. the first entry of the <code class="docutils literal notranslate"><span class="pre">data</span></code>
+tuple from <code class="docutils literal notranslate"><span class="pre">pyobj</span></code>’s member <code class="docutils literal notranslate"><span class="pre">__cuda_array_interface__</span></code>  and writes it to
+its pointer attribute.</p>
+<p>(Input type is not allowed for function pointer wrapper types.)</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the
+<a class="reference external" href="https://docs.python.org/3/c-api/buffer.html">Python buffer protocol</a>:</p>
+<p>If the object represents a simple contiguous array, the adapter acquires the
+buffer handle, retrieves the buffer writes the buffer’s data address to its
+pointer attribute. It releases the handle again at time of destruction.</p>
+<p>(Input type is not allowed for function pointer wrapper types.)</p>
+</li>
+<li><p><a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>:</p>
+<p>Writes the data pointer of the <code class="docutils literal notranslate"><span class="pre">~.types.Pointer</span></code> instance to its own data
+pointer attribute. No ownership is transferred.</p>
+</li>
+</ul>
+<p>Type checks are performed in the above order.</p>
+</section>
+<section id="properties-of-the-adapter-types">
+<h2>Properties of the Adapter Types<a class="headerlink" href="#properties-of-the-adapter-types" title="Link to this heading">#</a></h2>
+<p>Finally, we want to highlight some important properties that are shared by all
+adapter types presented in this chapter:</p>
+<ol class="arabic">
+<li><p>All datatypes presented in this chapter are subclasses of type
+<a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>. Therefore, they can all be passed to functions
+that use <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> for type conversions for the given
+argument; read the section <a class="reference internal" href="#sec-pointer"><span class="std std-ref">Pointer</span></a> again to understand why.</p></li>
+<li><p>Due to the way subclasses are initialized — the init procedure of
+<a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> is invoked if the specialized conversions were not
+applied (see <a class="reference internal" href="#sec-device-array"><span class="std std-ref">DeviceArray</span></a> and <a class="reference internal" href="#sec-list-types"><span class="std std-ref">List Types</span></a>) —
+<a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> and any of its subclasses can be passed to any
+function that uses a subclass of <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> as adapter.</p></li>
+<li><p>You can instantiate all of the datatypes presented in this chapter in
+Python and Cython code.</p></li>
+<li><p>You can subclass all of the datatypes presented in this chapter in Python
+and Cython code.</p></li>
+<li><p>You can always use <code class="docutils literal notranslate"><span class="pre">int(&lt;adapter_obj&gt;)</span></code> to obtain the address of
+the underlying data as integer.</p>
+<p>(Hint: Print the integer address via Python routine <a class="reference external" href="https://docs.python.org/3/library/functions.html#hex" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hex</span></code></a> to obtain
+an address that you can compare with AMD log output. AMD log output can be
+enabled via environment variable <code class="docutils literal notranslate"><span class="pre">AMD_LOG_LEVEL</span></code>. Set it to a value of at
+least <code class="docutils literal notranslate"><span class="pre">3</span></code>.)</p>
+</li>
+<li><p>You can always pass an <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> to functions that
+use an adapter type for translating the given argument.
+It will be interpreted as integer representation of an address.</p></li>
+</ol>
+<section id="implications">
+<h3>Implications<a class="headerlink" href="#implications" title="Link to this heading">#</a></h3>
+<p>Due to the first two properties, you can use one of the subclasses as adapter
+and then pass the object to a HIP Python function that uses
+<a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> or one of its subclasses as converter:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-number">Listing 27 </span><span class="caption-text">HIP Python Datatype Used as Adapter in Python Code</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">err</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">hipMyFunc</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+   <span class="n">pointer_is_used_to_convert_this_arg</span><span class="o">=</span><span class="n">hip</span><span class="o">.</span><span class="n">_util</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">ListOfInt</span><span class="p">(</span>
+     <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Due to properties 3 and 4, you can define your own adapter types and pass them
+to HIP Python’s functions wherever those use <a class="reference internal" href="../python_api_manual/_util_types.html#hip._util.types.Pointer" title="hip._util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> or one
+of its subclasses as converter. Obviously, your adapter must create data or
+link to data that makes sense for the C function wrapped by HIP Python’s Python
+interfaces.</p>
+</section>
+</section>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="2_cuda_python_interop.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">CUDA® Python Interoperability</p>
+</div>
+</a>
+<a class="right-next" href="4_report_bugs.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Feedback and Reporting Issues</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer-usage-in-hip-python">Pointer: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devicearray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devicearray-usage-in-hip-python">DeviceArray: Usage in HIP Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#list-types">List Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-types-usage-in-hip-python">List Types: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-type-for-hipmodulelaunchkernel">Helper type for <code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleLaunchKernel</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autogenerated-wrapper-types">Autogenerated Wrapper Types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-the-adapter-types">Properties of the Adapter Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implications">Implications</a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>
