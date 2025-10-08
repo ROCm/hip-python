@@ -30,7 +30,8 @@ and further a CUDA&reg; Python Interoperability layer that aims to simplify
 the porting of CUDA Python Python and Cython programs.
 
 :::{note}
-This documentation has been generated based on ROCm&trade; version 5.7.1.
+
+This documentation has been generated based on ROCm&trade; version 6.4.2.
 :::
 
 ## Spotlight
@@ -125,6 +126,7 @@ and functions.
 - {doc}`python_api/cuda`
 - {doc}`python_api/cudart`
 - {doc}`python_api/nvrtc`
+- {doc}`python_api/bindings`
 :::
 
 :::
