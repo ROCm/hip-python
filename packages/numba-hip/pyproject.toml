@@ -17,14 +17,24 @@ classifiers = [
 
 dependencies = [
     "numba>=0.58,<0.61",
-    "hip-python>=6.2.0",
-    "hip-python-as-cuda>=6.2.0",
-    "rocm-llvm-python>=6.2.0",
+    "hip-python>=6.3.0",
+    "hip-python-as-cuda>=6.3.0",
+    "rocm-llvm-python>=6.3.0",
 ]
 
 [project.optional-dependencies]
 test = ["pytest", "cffi"]
 dev = ["pytest", "cffi"]
+rocm-7-1-0 = [
+    "hip-python~=7.1.0.0",
+    "hip-python-as-cuda~=7.1.0.0",
+    "rocm-llvm-python~=7.1.0.0",
+]
+rocm-7-0-2 = [
+    "hip-python~=7.0.2.0",
+    "hip-python-as-cuda~=7.0.2.0",
+    "rocm-llvm-python~=7.0.2.0",
+]
 rocm-7-0-1 = [
     "hip-python~=7.0.1.0",
     "hip-python-as-cuda~=7.0.1.0",
