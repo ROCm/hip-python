@@ -2,14 +2,33 @@
 Numba HIP
 *********
 
-This repository provides a ROCm(TM) HIP backend for Numba.
+This repository provides a ROCm™ HIP backend for Numba.
 
-.. note:: Only for AMD MI series GPUs on Linux systems
+.. admonition:: **For AMD GPUs on Linux**
 
-    So far the Numba HIP backend has only been used and tested with AMD MI series GPUs
-    on Linux systems. CUDA(R) devices are not supported.
+    The Numba HIP backend has been tested on systems with AMD Instinct™, AMD Radeon™ RDNA3, and AMD Radeon™ RDNA4 accelerators
+    on ROCm 7.0 and ROCm 7.1.
 
-.. note:: Experimental project
+    The following AMD Radeon™ RDNA3 cards have been tested on ROCm 7.1:
+ 
+    * AMD Radeon™ RX 7900 XTX
+    * AMD Radeon™ RX 7900 XT
+    * AMD Radeon™ PRO W7900D
+    * AMD Radeon™ PRO V710
+
+    The following AMD Radeon™ RDNA4 cards have been tested on ROCm 7.1:
+
+    * AMD Radeon™ RX 9060 XT
+    * AMD Radeon™ AI PRO R9700
+
+    The following AMD Instinct™ accelerators have been tested on ROCm 7.0 and ROCm 7.1:
+
+    * AMD Instinct™ MI210
+    * AMD Instinct™ MI300X
+
+    CUDA® devices are not supported by Numba HIP.
+
+.. admonition:: **Experimental project**
     
     With this release, we primarily want to accomplish two things:
 
