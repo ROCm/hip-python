@@ -22,9 +22,9 @@
 
 from numba import hip as cuda
 from numpy import array as np_array
-from numba.np.ufunc import deviceufunc
-from numba.np.ufunc.deviceufunc import (UFuncMechanism, GeneralizedUFunc,
-                                        GUFuncCallSteps)
+from numba.hip import deviceufunc
+from numba.hip.deviceufunc import (UFuncMechanism, GeneralizedUFunc,
+                                   GUFuncCallSteps)
 
 
 class CUDAUFuncDispatcher(object):
