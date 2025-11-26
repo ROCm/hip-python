@@ -821,9 +821,7 @@ class HIPDispatcher(Dispatcher, serialize.ReduceMixin):
         *args*.
         """
         amdgpu_arch = get_current_device().amdgpu_arch
-        argtypes = tuple(
-            [self.typingctx.resolve_argument_type(a) for a in args]
-        )
+        argtypes = tuple(self.typeof_pyval(a) for a in args)
         if self.specialized:
             raise RuntimeError("Dispatcher already specialized")
 
