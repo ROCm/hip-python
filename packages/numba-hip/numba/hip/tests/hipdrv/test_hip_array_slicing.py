@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2025 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -278,7 +278,7 @@ class CudaArraySlicing(CUDATestCase):
         for i in range(darr.shape[0]):
             np.testing.assert_array_equal(darr[i:i].copy_to_host(), arr[i:i])
         # empty slice of empty slice
-        self.assertFalse(darr[:0][:0].copy_to_host())
+        self.assertFalse(darr[:0][:0].copy_to_host().size > 0)
         # out-of-bound slice just produces empty slices
         np.testing.assert_array_equal(darr[:0][:1].copy_to_host(), arr[:0][:1])
         np.testing.assert_array_equal(
@@ -291,7 +291,7 @@ class CudaArraySlicing(CUDATestCase):
         np.testing.assert_array_equal(darr[:0].copy_to_host(), arr[:0])
         np.testing.assert_array_equal(darr[3, :0].copy_to_host(), arr[3, :0])
         # empty slice of empty slice
-        self.assertFalse(darr[:0][:0].copy_to_host())
+        self.assertFalse(darr[:0][:0].copy_to_host().size > 0)
         # out-of-bound slice just produces empty slices
         np.testing.assert_array_equal(darr[:0][:1].copy_to_host(), arr[:0][:1])
         np.testing.assert_array_equal(
