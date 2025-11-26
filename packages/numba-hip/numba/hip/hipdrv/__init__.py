@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2025 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -62,27 +62,18 @@ assert not config.ENABLE_CUDASIM, "Cannot use real driver API with simulator"
 # Now follow the modules
 # -----------------------
 
-import os  # noqa: E402
-import re  # noqa: E402
-
-import numba.hip.util.modulerepl as _modulerepl  # noqa: E402
-
-mr = _modulerepl.ModuleReplicator(
-    "numba.hip.hipdrv",
-    os.path.join(os.path.dirname(__file__), "..", "..", "cuda", "cudadrv"),
-    base_context=globals(),
-    preprocess_all=lambda content: re.sub(  # noqa: F821
-        r"\bnumba.cuda\b", "numba.hip", content
-    ).replace("cudadrv", "hipdrv"),
-)
-
 # order is important here!
 
-from . import _extras, hiprtc  # noqa: E402, F401
+
+from . import _extras  # noqa: E402, F401
+from . import devicearray  # noqa: E402, F401
+from . import devices  # noqa: E402, F401
+from . import driver  # noqa: E402, F401
+from . import error  # noqa: E402, F401
+from . import hiprtc  # noqa: E402, F401
 
 nvrtc = hiprtc
-
-from . import driver  # noqa: E402, F401
+from . import ndarray  # noqa: E402, F401
 
 # DOCS 'devices':
 # Expose each GPU devices directly.
@@ -94,26 +85,3 @@ from . import driver  # noqa: E402, F401
 #
 # Note:
 # - This module must be imported by the main-thread.
-
-devices = mr.create_and_register_derived_module(
-    "devices",
-)  # make this a submodule of the package
-
-devicearray = mr.create_and_register_derived_module(
-    "devicearray",
-    preprocess=lambda content: content.replace(
-        "from numba import cuda", "from numba import hip as cuda"
-    ),
-    # preprocess=lambda content: content.replace("CUDA","HIP")
-    # Reuse CUDA config values as they are for now: config.CUDA_WARN_ON_IMPLICIT_COPY
-)  # make this a submodule of the package
-
-ndarray = mr.create_and_register_derived_module(
-    "ndarray",
-)  # make this a submodule of the package
-
-# clean up
-del mr
-del _modulerepl
-del os
-del re
