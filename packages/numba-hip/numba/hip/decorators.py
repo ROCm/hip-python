@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2025 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -47,10 +47,11 @@
 
 from warnings import warn
 
-from numba.core import config, sigutils, types
+from numba.core import config, types
 from numba.core.errors import DeprecationError, NumbaInvalidConfigWarning
 
 from numba.hip.compiler import declare_device_function
+from numba.hip.core import sigutils
 from numba.hip.dispatcher import HIPDispatcher
 
 # from numba.hip.simulator.kernel import FakeHIPKernel # TODO support simulator

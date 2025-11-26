@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2025 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ import sys
 from warnings import warn
 
 import numpy as np
-from numba.core import config, serialize, sigutils, types, typing, utils
+from numba.core import config, serialize, types, typing, utils
 from numba.core.caching import Cache, CacheImpl
 from numba.core.compiler_lock import global_compiler_lock
 from numba.core.dispatcher import Dispatcher
@@ -62,6 +62,7 @@ from numba import _dispatcher, hip
 from numba.hip.api import get_current_device
 from numba.hip.args import wrap_arg
 from numba.hip.compiler import HIPCompiler, compile_hip
+from numba.hip.core import sigutils
 from numba.hip.descriptor import hip_target
 from numba.hip.errors import (
     missing_launch_config_msg,

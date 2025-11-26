@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2025 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,6 @@ from numba.core import config  # noqa: F401
 from numba.core import (
     compiler,
     funcdesc,
-    sigutils,
     types,
     typing,
 )
@@ -79,6 +78,7 @@ from numba.core.typing.templates import ConcreteTemplate
 
 from numba.hip import codegen, hipconfig, target
 from numba.hip.api import get_current_device
+from numba.hip.core import sigutils
 
 
 def _options_type(x):

@@ -1,23 +1,45 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 
+# MIT License
+#
+# Modifications Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Implements custom ufunc dispatch mechanism for non-CPU devices.
 """
 
-from abc import ABCMeta, abstractmethod
-from collections import OrderedDict
 import operator
 import warnings
+from abc import ABCMeta, abstractmethod
+from collections import OrderedDict
 from functools import reduce
 
 import numpy as np
-
-from numba.np.ufunc.ufuncbuilder import _BaseUFuncBuilder, parse_identity
 from numba.core import types
 from numba.core.typing import signature
-from numba.cuda.core import sigutils
 from numba.np.ufunc.sigparse import parse_signature
+from numba.np.ufunc.ufuncbuilder import _BaseUFuncBuilder, parse_identity
+
+from numba.hip.core import sigutils
 
 
 def _broadcast_axis(a, b):
@@ -518,7 +540,9 @@ def _determine_gufunc_outer_types(argtys, dims):
             yield at.copy(ndim=nd + 1)
         else:
             if nd > 0:
-                raise ValueError("gufunc signature mismatch: ndim>0 for scalar")
+                raise ValueError(
+                    "gufunc signature mismatch: ndim>0 for scalar"
+                )
             yield types.Array(dtype=at, ndim=1, layout="A")
 
 
@@ -536,7 +560,7 @@ def expand_gufunc_template(template, indims, outdims, funcname, argtypes):
     outputs = [
         _gen_src_for_indexing(aref, adims, atype)
         for aref, adims, atype in zip(
-            argnames[len(indims) :], outdims, argtypes[len(indims) :]
+            argnames[len(indims):], outdims, argtypes[len(indims):]
         )
     ]
     argitems = inputs + outputs
@@ -753,9 +777,9 @@ class GeneralizedUFunc(object):
 
         # Creating new dimension
         elif len(ary.shape) < len(newshape):
-            assert newshape[-len(ary.shape) :] == ary.shape, (
-                "cannot add dim and reshape at the same time"
-            )
+            assert (
+                newshape[-len(ary.shape) :] == ary.shape
+            ), "cannot add dim and reshape at the same time"
             return self._broadcast_add_axis(ary, newshape)
 
         # Collapsing dimension
