@@ -22,7 +22,7 @@
 
 [project]
 name = "numba-hip"
-version = "0.1.3"
+version = "0.1.4"
 description = "Numba HIP - Numba backend for AMD GPUs"
 readme = { file = "README.rst", content-type = "text/x-rst" }
 authors = [{ name = "Advanced Micro Devices, Inc." }]
