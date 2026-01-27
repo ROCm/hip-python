@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2025 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2026 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -621,10 +621,13 @@ class DeviceNDArray(DeviceNDArrayBase):
         '''
         return self._dummy.is_c_contig
 
-    def __array__(self, dtype=None):
+    def __array__(self, dtype=None, copy=None):
         """
         :return: an `numpy.ndarray`, so copies to the host.
         """
+        if copy is False:
+            msg = "`copy=False` is not supported. A copy is always created."
+            raise ValueError(msg)
         if dtype:
             return self.copy_to_host().__array__(dtype)
         else:

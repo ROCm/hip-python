@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2026 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -48,12 +48,15 @@
 import itertools
 
 import numpy as np
+from numba.np.numpy_support import numpy_version
 
 from numba import hip as cuda
 from numba.hip.hipdrv import devicearray
 from numba.hip.testing import HIPTestCase as CUDATestCase
 from numba.hip.testing import skip_on_hipsim as skip_on_cudasim
 from numba.hip.testing import unittest
+
+IS_NUMPY_2 = numpy_version >= (2, 0)
 
 
 class TestCudaNDArray(CUDATestCase):
@@ -511,6 +514,37 @@ class TestCudaNDArray(CUDATestCase):
 
         dev_array.copy_to_device(dev_array_from_host)
         dev_array_from_host.copy_to_device(dev_array)
+
+
+class TestArrayMethod(CUDATestCase):
+    """Tests of the __array__() method via np.array"""
+
+    def test_np_array(self):
+        dev_array = cuda.to_device(np.asarray([1.0, 2.0, 3.0]))
+        host_array = np.array(dev_array)
+        np.testing.assert_equal(dev_array.copy_to_host(), host_array)
+
+    def test_np_array_dtype(self):
+        dtype = np.int32
+        dev_array = cuda.to_device(np.asarray([1.0, 2.0, 3.0]))
+        host_array = np.array(dev_array, dtype=dtype)
+        np.testing.assert_equal(
+            host_array, dev_array.copy_to_host().astype(dtype)
+        )
+
+    @skip_on_cudasim("Simulator does not use __array__()")
+    @unittest.skipUnless(IS_NUMPY_2, "NumPy 1.x does not pass copy kwarg")
+    def test_np_array_copy_false(self):
+        dev_array = cuda.to_device(np.asarray([1.0, 2.0, 3.0]))
+        with self.assertRaisesRegex(ValueError, "`copy=False` is not"):
+            np.array(dev_array, copy=False)
+
+    @skip_on_cudasim("Simulator does not use __array__()")
+    @unittest.skipUnless(IS_NUMPY_2, "NumPy 1.x does not pass copy kwarg")
+    def test_np_array_copy_true(self):
+        dev_array = cuda.to_device(np.asarray([1.0, 2.0, 3.0]))
+        host_array = np.array(dev_array)
+        np.testing.assert_equal(dev_array.copy_to_host(), host_array)
 
 
 class TestRecarray(CUDATestCase):
