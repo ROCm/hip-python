@@ -31,6 +31,7 @@ by Cython users of this project.
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import argparse
+import ctypes
 import enum
 import logging
 import os
@@ -39,6 +40,8 @@ import textwrap
 from pathlib import Path
 
 import cuda_interop_layer_gen
+from parse_hipify_perl import parse_hipify_perl
+
 import interfacegen
 from interfacegen.cparser import TypeHandler
 from interfacegen.cython import (
@@ -52,7 +55,6 @@ from interfacegen.tree import (
     Node,
     Parm,
 )
-from parse_hipify_perl import parse_hipify_perl
 
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
@@ -260,7 +262,8 @@ def parse_options():
 
 
 # hip
-def generate_hip_module_files():
+# TODO C901 function is too complex
+def generate_hip_module_files():  # noqa: C901
     global OUTPUT_DIR
     global ROCM_INC
     global RUNTIME_LINKING
@@ -328,6 +331,12 @@ def generate_hip_module_files():
     def renamer(name: str):
         return interfacegen.cython.DEFAULT_RENAMER(controls.hip.renamer(name))
 
+    def macro_type(node: MacroDefinition):
+        macro_name = node.name
+        if macro_name in controls.hip.void_p_macros:
+            return ctypes.c_ulonglong(controls.hip.void_p_macros[macro_name])
+        return controls.hip.macro_type(node)
+
     generator = CythonModuleGenerator(
         "hip.hip",
         ROCM_INC,
@@ -345,7 +354,7 @@ def generate_hip_module_files():
         ptr_parm_intent=controls.hip.ptr_parm_intent,
         ptr_rank=controls.hip.ptr_rank,
         ptr_complicated_type_handler=hip_ptr_complicated_type_handler,
-        macro_type=controls.hip.macro_type,
+        macro_type=macro_type,
         raw_comment_cleaner=controls.hip.raw_comment_cleaner,
         cflags=GENERATOR_ARGS,
     )
@@ -734,7 +743,7 @@ def write_version_file(
             HIP_PYTHON_BRANCH = "{{HIP_PYTHON_BRANCH}}"
             HIP_PYTHON_VERSION = "{{HIP_PYTHON_VERSION}}"
             HIP_PYTHON_REV = "{{HIP_PYTHON_REV}}"\
-            """
+            """  # noqa: E231
             ).strip()
         )
 
@@ -1146,8 +1155,8 @@ if __name__ == "__main__":
         ROCM_VERSION_PATCH,
     )
 
-    version = f"{rocm_version_name}.{gitversion.git_branch_rev_count(gitversion.git_current_branch())}"
-    long_version = f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
+    version = f"{rocm_version_name}.{gitversion.git_branch_rev_count(gitversion.git_current_branch())}"  # noqa: E231
+    long_version = f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"  # noqa: E231
 
     hip_python_lib_names = AVAILABLE_GENERATORS.keys()
     cuda_python_lib_names = ["cuda", "cudart", "nvrtc", "bindings"]
