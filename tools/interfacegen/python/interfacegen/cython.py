@@ -605,6 +605,7 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
 
         assert isinstance(self, tree.MacroDefinition)
         type_or_typename_or_value = self.macro_type(self)
+
         if type_or_typename_or_value is None:
             _log.error(f"no type specified for macro definition {self.name}.")
             # FIXME: Introduce error modes: fail on error, ignore on error, ...
@@ -612,7 +613,15 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
         elif type_or_typename_or_value == str:
             return None
         elif isinstance(type_or_typename_or_value, bool):
-            return f"cdef bint {self._cython_and_c_name(self.name)}"
+            if is_decl:
+                return f"cdef bint {self._cython_and_c_name(self.name)}"
+            return None
+        elif isinstance(type_or_typename_or_value, str):
+            if is_decl:
+                typename = type_or_typename_or_value
+                varname = self._cython_and_c_name(self.name)
+                return f"cdef {typename} {varname}"
+            return None
 
         # hardcoded values need to provide the value in the implementation file
         if isinstance(type_or_typename_or_value, int):
@@ -628,10 +637,11 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
             varname = self._cython_and_c_name(self.name)
             value = type_or_typename_or_value.value
         else:
-            assert isinstance(type_or_typename_or_value, str)
-            return f"cdef {type_or_typename_or_value} {self._cython_and_c_name(self.name)}"
-        var_decl = f"cdef {typename} {varname}"
+            err_msg = f" unsupported macro type for {self.name}: {type_or_typename_or_value}"
+            _log.error(err_msg)
+            raise RuntimeError(err_msg)
 
+        var_decl = f"cdef {typename} {varname}"
         # append right-hand side if is definition
         if is_decl:
             return var_decl
@@ -2529,7 +2539,7 @@ class CythonBackend:
                 curr_indent = indent
                 contrib = node.render_c_interface_decl()
                 last_was_extern = True
-            if contrib is not None:
+            if contrib:
                 result.append(textwrap.indent(contrib, curr_indent))
         return result
 
@@ -2571,7 +2581,9 @@ class CythonBackend:
             if isinstance(node, Function):
                 result.append("\n" + node.render_cython_lazy_loader_def())
             elif isinstance(node, MacroDefinition):
-                result.append("\n" + node.render_c_interface_impl())
+                contrib = node.render_c_interface_impl()
+                if contrib:
+                    result.append("\n" + contrib)
         return result
 
     def render_c_interface_decl_part(self, runtime_linking: bool = False):

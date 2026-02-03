@@ -46,10 +46,14 @@ class hip:
         "HIP_VERSION_GITHASH",
         "HIP_VERSION_BUILD_NAME",
     )
-    void_p_macros = (
-        "HIP_LAUNCH_PARAM_BUFFER_POINTER",
-        "HIP_LAUNCH_PARAM_BUFFER_SIZE",
-        "HIP_LAUNCH_PARAM_END",
+    # NOTE: Uses void* macro values from ROCm 7.1.1
+    # NOTE: Newer versions of GCC do not allow
+    #       to simply convert ``void*`` to ``unsigned long long``.
+    #       This requires us to hardcode these values into the generated #       interfaces for certain languages like Cython.
+    void_p_macros = dict(
+        HIP_LAUNCH_PARAM_BUFFER_POINTER=0x01,
+        HIP_LAUNCH_PARAM_BUFFER_SIZE=0x02,
+        HIP_LAUNCH_PARAM_END=0x03,
     )
     int_macros = (
         #  from hip/hip_version.h
@@ -156,7 +160,7 @@ class hip:
         if node.name in hip.int_macros:
             return "int"
         if node.name in hip.void_p_macros:
-            return "unsigned long long"
+            return "void *"
         if node.name in hip.str_macros:
             return "char *"
         assert False, "Not implemented!"
