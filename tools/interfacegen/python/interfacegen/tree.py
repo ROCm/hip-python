@@ -294,78 +294,146 @@ class Typed:
         self.typehandler = cparser.TypeHandler(clang_type)
 
     @staticmethod
+    def tokenize_type_spelling(type_spelling: str):
+        """Yields tokens of the canonical type spelling."""
+        tokens = type_spelling.split(" ")
+        while len(tokens) > 0:
+            token = tokens.pop(0)
+            if "*" in token:
+                # examples: "*", "**", "***"
+                yield from token.replace("*", " * ").split()
+            elif "[" in token and token.endswith("]"):
+                # example: "MyType_t[10]" -> ["MyType_t", "[10]"]
+                yield from token.replace("[", " [").split()
+            else:
+                yield token
+
+    @staticmethod
+    def _pack_asterisks(tokens: list[str]) -> list[str]:
+        """Packs asterisks into single tokens.
+
+        We follow Clang type spelling convention here.
+
+        E.g., ["const", "char", "*", "*"] -> ["const", "char", "**"]
+        """
+        result = []
+        asterisk_count = 0
+        for token in tokens:
+            if token == "*":
+                asterisk_count += 1
+            else:
+                if asterisk_count > 0:
+                    result.append("*" * asterisk_count)
+                    asterisk_count = 0
+                result.append(token)
+        if asterisk_count > 0:
+            result.append("*" * asterisk_count)
+        return result
+
+    @staticmethod
     def canonical_typename(
         typehandler: cparser.TypeHandler,
         searched_canonical_typename,
         repl_typename=None,
+        lstrip_const_qualifier=False,
     ):
         """Returns a Cython-compatible typename for the given Clang type.
 
-        If `repl_typename` is provided, replaces elaborated C type names, e.g. `struct Foo`,
-        and anonymous types by `repl_typename`.
-        Otherwise, simply returns the spelling of `clang_type.get_canonical()`.
+        If `repl_typename` is provided, replaces elaborated C type names, e.g.
+        `struct Foo`, and anonymous types by `repl_typename`.
+        (Keeps the `const` qualifier if not stripped explicitly.)
+
+        If `repl_typename` is not provided, simply returns the spelling of `clang_type.get_canonical()`.
 
         Args:
-            repl_typename (str): A forced typename for the struct, union, or enum part of the
-                                 canonical Clang typename.
+            typehandler (cparser.TypeHandler):
+                A TypeHandler instance for the type.
+            searched_canonical_typename (str):
+                A canonical typename to search for in the Clang type's
+                canonical typename and to replace by `repl_typename`.
+            repl_typename (str):
+                A forced typename for the struct, union, or
+                enum part of the canonical Clang typename.
+            lstrip_const_qualifier (bool):
+                If the `const` qualifier should be stripped from the
+                `searched_canonical_typename` before searching for it. Defaults to False. The effect is that the resulting typename
+                will keep the `const` qualifier if it is present in the Clang type's canonical typename.
+
+        # TODO: Check if we can simplify the Cython call generation if we add the include a Cython module prefix like `chip.` into the repl_typename.
         """
 
-        # FIXME(interfacegen.cython.tree.canonical_typename,0,docharri) Revise method; may not be robust as "name" in "name_" would be regarded das match, better do regex search with word boundaries
-        canonical_type_to_modify = (
-            typehandler.clang_type.get_canonical().spelling
-        )
         if repl_typename is None:
-            return canonical_type_to_modify
+            return typehandler.clang_type.get_canonical().spelling
         else:
             assert (
                 type(repl_typename) is str and repl_typename.isidentifier()
             ), repl_typename
-            for clang_type_layer in typehandler.walk_clang_type_layers(
-                postorder=True,  # must be post-order to go from inside to outside
-                canonical=True,
-            ):
-                layer_canonical_type_spelling = (
-                    clang_type_layer.get_canonical().spelling
-                )
-                if layer_canonical_type_spelling.startswith(
-                    searched_canonical_typename  # pointer with optional trailing modifiers
-                ) or layer_canonical_type_spelling.endswith(
-                    searched_canonical_typename  # other (canonical!) type with optional preceding modifiers
-                ):
-                    assert (
-                        layer_canonical_type_spelling
-                        in canonical_type_to_modify
-                    ), f"Types (searched typename, canonical type, canonical type of layer): '{searched_canonical_typename}', '{canonical_type_to_modify}', '{layer_canonical_type_spelling}'"
-                    start_incl = canonical_type_to_modify.index(
-                        layer_canonical_type_spelling
-                    )
-                    end_excl = len(layer_canonical_type_spelling)
-                    if start_incl > 0:
-                        # flake8: noqa: E203
-                        preceding = canonical_type_to_modify[
-                            0 : start_incl - 1
-                        ]
-                    else:
-                        preceding = ""
-                    return f"{preceding}{repl_typename}{canonical_type_to_modify[start_incl+end_excl:]}"
-            raise RuntimeError(
-                f"typename '{searched_canonical_typename}' is no part of '{canonical_type_to_modify}'"
+            result = []
+
+            searched_tokens = list(
+                Typed.tokenize_type_spelling(searched_canonical_typename)
             )
+
+            if lstrip_const_qualifier:
+                if len(searched_tokens) > 0 and searched_tokens[0] == "const":
+                    searched_tokens = searched_tokens[1:]
+
+            available_tokens = list(
+                Typed.tokenize_type_spelling(
+                    typehandler.clang_type.get_canonical().spelling
+                )
+            )
+
+            match = -1
+            for i in range(len(available_tokens) - len(searched_tokens) + 1):
+                if (
+                    available_tokens[i : i + len(searched_tokens)]
+                    == searched_tokens
+                ):
+                    match = i
+                    break
+            if match >= 0:
+                result.extend(available_tokens[0:match])
+                result.append(repl_typename)
+                result.extend(available_tokens[match + len(searched_tokens) :])
+                # trim whitespace introduced by tokenization and return
+                return " ".join(Typed._pack_asterisks(result)).replace(
+                    " [", "["
+                )
+            else:
+                msg = (
+                    f"could not find '{searched_canonical_typename}' in "
+                    f"'{typehandler.clang_type.get_canonical().spelling}'; "
+                    f"{searched_tokens=}, {available_tokens=}"
+                )
+                _log.error(msg)
+                raise RuntimeError(msg)
 
     def global_typename(
         self,
         sep: str,
         renamer: callable = lambda name: name,
         prefer_canonical: bool = False,
+        lstrip_const_qualifier=False,
     ):
-        """Returns a global typename based on types in the Root nodes type registry and
-        a backend-specific renaming function provided by the user.
+        """Returns a global typename based on types in the Root nodes type
+        registry and a backend-specific renaming function provided by the user.
 
         Args:
-            sep (str): A separator for connecting a nested types name with its parent name and it ancestors' name in order to
-                       derive a global name.
-            renamer (_type_, optional): A renaming function. Defaults to identity.
-            use_canonical (bool, optional): If the canonical name should be preferred.
+            sep (str):
+                A separator for connecting a nested types name with its
+                parent name and it ancestors' name in order to derive a
+                global name.
+            renamer (_type_, optional):
+                A renaming function. Defaults to
+                identity.
+            use_canonical (bool, optional):
+                If the canonical name should be
+                preferred.
+            lstrip_const_qualifier (bool):
+                If the `const` qualifier should be stripped from the
+                `searched_canonical_typename` before searching for it. Defaults to False. The effect is that the resulting typename
+                will keep the `const` qualifier if it is present in the Clang type's canonical typename.
 
         Raises:
             ValueError: If the separator is not a string.
@@ -380,6 +448,7 @@ class Typed:
         if not isinstance(sep, str):
             raise ValueError("argument 'sep' must be a string.")
         if self.typeref is not None and not use_canonical:
+            # Replace elaborated type names and anonymous types with global Cython name
             # print(f"[pre] {type(self.typeref)} <{self.typeref.render_location()}>")
             searched_typename = (
                 self.typeref.cursor.type.get_canonical().spelling
@@ -391,7 +460,10 @@ class Typed:
             repl_typename = None
         return renamer(
             Typed.canonical_typename(
-                self.typehandler, searched_typename, repl_typename
+                self.typehandler,
+                searched_typename,
+                repl_typename,
+                lstrip_const_qualifier=lstrip_const_qualifier,
             )
         )
 
@@ -451,8 +523,14 @@ class Typed:
         )
 
     @property
+    def is_const_qualified(self) -> bool:
+        """If the type of this typed entity is const qualified."""
+        return self.typehandler.clang_type.is_const_qualified()
+
+    @property
     def has_typeref(self):
-        """If this type is referencing any other typedef, record, or enum.
+        """If the type of this typed entity is referencing any other typedef,
+        record, or enum.
 
         Returns:
             bool: If this type is referencing any other typedef, record, or enum.
@@ -763,6 +841,13 @@ class Typed:
         """If the innermost type layer is of basic type or void type."""
         return (
             self.typehandler.is_innermost_canonical_type_layer_of_basic_type_or_void
+        )
+
+    @property
+    def has_innermost_type_layer_const_modifier(self):
+        """If the innermost type layer has a const modifier."""
+        return next(
+            self.typehandler.const_qualifiers(postorder=True, canonical=True)
         )
 
 
