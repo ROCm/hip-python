@@ -719,15 +719,38 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
 
 
 class Typed:
+
     @property
     def cython_global_typename(self):
+        """Get a global name for the type of this node.
+
+        To get a proper Cython typename, we need to strip trailing 'const' qualifiers, e.g. for 'char const *' and 'char * const', the Cython type is 'char *'/ We further need to replace struct/enum/union with just the identifier, e.g. for 'struct foo' the Cython type is just 'foo'
+        plus potentially a prefix.
+        """
 
         assert isinstance(self, tree.Typed)
         result = self.global_typename(
-            self.sep, self.renamer, prefer_canonical=True
+            self.sep,
+            self.renamer,
+            prefer_canonical=True,
+            lstrip_const_qualifier=True,
         )
         # if "[]" in result: # Cython does not like this in signatures
         #    result = result.replace("[]", "*")
+        return " ".join(
+            tk
+            for i, tk in enumerate(result.split(" "))
+            if tk != "const" or i == 0
+        )
+
+    @property
+    def cython_global_typename_no_const(self):
+        """Global typename without preceding 'const' qualifier (if present)."""
+
+        assert isinstance(self, tree.Typed)
+        result = self.cython_global_typename
+        if result.startswith("const "):
+            result = result[len("const ") :]
         return result
 
     @property
@@ -1526,7 +1549,7 @@ cdef void* {funptr_name} = NULL
     def _python_interface_retval_typename(self):
         """Returns a docstring expression for the return value type."""
 
-        typename = self.cython_global_typename
+        typename = self.cython_global_typename_no_const
         if self.is_void:
             return "None"
         elif self.is_basic_type or self.is_pointer_to_char(degree=1):
@@ -1735,6 +1758,19 @@ cdef void* {funptr_name} = NULL
         ).rstrip()
         return f'r"""{docstring_body}\n"""'  # r required if verbatim/code is in body
 
+    @staticmethod
+    def _parm_qualifiers(parm: Parm) -> str:
+        result = ""
+        if (
+            parm.is_pointer_to_record(-1)
+            or parm.is_pointer_to_enum(-1)
+            or parm.is_pointer_to_basic_type(-1)
+            or parm.is_pointer_to_void(-1)
+        ):
+            if parm.has_innermost_type_layer_const_modifier:
+                result += "const "
+        return result
+
     def _analyze_parms(self, cprefix: str):
 
         parm_python_types = (
@@ -1759,6 +1795,8 @@ cdef void* {funptr_name} = NULL
 
             parm_name = parm.cython_name
             parm_innermost_type = parm.lookup_innermost_type()
+            qualifiers = Function._parm_qualifiers(parm)
+
             out_parms.append(
                 parm
             )  # append original name as we need to compare vs the documentation
@@ -1791,7 +1829,7 @@ cdef void* {funptr_name} = NULL
                 parm_typename = parm_innermost_type.cython_global_name
                 prolog.append(f"{parm_name} = {parm_typename}.fromPtr(NULL)")
                 c_interface_call_args.append(
-                    f"<{cprefix}{parm_typename}**>&{parm_name}._ptr"
+                    f"<{qualifiers}{cprefix}{parm_typename}**>&{parm_name}._ptr"
                 )  # ! must be lvalue expression, can't use getElementPtr
                 parm_python_types[parm.name] = parm_typename
                 out_args.append(
@@ -1801,7 +1839,7 @@ cdef void* {funptr_name} = NULL
                 parm_typename = parm_innermost_type.cython_global_name
                 prolog.append(f"{parm_name} = {parm_typename}.new()")
                 c_interface_call_args.append(
-                    f"<{cprefix}{parm_typename}*>{parm_name}._ptr"
+                    f"<{qualifiers}{cprefix}{parm_typename}*>{parm_name}._ptr"
                 )  # ! must be lvalue expression, can't use getElementPtr
                 parm_python_types[parm.name] = parm_typename
                 out_args.append(f"{parm_name}")
@@ -1881,6 +1919,11 @@ cdef void* {funptr_name} = NULL
             nonlocal c_interface_call_args
             nonlocal parm_python_types
 
+            # TODO hacky and does not consider volatile e.g.
+            if parm_typename.startswith("const "):
+                cprefix = "const " + cprefix
+                parm_typename = parm_typename[len("const ") :]
+
             parm_name = parm.cython_name
             handler_name = parm.ptr_complicated_type_handler(parm)
             sig_args.append(f"object {parm_name}")
@@ -1915,6 +1958,7 @@ cdef void* {funptr_name} = NULL
 
             parm_name = parm.cython_name
             parm_innermost_type = parm.lookup_innermost_type()
+
             if parm.is_pointer_to_record(
                 degree=1, incomplete_array=True
             ) or parm.is_pointer_to_function_proto(
