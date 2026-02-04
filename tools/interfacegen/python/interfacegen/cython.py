@@ -22,12 +22,14 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import ctypes
 import keyword
 import logging
 import os
 import re
 import sys
 import textwrap
+import typing
 
 import clang.cindex
 import Cython.Tempita
@@ -128,7 +130,14 @@ def CYTHON_AUTOCONV_TO_PYTHON_TYPES(canonical_ctype: str):
         ["char", "[]"],
     ]:
         return "bytes"
-    elif tokens in (["char"], ["short"], ["int"], ["long"], ["long", "long"]):
+    elif tokens in (
+        ["char"],
+        ["short"],
+        ["int"],
+        ["long"],
+        ["long", "long"],
+        ["size_t"],
+    ):
         return "int"  # no long in Python 3 anymore
     elif tokens in [
         ["float"],
@@ -453,7 +462,7 @@ class CythonMixin(DoxygenMixin):
         else:
             return ""
 
-    def render_c_interface(self):
+    def render_c_interface_decl(self):
         """Render a Cython interface for external C code."""
         return None
 
@@ -522,10 +531,29 @@ class Root(tree.Root, CythonMixin):
 
 
 class MacroDefinition(tree.MacroDefinition, CythonMixin):
+    # via: https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#types
+    # note: ulonglong == ulong == size_t on some operating systems
+    ctypes_to_cython = {
+        ctypes.c_bool: "bint",  # Python: bool
+        ctypes.c_short: "short",  # Python: int
+        ctypes.c_ushort: "unsigned short",  # Python: int
+        ctypes.c_int: "int",  # Python: int
+        ctypes.c_uint: "unsigned int",  # Python: int
+        ctypes.c_long: "long",  # Python: int
+        ctypes.c_ulong: "unsigned long",  # Python: int
+        ctypes.c_longlong: "long long",  # Python: int
+        ctypes.c_ulonglong: "unsigned long long",  # Python: int
+        ctypes.c_size_t: "size_t",  # Python: int
+        ctypes.c_float: "float",  # Python: float
+        ctypes.c_double: "double",  # Python: float
+    }
+
     def __init__(self, *args, **kwargs):
         tree.MacroDefinition.__init__(self, *args, **kwargs)
         CythonMixin.__init__(self)
-        self.macro_type = DEFAULT_MACRO_TYPE
+        self.macro_type = (
+            DEFAULT_MACRO_TYPE
+        )  # type: typing.Callable[[MacroDefinition], None|bool|int|str]
 
     @property
     def no_right_hand_side(self):
@@ -534,59 +562,130 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
 
     @property
     def interpret_right_hand_side_as_str(self):
-        """If the `macro_type` user callback returns a Python bool 'True', this indicates a `#define <NAME>` without RHS."""
+        """If the `macro_type` user callback returns the type ``str``, this
+        means that the RHS should be interpreted as string literal."""
         return self.macro_type(self) == str
 
-    def render_c_interface(self):
+    @property
+    def hardcoded_right_hand_side(self):
+        """If the `macro_type` user callback returns a Python int or ctypes instance, this indicates that the value has been hardcoded."""
+        return (
+            type(self.macro_type(self)) == int
+            or type(self.macro_type(self)) in MacroDefinition.ctypes_to_cython
+        )
+
+    def render_c_interface(self, is_decl=True):
+        r"""Render declaration/definition for a macro.
+
+        Uses the `macro_type` callback to infer a Cython type or a hardcoded
+        value for the macro's RHS.
+
+        Args:
+            is_decl (bool, optional):
+            If `True`, generate code for the declaration file (*.pxd),
+            otherwise for the implementation file (*.pyx). This only affects
+            hardcoded values, which must be emitted in the implementation.
+
+        Behavior based on `macro_type(self)`:
+        * `None`: log an error and return `None`.
+        * `str`: interpret the RHS as a string literal and return `None` for the
+          C interface; a Python `str` will be emitted in the Python interface.
+        * `bool`: emit a `cdef bint <name>` without RHS.
+        * `int` or ctypes integer value: emit a hardcoded `cdef <type> <name>`
+          (and assign the value in the implementation).
+        * any other `str`: emit `cdef <typename> <name>`.
+
+        Returns:
+            Optional[str]:
+                The Cython declaration or definition for the macro,
+                or None if there is an error or if the macro should be represented as a Python string literal.
         """
-        Relies on the `macro_type callback` to infer
-        a type for the macro definition's RHS.
 
-        * If the macro expression is just a, `#define <name>`,
-          the callback should return `True`. Similarly, if it is
-          `#undef <name>` and that is important,
-          the callback must return `False`.
-        * If the macro right-hand side should be interpreted as string
-          literal even though it is not, the callback must return the type `str`.
-          In this case only a Python `str` object is created and no Cython
-          cdef type. Individual tokens are joined via a single " ".
-
-          Note that the result will be hardcoded, so this should not be used
-          for platform dependent types!
-
-        * If the callback returns `None`, an error is logged.
-        * In any other case, the callback should return a Python str instance
-          that indicates a Cython cdef type such as 'int', 'bint', 'char *', ...
-        """
+        # TODO: Simplify this by supporting only ctypes types when hardcoding
 
         assert isinstance(self, tree.MacroDefinition)
-        type_or_typename = self.macro_type(self)
-        if type_or_typename is None:
+        type_or_typename_or_value = self.macro_type(self)
+        if type_or_typename_or_value is None:
             _log.error(f"no type specified for macro definition {self.name}.")
             # FIXME: Introduce error modes: fail on error, ignore on error, ...
             return None
-        elif isinstance(type_or_typename, bool):
-            return f"cdef bint {self._cython_and_c_name(self.name)} = {int(type_or_typename)}"
-        elif type_or_typename == str:
+        elif type_or_typename_or_value == str:
             return None
+        elif isinstance(type_or_typename_or_value, bool):
+            return f"cdef bint {self._cython_and_c_name(self.name)}"
+
+        # hardcoded values need to provide the value in the implementation file
+        if isinstance(type_or_typename_or_value, int):
+            typename = "int"
+            varname = self.name
+            value = type_or_typename_or_value
+        elif (
+            type(type_or_typename_or_value) in MacroDefinition.ctypes_to_cython
+        ):
+            typename = MacroDefinition.ctypes_to_cython[
+                type_or_typename_or_value.__class__
+            ]
+            varname = self._cython_and_c_name(self.name)
+            value = type_or_typename_or_value.value
         else:
-            assert isinstance(type_or_typename, str)
-            return (
-                f"cdef {type_or_typename} {self._cython_and_c_name(self.name)}"
-            )
+            assert isinstance(type_or_typename_or_value, str)
+            return f"cdef {type_or_typename_or_value} {self._cython_and_c_name(self.name)}"
+        var_decl = f"cdef {typename} {varname}"
+
+        # append right-hand side if is definition
+        if is_decl:
+            return var_decl
+        else:
+            return f"{var_decl} = {value}"
+
+    def render_c_interface_decl(self):
+        """Render the declaration part of the macro definition."""
+        return self.render_c_interface(is_decl=True)
+
+    def render_c_interface_impl(self):
+        """Render the implementation part of the macro definition, which is only relevant for hardcoded values."""
+        return self.render_c_interface(is_decl=False)
 
     def render_python_interface_impl(self, cprefix: str):
-        """Returns '{self.name} = {prefix}{self.name}'."""
-
+        """Render a Python-facing macro definition assignment string.
+        Args:
+            cprefix: Prefix to apply to the C-level macro name when generating the right-hand side.
+        Returns:
+            A string of the form ``"{name} = {rhs}"`` where ``name`` is the
+            renamed macro identifier and ``rhs`` is either the prefixed macro name or a reconstructed string literal for string-like macros.
+        Side Effects:
+            - Appends a documentation entry for the macro to ``self.
+              docstring_attributes``.
+            - Registers the macro name in ``self.all``.
+        Notes:
+            - If the macro expands to a string-like value
+              (``type_or_typename_or_value == str``),
+              this reconstructs the literal from cursor tokens to preserve the
+              literal text.
+            - If the macro is a numeric/bool or has no right-hand side, the
+              Python type is inferred accordingly; otherwise the type is mapped
+              from Cython/ctypes.
+        """
         name = self.renamer(self.name)
-        type_or_typename = self.macro_type(self)
-        # docs entry:
-        if type_or_typename == str:
-            python_type = "str"
+
+        # derive docs entry type
+        type_or_typename_or_value = self.macro_type(self)
+        if isinstance(type_or_typename_or_value, (bool, int)):
+            python_type = type(type_or_typename_or_value).__name__
         elif self.no_right_hand_side:
             python_type = "bool"
         else:
-            python_type = CYTHON_AUTOCONV_TO_PYTHON_TYPES(type_or_typename)
+            # if we have a value of a ctypes type, map to Cython type first
+            _maybe_ctypes_type = type(type_or_typename_or_value)
+            if _maybe_ctypes_type in MacroDefinition.ctypes_to_cython:
+                cython_typename = MacroDefinition.ctypes_to_cython[
+                    _maybe_ctypes_type
+                ]
+            else:
+                cython_typename = type_or_typename_or_value
+            python_type = CYTHON_AUTOCONV_TO_PYTHON_TYPES(cython_typename)
+
+        # side effect: add to docstring attributes
         self.docstring_attributes.append(
             textwrap.dedent(
                 f"""\
@@ -595,10 +694,11 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
                     """
             )
         )
+        # side effect: register in __all__
         self.all.append(self.cython_global_name)
 
-        # variable
-        if type_or_typename == str:
+        # derive right-hand side
+        if type_or_typename_or_value == str:
             rhs_tokens = []
             in_arg_list = False
             for i, token in enumerate(self.cursor.get_tokens()):
@@ -782,7 +882,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
         )
         return f"{cython_def_kind} {self.c_record_kind} {name}:\n"
 
-    def render_c_interface(self) -> str:
+    def render_c_interface_decl(self) -> str:
         """Render Cython binding for this struct/union declaration.
 
         Renders a Cython binding for this struct/union declaration, does
@@ -959,7 +1059,7 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
             f"{cython_def_kind} enum{'' if self.is_anonymous else ' '+name}:\n"
         )
 
-    def render_c_interface(self):
+    def render_c_interface_decl(self):
 
         #
         global indent
@@ -1084,7 +1184,7 @@ class Typedef(tree.Typedef, CythonMixin, Typed):
 
         return self.get_pointer_degree()
 
-    def render_c_interface(self):
+    def render_c_interface_decl(self):
         """Returns a Cython binding for this Typedef."""
         underlying_type_name = self.global_typename(self.sep, self.renamer)
         name = self._cython_and_c_name(self.name)
@@ -1170,7 +1270,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
                 "Record, pointer, and enum members not supported yet."
             )
 
-    def render_c_interface(self) -> str:
+    def render_c_interface_decl(self) -> str:
         """Render Cython binding for this constant array declaration."""
         name = self._cython_and_c_name(self.global_name(self.sep))
         shape = f"[{']['.join([str(i) for i in self.shape])}]"
@@ -1215,7 +1315,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
 
 class FunctionPointer(CythonMixin):
 
-    def render_c_interface(self):
+    def render_c_interface_decl(self):
         """Returns a Cython binding for this Typedef."""
 
         parm_types = ",".join(
@@ -1383,7 +1483,7 @@ class Function(tree.Function, CythonMixin, Typed):
                     return True
         return False
 
-    def render_c_interface(self, modifiers_front="", modifiers=""):
+    def render_c_interface_decl(self, modifiers_front="", modifiers=""):
 
         typename = self.cython_global_typename
         name = self.cython_name
@@ -1394,7 +1494,7 @@ class Function(tree.Function, CythonMixin, Typed):
 """
 
     def render_cython_lazy_loader_decl(self):
-        return self.render_c_interface(
+        return self.render_c_interface_decl(
             modifiers_front="cdef ", modifiers=self.modifiers_lazy_loader
         )
 
@@ -2321,8 +2421,10 @@ class CythonBackend:
         """Returns the content of a Cython bindings file.
 
         Creates the content of a Cython bindings file.
-        Contains Cython declarations per C declaration
-        plus helper types that have been introduced for nested enum/struct/union types.
+
+        Contains Cython declarations per C declaration plus declarations of
+        hardcoded macro values and helper types that have been introduced for
+        nested enum/struct/union types
 
         Note:
             Anonymous types for which we have a tree node with
@@ -2364,13 +2466,14 @@ class CythonBackend:
                     and (
                         node.no_right_hand_side
                         or node.interpret_right_hand_side_as_str
+                        or node.hardcoded_right_hand_side
                     )
                 )
             ):
                 if isinstance(node, Function):
                     contrib = node.render_cython_lazy_loader_decl()
                 else:
-                    contrib = node.render_c_interface()
+                    contrib = node.render_c_interface_decl()
                 curr_indent = ""
                 last_was_extern = False
             else:
@@ -2380,13 +2483,13 @@ class CythonBackend:
                 else:
                     pass  # NOTE: already in 'cdef extern from ...' environment
                 curr_indent = indent
-                contrib = node.render_c_interface()
+                contrib = node.render_c_interface_decl()
                 last_was_extern = True
             if contrib is not None:
                 result.append(textwrap.indent(contrib, curr_indent))
         return result
 
-    def create_cython_lazy_loader_defs(self, dll: str, util_pkg: str):
+    def create_c_interface_impl_part(self, dll: str, util_pkg: str):
         result = []
         lib_handle = "_lib_handle"
         result.append(
@@ -2423,6 +2526,8 @@ class CythonBackend:
         for node in self.walk_filtered_nodes():
             if isinstance(node, Function):
                 result.append("\n" + node.render_cython_lazy_loader_def())
+            elif isinstance(node, MacroDefinition):
+                result.append("\n" + node.render_c_interface_impl())
         return result
 
     def render_c_interface_decl_part(self, runtime_linking: bool = False):
@@ -2440,7 +2545,7 @@ class CythonBackend:
                 raise ValueError(
                     "argument 'dll' must not be 'None' if 'runtime_linking' is set to 'True'"
                 )
-            return nl.join(self.create_cython_lazy_loader_defs(dll, util_pkg))
+            return nl.join(self.create_c_interface_impl_part(dll, util_pkg))
         else:
             return ""
 
