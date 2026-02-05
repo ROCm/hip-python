@@ -964,6 +964,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
             + "\n\n"
             + cythontemplates.wrapper_class_record_init_template
         )
+
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
@@ -998,6 +999,11 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
         self._python_body_epilog.append(code)
 
     def render_python_interface_impl(self, cprefix: str) -> str:
+        """Render the implementation part for the Python interface.
+
+        Note:
+            Python interface is defined as ``cdef class``.
+        """
 
         global python_interface_record_properties_name
         global indent
@@ -1323,6 +1329,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
             name=name,
             cname=self.cname(cprefix),
             is_complete_type=True,
+            is_array=True,
             util_types_prefix=self.util_types_prefix,
         )
 
@@ -1341,6 +1348,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
             is_complete_type=True,
             util_types_prefix=self.util_types_prefix,
             is_basic_type=True,
+            is_array=True,
             dim=self.dim,
             shape=self.shape,
         )

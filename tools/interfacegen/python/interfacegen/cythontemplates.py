@@ -20,12 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Note: wrapper_class_decl_template must declare all ``@staticmethod`` ``cdef`` functions
-# Note: Syntax ``bint owner=*`` is necessary to specify default value in implementation part
+# Note: wrapper_class_decl_template must declare all ``@staticmethod`` ``cdef``
+#       functions
+# Note: Syntax ``bint owner=*`` is necessary to specify default value in
+#       implementation part
 
 wrapper_class_decl_template = """
 {{default cptr_type = cname + "*"}}
 {{default is_complete_type = True}}
+{{default is_array = False}}
 cdef class {{name}}({{util_types_prefix}}Pointer):
     cdef bint _is_ptr_owner
 
@@ -35,14 +38,16 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
     cdef {{name}} fromPtr(void* ptr, bint owner=*)
     @staticmethod
     cdef {{name}} fromPyobj(object pyobj)
-    {{if is_complete_type}}
+{{if is_complete_type}}
     @staticmethod
     cdef __allocate(void* ptr)
     @staticmethod
     cdef {{name}} new()
+{{if not is_array}}
     @staticmethod
     cdef {{name}} fromValue({{cname}} other)
-    {{endif}}
+{{endif}}
+{{endif}}
 """
 
 wrapper_class_impl_base_template = """
@@ -50,6 +55,7 @@ wrapper_class_impl_base_template = """
 {{default is_funptr = False}}
 {{default is_complete_type = True}}
 {{default properties_name = None}}
+{{default is_array = False}}
 cdef class {{name}}({{util_types_prefix}}Pointer):
     \"""Python wrapper for cdef class {{cname}}.
 
@@ -196,6 +202,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         {{name}}.__allocate(&ptr)
         return {{name}}.fromPtr(ptr, owner=True)
 
+{{if not is_array}}
     @staticmethod
     cdef {{name}} fromValue({{cname}} other):
         \"""Allocate new C type and copy from ``other``.
@@ -203,6 +210,7 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         wrapper = {{name}}.new()
         string.memcpy(wrapper._ptr, &other, sizeof({{cname}}))
         return wrapper
+{{endif}}
 
     def c_sizeof(self):
         \"""Returns the size of the underlying C type in bytes.
