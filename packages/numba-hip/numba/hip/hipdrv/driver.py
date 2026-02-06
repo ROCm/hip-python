@@ -25,7 +25,7 @@
 
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2026 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -163,7 +163,9 @@ class HipAPIError(HipRuntimeError):
     def __str__(self):
         return "[%s] %s" % (self.code, self.msg)
 
+
 CudaAPIError = HipAPIError  #: HIP/AMD: alias
+
 
 def locate_runtime_and_loader():  #: HIP/AMD: modified body
     # envpath = config.CUDA_DRIVER
@@ -547,6 +549,45 @@ class Device(object):
             ).format(identity)
             raise RuntimeError(errmsg)
 
+    @staticmethod
+    def _get_uuid_via_amdsmi():
+        """Obtain GPU UUID via AMD SMI as a fallback when the UUID obtained from the driver is not in the expected format."""
+        import json
+        import subprocess
+
+        # note: we assume 'amd-smi' is in PATH
+        #       and that there is only a single GPU
+        #       in the system.
+        if driver.get_device_count() != 1:
+            raise RuntimeError(
+                "Fallback to AMD SMI for UUID is only supported for single-GPU systems."
+            )
+        result = subprocess.run(
+            ["amd-smi", "list", "-g", "0", "--json"],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(
+                "Failed to run 'amd-smi list' while obtaining GPU UUID. "
+                f"Exit code: {result.returncode}\n"
+                f"stdout:\n{result.stdout}\n"
+                f"stderr:\n{result.stderr}"
+            )
+        # Typical stdout output looks like:
+        # ```
+        # [
+        #     {
+        #         "gpu": 0,
+        #         ...
+        #         "uuid": "<the-uuid>",
+        #         ...
+        #     }
+        # ]
+        # ```
+        return json.loads(result.stdout)[0]["uuid"]
+
     def __init__(self, devnum):
         result = driver.cuDeviceGet(devnum)
         self.id = result
@@ -578,15 +619,30 @@ class Device(object):
         self.name = name
 
         # Read UUID
-        uuid = driver.cuDeviceGetUuid(self.id)
+        uuid = driver.cuDeviceGetUuid(self.id)  # type: bytes
         uuid_vals = tuple(uuid.bytes)
 
-        b = "%02x"
-        b2 = b * 2
-        b4 = b * 4
-        b6 = b * 6
-        fmt = f"GPU-{b4}-{b2}-{b2}-{b2}-{b6}"
-        self.uuid = fmt % uuid_vals
+        try:
+            b = "%02x"
+            b2 = b * 2
+            b4 = b * 4
+            b6 = b * 6
+            fmt = f"GPU-{b4}-{b2}-{b2}-{b2}-{b6}"
+            self.uuid = fmt % uuid_vals
+        except TypeError as formatting_error:
+            if hipconfig.FALLBACK_TO_AMDSMI_FOR_UUID:
+                self.uuid = "GPU-" + Device._get_uuid_via_amdsmi()
+            else:
+                _logger.error(
+                    f"Device UUID '{uuid.decode()}' is not in "
+                    "the expected format. You can try setting the "
+                    "environment variable "
+                    "NUMBA_HIP_FALLBACK_TO_AMDSMI_FOR_UUID=1 to "
+                    "obtain the UUID via AMD SMI as a fallback,"
+                    "but note that this is only supported for "
+                    "single-GPU systems."
+                )
+                raise formatting_error
 
         self.primary_context = None
 

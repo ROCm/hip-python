@@ -1,6 +1,6 @@
 # MIT License
 #
-# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+# Modifications Copyright (C) 2023-2026 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -64,6 +64,9 @@ Attributes (Controllable via Environment Variables ``NUMBA_HIP_<attribute>``):
         an unusual name. If this environment variable
         is set, NUMBA_HIP_LIBCLANG_PATH will be
         ignored.
+    FALLBACK_TO_AMDSMI_FOR_UUID (`bool`):
+        If set to ``True``, when obtaining the GPU UUID via the HIP runtime
+        fails, Numba will attempt to obtain the GPU UUID via AMD's AMD System Management Interface (AMDSMI) library. Defaults to ``False``.
 Note:
     We currently don't want to break out of subfolder
     ``numba/hip``with the changes that we apply to an
@@ -113,6 +116,10 @@ MINIMIZE_IR = bool(
 
 LIBCLANG_PATH = os.environ.get("NUMBA_HIP_LIBCLANG_PATH", None)
 LIBCLANG_FILE = os.environ.get("NUMBA_HIP_LIBCLANG_FILE", None)
+
+FALLBACK_TO_AMDSMI_FOR_UUID = bool(
+    int(os.environ.get("NUMBA_HIP_FALLBACK_TO_AMDSMI_FOR_UUID", False))
+)
 
 
 def get_rocm_path(*subdirs):
