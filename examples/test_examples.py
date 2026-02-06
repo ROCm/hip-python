@@ -35,6 +35,7 @@ props = hiprt.hipDeviceProp_t()
 hiprt.hipGetDeviceProperties(props, 0)
 gpugen = props.gcnArchName.decode("utf-8").split(":")[0]
 have_compatible_gpu_target = gpugen == "gfx90a"
+have_rccl_support = gpugen not in ("gfx1151",)
 
 try:
     from cuda import cuda
@@ -53,8 +54,12 @@ python_examples = [
     "0_Basic_Usage/hipblas_with_numpy_and_cu_mask.py",
     "0_Basic_Usage/hipfft.py",
     "0_Basic_Usage/hiprand_monte_carlo_pi.py",
-    "0_Basic_Usage/rccl_comminitall_bcast.py",
 ]
+
+if have_rccl_support:
+    python_examples += [
+        "0_Basic_Usage/rccl_comminitall_bcast.py"
+    ]
 
 if device_printf_works:
     python_examples += [
