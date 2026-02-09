@@ -173,6 +173,7 @@ Installation
    * 0.58.*
    * 0.59.*
    * 0.60.0
+   * 0.61.2
 
    Other versions have not been tested; using the Numba HIP backend with these versions might work or not.
 
