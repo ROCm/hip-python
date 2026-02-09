@@ -1,6 +1,6 @@
 <!-- MIT License
   --
-  -- Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
+  -- Copyright (c) 2023-2026 Advanced Micro Devices, Inc.
   --
   -- Permission is hereby granted, free of charge, to any person obtaining a copy
   -- of this software and associated documentation files (the "Software"), to deal
@@ -25,62 +25,12 @@
 This repository provides low-level Python and Cython bindings for HIP.
 Currently, only bindings for the AMD GPU backend of HIP are provided.
 
-## Known Issues
-
-### The `hiprand` Cython Module Causes Compiler Error
-
-With all ROCm&trade; versions before and including version 5.6.0,
-compiling/using HIP Python's `hiprand` Cython module results in
-a compiler error.
-
-The error is caused by the following statement in the C compilation
-path of `<path_to_rocm>/hiprand/hiprand_hcc.h`, which is not legal in C
-for aliasing a `struct` type:
-
-```c
-typedef rocrand_generator_base_type hiprandGenerator_st;
-```
-
-#### Workaround (Requires Access to Header File): Edit Header File
-
-For this fix, you need write access to the ROCm&trade; header files.
-Then, modify file `<path_to_rocm>/hiprand/hiprand_hcc.h` such that
-
-```c
-typedef rocrand_generator_base_type hiprandGenerator_st;
-```
-
-becomes
-
-```c
-typedef struct rocrand_generator_base_type hiprandGenerator_st;
-```
-
-### ROCm&trade; 5.5.0 and ROCm&trade; 5.5.1
-
-On systems with ROCm&trade; HIP SDK 5.5.0 or 5.5.1, the examples
-
-* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
-* hip-python/examples/0_Basic_Usage/hiprtc_launch_kernel_no_args.py
-
-abort with errors.
-
-An upgrade to version HIP SDK 5.6 or later (or a downgrade to version 5.4) is
-advised if the showcased functionality is needed.
-
-## Documentation
-
-For examples, guides and API reference, please take a
-look at the official HIP Python documentation pages:
-
-<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
-
 ## LICENSE
 
 ```text
 MIT License
 
-Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
+Copyright (c) 2023-2026 Advanced Micro Devices, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
