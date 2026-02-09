@@ -64,11 +64,10 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 
 ***
 
-> [!WARNING]
-> Currently, we have not uploaded any HIP Python packages to PyPI yet. So far
-> we have only uploaded packages to TestPyPI, mainly intended for internal
-> testing purposes. If you find similar named packages on PyPI they may been
-> provided by others, possibly with malicious intent.
+> [!CAUTION]
+> We have only uploaded HIP Python **dummy** packages to PyPI for security reasons.
+> Note that they do not distribute any HIP Python functionality.
+> Please use the ones from Test PyPI for now.
 
 ### Via TestPyPI
 
@@ -166,104 +165,6 @@ Options:
 ```
 
 <!-- markdownlint-enable  MD013 -->
-
-## Known Compilation Issues
-
-### The `hipsparse` Module won't Compile with Older GCC Release
-
-With all ROCm&trade; versions before version 5.6.0 (exclusive) and older GCC
-versions, compiling HIP Python's `hipsparse` module results in a compiler
-error caused by lines such as:
-
-<!-- markdownlint-disable  MD013 -->
-
-```c
-HIPSPARSE_ORDER_COLUMN [[deprecated("Please use HIPSPARSE_ORDER_COL instead")]] = 1,
-```
-
-<!-- markdownlint-enable  MD013 -->
-
-#### Workaround 1: Disable Build of 'hipsparse' Module
-
-Disabling the build of the `hipsparse` HIP python module can, e.g.,
-be achieved by supplying `--libs "^hipsparse"` to `build.sh`.
-
-#### Workaround 2 (Requires Access to Header File): Edit Header File
-
-For this fix, you need write access to the ROCm&trade; header files.
-Then, e.g., modify file `<path_to_rocm>/hiprand/hiprand_hcc.h` such that:
-
-<!-- markdownlint-disable  MD013 -->
-
-```c
-HIPSPARSE_ORDER_COLUMN [[deprecated("Please use HIPSPARSE_ORDER_COL instead")]] = 1,
-```
-
-<!-- markdownlint-enable  MD013 -->
-
-becomes
-
-<!-- markdownlint-disable  MD013 -->
-
-```c
-HIPSPARSE_ORDER_COLUMN = 1, // [[deprecated("Please use HIPSPARSE_ORDER_COL instead")]] = 1,
-```
-
-<!-- markdownlint-enable  MD013 -->
-
-### The `hiprand` module Won't Compile
-
-With all ROCm&trade; versions before and including version 5.6.0, compiling
-HIP Python's `hiprand` module results in a compiler error.
-
-The error is caused by the following line in the C compilation
-path of `<path_to_rocm>/hiprand/hiprand_hcc.h`, which is not legal in C
-for aliasing a `struct` type:
-
-```c
-typedef rocrand_generator_base_type hiprandGenerator_st;
-```
-
-#### Workaround 1: Disable Build of Hiprand Module
-
-Disabling the build of the `hiprand` HIP python module can, e.g.,
-be achieved by supplying `--libs "^hiprand"` to `build.sh`.
-
-<!-- markdownlint-disable  MD024 -->
-
-#### Workaround 2: (Requires Access to Header File): Edit Header File
-
-<!-- markdownlint-enable  MD013 -->
-
-For this fix, you need write access to the ROCm&trade; header files.
-Then, modify file `<path_to_rocm>/hiprand/hiprand_hcc.h` such that
-
-```c
-typedef rocrand_generator_base_type hiprandGenerator_st;
-```
-
-becomes
-
-```c
-typedef struct rocrand_generator_base_type hiprandGenerator_st;
-```
-
-Note that Cython users will experience the same issue if they use one
-of the Cython modules in their code and use `c` as compilation language.
-
-## Other Known Issues
-
-### ROCm&trade; 5.5.0 and ROCm&trade; 5.5.1
-
-On systems with ROCm&trade; HIP SDK 5.5.0 or 5.5.1, the examples
-
-* hip-python/examples/0\_Basic\_Usage/hiprtc\_launch\_kernel\_args.py
-* hip-python/examples/0\_Basic\_Usage/hiprtc\_launch\_kernel\_no\_args.py
-
-abort with errors.
-
-An upgrade to version HIP SDK 5.6 or later (or a downgrade to version 5.4) is
-advised if the showcased functionality is needed.
 
 ## Documentation
 
