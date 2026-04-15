@@ -50,6 +50,11 @@ dependencies = [
 [project.optional-dependencies]
 test = ["pytest", "cffi"]
 dev = ["pytest", "cffi"]
+rocm-7-2-2 = [
+    "hip-python~=7.2.2.0",
+    "hip-python-as-cuda~=7.2.2.0",
+    "rocm-llvm-python~=7.2.2.0",
+]
 rocm-7-2-1 = [
     "hip-python~=7.2.1.0",
     "hip-python-as-cuda~=7.2.1.0",
