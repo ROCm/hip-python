@@ -40,12 +40,24 @@ def parse_hipify_perl(hipify_perl_path: str):
     """
     cuda2hip = {}
     hip2cuda = {}
-    p_subst = re.compile(r'subst\s*\(\s*"(?P<cuda>\w+)"\s*,\s*"(?P<hip>\w+)"')
+
+    # Examples:
+    # old format: subst("cudaFuncSetAttribute", "hipFuncSetAttribute")
+    # new format: $mappings{"cudaFuncSetAttribute"} = {rep => "hipFuncSetAttribute", type => "execution"};
+    p_mapping_str = "|".join(
+        [
+            r'(subst\s*\(\s*"(?P<cuda>\w+)"\s*,\s*"(?P<hip>\w+)")',
+            r'(\$mappings\{"(?P<cuda2>\w+)"\}\s*=\s*\{\s*rep\s*=>\s*"(?P<hip2>\w+)")',
+        ]
+    )
+    # print(p_mapping_str)
+    p_mapping = re.compile(p_mapping_str)
+
     with open(hipify_perl_path, "r") as infile:
         for ln in infile.readlines():
-            for m in p_subst.finditer(ln):
-                cuda = m.group("cuda")
-                hip = m.group("hip")
+            for m in p_mapping.finditer(ln):
+                cuda = m.group("cuda") or m.group("cuda2")
+                hip = m.group("hip") or m.group("hip2")
                 cuda2hip[cuda] = hip
                 if hip not in hip2cuda:
                     hip2cuda[hip] = []
