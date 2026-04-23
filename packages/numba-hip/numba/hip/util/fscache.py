@@ -43,19 +43,42 @@ def get_cache_dir() -> str:
     )
 
 
-def get_cached_file_path(arch: str, prefix: str, ext: str) -> str:
-    """Returns a (to be) cached file's name given an AMD GPU architecture."""
+def get_cached_file_path(
+    arch: str, prefix: str, ext: str, version: str = None
+) -> str:
+    """Returns a (to be) cached file's name given an AMD GPU architecture.
+
+    Args:
+        arch: AMD GPU architecture (e.g., 'gfx90a', 'gfx942')
+        prefix: File prefix (e.g., 'hipdevicelib')
+        ext: File extension (e.g., 'bc')
+        version: Optional version string to include in cache key (e.g., LLVM version)
+    """
     arch = arch.replace(" ", "")
-    return os.path.join(get_cache_dir(), f"{prefix}_{arch}.{ext}")
+    if version:
+        # Sanitize version string for filename use
+        version_safe = version.replace(".", "_").replace(" ", "")
+        filename = f"{prefix}_{arch}_v{version_safe}.{ext}"
+    else:
+        filename = f"{prefix}_{arch}.{ext}"
+    return os.path.join(get_cache_dir(), filename)
 
 
-def read_cached_file(arch: str, prefix: str, ext: str):
+def read_cached_file(arch: str, prefix: str, ext: str, version: str = None):
     """Loads a cached file or throws FileNotFoundError if file doesn't exist.
+
+    Args:
+        arch: AMD GPU architecture
+        prefix: File prefix
+        ext: File extension
+        version: Optional version string to include in cache key
 
     See:
         `_write_cached_file`.
     """
-    with open(get_cached_file_path(arch, prefix, ext), "rb") as infile:
+    with open(
+        get_cached_file_path(arch, prefix, ext, version), "rb"
+    ) as infile:
         content = infile.read()
     return content
 
@@ -65,9 +88,17 @@ def write_cached_file(
     arch,  # type: str
     prefix,  # type: str
     ext,  # type: str
+    version=None,  # type: str | None
 ):
     """
-    Loads a cached file or throws FileNotFoundError if file doesn't exist.
+    Writes content to cache file.
+
+    Args:
+        content: Binary content to cache
+        arch: AMD GPU architecture
+        prefix: File prefix
+        ext: File extension
+        version: Optional version string to include in cache key
 
     Note:
         We apply a write-replace/rename strategy to ensure that
@@ -80,7 +111,7 @@ def write_cached_file(
     Note:
         Caller is reponsible for locking this operation with a threading lock if necessary.
     """
-    dest = get_cached_file_path(arch, prefix, ext)
+    dest = get_cached_file_path(arch, prefix, ext, version)
     tmp_dest = f"{dest}-{os.getpid()}"
     with open(tmp_dest, "wb") as outfile:
         outfile.write(content)

@@ -57,6 +57,10 @@ from .hipdevicelib import HIPDeviceLib as _HIPDeviceLib
 
 _lock = threading.Lock()
 
+_LLVM_VERSION_STRING = (
+    f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}"
+)
+
 
 def _setup_libclang():
     """Initialize libclang."""
@@ -194,6 +198,9 @@ def get_llvm_bc(amdgpu_arch: str):
         the result, it is stored into the aforementioned directory
         so that the next lookup (by a different process) will find it.
 
+        The cache key includes both the architecture and LLVM version
+        to prevent loading incompatible bitcode when switching ROCm versions.
+
     Args:
         amdgpu_arch (`str`):
             An AMD GPU arch identifier such as `gfx90a` (MI200 series) or `gfx942` (MI300 series).
@@ -211,6 +218,7 @@ def get_llvm_bc(amdgpu_arch: str):
                         amdgpu_arch,
                         prefix=_HIPDEVICELIB,
                         ext=_EXT,
+                        version=_LLVM_VERSION_STRING,
                     )  # ! uses hidden attribute '_bitcode'
                 found_cached_file = True
             except FileNotFoundError:
@@ -220,7 +228,11 @@ def get_llvm_bc(amdgpu_arch: str):
     if not found_cached_file and _hipconfig.USE_DEVICE_LIB_CACHE:
         with _lock:
             _fscache.write_cached_file(
-                bc, amdgpu_arch, prefix=_HIPDEVICELIB, ext=_EXT
+                bc,
+                amdgpu_arch,
+                prefix=_HIPDEVICELIB,
+                ext=_EXT,
+                version=_LLVM_VERSION_STRING,
             )
     return bc
 
