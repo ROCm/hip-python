@@ -20,18 +20,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+[build-system]
+requires = ["setuptools>=77.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "numba-hip"
 version = "0.1.6"
 description = "Numba HIP - Numba backend for AMD GPUs"
 readme = { file = "README.rst", content-type = "text/x-rst" }
 authors = [{ name = "Advanced Micro Devices, Inc." }]
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.9"
 classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Scientific/Engineering",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -139,9 +143,6 @@ rocm-6-3-0 = [
 [project.urls]
 Homepage = "https://github.com/rocm/numba-hip"
 Documentation = "https://github.com/rocm/numba-hip"
-
-[tool.setuptools]
-license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 where = ["."]
