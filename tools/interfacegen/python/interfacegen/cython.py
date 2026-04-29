@@ -2554,22 +2554,35 @@ class CythonBackend:
     def create_c_interface_impl_part(self, dll: str, util_pkg: str):
         result = []
         lib_handle = "_lib_handle"
+        # The DLL stem used to resolve the path lazily via
+        # rocm.bindings.util.paths.get_library_path. Strip a trailing ".so"/.dll
+        # so e.g. "libamdhip64.so" becomes "amdhip64".
+        dll_stem = dll
+        for _suffix in (".so", ".dll", ".dylib"):
+            if dll_stem.endswith(_suffix):
+                dll_stem = dll_stem[: -len(_suffix)]
+                break
+        if dll_stem.startswith("lib"):
+            dll_stem = dll_stem[len("lib"):]
         result.append(
             textwrap.dedent(
                 f"""\
-            cimport {util_pkg}.posixloader as loader
+            cimport {util_pkg}.loader as loader
             cdef void* {lib_handle} = NULL
 
-            DLL = b"{dll}"
+            cdef bytes _dll_path = b""  # Cached path, computed on first access
 
             cdef int __init() except 1 nogil:
-                global DLL
-                global {lib_handle}
+                global _dll_path, {lib_handle}
                 cdef char* dll = NULL
                 if {lib_handle} == NULL:
                     with gil:
-                        dll = DLL
-                    return loader.open_library(&{lib_handle},dll)
+                        # Lazy path resolution - only happens on first function call
+                        if not _dll_path:
+                            from rocm.bindings.util.paths import get_library_path
+                            _dll_path = get_library_path('{dll_stem}')
+                        dll = _dll_path
+                    return loader.open_library(&{lib_handle}, dll)
                 return 0
 
             cdef int __init_symbol(void** result, const char* name) except 1 nogil:
@@ -2763,12 +2776,15 @@ class CythonModuleGenerator:
         Args:
             module_name (str): Name of the module that should be generated. Influences filesnames.
         """
-        cmodule_name = f"c{self.module_name}"
+        # C-level wrappers use the `cy` prefix (modern hip-python convention,
+        # plan §B.5). Disambiguates Cython-level pxd/pyx files from anything
+        # `c` might collide with.
+        cmodule_name = f"cy{self.module_name}"
 
         python_interface_decl_prolog = (
             self.python_interface_decl_prolog
             + f"\ncimport {self.util_pkg}.types"
-            + f"\nfrom {self.pkg_name} cimport {cmodule_name}\n\n"
+            + f"\ncimport {self.pkg_name}.{cmodule_name} as {cmodule_name}\n\n"
         )
 
         with open(f"{output_dir}/{cmodule_name}.pxd", "w") as outfile:

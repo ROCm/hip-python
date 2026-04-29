@@ -59,7 +59,7 @@ def generate_cuda_interop_module_files(
     hip2cuda: dict,
     license_text: str,
     warn: bool = True,
-    cuda_cmodule_prefix="c",
+    cuda_cmodule_prefix="cy",
     extra_cimports="",
     extra_imports="",
     extra_cmodule_cimports="",
@@ -98,8 +98,10 @@ def generate_cuda_interop_module_files(
     global HAVE_LEVENSHTEIN
 
     cuda_global_module_as_tuple = cuda_global_module_name.split(".")
+    # Modern layout: <repo_root>/python/hip-python-interop/<cuda parts>/
     cuda_parent_package_dir = os.path.join(
-        output_dir, "hip-python-as-cuda", *(cuda_global_module_as_tuple[:-1])
+        output_dir, "python", "hip-python-interop",
+        *(cuda_global_module_as_tuple[:-1]),
     )
     cuda_parent_package = ".".join(cuda_global_module_as_tuple[:-1])
     cuda_module_name = cuda_global_module_as_tuple[-1]
@@ -107,8 +109,12 @@ def generate_cuda_interop_module_files(
     indent = " " * 4
 
     hip_module_name = hip_generator.module_name
-    hip_cmodule_name = f"hip.c{hip_module_name}"
-    hip_module_cimport_name = f"hip.{hip_module_name}"
+    # Use short aliases (e.g. `cyhip`, `hip`) so generated bodies can refer to
+    # types as `cyhip.X` / `hip.X` instead of the long dotted form.
+    hip_cmodule_alias = f"cy{hip_module_name}"
+    hip_module_alias = hip_module_name
+    hip_cmodule_name = f"rocm.bindings.{hip_cmodule_alias}"
+    hip_module_cimport_name = f"rocm.bindings.{hip_module_alias}"
     hip_backend = hip_generator.backend
 
     c_interface_decl_part = [
@@ -116,7 +122,7 @@ def generate_cuda_interop_module_files(
         textwrap.dedent(
             f"""\
 
-            cimport {hip_cmodule_name}
+            cimport {hip_cmodule_name} as {hip_cmodule_alias}
             """
         )
         + extra_cmodule_cimports,
@@ -128,8 +134,8 @@ def generate_cuda_interop_module_files(
 
             __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-            cimport {hip_cmodule_name}
-            cimport {hip_module_cimport_name}
+            cimport {hip_cmodule_name} as {hip_cmodule_alias}
+            cimport {hip_module_cimport_name} as {hip_module_alias}
             """
         )
         + extra_cimports,
@@ -151,9 +157,8 @@ def generate_cuda_interop_module_files(
             import os
             import enum
 
-            import hip.{hip_module_name}
-            {hip_module_name} = hip.{hip_module_name} # makes {hip_module_name} types and routines accessible without import
-                                        # allows checks such as `hasattr(cuda.{cuda_module_name},"{hip_module_name}")`
+            from rocm.bindings import {hip_module_name}  # makes {hip_module_name} types and routines accessible without import
+                                                       # allows checks such as `hasattr(cuda.{cuda_module_name},"{hip_module_name}")`
 
             hip_python_mod = {hip_module_name}
             globals()["HIP_PYTHON"] = True
@@ -211,9 +216,9 @@ def generate_cuda_interop_module_files(
         HIP_PYTHON ({python_interface_pyobj_role_template.format(name="bool")}):
             `True`.
         hip_python_mod (module):
-            A reference to the module {python_interface_pyobj_role_template.format(name=f"hip.{hip_module_name}")}.
+            A reference to the module {python_interface_pyobj_role_template.format(name=f"rocm.bindings.{hip_module_name}")}.
         {hip_module_name} (module):
-            A reference to the module {python_interface_pyobj_role_template.format(name=f"hip.{hip_module_name}")}.
+            A reference to the module {python_interface_pyobj_role_template.format(name=f"rocm.bindings.{hip_module_name}")}.
         """
         )
     )
@@ -234,7 +239,7 @@ def generate_cuda_interop_module_files(
                 f"from {hip_cmodule_name} cimport {hip_constant_name}"
             )
             python_constants.append(
-                f"{hip_constant_name} = {hip_cmodule_name}.{hip_constant_name}"
+                f"{hip_constant_name} = {hip_cmodule_alias}.{hip_constant_name}"
             )
             if hip_constant_name in hip2cuda:
                 for cuda_constant_name in hip2cuda[hip_constant_name]:
@@ -242,7 +247,7 @@ def generate_cuda_interop_module_files(
                         f"from {hip_cmodule_name} cimport {hip_constant_name} as {cuda_constant_name}"
                     )
                     python_constants.append(
-                        f"{cuda_constant_name} = {hip_cmodule_name}.{hip_constant_name}"
+                        f"{cuda_constant_name} = {hip_cmodule_alias}.{hip_constant_name}"
                     )
             else:
                 warn_(hip_constant_name)
@@ -430,7 +435,7 @@ def generate_cuda_interop_module_files(
                         f"from {hip_cmodule_name} cimport {hip_name} as {cuda_name}"
                     )
                     #
-                    cdef_subclass = f"cdef class {cuda_name}({hip_module_cimport_name}.{hip_name}):\n{indent}pass"
+                    cdef_subclass = f"cdef class {cuda_name}({hip_module_alias}.{hip_name}):\n{indent}pass"
                     python_interface_decl_part.append(cdef_subclass)
                     python_interface_impl_part.append(cdef_subclass)
                     all.append(cuda_name)

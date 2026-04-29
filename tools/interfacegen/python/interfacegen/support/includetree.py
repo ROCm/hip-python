@@ -178,7 +178,7 @@ class File(Node):
             dep_name = dep.py_name
 
             self.codegen.c_interface_decl_prolog += (
-                f"from {dep_pkg_prefix}.c{dep_name} cimport *\n"
+                f"from {dep_pkg_prefix}.cy{dep_name} cimport *\n"
             )
             self.codegen.python_interface_decl_prolog += "\n"
             self.codegen.python_interface_impl_prolog += "\n"
