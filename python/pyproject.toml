@@ -1,0 +1,25 @@
+[build-system]
+requires = ["scikit-build-core>=0.11.2", "cython>=3.0"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "hip-python-all"
+version = "0.0.0"
+description = "Unified build for all hip-python packages (builds extensions, packages created separately)"
+requires-python = ">=3.9"
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+build-dir = "build/{wheel_tag}"
+cmake.build-type = "Release"
+ninja.make-fallback = false
+
+# Build targets are controlled by CMake options:
+# - HIP_PYTHON_BUILD_UTIL (default: ON)
+# - HIP_PYTHON_BUILD_HIP (default: ON)
+# - HIP_PYTHON_BUILD_LIBRARIES (default: ON)
+# - HIP_PYTHON_BUILD_INTEROP (default: ON)
+# Set via: -Ccmake.define.HIP_PYTHON_BUILD_XXX=OFF
+
+# Don't create a wheel for "hip-python-all" - just build extensions
+wheel.packages = []

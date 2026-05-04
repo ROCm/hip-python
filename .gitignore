@@ -4,12 +4,14 @@ __pycache__
 hip-python/docs/_build
 _venv
 _build
+hip-python/cmake
 hip-python/build
 hip-python/dist/
 hip-python/hip/_version.py
 hip-python/hip_python.egg-info/
+hip-python-as-cuda/cmake
 hip-python-as-cuda/build
 hip-python-as-cuda/cuda/_version.py
 hip-python-as-cuda/dist/
 hip-python-as-cuda/hip_python_as_cuda.egg-info/
-hip-python-as-cuda/requirements.txt
+
