@@ -273,6 +273,35 @@ install(
   COMPONENT rocm-bindings-compiler
 )
 
+# Install generator-emitted .pyi type stubs for the high-level Python API
+# modules. cy* modules are cimport-only and deliberately not stubbed (see
+# plan §B.2). All globs are no-ops until interfacegen actually emits the
+# stubs.
+file(GLOB _compiler_pyi_top
+     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+     "${CMAKE_CURRENT_SOURCE_DIR}/rocm/bindings/*.pyi")
+if(_compiler_pyi_top)
+  install(
+    FILES ${_compiler_pyi_top}
+    DESTINATION rocm/bindings
+    COMPONENT rocm-bindings-compiler
+  )
+endif()
+install(
+  DIRECTORY rocm/bindings/llvm/c/
+  DESTINATION rocm/bindings/llvm/c
+  COMPONENT rocm-bindings-compiler
+  FILES_MATCHING
+    PATTERN "*.pyi"
+)
+install(
+  DIRECTORY rocm/bindings/llvm/config/
+  DESTINATION rocm/bindings/llvm/config
+  COMPONENT rocm-bindings-compiler
+  FILES_MATCHING
+    PATTERN "*.pyi"
+)
+
 # Install Python modules
 install(
   FILES

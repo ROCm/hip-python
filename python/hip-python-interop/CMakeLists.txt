@@ -84,6 +84,21 @@ install(
   COMPONENT hip-python-interop
 )
 
+# Install generator-emitted .pyi type stubs for the high-level Python API
+# modules (driver.pyi, runtime.pyi, nvrtc.pyi). cy* modules are
+# cimport-only and deliberately not stubbed (see plan §B.2). No-op until
+# the interfacegen code generator emits the stubs.
+file(GLOB _interop_pyi
+     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+     "${CMAKE_CURRENT_SOURCE_DIR}/cuda/bindings/*.pyi")
+if(_interop_pyi)
+  install(
+    FILES ${_interop_pyi}
+    DESTINATION cuda/bindings
+    COMPONENT hip-python-interop
+  )
+endif()
+
 # NOTE: cuda/ and cuda/bindings/ are PEP 420 implicit namespace packages
 # They intentionally have NO __init__.py files to allow multiple packages
 # to contribute modules to the same namespace.

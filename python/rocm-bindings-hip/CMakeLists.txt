@@ -128,6 +128,23 @@ install(
   COMPONENT rocm-bindings-hip
 )
 
+# Install generator-emitted .pyi type stubs alongside the .so extensions
+# so static type checkers (mypy, pyright) and IDEs find them automatically.
+# Only the high-level Python modules (hip.pyi, hiprtc.pyi) get stubs —
+# the cy* C-level modules are cimport-only (see plan §B.2).
+# Glob is best-effort: this is a no-op until the interfacegen code generator
+# emits the stubs.
+file(GLOB _rocm_bindings_hip_pyi
+     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+     "${CMAKE_CURRENT_SOURCE_DIR}/rocm/bindings/*.pyi")
+if(_rocm_bindings_hip_pyi)
+  install(
+    FILES ${_rocm_bindings_hip_pyi}
+    DESTINATION rocm/bindings
+    COMPONENT rocm-bindings-hip
+  )
+endif()
+
 # Install Python extension module (hiprtc_pyext.py)
 install(
   FILES rocm/bindings/hiprtc_pyext.py

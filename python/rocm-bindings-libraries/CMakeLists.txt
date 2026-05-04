@@ -93,6 +93,17 @@ foreach(_lib IN LISTS HIP_PYTHON_SELECTED_LIBRARIES)
     DESTINATION rocm/bindings
     COMPONENT rocm-bindings-libraries
   )
+
+  # Install generator-emitted .pyi type stubs for the high-level module
+  # (cy* modules are cimport-only — no stubs; see plan §B.2). No-op until
+  # the interfacegen code generator emits the file.
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/rocm/bindings/${_lib}.pyi")
+    install(
+      FILES rocm/bindings/${_lib}.pyi
+      DESTINATION rocm/bindings
+      COMPONENT rocm-bindings-libraries
+    )
+  endif()
 endforeach()
 
 # NOTE: rocm/bindings/ is a PEP 420 implicit namespace package
