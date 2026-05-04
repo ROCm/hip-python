@@ -54,6 +54,31 @@ modules that you need as shown below:
 
 And you are ready to go!
 
+.. note::
+
+   The legacy ``from hip import hip`` (and friends) imports continue to
+   work — they are served by the ``hip-python`` metapackage as a
+   compatibility shim that re-exports ``rocm.bindings.*``. New code
+   should prefer ``from rocm.bindings import hip`` (or
+   ``import rocm.bindings.hip as hip``) directly. The CUDA interop
+   layer similarly prefers ``from cuda.bindings import driver, runtime,
+   nvrtc``.
+
+   .. code-block:: py
+      :linenos:
+      :caption: Preferred imports for new code
+
+      from rocm.bindings import hip
+      from rocm.bindings import hiprtc
+      # or
+      import rocm.bindings.hip as hip
+      import rocm.bindings.hiprtc as hiprtc
+
+   Both styles are supported and not deprecated; the
+   ``rocm.bindings.*`` style is more explicit about which package
+   supplies the symbol and matches the modern per-package layout
+   used by every example in this guide.
+
 .. _sec_obtaining_device_properties:
 
 Obtaining Device Properties

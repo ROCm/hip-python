@@ -94,6 +94,19 @@ the individual modules that you need as shown below:
 
 .. note::
 
+   The legacy ``from cuda import cuda`` (and friends) imports continue
+   to work as a compatibility shim. New code should prefer
+   ``from cuda.bindings import driver, runtime, nvrtc`` directly,
+   matching the modern per-package layout. Both styles are supported
+   and not deprecated; the ``cuda.bindings.*`` style is more explicit
+   about which package supplies the symbol.
+
+   This mirrors the analogous guidance for the HIP side
+   (``from hip import hip`` → ``from rocm.bindings import hip``); see
+   the corresponding note in :doc:`1_usage`.
+
+.. note::
+
    When writing this documentation, only Python and Cython modules for the
    libraries ``cuda`` (CUDA Driver), ``cudart`` (CUDA runtime), and ``nvrtc`` (NVRTC)
    were shipped by CUDA Python. Therefore, HIP Python only provides

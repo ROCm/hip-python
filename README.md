@@ -102,6 +102,16 @@ It produces five wheels:
 Plus a `hip-python` metapackage providing the legacy `hip` import namespace.
 
 > [!NOTE]
+> Both import styles work. The legacy `from hip import hip, hiprtc` (and
+> `from cuda import cuda, cudart, nvrtc`) imports continue to work as
+> compatibility shims. **New code should prefer**
+> `from rocm.bindings import hip, hiprtc` (or `from cuda.bindings import
+> driver, runtime, nvrtc`) directly — the `rocm.bindings.*` and
+> `cuda.bindings.*` styles are more explicit about which package supplies
+> the symbol and match the modern per-package layout used throughout the
+> documentation and examples.
+
+> [!NOTE]
 > Most users do **not** need to build from source — prebuilt wheels are
 > distributed via PyPI for every supported ROCm release. See the [Install
 > Prebuilt Packages](#install-prebuilt-packages) section above.
