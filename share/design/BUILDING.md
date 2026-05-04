@@ -43,7 +43,7 @@ hip-python/
 │   ├── HipPythonBuild.cmake       Shared helpers (see below)
 │   └── render_version.cmake
 ├── python/
-│   ├── CMakeLists.txt             Unified top-level build; orchestrates all five packages
+│   ├── CMakeLists.txt             Unified top-level build; orchestrates all five packages + docs
 │   ├── pyproject.toml             Metadata for the `hip-python` (root) wheel target
 │   ├── rocm-bindings-util/        per-package source tree + CMakeLists.txt + pyproject.toml
 │   ├── rocm-bindings-hip/         …
@@ -51,6 +51,8 @@ hip-python/
 │   ├── rocm-bindings-compiler/    …
 │   ├── hip-python-interop/        …
 │   └── hip-python/                pure-Python compatibility shim
+├── docs_src/                      Sphinx source (reStructuredText)
+├── docs/                          Generator output: rendered Sphinx HTML (when HIP_PYTHON_BUILD_DOCS=ON)
 └── share/design/                  this folder (BUILDING.md, CODEGEN.md)
 ```
 
@@ -338,6 +340,54 @@ so the resulting source distribution is self-contained.
 - Python packages: `scikit-build-core>=0.11.2`, `cython>=3.0,<3.1`,
   `build`. Optional for production wheels: `auditwheel`, `patchelf`.
 - **ROCm SDK** at `${ROCM_PATH}` (defaults to `/opt/rocm`).
+- For docs builds: `sphinx`, `sphinx-autoapi`, `rocm-docs-core`, plus the
+  rest of `docs_src/sphinx/requirements.txt`.
+
+## Documentation build
+
+The Sphinx HTML documentation is a separate, optional CMake target that runs
+**in parallel to** and **independently of** the wheel build. It is gated on
+`HIP_PYTHON_BUILD_DOCS=ON`.
+
+The doc input language is **reStructuredText** (under `docs_src/`), distinct
+from the Markdown READMEs and design docs at the repo root. Sphinx parses
+Python sources and `.pyi` stubs directly via
+[`sphinx-autoapi`](https://sphinx-autoapi.readthedocs.io/), so the docs build
+does **not** require the wheels to be built or installed first.
+
+CMake options:
+
+| Option | Default | Effect |
+|---|---|---|
+| `HIP_PYTHON_BUILD_DOCS` | `OFF` | Gates target creation. When ON, fails fast if `python -m sphinx` is unavailable. |
+| `HIP_PYTHON_DOCS_OUTPUT_DIR` | `<repo>/docs` | Destination directory for the rendered HTML. The default keeps the served URL at `docs/index.html`. Override for per-version layouts (e.g. `docs/rocm-rel-7.13.0`) or direct hosting (`/var/www/...`). |
+| `HIP_PYTHON_DOCS_DOCTREE_DIR` | `<build>/docs/_doctrees` | Sphinx intermediate cache. Default keeps it inside the build dir. |
+
+Usage:
+
+```sh
+cd python
+cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
+cmake --build build --target docs
+# open ../docs/index.html
+```
+
+The `docs` target is **not** part of `all_wheels` — neither depends on the
+other. They can run concurrently:
+
+```sh
+cmake --build build --target all_wheels docs -j$(nproc)
+```
+
+The TOC structure (`docs_src/sphinx/_toc.yml.in`) is hand-maintained with one
+subtree per package, so generator-emitted per-module pages slot in cleanly
+without TOC edits. Generator-emitted pages live next to handcoded pages
+under `docs_src/python_api/` and `docs_src/python_api_manual/`; the
+`.gitignore` in the former ignores generator output by default while
+force-tracking the handcoded `rocm.bindings.util.rst` and `hip.rst`.
+
+See [CODEGEN.md](CODEGEN.md) for the full list of generator-owned
+documentation files.
 
 ## Common build invocations
 
@@ -372,6 +422,14 @@ cmake --build build --target all_wheels
 
 # Single package wheel from the unified build:
 cd python && cmake -B build && cmake --build build --target util_wheel
+
+# Build the documentation (independent of all_wheels):
+cd python && cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
+cmake --build build --target docs
+
+# Wheels and docs in parallel:
+cd python && cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
+cmake --build build --target all_wheels docs -j$(nproc)
 ```
 
 ## See also

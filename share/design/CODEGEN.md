@@ -28,7 +28,9 @@ A release flow looks like this:
 +--------------------+                    +-----------+-----------+
                                                        |
                                                   generated
-                                              .pxd / .pyx files
+                                          .pxd / .pyx + .pyi stubs
+                                          + docs_src/python_api/*.rst
+                                          + cmake/generated_*.cmake
                                                        v
                                           +-----------------------+
                                           | Release branch:       |
@@ -36,9 +38,10 @@ A release flow looks like this:
                                           | (base + generated)    |
                                           +-----------+-----------+
                                                        |
-                                                  built into
+                                              built into wheels (PyPI)
+                                              + Sphinx HTML (docs/)
                                                        v
-                                                   Wheels (PyPI)
+                                                  Wheels + Docs
 ```
 
 ## The two branch tiers in `hip-python`
@@ -83,6 +86,9 @@ For each release run, `recipes/hip_python/generate_hip_python.sh` writes:
 | `python/rocm-bindings-libraries/cmake/generated_modules.cmake` | Module list for the libraries package — drives the per-library CMake foreach loop. |
 | `python/rocm-bindings-compiler/cmake/generated_modules.cmake` | LLVM-C / transforms / config / COMGR module lists. |
 | `python/rocm-bindings-{hip,libraries,compiler}/cmake/generated_versions.cmake`<br>`python/hip-python-interop/cmake/generated_versions.cmake` | Version metadata: ROCm version, HIP version, code-generator branch/rev, hip-python branch/rev. Consumed by the existing `configure_file("_version.py.in" "_version.py")` flow. |
+| `<package>/<rocm-or-cuda>/<…>/<name>.pyi` (high-level modules only) | Type-stub files emitted alongside every high-level `<name>.pxd`/`.pyx` pair. Used by static type checkers (mypy, pyright) and IDEs to resolve symbol signatures without the compiled extensions on `sys.path`. The cy* C-level wrappers do **not** get `.pyi` — they are `cimport`-only and have no honest Python type-system equivalents (see plan §B.2). Installed alongside the corresponding `.so`. |
+| `docs_src/python_api/<dotted-module-name>.rst` (high-level modules) | Sphinx wrapper page that points `sphinx-autoapi` at the high-level Python module. One file per generated module (`rocm.bindings.hipblas.rst`, `cuda.bindings.driver.rst`, etc.). |
+| `docs_src/python_api/<dotted-module-name>.rst` (cy* wrappers) | Sphinx wrapper page for each generated `cy<name>.pxd`. Uses `literalinclude` to embed the .pxd source with Cython syntax highlighting — the `.pxd` itself is the readable, source-of-truth contract for downstream Cython users. No autoapi or `.pyi` involved. (See plan §B.3.) |
 
 ### Forbidden outputs (handcoded; generator must NEVER write)
 
