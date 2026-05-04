@@ -262,3 +262,56 @@ if(ALL_WHEEL_TARGETS)
   )
   message(STATUS "Aggregate wheel target 'all_wheels' created with: ${ALL_WHEEL_TARGETS}")
 endif()
+
+# ---------------------------------------------------------------------------
+# Documentation build (Sphinx)
+# ---------------------------------------------------------------------------
+#
+# The `docs` target is independent of `all_wheels` — it can be built
+# standalone, in parallel with the wheel targets, or skipped entirely.
+# Sphinx parses Python (and .pyi stub) source files via sphinx-autoapi,
+# so the docs build does NOT require the wheels to be installed.
+#
+option(HIP_PYTHON_BUILD_DOCS "Build the Sphinx documentation" OFF)
+
+set(HIP_PYTHON_DOCS_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../docs"
+    CACHE PATH "Destination directory for the rendered HTML documentation")
+set(HIP_PYTHON_DOCS_DOCTREE_DIR "${CMAKE_BINARY_DIR}/docs/_doctrees"
+    CACHE PATH "Directory for Sphinx's intermediate doctree cache")
+
+if(HIP_PYTHON_BUILD_DOCS)
+  # Fail fast if Sphinx isn't importable.
+  execute_process(
+    COMMAND "${Python_EXECUTABLE}" -c "import sphinx"
+    RESULT_VARIABLE _sphinx_check
+    OUTPUT_QUIET ERROR_QUIET
+  )
+  if(NOT _sphinx_check EQUAL 0)
+    message(FATAL_ERROR
+      "HIP_PYTHON_BUILD_DOCS=ON but `${Python_EXECUTABLE} -m sphinx` "
+      "is not available. Install the docs dependencies (see "
+      "docs_src/sphinx/requirements.txt) or disable this option.")
+  endif()
+
+  set(_docs_source_dir "${CMAKE_CURRENT_SOURCE_DIR}/../docs_src")
+  message(STATUS "Sphinx docs target enabled")
+  message(STATUS "  source:    ${_docs_source_dir}")
+  message(STATUS "  output:    ${HIP_PYTHON_DOCS_OUTPUT_DIR}")
+  message(STATUS "  doctrees:  ${HIP_PYTHON_DOCS_DOCTREE_DIR}")
+
+  add_custom_target(docs
+    COMMAND "${CMAKE_COMMAND}" -E make_directory
+            "${HIP_PYTHON_DOCS_OUTPUT_DIR}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory
+            "${HIP_PYTHON_DOCS_DOCTREE_DIR}"
+    COMMAND "${Python_EXECUTABLE}" -m sphinx
+            -T -E -b html
+            -d "${HIP_PYTHON_DOCS_DOCTREE_DIR}"
+            -D language=en
+            "${_docs_source_dir}"
+            "${HIP_PYTHON_DOCS_OUTPUT_DIR}"
+    WORKING_DIRECTORY "${_docs_source_dir}"
+    COMMENT "Building Sphinx HTML documentation → ${HIP_PYTHON_DOCS_OUTPUT_DIR}"
+    VERBATIM
+  )
+endif()
