@@ -96,8 +96,8 @@ Via :py:obj:`~.hipGetDeviceProperties`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A number of device properties can be obtained via the
-:py:obj:`~.hipDeviceProp_t` object. After creation (line 12) this object must
-be passed to the :py:obj:`~.hipGetDeviceProperties` routine (line 13). The
+:py:obj:`~.hipDeviceProp_t` object. After creation (line 14) this object must
+be passed to the :py:obj:`~.hipGetDeviceProperties` routine (line 15). The
 second argument (``0``) is the device number.
 
 Running the :ref:`example below <hip_deviceproperties>` will print out the
@@ -115,7 +115,7 @@ values of all queried device properties before the program eventually prints
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_deviceproperties.py
    :language: python
    :start-after: [literalinclude-begin]
-   :emphasize-lines: 12-13
+   :emphasize-lines: 14-15
    :linenos:
    :name: hip_deviceproperties
    :caption: Obtaining Device Properties via hipGetDeviceProperties
@@ -126,7 +126,7 @@ Via :py:obj:`~.hipDeviceGetAttribute`
 You can also obtain some of the properties that appeared in the
 :ref:`previous example <hip_deviceproperties>` plus a number of additional
 properties via the :py:obj:`~.hipDeviceGetAttribute` routine as shown in the
-:ref:`example below <hip_deviceattributes>` (line 26). In the example below,
+:ref:`example below <hip_deviceattributes>` (line 25). In the example below,
 we query integer-type device attributes/properties. Therefore, we supply the
 address of a :py:obj:`ctypes.c_int` variable as first argument. The respective
 property, the second argument, is passed as enum constant of type
@@ -138,7 +138,7 @@ attributes before the program prints ``"ok"`` and quits.
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_deviceattributes.py
    :language: python
    :start-after: [literalinclude-begin]
-   :emphasize-lines: 25-26
+   :emphasize-lines: 25
    :linenos:
    :name: hip_deviceattributes
    :caption: Obtaining Device Properties via hipDeviceGetAttribute
@@ -164,7 +164,7 @@ The :ref:`below example <hip_stream>` showcases how to use HIP Python's
 :py:obj:`~.hipStream_t` objects and the associated HIP Python routines. The
 example further demonstrates that you can pass Python 3 :py:obj:`array.array`
 types directly to HIP Python interfaces that expect an host buffer. One
-example of such interfaces is :py:obj:`~.hipMemcpyAsync` (lines 23 and 25).
+example of such interfaces is :py:obj:`~.hipMemcpyAsync` (lines 23 and 29).
 
 .. literalinclude:: ../../examples/0_Basic_Usage/hip_stream.py
    :language: python
@@ -177,13 +177,13 @@ example of such interfaces is :py:obj:`~.hipMemcpyAsync` (lines 23 and 25).
 
    1. A host buffer is filled with random numbers (line 18) before
       it is asynchronously copied to the device (line 23), where a asynchronous
-      :py:obj:`~.hipMemsetAsync` (same stream) resets all bytes to ``0`` (line 24).
+      :py:obj:`~.hipMemsetAsync` (same stream) resets all bytes to ``0`` (line 28).
    2. An asynchronous memcpy (same stream) is then issued to copy the device data
-      back to the host (line 25). All operations within the stream are executed in
+      back to the host (line 29). All operations within the stream are executed in
       order.
    3. As the ``~Async`` operations are non-blocking, the host waits via
       :py:obj:`~.hipStreamSynchronize` until operations in the stream have been
-      completed (line 26) before destroying the stream (line 27).
+      completed (line 34) before destroying the stream (line 35).
    4. Eventually the program deallocates device data via :py:obj:`~.hipFree` and
       checks if all bytes in the host buffer are now set to ``0``.
       If so, it quits with an "ok".
@@ -277,18 +277,18 @@ fixed precision.
 The :ref:`below example <hiprtc_launch_kernel_args>` demonstrates the usage of
 :py:obj:`~.hipModuleLaunchKernel` by means of a simple kernel, which scales a
 vector by a factor. Here, we pass multiple arguments that require different
-alignments to the aforementioned routine in lines 85-90. We insert some
+alignments to the aforementioned routine in lines 90-95. We insert some
 additional ``unused*`` arguments into the ``extra`` :py:obj:`tuple` to stress the
 argument buffer allocator. Note the :py:obj:`ctypes` object construction for
 scalars and the direct passing of the device array ``x_d``. Compare the argument
-list with the signature of the kernel defined in line 23. The example also
+list with the signature of the kernel defined in line 24. The example also
 introduces HIP Python's :py:obj:`~.dim3` struct (default value per dimension
 is 1), which can be unpacked just like a :py:obj:`tuple` or :py:obj:`list`.
 
 .. literalinclude:: ../../examples/0_Basic_Usage/hiprtc_launch_kernel_args.py
    :language: python
    :start-after: [literalinclude-begin]
-   :emphasize-lines: 85-90, 72-73, 23
+   :emphasize-lines: 90-95, 77-78, 24
    :linenos:
    :name: hiprtc_launch_kernel_args
    :caption: Compiling and Launching Kernels With Arguments
@@ -320,7 +320,7 @@ thus can be directly passed to those interfaces.
 .. literalinclude:: ../../examples/0_Basic_Usage/hipblas_with_numpy.py
    :language: python
    :start-after: [literalinclude-begin]
-   :emphasize-lines: 23-24, 35-36, 39-41, 44
+   :emphasize-lines: 26-27, 38-43, 46-52, 55-57
    :linenos:
    :name: hipblas_with_numpy
    :caption: hipBLAS and NumPy Interoperability
@@ -328,26 +328,25 @@ thus can be directly passed to those interfaces.
 .. admonition:: What is happening?
 
    1. We initialize two ``float32``-typed :py:obj:`numpy` arrays ``x_h`` and ``y_h`` on
-      the host and fill them with random data (lines 23-24).
+      the host and fill them with random data (lines 26-27).
    2. We compute the expected result on the host via :py:obj:`numpy` array
-      operations (line 27).
-   3. We allocate device analogues for ``x_h`` and ``y_h`` (lines 31-32) and copy the
-      host data over (line 35-36). Note that we can directly pass the
+      operations (line 30).
+   3. We allocate device analogues for ``x_h`` and ``y_h`` (lines 34-35) and copy the
+      host data over (lines 38-43). Note that we can directly pass the
       :py:obj:`numpy` arrays ``x_h`` and ``y_h`` to :py:obj:`~.hipMemcpy`.
    4. Before being able to call one of the compute routines of
       :py:obj:`~.hipblas`, it's necessary to create a :py:obj:`~.hipblas` handle
       via :py:obj:`~.hipblasCreate` that will be passed to every
-      :py:obj:`~.hipblas` routine as first argument (line 39).
-   5. In line 40 follows the call to :py:obj:`~.hipblasSaxpy`, where we pass the
+      :py:obj:`~.hipblas` routine as first argument (line 46).
+   5. In lines 47-51 follows the call to :py:obj:`~.hipblasSaxpy`, where we pass the
       handle as first argument and the address of host :py:obj:`ctypes.c_float`
       variable ``alpha`` as third argument.
-   6. In line 41 the handle is destroyed via :py:obj:`~.hipblasDestroy` because
+   6. In line 52 the handle is destroyed via :py:obj:`~.hipblasDestroy` because
       it is not needed anymore.
-   7. The device data is downloaded in line 44. where we pass ``numpy`` array ``y_h``
-      as destination array.
+   7. The device data is downloaded in lines 55-57, where we pass ``numpy`` array
+      ``y_h`` as destination array.
    8. We compare the expected host result with the downloaded device result
-      (lines 47-50) and print ``"ok"`` if all is fine.
-   9. Finally, we deallocate the device arrays in lines 55-56.
+      (lines 60-63) and print ``"ok"`` if all is fine.
 
 .. _sec_example_hip_python_device_arrays:
 
@@ -371,28 +370,29 @@ subarrays with respect to the specified type and shape information.
    :language: python
    :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 20-21, 25-27, 33, 36
+   :emphasize-lines: 25-26, 30-32, 40, 43-45
    :name: hip_python_device_array
    :caption: Configuring and Slicing HIP Python's DeviceArray
 
 .. admonition:: What is happening?
 
    1. A two-dimensional row-major array of size ``(3,20)`` is created on the host.
-      All elements are initialized to ``1`` (line 20-21).
+      All elements are initialized to ``1`` (lines 25-26).
    2. A device array with the same number of bytes is created on the device (line
-      25).
+      30).
    3. The device array is reconfigured to have ``float32`` type and the shape of
-      the host array (line 25-27).
-   4. The host data is copied to the device array (line 28).
+      the host array via :py:obj:`~.DeviceArray.configure` (lines 30-32).
+   4. The host data is copied to the device array (lines 33-35).
    5. Within a loop over the row indices (index: ``r``):
 
       1. A pointer to row with index ``r`` is created via array subscript (line
-         33). This yields ``row``.
+         40). This yields ``row``.
       2. ``row`` is passed to a :py:obj:`~.hipblasSscal` call that writes index ``r``
-         to all elements of the row (line 36).
-   6. Data is copied back from the device to the host array.
-   7. Finally, a check is performed on the host if the row values equal the
-      respective row index (lines 44-50). The program quits with ``"ok"`` if all
+         to all elements of the row (lines 43-45).
+   6. Data is copied back from the device to the host array (lines 50-52).
+   7. The device data is deallocated via :py:obj:`~.hipFree` (line 55).
+   8. Finally, a check is performed on the host if the row values equal the
+      respective row index (lines 57-63). The program quits with ``"ok"`` if all
       went well.
 
 .. note::
@@ -433,30 +433,30 @@ Monte Carlo with hipRAND
 .. literalinclude:: ../../examples/0_Basic_Usage/hiprand_monte_carlo_pi.py
    :language: python
    :start-after: [literalinclude-begin]
-   :emphasize-lines: 22, 24, 27
+   :emphasize-lines: 25-29, 33-35, 45
    :linenos:
    :name: hiprand_monte_carlo_pi
    :caption: Monte Carlo with hipRAND
 
 .. admonition:: What is happening?
 
-   Within a loop that per iteration multiplies the problem size ``n`` by ``10`` (line
-   37-38), we call a function ``calculate_pi`` with  ``n`` as argument, in which:
+   Within a loop that per iteration multiplies the problem size ``n`` by ``10``
+   (lines 56-57), we call a function ``calculate_pi`` with  ``n`` as argument, in which:
 
    1. We first create a two-dimensional host array ``xy`` of type ``double`` with ``n``
-      elements (line 21).
+      elements (line 24).
    2. We then create a :py:obj:`~.hiprandCreateGenerator` generator of type
-      :py:obj:`~.hiprandRngType.HIPRAND_RNG_PSEUDO_DEFAULT` (line 22).
+      :py:obj:`~.hiprandRngType.HIPRAND_RNG_PSEUDO_DEFAULT` (lines 25-29).
    3. We create a device array ``xy_d`` that stores the same number of bytes as
-      ``xy``.
+      ``xy`` (lines 30-32).
    4. We fill ``xy_d`` with random data via :py:obj:`~.hiprandGenerateUniformDouble`
-      (line 24).
-   5. We then copy to ``xy`` from ``xy_d`` and free ``x_d`` (lines 25-26) and destroy
-      the generator (line 27).
+      (lines 33-35).
+   5. We then copy to ``xy`` from ``xy_d`` and free ``xy_d`` (lines 36-44) and destroy
+      the generator (line 45).
    6. We use ``numpy`` array operations to count the number of random-generated
-      :math:`x-y`-coordinates within the unit circle (lines 29-30).
+      :math:`x-y`-coordinates within the unit circle (lines 47-48).
    7. Finally, we compute the ratio estimate for the given ``n`` and return it
-      (lines 31-32).
+      (lines 49-50).
 
 A simple complex FFT with hipFFT
 --------------------------------
@@ -478,24 +478,24 @@ which has the value :math:`N-Nj`.
    :language: python
    :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 25,28
+   :emphasize-lines: 32, 35-39
    :name: hipfft_py
    :caption: A simple complex FFT with hipFFT
 
 .. admonition:: What is happening?
 
-   1. We start with creating the initial data in lines 17-18, where we use
+   1. We start with creating the initial data in lines 21-23, where we use
       :py:obj:`~numpy.numpy` for convenience.
    2. We then create a device array of the same size and copy the device data
-      over (lines 21-22).
-   3. We create a plan in line 25, where we specify the number of samples ``N`` and
+      over (lines 26-29).
+   3. We create a plan in line 32, where we specify the number of samples ``N`` and
       the the type of the FFT as *double-complex-to-double-complex*, :py:obj:`~.hipfftType.HIPFFT_Z2Z`.
    4. Afterwards, we execute the FFT in-place (``idata=dx`` and ``odata=dx``) and
-      specify that we run an forward FFT, :py:obj:`~.HIPFFT_FORWARD` (line 28).
+      specify that we run an forward FFT, :py:obj:`~.HIPFFT_FORWARD` (lines 35-39).
    5. The host then waits for completion of all activity on the device before
-      copying data back to the host and freeing the device array (lines 29-33).
+      copying data back to the host and freeing the device array (lines 40-46).
    6. Finally, we check if the result is as expected and print ``"ok"`` if that's
-      the case (lines 35-42).
+      the case (lines 48 onward).
 
 A multi-GPU broadcast with RCCL
 -------------------------------
@@ -516,39 +516,39 @@ ones.
    :language: python
    :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 17-19, 36-37, 34,39, 55
+   :emphasize-lines: 21-26, 43, 46-55, 57, 72-75
    :name: rccl_comminitall_bcast
    :caption: A multi-GPU broadcast with RCCL
 
 .. admonition:: What is happening?
 
-   1. In line 17, we use the device count ``num_gpus`` (via
+   1. In line 21, we use the device count ``num_gpus`` (via
       :py:obj:`~.hipGetDeviceCount`) to create an array of pointers (same size as
       ``unsigned long``, ``dtype="uint64"``). This array named ``comms`` is intended to
       store a pointer to each device's communicator.
-   2. We then create an array of device identifiers (line 18).
-   3. We pass both arrays to :py:obj:`~.ncclCommInitAll`  as first and last
-      argument, respectively (line 19). The second element is the device count.
+   2. We then create an array of device identifiers (line 25).
+   3. We pass both arrays to :py:obj:`~.ncclCommInitAll` as first and last
+      argument, respectively (line 26). The second element is the device count.
       The aforementioned routine initializes all communicators and writes their
       address to the ``comms`` array.
-   4. In lines 22-28, we create an array ``dx`` on each device of size ``N`` that is
+   4. In lines 30-40, we create an array ``dx`` on each device of size ``N`` that is
       initialized with zeros on all devices except device ``0``. The latter's array
       is filled with ones.
-   5. We start a communication group in line 34, and then call
-      :py:obj:`~.ncclBcast` per device in line 37. The first argument of the call
+   5. We start a communication group in line 43, and then call
+      :py:obj:`~.ncclBcast` per device in lines 46-55. The first argument of the call
       is per-device ``dx``, the second the size of ``dx``. Then follows the
       :py:obj:`~.ncclDataType_t`, the root (device ``0``), then the communicator
       (``int(comms[dev])``) and finally the stream (:py:obj:`None`). Casting
       ``comms[dev]`` to :py:obj:`int` is required as the result is otherwise
       interpreted as single-element ``Py_buffer`` by HIP Python's
       :py:obj:`~.ncclBcast` instead of as an address.
-   6. In line 39, we close the communication group again.
+   6. In line 57, we close the communication group again.
    7. We download all data to the host per device and check if the elements are
-      set to ``1`` (lines 42-50). Otherwise, a runtime error is emitted.
-   8. Finally, we clean up by deallocating all device memory and destroying the
-      per-device communicators via :py:obj:`~.ncclCommDestroy` in line 55. Note
-      that here again the ``comm`` must be converted to ``int`` before passing it to
-      the HIP Python routine.
+      set to ``1`` (lines 60-69). Otherwise, a runtime error is emitted.
+   8. Finally, we clean up by deallocating all device memory (lines 72-73) and
+      destroying the per-device communicators via :py:obj:`~.ncclCommDestroy`
+      (lines 74-75). Note that here again the ``comm`` must be converted to
+      ``int`` before passing it to the HIP Python routine.
 
 .. note::
 

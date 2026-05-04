@@ -255,13 +255,13 @@ and `conditional statements
 <https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions>`__,
 respectively.
 
-.. literalinclude:: ../../examples/1_CUDA_Interop/ccuda_stream.pyx
+.. literalinclude:: ../../examples/1_CUDA_Interop/cyruntime_cuda_stream.pyx
    :language: python
    :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 11-14
+   :emphasize-lines: 7, 14-17, 22
    :name: ccuda_stream_pyx
-   :caption: CUDA Python Cython Program
+   :caption: CUDA Python Cython Program (cyruntime variant)
 
 .. admonition:: What is happening?
 
@@ -277,7 +277,7 @@ of the :py:obj:`~.cythonize` call in line
    :language: python
    :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 33
+   :emphasize-lines: 38
    :name: cuda_cython_setup_py
    :caption: Setup Script
 
