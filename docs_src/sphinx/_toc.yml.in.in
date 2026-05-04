@@ -29,7 +29,7 @@ subtrees:
       - file: user_guide/6_license
   - caption: "rocm-bindings-util"
     entries:
-      - file: python_api/rocm.bindings.util
+      - file: python_api/rocm/bindings/util/index
   - caption: "rocm-bindings-hip"
     entries:
 @TOC_ENTRIES_ROCM_BINDINGS_HIP@
@@ -44,12 +44,12 @@ subtrees:
 @TOC_ENTRIES_HIP_PYTHON_INTEROP@
   - caption: "hip-python (legacy compat shim)"
     entries:
-      - file: python_api/hip
+      - file: python_api/hip/index
   - caption: "Manual API"
     entries:
       - file: python_api_manual/_hip_helpers
       - file: python_api_manual/_util_types
-      - file: python_api_manual/rocm.comgr
+      - file: python_api/rocm/comgr/index
   - caption: "Cython-level declarations (advanced — for cimport users)"
     entries:
 @TOC_ENTRIES_CYTHON_LEVEL@

@@ -104,30 +104,30 @@ Spotlight
       The full list of HIP Python Python variables, classes
       and functions.
 
-      * :doc:`python_api/rocm.bindings.util`
-      * :doc:`python_api/rocm.bindings.hip`
-      * :doc:`python_api/rocm.bindings.hiprtc`
-      * :doc:`python_api/rocm.bindings.hipblas`
-      * :doc:`python_api/rocm.bindings.hipsolver`
-      * :doc:`python_api/rocm.bindings.rccl`
-      * :doc:`python_api/rocm.bindings.hiprand`
-      * :doc:`python_api/rocm.bindings.hipfft`
-      * :doc:`python_api/rocm.bindings.hipsparse`
-      * :doc:`python_api/rocm.bindings.roctx`
-      * :doc:`python_api/rocm.bindings.amd_comgr`
-      * :doc:`python_api/hip` (legacy compat shim)
+      * :doc:`python_api/rocm/bindings/util/index`
+      * :doc:`python_api/rocm/bindings/hip/index`
+      * :doc:`python_api/rocm/bindings/hiprtc/index`
+      * :doc:`python_api/rocm/bindings/hipblas/index`
+      * :doc:`python_api/rocm/bindings/hipsolver/index`
+      * :doc:`python_api/rocm/bindings/rccl/index`
+      * :doc:`python_api/rocm/bindings/hiprand/index`
+      * :doc:`python_api/rocm/bindings/hipfft/index`
+      * :doc:`python_api/rocm/bindings/hipsparse/index`
+      * :doc:`python_api/rocm/bindings/roctx/index`
+      * :doc:`python_api/rocm/bindings/amd_comgr/index`
+      * :doc:`python_api/hip/index` (legacy compat shim)
       * :doc:`python_api_manual/_hip_helpers`
       * :doc:`python_api_manual/_util_types`
-      * :doc:`python_api_manual/rocm.comgr`
+      * :doc:`python_api/rocm/comgr/index`
 
    .. grid-item-card:: The CUDA Python Interoperability Layer's Python API
 
       The full list of the CUDA Python interoperability layer's Python variables, classes
       and functions.
 
-      * :doc:`python_api/cuda.bindings.driver`
-      * :doc:`python_api/cuda.bindings.runtime`
-      * :doc:`python_api/cuda.bindings.nvrtc`
+      * :doc:`python_api/cuda/bindings/driver/index`
+      * :doc:`python_api/cuda/bindings/runtime/index`
+      * :doc:`python_api/cuda/bindings/nvrtc/index`
 
 .. |reg| unicode:: U+000AE .. REGISTERED SIGN
    :ltrim:
