@@ -37,7 +37,7 @@ import ctypes
 import math
 import sys
 
-from hip import hip, hiprtc
+from rocm.bindings import hip, hiprtc
 
 
 def hip_check(call_result):
@@ -60,12 +60,6 @@ class LLLVMProgram:
         self.name = name.encode("utf-8")
         self.llvm_bc_or_ir = source
         self.llvm_bc_or_ir_size = len(source)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
 
 
 class HiprtcLinker:
@@ -99,11 +93,12 @@ class HiprtcLinker:
             hiprtc.hiprtcLinkComplete(self.link_state)
         )
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
+    def __del__(self):
+        if hasattr(self, 'link_state') and self.link_state is not None:
+            try:
+                hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
+            except Exception:
+                pass  # Suppress errors during cleanup
 
 
 if __name__ in ("__test__", "__main__"):
@@ -176,45 +171,44 @@ if __name__ in ("__test__", "__main__"):
         )
         sys.exit(1)
 
-    with HiprtcLinker() as linker, LLLVMProgram(
-        "kernel", kernel_llvm_ir[gpugen]
-    ) as scale_op_prog:
-        linker.add_program(scale_op_prog)
-        linker.complete()
-        module = hip_check(hip.hipModuleLoadData(linker.code))
-        kernel = hip_check(hip.hipModuleGetFunction(module, b"scale"))
+    linker = HiprtcLinker()
+    scale_op_prog = LLLVMProgram("kernel", kernel_llvm_ir[gpugen])
+    linker.add_program(scale_op_prog)
+    linker.complete()
+    module = hip_check(hip.hipModuleLoadData(linker.code))
+    kernel = hip_check(hip.hipModuleGetFunction(module, b"scale"))
 
-        f32, size = 4, 32
-        assert size <= 1024
-        xh = array.array("f", [1.0] * size)
-        xd = hip_check(hip.hipMalloc(f32 * size))
-        hip_check(
-            hip.hipMemcpy(
-                xd, xh, f32 * size, hip.hipMemcpyKind.hipMemcpyHostToDevice
-            )
+    f32, size = 4, 32
+    assert size <= 1024
+    xh = array.array("f", [1.0] * size)
+    xd = hip_check(hip.hipMalloc(f32 * size))
+    hip_check(
+        hip.hipMemcpy(
+            xd, xh, f32 * size, hip.hipMemcpyKind.hipMemcpyHostToDevice
         )
-        hip_check(
-            hip.hipModuleLaunchKernel(
-                kernel,
-                *(1, 1, 1),  # grid
-                *(size, 1, 1),  # block
-                sharedMemBytes=0,
-                stream=None,
-                kernelParams=None,
-                extra=(
-                    xd,
-                    ctypes.c_float(2.0),
-                ),
-            )
+    )
+    hip_check(
+        hip.hipModuleLaunchKernel(
+            kernel,
+            *(1, 1, 1),  # grid
+            *(size, 1, 1),  # block
+            sharedMemBytes=0,
+            stream=None,
+            kernelParams=None,
+            extra=(
+                xd,
+                ctypes.c_float(2.0),
+            ),
         )
-        hip_check(
-            hip.hipMemcpy(
-                xh, xd, f32 * size, hip.hipMemcpyKind.hipMemcpyHostToDevice
-            )
+    )
+    hip_check(
+        hip.hipMemcpy(
+            xh, xd, f32 * size, hip.hipMemcpyKind.hipMemcpyHostToDevice
         )
-        hip_check(hip.hipFree(xd))
-        hip_check(hip.hipModuleUnload(module))
+    )
+    hip_check(hip.hipFree(xd))
+    hip_check(hip.hipModuleUnload(module))
 
-        for i in range(0, size):
-            assert math.isclose(xh[i], 2.0), f"failed at pos {i}"
-        print("ok")
+    for i in range(0, size):
+        assert math.isclose(xh[i], 2.0), f"failed at pos {i}"
+    print("ok")

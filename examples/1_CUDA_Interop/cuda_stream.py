@@ -27,7 +27,7 @@ import array
 # [literalinclude-begin]
 import random
 
-from cuda import cuda
+from cuda.bindings import runtime
 
 
 def cuda_check(call_result):
@@ -36,8 +36,8 @@ def cuda_check(call_result):
     if len(result) == 1:
         result = result[0]
     if (
-        isinstance(err, cuda.cudaError_t)
-        and err != cuda.cudaError_t.cudaSuccess
+        isinstance(err, runtime.cudaError_t)
+        and err != runtime.cudaError_t.cudaSuccess
     ):
         raise RuntimeError(str(err))
     return result
@@ -47,25 +47,33 @@ def cuda_check(call_result):
 n = 100
 x_h = array.array("i", [int(random.random() * 10) for i in range(0, n)])
 num_bytes = x_h.itemsize * len(x_h)
-x_d = cuda_check(cuda.cudaMalloc(num_bytes))
+x_d = cuda_check(runtime.cudaMalloc(num_bytes))
 
-stream = cuda_check(cuda.cudaStreamCreate())
+stream = cuda_check(runtime.cudaStreamCreate())
 cuda_check(
-    cuda.cudaMemcpyAsync(
-        x_d, x_h, num_bytes, cuda.cudaMemcpyKind.cudaMemcpyHostToDevice, stream
+    runtime.cudaMemcpyAsync(
+        x_d,
+        x_h,
+        num_bytes,
+        runtime.cudaMemcpyKind.cudaMemcpyHostToDevice,
+        stream,
     )
 )
-cuda_check(cuda.cudaMemsetAsync(x_d, 0, num_bytes, stream))
+cuda_check(runtime.cudaMemsetAsync(x_d, 0, num_bytes, stream))
 cuda_check(
-    cuda.cudaMemcpyAsync(
-        x_h, x_d, num_bytes, cuda.cudaMemcpyKind.cudaMemcpyDeviceToHost, stream
+    runtime.cudaMemcpyAsync(
+        x_h,
+        x_d,
+        num_bytes,
+        runtime.cudaMemcpyKind.cudaMemcpyDeviceToHost,
+        stream,
     )
 )
-cuda_check(cuda.cudaStreamSynchronize(stream))
-cuda_check(cuda.cudaStreamDestroy(stream))
+cuda_check(runtime.cudaStreamSynchronize(stream))
+cuda_check(runtime.cudaStreamDestroy(stream))
 
 # deallocate device data
-cuda_check(cuda.cudaFree(x_d))
+cuda_check(runtime.cudaFree(x_d))
 
 for i, x in enumerate(x_h):
     if x != 0:

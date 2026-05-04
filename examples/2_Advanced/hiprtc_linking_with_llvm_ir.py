@@ -40,11 +40,27 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 # [literalinclude-begin]
 import array
+import copy
 import ctypes
 import math
 import sys
 
+import numpy as np
 from rocm.bindings import hip, hiprtc
+from rocm.bindings.llvm.c.bitreader import LLVMParseBitcode2
+from rocm.bindings.llvm.c.bitwriter import LLVMWriteBitcodeToMemoryBuffer
+from rocm.bindings.llvm.c.core import (
+    LLVMContextCreate,
+    LLVMContextDispose,
+    LLVMCreateMemoryBufferWithMemoryRange,
+    LLVMDisposeMemoryBuffer,
+    LLVMDisposeMessage,
+    LLVMDisposeModule,
+    LLVMGetBufferSize,
+    LLVMGetBufferStart,
+    LLVMPrintModuleToString,
+)
+from rocm.bindings.llvm.c.irreader import LLVMParseIRInContext
 
 
 def hip_check(call_result):
@@ -62,11 +78,50 @@ def hip_check(call_result):
     return result
 
 
-class LLLVMProgram:
+def llvm_check(status, message):
+    if status != 0:
+        msg_str = str(message)
+        LLVMDisposeMessage(message)
+        raise RuntimeError(f"{msg_str}")
+
+
+class LLVMProgram:
     def __init__(self, name: str, source: bytes):
         self.name = name.encode("utf-8")
         self.llvm_bc_or_ir = source
         self.llvm_bc_or_ir_size = len(source)
+
+    def get_llvm_bc(self):
+        """Only use if ``self.llvm_bc_or_ir`` is IR.
+
+        Note:
+            Creates a copy of bc_buf via numpy in order to
+            dispose the buffer.
+        """
+        ir_buf = LLVMCreateMemoryBufferWithMemoryRange(
+            self.llvm_bc_or_ir,
+            self.llvm_bc_or_ir_size,
+            b"llvm-ir-buffer",
+            0,
+        )
+        context = LLVMContextCreate()
+        (status, mod, message) = LLVMParseIRInContext(context, ir_buf)
+        llvm_check(status, message)
+        bc_buf = LLVMWriteBitcodeToMemoryBuffer(mod)
+        llvm_bitcode = LLVMGetBufferStart(
+            bc_buf
+        ).as_c_void_p()  # store in ctypes form to be compatible with hip python datatypes
+        llvm_bitcode_size = LLVMGetBufferSize(bc_buf)
+        LLVMDisposeModule(mod)
+        LLVMContextDispose(context)
+        # LLVMDisposeMemoryBuffer(ir_buf) # TODO LLVMParseIRInContext seems to consume the buffer, memory analysis needed
+        data_ptr = ctypes.cast(llvm_bitcode, ctypes.POINTER(ctypes.c_byte))
+        result = np.ctypeslib.as_array(
+            data_ptr, shape=(llvm_bitcode_size,)
+        ).copy()
+        LLVMDisposeMemoryBuffer(bc_buf)
+        return result
+
 
 
 class HipProgram:
@@ -95,6 +150,23 @@ class HipProgram:
         self.llvm_bc_or_ir = bytearray(self.llvm_bc_or_ir_size)
         hip_check(hiprtc.hiprtcGetBitcode(self.prog, self.llvm_bc_or_ir))
 
+    def get_llvm_ir(self):
+        assert self.llvm_bc_or_ir is not None, "run 'compile_to_llvm_bc' first"
+        buf = LLVMCreateMemoryBufferWithMemoryRange(
+            self.llvm_bc_or_ir,
+            self.llvm_bc_or_ir_size,
+            b"llvm-ir-buffer",
+            0,
+        )
+        (status, mod) = LLVMParseBitcode2(buf)
+        llvm_check(status, "failed to parse bitcode")
+        ir = LLVMPrintModuleToString(mod)
+        result = copy.deepcopy(bytes(ir))  # copies into buffer
+        LLVMDisposeMessage(ir)
+        LLVMDisposeModule(mod)
+        LLVMDisposeMemoryBuffer(buf)
+        return result
+
     def __del__(self):
         if hasattr(self, 'prog') and self.prog is not None:
             try:
@@ -111,10 +183,17 @@ class HiprtcLinker:
         self.code_size = None
 
     def add_program(self, program):
+        try:  # >= ROCm 6.4.0
+            input_type = hip.hipJitInputType.hipJitInputLLVMBitcode
+        except AttributeError:
+            input_type = (
+                hiprtc.hiprtcJITInputType.HIPRTC_JIT_INPUT_LLVM_BITCODE
+            )
+
         hip_check(
             hiprtc.hiprtcLinkAddData(
                 self.link_state,
-                hiprtc.hiprtcJITInputType.HIPRTC_JIT_INPUT_LLVM_BITCODE,
+                input_type,
                 program.llvm_bc_or_ir,
                 program.llvm_bc_or_ir_size,
                 program.name,
@@ -139,6 +218,9 @@ class HiprtcLinker:
 
 if __name__ in ("__test__", "__main__"):
     import textwrap
+
+    USE_BC = False
+    DUMP_LINKER_OBJECT = False
 
     kernel_hip = textwrap.dedent(
         """\
@@ -221,12 +303,26 @@ if __name__ in ("__test__", "__main__"):
     linker = HiprtcLinker()
     kernel_prog = HipProgram("kernel", arch, kernel_hip)
     print_val_prog = HipProgram("print_val", arch, print_val_hip)
-    scale_op_prog = LLLVMProgram("scale_op", scale_op_llvm_ir[gpugen])
+    scale_op_prog = LLVMProgram("scale_op", scale_op_llvm_ir[gpugen])
     linker.add_program(kernel_prog)
     linker.add_program(print_val_prog)
+    if USE_BC:
+        bc_buf = scale_op_prog.get_llvm_bc()
+        scale_op_prog.llvm_bc_or_ir = bc_buf
+        scale_op_prog.llvm_bc_or_ir_size = len(bc_buf)
     linker.add_program(scale_op_prog)
+    # print(scale_op_prog.get_llvm_ir().decode("utf-8")) # 1) recreate llvm ir sample
     linker.complete()
     module = hip_check(hip.hipModuleLoadData(linker.code))
+    if DUMP_LINKER_OBJECT:
+        with open("linked.obj", "wb") as outfile:
+            data_ptr = ctypes.cast(
+                linker.code.as_c_void_p(), ctypes.POINTER(ctypes.c_byte)
+            )
+            result = np.ctypeslib.as_array(
+                data_ptr, shape=(linker.code_size,)
+            )
+            outfile.write(result)
     kernel = hip_check(hip.hipModuleGetFunction(module, b"scale"))
 
     f32, size = 4, 32

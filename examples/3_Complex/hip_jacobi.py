@@ -28,7 +28,7 @@ import ctypes
 import time
 
 import numpy as np
-from hip import hip, hiprtc
+from rocm.bindings import hip, hiprtc
 
 
 def hip_check(call_result):

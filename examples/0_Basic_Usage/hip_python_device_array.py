@@ -35,7 +35,7 @@ with respect to specified type and shape information.
 import ctypes
 
 import numpy as np
-from hip import hip, hipblas
+from rocm.bindings import hip, hipblas
 
 verbose = False
 

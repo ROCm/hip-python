@@ -26,7 +26,7 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 import ctypes
 
 import numpy as np
-from hip import hip, hipblas
+from rocm.bindings import hip, hipblas
 
 
 def hip_check(call_result):

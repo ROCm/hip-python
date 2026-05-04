@@ -27,7 +27,7 @@ import array
 # [literalinclude-begin]
 import random
 
-from hip import hip
+from rocm.bindings import hip
 
 
 def hip_check(call_result):

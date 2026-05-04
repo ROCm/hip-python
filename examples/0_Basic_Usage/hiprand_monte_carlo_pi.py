@@ -43,7 +43,7 @@ import math
 import numpy as np
 
 # [literalinclude-begin]
-from hip import hip, hiprand
+from rocm.bindings import hip, hiprand
 
 
 def hip_check(call_result):

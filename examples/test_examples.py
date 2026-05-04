@@ -22,12 +22,11 @@
 
 import os
 import runpy
-import shlex
 import subprocess
 
 import pytest
-from hip import ROCM_VERSION_TUPLE
-from hip import hip as hiprt
+from rocm.version import ROCM_VERSION_TUPLE, ROCM_VERSION
+from rocm.bindings import hip as hiprt
 
 device_printf_works = ROCM_VERSION_TUPLE[0:2] != (5, 5)
 
@@ -37,10 +36,23 @@ gpugen = props.gcnArchName.decode("utf-8").split(":")[0]
 have_compatible_gpu_target = gpugen == "gfx90a"
 have_rccl_support = gpugen not in ("gfx1151",)
 
-try:
-    from cuda import cuda
+# Compiler-specific conditions (from compiler/test_examples.py)
+have_matching_hip_python = False
+hiprtc_cannot_produce_llvm_bitcode = False
 
-    del cuda
+try:
+    import hip
+    have_matching_hip_python = hip.ROCM_VERSION == ROCM_VERSION
+except Exception:
+    pass
+
+# Check for ROCm 6.1.0 bitcode bug
+hiprtc_cannot_produce_llvm_bitcode = ROCM_VERSION_TUPLE == (6, 1, 0)
+
+try:
+    from cuda.bindings import runtime
+
+    del runtime
     have_hip_python_as_cuda = True
 except ImportError:
     have_hip_python_as_cuda = False
@@ -75,7 +87,6 @@ if have_hip_python_as_cuda:
     ]
 
 python_examples += [
-    "2_Advanced/hip_jacobi.py",
     "2_Advanced/hiprtc_linking_device_functions.py",
 ]
 
@@ -84,6 +95,56 @@ if have_compatible_gpu_target:
         "2_Advanced/hiprtc_jit_with_llvm_ir.py",
         "2_Advanced/hiprtc_linking_llvm_ir.py",
     ]
+
+# Complex examples
+python_examples += [
+    "3_Complex/hip_jacobi.py",  # MOVED from 2_Advanced/
+]
+
+# Compiler examples (moved to 2_Advanced/)
+python_examples += [
+    "2_Advanced/list_targets.py",
+    "2_Advanced/parse_llvm_bitcode.py",
+    # "2_Advanced/execution_engine_sum.py",  # TODO: only direct running works
+    "2_Advanced/amd_comgr_parse_amd_hsa_kernel_descriptor.py",
+    "2_Advanced/amd_comgr_disassemble_amdgpu_program.py",
+    "2_Advanced/amd_comgr_disassemble_amdgpu_code_obj.py",
+    "2_Advanced/amd_comgr_hip_to_llvm_ir.py",
+    "2_Advanced/hiprtc_amd_comgr_hip_to_hsa.py",
+    "2_Advanced/amd_comgr_llvm_ir_to_hsa.py",
+    "2_Advanced/hiprtc_amd_comgr_hsa_to_code_obj.py",
+    pytest.param(
+        "2_Advanced/hiprtc_amd_comgr_get_jit_kernel_metadata.py",
+        marks=[
+            pytest.mark.skipif(
+                not have_matching_hip_python,
+                reason="requires that 'hip-python' is installed",
+            ),
+        ],
+    ),
+    pytest.param(
+        "2_Advanced/hiprtc_hip_to_llvm_ir.py",
+        marks=pytest.mark.skipif(
+            not have_matching_hip_python,
+            reason="requires that 'hip-python' is installed",
+        ),
+    ),
+    pytest.param(
+        "2_Advanced/hiprtc_linking_with_llvm_ir.py",
+        marks=pytest.mark.skipif(
+            (
+                not have_matching_hip_python
+                or not have_compatible_gpu_target
+                or hiprtc_cannot_produce_llvm_bitcode
+            ),
+            reason=(
+                "requires that compatible GPU target (==gfx90a) is "
+                "present, 'hip-python' is installed, and that hipRTC "
+                + " can produce bitcode (ROCm != 6.1.0)"
+            ),
+        ),
+    ),
+]
 
 
 @pytest.mark.parametrize("example", python_examples)
@@ -95,14 +156,36 @@ def test_python_examples(example):
 if have_hip_python_as_cuda:
 
     @pytest.mark.parametrize(
-        "example",
+        "module_name",
         [
-            "1_CUDA_Interop/ccuda_stream.pyx",
-            "1_CUDA_Interop/ccuda_stream_with_cuda_bindings.pyx",
+            "cyruntime_cuda_stream",
+            "cyruntime_cuda_stream_with_cuda_bindings",
         ],
     )
-    def test_cython_examples(example):
-        abspath = os.path.join(
-            os.path.dirname(__file__), os.path.dirname(example)
-        )
-        subprocess.check_call(shlex.split(f"make -C {abspath} run"))
+    def test_cython_examples(module_name):
+        """Build and test Cython examples using setup.py (cross-platform)."""
+        import sys
+        import tempfile
+
+        example_dir = os.path.join(os.path.dirname(__file__), "1_CUDA_Interop")
+
+        # Build the Cython module using setup.py
+        # Use a temporary directory for build artifacts to avoid polluting source
+        with tempfile.TemporaryDirectory() as tmpdir:
+            env = os.environ.copy()
+            env["PYTHONPATH"] = example_dir + os.pathsep + env.get("PYTHONPATH", "")
+
+            # Build extension in-place
+            subprocess.check_call(
+                [sys.executable, "setup.py", "build_ext", "--inplace",
+                 f"--build-temp={tmpdir}", f"--build-lib={example_dir}"],
+                cwd=example_dir,
+                env=env,
+            )
+
+            # Import and run the module
+            subprocess.check_call(
+                [sys.executable, "-c", f"import {module_name}"],
+                cwd=example_dir,
+                env=env,
+            )

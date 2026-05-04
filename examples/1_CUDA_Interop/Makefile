@@ -28,6 +28,7 @@ PYTHON ?= python3
 build:
 	$(PYTHON) setup.py build_ext --inplace
 run: build
-	$(PYTHON) -c "import ccuda_stream"
+	$(PYTHON) -c "import cyruntime_cuda_stream"
+	$(PYTHON) -c "import cyruntime_cuda_stream_with_cuda_bindings"
 clean:
 	rm -rf *.so *.c build/

@@ -40,7 +40,7 @@ This script:
 """
 
 # [literalinclude-begin]
-from cuda.cudart import cudaError_t
+from cuda.bindings.runtime import cudaError_t
 
 error_kinds = (  # some of those do not exist in HIP
     cudaError_t.cudaErrorInitializationError,

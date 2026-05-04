@@ -29,7 +29,7 @@ import ctypes
 import math
 import random
 
-from hip import hip, hiprtc
+from rocm.bindings import hip, hiprtc
 
 
 def hip_check(call_result):

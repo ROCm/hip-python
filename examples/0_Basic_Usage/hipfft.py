@@ -33,7 +33,7 @@ except the first one, which has the value N-Nj.
 
 # [literalinclude-begin]
 import numpy as np
-from hip import hip, hipfft
+from rocm.bindings import hip, hipfft
 
 
 def hip_check(call_result):

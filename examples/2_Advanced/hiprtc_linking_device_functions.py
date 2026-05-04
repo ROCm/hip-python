@@ -34,7 +34,7 @@ be added as `HIPRTC_JIT_INPUT_LLVM_BITCODE` type input to the link object.
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 # [literalinclude-begin]
-from hip import hip, hiprtc
+from rocm.bindings import hip, hiprtc
 
 
 def hip_check(call_result):
@@ -82,12 +82,12 @@ class HiprtcProgram:
         self.llvm_bitcode = bytearray(self.llvm_bitcode_size)
         hip_check(hiprtc.hiprtcGetBitcode(self.prog, self.llvm_bitcode))
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if self.prog is not None:
-            hip_check(hiprtc.hiprtcDestroyProgram(self.prog.createRef()))
+    def __del__(self):
+        if hasattr(self, 'prog') and self.prog is not None:
+            try:
+                hip_check(hiprtc.hiprtcDestroyProgram(self.prog.createRef()))
+            except Exception:
+                pass  # Suppress errors during cleanup
 
 
 class HiprtcLinker:
@@ -117,11 +117,12 @@ class HiprtcLinker:
             hiprtc.hiprtcLinkComplete(self.link_state)
         )
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
+    def __del__(self):
+        if hasattr(self, 'link_state') and self.link_state is not None:
+            try:
+                hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
+            except Exception:
+                pass  # Suppress errors during cleanup
 
 
 if __name__ in ("__test__", "__main__"):
@@ -145,32 +146,30 @@ if __name__ in ("__test__", "__main__"):
         """
     ).encode("utf-8")
 
-    with HiprtcLinker() as linker, HiprtcProgram(
-        "kernel", kernel_src
-    ) as kernel_prog, HiprtcProgram(
-        "device_fun", device_fun_src
-    ) as device_fun_prog:
-        kernel_prog.compile_to_llvm_bc()
-        device_fun_prog.compile_to_llvm_bc()
-        linker.add_program(kernel_prog)
-        linker.add_program(device_fun_prog)
-        linker.complete()
-        module = hip_check(hip.hipModuleLoadData(linker.code))
-        kernel = hip_check(hip.hipModuleGetFunction(module, b"print_tid"))
-        #
-        hip_check(
-            hip.hipModuleLaunchKernel(
-                kernel,
-                *(1, 1, 1),  # grid
-                *(32, 1, 1),  # block
-                sharedMemBytes=0,
-                stream=None,
-                kernelParams=None,
-                extra=None,
-            )
+    linker = HiprtcLinker()
+    kernel_prog = HiprtcProgram("kernel", kernel_src)
+    device_fun_prog = HiprtcProgram("device_fun", device_fun_src)
+    kernel_prog.compile_to_llvm_bc()
+    device_fun_prog.compile_to_llvm_bc()
+    linker.add_program(kernel_prog)
+    linker.add_program(device_fun_prog)
+    linker.complete()
+    module = hip_check(hip.hipModuleLoadData(linker.code))
+    kernel = hip_check(hip.hipModuleGetFunction(module, b"print_tid"))
+    #
+    hip_check(
+        hip.hipModuleLaunchKernel(
+            kernel,
+            *(1, 1, 1),  # grid
+            *(32, 1, 1),  # block
+            sharedMemBytes=0,
+            stream=None,
+            kernelParams=None,
+            extra=None,
         )
+    )
 
-        hip_check(hip.hipDeviceSynchronize())
-        hip_check(hip.hipModuleUnload(module))
+    hip_check(hip.hipDeviceSynchronize())
+    hip_check(hip.hipModuleUnload(module))
 
-        print("ok")
+    print("ok")

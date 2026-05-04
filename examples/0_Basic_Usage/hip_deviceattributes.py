@@ -23,7 +23,7 @@
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 # [literalinclude-begin]
-from hip import hip
+from rocm.bindings import hip
 
 
 def hip_check(call_result):

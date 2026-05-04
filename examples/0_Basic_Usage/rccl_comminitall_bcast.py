@@ -24,7 +24,7 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 # [literalinclude-begin]
 import numpy as np
-from hip import hip, rccl
+from rocm.bindings import hip, rccl
 
 
 def hip_check(call_result):
