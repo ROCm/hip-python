@@ -60,10 +60,12 @@ external_toc_path = "./sphinx/_toc.yml"
 extensions = [
     "rocm_docs",
     # sphinx-autoapi parses Python (and .pyi stub) source files directly,
-    # so the doc build no longer requires the hip-python wheels to be built
-    # and installed before running Sphinx. The generator emits .pyi stubs
-    # alongside every generated .pxd/.pyx for the high-level Python API
-    # (see share/design/CODEGEN.md).
+    # so the doc build does not need the compiled hip-python wheels on
+    # `sys.path`. The generator emits .pyi stubs alongside every
+    # generated .pxd/.pyx for the high-level Python API; each function
+    # stub carries the parameter names and the .pyx docstring, so
+    # autoapi has enough to render the API surface (see
+    # share/design/CODEGEN.md).
     "autoapi.extension",
 ]
 
