@@ -248,9 +248,44 @@ For deeper documentation:
 | `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON` | Bundle `libLLVM.so` inside the `rocm-bindings-compiler` wheel. |
 | `HIP_PYTHON_AUDITWHEEL_REPAIR` | `OFF` | Run `auditwheel repair` to produce manylinux wheels. |
 | `HIP_PYTHON_WHEEL_OUTPUT_DIR` | `${CMAKE_BINARY_DIR}/dist` | Wheel output directory. |
+| `HIP_PYTHON_BUILD_DOCS` | `OFF` | Build the Sphinx HTML documentation as a CMake target (`docs`). |
+| `HIP_PYTHON_DOCS_OUTPUT_DIR` | `<repo>/docs` | Destination for the rendered HTML docs. |
+| `HIP_PYTHON_DOCS_DOCTREE_DIR` | `<build>/docs/_doctrees` | Sphinx intermediate cache. |
 | `CMAKE_BUILD_TYPE` | `Release` | Standard CMake build type. |
 
 <!-- markdownlint-enable  MD013 -->
+
+### Build the Documentation
+
+The Sphinx documentation is a separate, optional CMake target that runs in
+parallel to (and independently of) the wheel build. It uses
+[`sphinx-autoapi`](https://sphinx-autoapi.readthedocs.io/) to parse Python
+sources and `.pyi` stubs directly, so it does **not** require the wheels to
+be built or installed first.
+
+```shell
+# Install Sphinx + dependencies (one-time):
+pip install -r docs_src/sphinx/requirements.txt
+
+# Configure and build the docs:
+cd python
+cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
+cmake --build build --target docs
+# open ../docs/index.html
+```
+
+By default the rendered HTML lands in `<repo>/docs/`. Override
+`HIP_PYTHON_DOCS_OUTPUT_DIR` to redirect anywhere — e.g. for per-version doc
+hosting:
+
+```shell
+cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON \
+               -DHIP_PYTHON_DOCS_OUTPUT_DIR=docs/rocm-rel-7.13.0
+cmake --build build --target docs
+```
+
+The doc input language is **reStructuredText** (under `docs_src/`), distinct
+from the Markdown READMEs and design documents at the repo root.
 
 ## Legacy Build from Source
 
