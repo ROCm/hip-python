@@ -66,21 +66,24 @@ class HiprtcProgram:
         return props.gcnArchName
 
     def compile_to_llvm_bc(self):
-        self.prog = hip_check(
+        # [literalinclude-hiprtc-compile-rdc-begin]
+        prog = hip_check(
             hiprtc.hiprtcCreateProgram(self.source, self.name, 0, [], [])
         )
         cflags = [b"--offload-arch=" + self._get_arch(), b"-fgpu-rdc"]
-        (err,) = hiprtc.hiprtcCompileProgram(self.prog, len(cflags), cflags)
+        (err,) = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
-            log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(self.prog))
+            log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(prog))
             log = bytearray(log_size)
-            hip_check(hiprtc.hiprtcGetProgramLog(self.prog, log))
+            hip_check(hiprtc.hiprtcGetProgramLog(prog, log))
             raise RuntimeError(log.decode())
-        self.llvm_bitcode_size = hip_check(
-            hiprtc.hiprtcGetBitcodeSize(self.prog)
-        )
-        self.llvm_bitcode = bytearray(self.llvm_bitcode_size)
-        hip_check(hiprtc.hiprtcGetBitcode(self.prog, self.llvm_bitcode))
+        bitcode_size = hip_check(hiprtc.hiprtcGetBitcodeSize(prog))
+        bitcode = bytearray(bitcode_size)
+        hip_check(hiprtc.hiprtcGetBitcode(prog, bitcode))
+        # [literalinclude-hiprtc-compile-rdc-end]
+        self.prog = prog
+        self.llvm_bitcode_size = bitcode_size
+        self.llvm_bitcode = bitcode
 
     def __del__(self):
         if hasattr(self, 'prog') and self.prog is not None:
@@ -128,6 +131,7 @@ class HiprtcLinker:
 if __name__ in ("__test__", "__main__"):
     import textwrap
 
+    # [literalinclude-kernel-sources-begin]
     device_fun_src = textwrap.dedent(
         """\
         __device__ void foo() {
@@ -145,7 +149,9 @@ if __name__ in ("__test__", "__main__"):
         }
         """
     ).encode("utf-8")
+    # [literalinclude-kernel-sources-end]
 
+    # [literalinclude-hiprtc-link-flow-begin]
     linker = HiprtcLinker()
     kernel_prog = HiprtcProgram("kernel", kernel_src)
     device_fun_prog = HiprtcProgram("device_fun", device_fun_src)
@@ -156,6 +162,7 @@ if __name__ in ("__test__", "__main__"):
     linker.complete()
     module = hip_check(hip.hipModuleLoadData(linker.code))
     kernel = hip_check(hip.hipModuleGetFunction(module, b"print_tid"))
+    # [literalinclude-hiprtc-link-flow-end]
     #
     hip_check(
         hip.hipModuleLaunchKernel(

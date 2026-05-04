@@ -183,6 +183,7 @@ class HiprtcLinker:
         self.code_size = None
 
     def add_program(self, program):
+        # [literalinclude-hiprtc-link-input-type-begin]
         try:  # >= ROCm 6.4.0
             input_type = hip.hipJitInputType.hipJitInputLLVMBitcode
         except AttributeError:
@@ -202,6 +203,7 @@ class HiprtcLinker:
                 None,
             )
         )
+        # [literalinclude-hiprtc-link-input-type-end]
 
     def complete(self):
         self.code, self.code_size = hip_check(
@@ -300,20 +302,22 @@ if __name__ in ("__test__", "__main__"):
         )
         sys.exit(1)
 
-    linker = HiprtcLinker()
     kernel_prog = HipProgram("kernel", arch, kernel_hip)
     print_val_prog = HipProgram("print_val", arch, print_val_hip)
     scale_op_prog = LLVMProgram("scale_op", scale_op_llvm_ir[gpugen])
-    linker.add_program(kernel_prog)
-    linker.add_program(print_val_prog)
     if USE_BC:
         bc_buf = scale_op_prog.get_llvm_bc()
         scale_op_prog.llvm_bc_or_ir = bc_buf
         scale_op_prog.llvm_bc_or_ir_size = len(bc_buf)
+
+    # [literalinclude-hiprtc-link-mixed-begin]
+    linker = HiprtcLinker()
+    linker.add_program(kernel_prog)
+    linker.add_program(print_val_prog)
     linker.add_program(scale_op_prog)
-    # print(scale_op_prog.get_llvm_ir().decode("utf-8")) # 1) recreate llvm ir sample
     linker.complete()
     module = hip_check(hip.hipModuleLoadData(linker.code))
+    # [literalinclude-hiprtc-link-mixed-end]
     if DUMP_LINKER_OBJECT:
         with open("linked.obj", "wb") as outfile:
             data_ptr = ctypes.cast(

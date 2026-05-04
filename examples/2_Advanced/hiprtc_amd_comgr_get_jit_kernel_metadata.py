@@ -103,17 +103,21 @@ class HipProgram:
 
     def parse_metadata(self):
         assert self.code is not None
+        # [literalinclude-comgr-inspect-metadata-begin]
         return comgr.parse_code_obj_metadata(self.code, self.code_size)
+        # [literalinclude-comgr-inspect-metadata-end]
 
     def parse_kernel_names(self):
         assert self.code is not None
-        return comgr.parse_code_obj_kernel_names(
-            self.code, self.code_size
-        )
+        # [literalinclude-comgr-inspect-kernel-names-begin]
+        return comgr.parse_code_obj_kernel_names(self.code, self.code_size)
+        # [literalinclude-comgr-inspect-kernel-names-end]
 
     def parse_symbols(self):
         assert self.code is not None
+        # [literalinclude-comgr-inspect-symbols-begin]
         return comgr.parse_code_symbols(self.code, self.code_size)
+        # [literalinclude-comgr-inspect-symbols-end]
 
     def disassemble(self, func_name):
         """
@@ -127,11 +131,13 @@ class HipProgram:
         """
         assert self.code is not None
         assert self.arch is not None
+        # [literalinclude-comgr-inspect-disassemble-begin]
         return comgr.disassemble_code_obj_function(
             self.code,
             f"amdgcn-amd-amdhsa--{self.arch}",
             func_name=func_name,
         )
+        # [literalinclude-comgr-inspect-disassemble-end]
 
     def __del__(self):
         if self.prog is not None:

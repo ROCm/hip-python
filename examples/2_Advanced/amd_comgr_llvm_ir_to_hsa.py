@@ -52,15 +52,16 @@ class LLVMProgram:
         self._compile_to_hsa(arch)
 
     def _compile_to_hsa(self, arch: str):
-        (
-            self.hsa,
-            self.log,
-            self.diagnostic,
-        ) = comgr.compile_bc_to_hsa(
+        # [literalinclude-comgr-compile-bc-to-hsa-begin]
+        (hsa, log, diagnostic) = comgr.compile_bc_to_hsa(
             source=self.hip_source,
             isa_name=f"amdgcn-amd-amdhsa--{arch}",
             logging=True,
         )
+        # [literalinclude-comgr-compile-bc-to-hsa-end]
+        self.hsa = hsa
+        self.log = log
+        self.diagnostic = diagnostic
         self.hsa_size = len(self.hsa)
 
 

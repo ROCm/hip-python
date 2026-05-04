@@ -66,17 +66,18 @@ class HipProgram:
         self._compile_to_llvm_bc(arch)
 
     def _compile_to_llvm_bc(self, arch: str):
-        (
-            self.llvm_bc_or_ir,
-            self.log,
-            self.diagnostic,
-        ) = comgr.compile_hip_to_bc(
+        # [literalinclude-comgr-compile-hip-to-bc-begin]
+        (bc, log, diagnostic) = comgr.compile_hip_to_bc(
             source=self.hip_source,
             isa_name=f"amdgcn-amd-amdhsa--{arch}",
             hip_version_tuple=ROCM_VERSION_TUPLE,  # only same up to last entry
             logging=True,
             extra_opts=["-D__HIPCC_RTC__"],
         )
+        # [literalinclude-comgr-compile-hip-to-bc-end]
+        self.llvm_bc_or_ir = bc
+        self.log = log
+        self.diagnostic = diagnostic
         self.llvm_bc_or_ir_size = len(self.llvm_bc_or_ir)
 
     def get_llvm_ir(self):
@@ -103,6 +104,7 @@ class HipProgram:
 if __name__ in ("__test__", "__main__"):
     import textwrap
 
+    # [literalinclude-comgr-runtime-header-begin]
     kernel_hip = textwrap.dedent(
         comgr.HIPRTC_RUNTIME_HEADER
         + """\
@@ -111,6 +113,7 @@ if __name__ in ("__test__", "__main__"):
         }
         """
     ).encode("utf-8")
+    # [literalinclude-comgr-runtime-header-end]
 
     arch = "gfx90a"
     kernel_prog = HipProgram("kernel", arch, kernel_hip)

@@ -80,6 +80,16 @@ Spotlight
          :width: 240
          :align: center
 
+   .. grid-item-card:: JIT Compilation with HIPRTC and AMD COMGR
+
+      Learn how to JIT-compile, link, and inspect HIP kernels at
+      runtime --- from the high-level :py:obj:`~.hiprtc` API
+      (compile, link, launch) down to the lower-level
+      :py:obj:`rocm.comgr` pipeline (HIP source --> LLVM bitcode
+      --> HSA assembly --> code object).
+
+      * :doc:`/user_guide/3_jit_compilation`
+
    .. grid-item-card:: HIP Python's Adapter Types
 
       Learn about the datatypes that HIP Python uses to translate between C and Python
@@ -87,7 +97,7 @@ Spotlight
       packages such as `NumPy <https://numpy.org>`__ and
       `Numba <https://numba.pydata.org/>`__.
 
-      * :doc:`/user_guide/3_datatypes`
+      * :doc:`/user_guide/4_datatypes`
 
    .. grid-item-card:: HIP Python's Python API
 

@@ -39,11 +39,15 @@ article_pages = [
         "read-time": "20 min read",
     },
     {
-        "file": "user_guide/3_datatypes",
+        "file": "user_guide/3_jit_compilation",
+        "read-time": "30 min read",
+    },
+    {
+        "file": "user_guide/4_datatypes",
         "read-time": "10 min read",
     },
     {
-        "file": "user_guide/4_report_bugs",
+        "file": "user_guide/5_report_bugs",
         "read-time": "20 min read",
     },
 ]
