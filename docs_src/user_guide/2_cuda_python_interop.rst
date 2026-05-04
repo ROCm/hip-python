@@ -70,43 +70,30 @@ Basic Usage (Python)
    * How I can use HIP Python's CUDA Python interoperability modules in my Python
      code.
 
-.. note::
-
-   Most links in this tutorial to the CUDA Python interoperability layer API are
-   broken. Until we find a way to index the respective Python modules, you must
-   unfortunately use the search function for CUDA Python interoperability layer
-   symbols.
-
 After installing ``hip-python-interop``, you can import the individual
 modules that you need as shown below:
 
 .. code-block:: py
    :linenos:
-   :caption: Importing HIP Python CUDA Interop Modules
+   :caption: Importing the CUDA interop modules
 
-   from cuda import cuda
-   from cuda import cudart
-   from cuda import nvrtc
-
-.. note::
-
-   The ``from cuda import cuda`` (and friends) imports continue to
-   work — they are aliases of ``cuda.bindings.{driver,runtime,nvrtc}``.
-   New code should prefer ``from cuda.bindings import driver, runtime,
-   nvrtc`` directly, matching the modern per-package layout. Both
-   styles are supported; the ``cuda.bindings.*`` style is more
-   explicit about which package supplies the symbol.
-
-   This mirrors the analogous guidance for the HIP side
-   (``from hip import hip`` → ``from rocm.bindings import hip``); see
-   the corresponding note in :doc:`1_usage`.
+   from cuda.bindings import driver
+   from cuda.bindings import runtime
+   from cuda.bindings import nvrtc
 
 .. note::
 
-   When writing this documentation, only Python and Cython modules for the
-   libraries ``cuda`` (CUDA Driver), ``cudart`` (CUDA runtime), and ``nvrtc`` (NVRTC)
-   were shipped by CUDA Python. Therefore, HIP Python only provides
-   interoperability modules for them and no other CUDA library.
+   ``cuda.bindings`` is the package; ``driver`` (CUDA Driver API),
+   ``runtime`` (CUDA Runtime API), and ``nvrtc`` (NVRTC) are the
+   modules. Importing them under shorter names (``from cuda import
+   cuda`` etc., as some older CUDA Python releases used to support)
+   is **not** provided by ``hip-python-interop``.
+
+.. note::
+
+   ``hip-python-interop`` ships exactly the three modules above —
+   matching the surface CUDA Python itself exposes under
+   ``cuda.bindings``. There are no additional CUDA-library wrappers.
 
 Python Example
 --------------

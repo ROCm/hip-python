@@ -102,18 +102,20 @@ It produces five wheels:
 - `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer
 
 Plus a `hip-python` package that exposes the `hip.*` namespace as an
-alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc` and
-`from cuda import cuda, cudart, nvrtc` keep working unchanged.
+alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
+(etc.) keeps working unchanged.
 
 > [!NOTE]
-> Both import styles are supported. `from hip import hip, hiprtc` and
-> `from cuda import cuda, cudart, nvrtc` are aliases of the modern
-> per-package modules. **New code should prefer**
-> `from rocm.bindings import hip, hiprtc` (or `from cuda.bindings import
-> driver, runtime, nvrtc`) directly — the `rocm.bindings.*` and
-> `cuda.bindings.*` styles are more explicit about which package supplies
-> the symbol and match the per-package layout used throughout the
-> documentation and examples.
+> The HIP-side `from hip import hip, hiprtc` (and friends) are aliases
+> of the per-package `rocm.bindings.*` modules — both styles are
+> supported. The CUDA interop side has **no such alias package**: only
+> `from cuda.bindings import driver, runtime, nvrtc` works (`cuda.bindings`
+> is the package, `driver` / `runtime` / `nvrtc` are the modules).
+>
+> **New code should prefer** `from rocm.bindings import hip, hiprtc` and
+> `from cuda.bindings import driver, runtime, nvrtc` directly — these
+> match the per-package layout used throughout the documentation and
+> examples.
 
 > [!NOTE]
 > Most users do **not** need to build from source — prebuilt wheels are
