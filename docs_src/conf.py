@@ -3,6 +3,7 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import os
 from datetime import datetime as _datetime
 
 _today = _datetime.today()
@@ -54,7 +55,12 @@ external_toc_path = "./sphinx/_toc.yml"
 
 extensions = [
     "rocm_docs",
-    "sphinx.ext.autodoc",  # Automatically create API documentation from Python docstrings
+    # sphinx-autoapi parses Python (and .pyi stub) source files directly,
+    # so the doc build no longer requires the hip-python wheels to be built
+    # and installed before running Sphinx. The generator emits .pyi stubs
+    # alongside every generated .pxd/.pyx for the high-level Python API
+    # (see share/design/CODEGEN.md).
+    "autoapi.extension",
 ]
 
 
@@ -66,16 +72,35 @@ default_role = (
     "py:obj"  # this means that `test` will be expanded to :py:obj`test`
 )
 
-# NOTE: always install the HIP Python packages, do not add the source folders
-# to the sys path, i.e. do not add .. and ../hip-python-as-cuda as
-# this breaks autodoc's automodule routine.
+# ---------------------------------------------------------------------------
+# sphinx-autoapi configuration
+# ---------------------------------------------------------------------------
+#
+# autoapi parses each rocm/, cuda/, hip/ source tree directly. Combined with
+# the generator-emitted .pyi stubs (per share/design/CODEGEN.md), this lets
+# Sphinx render the API surface without importing any compiled extension.
+#
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_PYTHON_ROOT = os.path.normpath(os.path.join(_HERE, "..", "python"))
 
-autodoc_default_options = {
-    "members": True,
-    "undoc-members": True,
-    "special-members": "__init__, __getitem__",
-    "inherited-members": True,
-    "show-inheritance": True,
-    "imported-members": False,
-    "member-order": "bysource",  # bysource: seems unfortunately not to work for Cython modules
-}
+autoapi_type = "python"
+autoapi_dirs = [
+    os.path.join(_PYTHON_ROOT, "rocm-bindings-util", "rocm"),
+    os.path.join(_PYTHON_ROOT, "rocm-bindings-hip", "rocm"),
+    os.path.join(_PYTHON_ROOT, "rocm-bindings-libraries", "rocm"),
+    os.path.join(_PYTHON_ROOT, "rocm-bindings-compiler", "rocm"),
+    os.path.join(_PYTHON_ROOT, "hip-python-interop", "cuda"),
+    os.path.join(_PYTHON_ROOT, "hip-python", "hip"),
+]
+autoapi_root = "python_api"
+autoapi_keep_files = True
+autoapi_add_toctree_entry = False  # the per-package _toc.yml manages TOC
+autoapi_member_order = "bysource"
+autoapi_python_use_implicit_namespaces = True
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "imported-members",
+]

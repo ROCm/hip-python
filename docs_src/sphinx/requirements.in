@@ -1,5 +1,3 @@
 --extra-index-url https://test.pypi.org/simple/
 rocm-docs-core==1.17.0
-autodoc
-hip-python
-hip-python-as-cuda
+sphinx-autoapi
