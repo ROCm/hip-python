@@ -30,7 +30,7 @@ This chapter highlights some of the datatypes that HIP Python's Python
 interfaces use to convert various Python objects to the C datatypes expected
 by the routines of the HIP C API.
 
-While generic types are defined in module {py:obj}`hip._util.types`,
+While generic types are defined in module {py:obj}`rocm.bindings.util.types`,
 specific helper types for {py:obj}`hip.hip` are defined in
 {py:obj}`hip._hip_helpers`.
 
@@ -351,7 +351,7 @@ and then pass the object to a HIP Python function that uses
    :caption: HIP Python Datatype Used as Adapter in Python Code
 
    err = hip.hipMyFunc(...,
-      pointer_is_used_to_convert_this_arg=hip._util.types.ListOfInt(
+      pointer_is_used_to_convert_this_arg=rocm.bindings.util.types.ListOfInt(
         [1,2,3]),...)
 ```
 

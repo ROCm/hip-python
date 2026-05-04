@@ -29,7 +29,7 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 ## Requirements
 
 * Currently, only Linux is supported (prebuilt packages and code).
-  * Prebuilt packages distributed via PyPI (or Test PyPI) are only provided for
+  * Prebuilt packages distributed via PyPI are only provided for
     Linux systems that agree with the `manylinux_2_17_x86_64` tag.
 * Requires that a compatible ROCm&trade; HIP SDK is installed on your system.
   * Source code is provided only for particular ROCm versions.
@@ -51,12 +51,6 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 
 ## Install Prebuilt Packages
 
-> [!NOTE]
-> Prebuilt packages for some ROCm releases are published to Test PyPI first.
-> Check the `simple` lists to see if your operating system and Python version
-> is supported: [hip-python](https://test.pypi.org/simple/hip-python/),
-> [hip-python-as-cuda](https://test.pypi.org/simple/hip-python-as-cuda/).
-
 ***
 
 > [!IMPORTANT]
@@ -64,12 +58,7 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 
 ***
 
-> [!CAUTION]
-> We have only uploaded HIP Python **dummy** packages to PyPI for security reasons.
-> Note that they do not distribute any HIP Python functionality.
-> Please use the ones from Test PyPI for now.
-
-### Via TestPyPI
+### Via PyPI
 
 First identify the first three digits of the version number of your
 ROCm&trade; installation. Then install the HIP Python package(s) as follows:
@@ -77,23 +66,12 @@ ROCm&trade; installation. Then install the HIP Python package(s) as follows:
 <!-- markdownlint-disable  MD013 -->
 
 ```shell
-python3 -m pip install -i https://test.pypi.org/simple hip-python~=$rocm_version.0
+python3 -m pip install hip-python~=$rocm_version.0
 # if you want to install the CUDA Python interoperability package too, run:
-python3 -m pip install -i https://test.pypi.org/simple hip-python-as-cuda~=$rocm_version.0
+python3 -m pip install hip-python-as-cuda~=$rocm_version.0
 ```
 
 <!-- markdownlint-enable  MD013 -->
-
-<!--
--- #### Via TestPyPI
---
--- Packages can be installed via the TestPyPI index by prefixing the
--- the PIP install commands as follows:
---
--- ```shell
--- python3 -m pip install -i https://test.pypi.org/simple ...
--- ```
--->
 
 ### Via Wheel in Local Filesystem
 
@@ -111,60 +89,198 @@ python3 -m pip install $path_to_hip_python_as_cuda.whl
 
 ## Build from Source
 
-1. Install ROCM.
-2. Install `pip`, virtual environment and development headers for Python 3:
+The build uses CMake with `scikit-build-core` as the Python build backend.
+It produces five wheels:
+
+- `rocm-bindings-util` — DLL loader, types, ROCm path resolution
+- `rocm-bindings-hip` — `hip` and `hiprtc` Python bindings
+- `rocm-bindings-libraries` — `hipblas`, `hipsolver`, `rccl`, `hiprand`,
+  `hipfft`, `hipsparse`, `roctx`
+- `rocm-bindings-compiler` — LLVM-C and AMD COMGR bindings (with optional bundled `libLLVM.so`)
+- `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer
+
+Plus a `hip-python` metapackage providing the legacy `hip` import namespace.
+
+> [!NOTE]
+> Most users do **not** need to build from source — prebuilt wheels are
+> distributed via PyPI for every supported ROCm release. See the [Install
+> Prebuilt Packages](#install-prebuilt-packages) section above.
+
+### Quick Start (build all packages)
+
+1. Install ROCm and Python development tools:
 
    ```shell
    # Ubuntu:
    sudo apt install python3-pip python3-venv python3-dev
    ```
 
-3. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular
-   ROCm&trade; installation:
-4. Finally run:
+2. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular
+   ROCm&trade; installation.
+
+3. Create a virtual environment and install build requirements:
 
    ```shell
-   ./build.sh --hip --cuda --post-clean
+   python3 -m venv .venv
+   . .venv/bin/activate
+   pip install --upgrade pip
+   pip install build "scikit-build-core>=0.11.2" "cmake>=3.26" "ninja>=1.11" "cython>=3.0,<3.1"
    ```
 
-The build process will produce Python binary wheels in the subdirectories
-`hip-python/dist/` and `hip-python-as-cuda/dist`, which can be installed
-as discussed in the previous section.
+4. Configure and build all wheels:
+
+   ```shell
+   cd python
+   cmake -B build
+   cmake --build build --target all_wheels -j$(nproc)
+   ```
+
+   Wheels for all five packages plus the `hip-python` metapackage land in
+   `python/build/dist/`.
+
+5. Install the wheels:
+
+   ```shell
+   pip install build/dist/*.whl
+   ```
+
+### Build Individual Packages
+
+Each package has its own `pyproject.toml` and can be built standalone — useful for
+development loops on a single package:
+
+```shell
+# Build just rocm-bindings-util:
+cd python/rocm-bindings-util
+python3 -m build --wheel --no-isolation
+
+# Build just rocm-bindings-hip:
+cd python/rocm-bindings-hip
+python3 -m build --wheel --no-isolation
+```
+
+Standalone per-package builds skip `auditwheel repair` (the resulting wheel is tagged
+`linux_x86_64` rather than `manylinux_*`) and only build that one package's targets.
+Prefer the unified CMake build above when you want all wheels and/or manylinux compatibility.
+
+To build a subset via the unified CMake build, disable the packages you don't want at
+configure time:
+
+```shell
+# Build only util, hip, and libraries (skip compiler and interop):
+cd python
+cmake -B build \
+  -DHIP_PYTHON_BUILD_COMPILER=OFF \
+  -DHIP_PYTHON_BUILD_INTEROP=OFF
+cmake --build build --target all_wheels
+```
+
+You can also build a single package's wheel from the unified build:
+
+```shell
+cd python
+cmake -B build
+cmake --build build --target util_wheel        # rocm-bindings-util only
+cmake --build build --target hip_wheel         # rocm-bindings-hip only
+cmake --build build --target libraries_wheel   # rocm-bindings-libraries only
+cmake --build build --target compiler_wheel    # rocm-bindings-compiler only
+cmake --build build --target interop_wheel     # hip-python-interop only
+cmake --build build --target hip_python_wheel  # hip-python metapackage only
+```
+
+### Build Options
+
+Pass options to CMake via `-D<NAME>=<VALUE>` at configure time.
+
+```shell
+# Debug build
+cmake -B build -DCMAKE_BUILD_TYPE=Debug
+
+# Custom ROCm path
+cmake -B build -DROCM_PATH=/opt/rocm-7.13
+
+# Production manylinux wheels (requires auditwheel)
+cmake -B build -DHIP_PYTHON_AUDITWHEEL_REPAIR=ON
+
+# Custom wheel output directory
+cmake -B build -DHIP_PYTHON_WHEEL_OUTPUT_DIR=/output
+
+# Use sccache
+cmake -B build \
+  -DCMAKE_C_COMPILER_LAUNCHER=sccache \
+  -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+
+# Combine multiple options
+cmake -B build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DHIP_PYTHON_AUDITWHEEL_REPAIR=ON \
+  -DHIP_PYTHON_WHEEL_OUTPUT_DIR=/output
+cmake --build build --target all_wheels -j16
+```
+
+For a clean rebuild, just remove the build directory:
+
+```shell
+rm -rf python/build && cmake -S python -B python/build && cmake --build python/build --target all_wheels
+```
+
+For deeper documentation:
+
+- [share/design/BUILDING.md](share/design/BUILDING.md) — Build system architecture, helper functions, package layout
+- [share/design/CODEGEN.md](share/design/CODEGEN.md) — How the interfacegen code generator interacts with the hip-python source tree to produce a release
+- [BUILD.md](BUILD.md) — CMake target reference and historical CMake-specific notes
 
 > [!NOTE]
 > See the HIP Python developer guide for more details:
 > <https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
 
-### Build Options
+### Build Configuration Options
 
 <!-- markdownlint-disable  MD013 -->
 
-```text
-Usage: ./build.sh [OPTIONS]
-
-Options:
-  --rocm-path          Path to a ROCm installation, defaults to variable 'ROCM_PATH' if set or '/opt/rocm'.
-  --libs               HIP Python libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_LIBS' if set or '*'.
-                       Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
-  --cuda-libs          HIP Python CUDA interop libraries to build as comma separated list without whitespaces, defaults to variable 'HIP_PYTHON_CUDA_LIBS' if set or '*'.
-                       Add a prefix '^' to NOT build the comma-separated list of libraries that follows but all other libraries.
-  --hip                Build package 'hip-python'.
-  --cuda               Build package 'hip-python-as-cuda'.
-  --docs               Build the docs.
-  --no-api-docs        Temporarily move the 'docs/python_api' subfolder so that sphinx does not see it.
-  --no-clean-docs      Do not generate docs from scratch, i.e. don't run sphinx with -E switch.
-  --docs-use-testpypi  Get the HIP Python packages for building the docs from Test PyPI.
-  --docs-use-pypi      Get the HIP Python packages for building the docs from PyPI.
-  --no-archive         Do not put previously created packages into the archive folder.
-  --run-tests          Run the tests.
-  -j,--num-jobs        Number of build jobs to use. Defaults to 1.
-  --pre-clean          Remove the virtual Python environment subfolder '_venv' --- if it exists --- before all other tasks.
-  --post-clean         Remove the virtual Python environment subfolder '_venv' --- if it exists --- after all other tasks.
-  -n, --no-venv        Do not create and use a virtual Python environment.
-  -h, --help           Show this help message.
-```
+| Option | Default | Effect |
+|---|---|---|
+| `ROCM_PATH` | `/opt/rocm` (or `$ROCM_PATH`/`$ROCM_HOME`) | Path to the ROCm installation. |
+| `HIP_PLATFORM` | `amd` | HIP backend selector. Only `amd` and `hcc` are supported. |
+| `HIP_PYTHON_BUILD_<NAME>` | `ON` | Per-package opt-in: `UTIL`, `HIP`, `LIBRARIES`, `COMPILER`, `INTEROP`, `HIP_PYTHON`. |
+| `HIP_PYTHON_RUNTIME_LINKING` | `ON` | When `ON`, generated extensions resolve ROCm shared libraries lazily at runtime; when `OFF`, they link against them at build time. |
+| `HIP_PYTHON_ENABLE_LIB_<NAME>` | `ON` | Per-library toggle inside `rocm-bindings-libraries` (e.g. `HIP_PYTHON_ENABLE_LIB_HIPRAND=OFF`). |
+| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON` | Bundle `libLLVM.so` inside the `rocm-bindings-compiler` wheel. |
+| `HIP_PYTHON_AUDITWHEEL_REPAIR` | `OFF` | Run `auditwheel repair` to produce manylinux wheels. |
+| `HIP_PYTHON_WHEEL_OUTPUT_DIR` | `${CMAKE_BINARY_DIR}/dist` | Wheel output directory. |
+| `CMAKE_BUILD_TYPE` | `Release` | Standard CMake build type. |
 
 <!-- markdownlint-enable  MD013 -->
+
+## Legacy Build from Source
+
+These are the original script-based build instructions for older releases up to
+and including ROCm 7.2.2.
+
+1. Install ROCm.
+1. Install `pip`, virtual environment and development headers for Python 3:
+
+   ```shell
+   # Ubuntu:
+   sudo apt install python3-pip python3-venv python3-dev
+   ```
+
+1. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular
+   ROCm installation.
+1. Initialize the branch:
+
+   ```shell
+   ./init.sh
+   ```
+
+1. Build the packages:
+
+   ```shell
+   ./build_hip_python_pkgs.sh --hip --cuda --post-clean
+   ```
+
+The legacy build process produces Python binary wheels in `hip-python/dist/`
+and `hip-python-as-cuda/dist/`.
 
 ## Documentation
 

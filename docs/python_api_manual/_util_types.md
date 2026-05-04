@@ -20,10 +20,10 @@
   -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   -- SOFTWARE.
   -->
-# hip._util.types
+# rocm.bindings.util.types
 
 <!-- global automodule options are set in conf.py -->
 ```{eval-rst}
-.. automodule:: hip._util.types
+.. automodule:: rocm.bindings.util.types
 
 ```

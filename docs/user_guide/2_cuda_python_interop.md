@@ -358,23 +358,23 @@ enum constants of their HIP analogue as shown in the
 
    # [...]
    class CUmemorytype(hip._hipMemoryType__Base,metaclass=_CUmemorytype_EnumMeta):
-      hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
-      CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
-      cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
-      hipMemoryTypeDevice = hip.chip.hipMemoryTypeDevice
-      CU_MEMORYTYPE_DEVICE = hip.chip.hipMemoryTypeDevice
-      cudaMemoryTypeDevice = hip.chip.hipMemoryTypeDevice
-      hipMemoryTypeArray = hip.chip.hipMemoryTypeArray
-      CU_MEMORYTYPE_ARRAY = hip.chip.hipMemoryTypeArray
-      hipMemoryTypeUnified = hip.chip.hipMemoryTypeUnified
-      CU_MEMORYTYPE_UNIFIED = hip.chip.hipMemoryTypeUnified
-      hipMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
-      cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
+      hipMemoryTypeHost = rocm.bindings.cyhip.hipMemoryTypeHost
+      CU_MEMORYTYPE_HOST = rocm.bindings.cyhip.hipMemoryTypeHost
+      cudaMemoryTypeHost = rocm.bindings.cyhip.hipMemoryTypeHost
+      hipMemoryTypeDevice = rocm.bindings.cyhip.hipMemoryTypeDevice
+      CU_MEMORYTYPE_DEVICE = rocm.bindings.cyhip.hipMemoryTypeDevice
+      cudaMemoryTypeDevice = rocm.bindings.cyhip.hipMemoryTypeDevice
+      hipMemoryTypeArray = rocm.bindings.cyhip.hipMemoryTypeArray
+      CU_MEMORYTYPE_ARRAY = rocm.bindings.cyhip.hipMemoryTypeArray
+      hipMemoryTypeUnified = rocm.bindings.cyhip.hipMemoryTypeUnified
+      CU_MEMORYTYPE_UNIFIED = rocm.bindings.cyhip.hipMemoryTypeUnified
+      hipMemoryTypeManaged = rocm.bindings.cyhip.hipMemoryTypeManaged
+      cudaMemoryTypeManaged = rocm.bindings.cyhip.hipMemoryTypeManaged
    # [...]
 ```
 
-In the `c`-prefixed Cython declaration files (`cuda.ccuda.pxd`,
-`cuda.ccudart.pxd`, and `cuda.cnvrtc.pxd`), you will further find that the
+In the `cy`-prefixed Cython declaration files (`cuda.cydriver.pxd`,
+`cuda.cyruntime.pxd`, and `cuda.cnvrtc.pxd`), you will further find that the
 <!-- markdownlint-disable-next-line MD013 -->
 [HIP functions and union/struct types are directly included too](ccuda_hip_names):
 
@@ -387,16 +387,16 @@ In the `c`-prefixed Cython declaration files (`cuda.ccuda.pxd`,
    :name: ccuda_hip_names
 
    # [...]
-   from hip.chip cimport hipDeviceProp_t
-   from hip.chip cimport hipDeviceProp_t as cudaDeviceProp
+   from rocm.bindings.cyhip cimport hipDeviceProp_t
+   from rocm.bindings.cyhip cimport hipDeviceProp_t as cudaDeviceProp
    # [...]
-   from hip.chip cimport hipMemcpy
-   from hip.chip cimport hipMemcpy as cudaMemcpy
+   from rocm.bindings.cyhip cimport hipMemcpy
+   from rocm.bindings.cyhip cimport hipMemcpy as cudaMemcpy
    # [...]
 ```
 
-In the Cython declaration files without `c`-prefix (`cuda.cuda.pxd`,
-`cuda.cudart.pxd`, and `cuda.nvrtc.pxd`), you will discover that the original
+In the Cython declaration files without `c`-prefix (`cuda.driver.pxd`,
+`cuda.runtime.pxd`, and `cuda.nvrtc.pxd`), you will discover that the original
 HIP types (only those derived from unions and structs) are `c`-imported too and
 that the CUDA interoperability layer types are made subclasses of the
 respective HIP type; see [the example below](cuda_hip_names). This allows to
@@ -412,14 +412,14 @@ aliased HIP Python functions.
    :name: cuda_hip_names
 
    # [...]
-   from hip.hip cimport hipKernelNodeParams # here
-   cdef class CUDA_KERNEL_NODE_PARAMS(hip.hip.hipKernelNodeParams):
+   from rocm.bindings.hip cimport hipKernelNodeParams # here
+   cdef class CUDA_KERNEL_NODE_PARAMS(hip.hipKernelNodeParams):
       pass
-   cdef class CUDA_KERNEL_NODE_PARAMS_st(hip.hip.hipKernelNodeParams):
+   cdef class CUDA_KERNEL_NODE_PARAMS_st(hip.hipKernelNodeParams):
       pass
-   cdef class CUDA_KERNEL_NODE_PARAMS_v1(hip.hip.hipKernelNodeParams):
+   cdef class CUDA_KERNEL_NODE_PARAMS_v1(hip.hipKernelNodeParams):
       pass
-   cdef class cudaKernelNodeParams(hip.hip.hipKernelNodeParams):
+   cdef class cudaKernelNodeParams(hip.hipKernelNodeParams):
       pass
    # [...]
 ```
