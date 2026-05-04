@@ -1,26 +1,27 @@
-<!-- MIT License
-  --
-  -- Copyright (c) 2023-2025 Advanced Micro Devices, Inc.
-  --
-  -- Permission is hereby granted, free of charge, to any person obtaining a copy
-  -- of this software and associated documentation files (the "Software"), to deal
-  -- in the Software without restriction, including without limitation the rights
-  -- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  -- copies of the Software, and to permit persons to whom the Software is
-  -- furnished to do so, subject to the following conditions:
-  --
-  -- The above copyright notice and this permission notice shall be included in all
-  -- copies or substantial portions of the Software.
-  --
-  -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  -- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  -- SOFTWARE.
-  -->
-# Feedback and Reporting Issues
+.. MIT License
+..
+.. Copyright (c) 2023-2026 Advanced Micro Devices, Inc.
+..
+.. Permission is hereby granted, free of charge, to any person obtaining a copy
+.. of this software and associated documentation files (the "Software"), to deal
+.. in the Software without restriction, including without limitation the rights
+.. to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+.. copies of the Software, and to permit persons to whom the Software is
+.. furnished to do so, subject to the following conditions:
+..
+.. The above copyright notice and this permission notice shall be included in all
+.. copies or substantial portions of the Software.
+..
+.. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.. IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.. FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+.. AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+.. LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+.. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+.. SOFTWARE.
+
+Feedback and Reporting Issues
+=============================
 
 We are looking forward to get your positive or negative feedback --- especially
 the negative feedback.
@@ -31,17 +32,18 @@ In particular, we are interested to learn:
 * What changes to the existing interfaces would make your life easier?
 * What else blocks you or could be improved?
 
-## Reporting Issues
+Reporting Issues
+----------------
 
-<!-- markdownlint-disable-next-line MD013 -->
-We use [GitHub Issues](https://github.com/ROCmSoftwarePlatform/hip-python/issues)
+We use `GitHub Issues <https://github.com/ROCmSoftwarePlatform/hip-python/issues>`__
 to track public **bugs** and **enhancement requests**.
 
-<!-- markdownlint-disable-next-line MD013 -->
-If you have found an issue, please check the [HIP Python documentation](https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html)
+If you have found an issue, please check the `HIP Python documentation
+<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>`__
 to see if it hasn't already been resolved in the latest version of HIP Python.
 
-### Bugs
+Bugs
+^^^^
 
 Please follow the template below to report bugs that you found in HIP Python:
 
@@ -56,7 +58,8 @@ Please follow the template below to report bugs that you found in HIP Python:
 
 3. Any additional information:
 
-### Enhancement Requests
+Enhancement Requests
+^^^^^^^^^^^^^^^^^^^^
 
 Please follow the template below to request any enhancement for HIP Python:
 
@@ -74,16 +77,16 @@ Other contributors can change these values if they disagree. That being said,
 adding a small comment explaining the motivation is highly recommended.
 In this way, we keep the process flexible while cultivating mutual understanding.
 
-:::{note}
+.. note::
 
-Most likely, labels like "bug", "feature" or "complexity*"
-will not cause discussions while others like "value*" or "urgency*" might
-do so.
-:::
+   Most likely, labels like "bug", "feature" or "complexity*"
+   will not cause discussions while others like "value*" or "urgency*" might
+   do so.
 
-## Creating Pull Requests
+Creating Pull Requests
+----------------------
 
-No changes are allowed to be directly committed to the `dev` and release
+No changes are allowed to be directly committed to the ``dev`` and release
 branches of the HIP Python repository. All authors are required to
 develop their change sets on a separate branch and then create
 a pull request (PR) to merge their changes into the respective branch.
@@ -94,7 +97,8 @@ technical expert in the portion of the library that the changes
 are being made in. The second reviewer should be a peer reviewer. This reviewer
 can be any other HIP Python developer.
 
-## Responsibility of the Author
+Responsibility of the Author
+----------------------------
 
 The author of a PR is responsible for:
 
@@ -104,7 +108,8 @@ The author of a PR is responsible for:
 * Writing tests to ensure code coverage
 * Report on the impact to performance
 
-## Responsibility of the Reviewer
+Responsibility of the Reviewer
+------------------------------
 
 Each reviewer is responsible for verifying that the changes are
 clearly written in keeping with the coding styles of the library,
@@ -114,31 +119,32 @@ maintain or improve the overall quality of the code base.
 
 Reviewer's task checklist:
 
-* [ ] Has the PR passed necessary CI?
-* [ ] Does the PR consist of a well-organized sequence of small commits, each
+* Has the PR passed necessary CI?
+* Does the PR consist of a well-organized sequence of small commits, each
   of which is designed to make one specific feature or fix (and ideally should
   be able to pass CI testing)?
-* [ ] Does the PR only include a reviewable amount of changes? Or it is a
+* Does the PR only include a reviewable amount of changes? Or it is a
   consolidation of already reviewed small batches? e.g. break it into smaller
   testable and reviewable tasks instead of a huge chunk at once.
-<!-- markdownlint-disable-next-line MD013 -->
-* [ ] Is PR sufficiently documented and it is easy to read and understand, is
+* Is PR sufficiently documented and it is easy to read and understand, is
   it feasible for test and future maintenance? Do related docs already exist in
-  the [HIP Python documentation](https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html)
+  the `HIP Python documentation <https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>`__
   if API or functionality has changed?
-* [ ] For bug fixes and new features, new regression test created and included
+* For bug fixes and new features, new regression test created and included
   in CI, or some other holistic test pipeline?
-* [ ] Is every PR associated with a ticket or issue number for tracking
+* Is every PR associated with a ticket or issue number for tracking
   purposes?
 
-## Passing CI
+Passing CI
+----------
 
 The most critical component of the PR process is the CI testing.
 All PRs must pass the CI in order to be considered for merger.
 Reviewers may choose to defer their review until the CI testing
 has passed.
 
-## The Review
+The Review
+----------
 
 During the review, reviewers will look over the changes and make
 suggestions or requests for changes.
@@ -154,17 +160,19 @@ authors can take the following actions:
 * If a PR needs to be reviewed as soon as possible, explain to
   the reviewers why a review may need to take priority.
 
-### PRs affecting autogenerated code
+PRs affecting autogenerated code
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In situations where your PR affects code that is autogenerated, the PR creation
 and review should take place as described above, however the reviewers should
 additionally appoint a HIP Python developer to integrate the fix or enhancement
 into the code generator of HIP Python.
 
-## Other Feedback/Requests
+Other Feedback/Requests
+-----------------------
 
 For other feedback or requests, please use this address:
 
-```text
-hip-python.maintainer@amd.com
-```
+.. code-block:: text
+
+   hip-python.maintainer@amd.com
