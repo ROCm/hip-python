@@ -520,6 +520,57 @@ class CythonMixin(DoxygenMixin):
     def to_sphinx_pyobj(expr: str):
         return python_interface_pyobj_role_template.format(name=expr)
 
+    def render_pyi_stub(
+        self, cprefix: str, *, override_name: str = None,
+        base: str = None,
+    ):
+        """Render this node as a `.pyi` type-stub fragment.
+
+        Returns a `list[str]` of lines, or `None` if this node should
+        be omitted from the stub (most node kinds — only the handful
+        of public API entities have an override below).
+
+        Args:
+            cprefix:
+                The Cython C-level module prefix (e.g. ``"cyhip."``)
+                used by the same docstring-rendering helpers that drive
+                the .pyx output.
+            override_name:
+                If set, the stub renders under this name instead of
+                ``self.cython_name``. The cuda interop generator uses
+                this so a hip node can be re-emitted as its cuda alias
+                with the hip signature/docstring intact.
+            base:
+                If set, class stubs render as ``class Name(<base>):``.
+                The cuda interop uses this so each cuda alias inherits
+                from the corresponding hip type, matching the
+                ``cdef class CUDA_X(hip.X): pass`` shape in the .pyx.
+        """
+        return None
+
+    def _render_pyi_class_stub(
+        self, cprefix: str, override_name: str = None,
+        base: str = None,
+    ):
+        """Shared implementation used by `Record`, `Enum`, `AnonymousEnum`,
+        and `FunctionPointer`. Renders ``class Name[(base)]:`` followed
+        by the docstring (`render_python_docstring`) and a placeholder
+        ``__init__``."""
+        name = override_name or getattr(self, "cython_name", None) or self.name
+        if not name or not name.isidentifier():
+            return None
+        try:
+            docstring = self.render_python_docstring(cprefix)
+        except Exception:
+            docstring = None
+        head = f"class {name}({base}):" if base else f"class {name}:"
+        lines = [head]
+        if docstring:
+            for dl in docstring.splitlines():
+                lines.append(f"    {dl}" if dl else "")
+        lines.append("    def __init__(self, *args, **kwargs): ...")
+        return lines
+
 
 Node = CythonMixin  # alias so that it can be used in treefactory
 
@@ -655,6 +706,18 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
     def render_c_interface_impl(self):
         """Render the implementation part of the macro definition, which is only relevant for hardcoded values."""
         return self.render_c_interface(is_decl=False)
+
+    def render_pyi_stub(
+        self, cprefix: str, *, override_name: str = None,
+        base: str = None,
+    ):
+        """Macro constants render as `<name>: Any` (no type info — the
+        macro_type callback is best-effort and we don't pretend
+        otherwise in the stub)."""
+        name = override_name or self.cython_name
+        if not name or not name.isidentifier():
+            return None
+        return [f"{name}: Any"]
 
     def render_python_interface_impl(self, cprefix: str):
         """Render a Python-facing macro definition assignment string.
@@ -900,6 +963,12 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
     def __init__(self):
         raise RuntimeError("cannot be instantiated")
 
+    def render_pyi_stub(
+        self, cprefix: str, *, override_name: str = None,
+        base: str = None,
+    ):
+        return self._render_pyi_class_stub(cprefix, override_name, base)
+
     @property
     def c_record_kind(self) -> str:
         if self.cursor.kind == clang.cindex.CursorKind.STRUCT_DECL:
@@ -1080,6 +1149,12 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
     def __init__(self, *args, **kwargs):
         tree.Enum.__init__(self, *args, **kwargs)
         CythonMixin.__init__(self)
+
+    def render_pyi_stub(
+        self, cprefix: str, *, override_name: str = None,
+        base: str = None,
+    ):
+        return self._render_pyi_class_stub(cprefix, override_name, base)
 
     def _render_cython_enums(self):
         """Yields the enum constants' names."""
@@ -1355,6 +1430,12 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
 
 
 class FunctionPointer(CythonMixin):
+
+    def render_pyi_stub(
+        self, cprefix: str, *, override_name: str = None,
+        base: str = None,
+    ):
+        return self._render_pyi_class_stub(cprefix, override_name, base)
 
     def render_c_interface_decl(self):
         """Returns a Cython binding for this Typedef."""
@@ -2256,6 +2337,85 @@ cdef void* {funptr_name} = NULL
         self.all.append(self.cython_global_name)
         return result
 
+    # ------------------------------------------------------------------
+    # .pyi rendering
+    # ------------------------------------------------------------------
+
+    def render_pyi_stub(
+        self, cprefix: str, *, override_name: str = None,
+        base: str = None,
+    ):
+        """Function override of `CythonMixin.render_pyi_stub`.
+
+        Reuses `_analyze_parms` to recover the real parameter names,
+        and `_render_python_docstring` to embed the same Args/Returns
+        docstring the .pyx carries. Argument and return-value type
+        annotations are intentionally bare — `parm_python_types` is
+        union-valued (e.g. ``DeviceArray/object``) and would not
+        round-trip cleanly to a Python annotation; the docstring is
+        the source of truth for types.
+
+        `base` is unused for functions (kept in the signature for
+        a uniform call site with class-stub renderers). On any
+        analysis exception, falls back to ``def name(*args, **kwargs)``.
+        """
+        del base  # functions don't have a base class
+        name = override_name or self.cython_name
+        if not name or not name.isidentifier():
+            return None
+        try:
+            (
+                _fully_specified,
+                sig_args,
+                _out_args,
+                out_parms,
+                _call_args,
+                _prolog,
+                parm_python_types,
+            ) = self._analyze_parms(cprefix)
+        except Exception:
+            return [f"def {name}(*args, **kwargs): ..."]
+        py_params = []
+        for sa in sig_args:
+            _ctype, pname, default = _pyi_split_sig_arg(sa)
+            if default is not None:
+                py_params.append(f"{pname}={default}")
+            else:
+                py_params.append(pname)
+        try:
+            docstring = self._render_python_docstring(
+                [p.name for p in out_parms], parm_python_types
+            )
+        except Exception:
+            docstring = None
+        sig = ", ".join(py_params)
+        lines = [f"def {name}({sig}):"]
+        if docstring:
+            for dl in docstring.splitlines():
+                lines.append(f"    {dl}" if dl else "")
+        lines.append("    ...")
+        return lines
+
+
+def _pyi_split_sig_arg(sig_arg: str):
+    """Parse a Cython sig_arg like 'unsigned long size' or 'object foo'
+    into (cython_type, name, default). Used by `Function.render_pyi_stub`."""
+    if "=" in sig_arg:
+        decl, default = sig_arg.split("=", 1)
+        decl = decl.rstrip()
+        default = default.strip()
+    else:
+        decl = sig_arg
+        default = None
+    parts = decl.rsplit(" ", 1)
+    if len(parts) == 1:
+        ctype = None
+        name = parts[0]
+    else:
+        ctype, name = parts
+    name = name.lstrip("*")
+    return (ctype.strip() if ctype else None, name.strip(), default)
+
 
 class CythonBackend:
     def from_libclang_translation_unit(
@@ -2844,140 +3004,15 @@ class CythonModuleGenerator:
         with open(f"{output_dir}/{self.module_name}.pyi", "w") as outfile:
             outfile.write(self._render_pyi_stub(f"{cmodule_name}."))
 
-    # Cython sig_arg → Python type annotation. Covers the autoconverted
-    # types Cython exposes (CYTHON_AUTOCONV_TO_PYTHON_TYPES) plus a few
-    # extras used by the generator.
-    _PYI_CTYPE_MAP = {
-        "char": "int", "short": "int", "int": "int", "long": "int",
-        "long long": "int", "size_t": "int", "ssize_t": "int",
-        "unsigned char": "int", "unsigned short": "int",
-        "unsigned int": "int", "unsigned long": "int",
-        "unsigned long long": "int",
-        "float": "float", "double": "float", "long double": "float",
-        "bint": "bool", "bool": "bool",
-        "object": "Any",
-    }
-
-    @staticmethod
-    def _pyi_split_sig_arg(sig_arg: str):
-        """Parse a Cython sig_arg like 'unsigned long size' or 'object foo'
-        into (cython_type, name, default)."""
-        if "=" in sig_arg:
-            decl, default = sig_arg.split("=", 1)
-            decl = decl.rstrip()
-            default = default.strip()
-        else:
-            decl = sig_arg
-            default = None
-        parts = decl.rsplit(" ", 1)
-        if len(parts) == 1:
-            ctype = None
-            name = parts[0]
-        else:
-            ctype, name = parts
-        name = name.lstrip("*")
-        return (ctype.strip() if ctype else None, name.strip(), default)
-
-    @classmethod
-    def _pyi_ctype_to_py(cls, ctype):
-        if ctype is None:
-            return "Any"
-        norm = " ".join(ctype.split())
-        if norm in cls._PYI_CTYPE_MAP:
-            return cls._PYI_CTYPE_MAP[norm]
-        if norm.endswith("*") and "char" in norm:
-            return "bytes"
-        if norm.endswith("*"):
-            return "Any"
-        # Likely a record/enum class name in this module — keep as
-        # forward reference. `from __future__ import annotations`
-        # turns every annotation into a string, so unresolved names
-        # never blow up at import time.
-        if norm.replace("_", "").isalnum() and norm[:1].isalpha():
-            return norm
-        return "Any"
-
-    @staticmethod
-    def _pyi_normalize_doctype(raw):
-        """Convert a `parm_python_types` value into a Python annotation.
-
-        Values look like 'int', 'hipDeviceProp_t', or 'DeviceArray/object'
-        (the last form denotes a union of acceptable adapter types). Pick
-        the first option as the annotation; readers wanting the full set
-        consult the docstring."""
-        if not raw:
-            return None
-        first = raw.split("/")[0].strip()
-        if not first:
-            return None
-        # Reject anything that doesn't look like a bare identifier or
-        # dotted path — those would not parse as a type annotation.
-        if not all(part.isidentifier() for part in first.split(".")):
-            return None
-        return first
-
-    def _pyi_function_stub(self, node, cprefix):
-        """Render a stub line for a Function node with real param names
-        and the docstring the .pyx emits.
-
-        Argument and return-value type annotations are intentionally
-        omitted — the docstring is the source of truth for types
-        (`parm_python_types` is union-valued, e.g. `DeviceArray/object`,
-        and that does not round-trip cleanly to a Python annotation).
-        """
-        try:
-            result = node._analyze_parms(cprefix)
-            sig_args = result[1]
-            out_parms = result[3]
-            parm_python_types = result[6]
-        except Exception:
-            return [f"def {node.cython_name}(*args, **kwargs): ..."]
-        py_params = []
-        for sa in sig_args:
-            _ctype, pname, default = self._pyi_split_sig_arg(sa)
-            if default is not None:
-                py_params.append(f"{pname}={default}")
-            else:
-                py_params.append(pname)
-        try:
-            docstring = node._render_python_docstring(
-                [p.name for p in out_parms], parm_python_types
-            )
-        except Exception:
-            docstring = None
-        sig = ", ".join(py_params)
-        lines = [f"def {node.cython_name}({sig}):"]
-        if docstring:
-            for dl in docstring.splitlines():
-                lines.append(f"    {dl}" if dl else "")
-        lines.append("    ...")
-        return lines
-
-    def _pyi_class_stub(self, node, cprefix, rendered_name):
-        """Render a class stub with the docstring the .pyx emits."""
-        try:
-            docstring = node.render_python_docstring(cprefix)
-        except Exception:
-            docstring = None
-        lines = [f"class {rendered_name}:"]
-        if docstring:
-            for dl in docstring.splitlines():
-                lines.append(f"    {dl}" if dl else "")
-        lines.append("    def __init__(self, *args, **kwargs): ...")
-        return lines
-
     def _render_pyi_stub(self, cprefix: str) -> str:
         """Render a `.pyi` type-stub for the high-level Python module.
 
-        Walks the same filtered node tree used by
-        `render_python_interface_impl_part`. For each Function the stub
-        carries the actual parameter names with Python type annotations
-        derived from the same `_analyze_parms` info that drives the .pyx,
-        plus the docstring the .pyx emits — so static type checkers
-        (mypy, pyright), IDEs, and autoapi see a faithful (though
-        signature-light) view of the API surface without the compiled
-        extension on `sys.path`. Records / enums get a class stub plus
-        their generated docstring; macro constants stay `: Any`.
+        Thin walker: each node knows how to render its own stub via
+        `CythonMixin.render_pyi_stub` (overridden on `Function` to
+        carry the real signature + docstring). This module-level
+        method just iterates the same filtered node tree that drives
+        the .pyx, concatenates the per-node stubs, and adds the
+        module header + `__all__`.
         """
         lines = [
             "# AUTO-GENERATED by the hip-python code generator.",
@@ -2999,13 +3034,8 @@ class CythonModuleGenerator:
                 rendered_name = name
             if not rendered_name or not rendered_name.isidentifier():
                 continue
-            if isinstance(node, Function):
-                stub = self._pyi_function_stub(node, cprefix)
-            elif isinstance(node, (Record, Enum, AnonymousEnum, FunctionPointer)):
-                stub = self._pyi_class_stub(node, cprefix, rendered_name)
-            elif isinstance(node, MacroDefinition):
-                stub = [f"{rendered_name}: Any"]
-            else:
+            stub = node.render_pyi_stub(cprefix, override_name=rendered_name)
+            if not stub:
                 continue
             lines.extend(stub)
             lines.append("")

@@ -356,55 +356,56 @@ def _all_emitted_modules(recipe_results):
 
 
 def write_docs_pages(opts, recipe_results):
-    """Emit one Sphinx .rst page per generated module.
+    """Emit one Sphinx .rst page per generated cy* module.
 
-    For each high-level module, emit an autoapi-driven page. For each
-    cy* C-level wrapper, emit a page that uses `literalinclude` to embed
-    the .pxd source with Cython syntax highlighting (the .pxd itself is
-    the readable contract for downstream Cython users).
+    The high-level Python modules are documented by sphinx-autoapi
+    directly (it walks the source tree configured in
+    ``autoapi_dirs`` and writes one ``index.rst`` per module). The
+    generator therefore does NOT emit wrapper pages for them — the
+    TOC (see ``write_toc_yml_in``) points at the autoapi-emitted
+    paths instead. Earlier versions wrote a ``.. autoapi-module::``
+    stub here, but that directive does not exist in sphinx-autoapi
+    and produced empty pages.
 
-    Cleanup: any existing `.rst` (or leftover `.md`) under
-    docs_src/python_api/ that starts with the autogen header AND no longer
-    corresponds to a current module is removed. Handcoded pages
-    (`rocm.bindings.util.rst`, `hip.rst`, …) lack the header and are
-    preserved.
+    For each cy* C-level wrapper, this function emits a real
+    ``literalinclude`` page that embeds the .pxd source with Cython
+    syntax highlighting (the .pxd is the readable contract for
+    downstream Cython users; cy* modules are not Python-importable
+    and thus not autoapi targets).
+
+    Cleanup: any `.rst` (or leftover `.md`) under
+    ``docs_src/python_api/`` that starts with the autogen header AND
+    no longer corresponds to a current cy* module is removed.
+    Handcoded pages (no autogen header) are preserved.
     """
     docs_dir = os.path.join(opts.output_dir, "docs_src", "python_api")
     Path(docs_dir).mkdir(parents=True, exist_ok=True)
 
     high_level = _all_emitted_modules(recipe_results)
+    # Only cy* pages are generator-owned now; the cleanup pass uses
+    # `expected` to know which autogen-headered files to keep.
     expected = set()
     for module in high_level:
-        expected.add(f"{module}.rst")
-        # Each high-level module has a paired cy* page (except for
-        # _hip_helpers / _hiprtc_helpers which are handcoded and therefore
-        # not in the high-level list).
         leaf = module.rsplit(".", 1)[-1]
-        if not leaf.startswith("cy") and not leaf.startswith("_"):
-            cy_dotted = ".".join(module.rsplit(".", 1)[:-1] + [f"cy{leaf}"])
-            expected.add(f"{cy_dotted}.rst")
+        if leaf.startswith("cy") or leaf.startswith("_"):
+            continue
+        cy_dotted = ".".join(module.rsplit(".", 1)[:-1] + [f"cy{leaf}"])
+        expected.add(f"{cy_dotted}.rst")
 
-    # Emit pages.
+    # Emit cy* literalinclude pages.
     for module in high_level:
         leaf = module.rsplit(".", 1)[-1]
-        if leaf.startswith("_"):
-            continue  # handcoded helpers (_hip_helpers, _hiprtc_helpers)
-        # High-level Python autoapi page.
-        underline = "=" * len(module)
-        with open(os.path.join(docs_dir, f"{module}.rst"), "w") as f:
-            f.write(
-                f"{_AUTOGEN_RST_HEADER}\n"
-                f"{module}\n{underline}\n\n"
-                f".. autoapi-module:: {module}\n"
-            )
-        # cy* C-level literalinclude page (skip if this entry already IS cy*).
-        if leaf.startswith("cy"):
+        if leaf.startswith("_") or leaf.startswith("cy"):
             continue
         cy_dotted = ".".join(module.rsplit(".", 1)[:-1] + [f"cy{leaf}"])
         cy_underline = "=" * len(cy_dotted)
         pxd_rel = _module_to_pxd_relpath(opts, module)
         if pxd_rel is None:
             continue
+        # The high-level autoapi-emitted index lives at
+        # `python_api/<slash/path>/index` — link from the cy* page so
+        # readers can hop to the Python API for the same module.
+        autoapi_doc = "/".join(["", "python_api", *module.split("."), "index"])
         with open(os.path.join(docs_dir, f"{cy_dotted}.rst"), "w") as f:
             f.write(
                 f"{_AUTOGEN_RST_HEADER}\n"
@@ -414,15 +415,16 @@ def write_docs_pages(opts, recipe_results):
                 f"these declarations directly.\n\n"
                 f".. seealso::\n\n"
                 f"   The high-level Python API is documented at "
-                f":doc:`{module}`.\n\n"
+                f":doc:`{autoapi_doc}`.\n\n"
                 f".. literalinclude:: {pxd_rel}\n"
                 f"   :language: cython\n"
             )
 
-    # Cleanup pass: remove autogen pages whose module is no longer present.
-    expected_str = {n for n in expected if n}
+    # Cleanup pass: remove autogen pages whose module is no longer
+    # present, including the legacy ``<dotted>.rst`` wrappers from the
+    # broken-`.. autoapi-module::` era.
     for fn in os.listdir(docs_dir):
-        if fn in expected_str:
+        if fn in expected:
             continue
         if not (fn.endswith(".rst") or fn.endswith(".md")):
             continue
@@ -446,7 +448,12 @@ def write_toc_yml_in(opts, recipe_results):
     contains a `@TOC_ENTRIES_<SECTION>@` placeholder per generator-owned
     subtree (rocm-bindings-{hip,libraries,compiler}, hip-python-interop,
     cython-level). This pass substitutes each placeholder with the
-    discovered `      - file: python_api/<dotted-name>` entries.
+    discovered TOC entries.
+
+    High-level modules point at the autoapi-emitted index path
+    (``python_api/<slash/path>/index``); cy* modules keep the dotted
+    form because they are real generator-emitted literalinclude pages
+    (see ``write_docs_pages``).
 
     Handcoded subtrees (User Guide, rocm-bindings-util, hip compat shim,
     Manual API) are listed inline in the template and left unchanged.
@@ -488,8 +495,13 @@ def write_toc_yml_in(opts, recipe_results):
             section = "HIP_PYTHON_INTEROP"
         else:
             continue
-        sections[section].append(f"      - file: python_api/{module}")
-        # Each high-level entry has a paired cy* entry (in the cy subtree).
+        # High-level modules are autoapi-emitted; reference their
+        # natural slash/path/index location.
+        autoapi_path = "/".join(["python_api", *module.split("."), "index"])
+        sections[section].append(f"      - file: {autoapi_path}")
+        # Each high-level entry has a paired cy* entry (in the cy subtree)
+        # — that one IS a real generator-emitted page, so use the dotted
+        # form to match the file the generator writes.
         if not leaf.startswith("cy"):
             cy_dotted = ".".join(module.rsplit(".", 1)[:-1] + [f"cy{leaf}"])
             sections["CYTHON_LEVEL"].append(
