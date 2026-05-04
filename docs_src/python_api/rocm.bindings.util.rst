@@ -20,23 +20,24 @@
 .. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .. SOFTWARE.
 
-hip (legacy compatibility shim)
-===============================
+rocm.bindings.util
+==================
 
-The ``hip`` package is a pure-Python compatibility shim shipped by the
-``hip-python`` metapackage. It re-exports the modern ``rocm.bindings.*``
-namespace under the legacy ``hip`` import path, so existing user code that
-does ``from hip import hip, hiprtc, hipblas`` keeps working unchanged after
-the ``rocm-bindings-*`` package split.
+The ``rocm.bindings.util`` package is the foundation of the modern hip-python
+package layout. It is **handcoded in full** — no part of it is produced by
+the interfacegen code generator. Every other ``rocm-bindings-*`` package
+depends on it for DLL loading, type marshalling, and ROCm path resolution.
 
-It is **handcoded** — not produced by the interfacegen code generator.
+It contains:
 
-.. note::
+* The platform-agnostic :py:mod:`rocm.bindings.util.loader` Cython module
+  (dispatching to ``posixloader`` on Linux or ``win32loader`` on Windows at
+  Cython compile time).
+* The shared Cython type adapters in :py:mod:`rocm.bindings.util.types`
+  (``Pointer``, ``CStr``, ``ImmortalCStr``, ``NDBuffer``, ``ListOfPointer``,
+  ``ListOfBytes``, ``DeviceArray``).
+* The :py:mod:`rocm.bindings.util.paths` helper with
+  ``get_library_path('<libname>')`` for lazy ROCm library resolution at
+  import time.
 
-   New code should prefer ``from rocm.bindings import hip`` (or
-   ``import rocm.bindings.hip as hip``) directly. The legacy
-   ``from hip import hip`` style continues to work as a compatibility
-   shim and is not deprecated, but the ``rocm.bindings.*`` style is more
-   explicit about which package supplies the symbol.
-
-.. autoapi-module:: hip
+.. autoapi-module:: rocm.bindings.util

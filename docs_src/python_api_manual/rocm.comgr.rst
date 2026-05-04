@@ -20,23 +20,30 @@
 .. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .. SOFTWARE.
 
-hip (legacy compatibility shim)
-===============================
+rocm.comgr
+==========
 
-The ``hip`` package is a pure-Python compatibility shim shipped by the
-``hip-python`` metapackage. It re-exports the modern ``rocm.bindings.*``
-namespace under the legacy ``hip`` import path, so existing user code that
-does ``from hip import hip, hiprtc, hipblas`` keeps working unchanged after
-the ``rocm-bindings-*`` package split.
+The ``rocm.comgr`` package is a **handcoded** high-level Python wrapper around
+the generator-emitted COMGR Cython bindings (``rocm.bindings.amd_comgr``,
+``rocm.bindings.cyamd_comgr``). It ships in the ``rocm-bindings-compiler``
+wheel under ``python/rocm-bindings-compiler/rocm/comgr/``.
 
-It is **handcoded** — not produced by the interfacegen code generator.
+It provides convenience helpers for working with AMD Code Object Manager
+(COMGR) workflows: assembling and disassembling code objects, parsing AMD HSA
+kernel descriptors, etc.
 
-.. note::
+.. seealso::
 
-   New code should prefer ``from rocm.bindings import hip`` (or
-   ``import rocm.bindings.hip as hip``) directly. The legacy
-   ``from hip import hip`` style continues to work as a compatibility
-   shim and is not deprecated, but the ``rocm.bindings.*`` style is more
-   explicit about which package supplies the symbol.
+   * :doc:`/python_api/rocm.bindings.amd_comgr` — the generator-emitted
+     low-level Python bindings.
 
-.. autoapi-module:: hip
+.. autoapi-module:: rocm.comgr
+
+Submodules
+----------
+
+.. autoapi-module:: rocm.comgr.comgr
+
+.. autoapi-module:: rocm.comgr.amd_hsa_kernel_descriptor
+
+.. autoapi-module:: rocm.comgr.amdhsa_kernel_directives

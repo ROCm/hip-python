@@ -94,26 +94,30 @@ Spotlight
       The full list of HIP Python Python variables, classes
       and functions.
 
-      * :doc:`python_api/hip`
-      * :doc:`python_api/hiprtc`
-      * :doc:`python_api/hipblas`
-      * :doc:`python_api/rccl`
-      * :doc:`python_api/hiprand`
-      * :doc:`python_api/hipfft`
-      * :doc:`python_api/hipsparse`
-      * :doc:`python_api/roctx`
-      * :doc:`python_api/hipsolver`
+      * :doc:`python_api/rocm.bindings.util`
+      * :doc:`python_api/rocm.bindings.hip`
+      * :doc:`python_api/rocm.bindings.hiprtc`
+      * :doc:`python_api/rocm.bindings.hipblas`
+      * :doc:`python_api/rocm.bindings.hipsolver`
+      * :doc:`python_api/rocm.bindings.rccl`
+      * :doc:`python_api/rocm.bindings.hiprand`
+      * :doc:`python_api/rocm.bindings.hipfft`
+      * :doc:`python_api/rocm.bindings.hipsparse`
+      * :doc:`python_api/rocm.bindings.roctx`
+      * :doc:`python_api/rocm.bindings.amd_comgr`
+      * :doc:`python_api/hip` (legacy compat shim)
       * :doc:`python_api_manual/_hip_helpers`
       * :doc:`python_api_manual/_util_types`
+      * :doc:`python_api_manual/rocm.comgr`
 
    .. grid-item-card:: The CUDA Python Interoperability Layer's Python API
 
       The full list of the CUDA Python interoperability layer's Python variables, classes
       and functions.
 
-      * :doc:`python_api/cuda`
-      * :doc:`python_api/cudart`
-      * :doc:`python_api/nvrtc`
+      * :doc:`python_api/cuda.bindings.driver`
+      * :doc:`python_api/cuda.bindings.runtime`
+      * :doc:`python_api/cuda.bindings.nvrtc`
 
 .. |reg| unicode:: U+000AE .. REGISTERED SIGN
    :ltrim:

@@ -8,7 +8,7 @@
 defaults:
   numbered: False
   maxdepth: 6
-root: index.md
+root: index
 subtrees:
   - caption: User Guide
     entries:
@@ -18,21 +18,50 @@ subtrees:
       - file: user_guide/3_datatypes
       - file: user_guide/4_report_bugs
       - file: user_guide/5_license
-  - caption: "HIP Python: Python API"
+  - caption: "rocm-bindings-util"
+    entries:
+      - file: python_api/rocm.bindings.util
+  - caption: "rocm-bindings-hip"
+    entries:
+      - file: python_api/rocm.bindings.hip
+      - file: python_api/rocm.bindings.hiprtc
+  - caption: "rocm-bindings-libraries"
+    entries:
+      - file: python_api/rocm.bindings.hipblas
+      - file: python_api/rocm.bindings.hipsolver
+      - file: python_api/rocm.bindings.rccl
+      - file: python_api/rocm.bindings.hiprand
+      - file: python_api/rocm.bindings.hipfft
+      - file: python_api/rocm.bindings.hipsparse
+      - file: python_api/rocm.bindings.roctx
+  - caption: "rocm-bindings-compiler"
+    entries:
+      - file: python_api/rocm.bindings.amd_comgr
+  - caption: "hip-python-interop (CUDA compat)"
+    entries:
+      - file: python_api/cuda.bindings.driver
+      - file: python_api/cuda.bindings.runtime
+      - file: python_api/cuda.bindings.nvrtc
+  - caption: "hip-python (legacy compat shim)"
     entries:
       - file: python_api/hip
-      - file: python_api/hiprtc
-      - file: python_api/hipblas
-      - file: python_api/rccl
-      - file: python_api/hiprand
-      - file: python_api/hipfft
-      - file: python_api/hipsparse
-      - file: python_api/roctx
-      - file: python_api/hipsolver
+  - caption: "Manual API"
+    entries:
       - file: python_api_manual/_hip_helpers
       - file: python_api_manual/_util_types
-  - caption: "CUDA Python Interoperability: Python API"
+      - file: python_api_manual/rocm.comgr
+  - caption: "Cython-level declarations (advanced — for cimport users)"
     entries:
-      - file: python_api/cuda
-      - file: python_api/cudart
-      - file: python_api/nvrtc
+      - file: python_api/rocm.bindings.cyhip
+      - file: python_api/rocm.bindings.cyhiprtc
+      - file: python_api/rocm.bindings.cyhipblas
+      - file: python_api/rocm.bindings.cyhipsolver
+      - file: python_api/rocm.bindings.cyrccl
+      - file: python_api/rocm.bindings.cyhiprand
+      - file: python_api/rocm.bindings.cyhipfft
+      - file: python_api/rocm.bindings.cyhipsparse
+      - file: python_api/rocm.bindings.cyroctx
+      - file: python_api/rocm.bindings.cyamd_comgr
+      - file: python_api/cuda.bindings.cydriver
+      - file: python_api/cuda.bindings.cyruntime
+      - file: python_api/cuda.bindings.cynvrtc
