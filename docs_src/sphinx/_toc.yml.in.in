@@ -1,14 +1,22 @@
-# Variables of the form ${<variable>} are substituted, currently the following
-# list is supported:
-#   - ${branch} (or {branch}) the name of the current branch
-#   - ${url} (or {url}) github url of the current project
-#   - ${project:<project_name>} base url of the documentation of <project_name>
-#     based on intersphinx_mapping.
-# These comments will also be removed.
+# Template for the Sphinx TOC, rendered by the hip-python code generator.
+#
+# The generator reads this file (`_toc.yml.in.in`) and writes
+# `_toc.yml.in` next to it, substituting every `@TOC_ENTRIES_<SECTION>@`
+# placeholder below with the discovered per-subtree module list. Handcoded
+# subtrees (User Guide, rocm-bindings-util, hip-python compat shim,
+# Manual API) are listed inline and left unchanged.
+#
+# Placeholder convention: `@VAR@` (matches the `_version.py.in` style
+# used elsewhere in the repo). Each placeholder expands to a multi-line
+# YAML block of `      - file: python_api/<name>` entries (already
+# indented to fit under `entries:`); the placeholder must therefore sit
+# at column 0 on its own line.
+#
+# See `share/design/CODEGEN.md` for the broader output-scope contract.
 defaults:
   numbered: False
   maxdepth: 6
-root: index.md
+root: index
 subtrees:
   - caption: User Guide
     entries:
@@ -18,11 +26,29 @@ subtrees:
       - file: user_guide/3_datatypes
       - file: user_guide/4_report_bugs
       - file: user_guide/5_license
-  - caption: "HIP Python: Python API"
+  - caption: "rocm-bindings-util"
     entries:
-{PYTHON_API_FILE_NAMES}
+      - file: python_api/rocm.bindings.util
+  - caption: "rocm-bindings-hip"
+    entries:
+@TOC_ENTRIES_ROCM_BINDINGS_HIP@
+  - caption: "rocm-bindings-libraries"
+    entries:
+@TOC_ENTRIES_ROCM_BINDINGS_LIBRARIES@
+  - caption: "rocm-bindings-compiler"
+    entries:
+@TOC_ENTRIES_ROCM_BINDINGS_COMPILER@
+  - caption: "hip-python-interop (CUDA compat)"
+    entries:
+@TOC_ENTRIES_HIP_PYTHON_INTEROP@
+  - caption: "hip-python (legacy compat shim)"
+    entries:
+      - file: python_api/hip
+  - caption: "Manual API"
+    entries:
       - file: python_api_manual/_hip_helpers
       - file: python_api_manual/_util_types
-  - caption: "CUDA Python Interoperability: Python API"
+      - file: python_api_manual/rocm.comgr
+  - caption: "Cython-level declarations (advanced — for cimport users)"
     entries:
-{PYTHON_API_FILE_NAMES_CUDA}
+@TOC_ENTRIES_CYTHON_LEVEL@

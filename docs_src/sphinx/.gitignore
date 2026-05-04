@@ -1,0 +1,10 @@
+# _toc.yml.in is generator-output (rendered from _toc.yml.in.in by the
+# hip-python code generator). The handcoded source-of-truth for the
+# Sphinx TOC structure lives in _toc.yml.in.in; the generator
+# substitutes its `@TOC_ENTRIES_*@` placeholders with the discovered
+# per-package module list.
+_toc.yml.in
+
+# _toc.yml is rendered from _toc.yml.in by rocm-docs-core at Sphinx
+# build time (variable substitution for ${branch}, ${url}, etc.).
+_toc.yml
