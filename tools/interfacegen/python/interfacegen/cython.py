@@ -2842,25 +2842,147 @@ class CythonModuleGenerator:
         # not stubbed (mapping void*/const char*/function-pointer typedefs
         # to fake Python type signatures would mislead).
         with open(f"{output_dir}/{self.module_name}.pyi", "w") as outfile:
-            outfile.write(self._render_pyi_stub())
+            outfile.write(self._render_pyi_stub(f"{cmodule_name}."))
 
-    def _render_pyi_stub(self) -> str:
-        """Render a minimal `.pyi` type-stub for the high-level Python module.
+    # Cython sig_arg → Python type annotation. Covers the autoconverted
+    # types Cython exposes (CYTHON_AUTOCONV_TO_PYTHON_TYPES) plus a few
+    # extras used by the generator.
+    _PYI_CTYPE_MAP = {
+        "char": "int", "short": "int", "int": "int", "long": "int",
+        "long long": "int", "size_t": "int", "ssize_t": "int",
+        "unsigned char": "int", "unsigned short": "int",
+        "unsigned int": "int", "unsigned long": "int",
+        "unsigned long long": "int",
+        "float": "float", "double": "float", "long double": "float",
+        "bint": "bool", "bool": "bool",
+        "object": "Any",
+    }
+
+    @staticmethod
+    def _pyi_split_sig_arg(sig_arg: str):
+        """Parse a Cython sig_arg like 'unsigned long size' or 'object foo'
+        into (cython_type, name, default)."""
+        if "=" in sig_arg:
+            decl, default = sig_arg.split("=", 1)
+            decl = decl.rstrip()
+            default = default.strip()
+        else:
+            decl = sig_arg
+            default = None
+        parts = decl.rsplit(" ", 1)
+        if len(parts) == 1:
+            ctype = None
+            name = parts[0]
+        else:
+            ctype, name = parts
+        name = name.lstrip("*")
+        return (ctype.strip() if ctype else None, name.strip(), default)
+
+    @classmethod
+    def _pyi_ctype_to_py(cls, ctype):
+        if ctype is None:
+            return "Any"
+        norm = " ".join(ctype.split())
+        if norm in cls._PYI_CTYPE_MAP:
+            return cls._PYI_CTYPE_MAP[norm]
+        if norm.endswith("*") and "char" in norm:
+            return "bytes"
+        if norm.endswith("*"):
+            return "Any"
+        # Likely a record/enum class name in this module — keep as
+        # forward reference. `from __future__ import annotations`
+        # turns every annotation into a string, so unresolved names
+        # never blow up at import time.
+        if norm.replace("_", "").isalnum() and norm[:1].isalpha():
+            return norm
+        return "Any"
+
+    @staticmethod
+    def _pyi_normalize_doctype(raw):
+        """Convert a `parm_python_types` value into a Python annotation.
+
+        Values look like 'int', 'hipDeviceProp_t', or 'DeviceArray/object'
+        (the last form denotes a union of acceptable adapter types). Pick
+        the first option as the annotation; readers wanting the full set
+        consult the docstring."""
+        if not raw:
+            return None
+        first = raw.split("/")[0].strip()
+        if not first:
+            return None
+        # Reject anything that doesn't look like a bare identifier or
+        # dotted path — those would not parse as a type annotation.
+        if not all(part.isidentifier() for part in first.split(".")):
+            return None
+        return first
+
+    def _pyi_function_stub(self, node, cprefix):
+        """Render a stub line for a Function node with real param names
+        and the docstring the .pyx emits.
+
+        Argument and return-value type annotations are intentionally
+        omitted — the docstring is the source of truth for types
+        (`parm_python_types` is union-valued, e.g. `DeviceArray/object`,
+        and that does not round-trip cleanly to a Python annotation).
+        """
+        try:
+            result = node._analyze_parms(cprefix)
+            sig_args = result[1]
+            out_parms = result[3]
+            parm_python_types = result[6]
+        except Exception:
+            return [f"def {node.cython_name}(*args, **kwargs): ..."]
+        py_params = []
+        for sa in sig_args:
+            _ctype, pname, default = self._pyi_split_sig_arg(sa)
+            if default is not None:
+                py_params.append(f"{pname}={default}")
+            else:
+                py_params.append(pname)
+        try:
+            docstring = node._render_python_docstring(
+                [p.name for p in out_parms], parm_python_types
+            )
+        except Exception:
+            docstring = None
+        sig = ", ".join(py_params)
+        lines = [f"def {node.cython_name}({sig}):"]
+        if docstring:
+            for dl in docstring.splitlines():
+                lines.append(f"    {dl}" if dl else "")
+        lines.append("    ...")
+        return lines
+
+    def _pyi_class_stub(self, node, cprefix, rendered_name):
+        """Render a class stub with the docstring the .pyx emits."""
+        try:
+            docstring = node.render_python_docstring(cprefix)
+        except Exception:
+            docstring = None
+        lines = [f"class {rendered_name}:"]
+        if docstring:
+            for dl in docstring.splitlines():
+                lines.append(f"    {dl}" if dl else "")
+        lines.append("    def __init__(self, *args, **kwargs): ...")
+        return lines
+
+    def _render_pyi_stub(self, cprefix: str) -> str:
+        """Render a `.pyi` type-stub for the high-level Python module.
 
         Walks the same filtered node tree used by
-        `render_python_interface_impl_part` and emits one declaration per
-        public top-level entity. Type annotations are `Any` everywhere —
-        this is honest about the C-to-Python impedance mismatch (mapping
-        `void *` or function-pointer typedefs to a more specific Python
-        type would mislead). The stub gives autoapi, mypy, and IDEs a
-        complete enumeration of the module's public symbols without
-        committing to type signatures we can't faithfully express.
+        `render_python_interface_impl_part`. For each Function the stub
+        carries the actual parameter names with Python type annotations
+        derived from the same `_analyze_parms` info that drives the .pyx,
+        plus the docstring the .pyx emits — so static type checkers
+        (mypy, pyright), IDEs, and autoapi see a faithful (though
+        signature-light) view of the API surface without the compiled
+        extension on `sys.path`. Records / enums get a class stub plus
+        their generated docstring; macro constants stay `: Any`.
         """
         lines = [
             "# AUTO-GENERATED by the hip-python code generator.",
             f"# Type stubs for {self.global_module_name}. Edits will be overwritten.",
             "",
-            "from __future__ import annotations",
             "from typing import Any",
             "",
         ]
@@ -2878,19 +3000,17 @@ class CythonModuleGenerator:
             if not rendered_name or not rendered_name.isidentifier():
                 continue
             if isinstance(node, Function):
-                lines.append(
-                    f"def {rendered_name}(*args: Any, **kwargs: Any) -> Any: ..."
-                )
+                stub = self._pyi_function_stub(node, cprefix)
             elif isinstance(node, (Record, Enum, AnonymousEnum, FunctionPointer)):
-                lines.append(f"class {rendered_name}:")
-                lines.append("    def __init__(self, *args: Any, **kwargs: Any) -> None: ...")
+                stub = self._pyi_class_stub(node, cprefix, rendered_name)
             elif isinstance(node, MacroDefinition):
-                lines.append(f"{rendered_name}: Any")
+                stub = [f"{rendered_name}: Any"]
             else:
                 continue
+            lines.extend(stub)
+            lines.append("")
             names.append(rendered_name)
         if names:
-            lines.append("")
             lines.append("__all__ = [")
             for n in sorted(set(names)):
                 lines.append(f"    {n!r},")
