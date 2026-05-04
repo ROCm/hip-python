@@ -22,19 +22,36 @@
 
 """Unified hip-python code generator.
 
-Produces Cython sources for the four generator-owned packages of hip-python:
+Produces generator outputs for the four generator-owned packages of
+hip-python:
+
   - rocm-bindings-hip
   - rocm-bindings-libraries
   - rocm-bindings-compiler
   - hip-python-interop
 
-Output scope is strictly Cython sources (`.pxd`/`.pyx`), namespace package
-markers (`__init__.pxd`) below `rocm/bindings/` and `cuda/bindings/`, and
-CMake module-list/version include files (`cmake/generated_modules.cmake`,
-`cmake/generated_versions.cmake`). NO Python-packaging files are produced —
-those (handcoded `__init__.py`, `_version.py.in`, `pyproject.toml`,
-`setup.py`, etc.) live in the hip-python repo as the source of truth.
-See plan §B.7 and §A.1.
+Generator-owned outputs:
+
+  * `.pxd` / `.pyx` Cython sources for every high-level Python module
+    plus its paired cy*-prefixed C-level wrapper.
+  * `.pyi` type-stub files for every **high-level** Python module
+    (high-level only — cy* modules are cimport-only and deliberately
+    not stubbed; see `share/design/CODEGEN.md`).
+  * `__init__.pxd` namespace package markers below `rocm/bindings/`
+    and `cuda/bindings/` (build-time only; never installed).
+  * `cmake/generated_modules.cmake` (libraries + compiler) — module
+    lists consumed by per-package CMakeLists.txt.
+  * `cmake/generated_versions.cmake` (every package) — version
+    metadata consumed by the `configure_file("_version.py.in" …)`
+    flow.
+  * `docs_src/python_api/<dotted-name>.rst` Sphinx wrapper pages —
+    autoapi pages for high-level modules + literalinclude pages for
+    cy* C-level wrappers.
+
+NO Python-packaging files are produced — those (handcoded
+`__init__.py`, `_version.py.in`, `pyproject.toml`, `setup.py`, etc.)
+live in the hip-python repo as the source of truth. See
+`share/design/CODEGEN.md` for the full table.
 """
 
 import argparse
