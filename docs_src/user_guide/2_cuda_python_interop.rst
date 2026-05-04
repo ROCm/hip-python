@@ -119,17 +119,20 @@ Python Example
 
    How I can run simple CUDA Python applications directly on AMD GPUs via HIP Python.
 
-After installing the HIP Python package ``hip-python-as-cuda``, you can run the
-:ref:`example below <cuda_stream>` directly on AMD GPUs. There is nothing else to
-do. This works because all CUDA Python functions, types and even enum
+After installing the HIP Python package ``hip-python-interop``, you can run the
+:ref:`example below <cuda_stream>` directly on AMD GPUs. There is nothing else
+to do. This works because all CUDA Python functions, types and even enum
 constants are aliases of HIP objects.
 
 .. admonition:: See
 
-   :py:obj:`~.cuda.cudaError_t`, :py:obj:`~.cuda.cudaError_t`,
-   :py:obj:`~.cuda.cudaStreamCreate`, :py:obj:`~.cuda.cudaMemcpyAsync`,
-   :py:obj:`~.cuda.cudaMemsetAsync`, :py:obj:`~.cuda.cudaStreamSynchronize`,
-   :py:obj:`~.cuda.cudaStreamDestroy`, :py:obj:`~.cuda.cudaFree`
+   :py:obj:`~.cuda.bindings.runtime.cudaError_t`,
+   :py:obj:`~.cuda.bindings.runtime.cudaStreamCreate`,
+   :py:obj:`~.cuda.bindings.runtime.cudaMemcpyAsync`,
+   :py:obj:`~.cuda.bindings.runtime.cudaMemsetAsync`,
+   :py:obj:`~.cuda.bindings.runtime.cudaStreamSynchronize`,
+   :py:obj:`~.cuda.bindings.runtime.cudaStreamDestroy`,
+   :py:obj:`~.cuda.bindings.runtime.cudaFree`
 
 .. literalinclude:: ../../examples/1_CUDA_Interop/cuda_stream.py
    :language: python
@@ -160,8 +163,8 @@ never return these enum constants, it is safe to generate values for them on
 the fly. Such behavior can be enabled selectively for CUDA Python
 interoperability layer enums --- either via the respective environment
 variable ``HIP_PYTHON_{myenumtype}_HALLUCINATE`` and/or at runtime via the
-module variable with the same name in :py:obj:`cuda`, :py:obj:`cudart`, or
-:py:obj:`nvtrc`.
+module variable with the same name in :py:obj:`cuda.bindings.driver`,
+:py:obj:`cuda.bindings.runtime`, or :py:obj:`cuda.bindings.nvrtc`.
 
 :ref:`The example below <cuda_error_hallucinate_enums>` fails because there are no
 HIP analogues to the following constants:
@@ -177,7 +180,7 @@ HIP analogues to the following constants:
 However, the example will run successfully if you set the environment
 variable ``HIP_PYTHON_cudaError_t_HALLUCINATE`` to ``1``, ``yes``, ``y``, or ``true``
 (case does not matter). Alternatively, you could set the module variable
-:py:obj:`cuda.cudart.HIP_PYTHON_cudaError_t_HALLUCINATE` to :py:obj:`True`;
+:py:obj:`cuda.bindings.runtime.HIP_PYTHON_cudaError_t_HALLUCINATE` to :py:obj:`True`;
 see :ref:`sec_hip_python_specific_code_modifications` on different ways
 to detect HIP Python in order to introduce such a modification to your code.
 
@@ -317,18 +320,18 @@ in :ref:`the example below <detecting_hip_python>`.
    :caption: Various ways to determine if we are working with HIP Python's CUDA Python interoperability layer in Python code.
    :name: detecting_hip_python
 
-   from cuda import cuda # or cudart, or nvrtc
+   from cuda.bindings import driver # or runtime, or nvrtc
    # [...]
-   if "HIP_PYTHON" in cuda:
-      # do something (with cuda.hip.<...> or cuda.hip_python_mod.<...>)
-   if "hip" in cuda: # or "hiprtc" for nvrtc
-      # do something with cuda.hip.<...> (or cuda.hip_python_mod.<...>)
-   if hasattr(cuda,"hip"): # or "hiprtc" for nvrtc
-      # do something with cuda.hip.<...> (or cuda.hip_python_mod.<...>)
-   if "hip_python_mod" in cuda:
-      # do something with cuda.hip_python_mod.<...> (or cuda.hip.<...>) # or nvrtc.<...> for nvrtc
-   if hasattr(cuda,"hip_python_mod"):
-      # do something with cuda.hip_python_mod.<...> (or cuda.hip.<...>) # or nvrtc.<...> for nvrtc
+   if "HIP_PYTHON" in driver:
+      # do something (with driver.hip.<...> or driver.hip_python_mod.<...>)
+   if "hip" in driver: # or "hiprtc" for nvrtc
+      # do something with driver.hip.<...> (or driver.hip_python_mod.<...>)
+   if hasattr(driver,"hip"): # or "hiprtc" for nvrtc
+      # do something with driver.hip.<...> (or driver.hip_python_mod.<...>)
+   if "hip_python_mod" in driver:
+      # do something with driver.hip_python_mod.<...> (or driver.hip.<...>) # or nvrtc.<...> for nvrtc
+   if hasattr(driver,"hip_python_mod"):
+      # do something with driver.hip_python_mod.<...> (or driver.hip.<...>) # or nvrtc.<...> for nvrtc
 
 Moreover, the interoperability layer's Python enum types also contain all the
 enum constants of their HIP analogue as shown in the
@@ -336,7 +339,7 @@ enum constants of their HIP analogue as shown in the
 
 .. code-block:: cython
    :linenos:
-   :caption: Python enum class in cuda.pyx
+   :caption: Python enum class in cuda/bindings/driver.pyx
    :emphasize-lines: 3,5,7,9,11,13
    :name: snippet_cuda_enum
 
@@ -356,14 +359,15 @@ enum constants of their HIP analogue as shown in the
       cudaMemoryTypeManaged = rocm.bindings.cyhip.hipMemoryTypeManaged
    # [...]
 
-In the ``cy``-prefixed Cython declaration files (``cuda.cydriver.pxd``,
-``cuda.cyruntime.pxd``, and ``cuda.cnvrtc.pxd``), you will further find that the
+In the ``cy``-prefixed Cython declaration files
+(``cuda.bindings.cydriver.pxd``, ``cuda.bindings.cyruntime.pxd``, and
+``cuda.bindings.cynvrtc.pxd``), you will further find that the
 :ref:`HIP functions and union/struct types are directly included too <ccuda_hip_names>`:
 
 .. code-block:: cython
    :linenos:
    :emphasize-lines: 2, 5
-   :caption: Excerpt from ccuda.pxd
+   :caption: Excerpt from cuda/bindings/cydriver.pxd
    :name: ccuda_hip_names
 
    # [...]
@@ -374,29 +378,30 @@ In the ``cy``-prefixed Cython declaration files (``cuda.cydriver.pxd``,
    from rocm.bindings.cyhip cimport hipMemcpy as cudaMemcpy
    # [...]
 
-In the Cython declaration files without ``c``-prefix (``cuda.driver.pxd``,
-``cuda.runtime.pxd``, and ``cuda.nvrtc.pxd``), you will discover that the original
-HIP types (only those derived from unions and structs) are ``c``-imported too and
+In the Cython declaration files without ``cy``-prefix
+(``cuda.bindings.driver.pxd``, ``cuda.bindings.runtime.pxd``, and
+``cuda.bindings.nvrtc.pxd``), you will discover that the original HIP types
+(only those derived from unions and structs) are ``cimport``\ ed too and
 that the CUDA interoperability layer types are made subclasses of the
-respective HIP type; see :ref:`the example below <cuda_hip_names>`. This allows to
-pass them to the CUDA interoperability layer's Python functions, i.e., the
+respective HIP type; see :ref:`the example below <cuda_hip_names>`. This allows
+to pass them to the CUDA interoperability layer's Python functions, i.e., the
 aliased HIP Python functions.
 
 .. code-block:: cython
    :linenos:
-   :caption: Excerpt from cuda.pxd
+   :caption: Excerpt from cuda/bindings/driver.pxd
    :emphasize-lines: 2,3,5,7,9
    :name: cuda_hip_names
 
    # [...]
    from rocm.bindings.hip cimport hipKernelNodeParams # here
-   cdef class CUDA_KERNEL_NODE_PARAMS(hip.hipKernelNodeParams):
+   cdef class CUDA_KERNEL_NODE_PARAMS(hipKernelNodeParams):
       pass
-   cdef class CUDA_KERNEL_NODE_PARAMS_st(hip.hipKernelNodeParams):
+   cdef class CUDA_KERNEL_NODE_PARAMS_st(hipKernelNodeParams):
       pass
-   cdef class CUDA_KERNEL_NODE_PARAMS_v1(hip.hipKernelNodeParams):
+   cdef class CUDA_KERNEL_NODE_PARAMS_v1(hipKernelNodeParams):
       pass
-   cdef class cudaKernelNodeParams(hip.hipKernelNodeParams):
+   cdef class cudaKernelNodeParams(hipKernelNodeParams):
       pass
    # [...]
 

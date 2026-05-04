@@ -201,8 +201,8 @@ Launching Kernels
 HIP Python does not provide the necessary infrastructure to express device code
 in native Python. However, you can compile and launch kernels from within
 Python code via the just-in-time (JIT) compilation interface provided by HIP
-Python module :py:obj:`~.hip.hiprtc` together with the kernel launch routines
-provided by HIP Python module :py:obj:`~.hip.hip`. The
+Python module :py:obj:`~.rocm.bindings.hiprtc` together with the kernel launch routines
+provided by HIP Python module :py:obj:`~.rocm.bindings.hip`. The
 :ref:`example below <hiprtc_launch_kernel_no_args>` demonstrates how to do so.
 
 .. literalinclude:: ../../examples/0_Basic_Usage/hiprtc_launch_kernel_no_args.py
@@ -602,15 +602,16 @@ aforementioned two tasks.
 Cython modules in HIP Python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Per Python module :py:obj:`hip.hip`, :py:obj:`hip.hiprtc`, ... ,
-HIP Python ships an additional ``c``-prefixed ``hip.c<pkg_name>`` module.
+Per Python module :py:obj:`rocm.bindings.hip`,
+:py:obj:`rocm.bindings.hiprtc`, ..., HIP Python ships an additional
+``cy``-prefixed ``rocm.bindings.cy<pkg_name>`` module.
 
 * The module *without* the ``c`` prefix is compiled into the interface for HIP
   Python's Python users. However, all ``cdef`` declarations therein can also be
   ``cimport``\ ed by Cython users (typically ``cdef class`` declarations) and all
   Python objects therein can be ``import``\ ed by Cython users too (typically enum
   and function objects).
-* The module *with* the ``c`` prefix builds the bridge to the underlying HIP C
+* The module *with* the ``cy`` prefix builds the bridge to the underlying HIP C
   library by including C definitions from the corresponding header files. This
   code is located in the declaration part. This part further declares runtime
   function loader prototypes. The definition of these function loaders in the

@@ -30,8 +30,8 @@ interfaces use to convert various Python objects to the C datatypes expected
 by the routines of the HIP C API.
 
 While generic types are defined in module :py:obj:`rocm.bindings.util.types`,
-specific helper types for :py:obj:`hip.hip` are defined in
-:py:obj:`hip._hip_helpers`.
+specific helper types for :py:obj:`rocm.bindings.hip` are defined in
+:py:obj:`rocm.bindings._hip_helpers` (handcoded helper module).
 
 .. _sec_pointer:
 
@@ -162,7 +162,7 @@ The type is used as return value of:
 
 It can be passed to functions that expect a :py:obj:`~.Pointer` argument and
 where passing an instance of this type instead makes sense, e.g. you can pass
-it as copy destination or copy source in :py:obj:`~.hip.hipMemcpy`.
+it as copy destination or copy source in :py:obj:`~.hipMemcpy`.
 
 .. note::
 
@@ -355,6 +355,7 @@ and then pass the object to a HIP Python function that uses
 .. code-block:: python
    :caption: HIP Python Datatype Used as Adapter in Python Code
 
+   from rocm.bindings import hip
    err = hip.hipMyFunc(...,
       pointer_is_used_to_convert_this_arg=rocm.bindings.util.types.ListOfInt(
         [1,2,3]),...)
