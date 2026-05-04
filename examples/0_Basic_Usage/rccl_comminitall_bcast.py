@@ -22,6 +22,14 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""Single-node multi-GPU broadcast via RCCL.
+
+Initializes one RCCL communicator per visible AMD GPU
+(:py:obj:`~.ncclCommInitAll`), seeds device 0's buffer with ones
+(others with zeros), broadcasts from device 0 to all peers via
+:py:obj:`~.ncclBcast`, and verifies every peer received the data.
+"""
+
 # [literalinclude-begin]
 import numpy as np
 from rocm.bindings import hip, rccl

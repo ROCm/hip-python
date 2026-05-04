@@ -22,6 +22,14 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""hipBLAS Saxpy on float32 numpy arrays.
+
+Demonstrates that :py:obj:`numpy` arrays can be passed directly to
+:py:obj:`~.hipMemcpy`, and that :py:obj:`~.hipblasSaxpy` from
+``rocm.bindings.hipblas`` accepts the address of a host ``ctypes``
+scalar as its alpha parameter.
+"""
+
 # [literalinclude-begin]
 import ctypes
 

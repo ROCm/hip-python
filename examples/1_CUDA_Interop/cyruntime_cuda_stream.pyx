@@ -22,6 +22,19 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""Cython-level CUDA Python stream example using cyruntime.
+
+Demonstrates the same stream workflow as :mod:`cuda_stream` but
+written in Cython against the cy*-prefixed C-level wrapper
+``cuda.bindings.cyruntime`` (cimport-only). The ``DEF HIP_PYTHON``
+compile-time guard switches between the C-style enum-constant
+access used by HIP Python's interop layer and the C++-style
+qualified-enum access expected by upstream cuda-python.
+
+Build with the companion ``setup.py`` (``compile_time_env=
+dict(HIP_PYTHON=True)``) and run via ``make run``.
+"""
+
 # [literalinclude-begin]
 
 cimport cuda.bindings.cyruntime as cyruntime

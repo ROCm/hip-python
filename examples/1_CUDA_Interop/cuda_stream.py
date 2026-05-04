@@ -22,6 +22,17 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""CUDA Python stream usage on AMD GPUs.
+
+Demonstrates that the CUDA runtime API (``cuda.bindings.runtime``)
+provided by the ``hip-python-interop`` package is callable from
+ordinary CUDA Python code unchanged: stream creation, asynchronous
+host↔device memcpy/memset, synchronization, and stream destruction.
+
+The same source compiles and runs on AMD GPUs via HIP Python's
+interop layer.
+"""
+
 import array
 
 # [literalinclude-begin]

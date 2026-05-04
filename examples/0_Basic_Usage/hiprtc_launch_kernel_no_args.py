@@ -22,6 +22,14 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""Compile and launch a HIP kernel via HIPRTC at runtime.
+
+Defines a trivial ``print_tid`` kernel as a Python ``bytes`` source
+string, compiles it via :py:obj:`~.hiprtcCompileProgram`, loads the
+resulting module with :py:obj:`~.hipModuleLoadData`, and launches it
+via :py:obj:`~.hipModuleLaunchKernel` with no kernel arguments.
+"""
+
 # [literalinclude-begin]
 from rocm.bindings import hip, hiprtc
 

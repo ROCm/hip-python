@@ -22,6 +22,15 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""Cython-level CUDA Python stream example, cuda-python compatible variant.
+
+Companion to :mod:`cyruntime_cuda_stream` written so the same
+``cyruntime`` cimports compile cleanly against either the
+``hip-python-interop`` ``cuda.bindings.cyruntime`` shim or the
+upstream cuda-python package on NVIDIA. Demonstrates the
+portability of the modern ``cuda.bindings.*`` Cython API.
+"""
+
 # [literalinclude-begin]
 
 cimport cuda.bindings.cyruntime as cyruntime

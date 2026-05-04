@@ -22,6 +22,15 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""HIP stream basics: async memcpy/memset on a non-default stream.
+
+Illustrates :py:obj:`~.hipStreamCreate`, asynchronous host↔device
+memcpy, ``hipMemsetAsync``, :py:obj:`~.hipStreamSynchronize`, and
+:py:obj:`~.hipStreamDestroy`. Demonstrates that Python 3
+``array.array`` objects can be passed directly to HIP runtime calls
+that expect a host buffer.
+"""
+
 import array
 
 # [literalinclude-begin]

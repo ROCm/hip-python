@@ -22,6 +22,13 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""hipBLAS Saxpy with an explicit compute-unit (CU) mask.
+
+Same workflow as :mod:`hipblas_with_numpy` plus a call to
+:py:obj:`~.hipExtStreamCreateWithCUMask` to restrict the hipBLAS
+operations to a subset of compute units.
+"""
+
 # [literalinclude-begin]
 import ctypes
 

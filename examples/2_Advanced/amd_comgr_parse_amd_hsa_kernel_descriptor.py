@@ -20,6 +20,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Parse an AMD HSA kernel descriptor from raw bytes.
+
+Demonstrates the standalone parser
+:py:obj:`rocm.comgr.amd_hsa_kernel_descriptor.parse_amdgpu_code_obj_kernel_descriptor`,
+which decodes the 64-byte descriptor block emitted into AMD GPU
+code objects (giving access to fields like the kernel's compute-unit
+count requirements, granulated VGPR/SGPR usage, and IEEE-mode flag).
+
+The parser is purely byte-oriented and does not require AMD COMGR
+or any HIP runtime call.
+"""
+
 # [literalinclude-begin]
 
 # note: amd_hsa_kernel_descriptor is a standalone module

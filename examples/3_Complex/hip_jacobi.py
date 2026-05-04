@@ -22,7 +22,17 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-import ctypes
+"""Multi-GPU 2D Jacobi solver via HIP + HIPRTC + RCCL.
+
+Solves a Laplace problem on a 2D grid distributed across all visible
+AMD GPUs. Each device runs a JIT-compiled Jacobi update kernel, and
+RCCL handles the halo exchange between devices each iteration. This
+is the largest demo in the suite — it exercises the full stack
+(:py:obj:`~.hipMalloc`, :py:obj:`~.hiprtcCompileProgram`,
+:py:obj:`~.hipModuleLaunchKernel`, :py:obj:`~.ncclSendRecv`,
+multi-device synchronization) and intentionally lives under
+``3_Complex/`` rather than ``2_Advanced/``.
+"""
 
 # [literalinclude-begin]
 import time

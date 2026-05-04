@@ -23,12 +23,12 @@
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 """This example demonstrates how to configure the shape and data type
-of a device array returned by hipMalloc.
+of a ``DeviceArray`` returned by ``hipMalloc`` (and related routines)
+from ``rocm.bindings.hip``.
 
-This example demonstrates how to configure the shape and data type
-of a device array returned by hipMalloc (and related routines).
-Further showns how to retrieve single elements / contiguous subarrays
-with respect to specified type and shape information.
+It further shows how to retrieve contiguous subarrays via array
+subscript and uses ``hipblasSscal`` from ``rocm.bindings.hipblas`` to
+write the row index into each row in place.
 """
 
 # [literalinclude-begin]

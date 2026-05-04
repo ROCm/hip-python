@@ -22,6 +22,12 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""Query selected device attributes via ``hipDeviceGetAttribute``.
+
+Iterates over a curated list of ``hipDeviceAttribute_t`` enum values
+and prints the integer attribute value for each one.
+"""
+
 # [literalinclude-begin]
 from rocm.bindings import hip
 

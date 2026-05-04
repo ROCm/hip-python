@@ -22,6 +22,17 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""Compile and launch a HIP kernel with arguments via HIPRTC.
+
+Defines a ``scale_vector`` kernel that takes mixed-alignment
+arguments (float, int, short, ctypes scalars, a device pointer),
+compiles it via :py:obj:`~.hiprtcCompileProgram`, and launches it
+via :py:obj:`~.hipModuleLaunchKernel` with the arguments packed into
+the ``extra`` tuple. Demonstrates that HIP Python's
+:py:obj:`~.dim3` struct can be unpacked directly into the launch
+call's grid/block triples.
+"""
+
 import array
 
 # [literalinclude-begin]

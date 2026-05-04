@@ -22,6 +22,12 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""Query and print every property exposed by ``hipDeviceProp_t``.
+
+Constructs an empty :py:obj:`~.hipDeviceProp_t` instance, populates it
+via :py:obj:`~.hipGetDeviceProperties`, and dumps every named field.
+"""
+
 # [literalinclude-begin]
 from rocm.bindings import hip
 

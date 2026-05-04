@@ -22,6 +22,15 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+"""CUDA Python stream usage with the cuda-python ``cuda.bindings`` API.
+
+Companion to :mod:`cuda_stream` showing the same workflow against
+the modern ``cuda.bindings.runtime`` import path. On AMD GPUs the
+``hip-python-interop`` package supplies the binding; on NVIDIA the
+official ``cuda-python`` package does. The Python source is
+identical in both environments.
+"""
+
 import array
 
 # [literalinclude-begin]
