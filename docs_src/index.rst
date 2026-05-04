@@ -115,7 +115,7 @@ Spotlight
       * :doc:`python_api/rocm/bindings/hipsparse/index`
       * :doc:`python_api/rocm/bindings/roctx/index`
       * :doc:`python_api/rocm/bindings/amd_comgr/index`
-      * :doc:`python_api/hip/index` (legacy compat shim)
+      * :doc:`python_api/hip/index` (``hip.*`` alias package)
       * :doc:`python_api_manual/_hip_helpers`
       * :doc:`python_api_manual/_util_types`
       * :doc:`python_api/rocm/comgr/index`

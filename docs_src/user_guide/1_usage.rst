@@ -56,13 +56,16 @@ And you are ready to go!
 
 .. note::
 
-   The legacy ``from hip import hip`` (and friends) imports continue to
-   work — they are served by the ``hip-python`` metapackage as a
-   compatibility shim that re-exports ``rocm.bindings.*``. New code
-   should prefer ``from rocm.bindings import hip`` (or
-   ``import rocm.bindings.hip as hip``) directly. The CUDA interop
-   layer similarly prefers ``from cuda.bindings import driver, runtime,
-   nvrtc``.
+   The ``from hip import hip`` (and friends) imports continue to
+   work — they are served by the ``hip-python`` package, which
+   provides the ``hip.*`` namespace as an alias of the
+   ``rocm.bindings.*`` modules. New code should prefer
+   ``from rocm.bindings import hip`` (or
+   ``import rocm.bindings.hip as hip``) directly: the modern style
+   is more explicit about which package supplies the symbol and
+   matches the per-package layout used throughout the rest of the
+   documentation. The CUDA interop layer similarly prefers
+   ``from cuda.bindings import driver, runtime, nvrtc``.
 
    .. code-block:: py
       :linenos:

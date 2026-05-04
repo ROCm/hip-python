@@ -28,7 +28,7 @@ The build system is designed around three properties:
 | `rocm-bindings-libraries` | `python/rocm-bindings-libraries/` | The math/comm/profile libraries: hipblas, hipsolver, rccl, hiprand, hipfft, hipsparse, roctx. List is generator-managed. |
 | `rocm-bindings-compiler` | `python/rocm-bindings-compiler/` | LLVM-C bindings, AMD COMGR bindings, optional bundled `libLLVM.so`. Module list is generator-managed. |
 | `hip-python-interop` | `python/hip-python-interop/` | CUDA interop layer: `cuda.bindings.{driver,runtime,nvrtc}`. Implemented on top of HIP. |
-| `hip-python` (metapackage) | `python/hip-python/` | Backward-compatibility shim providing the legacy `hip` namespace as a re-export of `rocm.bindings.*`. Pure Python. |
+| `hip-python` | `python/hip-python/` | Provides the `hip.*` namespace as an alias of `rocm.bindings.*` (`from hip import hip, hiprtc, hipblas, …` re-export). Pure Python. |
 
 All five packages contribute to two PEP 420 implicit namespace packages
 at runtime: `rocm.bindings.*` and `cuda.bindings.*`. Multiple packages
@@ -50,7 +50,7 @@ hip-python/
 │   ├── rocm-bindings-libraries/   …
 │   ├── rocm-bindings-compiler/    …
 │   ├── hip-python-interop/        …
-│   └── hip-python/                pure-Python compatibility shim
+│   └── hip-python/                pure-Python `hip.*` alias of `rocm.bindings.*`
 ├── docs_src/                      Sphinx source (reStructuredText)
 ├── docs/                          Generator output: rendered Sphinx HTML (when HIP_PYTHON_BUILD_DOCS=ON)
 └── share/design/                  this folder (BUILDING.md, CODEGEN.md)

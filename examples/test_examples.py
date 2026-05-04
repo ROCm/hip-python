@@ -53,9 +53,9 @@ try:
     from cuda.bindings import runtime
 
     del runtime
-    have_hip_python_as_cuda = True
+    have_hip_python_interop = True
 except ImportError:
-    have_hip_python_as_cuda = False
+    have_hip_python_interop = False
 
 python_examples = [
     "0_Basic_Usage/hip_deviceattributes.py",
@@ -79,7 +79,7 @@ if device_printf_works:
         "0_Basic_Usage/hiprtc_launch_kernel_no_args.py",
     ]
 
-if have_hip_python_as_cuda:
+if have_hip_python_interop:
     python_examples += [
         "1_CUDA_Interop/cuda_stream.py",
         "1_CUDA_Interop/cuda_stream_with_cuda_bindings.py",
@@ -153,7 +153,7 @@ def test_python_examples(example):
     runpy.run_path(abspath)
 
 
-if have_hip_python_as_cuda:
+if have_hip_python_interop:
 
     @pytest.mark.parametrize(
         "module_name",

@@ -66,9 +66,11 @@ ROCm&trade; installation. Then install the HIP Python package(s) as follows:
 <!-- markdownlint-disable  MD013 -->
 
 ```shell
+# Install the rocm-bindings-* packages (HIP, libraries, compiler) plus
+# the hip-python alias:
 python3 -m pip install hip-python~=$rocm_version.0
-# if you want to install the CUDA Python interoperability package too, run:
-python3 -m pip install hip-python-as-cuda~=$rocm_version.0
+# Install the CUDA Python interoperability package too:
+python3 -m pip install hip-python-interop~=$rocm_version.0
 ```
 
 <!-- markdownlint-enable  MD013 -->
@@ -79,8 +81,8 @@ If you have HIP Python package wheels on your filesystem, you can run:
 
 ```shell
 python3 -m pip install $path_to_hip_python.whl
-# if you want to install the CUDA Python interoperability package too, run:
-python3 -m pip install $path_to_hip_python_as_cuda.whl
+# if you want the CUDA Python interoperability package too, run:
+python3 -m pip install $path_to_hip_python_interop.whl
 ```
 
 > [!NOTE]
@@ -99,16 +101,18 @@ It produces five wheels:
 - `rocm-bindings-compiler` — LLVM-C and AMD COMGR bindings (with optional bundled `libLLVM.so`)
 - `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer
 
-Plus a `hip-python` metapackage providing the legacy `hip` import namespace.
+Plus a `hip-python` package that exposes the `hip.*` namespace as an
+alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc` and
+`from cuda import cuda, cudart, nvrtc` keep working unchanged.
 
 > [!NOTE]
-> Both import styles work. The legacy `from hip import hip, hiprtc` (and
-> `from cuda import cuda, cudart, nvrtc`) imports continue to work as
-> compatibility shims. **New code should prefer**
+> Both import styles are supported. `from hip import hip, hiprtc` and
+> `from cuda import cuda, cudart, nvrtc` are aliases of the modern
+> per-package modules. **New code should prefer**
 > `from rocm.bindings import hip, hiprtc` (or `from cuda.bindings import
 > driver, runtime, nvrtc`) directly — the `rocm.bindings.*` and
 > `cuda.bindings.*` styles are more explicit about which package supplies
-> the symbol and match the modern per-package layout used throughout the
+> the symbol and match the per-package layout used throughout the
 > documentation and examples.
 
 > [!NOTE]

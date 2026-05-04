@@ -24,13 +24,13 @@ CUDA\ |reg| Python Interoperability
 ===================================
 
 This chapter discusses HIP Python's CUDA\ |reg| Python interoperability layer
-that is shipped in a separate package with the name ``hip-python-as-cuda``. In
-particular, we discuss how to run existing CUDA Python code on AMD GPUs, and if
-localized modifications are required, how to detect HIP Python and how to fall
-back to the underlying HIP Python Python and Cython modules. Moreover, a
-technique named "enum constant hallucination" is presented that allows HIP
-Python "invent" enum constants and their non-conflicting value on-the-fly for
-enum error types.
+that is shipped in a separate package with the name ``hip-python-interop``.
+In particular, we discuss how to run existing CUDA Python code on AMD GPUs,
+and if localized modifications are required, how to detect HIP Python and
+how to fall back to the underlying HIP Python Python and Cython modules.
+Moreover, a technique named "enum constant hallucination" is presented that
+allows HIP Python "invent" enum constants and their non-conflicting value
+on-the-fly for enum error types.
 
 .. note::
 
@@ -40,31 +40,27 @@ enum error types.
 Installation
 ------------
 
-HIP Python's CUDA interoperability layer comes in a separate Python 3 package
-with the name ``hip-python-as-cuda``. Its sole dependency is the ``hip-python``
-package with the exact same version number.
+HIP Python's CUDA interoperability layer comes in a separate Python 3
+package with the name ``hip-python-interop``. Its sole dependency is the
+``rocm-bindings-hip`` package with the exact same version number.
 
-After having identified the correct package for your ROCm\ |trade| installation,
-type:
+After having identified the correct package for your ROCm\ |trade|
+installation, type:
 
 .. code-block:: shell
 
-   python3 -m pip install hip-python-as-cuda-<hip_version>.<hip_python_version>
+   python3 -m pip install hip-python-interop~=<rocm_version>
 
 or, if you have a HIP Python wheel somewhere in your filesystem, type:
 
 .. code-block:: shell
 
-   python3 -m pip install <path/to/hip_python_as_cuda>.whl
+   python3 -m pip install <path/to/hip_python_interop>.whl
 
 .. note::
 
-   The first option will only be available after the public release on PyPI.
-
-.. note::
-
-   See :ref:`subsec_hip_python_versioning` for more details on the ``hip-python``
-   and ``hip-python-as-cuda`` version number.
+   See :ref:`subsec_hip_python_versioning` for more details on the
+   ``hip-python-interop`` version number.
 
 Basic Usage (Python)
 --------------------
@@ -81,8 +77,8 @@ Basic Usage (Python)
    unfortunately use the search function for CUDA Python interoperability layer
    symbols.
 
-After installing the HIP Python package ``hip-python-as-cuda``, you can import
-the individual modules that you need as shown below:
+After installing ``hip-python-interop``, you can import the individual
+modules that you need as shown below:
 
 .. code-block:: py
    :linenos:
@@ -94,12 +90,12 @@ the individual modules that you need as shown below:
 
 .. note::
 
-   The legacy ``from cuda import cuda`` (and friends) imports continue
-   to work as a compatibility shim. New code should prefer
-   ``from cuda.bindings import driver, runtime, nvrtc`` directly,
-   matching the modern per-package layout. Both styles are supported
-   and not deprecated; the ``cuda.bindings.*`` style is more explicit
-   about which package supplies the symbol.
+   The ``from cuda import cuda`` (and friends) imports continue to
+   work — they are aliases of ``cuda.bindings.{driver,runtime,nvrtc}``.
+   New code should prefer ``from cuda.bindings import driver, runtime,
+   nvrtc`` directly, matching the modern per-package layout. Both
+   styles are supported; the ``cuda.bindings.*`` style is more
+   explicit about which package supplies the symbol.
 
    This mirrors the analogous guidance for the HIP side
    (``from hip import hip`` → ``from rocm.bindings import hip``); see
@@ -119,10 +115,11 @@ Python Example
 
    How I can run simple CUDA Python applications directly on AMD GPUs via HIP Python.
 
-After installing the HIP Python package ``hip-python-interop``, you can run the
-:ref:`example below <cuda_stream>` directly on AMD GPUs. There is nothing else
-to do. This works because all CUDA Python functions, types and even enum
-constants are aliases of HIP objects.
+After installing ``hip-python-interop`` (and its ``rocm-bindings-hip``
+dependency), you can run the :ref:`example below <cuda_stream>` directly
+on AMD GPUs. There is nothing else to do. This works because all CUDA
+Python functions, types and even enum constants are aliases of HIP
+objects.
 
 .. admonition:: See
 
@@ -212,8 +209,9 @@ You can import the Python objects that you need into your ``*.pyx`` file as show
    :linenos:
    :caption: Importing HIP Python Modules into Cython ``*.pyx`` file
 
-   from cuda import cuda # enum types, enum aliases, fields
-   from cuda import nvrtc
+   from cuda.bindings import driver  # enum types, enum aliases, fields
+   from cuda.bindings import runtime
+   from cuda.bindings import nvrtc
    # ...
 
 In the same file, you can **also or alternatively** ``cimport`` the ``cdef`` entities
@@ -223,16 +221,19 @@ as shown below:
    :linenos:
    :caption: Importing HIP Python Cython declaration files (``*.pxd``) into a Cython ``*.pxd`` or ``*.pyx`` file
 
-   from cuda cimport ccuda   # direct access to C interfaces and lazy function loaders
-   from cuda cimport ccudart
-   from cuda cimport cnvrtc
-   ...
+   # The cy*-prefixed modules expose the C declarations and the lazy
+   # function loaders that delegate to the underlying HIP/HIPRTC C API.
+   from cuda.bindings cimport cydriver
+   from cuda.bindings cimport cyruntime
+   from cuda.bindings cimport cynvrtc
+   # ...
 
-   from cuda cimport cuda # access to `cdef class` and `ctypedef` types
-                          # that have been created per C struct/union/typedef
-   from cuda cimport cudart
-   from cuda cimport nvrtc
-    # ...
+   # The non-prefixed modules expose the `cdef class` and `ctypedef`
+   # types created per C struct/union/typedef.
+   from cuda.bindings cimport driver
+   from cuda.bindings cimport runtime
+   from cuda.bindings cimport nvrtc
+   # ...
 
 Cython Example
 --------------
@@ -246,10 +247,13 @@ Cython Example
 
 :ref:`The example below <ccuda_stream_pyx>` shows a CUDA Python example that can be
 compiled for and run on AMD GPUs. To do so, it is necessary to define the
-compiler flag ``HIP_Python`` from within the ``setup.py`` script. (We will
-discuss how to do so in short). This will replace the qualified ``C++``-like
-enum constant expression ``ccudart.cudaError_t.cudaSuccess`` by the ``C``-like
-expression ``ccudart.cudaSuccess``.
+Cython compile-time flag ``HIP_PYTHON`` from within the ``setup.py``
+script (see the script below). This will replace the qualified
+``C++``-like enum constant expression
+``cyruntime.cudaError_t.cudaSuccess`` by the ``C``-like expression
+``cyruntime.cudaSuccess`` (the HIP/HIPRTC Cython enums expose enum
+constants directly at module scope, while CUDA Cython enums nest them
+inside the enum class).
 
 In the example, the ``DEF`` statement and the ``IF`` and ``ELSE`` statements are
 Cython `compile time definitions
@@ -310,28 +314,52 @@ HIP Python-Specific Code Modifications
      Python interoperability layer's Cython modules.
 
 In scenarios where the HIP Python Python or Cython code will need to diverge
-from the original CUDA Python code, e.g. due
-to differences in a signature, we can directly access the underlying HIP Python
-Python modules from the CUDA interoperability layer's Python modules as shown
-in :ref:`the example below <detecting_hip_python>`.
+from the original CUDA Python code, e.g. due to differences in a signature,
+we can directly access the underlying HIP Python Python modules from the
+CUDA interoperability layer's Python modules. Each of
+:py:obj:`cuda.bindings.driver`, :py:obj:`cuda.bindings.runtime`, and
+:py:obj:`cuda.bindings.nvrtc` exposes the following module-level
+attributes when served by HIP Python's interop layer:
+
+* ``HIP_PYTHON`` — the literal :py:obj:`True`. Absent when the user is
+  running NVIDIA's stock ``cuda-python`` package instead.
+* ``hip_python_mod`` — a reference to the underlying HIP Python module
+  (:py:obj:`rocm.bindings.hip` for ``driver`` / ``runtime``,
+  :py:obj:`rocm.bindings.hiprtc` for ``nvrtc``).
+* ``hip`` — same module as ``hip_python_mod``, exposed under the short
+  name on the ``driver`` and ``runtime`` modules. *Not* exposed on
+  ``nvrtc`` (which uses ``hiprtc`` instead — see below).
+* ``hiprtc`` — same module as ``hip_python_mod``, exposed under the
+  short name on ``nvrtc``. Not exposed on ``driver`` / ``runtime``.
+
+Use :py:func:`hasattr` (or ``__dict__`` membership) to test for these.
+Module-level :py:obj:`in` does **not** work — Python modules are not
+iterable, so ``"HIP_PYTHON" in driver`` raises :py:obj:`TypeError`.
 
 .. code-block:: python
    :linenos:
-   :caption: Various ways to determine if we are working with HIP Python's CUDA Python interoperability layer in Python code.
+   :caption: Detecting HIP Python's CUDA interoperability layer at runtime
    :name: detecting_hip_python
 
-   from cuda.bindings import driver # or runtime, or nvrtc
-   # [...]
-   if "HIP_PYTHON" in driver:
-      # do something (with driver.hip.<...> or driver.hip_python_mod.<...>)
-   if "hip" in driver: # or "hiprtc" for nvrtc
-      # do something with driver.hip.<...> (or driver.hip_python_mod.<...>)
-   if hasattr(driver,"hip"): # or "hiprtc" for nvrtc
-      # do something with driver.hip.<...> (or driver.hip_python_mod.<...>)
-   if "hip_python_mod" in driver:
-      # do something with driver.hip_python_mod.<...> (or driver.hip.<...>) # or nvrtc.<...> for nvrtc
-   if hasattr(driver,"hip_python_mod"):
-      # do something with driver.hip_python_mod.<...> (or driver.hip.<...>) # or nvrtc.<...> for nvrtc
+   from cuda.bindings import driver  # or runtime; or nvrtc
+
+   # Preferred test:
+   if getattr(driver, "HIP_PYTHON", False):
+       # We are running on HIP Python's interop layer.
+       hip = driver.hip            # or driver.hip_python_mod  (same module)
+       # ... use HIP-only APIs as needed ...
+
+   # Equivalent forms:
+   if hasattr(driver, "HIP_PYTHON"):
+       ...
+   if "HIP_PYTHON" in driver.__dict__:
+       ...
+
+   # For `nvrtc`, the underlying module is exposed as `hiprtc` (no
+   # `hip` attribute), but `hip_python_mod` works on all three modules:
+   from cuda.bindings import nvrtc
+   if getattr(nvrtc, "HIP_PYTHON", False):
+       hiprtc = nvrtc.hiprtc       # or nvrtc.hip_python_mod  (same module)
 
 Moreover, the interoperability layer's Python enum types also contain all the
 enum constants of their HIP analogue as shown in the

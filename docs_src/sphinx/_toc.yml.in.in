@@ -3,7 +3,7 @@
 # The generator reads this file (`_toc.yml.in.in`) and writes
 # `_toc.yml.in` next to it, substituting every `@TOC_ENTRIES_<SECTION>@`
 # placeholder below with the discovered per-subtree module list. Handcoded
-# subtrees (User Guide, rocm-bindings-util, hip-python compat shim,
+# subtrees (User Guide, rocm-bindings-util, hip-python alias package,
 # Manual API) are listed inline and left unchanged.
 #
 # Placeholder convention: `@VAR@` (matches the `_version.py.in` style
@@ -42,7 +42,7 @@ subtrees:
   - caption: "hip-python-interop (CUDA compat)"
     entries:
 @TOC_ENTRIES_HIP_PYTHON_INTEROP@
-  - caption: "hip-python (legacy compat shim)"
+  - caption: "hip-python (hip.* alias package)"
     entries:
       - file: python_api/hip/index
   - caption: "Manual API"
