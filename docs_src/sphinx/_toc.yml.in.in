@@ -42,17 +42,13 @@ subtrees:
   - caption: "rocm-bindings-compiler"
     entries:
 @TOC_ENTRIES_ROCM_BINDINGS_COMPILER@
+      - file: python_api/rocm/comgr/index
   - caption: "hip-python-interop (CUDA compat)"
     entries:
 @TOC_ENTRIES_HIP_PYTHON_INTEROP@
   - caption: "hip-python (hip.* alias package)"
     entries:
       - file: python_api/hip/index
-  - caption: "Manual API"
-    entries:
-      - file: python_api_manual/_hip_helpers
-      - file: python_api_manual/_util_types
-      - file: python_api/rocm/comgr/index
   - caption: "Cython-level declarations (advanced — for cimport users)"
     entries:
 @TOC_ENTRIES_CYTHON_LEVEL@

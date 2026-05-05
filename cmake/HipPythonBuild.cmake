@@ -394,3 +394,83 @@ function(hip_python_add_sdist_target)
     DEPENDS "${STAMP_FILE}"
   )
 endfunction()
+
+
+# Add a developer-only target that runs `mypy stubgen` against a
+# handcoded Cython module's compiled extension to (re)generate its
+# `.pyi` type stub. The generated `.pyi` is written *into the source
+# tree* (next to the `.pyx`), so the dev sees the diff in
+# `git status` and can commit it.
+#
+# This is NOT a build-time step: the per-package wheel/sdist targets
+# do not depend on it, end-user `pip install` does not invoke it,
+# and `mypy` is NOT a build-system dependency. The dev opts in via
+# `-DHIP_PYTHON_ENABLE_STUBGEN=ON` at CMake configure time and runs
+# `cmake --build build --target <module>_stub` (or one of the
+# aggregate targets) explicitly.
+#
+# Args:
+#   MODULE          Dotted module name (e.g. rocm.bindings.util.types).
+#   CYTHON_TARGET   The cython add-module target whose compiled .so
+#                   stubgen should introspect. Used for DEPENDS and
+#                   for naming the generated <CYTHON_TARGET>_stub
+#                   target.
+#   SOURCE_PYI_DIR  Absolute path to the directory next to the .pyx
+#                   where the generated .pyi should land.
+#
+# Output target name: ${CYTHON_TARGET}_stub.
+function(hip_python_add_stubgen_target)
+  set(options "")
+  set(oneValueArgs MODULE CYTHON_TARGET SOURCE_PYI_DIR)
+  cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "" ${ARGN})
+
+  string(REPLACE "." ";" _parts "${ARG_MODULE}")
+  list(GET _parts -1 _leaf)
+  set(_pyi_path "${ARG_SOURCE_PYI_DIR}/${_leaf}.pyi")
+
+  # Per-call PYTHONPATH staging dir mirroring the package layout so
+  # `python -m mypy.stubgen --module <MODULE>` can resolve the
+  # just-built .so. Convert "a.b.c" -> "a/b" (parent path).
+  set(_staging "${CMAKE_CURRENT_BINARY_DIR}/_stubgen_staging/${ARG_CYTHON_TARGET}")
+  list(REMOVE_AT _parts -1)
+  string(REPLACE ";" "/" _module_subdir "${_parts}")
+
+  # stubgen with `--module a.b.c --output OUT` writes
+  # OUT/a/b/c.pyi (preserves the dotted path inside OUT). Write to
+  # a temp dir per invocation, then move the single leaf .pyi to the
+  # source-tree destination.
+  set(_stubgen_outdir "${_staging}_out")
+
+  add_custom_target(${ARG_CYTHON_TARGET}_stub
+    # Tear down + rebuild the staging tree to keep it in sync with
+    # the just-built .so on every invocation.
+    COMMAND ${CMAKE_COMMAND} -E rm -rf "${_staging}" "${_stubgen_outdir}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${_staging}/${_module_subdir}"
+    # Symlink the just-built .so into the leaf staging directory so
+    # `import <module>` works under PYTHONPATH=${_staging}.
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+            "$<TARGET_FILE:${ARG_CYTHON_TARGET}>"
+            "${_staging}/${_module_subdir}/$<TARGET_FILE_NAME:${ARG_CYTHON_TARGET}>"
+    # Make sure the destination dir exists.
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${ARG_SOURCE_PYI_DIR}"
+    # Run stubgen via the dedicated CLI entry point. `python -m
+    # mypy.stubgen` does not work when mypy is installed as a
+    # compiled .so (no code object for `-m`); the `stubgen` script
+    # in the same venv works regardless of the install layout.
+    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${_staging}
+            ${HIP_PYTHON_STUBGEN_EXECUTABLE}
+            --module ${ARG_MODULE}
+            --output ${_stubgen_outdir}
+            --include-private
+    # Move the generated leaf .pyi from the dotted-path layout into
+    # the source-tree destination next to the .pyx.
+    COMMAND ${CMAKE_COMMAND} -E copy
+            "${_stubgen_outdir}/${_module_subdir}/${_leaf}.pyi"
+            "${_pyi_path}"
+    COMMAND ${CMAKE_COMMAND} -E rm -rf "${_stubgen_outdir}"
+    DEPENDS ${ARG_CYTHON_TARGET}
+    BYPRODUCTS "${_pyi_path}"
+    COMMENT "stubgen ${ARG_MODULE} -> ${_pyi_path}"
+    VERBATIM
+  )
+endfunction()

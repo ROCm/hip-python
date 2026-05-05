@@ -89,6 +89,15 @@ For each release run, `recipes/hip_python/generate_hip_python.sh` writes:
 | `python/rocm-bindings-compiler/cmake/generated_modules.cmake` | LLVM-C / transforms / config / COMGR module lists. |
 | `python/rocm-bindings-{hip,libraries,compiler}/cmake/generated_versions.cmake`<br>`python/hip-python-interop/cmake/generated_versions.cmake` | Version metadata: ROCm version, HIP version, code-generator branch/rev, hip-python branch/rev. Consumed by the existing `configure_file("_version.py.in" "_version.py")` flow. |
 | `<package>/<rocm-or-cuda>/<…>/<name>.pyi` (high-level modules only) | Type-stub files emitted alongside every high-level `<name>.pxd`/`.pyx` pair. Used by static type checkers (mypy, pyright) and IDEs to resolve symbol signatures without the compiled extensions on `sys.path`. The cy* C-level wrappers do **not** get `.pyi` — they are `cimport`-only and have no honest Python type-system equivalents (see plan §B.2). Installed alongside the corresponding `.so`. |
+
+> **Note on handcoded Cython modules.** The handful of handcoded
+> `.pyx` files in `rocm-bindings-core` (`rocm.bindings.util.{types,
+> loader,posixloader}`) and `rocm-bindings-hip` (`_hip_helpers`,
+> `_hiprtc_helpers`) are **not** touched by interfacegen. Their
+> `.pyi` stubs are committed to git and refreshed by a developer-run
+> CMake target backed by `mypy stubgen` — see
+> [BUILDING.md](BUILDING.md) §"Regenerating stubs for handcoded
+> Cython modules" for the workflow.
 | `docs_src/python_api/<dotted-module-name>.rst` (high-level modules) | Sphinx wrapper page that points `sphinx-autoapi` at the high-level Python module. One file per generated module (`rocm.bindings.hipblas.rst`, `cuda.bindings.driver.rst`, etc.). |
 | `docs_src/python_api/<dotted-module-name>.rst` (cy* wrappers) | Sphinx wrapper page for each generated `cy<name>.pxd`. Uses `literalinclude` to embed the .pxd source with Cython syntax highlighting — the `.pxd` itself is the readable, source-of-truth contract for downstream Cython users. No autoapi or `.pyi` involved. (See plan §B.3.) |
 

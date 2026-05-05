@@ -427,6 +427,119 @@ if(ALL_SDIST_TARGETS)
 endif()
 
 # ---------------------------------------------------------------------------
+# Stubgen: developer-only `.pyi` regeneration for handcoded Cython modules
+# ---------------------------------------------------------------------------
+#
+# When a developer edits one of the handcoded Cython modules listed in
+# `HIP_PYTHON_STUBGEN_MODULES` below, they re-run `mypy stubgen` to refresh
+# the corresponding `.pyi` next to the `.pyx` and commit both files
+# together. This is NOT invoked by any wheel/sdist target — end users
+# `pip install`ing from sdist or wheel consume the committed `.pyi`
+# directly and do NOT need `mypy` installed.
+#
+# Opt-in via `-DHIP_PYTHON_ENABLE_STUBGEN=ON`. The targets created are:
+#   - `<cython-target>_stub` per module
+#   - `<pkg>_stubs` aggregate per package (e.g. `core_stubs`, `hip_stubs`)
+#   - `all_stubs` aggregate across packages
+#
+# Adding a new handcoded Cython module to be stubbed: append one line to
+# `HIP_PYTHON_STUBGEN_MODULES` below — this is the single source of
+# truth across all packages.
+#
+# See `share/design/BUILDING.md` "Regenerating stubs for handcoded
+# Cython modules" for the full developer workflow.
+option(HIP_PYTHON_ENABLE_STUBGEN
+  "Enable developer-only stubgen targets (requires `mypy` installed)" OFF)
+
+if(HIP_PYTHON_ENABLE_STUBGEN)
+  # Locate the `stubgen` CLI script in the same venv as Python_EXECUTABLE.
+  # `python -m mypy.stubgen` does not work when mypy is installed as a
+  # compiled .so (`No code object available for mypy.stubgen`); the
+  # `stubgen` console-script entry point works regardless.
+  get_filename_component(_python_bindir "${Python_EXECUTABLE}" DIRECTORY)
+  find_program(HIP_PYTHON_STUBGEN_EXECUTABLE
+    NAMES stubgen
+    HINTS "${_python_bindir}"
+    NO_DEFAULT_PATH
+  )
+  if(NOT HIP_PYTHON_STUBGEN_EXECUTABLE)
+    # Fall back to PATH lookup so a system-wide stubgen still works.
+    find_program(HIP_PYTHON_STUBGEN_EXECUTABLE NAMES stubgen)
+  endif()
+  if(NOT HIP_PYTHON_STUBGEN_EXECUTABLE)
+    message(FATAL_ERROR
+      "HIP_PYTHON_ENABLE_STUBGEN=ON but `stubgen` was not found "
+      "alongside ${Python_EXECUTABLE} or on PATH. Install mypy in "
+      "your active Python environment (`pip install mypy`) and "
+      "re-configure, or disable this option.")
+  endif()
+  message(STATUS "stubgen executable: ${HIP_PYTHON_STUBGEN_EXECUTABLE}")
+
+  # Single repo-spanning enumeration. Each entry:
+  #   "<package-dir>|<dotted-module>|<source-pyi-relative-dir>|<cython-target>"
+  #
+  # `<source-pyi-relative-dir>` is relative to `python/`; it's where the
+  # `.pyi` lands in the source tree (next to the `.pyx`).
+  # `<cython-target>` is the CMake target whose compiled `.so` stubgen
+  # introspects.
+  set(HIP_PYTHON_STUBGEN_MODULES
+    "core|rocm.bindings.util.types|rocm-bindings-core/rocm/bindings/util|rocm_bindings_core_types"
+    "core|rocm.bindings.util.loader|rocm-bindings-core/rocm/bindings/util|rocm_bindings_core_loader"
+    "core|rocm.bindings.util.posixloader|rocm-bindings-core/rocm/bindings/util|rocm_bindings_core_platform_loader"
+    "hip|rocm.bindings._hip_helpers|rocm-bindings-hip/rocm/bindings|rocm_bindings_hip_helpers"
+    "hip|rocm.bindings._hiprtc_helpers|rocm-bindings-hip/rocm/bindings|rocm_bindings_hiprtc_helpers"
+  )
+
+  # Bucket per-module stub targets by package shortname; these populate
+  # the per-package <pkg>_stubs aggregate targets below.
+  set(_core_stub_targets)
+  set(_hip_stub_targets)
+  set(_libraries_stub_targets)
+  set(_systems_stub_targets)
+  set(_compiler_stub_targets)
+  set(_interop_stub_targets)
+
+  foreach(_entry IN LISTS HIP_PYTHON_STUBGEN_MODULES)
+    string(REPLACE "|" ";" _fields "${_entry}")
+    list(GET _fields 0 _pkg_short)
+    list(GET _fields 1 _module)
+    list(GET _fields 2 _pyi_subdir)
+    list(GET _fields 3 _cython_target)
+
+    # Skip entries whose owning package isn't enabled in this configure
+    # — the cython target won't exist, and add_custom_target DEPENDS on
+    # a missing target would fail.
+    set(_owning_var "HIP_PYTHON_BUILD_${_pkg_short}")
+    string(TOUPPER "${_owning_var}" _owning_var)
+    if(NOT ${_owning_var})
+      continue()
+    endif()
+
+    hip_python_add_stubgen_target(
+      MODULE "${_module}"
+      CYTHON_TARGET "${_cython_target}"
+      SOURCE_PYI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${_pyi_subdir}"
+    )
+    list(APPEND _${_pkg_short}_stub_targets "${_cython_target}_stub")
+  endforeach()
+
+  set(_all_stub_targets)
+  foreach(_pkg_short IN ITEMS core hip libraries systems compiler interop)
+    set(_pkg_targets "_${_pkg_short}_stub_targets")
+    if(${_pkg_targets})
+      add_custom_target(${_pkg_short}_stubs DEPENDS ${${_pkg_targets}})
+      list(APPEND _all_stub_targets ${_pkg_short}_stubs)
+      message(STATUS "Stubgen target enabled: ${_pkg_short}_stubs (${${_pkg_targets}})")
+    endif()
+  endforeach()
+
+  if(_all_stub_targets)
+    add_custom_target(all_stubs DEPENDS ${_all_stub_targets})
+    message(STATUS "Aggregate stubgen target 'all_stubs' created with: ${_all_stub_targets}")
+  endif()
+endif()
+
+# ---------------------------------------------------------------------------
 # Documentation build (Sphinx)
 # ---------------------------------------------------------------------------
 #

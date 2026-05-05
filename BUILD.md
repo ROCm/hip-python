@@ -66,6 +66,13 @@ cmake --build build --target core_wheel
 - `CMAKE_C_COMPILER_LAUNCHER` - Compiler launcher like `sccache` or `ccache`
 - `CMAKE_CXX_COMPILER_LAUNCHER` - Compiler launcher for C++
 
+**Developer Options:**
+- `HIP_PYTHON_ENABLE_STUBGEN` - Enable developer-only `*_stubs` targets that
+  refresh the committed `.pyi` files for handcoded Cython modules via
+  `mypy stubgen` (default: OFF; requires `pip install mypy`).
+  See `share/design/BUILDING.md` "Regenerating stubs for handcoded
+  Cython modules" for the workflow.
+
 ### CMake Targets
 
 **Wheel targets:**
@@ -83,6 +90,17 @@ cmake --build build --target core_wheel
 - `package_rocm_bindings_libraries` - Build libraries C extensions
 - `package_rocm_bindings_systems` - Build systems C extensions
 - `package_hip_python_interop` - Build interop C extensions
+
+**Developer-only stubgen targets** (requires `HIP_PYTHON_ENABLE_STUBGEN=ON`
+and `mypy` installed; not part of `all_wheels` / `all_sdists`):
+- `all_stubs` - Refresh `.pyi` for every handcoded Cython module across
+  all enabled packages
+- `core_stubs` - Refresh stubs for rocm-bindings-core handcoded modules
+  (`rocm.bindings.util.{types,loader,posixloader}`)
+- `hip_stubs` - Refresh stubs for rocm-bindings-hip handcoded helpers
+  (`_hip_helpers`, `_hiprtc_helpers`)
+- `<cython-target>_stub` - Refresh a single module's stub (e.g.
+  `rocm_bindings_core_types_stub`)
 
 ## Environment Variables
 

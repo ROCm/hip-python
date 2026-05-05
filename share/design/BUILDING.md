@@ -429,6 +429,79 @@ unified configure step, listed in each per-package
 - **ROCm SDK** at `${ROCM_PATH}` (defaults to `/opt/rocm`).
 - For docs builds: `sphinx`, `sphinx-autoapi`, `rocm-docs-core`, plus the
   rest of `docs_src/sphinx/requirements.txt`.
+- For developer-only stub regeneration (see next section): `mypy`.
+
+## Regenerating stubs for handcoded Cython modules
+
+A handful of handcoded Cython modules ship in `rocm-bindings-core`
+(`rocm.bindings.util.{types,loader,posixloader}`) and
+`rocm-bindings-hip` (`rocm.bindings._hip_helpers`,
+`rocm.bindings._hiprtc_helpers`). Their `.pyi` type-stub
+counterparts are **committed to git** alongside the `.pyx` so:
+
+- `sphinx-autoapi` can document them (astroid cannot parse `.pyx`).
+- Static type checkers (mypy, pyright) and IDEs see real signatures.
+- Consumers building from sdist or wheel get the stubs in the
+  installed wheel without running any extra tool.
+
+The interfacegen-owned packages (`rocm-bindings-hip`'s `hip` and
+`hiprtc`, libraries, systems, compiler, hip-python-interop) get
+their `.pyi` from interfacegen at codegen time — those stubs are
+**not** maintained via the dev workflow described here.
+
+### Developer workflow
+
+After editing one of the handcoded `.pyx` files (changing a class
+or function signature, adding a method, etc.):
+
+```sh
+pip install mypy                                   # one-time
+cd python
+cmake -B build -DHIP_PYTHON_ENABLE_STUBGEN=ON
+cmake --build build --target all_stubs             # all handcoded modules
+# or one package at a time:
+cmake --build build --target core_stubs
+cmake --build build --target hip_stubs
+# or a single module:
+cmake --build build --target rocm_bindings_core_types_stub
+```
+
+The regenerated `.pyi` lands in the source tree next to the `.pyx`.
+Inspect the diff with `git diff python/rocm-bindings-*/rocm/...`,
+then commit `<module>.pyx` and `<module>.pyi` together.
+
+### What is NOT triggered
+
+- `pip install rocm-bindings-core` (from wheel or sdist) — uses the
+  committed `.pyi` directly. `mypy` is **not** a build-system
+  dependency; it's a developer-only tool.
+- `cmake --build build --target all_wheels` / `all_sdists` — wheel
+  and sdist targets do **not** depend on `all_stubs`.
+- `HIP_PYTHON_ENABLE_STUBGEN=OFF` (the default) — the stubgen
+  targets are not even created; CMake configure does not look for
+  `mypy`.
+
+### Adding a new handcoded Cython module to be stubbed
+
+The list of modules is repo-spanning and lives in **one place**:
+`HIP_PYTHON_STUBGEN_MODULES` in `python/CMakeLists.txt`. Append one
+line of the form:
+
+```
+"<package-shortname>|<dotted-module>|<source-pyi-relative-dir>|<cython-target>"
+```
+
+`<package-shortname>` matches the `HIP_PYTHON_BUILD_<NAME>` option
+suffix (`core`, `hip`, `libraries`, `systems`, `compiler`,
+`interop`); the entry is silently skipped if the owning package is
+disabled in this configure. The dispatch loop below the list calls
+`hip_python_add_stubgen_target()` (in
+`cmake/HipPythonBuild.cmake`) for each entry and aggregates them
+into per-package `<pkg>_stubs` targets and the repo-wide
+`all_stubs` target.
+
+Per-package `CMakeLists.txt` files do not contain any stubgen
+wiring — the single list is the authoritative source.
 
 ## Documentation build
 
