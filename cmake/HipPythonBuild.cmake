@@ -338,3 +338,59 @@ function(hip_python_add_wheel_target)
     DEPENDS "${STAMP_FILE}"
   )
 endfunction()
+
+
+# Add a custom target that runs `python -m build --sdist` from
+# ${PACKAGE_DIR}, dropping the resulting .tar.gz into ${OUTPUT_DIR}
+# (defaults to ${CMAKE_BINARY_DIR}/dist).
+#
+# Args:
+#   TARGET       Name of the CMake target to create.
+#   PACKAGE_DIR  Per-package source dir containing pyproject.toml.
+#   OUTPUT_DIR   Destination dir for the sdist tarball (created if
+#                missing). Defaults to ${CMAKE_BINARY_DIR}/dist.
+#   DEPENDS      Optional CMake target dependencies (rare for sdist;
+#                no native build is needed since the sdist just packs
+#                source files + the per-package VERSION + cmake helper
+#                that the unified configure step has already populated).
+function(hip_python_add_sdist_target)
+  set(options "")
+  set(oneValueArgs TARGET PACKAGE_DIR OUTPUT_DIR)
+  set(multiValueArgs DEPENDS)
+  cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+  if(NOT ARG_OUTPUT_DIR)
+    set(ARG_OUTPUT_DIR "${CMAKE_BINARY_DIR}/dist")
+  endif()
+
+  # Stamp file (sdist filename includes the version string, so we can't
+  # use it directly as the OUTPUT of the custom command).
+  set(STAMP_FILE "${CMAKE_CURRENT_BINARY_DIR}/${ARG_TARGET}.stamp")
+  set(TEMP_SDIST_DIR "${CMAKE_CURRENT_BINARY_DIR}/${ARG_TARGET}_temp")
+
+  # NOTE: per-package VERSION and the shared cmake helper are populated
+  # at unified-CMake configure time by the configure_file() loop in
+  # python/CMakeLists.txt, so they exist in ${ARG_PACKAGE_DIR}/ when
+  # this command runs. The sdist tarball includes them via each
+  # per-package pyproject.toml `sdist.include`.
+  add_custom_command(
+    OUTPUT "${STAMP_FILE}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${TEMP_SDIST_DIR}"
+    COMMAND ${Python_EXECUTABLE} -m build
+            --sdist
+            --no-isolation
+            --outdir=${TEMP_SDIST_DIR}
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${ARG_OUTPUT_DIR}"
+    COMMAND sh -c "cp '${TEMP_SDIST_DIR}'/*.tar.gz '${ARG_OUTPUT_DIR}/'"
+    COMMAND ${CMAKE_COMMAND} -E rm -rf "${TEMP_SDIST_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E touch "${STAMP_FILE}"
+    WORKING_DIRECTORY "${ARG_PACKAGE_DIR}"
+    DEPENDS ${ARG_DEPENDS}
+    COMMENT "Building sdist for ${ARG_TARGET} -> ${ARG_OUTPUT_DIR}"
+    VERBATIM
+  )
+
+  add_custom_target(${ARG_TARGET}
+    DEPENDS "${STAMP_FILE}"
+  )
+endfunction()

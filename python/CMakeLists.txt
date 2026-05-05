@@ -289,6 +289,95 @@ if(ALL_WHEEL_TARGETS)
   message(STATUS "Aggregate wheel target 'all_wheels' created with: ${ALL_WHEEL_TARGETS}")
 endif()
 
+# Sdist packaging targets (conditional on the same per-package opt-in
+# as the wheel targets above). Each `<name>_sdist` target runs
+# `python -m build --sdist --no-isolation` from its package dir and
+# drops the resulting tarball into ${HIP_PYTHON_WHEEL_OUTPUT_DIR}.
+# No native build is required — the per-package VERSION and shared
+# cmake helper are already in place from the configure_file() loop
+# above.
+if(HIP_PYTHON_BUILD_CORE)
+  hip_python_add_sdist_target(
+    TARGET core_sdist
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-core"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Sdist target enabled: core_sdist")
+endif()
+
+if(HIP_PYTHON_BUILD_HIP)
+  hip_python_add_sdist_target(
+    TARGET hip_sdist
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-hip"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Sdist target enabled: hip_sdist")
+endif()
+
+if(HIP_PYTHON_BUILD_LIBRARIES)
+  hip_python_add_sdist_target(
+    TARGET libraries_sdist
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-libraries"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Sdist target enabled: libraries_sdist")
+endif()
+
+if(HIP_PYTHON_BUILD_COMPILER)
+  hip_python_add_sdist_target(
+    TARGET compiler_sdist
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-compiler"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Sdist target enabled: compiler_sdist")
+endif()
+
+if(HIP_PYTHON_BUILD_INTEROP)
+  hip_python_add_sdist_target(
+    TARGET interop_sdist
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/hip-python-interop"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Sdist target enabled: interop_sdist")
+endif()
+
+if(HIP_PYTHON_BUILD_HIP_PYTHON)
+  hip_python_add_sdist_target(
+    TARGET hip_python_sdist
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/hip-python"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Sdist target enabled: hip_python_sdist")
+endif()
+
+# Aggregate target to build all sdists.
+set(ALL_SDIST_TARGETS)
+if(HIP_PYTHON_BUILD_CORE)
+  list(APPEND ALL_SDIST_TARGETS core_sdist)
+endif()
+if(HIP_PYTHON_BUILD_HIP)
+  list(APPEND ALL_SDIST_TARGETS hip_sdist)
+endif()
+if(HIP_PYTHON_BUILD_LIBRARIES)
+  list(APPEND ALL_SDIST_TARGETS libraries_sdist)
+endif()
+if(HIP_PYTHON_BUILD_COMPILER)
+  list(APPEND ALL_SDIST_TARGETS compiler_sdist)
+endif()
+if(HIP_PYTHON_BUILD_INTEROP)
+  list(APPEND ALL_SDIST_TARGETS interop_sdist)
+endif()
+if(HIP_PYTHON_BUILD_HIP_PYTHON)
+  list(APPEND ALL_SDIST_TARGETS hip_python_sdist)
+endif()
+
+if(ALL_SDIST_TARGETS)
+  add_custom_target(all_sdists
+    DEPENDS ${ALL_SDIST_TARGETS}
+  )
+  message(STATUS "Aggregate sdist target 'all_sdists' created with: ${ALL_SDIST_TARGETS}")
+endif()
+
 # ---------------------------------------------------------------------------
 # Documentation build (Sphinx)
 # ---------------------------------------------------------------------------

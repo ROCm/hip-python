@@ -147,11 +147,29 @@ configure once to populate the per-package files.
 
 ### C. sdist build + install (offline, distribution-friendly)
 
+The unified build exposes per-package sdist targets in addition to
+the wheel targets:
+
 ```sh
-cd python && cmake -B build                   # populates per-pkg VERSION + cmake helper
-cd rocm-bindings-compiler
-python3 -m build --sdist --no-isolation       # produces a .tar.gz
-pip install --no-build-isolation rocm_bindings_compiler-*.tar.gz
+cd python
+cmake -B build
+cmake --build build --target all_sdists       # all enabled packages
+# or one at a time:
+cmake --build build --target core_sdist
+cmake --build build --target compiler_sdist
+```
+
+Each `<pkg>_sdist` target runs `python -m build --sdist
+--no-isolation` from the package directory and drops the resulting
+tarball into `${HIP_PYTHON_WHEEL_OUTPUT_DIR}` (default
+`python/build/dist/`). The same per-package opt-in
+(`HIP_PYTHON_BUILD_<NAME>`) controls both wheel and sdist targets.
+
+To install a sdist downstream:
+
+```sh
+pip install --no-build-isolation \
+    python/build/dist/rocm_bindings_compiler-*.tar.gz
 ```
 
 The sdist tarball bundles `VERSION`, the shared cmake helper

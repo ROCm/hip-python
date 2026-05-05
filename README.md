@@ -185,14 +185,20 @@ Prefer the unified CMake build above when you want all wheels and/or manylinux c
 
 ### Build and Install from sdist
 
-Each package ships a self-contained source distribution that can be built and
-installed offline (or distributed via PyPI):
+Each package ships a self-contained source distribution. The unified CMake
+build provides per-package `<pkg>_sdist` targets and an aggregate
+`all_sdists` that mirrors `all_wheels`:
 
 ```shell
-# After the one-time `cmake -B build` configure step above:
-cd python/rocm-bindings-compiler
-python3 -m build --sdist --no-isolation       # produces dist/rocm_bindings_compiler-*.tar.gz
-pip install --no-build-isolation dist/rocm_bindings_compiler-*.tar.gz
+cd python
+cmake -B build
+cmake --build build --target all_sdists       # build sdists for every enabled package
+# or one at a time:
+cmake --build build --target core_sdist
+cmake --build build --target compiler_sdist
+
+# Install:
+pip install --no-build-isolation build/dist/rocm_bindings_compiler-*.tar.gz
 ```
 
 The sdist tarball bundles the per-package `VERSION`, the shared cmake helper, every
