@@ -163,9 +163,13 @@ alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
 ### Build Individual Packages
 
 Each package has its own `pyproject.toml` and can be built standalone — useful for
-development loops on a single package:
+development loops on a single package. Run the unified configure once first to
+populate the per-package `VERSION` and shared cmake helper (both gitignored):
 
 ```shell
+# One-time: populate per-package VERSION + cmake helper from the repo-root files
+cd python && cmake -B build && cd ..
+
 # Build just rocm-bindings-core:
 cd python/rocm-bindings-core
 python3 -m build --wheel --no-isolation
@@ -178,6 +182,24 @@ python3 -m build --wheel --no-isolation
 Standalone per-package builds skip `auditwheel repair` (the resulting wheel is tagged
 `linux_x86_64` rather than `manylinux_*`) and only build that one package's targets.
 Prefer the unified CMake build above when you want all wheels and/or manylinux compatibility.
+
+### Build and Install from sdist
+
+Each package ships a self-contained source distribution that can be built and
+installed offline (or distributed via PyPI):
+
+```shell
+# After the one-time `cmake -B build` configure step above:
+cd python/rocm-bindings-compiler
+python3 -m build --sdist --no-isolation       # produces dist/rocm_bindings_compiler-*.tar.gz
+pip install --no-build-isolation dist/rocm_bindings_compiler-*.tar.gz
+```
+
+The sdist tarball bundles the per-package `VERSION`, the shared cmake helper, every
+`.pxd`/`.pyx`/`.pyi`/`.py` source, the per-package `CMakeLists.txt`, and (for
+`rocm-bindings-compiler`) the `src/` subtree that builds the bundled `libLLVM.so`.
+Installing the sdist re-runs CMake against the package's own self-contained
+`CMakeLists.txt` — no parent directory or repo checkout required.
 
 To build a subset via the unified CMake build, disable the packages you don't want at
 configure time:

@@ -39,6 +39,32 @@ set(HIP_PYTHON_LONG_VERSION_NAME "${HIP_PYTHON_VERSION_FULL}")
 
 message(STATUS "hip-python version: ${HIP_PYTHON_VERSION_FULL}")
 
+# Populate per-package VERSION files (gitignored, single source of truth
+# is the repo-root VERSION). Each per-package CMakeLists.txt and
+# pyproject.toml then reads `./VERSION`, which lets every package build
+# standalone (single-package wheel from its own dir) AND lets sdist
+# tarballs include their own VERSION so sdist installs work without
+# `../../VERSION` access. See share/design/BUILDING.md.
+foreach(_hp_pkg
+    rocm-bindings-core rocm-bindings-hip
+    rocm-bindings-libraries rocm-bindings-compiler
+    hip-python-interop hip-python)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION"
+    "${CMAKE_CURRENT_SOURCE_DIR}/${_hp_pkg}/VERSION"
+    COPYONLY)
+  # Mirror the shared cmake helper into each per-package cmake/ dir so
+  # the helper is present locally for both standalone single-package
+  # builds AND sdist packaging (sdist.include picks it up from the
+  # local path). See share/design/BUILDING.md.
+  if(NOT _hp_pkg STREQUAL "hip-python")  # pure Python; no cmake helper needed
+    configure_file(
+      "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/HipPythonBuild.cmake"
+      "${CMAKE_CURRENT_SOURCE_DIR}/${_hp_pkg}/cmake/HipPythonBuild.cmake"
+      COPYONLY)
+  endif()
+endforeach()
+
 # Wheel output directory (can be overridden)
 # Support DIST_DIR environment variable for backward compatibility
 if(DEFINED ENV{DIST_DIR} AND NOT DEFINED HIP_PYTHON_WHEEL_OUTPUT_DIR)

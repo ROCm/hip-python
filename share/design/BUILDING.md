@@ -117,15 +117,52 @@ cmake --build build --target hip_python_wheel
 ### B. Single-package build (development loop)
 
 ```sh
-cd python/rocm-bindings-core
+cd python
+cmake -B build                                # one-time configure step
+cd rocm-bindings-core
 python3 -m build --wheel --no-isolation
 ```
 
-Each package has its own `pyproject.toml` with `scikit-build-core` as
-the build backend pointing at `cmake.source-dir = ".."` (the `python/`
-directory). This is the right entry point when iterating on one package
-in isolation; it skips `auditwheel repair` and only builds that one
-package's targets.
+Each per-package `pyproject.toml` points scikit-build-core at
+`cmake.source-dir = "."` (the package's own `CMakeLists.txt`) and
+`metadata.version.input = "VERSION"` (a per-package file populated by
+the unified configure step). This makes every package self-sufficient:
+
+- For wheel/sdist builds, the per-package `CMakeLists.txt` is the
+  CMake root.
+- The version file `python/<pkg>/VERSION` is a copy of the canonical
+  repo-root `VERSION`; the unified `cmake -B build` step does the
+  copy at configure time. Each per-package `VERSION` is **gitignored**
+  (single source of truth lives at the repo root).
+- The shared cmake helper `cmake/HipPythonBuild.cmake` is similarly
+  mirrored into each `python/<pkg>/cmake/` at configure time, so
+  every package finds it locally without a `../../cmake/...` lookup.
+  Also gitignored.
+
+If you skip the unified configure and try
+`python -m build --wheel` from a per-package directory directly,
+scikit-build-core's metadata provider will fail with
+`FileNotFoundError: VERSION` — the fix is to run the unified
+configure once to populate the per-package files.
+
+### C. sdist build + install (offline, distribution-friendly)
+
+```sh
+cd python && cmake -B build                   # populates per-pkg VERSION + cmake helper
+cd rocm-bindings-compiler
+python3 -m build --sdist --no-isolation       # produces a .tar.gz
+pip install --no-build-isolation rocm_bindings_compiler-*.tar.gz
+```
+
+The sdist tarball bundles `VERSION`, the shared cmake helper
+(`cmake/HipPythonBuild.cmake`), every `.pxd`/`.pyx`/`.pyi`/`.py`
+source, the per-package `CMakeLists.txt`, and (for
+`rocm-bindings-compiler`) the `src/` subtree that builds the bundled
+`libLLVM.so`. Installing the sdist re-runs CMake against the
+package's own self-contained `CMakeLists.txt`, compiles the Cython
+extensions, and (for the compiler package) builds or copies
+`libLLVM.so` into the resulting wheel — exactly what a
+`python -m build --wheel` from the source tree would produce.
 
 ## CMake build orchestration
 
@@ -325,10 +362,31 @@ gracefully — it still auto-prepends `${CMAKE_CURRENT_SOURCE_DIR}`. The
 package is responsible for ensuring it can build with only its own
 sources and its installed dependencies.
 
-The per-package CMakeLists also includes a "helper resolution" block at
-the top that copies `HipPythonBuild.cmake` into the package's `cmake/`
-subdirectory when building an sdist (`SKBUILD_STATE STREQUAL "sdist"`),
-so the resulting source distribution is self-contained.
+### How the version file reaches scikit-build's metadata provider
+
+`metadata.version.input = "VERSION"` (per-package) is read by
+scikit-build-core **before** CMake runs. So `VERSION` must already
+exist locally:
+
+- **Source-tree wheel/sdist build**: the unified
+  `cmake -B build` from `python/` does a `configure_file()` of
+  repo-root `VERSION` → each `python/<pkg>/VERSION`. Run the
+  unified configure once before any per-package `python -m build`
+  invocation. Both files are gitignored.
+- **sdist install path** (downstream consumer of the .tar.gz): the
+  sdist already contains `VERSION` (added via `sdist.include`).
+  pip extracts it and scikit-build reads it directly — no source
+  tree, no unified configure needed.
+- **`hip_python_resolve_version()`** (in
+  `cmake/HipPythonBuild.cmake`) reads `VERSION` from the package
+  dir at CMake configure time and exports
+  `HIP_PYTHON_VERSION_FULL` so per-package `_version.py.in`
+  configure_file calls keep working.
+
+The shared `cmake/HipPythonBuild.cmake` follows the same model:
+mirrored into each `python/<pkg>/cmake/HipPythonBuild.cmake` by the
+unified configure step, listed in each per-package
+`sdist.include`, gitignored.
 
 ## Build requirements
 

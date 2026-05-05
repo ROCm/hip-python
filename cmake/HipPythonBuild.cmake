@@ -23,6 +23,47 @@ function(hip_python_get_env_default out_var env_var default_value)
   endif()
 endfunction()
 
+# Resolve the package version string for the calling per-package
+# CMakeLists.txt and export it as HIP_PYTHON_VERSION_FULL,
+# HIP_PYTHON_VERSION_NAME, and HIP_PYTHON_LONG_VERSION_NAME in
+# the parent scope.
+#
+# Behavior:
+# - sdist build (SKBUILD_STATE=sdist): copy repo-root ../../VERSION
+#   into ${CMAKE_CURRENT_SOURCE_DIR}/VERSION so the tarball includes it.
+#   Repo-root VERSION must exist (FATAL_ERROR if not).
+# - Other builds: require ${CMAKE_CURRENT_SOURCE_DIR}/VERSION to exist.
+#   It is populated either at unified-CMake configure time (the
+#   `python/CMakeLists.txt` configure_file loop) or by an extracted
+#   sdist tarball. Missing -> FATAL_ERROR with a clear message.
+function(hip_python_resolve_version)
+  set(_pkg_version_file "${CMAKE_CURRENT_SOURCE_DIR}/VERSION")
+  set(_repo_version_file "${CMAKE_CURRENT_SOURCE_DIR}/../../VERSION")
+
+  if(DEFINED SKBUILD_STATE AND SKBUILD_STATE STREQUAL "sdist")
+    if(NOT EXISTS "${_repo_version_file}")
+      message(FATAL_ERROR
+        "sdist build: repo-root VERSION not found at ${_repo_version_file}.")
+    endif()
+    configure_file("${_repo_version_file}" "${_pkg_version_file}" COPYONLY)
+  endif()
+
+  if(NOT EXISTS "${_pkg_version_file}")
+    message(FATAL_ERROR
+      "VERSION file not found at ${_pkg_version_file}. "
+      "Run the unified configure first: "
+      "`cmake -B build -S python` from the repo root, "
+      "which populates each per-package VERSION from the canonical "
+      "repo-root VERSION.")
+  endif()
+
+  file(READ "${_pkg_version_file}" _hp_version)
+  string(STRIP "${_hp_version}" _hp_version)
+  set(HIP_PYTHON_VERSION_FULL "${_hp_version}" PARENT_SCOPE)
+  set(HIP_PYTHON_VERSION_NAME "${_hp_version}" PARENT_SCOPE)
+  set(HIP_PYTHON_LONG_VERSION_NAME "${_hp_version}" PARENT_SCOPE)
+endfunction()
+
 function(hip_python_initialize)
   hip_python_get_rocm_path_default(_rocm_path_default)
   set(ROCM_PATH "${_rocm_path_default}" CACHE PATH "Path to the ROCm installation")
@@ -234,15 +275,13 @@ function(hip_python_add_wheel_target)
   # Always use temporary directory for initial wheel build
   set(TEMP_WHEEL_DIR "${CMAKE_CURRENT_BINARY_DIR}/${ARG_TARGET}_temp")
 
-  # Build the wheel command sequence
+  # Build the wheel command sequence.
+  # NOTE: per-package VERSION is populated at unified-CMake configure
+  # time by the configure_file() loop in python/CMakeLists.txt, so it
+  # already exists in ${ARG_PACKAGE_DIR}/VERSION when this command runs.
   set(WHEEL_COMMANDS
     # Create temporary directory
     COMMAND ${CMAKE_COMMAND} -E make_directory "${TEMP_WHEEL_DIR}"
-    # Copy VERSION file to package directory if it references ../../VERSION
-    # This is needed for pure Python packages using setuptools which restricts file access
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION"
-            "${ARG_PACKAGE_DIR}/VERSION"
     # Build wheel to temporary directory.
     # Forward HIP_PYTHON_* CMake options so the per-package scikit-build-core
     # configure (which is a separate CMake invocation) sees the same values

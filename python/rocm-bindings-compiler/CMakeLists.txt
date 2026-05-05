@@ -43,6 +43,8 @@ endif()
 
 hip_python_initialize()
 
+hip_python_resolve_version()
+
 # Find ROCm LLVM and AMD Comgr
 find_package(amd_comgr REQUIRED)
 

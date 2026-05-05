@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
 project(rocm-bindings-core LANGUAGES C)
 
 # Helper resolution: try shared helper first (for unified build), then local
-set(HIP_PYTHON_SHARED_HELPER "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/HipPythonBuild.cmake")
+set(HIP_PYTHON_SHARED_HELPER "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/HipPythonBuild.cmake")
 set(HIP_PYTHON_LOCAL_HELPER "${CMAKE_CURRENT_SOURCE_DIR}/cmake/HipPythonBuild.cmake")
 
 # For sdist: copy shared helper to local cmake/ directory
@@ -14,11 +14,13 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 if(EXISTS "${HIP_PYTHON_SHARED_HELPER}")
-  list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
+  list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 endif()
 include(HipPythonBuild)
 
 hip_python_initialize()
+
+hip_python_resolve_version()
 
 # Collect Cython dependencies
 hip_python_collect_cython_depends(UTIL_CYTHON_DEPENDS
