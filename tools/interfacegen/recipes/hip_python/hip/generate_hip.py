@@ -939,20 +939,27 @@ def generate(opts):  # noqa: C901
                     f"library name '{name}' is not valid, use one of: {', '.join(avail_lib_names)}"
                 )
 
-    # Modern layout: hip and hiprtc go to rocm-bindings-hip; everything else
-    # (the high-level math/comm/profile libs) goes to rocm-bindings-libraries.
+    # Modern layout:
+    #   hip, hiprtc      -> rocm-bindings-hip
+    #   rccl, roctx      -> rocm-bindings-systems  (collective comm + tracing)
+    #   everything else  -> rocm-bindings-libraries  (math / FFT / random / sparse)
     HIP_CORE_LIBS = {"hip", "hiprtc"}
+    SYSTEMS_LIBS = {"rccl", "roctx"}
     hip_pkg_dir = os.path.join(
         OUTPUT_DIR, "python", "rocm-bindings-hip", "rocm", "bindings"
     )
     libraries_pkg_dir = os.path.join(
         OUTPUT_DIR, "python", "rocm-bindings-libraries", "rocm", "bindings"
     )
+    systems_pkg_dir = os.path.join(
+        OUTPUT_DIR, "python", "rocm-bindings-systems", "rocm", "bindings"
+    )
     cuda_output_dir = os.path.join(
         OUTPUT_DIR, "python", "hip-python-interop", "cuda"
     )
     Path(hip_pkg_dir).mkdir(parents=True, exist_ok=True)
     Path(libraries_pkg_dir).mkdir(parents=True, exist_ok=True)
+    Path(systems_pkg_dir).mkdir(parents=True, exist_ok=True)
     Path(os.path.join(cuda_output_dir, "bindings")).mkdir(parents=True, exist_ok=True)
 
     for libname in (entry.strip() for entry in lib_names):
@@ -963,7 +970,12 @@ def generate(opts):  # noqa: C901
                 f"from: {available_libs}, or '*'."
             )
         generator = AVAILABLE_GENERATORS[libname]()
-        target_dir = hip_pkg_dir if libname in HIP_CORE_LIBS else libraries_pkg_dir
+        if libname in HIP_CORE_LIBS:
+            target_dir = hip_pkg_dir
+        elif libname in SYSTEMS_LIBS:
+            target_dir = systems_pkg_dir
+        else:
+            target_dir = libraries_pkg_dir
         generator.write_module_files(output_dir=target_dir)
 
     # CUDA interop layer (writes into <output_dir>/python/hip-python-interop/cuda/...)
@@ -977,8 +989,12 @@ def generate(opts):  # noqa: C901
     generate_cuda_interop_layer_files(license_text)
 
     # Return data the orchestrator may want (e.g. version metadata for
-    # cmake/generated_versions.cmake; libs list for the libraries package).
-    libraries_modules = [n for n in lib_names if n not in HIP_CORE_LIBS]
+    # cmake/generated_versions.cmake; per-package module lists).
+    libraries_modules = [
+        n for n in lib_names
+        if n not in HIP_CORE_LIBS and n not in SYSTEMS_LIBS
+    ]
+    systems_modules = [n for n in lib_names if n in SYSTEMS_LIBS]
     return dict(
         rocm_version=(ROCM_VERSION_MAJOR, ROCM_VERSION_MINOR, ROCM_VERSION_PATCH),
         hip_version=(
@@ -987,6 +1003,7 @@ def generate(opts):  # noqa: C901
         ),
         hip_modules=lib_names,
         libraries_modules=libraries_modules,
+        systems_modules=systems_modules,
     )
 
 

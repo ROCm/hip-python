@@ -22,11 +22,12 @@
 
 """Unified hip-python code generator.
 
-Produces generator outputs for the four generator-owned packages of
+Produces generator outputs for the five generator-owned packages of
 hip-python:
 
   - rocm-bindings-hip
-  - rocm-bindings-libraries
+  - rocm-bindings-libraries  (math: hipblas, hipfft, hiprand, hipsolver, hipsparse)
+  - rocm-bindings-systems    (collective comm + tracing: rccl, roctx)
   - rocm-bindings-compiler
   - hip-python-interop
 
@@ -153,6 +154,7 @@ def write_namespace_markers(opts, recipe_results):
     package_roots = [
         os.path.join(opts.output_dir, "python", "rocm-bindings-hip", "rocm", "bindings"),
         os.path.join(opts.output_dir, "python", "rocm-bindings-libraries", "rocm", "bindings"),
+        os.path.join(opts.output_dir, "python", "rocm-bindings-systems", "rocm", "bindings"),
         os.path.join(opts.output_dir, "python", "rocm-bindings-compiler", "rocm", "bindings"),
         os.path.join(opts.output_dir, "python", "hip-python-interop", "cuda", "bindings"),
     ]
@@ -203,6 +205,18 @@ def write_cmake_module_lists(opts, recipe_results):
         with open(path, "w") as f:
             f.write(_AUTOGEN_HEADER)
             f.write(f"set(HIP_PYTHON_LIBRARIES_GENERATED_MODULES\n    {' '.join(libs)})\n")
+
+    # rocm-bindings-systems
+    if hip_result is not None:
+        sys_libs = hip_result.get("systems_modules") or []
+        path = os.path.join(
+            opts.output_dir, "python", "rocm-bindings-systems", "cmake",
+            "generated_modules.cmake",
+        )
+        Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
+        with open(path, "w") as f:
+            f.write(_AUTOGEN_HEADER)
+            f.write(f"set(HIP_PYTHON_SYSTEMS_GENERATED_MODULES\n    {' '.join(sys_libs)})\n")
 
     # rocm-bindings-compiler
     llvm_modules = recipe_results.get("llvm", {}).get("llvm_modules") or []
@@ -271,7 +285,8 @@ def write_cmake_version_files(opts, recipe_results):
         + f'set(HIP_PYTHON_GENERATED_CODEGEN_VERSION "{codegen_version}")\n'
     )
     for pkg in ("rocm-bindings-hip", "rocm-bindings-libraries",
-                "rocm-bindings-compiler", "hip-python-interop"):
+                "rocm-bindings-systems", "rocm-bindings-compiler",
+                "hip-python-interop"):
         path = os.path.join(opts.output_dir, "python", pkg, "cmake", "generated_versions.cmake")
         Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
         with open(path, "w") as f:
@@ -309,14 +324,17 @@ def _module_to_pxd_relpath(opts, module_name):
         subdir = "/".join(parts[2:-1])  # llvm/c, llvm/c/transforms, llvm/config
         rel = f"python/rocm-bindings-compiler/rocm/bindings/{subdir}/{cy_leaf}.pxd"
     elif module_name.startswith("rocm.bindings."):
-        # decide hip vs libraries vs compiler by leaf name
+        # decide hip vs libraries vs systems vs compiler by leaf name
         _HIP_CORE = {"hip", "hiprtc", "_hip_helpers", "_hiprtc_helpers"}
         _COMPILER_CORE = {"amd_comgr"}
+        _SYSTEMS_CORE = {"rccl", "roctx"}
         bare = leaf[2:] if leaf.startswith("cy") else leaf
         if bare in _HIP_CORE:
             pkg = "rocm-bindings-hip"
         elif bare in _COMPILER_CORE:
             pkg = "rocm-bindings-compiler"
+        elif bare in _SYSTEMS_CORE:
+            pkg = "rocm-bindings-systems"
         else:
             pkg = "rocm-bindings-libraries"
         rel = f"python/{pkg}/rocm/bindings/{cy_leaf}.pxd"
@@ -471,12 +489,14 @@ def write_toc_yml_in(opts, recipe_results):
     sections = {
         "ROCM_BINDINGS_HIP": [],
         "ROCM_BINDINGS_LIBRARIES": [],
+        "ROCM_BINDINGS_SYSTEMS": [],
         "ROCM_BINDINGS_COMPILER": [],
         "HIP_PYTHON_INTEROP": [],
         "CYTHON_LEVEL": [],
     }
     _HIP_CORE = {"hip", "hiprtc"}
     _COMPILER_CORE = {"amd_comgr"}
+    _SYSTEMS_CORE = {"rccl", "roctx"}
     for module in _all_emitted_modules(recipe_results):
         leaf = module.rsplit(".", 1)[-1]
         if leaf.startswith("_"):
@@ -489,6 +509,8 @@ def write_toc_yml_in(opts, recipe_results):
                 section = "ROCM_BINDINGS_HIP"
             elif bare in _COMPILER_CORE:
                 section = "ROCM_BINDINGS_COMPILER"
+            elif bare in _SYSTEMS_CORE:
+                section = "ROCM_BINDINGS_SYSTEMS"
             else:
                 section = "ROCM_BINDINGS_LIBRARIES"
         elif module.startswith("cuda.bindings."):
