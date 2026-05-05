@@ -455,7 +455,7 @@ def write_toc_yml_in(opts, recipe_results):
     form because they are real generator-emitted literalinclude pages
     (see ``write_docs_pages``).
 
-    Handcoded subtrees (User Guide, rocm-bindings-util, hip compat shim,
+    Handcoded subtrees (User Guide, rocm-bindings-core, hip compat shim,
     Manual API) are listed inline in the template and left unchanged.
     """
     template_path = os.path.join(
