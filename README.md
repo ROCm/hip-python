@@ -84,12 +84,11 @@ python3 -m pip install hip-python[libraries]~=$rocm_version.0
 # Communication + tracing (RCCL, ROCTX).
 python3 -m pip install hip-python[systems]~=$rocm_version.0
 
-# Both extras at once:
-python3 -m pip install "hip-python[libraries,systems]~=$rocm_version.0"
-
 # Compiler bindings (LLVM-C + AMD COMGR + bundled libLLVM.so).
-# Standalone wheel; not exposed via a hip-python extra.
-python3 -m pip install rocm-bindings-compiler~=$rocm_version.0
+python3 -m pip install hip-python[compiler]~=$rocm_version.0
+
+# Several extras at once:
+python3 -m pip install "hip-python[libraries,systems,compiler]~=$rocm_version.0"
 
 # CUDA Python interoperability layer
 # (cuda.bindings.{driver,runtime,nvrtc}).
