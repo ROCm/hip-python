@@ -94,6 +94,7 @@ autoapi_dirs = [
     os.path.join(_PYTHON_ROOT, "rocm-bindings-core", "rocm"),
     os.path.join(_PYTHON_ROOT, "rocm-bindings-hip", "rocm"),
     os.path.join(_PYTHON_ROOT, "rocm-bindings-libraries", "rocm"),
+    os.path.join(_PYTHON_ROOT, "rocm-bindings-systems", "rocm"),
     os.path.join(_PYTHON_ROOT, "rocm-bindings-compiler", "rocm"),
     os.path.join(_PYTHON_ROOT, "hip-python-interop", "cuda"),
     os.path.join(_PYTHON_ROOT, "hip-python", "hip"),

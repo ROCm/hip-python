@@ -46,6 +46,7 @@ cmake --build build --target core_wheel
 - `HIP_PYTHON_BUILD_CORE` - Build rocm-bindings-core (default: ON)
 - `HIP_PYTHON_BUILD_HIP` - Build rocm-bindings-hip (default: ON)
 - `HIP_PYTHON_BUILD_LIBRARIES` - Build rocm-bindings-libraries (default: ON)
+- `HIP_PYTHON_BUILD_SYSTEMS` - Build rocm-bindings-systems (default: ON)
 - `HIP_PYTHON_BUILD_INTEROP` - Build hip-python-interop (default: ON)
 - `HIP_PYTHON_BUILD_HIP_PYTHON` - Build hip-python metapackage (default: ON)
 
@@ -72,6 +73,7 @@ cmake --build build --target core_wheel
 - `core_wheel` - Build rocm-bindings-core wheel
 - `hip_wheel` - Build rocm-bindings-hip wheel
 - `libraries_wheel` - Build rocm-bindings-libraries wheel
+- `systems_wheel` - Build rocm-bindings-systems wheel
 - `interop_wheel` - Build hip-python-interop wheel
 - `hip_python_wheel` - Build hip-python metapackage wheel
 
@@ -79,6 +81,7 @@ cmake --build build --target core_wheel
 - `package_rocm_bindings_core` - Build util C extensions
 - `package_rocm_bindings_hip` - Build hip C extensions
 - `package_rocm_bindings_libraries` - Build libraries C extensions
+- `package_rocm_bindings_systems` - Build systems C extensions
 - `package_hip_python_interop` - Build interop C extensions
 
 ## Environment Variables

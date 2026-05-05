@@ -1,0 +1,71 @@
+[build-system]
+requires = ["scikit-build-core>=0.11.2", "cython>=3.0"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "rocm-bindings-systems"
+dynamic = ["version"]
+description = "ROCm system-level Python bindings (RCCL collective communication, ROCTX tracing)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Advanced Micro Devices, Inc.", email = "hip-python.maintainer@amd.com"},
+]
+dependencies = [
+    "rocm-bindings-core~=7.13.0.0",
+    "rocm-bindings-hip~=7.13.0.0"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Cython",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+build-dir = "../build/{wheel_tag}"
+cmake.source-dir = "."
+cmake.build-type = "Release"
+ninja.make-fallback = false
+wheel.packages = ["rocm"]
+metadata.version.provider = "scikit_build_core.metadata.regex"
+metadata.version.input = "VERSION"
+metadata.version.regex = "(?P<value>.*)"
+build.targets = ["package_rocm_bindings_systems"]
+install.components = ["rocm-bindings-systems"]
+
+# Include .pxd files for cimport
+sdist.include = [
+    "VERSION",
+    "cmake/HipPythonBuild.cmake",
+    "*/*.pxd",
+    "*/*.pyx"
+]
+
+# Custom ROCm metadata
+[tool.rocm-bindings]
+# User-facing version information (exposed via rocm.version module)
+rocm_version = "7.13.0"
+hip_version = "7.13.26154"
+hip_commit = "92b7431876"
+hip_full_version = "7.13.26154-92b7431876"
+
+# Build metadata (NOT exposed to Python users, build-time only)
+# Placeholders will be filled by build system
+codegen_branch = "{codegen_branch}"
+codegen_version = "{codegen_version}"
+codegen_rev = "{codegen_rev}"
+base_branch = "{branch}"
+base_version = "{version}"
+base_rev = "{rev}"
+
+[tool.cibuildwheel]
+build-verbosity = 1

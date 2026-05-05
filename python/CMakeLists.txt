@@ -47,7 +47,8 @@ message(STATUS "hip-python version: ${HIP_PYTHON_VERSION_FULL}")
 # `../../VERSION` access. See share/design/BUILDING.md.
 foreach(_hp_pkg
     rocm-bindings-core rocm-bindings-hip
-    rocm-bindings-libraries rocm-bindings-compiler
+    rocm-bindings-libraries rocm-bindings-systems
+    rocm-bindings-compiler
     hip-python-interop hip-python)
   configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION"
@@ -95,6 +96,7 @@ endif()
 option(HIP_PYTHON_BUILD_CORE "Build rocm-bindings-core package" ON)
 option(HIP_PYTHON_BUILD_HIP "Build rocm-bindings-hip package" ON)
 option(HIP_PYTHON_BUILD_LIBRARIES "Build rocm-bindings-libraries package" ON)
+option(HIP_PYTHON_BUILD_SYSTEMS "Build rocm-bindings-systems package (rccl, roctx)" ON)
 option(HIP_PYTHON_BUILD_COMPILER "Build rocm-bindings-compiler package" ON)
 option(HIP_PYTHON_BUILD_INTEROP "Build hip-python-interop package" ON)
 
@@ -129,6 +131,16 @@ if(HIP_PYTHON_BUILD_LIBRARIES AND NOT HIP_PYTHON_BUILD_HIP)
   set(HIP_PYTHON_BUILD_HIP ON CACHE BOOL "Build rocm-bindings-hip package" FORCE)
 endif()
 
+if(HIP_PYTHON_BUILD_SYSTEMS AND NOT HIP_PYTHON_BUILD_CORE)
+  message(WARNING "HIP_PYTHON_BUILD_SYSTEMS requires HIP_PYTHON_BUILD_CORE, enabling it")
+  set(HIP_PYTHON_BUILD_CORE ON CACHE BOOL "Build rocm-bindings-core package" FORCE)
+endif()
+
+if(HIP_PYTHON_BUILD_SYSTEMS AND NOT HIP_PYTHON_BUILD_HIP)
+  message(WARNING "HIP_PYTHON_BUILD_SYSTEMS requires HIP_PYTHON_BUILD_HIP, enabling it")
+  set(HIP_PYTHON_BUILD_HIP ON CACHE BOOL "Build rocm-bindings-hip package" FORCE)
+endif()
+
 if(HIP_PYTHON_BUILD_COMPILER AND NOT HIP_PYTHON_BUILD_CORE)
   message(WARNING "HIP_PYTHON_BUILD_COMPILER requires HIP_PYTHON_BUILD_CORE=ON (rocm-bindings-compiler depends on rocm.bindings.util)")
   set(HIP_PYTHON_BUILD_CORE ON CACHE BOOL "Build rocm-bindings-core package" FORCE)
@@ -159,6 +171,12 @@ if(HIP_PYTHON_BUILD_LIBRARIES)
   )
 endif()
 
+if(HIP_PYTHON_BUILD_SYSTEMS)
+  list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
+    "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-systems"
+  )
+endif()
+
 if(HIP_PYTHON_BUILD_COMPILER)
   list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-compiler"
@@ -184,7 +202,12 @@ endif()
 
 if(HIP_PYTHON_BUILD_LIBRARIES)
   message(STATUS "Building rocm-bindings-libraries")
-  add_subdirectory(rocm-bindings-libraries) # Depends on util, hip (cimport + import)
+  add_subdirectory(rocm-bindings-libraries) # Depends on core, hip (cimport + import)
+endif()
+
+if(HIP_PYTHON_BUILD_SYSTEMS)
+  message(STATUS "Building rocm-bindings-systems")
+  add_subdirectory(rocm-bindings-systems)   # Depends on core, hip (cimport + import)
 endif()
 
 if(HIP_PYTHON_BUILD_COMPILER)
@@ -231,6 +254,16 @@ if(HIP_PYTHON_BUILD_LIBRARIES)
   message(STATUS "Wheel target enabled: libraries_wheel")
 endif()
 
+if(HIP_PYTHON_BUILD_SYSTEMS)
+  hip_python_add_wheel_target(
+    TARGET systems_wheel
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-systems"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+    DEPENDS package_rocm_bindings_systems
+  )
+  message(STATUS "Wheel target enabled: systems_wheel")
+endif()
+
 if(HIP_PYTHON_BUILD_COMPILER)
   hip_python_add_wheel_target(
     TARGET compiler_wheel
@@ -271,6 +304,9 @@ if(HIP_PYTHON_BUILD_HIP)
 endif()
 if(HIP_PYTHON_BUILD_LIBRARIES)
   list(APPEND ALL_WHEEL_TARGETS libraries_wheel)
+endif()
+if(HIP_PYTHON_BUILD_SYSTEMS)
+  list(APPEND ALL_WHEEL_TARGETS systems_wheel)
 endif()
 if(HIP_PYTHON_BUILD_COMPILER)
   list(APPEND ALL_WHEEL_TARGETS compiler_wheel)
@@ -323,6 +359,15 @@ if(HIP_PYTHON_BUILD_LIBRARIES)
   message(STATUS "Sdist target enabled: libraries_sdist")
 endif()
 
+if(HIP_PYTHON_BUILD_SYSTEMS)
+  hip_python_add_sdist_target(
+    TARGET systems_sdist
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-systems"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Sdist target enabled: systems_sdist")
+endif()
+
 if(HIP_PYTHON_BUILD_COMPILER)
   hip_python_add_sdist_target(
     TARGET compiler_sdist
@@ -360,6 +405,9 @@ if(HIP_PYTHON_BUILD_HIP)
 endif()
 if(HIP_PYTHON_BUILD_LIBRARIES)
   list(APPEND ALL_SDIST_TARGETS libraries_sdist)
+endif()
+if(HIP_PYTHON_BUILD_SYSTEMS)
+  list(APPEND ALL_SDIST_TARGETS systems_sdist)
 endif()
 if(HIP_PYTHON_BUILD_COMPILER)
   list(APPEND ALL_SDIST_TARGETS compiler_sdist)

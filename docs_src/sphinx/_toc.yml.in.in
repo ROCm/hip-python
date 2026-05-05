@@ -36,6 +36,9 @@ subtrees:
   - caption: "rocm-bindings-libraries"
     entries:
 @TOC_ENTRIES_ROCM_BINDINGS_LIBRARIES@
+  - caption: "rocm-bindings-systems"
+    entries:
+@TOC_ENTRIES_ROCM_BINDINGS_SYSTEMS@
   - caption: "rocm-bindings-compiler"
     entries:
 @TOC_ENTRIES_ROCM_BINDINGS_COMPILER@

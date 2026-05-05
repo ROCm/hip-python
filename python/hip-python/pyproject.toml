@@ -32,6 +32,9 @@ classifiers = [
 libraries = [
     "rocm-bindings-libraries~=7.13.0.0"
 ]
+systems = [
+    "rocm-bindings-systems~=7.13.0.0"
+]
 
 [project.urls]
 Homepage = "https://github.com/ROCm/hip-python"

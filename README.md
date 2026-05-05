@@ -92,12 +92,14 @@ python3 -m pip install $path_to_hip_python_interop.whl
 ## Build from Source
 
 The build uses CMake with `scikit-build-core` as the Python build backend.
-It produces five wheels:
+It produces six wheels:
 
 - `rocm-bindings-core` — DLL loader, types, ROCm path resolution
 - `rocm-bindings-hip` — `hip` and `hiprtc` Python bindings
-- `rocm-bindings-libraries` — `hipblas`, `hipsolver`, `rccl`, `hiprand`,
-  `hipfft`, `hipsparse`, `roctx`
+- `rocm-bindings-libraries` — math libraries: `hipblas`, `hipsolver`,
+  `hiprand`, `hipfft`, `hipsparse`
+- `rocm-bindings-systems` — system-level libraries: `rccl`
+  (collective communication), `roctx` (profiling/tracing)
 - `rocm-bindings-compiler` — LLVM-C and AMD COMGR bindings (with optional bundled `libLLVM.so`)
 - `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer
 

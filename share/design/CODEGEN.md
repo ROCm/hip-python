@@ -59,7 +59,7 @@ Contains **only handcoded** content:
 - The handcoded helper Cython modules `_hip_helpers.{pxd,pyx}` and `_hiprtc_helpers.{pxd,pyx}` in `rocm-bindings-hip`.
 - Documentation, examples, license.
 
-A bare clone of the codegen base branch is **not buildable** — the generator must run into it first to populate the `.pxd`/`.pyx` files for `hip`, `hiprtc`, `hipblas`, `hipsolver`, `rccl`, `hiprand`, `hipfft`, `hipsparse`, `roctx`, `amd_comgr`, the LLVM-C suite, and the CUDA interop layer.
+A bare clone of the codegen base branch is **not buildable** — the generator must run into it first to populate the `.pxd`/`.pyx` files for `hip`, `hiprtc` (`rocm-bindings-hip`); `hipblas`, `hipsolver`, `hiprand`, `hipfft`, `hipsparse` (`rocm-bindings-libraries`); `rccl`, `roctx` (`rocm-bindings-systems`); `amd_comgr`, the LLVM-C suite (`rocm-bindings-compiler`); and the CUDA interop layer.
 
 ### Release branches — `release/rocm-rel-X.Y[.Z]`
 
@@ -78,12 +78,14 @@ For each release run, `recipes/hip_python/generate_hip_python.sh` writes:
 | Path | Content |
 |---|---|
 | `python/rocm-bindings-hip/rocm/bindings/{,cy}{hip,hiprtc}.{pxd,pyx}` | HIP runtime + RTC bindings |
-| `python/rocm-bindings-libraries/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipsolver, rccl, hiprand, hipfft, hipsparse, roctx |
+| `python/rocm-bindings-libraries/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipsolver, hiprand, hipfft, hipsparse |
+| `python/rocm-bindings-systems/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx |
 | `python/rocm-bindings-compiler/rocm/bindings/{,cy}amd_comgr.{pxd,pyx}` | AMD COMGR |
 | `python/rocm-bindings-compiler/rocm/bindings/llvm/c/**/*.{pxd,pyx}` | LLVM-C suite (~30 modules + transforms + config) |
 | `python/hip-python-interop/cuda/bindings/{,cy}{driver,runtime,nvrtc}.{pxd,pyx}` | CUDA interop layer (HIP-as-CUDA) |
 | `__init__.pxd` files **below** `rocm/bindings/` and `cuda/bindings/` | Cython namespace markers (build-time only, never installed) |
 | `python/rocm-bindings-libraries/cmake/generated_modules.cmake` | Module list for the libraries package — drives the per-library CMake foreach loop. |
+| `python/rocm-bindings-systems/cmake/generated_modules.cmake` | Module list for the systems package (rccl, roctx). |
 | `python/rocm-bindings-compiler/cmake/generated_modules.cmake` | LLVM-C / transforms / config / COMGR module lists. |
 | `python/rocm-bindings-{hip,libraries,compiler}/cmake/generated_versions.cmake`<br>`python/hip-python-interop/cmake/generated_versions.cmake` | Version metadata: ROCm version, HIP version, code-generator branch/rev, hip-python branch/rev. Consumed by the existing `configure_file("_version.py.in" "_version.py")` flow. |
 | `<package>/<rocm-or-cuda>/<…>/<name>.pyi` (high-level modules only) | Type-stub files emitted alongside every high-level `<name>.pxd`/`.pyx` pair. Used by static type checkers (mypy, pyright) and IDEs to resolve symbol signatures without the compiled extensions on `sys.path`. The cy* C-level wrappers do **not** get `.pyi` — they are `cimport`-only and have no honest Python type-system equivalents (see plan §B.2). Installed alongside the corresponding `.so`. |
@@ -130,7 +132,7 @@ The end-to-end release flow:
    - `cmake/generated_modules.cmake` for libraries and compiler
    - `cmake/generated_versions.cmake` for every package
 
-3. **Verify the round-trip.** A clean `cmake -S python -B build && cmake --build build --target all_wheels` should produce manylinux-compatible wheels for all five packages with no Cython errors.
+3. **Verify the round-trip.** A clean `cmake -S python -B build && cmake --build build --target all_wheels` should produce manylinux-compatible wheels for all six packages with no Cython errors.
 
 4. **Commit and push the release branch.**
    ```sh
@@ -143,13 +145,17 @@ The end-to-end release flow:
 
 ## Adding or removing modules
 
-The module count for `rocm-bindings-libraries` and `rocm-bindings-compiler` can change between ROCm releases (e.g., a new LLVM-C header appears, or AMD adds a new high-level library). The build system absorbs this through the `cmake/generated_modules.cmake` files:
+The module count for `rocm-bindings-libraries`, `rocm-bindings-systems`, and `rocm-bindings-compiler` can change between ROCm releases (e.g., a new LLVM-C header appears, or AMD adds a new high-level library). The build system absorbs this through the `cmake/generated_modules.cmake` files:
 
 ```cmake
 # python/rocm-bindings-libraries/cmake/generated_modules.cmake
 # AUTO-GENERATED — do not edit by hand.
 set(HIP_PYTHON_LIBRARIES_GENERATED_MODULES
-    hipblas hipsolver rccl hiprand hipfft hipsparse roctx)
+    hipblas hipsolver hiprand hipfft hipsparse)
+
+# python/rocm-bindings-systems/cmake/generated_modules.cmake
+set(HIP_PYTHON_SYSTEMS_GENERATED_MODULES
+    rccl roctx)
 ```
 
 The corresponding `CMakeLists.txt` does:

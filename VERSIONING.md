@@ -124,6 +124,8 @@ All packages share the same version from the root `VERSION` file:
 - `rocm-bindings-core` - 7.13.0.563.xxx
 - `rocm-bindings-hip` - 7.13.0.563.xxx
 - `rocm-bindings-libraries` - 7.13.0.563.xxx
+- `rocm-bindings-systems` - 7.13.0.563.xxx
+- `rocm-bindings-compiler` - 7.13.0.563.xxx
 - `hip-python-interop` - 7.13.0.563.xxx
 - `hip-python` - 7.13.0.563.xxx
 
