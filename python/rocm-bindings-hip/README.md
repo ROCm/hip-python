@@ -26,7 +26,7 @@ ptr = hip.hipMalloc(1024)
 
 ## Dependencies
 
-- `rocm-bindings-util` - Common utility types and loaders
+- `rocm-bindings-core` - Common utility types and loaders
 
 ## Related Packages
 

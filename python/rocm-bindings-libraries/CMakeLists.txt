@@ -108,7 +108,7 @@ endforeach()
 
 # NOTE: rocm/bindings/ is a PEP 420 implicit namespace package
 # It intentionally has NO __init__.py file to allow multiple packages
-# (rocm-bindings-util, rocm-bindings-hip, rocm-bindings-libraries)
+# (rocm-bindings-core, rocm-bindings-hip, rocm-bindings-libraries)
 # to contribute modules to the same namespace.
 # See: https://peps.python.org/pep-0420/
 

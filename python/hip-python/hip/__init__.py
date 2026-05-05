@@ -60,7 +60,7 @@ try:
         hip_version_tuple,
     )
 except ImportError:
-    # Fallback if rocm-bindings-util not installed (shouldn't happen in practice)
+    # Fallback if rocm-bindings-core not installed (shouldn't happen in practice)
     ROCM_VERSION = 71300000
     ROCM_VERSION_NAME = rocm_version_name = "7.13.0"
     ROCM_VERSION_TUPLE = rocm_version_tuple = (7, 13, 0)

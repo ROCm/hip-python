@@ -121,7 +121,7 @@ cmake -DHIP_PYTHON_VERSION_SHORT="1.2.3-custom" -B build
 
 All packages share the same version from the root `VERSION` file:
 
-- `rocm-bindings-util` - 7.13.0.563.xxx
+- `rocm-bindings-core` - 7.13.0.563.xxx
 - `rocm-bindings-hip` - 7.13.0.563.xxx
 - `rocm-bindings-libraries` - 7.13.0.563.xxx
 - `hip-python-interop` - 7.13.0.563.xxx

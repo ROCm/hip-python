@@ -13,8 +13,8 @@ authors = [
     {name = "Advanced Micro Devices, Inc.", email = "hip-python.maintainer@amd.com"},
 ]
 dependencies = [
-    "rocm-bindings-util>=7.13",
-    "rocm-bindings-hip>=7.13"
+    "rocm-bindings-core~=7.13.0.0",
+    "rocm-bindings-hip~=7.13.0.0"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

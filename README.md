@@ -94,7 +94,7 @@ python3 -m pip install $path_to_hip_python_interop.whl
 The build uses CMake with `scikit-build-core` as the Python build backend.
 It produces five wheels:
 
-- `rocm-bindings-util` — DLL loader, types, ROCm path resolution
+- `rocm-bindings-core` — DLL loader, types, ROCm path resolution
 - `rocm-bindings-hip` — `hip` and `hiprtc` Python bindings
 - `rocm-bindings-libraries` — `hipblas`, `hipsolver`, `rccl`, `hiprand`,
   `hipfft`, `hipsparse`, `roctx`
@@ -166,8 +166,8 @@ Each package has its own `pyproject.toml` and can be built standalone — useful
 development loops on a single package:
 
 ```shell
-# Build just rocm-bindings-util:
-cd python/rocm-bindings-util
+# Build just rocm-bindings-core:
+cd python/rocm-bindings-core
 python3 -m build --wheel --no-isolation
 
 # Build just rocm-bindings-hip:
@@ -183,7 +183,7 @@ To build a subset via the unified CMake build, disable the packages you don't wa
 configure time:
 
 ```shell
-# Build only util, hip, and libraries (skip compiler and interop):
+# Build only core, hip, and libraries (skip compiler and interop):
 cd python
 cmake -B build \
   -DHIP_PYTHON_BUILD_COMPILER=OFF \
@@ -196,7 +196,7 @@ You can also build a single package's wheel from the unified build:
 ```shell
 cd python
 cmake -B build
-cmake --build build --target util_wheel        # rocm-bindings-util only
+cmake --build build --target core_wheel        # rocm-bindings-core only
 cmake --build build --target hip_wheel         # rocm-bindings-hip only
 cmake --build build --target libraries_wheel   # rocm-bindings-libraries only
 cmake --build build --target compiler_wheel    # rocm-bindings-compiler only

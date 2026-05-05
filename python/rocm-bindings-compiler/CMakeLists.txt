@@ -245,7 +245,7 @@ list(APPEND COMGR_TARGETS rocm_bindings_amd_comgr rocm_bindings_cyamd_comgr)
 # Install .pxd files (for cimport)
 # NOTE: __init__.pxd files are intentionally excluded — they are build-time
 # package markers only. The installed namespace markers come from
-# rocm-bindings-util.
+# rocm-bindings-core.
 install(
   DIRECTORY rocm/bindings/llvm/c/
   DESTINATION rocm/bindings/llvm/c

@@ -116,9 +116,9 @@ def _version_to_int(version_tuple: Tuple[int, ...]) -> int:
     return major * 10000000 + minor * 100000 + patch
 
 
-# Get package version from rocm-bindings-util package metadata
+# Get package version from rocm-bindings-core package metadata
 try:
-    __version__ = get_version("rocm-bindings-util")  # e.g., "7.13.0.563.61"
+    __version__ = get_version("rocm-bindings-core")  # e.g., "7.13.0.563.61"
 
     # Extract ROCm version (first 3 parts) from package version
     _pkg_parts = __version__.split('.')
@@ -147,7 +147,7 @@ except PackageNotFoundError:
 # 2. rocm-bindings-hip package version
 # 3. Hardcoded fallback
 
-_tool_meta = _get_tool_metadata("rocm-bindings-util")
+_tool_meta = _get_tool_metadata("rocm-bindings-core")
 if _tool_meta and "hip_full_version" in _tool_meta:
     # Got it from tool metadata
     HIP_VERSION_NAME = hip_version_name = _tool_meta["hip_full_version"]

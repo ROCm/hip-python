@@ -3,7 +3,7 @@ requires = ["scikit-build-core>=0.11.2", "cython>=3.0"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "rocm-bindings-util"
+name = "rocm-bindings-core"
 dynamic = ["version"]
 description = "Utility types and loaders for ROCm Python bindings"
 readme = "README.md"
@@ -35,8 +35,8 @@ wheel.packages = ["rocm"]
 metadata.version.provider = "scikit_build_core.metadata.regex"
 metadata.version.input = "../../VERSION"
 metadata.version.regex = "(?P<value>.*)"
-build.targets = ["package_rocm_bindings_util"]
-install.components = ["rocm-bindings-util"]
+build.targets = ["package_rocm_bindings_core"]
+install.components = ["rocm-bindings-core"]
 
 # Include .pxd files for cimport
 sdist.include = [

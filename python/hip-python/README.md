@@ -31,7 +31,7 @@ from rocm.bindings import hipblas  # Requires rocm-bindings-libraries
 ## Package Structure
 
 The hip-python ecosystem now consists of:
-- **rocm-bindings-util** - Utility types and loaders
+- **rocm-bindings-core** - Utility types and loaders
 - **rocm-bindings-hip** - HIP and HIPRTC bindings
 - **rocm-bindings-libraries** - hipBLAS, hipSOLVER, RCCL, etc.
 - **hip-python** - This backward compatibility package (meta-package)

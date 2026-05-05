@@ -7,7 +7,7 @@ There are two ways to build hip-python packages:
 For local development, build individual packages directly:
 
 ```bash
-cd python/rocm-bindings-util
+cd python/rocm-bindings-core
 python3 -m build --wheel --no-isolation
 
 # Or with custom output directory
@@ -26,7 +26,7 @@ cd python
 # Configure
 cmake -B build \
   -DCMAKE_BUILD_TYPE=Release \
-  -DHIP_PYTHON_BUILD_UTIL=ON \
+  -DHIP_PYTHON_BUILD_CORE=ON \
   -DHIP_PYTHON_BUILD_HIP=ON \
   -DHIP_PYTHON_BUILD_LIBRARIES=ON \
   -DHIP_PYTHON_BUILD_INTEROP=ON \
@@ -37,13 +37,13 @@ cmake -B build \
 cmake --build build --target all_wheels -j$(nproc)
 
 # Or build specific package wheel
-cmake --build build --target util_wheel
+cmake --build build --target core_wheel
 ```
 
 ### CMake Options
 
 **Package Selection:**
-- `HIP_PYTHON_BUILD_UTIL` - Build rocm-bindings-util (default: ON)
+- `HIP_PYTHON_BUILD_CORE` - Build rocm-bindings-core (default: ON)
 - `HIP_PYTHON_BUILD_HIP` - Build rocm-bindings-hip (default: ON)
 - `HIP_PYTHON_BUILD_LIBRARIES` - Build rocm-bindings-libraries (default: ON)
 - `HIP_PYTHON_BUILD_INTEROP` - Build hip-python-interop (default: ON)
@@ -69,14 +69,14 @@ cmake --build build --target util_wheel
 
 **Wheel targets:**
 - `all_wheels` - Build all enabled package wheels
-- `util_wheel` - Build rocm-bindings-util wheel
+- `core_wheel` - Build rocm-bindings-core wheel
 - `hip_wheel` - Build rocm-bindings-hip wheel
 - `libraries_wheel` - Build rocm-bindings-libraries wheel
 - `interop_wheel` - Build hip-python-interop wheel
 - `hip_python_wheel` - Build hip-python metapackage wheel
 
 **C extension targets:**
-- `package_rocm_bindings_util` - Build util C extensions
+- `package_rocm_bindings_core` - Build util C extensions
 - `package_rocm_bindings_hip` - Build hip C extensions
 - `package_rocm_bindings_libraries` - Build libraries C extensions
 - `package_hip_python_interop` - Build interop C extensions

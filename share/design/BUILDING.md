@@ -23,7 +23,7 @@ The build system is designed around three properties:
 
 | Package | Source path | Provides |
 |---|---|---|
-| `rocm-bindings-util` | `python/rocm-bindings-util/` | DLL loader (`posixloader`/`win32loader` + platform-agnostic `loader`), shared Cython types (`Pointer`, `CStr`, `NDBuffer`, …), and the `paths` module that does lazy ROCm library lookup. **Handcoded; not generator output.** |
+| `rocm-bindings-core` | `python/rocm-bindings-core/` | DLL loader (`posixloader`/`win32loader` + platform-agnostic `loader`), shared Cython types (`Pointer`, `CStr`, `NDBuffer`, …), and the `paths` module that does lazy ROCm library lookup. **Handcoded; not generator output.** |
 | `rocm-bindings-hip` | `python/rocm-bindings-hip/` | `hip` and `hiprtc` bindings (high-level + cy*-prefixed C-level pairs). Helpers (`_hip_helpers`, `_hiprtc_helpers`) are handcoded. |
 | `rocm-bindings-libraries` | `python/rocm-bindings-libraries/` | The math/comm/profile libraries: hipblas, hipsolver, rccl, hiprand, hipfft, hipsparse, roctx. List is generator-managed. |
 | `rocm-bindings-compiler` | `python/rocm-bindings-compiler/` | LLVM-C bindings, AMD COMGR bindings, optional bundled `libLLVM.so`. Module list is generator-managed. |
@@ -32,7 +32,7 @@ The build system is designed around three properties:
 
 All five packages contribute to two PEP 420 implicit namespace packages
 at runtime: `rocm.bindings.*` and `cuda.bindings.*`. Multiple packages
-add modules to the same namespace; only `rocm-bindings-util` ships the
+add modules to the same namespace; only `rocm-bindings-core` ships the
 runtime `__init__.pxd` markers for `rocm/` and `rocm/bindings/`.
 
 ## Top-level layout
@@ -45,7 +45,7 @@ hip-python/
 ├── python/
 │   ├── CMakeLists.txt             Unified top-level build; orchestrates all five packages + docs
 │   ├── pyproject.toml             Metadata for the `hip-python` (root) wheel target
-│   ├── rocm-bindings-util/        per-package source tree + CMakeLists.txt + pyproject.toml
+│   ├── rocm-bindings-core/        per-package source tree + CMakeLists.txt + pyproject.toml
 │   ├── rocm-bindings-hip/         …
 │   ├── rocm-bindings-libraries/   …
 │   ├── rocm-bindings-compiler/    …
@@ -91,7 +91,7 @@ Common CMake options:
 cd python
 cmake -B build \
   -DCMAKE_BUILD_TYPE=Release \
-  -DHIP_PYTHON_BUILD_UTIL=ON \
+  -DHIP_PYTHON_BUILD_CORE=ON \
   -DHIP_PYTHON_BUILD_HIP=ON \
   -DHIP_PYTHON_BUILD_LIBRARIES=ON \
   -DHIP_PYTHON_BUILD_COMPILER=ON \
@@ -106,7 +106,7 @@ You can also build a single package's wheel from the unified build:
 ```sh
 cd python
 cmake -B build
-cmake --build build --target util_wheel        # rocm-bindings-util only
+cmake --build build --target core_wheel        # rocm-bindings-core only
 cmake --build build --target hip_wheel
 cmake --build build --target libraries_wheel
 cmake --build build --target compiler_wheel
@@ -117,7 +117,7 @@ cmake --build build --target hip_python_wheel
 ### B. Single-package build (development loop)
 
 ```sh
-cd python/rocm-bindings-util
+cd python/rocm-bindings-core
 python3 -m build --wheel --no-isolation
 ```
 
@@ -290,12 +290,12 @@ nvrtc) are stable across releases.
   `rocm/bindings/llvm/c/`, …): emitted by the consolidated generator
   alongside the `.pxd`/`.pyx` files. See [CODEGEN.md](CODEGEN.md).
 
-**None** of these are installed except the two from `rocm-bindings-util`:
+**None** of these are installed except the two from `rocm-bindings-core`:
 
 ```cmake
-# python/rocm-bindings-util/CMakeLists.txt
-install(FILES rocm/__init__.pxd          DESTINATION rocm        COMPONENT rocm-bindings-util)
-install(FILES rocm/bindings/__init__.pxd DESTINATION rocm/bindings COMPONENT rocm-bindings-util)
+# python/rocm-bindings-core/CMakeLists.txt
+install(FILES rocm/__init__.pxd          DESTINATION rocm        COMPONENT rocm-bindings-core)
+install(FILES rocm/bindings/__init__.pxd DESTINATION rocm/bindings COMPONENT rocm-bindings-core)
 ```
 
 The other packages explicitly EXCLUDE `__init__.pxd` from their
@@ -393,7 +393,7 @@ documentation files.
 
 ```sh
 # Fastest dev iteration on a single package:
-cd python/rocm-bindings-util && python3 -m build --wheel --no-isolation
+cd python/rocm-bindings-core && python3 -m build --wheel --no-isolation
 
 # Full build, all five packages (run from python/ subdir):
 cd python && cmake -B build && cmake --build build --target all_wheels -j$(nproc)
@@ -421,7 +421,7 @@ cd python && cmake -B build -DROCM_PATH=/opt/rocm-7.13
 cmake --build build --target all_wheels
 
 # Single package wheel from the unified build:
-cd python && cmake -B build && cmake --build build --target util_wheel
+cd python && cmake -B build && cmake --build build --target core_wheel
 
 # Build the documentation (independent of all_wheels):
 cd python && cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON

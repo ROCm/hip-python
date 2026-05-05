@@ -3,7 +3,7 @@
 # The generator reads this file (`_toc.yml.in.in`) and writes
 # `_toc.yml.in` next to it, substituting every `@TOC_ENTRIES_<SECTION>@`
 # placeholder below with the discovered per-subtree module list. Handcoded
-# subtrees (User Guide, rocm-bindings-util, hip-python alias package,
+# subtrees (User Guide, rocm-bindings-core, hip-python alias package,
 # Manual API) are listed inline and left unchanged.
 #
 # Placeholder convention: `@VAR@` (matches the `_version.py.in` style
@@ -27,7 +27,7 @@ subtrees:
       - file: user_guide/4_datatypes
       - file: user_guide/5_report_bugs
       - file: user_guide/6_license
-  - caption: "rocm-bindings-util"
+  - caption: "rocm-bindings-core"
     entries:
       - file: python_api/rocm/bindings/util/index
   - caption: "rocm-bindings-hip"

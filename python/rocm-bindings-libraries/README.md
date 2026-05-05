@@ -28,7 +28,7 @@ handle = hipblas.hipblasCreate()
 
 ## Dependencies
 
-- `rocm-bindings-util` - Common utility types
+- `rocm-bindings-core` - Common utility types
 - `rocm-bindings-hip` - HIP runtime and HIPRTC
 
 ## Related Packages

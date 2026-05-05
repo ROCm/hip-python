@@ -66,7 +66,7 @@ if(HIP_PYTHON_AUDITWHEEL_REPAIR)
 endif()
 
 # Package build options - allow selective building of packages
-option(HIP_PYTHON_BUILD_UTIL "Build rocm-bindings-util package" ON)
+option(HIP_PYTHON_BUILD_CORE "Build rocm-bindings-core package" ON)
 option(HIP_PYTHON_BUILD_HIP "Build rocm-bindings-hip package" ON)
 option(HIP_PYTHON_BUILD_LIBRARIES "Build rocm-bindings-libraries package" ON)
 option(HIP_PYTHON_BUILD_COMPILER "Build rocm-bindings-compiler package" ON)
@@ -88,14 +88,14 @@ if(NOT HIP_PYTHON_BUILD_HIP_PYTHON)
 endif()
 
 # Validate dependencies
-if(HIP_PYTHON_BUILD_HIP AND NOT HIP_PYTHON_BUILD_UTIL)
-  message(WARNING "HIP_PYTHON_BUILD_HIP requires HIP_PYTHON_BUILD_UTIL, enabling it")
-  set(HIP_PYTHON_BUILD_UTIL ON CACHE BOOL "Build rocm-bindings-util package" FORCE)
+if(HIP_PYTHON_BUILD_HIP AND NOT HIP_PYTHON_BUILD_CORE)
+  message(WARNING "HIP_PYTHON_BUILD_HIP requires HIP_PYTHON_BUILD_CORE, enabling it")
+  set(HIP_PYTHON_BUILD_CORE ON CACHE BOOL "Build rocm-bindings-core package" FORCE)
 endif()
 
-if(HIP_PYTHON_BUILD_LIBRARIES AND NOT HIP_PYTHON_BUILD_UTIL)
-  message(WARNING "HIP_PYTHON_BUILD_LIBRARIES requires HIP_PYTHON_BUILD_UTIL, enabling it")
-  set(HIP_PYTHON_BUILD_UTIL ON CACHE BOOL "Build rocm-bindings-util package" FORCE)
+if(HIP_PYTHON_BUILD_LIBRARIES AND NOT HIP_PYTHON_BUILD_CORE)
+  message(WARNING "HIP_PYTHON_BUILD_LIBRARIES requires HIP_PYTHON_BUILD_CORE, enabling it")
+  set(HIP_PYTHON_BUILD_CORE ON CACHE BOOL "Build rocm-bindings-core package" FORCE)
 endif()
 
 if(HIP_PYTHON_BUILD_LIBRARIES AND NOT HIP_PYTHON_BUILD_HIP)
@@ -103,9 +103,9 @@ if(HIP_PYTHON_BUILD_LIBRARIES AND NOT HIP_PYTHON_BUILD_HIP)
   set(HIP_PYTHON_BUILD_HIP ON CACHE BOOL "Build rocm-bindings-hip package" FORCE)
 endif()
 
-if(HIP_PYTHON_BUILD_COMPILER AND NOT HIP_PYTHON_BUILD_UTIL)
-  message(WARNING "HIP_PYTHON_BUILD_COMPILER requires HIP_PYTHON_BUILD_UTIL=ON (rocm-bindings-compiler depends on rocm.bindings.util)")
-  set(HIP_PYTHON_BUILD_UTIL ON CACHE BOOL "Build rocm-bindings-util package" FORCE)
+if(HIP_PYTHON_BUILD_COMPILER AND NOT HIP_PYTHON_BUILD_CORE)
+  message(WARNING "HIP_PYTHON_BUILD_COMPILER requires HIP_PYTHON_BUILD_CORE=ON (rocm-bindings-compiler depends on rocm.bindings.util)")
+  set(HIP_PYTHON_BUILD_CORE ON CACHE BOOL "Build rocm-bindings-core package" FORCE)
 endif()
 
 # Global include directories for cross-package cimport
@@ -115,9 +115,9 @@ set(HIP_PYTHON_GLOBAL_INCLUDE_DIRS
   "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-if(HIP_PYTHON_BUILD_UTIL)
+if(HIP_PYTHON_BUILD_CORE)
   list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
-    "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-util"
+    "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-core"
   )
 endif()
 
@@ -146,9 +146,9 @@ if(HIP_PYTHON_BUILD_INTEROP)
 endif()
 
 # Build packages in dependency order (only if enabled)
-if(HIP_PYTHON_BUILD_UTIL)
-  message(STATUS "Building rocm-bindings-util")
-  add_subdirectory(rocm-bindings-util)      # No dependencies
+if(HIP_PYTHON_BUILD_CORE)
+  message(STATUS "Building rocm-bindings-core")
+  add_subdirectory(rocm-bindings-core)      # No dependencies
 endif()
 
 if(HIP_PYTHON_BUILD_HIP)
@@ -175,14 +175,14 @@ endif()
 # hip-python/ doesn't need CMake - it's just re-exports
 
 # Wheel packaging targets (conditional on build options)
-if(HIP_PYTHON_BUILD_UTIL)
+if(HIP_PYTHON_BUILD_CORE)
   hip_python_add_wheel_target(
-    TARGET util_wheel
-    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-util"
+    TARGET core_wheel
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-core"
     OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
-    DEPENDS package_rocm_bindings_util
+    DEPENDS package_rocm_bindings_core
   )
-  message(STATUS "Wheel target enabled: util_wheel")
+  message(STATUS "Wheel target enabled: core_wheel")
 endif()
 
 if(HIP_PYTHON_BUILD_HIP)
@@ -237,8 +237,8 @@ endif()
 
 # Aggregate target to build all wheels
 set(ALL_WHEEL_TARGETS)
-if(HIP_PYTHON_BUILD_UTIL)
-  list(APPEND ALL_WHEEL_TARGETS util_wheel)
+if(HIP_PYTHON_BUILD_CORE)
+  list(APPEND ALL_WHEEL_TARGETS core_wheel)
 endif()
 if(HIP_PYTHON_BUILD_HIP)
   list(APPEND ALL_WHEEL_TARGETS hip_wheel)

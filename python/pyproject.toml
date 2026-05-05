@@ -15,7 +15,7 @@ cmake.build-type = "Release"
 ninja.make-fallback = false
 
 # Build targets are controlled by CMake options:
-# - HIP_PYTHON_BUILD_UTIL (default: ON)
+# - HIP_PYTHON_BUILD_CORE (default: ON)
 # - HIP_PYTHON_BUILD_HIP (default: ON)
 # - HIP_PYTHON_BUILD_LIBRARIES (default: ON)
 # - HIP_PYTHON_BUILD_INTEROP (default: ON)

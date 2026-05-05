@@ -91,7 +91,7 @@ _PYTHON_ROOT = os.path.normpath(os.path.join(_HERE, "..", "python"))
 
 autoapi_type = "python"
 autoapi_dirs = [
-    os.path.join(_PYTHON_ROOT, "rocm-bindings-util", "rocm"),
+    os.path.join(_PYTHON_ROOT, "rocm-bindings-core", "rocm"),
     os.path.join(_PYTHON_ROOT, "rocm-bindings-hip", "rocm"),
     os.path.join(_PYTHON_ROOT, "rocm-bindings-libraries", "rocm"),
     os.path.join(_PYTHON_ROOT, "rocm-bindings-compiler", "rocm"),

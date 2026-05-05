@@ -53,7 +53,7 @@ The `hip-python` repo distinguishes two kinds of branches:
 Contains **only handcoded** content:
 
 - All build infrastructure: `cmake/HipPythonBuild.cmake`, every per-package `CMakeLists.txt`, `pyproject.toml` files, `_version.py.in` templates, `setup.cfg`, `MANIFEST.in`.
-- The `rocm-bindings-util` package in full — its loader, types, and `paths` modules are handcoded and not produced by the generator.
+- The `rocm-bindings-core` package in full — its loader, types, and `paths` modules are handcoded and not produced by the generator.
 - Per-package `__init__.py` files (Python runtime markers).
 - Top-of-namespace `__init__.pxd` markers (`rocm/__init__.pxd`, `rocm/bindings/__init__.pxd`, `cuda/__init__.pxd`, `cuda/bindings/__init__.pxd`) committed in each package source tree.
 - The handcoded helper Cython modules `_hip_helpers.{pxd,pyx}` and `_hiprtc_helpers.{pxd,pyx}` in `rocm-bindings-hip`.
@@ -172,9 +172,9 @@ Cython's cross-package `cimport` resolution requires that every directory along 
 
 - The two top-of-namespace markers per package (`rocm/__init__.pxd` and `rocm/bindings/__init__.pxd`; or `cuda/`, `cuda/bindings/`) are **handcoded** because they exist regardless of generator output. They live on the codegen base branch.
 - Markers below those (`rocm/bindings/llvm/__init__.pxd`, `rocm/bindings/llvm/c/__init__.pxd`, etc.) are **generator-emitted** because the directory tree they describe is generator-owned.
-- All non-`util` markers are **build-time only** — they are NOT installed. `rocm-bindings-util` is the single component that installs the runtime namespace markers (`rocm/__init__.pxd`, `rocm/bindings/__init__.pxd`).
+- All non-`util` markers are **build-time only** — they are NOT installed. `rocm-bindings-core` is the single component that installs the runtime namespace markers (`rocm/__init__.pxd`, `rocm/bindings/__init__.pxd`).
 
-This keeps the runtime install tree clean (one marker per namespace level, contributed by `rocm-bindings-util`) while letting Cython resolve cross-package `cimport` at build time inside every package's source tree.
+This keeps the runtime install tree clean (one marker per namespace level, contributed by `rocm-bindings-core`) while letting Cython resolve cross-package `cimport` at build time inside every package's source tree.
 
 ## File-prefix history
 

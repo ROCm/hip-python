@@ -1,4 +1,4 @@
-# rocm-bindings-util
+# rocm-bindings-core
 
 Utility types and loaders for ROCm Python bindings.
 
@@ -9,7 +9,7 @@ This package provides:
 ## Installation
 
 ```bash
-pip install rocm-bindings-util
+pip install rocm-bindings-core
 ```
 
 ## Usage
