@@ -156,36 +156,42 @@ set(HIP_PYTHON_GLOBAL_INCLUDE_DIRS
 if(HIP_PYTHON_BUILD_CORE)
   list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-core"
+    "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-core/src"
   )
 endif()
 
 if(HIP_PYTHON_BUILD_HIP)
   list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-hip"
+    "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-hip/src"
   )
 endif()
 
 if(HIP_PYTHON_BUILD_LIBRARIES)
   list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-libraries"
+    "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-libraries/src"
   )
 endif()
 
 if(HIP_PYTHON_BUILD_SYSTEMS)
   list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-systems"
+    "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-systems/src"
   )
 endif()
 
 if(HIP_PYTHON_BUILD_COMPILER)
   list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-compiler"
+    "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-compiler/src"
   )
 endif()
 
 if(HIP_PYTHON_BUILD_INTEROP)
   list(APPEND HIP_PYTHON_GLOBAL_INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/hip-python-interop"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hip-python-interop/src"
   )
 endif()
 
