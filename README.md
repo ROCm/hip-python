@@ -191,7 +191,7 @@ alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
    ```
 
    Wheels for all five packages plus the `hip-python` metapackage land in
-   `python/build/dist/`.
+   `packages/build/dist/`.
 
 5. Install the wheels:
 
@@ -210,11 +210,11 @@ populate the per-package `VERSION` and shared cmake helper (both gitignored):
 cd python && cmake -B build && cd ..
 
 # Build just rocm-bindings-core:
-cd python/rocm-bindings-core
+cd packages/rocm-bindings-core
 python3 -m build --wheel --no-isolation
 
 # Build just rocm-bindings-hip:
-cd python/rocm-bindings-hip
+cd packages/rocm-bindings-hip
 python3 -m build --wheel --no-isolation
 ```
 
@@ -300,7 +300,7 @@ Inspect the diff with `git diff`, then commit `<module>.pyx` and
 End-user `pip install` from sdist or wheel does **not** invoke
 stubgen, and `mypy` is **not** a build-system dependency. The list
 of modules that need stubbing lives in a single repo-spanning CMake
-variable `HIP_PYTHON_STUBGEN_MODULES` in `python/CMakeLists.txt` —
+variable `HIP_PYTHON_STUBGEN_MODULES` in `packages/CMakeLists.txt` —
 see [share/design/BUILDING.md](share/design/BUILDING.md)
 "Regenerating stubs for handcoded Cython modules" for the full
 developer workflow and how to add a new module to the list.
@@ -338,7 +338,7 @@ cmake --build build --target all_wheels -j16
 For a clean rebuild, just remove the build directory:
 
 ```shell
-rm -rf python/build && cmake -S python -B python/build && cmake --build python/build --target all_wheels
+rm -rf packages/build && cmake -S packages -B packages/build && cmake --build packages/build --target all_wheels
 ```
 
 For deeper documentation:

@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hip-python"
+dynamic = ["version"]
+description = "Python bindings for HIP and ROCm libraries (backward compatibility package)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    {name = "Advanced Micro Devices, Inc.", email = "hip-python.maintainer@amd.com"},
+]
+dependencies = [
+    "rocm-bindings-hip~=7.13.0.0",
+    "rocm-bindings-core~=7.13.0.0"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+libraries = [
+    "rocm-bindings-libraries~=7.13.0.0"
+]
+systems = [
+    "rocm-bindings-systems~=7.13.0.0"
+]
+compiler = [
+    "rocm-bindings-compiler~=7.13.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/rocm/hip-python"
+Documentation = "https://rocm.docs.amd.com/projects/hip-python/en/latest/"
+Repository = "https://github.com/rocm/hip-python"
+Issues = "https://github.com/rocm/hip-python/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["hip*"]
+
+[tool.setuptools.dynamic]
+version = {file = "VERSION"}

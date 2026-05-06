@@ -36,7 +36,7 @@ Example generated VERSION:
 
 ## Build Process
 
-### Top-level Build (python/CMakeLists.txt)
+### Top-level Build (packages/CMakeLists.txt)
 
 1. Determines `HIP_PYTHON_VERSION_SHORT`
 2. Configures `VERSION.in` → `VERSION`

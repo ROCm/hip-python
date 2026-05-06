@@ -73,21 +73,22 @@ The generator's responsibility is **strictly Cython source generation** plus the
 
 ### Generator-owned outputs
 
-For each release run, `recipes/hip_python/generate_hip_python.sh` writes:
+For each release run, the `hip-python-generate` CLI (after `pip install`
+from `recipes/hip-python/`) writes:
 
 | Path | Content |
 |---|---|
-| `python/rocm-bindings-hip/rocm/bindings/{,cy}{hip,hiprtc}.{pxd,pyx}` | HIP runtime + RTC bindings |
-| `python/rocm-bindings-libraries/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipsolver, hiprand, hipfft, hipsparse |
-| `python/rocm-bindings-systems/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx |
-| `python/rocm-bindings-compiler/rocm/bindings/{,cy}amd_comgr.{pxd,pyx}` | AMD COMGR |
-| `python/rocm-bindings-compiler/rocm/bindings/llvm/c/**/*.{pxd,pyx}` | LLVM-C suite (~30 modules + transforms + config) |
-| `python/hip-python-interop/cuda/bindings/{,cy}{driver,runtime,nvrtc}.{pxd,pyx}` | CUDA interop layer (HIP-as-CUDA) |
+| `packages/rocm-bindings-hip/src/rocm/bindings/{,cy}{hip,hiprtc}.{pxd,pyx}` | HIP runtime + RTC bindings |
+| `packages/rocm-bindings-libraries/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipsolver, hiprand, hipfft, hipsparse |
+| `packages/rocm-bindings-systems/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx |
+| `packages/rocm-bindings-compiler/src/rocm/bindings/{,cy}amd_comgr.{pxd,pyx}` | AMD COMGR |
+| `packages/rocm-bindings-compiler/src/rocm/bindings/llvm/c/**/*.{pxd,pyx}` | LLVM-C suite (~30 modules + transforms + config) |
+| `packages/hip-python-interop/src/cuda/bindings/{,cy}{driver,runtime,nvrtc}.{pxd,pyx}` | CUDA interop layer (HIP-as-CUDA) |
 | `__init__.pxd` files **below** `rocm/bindings/` and `cuda/bindings/` | Cython namespace markers (build-time only, never installed) |
-| `python/rocm-bindings-libraries/cmake/generated_modules.cmake` | Module list for the libraries package — drives the per-library CMake foreach loop. |
-| `python/rocm-bindings-systems/cmake/generated_modules.cmake` | Module list for the systems package (rccl, roctx). |
-| `python/rocm-bindings-compiler/cmake/generated_modules.cmake` | LLVM-C / transforms / config / COMGR module lists. |
-| `python/rocm-bindings-{hip,libraries,compiler}/cmake/generated_versions.cmake`<br>`python/hip-python-interop/cmake/generated_versions.cmake` | Version metadata: ROCm version, HIP version, code-generator branch/rev, hip-python branch/rev. Consumed by the existing `configure_file("_version.py.in" "_version.py")` flow. |
+| `packages/rocm-bindings-libraries/cmake/generated_modules.cmake` | Module list for the libraries package — drives the per-library CMake foreach loop. |
+| `packages/rocm-bindings-systems/cmake/generated_modules.cmake` | Module list for the systems package (rccl, roctx). |
+| `packages/rocm-bindings-compiler/cmake/generated_modules.cmake` | LLVM-C / transforms / config / COMGR module lists. |
+| `packages/rocm-bindings-{hip,libraries,compiler}/cmake/generated_versions.cmake`<br>`packages/hip-python-interop/cmake/generated_versions.cmake` | Version metadata: ROCm version, HIP version, code-generator branch/rev, hip-python branch/rev. Consumed by the existing `configure_file("_version.py.in" "_version.py")` flow. |
 | `<package>/<rocm-or-cuda>/<…>/<name>.pyi` (high-level modules only) | Type-stub files emitted alongside every high-level `<name>.pxd`/`.pyx` pair. Used by static type checkers (mypy, pyright) and IDEs to resolve symbol signatures without the compiled extensions on `sys.path`. The cy* C-level wrappers do **not** get `.pyi` — they are `cimport`-only and have no honest Python type-system equivalents (see plan §B.2). Installed alongside the corresponding `.so`. |
 
 > **Note on handcoded Cython modules.** The handful of handcoded
@@ -130,12 +131,15 @@ The end-to-end release flow:
 
 2. **Run the consolidated generator** against the chosen ROCm SDK:
    ```sh
-   /path/to/interfacegen/recipes/hip_python/generate_hip_python.sh \
+   hip-python-generate \
        /path/to/hip-python \
        --rocm-version X.Y.Z \
        --rocm-path /opt/rocm
    ```
-   The script sets up its own venv, installs `cython` + `libclang`, and writes:
+   (Install via `pip install -r dev-requirements.txt && pip install .`
+   inside `recipes/hip-python/`; see that directory's `README.md`.)
+
+   After installation, running the CLI writes:
    - `.pxd`/`.pyx` files into the four generator-owned packages
    - `__init__.pxd` namespace markers below `rocm/bindings/` and `cuda/bindings/`
    - `cmake/generated_modules.cmake` for libraries and compiler
@@ -145,7 +149,7 @@ The end-to-end release flow:
 
 4. **Commit and push the release branch.**
    ```sh
-   git add python/
+   git add packages/
    git commit -m "[chore] generate bindings for ROCm X.Y.Z"
    git push origin release/rocm-rel-X.Y
    ```
@@ -157,12 +161,12 @@ The end-to-end release flow:
 The module count for `rocm-bindings-libraries`, `rocm-bindings-systems`, and `rocm-bindings-compiler` can change between ROCm releases (e.g., a new LLVM-C header appears, or AMD adds a new high-level library). The build system absorbs this through the `cmake/generated_modules.cmake` files:
 
 ```cmake
-# python/rocm-bindings-libraries/cmake/generated_modules.cmake
+# packages/rocm-bindings-libraries/cmake/generated_modules.cmake
 # AUTO-GENERATED — do not edit by hand.
 set(HIP_PYTHON_LIBRARIES_GENERATED_MODULES
     hipblas hipsolver hiprand hipfft hipsparse)
 
-# python/rocm-bindings-systems/cmake/generated_modules.cmake
+# packages/rocm-bindings-systems/cmake/generated_modules.cmake
 set(HIP_PYTHON_SYSTEMS_GENERATED_MODULES
     rccl roctx)
 ```
@@ -204,35 +208,48 @@ Every site that emits a C-level module name — filenames, package-relative `cim
 ## Repository layout (interfacegen side)
 
 ```
-interfacegen/recipes/hip_python/
-├── codegen.py                 unified driver (orchestrator)
-├── generate_hip_python.sh     shell wrapper (venv setup + invocation)
-├── requirements.txt           cython, libclang, pyparsing
-├── Makefile                   builds librocmllvm.so when bundling
-├── hip/
-│   ├── generate_hip.py        HIP + library subgenerators (generate(opts) entry)
-│   ├── cuda_interop.py        CUDA interop (driver/runtime/nvrtc) subgenerator
-│   └── hipify.py              hipify-perl substitution parser
-├── llvm/
-│   └── generate_llvm.py       LLVM-C subgenerator
-└── comgr/
-    └── generate_comgr.py      AMD COMGR subgenerator
+interfacegen/recipes/hip-python/
+├── pyproject.toml              CLI entry-point + runtime deps (hip-python-codegen)
+├── README.md                   CLI usage
+├── dev-requirements.txt        path-relative interfacegen install
+└── src/hip_python_codegen/
+    ├── generate.py             CLI: argparse + main() dispatcher
+    ├── binding_generator.py    master orchestrator + cmake/marker writers
+    ├── docs_generator.py       Sphinx page + TOC YAML emission
+    ├── generators_hip.py       hip + hiprtc generators
+    ├── generators_libraries.py hipblas/hipsolver/hiprand/hipfft/hipsparse generators
+    ├── generators_systems.py   rccl/roctx/hipfile generators
+    ├── generators_compiler.py  amd_comgr + llvm generators
+    ├── cuda_interop.py         CUDA interop (driver/runtime/nvrtc) subgenerator
+    └── hipify.py               hipify-perl substitution parser
 ```
 
-The orchestrator (`codegen.py`) loads each subgenerator, calls `generate(opts)`, then performs the cross-cutting steps: namespace marker emission and CMake include-file emission.
+The CLI entry is `generate.py` (installed as the `hip-python-generate`
+console script). The master orchestrator `binding_generator.py` invokes
+the per-wheel generators (`generators_*.py`) and emits cross-cutting
+build inputs (Cython namespace markers, cmake module/version lists).
+Sphinx page emission lives in `docs_generator.py`. The previously
+separate `comgr` and `llvm` recipes have been merged into the unified
+hip recipe as libraries inside `binding_generator.AVAILABLE_GENERATORS`.
 
 ## Reproducing a release locally
 
 To run the generator end-to-end against a checked-out codegen base branch:
 
 ```sh
-# Prereqs: ROCm SDK installed at /opt/rocm; cython + libclang available.
+# Prereqs: ROCm SDK installed at /opt/rocm.
 cd /path/to/hip-python
 git switch codegen/base
 
-cd /path/to/interfacegen
-recipes/hip_python/generate_hip_python.sh \
-    "/path/to/hip-python" \
+# One-time install of the codegen tool:
+cd /path/to/interfacegen/recipes/hip-python
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r dev-requirements.txt   # editable interfacegen
+pip install .                         # hip-python-codegen + runtime deps
+
+# Each release run:
+hip-python-generate \
+    /path/to/hip-python \
     --rocm-version X.Y.Z \
     --rocm-path /opt/rocm
 
@@ -240,7 +257,7 @@ cd /path/to/hip-python
 cmake -S python -B build && cmake --build build --target all_wheels
 ```
 
-After this, `python/build/dist/` (or whatever `HIP_PYTHON_WHEEL_OUTPUT_DIR` points to) contains the wheels.
+After this, `packages/build/dist/` (or whatever `HIP_PYTHON_WHEEL_OUTPUT_DIR` points to) contains the wheels.
 
 ## See also
 

@@ -23,13 +23,13 @@ The build system is designed around three properties:
 
 | Package | Source path | Provides |
 |---|---|---|
-| `rocm-bindings-core` | `python/rocm-bindings-core/` | DLL loader (`posixloader`/`win32loader` + platform-agnostic `loader`), shared Cython types (`Pointer`, `CStr`, `NDBuffer`, …), and the `paths` module that does lazy ROCm library lookup. **Handcoded; not generator output.** |
-| `rocm-bindings-hip` | `python/rocm-bindings-hip/` | `hip` and `hiprtc` bindings (high-level + cy*-prefixed C-level pairs). Helpers (`_hip_helpers`, `_hiprtc_helpers`) are handcoded. |
-| `rocm-bindings-libraries` | `python/rocm-bindings-libraries/` | Math/FFT/random/sparse libraries: hipblas, hipsolver, hiprand, hipfft, hipsparse. List is generator-managed. |
-| `rocm-bindings-systems` | `python/rocm-bindings-systems/` | System-level libraries: rccl (collective communication), roctx (profiling/tracing). List is generator-managed. |
-| `rocm-bindings-compiler` | `python/rocm-bindings-compiler/` | LLVM-C bindings, AMD COMGR bindings, optional bundled `libLLVM.so`. Module list is generator-managed. |
-| `hip-python-interop` | `python/hip-python-interop/` | CUDA interop layer: `cuda.bindings.{driver,runtime,nvrtc}`. Implemented on top of HIP. |
-| `hip-python` | `python/hip-python/` | Provides the `hip.*` namespace as an alias of `rocm.bindings.*` (`from hip import hip, hiprtc, hipblas, …` re-export). Pure Python. |
+| `rocm-bindings-core` | `packages/rocm-bindings-core/` | DLL loader (`posixloader`/`win32loader` + platform-agnostic `loader`), shared Cython types (`Pointer`, `CStr`, `NDBuffer`, …), and the `paths` module that does lazy ROCm library lookup. **Handcoded; not generator output.** |
+| `rocm-bindings-hip` | `packages/rocm-bindings-hip/` | `hip` and `hiprtc` bindings (high-level + cy*-prefixed C-level pairs). Helpers (`_hip_helpers`, `_hiprtc_helpers`) are handcoded. |
+| `rocm-bindings-libraries` | `packages/rocm-bindings-libraries/` | Math/FFT/random/sparse libraries: hipblas, hipsolver, hiprand, hipfft, hipsparse. List is generator-managed. |
+| `rocm-bindings-systems` | `packages/rocm-bindings-systems/` | System-level libraries: rccl (collective communication), roctx (profiling/tracing), hipfile (accelerated file I/O). Optional bundled `libhipfile.so`. List is generator-managed. |
+| `rocm-bindings-compiler` | `packages/rocm-bindings-compiler/` | LLVM-C bindings, AMD COMGR bindings, optional bundled `libLLVM.so`. Module list is generator-managed. |
+| `hip-python-interop` | `packages/hip-python-interop/` | CUDA interop layer: `cuda.bindings.{driver,runtime,nvrtc}`. Implemented on top of HIP. |
+| `hip-python` | `packages/hip-python/` | Provides the `hip.*` namespace as an alias of `rocm.bindings.*` (`from hip import hip, hiprtc, hipblas, …` re-export). Pure Python. |
 
 All six packages contribute to two PEP 420 implicit namespace packages
 at runtime: `rocm.bindings.*` and `cuda.bindings.*`. Multiple packages
@@ -43,34 +43,103 @@ hip-python/
 ├── cmake/
 │   ├── HipPythonBuild.cmake       Shared helpers (see below)
 │   └── render_version.cmake
-├── python/
-│   ├── CMakeLists.txt             Unified top-level build; orchestrates all six packages + docs
-│   ├── pyproject.toml             Metadata for the `hip-python` (root) wheel target
-│   ├── rocm-bindings-core/        per-package source tree + CMakeLists.txt + pyproject.toml
+├── packages/
+│   ├── CMakeLists.txt             Unified top-level build; orchestrates all seven packages + docs
+│   ├── rocm-bindings-core/        per-package: pyproject.toml + CMakeLists.txt + cmake/ + src/rocm/
 │   ├── rocm-bindings-hip/         …
 │   ├── rocm-bindings-libraries/   …
-│   ├── rocm-bindings-systems/     …
-│   ├── rocm-bindings-compiler/    …
-│   ├── hip-python-interop/        …
-│   └── hip-python/                pure-Python `hip.*` alias of `rocm.bindings.*`
+│   ├── rocm-bindings-systems/     …  + bundled/libhipfile/ (optional libhipfile.so bundling)
+│   ├── rocm-bindings-compiler/    …  + bundled/libllvm/ (libLLVM detection + optional bundling)
+│   ├── hip-python-interop/        …  src/cuda/ instead of src/rocm/
+│   └── hip-python/                pure-Python `hip.*` alias of `rocm.bindings.*` (src/hip/)
 ├── docs_src/                      Sphinx source (reStructuredText)
 ├── docs/                          Generator output: rendered Sphinx HTML (when HIP_PYTHON_BUILD_DOCS=ON)
 └── share/design/                  this folder (BUILDING.md, CODEGEN.md)
 ```
+
+## Per-package layout (PyPA src-layout)
+
+Every wheel has the same three top-level subdirectories:
+
+| Subdir | Purpose |
+|---|---|
+| `src/<top-pkg>/...` | Python sources (`.pxd`/`.pyx`/`.pyi`/`.py`). `<top-pkg>` is `rocm` for the binding wheels and `cuda` for `hip-python-interop`. |
+| `cmake/HipPythonBuild.cmake` | Shared CMake helper, mirrored from the repo-root `cmake/` at configure time. |
+| `bundled/<libname>/CMakeLists.txt` | Optional. Build/detect a vendored shared library and copy it into the wheel. See section below. |
+
+Plus per-wheel `pyproject.toml`, `CMakeLists.txt`, `VERSION`, `_version.py.in`, `LICENSE`, `README.md`.
+
+The `src/` layout is a PyPA convention (not a PEP). It keeps the importable
+package isolated from build artifacts and tooling so test runs against the
+installed wheel can't accidentally pick up the in-tree source.
+
+## Vendored libraries: `bundled/<libname>/`
+
+Some wheels redistribute or wrap a system shared library that is built /
+detected at wheel-build time and copied into the wheel for self-contained
+installs. Two examples currently:
+
+- `packages/rocm-bindings-compiler/bundled/libllvm/` — builds
+  `librocmllvm.so` from LLVM static archives via `--whole-archive`, OR
+  copies a system `libLLVM.so` from the ROCm install. The cython modules
+  in this wheel get an `$ORIGIN/..` RPATH so they find the bundled lib.
+- `packages/rocm-bindings-systems/bundled/libhipfile/` — when
+  `HIP_PYTHON_BUNDLE_LIBHIPFILE=ON`, copies the resolved `libhipfile.so`
+  into the wheel and sets `$ORIGIN` RPATH on the cython modules.
+
+### Convention
+
+Every vendored library lives in its own `bundled/<libname>/` subdirectory
+of the wheel that ships it. The subdirectory contains at minimum a
+`CMakeLists.txt` that:
+
+1. Resolves or builds the shared library at configure time.
+2. `install(...)` it into the wheel's runtime directory (typically
+   `rocm/bindings/`).
+3. Sets `INSTALL_RPATH` on the relevant cython module targets so they
+   find the bundled `.so` via `$ORIGIN`-relative lookup.
+
+### Why a separate subdirectory
+
+- **Symmetric with `src/`.** Each wheel has at most three top-level subdirs
+  (`src/`, `cmake/`, `bundled/`); each has one job. No directory is a
+  grab-bag.
+- **Discoverable.** A new contributor opening `packages/<wheel>/` can
+  immediately tell what gets shipped and where it comes from.
+- **Per-library isolation.** Bundling logic for one vendored lib doesn't
+  pollute the parent CMakeLists.txt. Adding another vendored lib later is
+  just another `bundled/<libname>/` directory + an `add_subdirectory()`
+  call.
+
+### Parent–child cmake contract
+
+The parent `packages/<wheel>/CMakeLists.txt`:
+- Calls `find_package(<lib> [QUIET])` so the variables/targets are in scope
+- Declares the `option(HIP_PYTHON_BUNDLE_LIB<NAME> …)` flag
+- Creates the cython module targets in its main foreach loop
+- Calls `add_subdirectory(bundled/<libname>)` **after** the foreach loop
+  (the subdirectory's CMakeLists.txt sets RPATH on the cython targets,
+  so they must already exist)
+
+The bundled `CMakeLists.txt`:
+- Reads only the inputs documented at the top (find_package outputs +
+  the `BUNDLE_LIB<NAME>` option)
+- Does not call `find_package` itself (avoids redundant detection)
+- Is a no-op when bundling is disabled
 
 ## Two ways to build
 
 ### A. Unified build via CMake
 
 ```sh
-cd python
+cd packages
 cmake -B build
 cmake --build build --target all_wheels -j$(nproc)
 ```
 
 This is the canonical build flow. It:
 
-- Configures every enabled package via the unified `python/CMakeLists.txt`.
+- Configures every enabled package via the unified `packages/CMakeLists.txt`.
 - Compiles all Cython extensions across all packages.
 - Invokes `python -m build --wheel --no-isolation` for each enabled
   package via per-package wheel targets.
@@ -78,19 +147,19 @@ This is the canonical build flow. It:
   `-DHIP_PYTHON_AUDITWHEEL_REPAIR=ON`.
 
 Wheel artifacts land in `${HIP_PYTHON_WHEEL_OUTPUT_DIR}` (default
-`python/build/dist/`).
+`packages/build/dist/`).
 
 For a clean rebuild, remove the build directory:
 
 ```sh
-rm -rf python/build
-cmake -S python -B python/build && cmake --build python/build --target all_wheels
+rm -rf packages/build
+cmake -S packages -B packages/build && cmake --build packages/build --target all_wheels
 ```
 
 Common CMake options:
 
 ```sh
-cd python
+cd packages
 cmake -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DHIP_PYTHON_BUILD_CORE=ON \
@@ -107,7 +176,7 @@ cmake --build build --target all_wheels -j$(nproc)
 You can also build a single package's wheel from the unified build:
 
 ```sh
-cd python
+cd packages
 cmake -B build
 cmake --build build --target core_wheel        # rocm-bindings-core only
 cmake --build build --target hip_wheel
@@ -120,7 +189,7 @@ cmake --build build --target hip_python_wheel
 ### B. Single-package build (development loop)
 
 ```sh
-cd python
+cd packages
 cmake -B build                                # one-time configure step
 cd rocm-bindings-core
 python3 -m build --wheel --no-isolation
@@ -133,12 +202,12 @@ the unified configure step). This makes every package self-sufficient:
 
 - For wheel/sdist builds, the per-package `CMakeLists.txt` is the
   CMake root.
-- The version file `python/<pkg>/VERSION` is a copy of the canonical
+- The version file `packages/<pkg>/VERSION` is a copy of the canonical
   repo-root `VERSION`; the unified `cmake -B build` step does the
   copy at configure time. Each per-package `VERSION` is **gitignored**
   (single source of truth lives at the repo root).
 - The shared cmake helper `cmake/HipPythonBuild.cmake` is similarly
-  mirrored into each `python/<pkg>/cmake/` at configure time, so
+  mirrored into each `packages/<pkg>/cmake/` at configure time, so
   every package finds it locally without a `../../cmake/...` lookup.
   Also gitignored.
 
@@ -154,7 +223,7 @@ The unified build exposes per-package sdist targets in addition to
 the wheel targets:
 
 ```sh
-cd python
+cd packages
 cmake -B build
 cmake --build build --target all_sdists       # all enabled packages
 # or one at a time:
@@ -165,14 +234,14 @@ cmake --build build --target compiler_sdist
 Each `<pkg>_sdist` target runs `python -m build --sdist
 --no-isolation` from the package directory and drops the resulting
 tarball into `${HIP_PYTHON_WHEEL_OUTPUT_DIR}` (default
-`python/build/dist/`). The same per-package opt-in
+`packages/build/dist/`). The same per-package opt-in
 (`HIP_PYTHON_BUILD_<NAME>`) controls both wheel and sdist targets.
 
 To install a sdist downstream:
 
 ```sh
 pip install --no-build-isolation \
-    python/build/dist/rocm_bindings_compiler-*.tar.gz
+    packages/build/dist/rocm_bindings_compiler-*.tar.gz
 ```
 
 The sdist tarball bundles `VERSION`, the shared cmake helper
@@ -187,7 +256,7 @@ extensions, and (for the compiler package) builds or copies
 
 ## CMake build orchestration
 
-### Top-level `python/CMakeLists.txt`
+### Top-level `packages/CMakeLists.txt`
 
 Responsibilities:
 
@@ -273,7 +342,7 @@ between ROCm releases. To keep `CMakeLists.txt` stable across releases,
 these packages source the module list from a generator-emitted include
 file:
 
-### `python/rocm-bindings-libraries/cmake/generated_modules.cmake`
+### `packages/rocm-bindings-libraries/cmake/generated_modules.cmake`
 
 ```cmake
 # AUTO-GENERATED by the hip-python code generator. Do not edit by hand.
@@ -281,7 +350,7 @@ set(HIP_PYTHON_LIBRARIES_GENERATED_MODULES
     hipblas hipsolver hiprand hipfft hipsparse)
 ```
 
-### `python/rocm-bindings-systems/cmake/generated_modules.cmake`
+### `packages/rocm-bindings-systems/cmake/generated_modules.cmake`
 
 ```cmake
 # AUTO-GENERATED by the hip-python code generator. Do not edit by hand.
@@ -300,7 +369,7 @@ foreach(_lib IN LISTS HIP_PYTHON_SELECTED_LIBRARIES)
 endforeach()
 ```
 
-### `python/rocm-bindings-compiler/cmake/generated_modules.cmake`
+### `packages/rocm-bindings-compiler/cmake/generated_modules.cmake`
 
 ```cmake
 set(HIP_PYTHON_LLVM_C_MODULES disassembler lljit lto debuginfo executionengine ...)
@@ -341,7 +410,7 @@ nvrtc) are stable across releases.
 
 | Option | Default | Effect |
 |---|---|---|
-| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON` | Bundle a working `libLLVM.so` inside the wheel (uses the system one if available; otherwise builds from sources via `python/rocm-bindings-compiler/src/`). |
+| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON` | Bundle a working `libLLVM.so` inside the wheel (uses the system one if available; otherwise builds from sources via `packages/rocm-bindings-compiler/src/`). |
 | `HIP_PYTHON_FORCE_BUILD_LIBLLVM` | `OFF` | Force-build `libLLVM.so` from sources even if a system one is present. Implies BUNDLE. |
 
 ## Cython namespace markers and install layout
@@ -359,7 +428,7 @@ nvrtc) are stable across releases.
 **None** of these are installed except the two from `rocm-bindings-core`:
 
 ```cmake
-# python/rocm-bindings-core/CMakeLists.txt
+# packages/rocm-bindings-core/CMakeLists.txt
 install(FILES rocm/__init__.pxd          DESTINATION rocm        COMPONENT rocm-bindings-core)
 install(FILES rocm/bindings/__init__.pxd DESTINATION rocm/bindings COMPONENT rocm-bindings-core)
 ```
@@ -398,8 +467,8 @@ scikit-build-core **before** CMake runs. So `VERSION` must already
 exist locally:
 
 - **Source-tree wheel/sdist build**: the unified
-  `cmake -B build` from `python/` does a `configure_file()` of
-  repo-root `VERSION` → each `python/<pkg>/VERSION`. Run the
+  `cmake -B build` from `packages/` does a `configure_file()` of
+  repo-root `VERSION` → each `packages/<pkg>/VERSION`. Run the
   unified configure once before any per-package `python -m build`
   invocation. Both files are gitignored.
 - **sdist install path** (downstream consumer of the .tar.gz): the
@@ -413,7 +482,7 @@ exist locally:
   configure_file calls keep working.
 
 The shared `cmake/HipPythonBuild.cmake` follows the same model:
-mirrored into each `python/<pkg>/cmake/HipPythonBuild.cmake` by the
+mirrored into each `packages/<pkg>/cmake/HipPythonBuild.cmake` by the
 unified configure step, listed in each per-package
 `sdist.include`, gitignored.
 
@@ -456,7 +525,7 @@ or function signature, adding a method, etc.):
 
 ```sh
 pip install mypy                                   # one-time
-cd python
+cd packages
 cmake -B build -DHIP_PYTHON_ENABLE_STUBGEN=ON
 cmake --build build --target all_stubs             # all handcoded modules
 # or one package at a time:
@@ -467,7 +536,7 @@ cmake --build build --target rocm_bindings_core_types_stub
 ```
 
 The regenerated `.pyi` lands in the source tree next to the `.pyx`.
-Inspect the diff with `git diff python/rocm-bindings-*/rocm/...`,
+Inspect the diff with `git diff packages/rocm-bindings-*/src/rocm/...`,
 then commit `<module>.pyx` and `<module>.pyi` together.
 
 ### What is NOT triggered
@@ -484,7 +553,7 @@ then commit `<module>.pyx` and `<module>.pyi` together.
 ### Adding a new handcoded Cython module to be stubbed
 
 The list of modules is repo-spanning and lives in **one place**:
-`HIP_PYTHON_STUBGEN_MODULES` in `python/CMakeLists.txt`. Append one
+`HIP_PYTHON_STUBGEN_MODULES` in `packages/CMakeLists.txt`. Append one
 line of the form:
 
 ```
@@ -526,7 +595,7 @@ CMake options:
 Usage:
 
 ```sh
-cd python
+cd packages
 cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
 cmake --build build --target docs
 # open ../docs/index.html
@@ -553,42 +622,42 @@ documentation files.
 
 ```sh
 # Fastest dev iteration on a single package:
-cd python/rocm-bindings-core && python3 -m build --wheel --no-isolation
+cd packages/rocm-bindings-core && python3 -m build --wheel --no-isolation
 
-# Full build, all five packages (run from python/ subdir):
-cd python && cmake -B build && cmake --build build --target all_wheels -j$(nproc)
+# Full build, all five packages (run from packages/ subdir):
+cd packages && cmake -B build && cmake --build build --target all_wheels -j$(nproc)
 
 # Production manylinux wheels:
-cd python && cmake -B build -DHIP_PYTHON_AUDITWHEEL_REPAIR=ON
+cd packages && cmake -B build -DHIP_PYTHON_AUDITWHEEL_REPAIR=ON
 cmake --build build --target all_wheels -j$(nproc)
 
 # Skip the compiler package (faster; doesn't need libLLVM):
-cd python && cmake -B build -DHIP_PYTHON_BUILD_COMPILER=OFF
+cd packages && cmake -B build -DHIP_PYTHON_BUILD_COMPILER=OFF
 cmake --build build --target all_wheels
 
 # Debug build:
-cd python && cmake -B build -DCMAKE_BUILD_TYPE=Debug
+cd packages && cmake -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build --target all_wheels
 
 # Use sccache:
-cd python && cmake -B build \
+cd packages && cmake -B build \
   -DCMAKE_C_COMPILER_LAUNCHER=sccache \
   -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
 cmake --build build --target all_wheels
 
 # Custom ROCm path:
-cd python && cmake -B build -DROCM_PATH=/opt/rocm-7.13
+cd packages && cmake -B build -DROCM_PATH=/opt/rocm-7.13
 cmake --build build --target all_wheels
 
 # Single package wheel from the unified build:
-cd python && cmake -B build && cmake --build build --target core_wheel
+cd packages && cmake -B build && cmake --build build --target core_wheel
 
 # Build the documentation (independent of all_wheels):
-cd python && cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
+cd packages && cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
 cmake --build build --target docs
 
 # Wheels and docs in parallel:
-cd python && cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
+cd packages && cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
 cmake --build build --target all_wheels docs -j$(nproc)
 ```
 
