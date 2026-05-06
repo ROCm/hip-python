@@ -109,19 +109,30 @@ def generate_hipsolver(
         raw_comment_cleaner=controls.hipsolver.raw_comment_cleaner,
         cflags=generator_args,
     )
+    # hipsolver-types.h aliases hipblas typedefs:
+    #   typedef hipblasOperation_t hipsolverOperation_t;
+    #   typedef hipblasFillMode_t  hipsolverFillMode_t;
+    #   typedef hipblasSideMode_t  hipsolverSideMode_t;
+    # The codegen emits these as `ctypedef hipblas<X> hipsolver<X>` in
+    # cyhipsolver.pxd, so the Cython compiler needs hipblas types in
+    # scope via cyhipblas. The high-level hipsolver.pyx similarly
+    # references the hipblas Python wrappers.
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.cyhip cimport *
+    from rocm.bindings.cyhipblas cimport *
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.hip cimport *
+    from rocm.bindings.hipblas cimport *
     """
     )
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.hip import _hipDataType__Base
+    from rocm.bindings.hipblas import *
     """
     )
     return generator
