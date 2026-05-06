@@ -133,10 +133,12 @@ It produces six wheels:
 
 - `rocm-bindings-core` — DLL loader, types, ROCm path resolution
 - `rocm-bindings-hip` — `hip` and `hiprtc` Python bindings
-- `rocm-bindings-libraries` — math libraries: `hipblas`, `hipsolver`,
-  `hiprand`, `hipfft`, `hipsparse`
+- `rocm-bindings-libraries` — math libraries: `hipblas`, `hipblaslt`*,
+  `hipsolver`, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt`*,
+  `hiptensor`*, `hipdnn`* (* = experimental, see [Known Limitations](#known-limitations))
 - `rocm-bindings-systems` — system-level libraries: `rccl`
-  (collective communication), `roctx` (profiling/tracing)
+  (collective communication), `roctx` (profiling/tracing),
+  `hipfile`, `amdsmi`, `hsa`* (HSA runtime + AMD extensions)
 - `rocm-bindings-compiler` — LLVM-C and AMD COMGR bindings (with optional bundled `libLLVM.so`)
 - `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer
 
@@ -432,6 +434,59 @@ and including ROCm 7.2.2.
 
 The legacy build process produces Python binary wheels in `hip-python/dist/`
 and `hip-python-as-cuda/dist/`.
+
+## Known Limitations
+
+### Experimental libraries
+
+The newly added bindings — `hipblaslt`, `hipsparselt`, `hiptensor`,
+`hipdnn`, and `hsa` — are marked **experimental** for one release
+cycle. What this means in practice:
+
+- The Python-level API surface is generated automatically from the
+  upstream C headers and is functional today, but parameter
+  classification (especially **OUT vs INOUT pointer parameters**)
+  is heuristic. Some parameters that are currently classified as
+  output-only may be re-tuned to in/out (or vice-versa) once we
+  collect user feedback. Programs depending on these libraries may
+  need minor signature adjustments after a future tuning pass.
+- File issues at the hip-python tracker if you find a parameter
+  classification that doesn't match the underlying C semantics.
+- All other interfaces (return values, opaque handles, scalar types)
+  are stable.
+
+### `hsakmt` is intentionally not bound
+
+`/opt/rocm/lib/` ships only `libhsakmt.a` — a static archive — so
+hip-python's `dlopen`-based runtime model can't load it. We've
+deliberately deferred the `hsakmt` binding rather than ship a
+non-functional one. Track upstream
+[ROCm/ROCT-Thunk-Interface](https://github.com/ROCm/ROCT-Thunk-Interface)
+for a shared-library variant. The companion `hsa` binding is
+unaffected — `libhsa-runtime64.so.1` is shipped and loaded normally.
+
+### `hipblaslt`: Cython-level (`cimport`) usage may require C++ compilation
+
+The Python-level API (`from rocm.bindings import hipblaslt`) works
+as expected — at runtime hip-python `dlopen`s `libhipblaslt.so` and
+calls C-ABI symbols, which is unaffected by header-source issues.
+
+However, downstream Cython users who do
+`cimport rocm.bindings.cyhipblaslt` will cause Cython to emit
+`#include <hipblaslt/hipblaslt.h>` in the generated C, and the
+upstream header (as of ROCm 7.13.0 / hipBLASLt 1.2.2)
+unconditionally pulls in `<memory>`, `<regex>`, `<vector>` (C++
+stdlib) even though it is otherwise structured as a pure C-API
+header (the C++ extension API lives separately in
+`hipblaslt-ext.hpp`). As a result, such extensions must currently
+be compiled as C++ (or you must `#define`-shim around the
+includes) until the upstream fix lands.
+
+The hip-python codegen itself works around this with an in-memory
+strip of the offending lines before parsing; that workaround is not
+visible to downstream Cython consumers because it operates only at
+generation time. Track upstream issue at
+[ROCm/hipBLASLt](https://github.com/ROCm/hipBLASLt).
 
 ## Documentation
 
