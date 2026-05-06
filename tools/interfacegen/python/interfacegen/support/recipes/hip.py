@@ -768,3 +768,315 @@ class roctx:
     def raw_comment_cleaner(raw_comment: str):
         """Cleans roctx doxygen documentation strings."""
         return raw_comment
+
+
+class hipfile:
+    """Code generation controls for hipFILE (Accelerated I/O Storage).
+
+    The hipFILE C API uses the `hipFile` prefix for all functions/types and
+    `HIPFILE_` for macros. Identifiers outside those prefixes are external
+    types pulled in via `#include` (hipError_t, off_t, sockaddr, ...) and
+    must not be re-emitted by the bindings.
+    """
+
+    @staticmethod
+    def node_filter(node: Node):
+        if isinstance(node, MacroDefinition):
+            return node.name in (
+                "HIPFILE_VERSION_MAJOR",
+                "HIPFILE_VERSION_MINOR",
+                "HIPFILE_VERSION_PATCH",
+                "HIPFILE_BASE_ERR",
+            )
+        if node.name.startswith("hipFile") or node.name.startswith("HIPFILE_"):
+            return True
+        return False
+
+    @staticmethod
+    def macro_type(node: MacroDefinition):
+        return "int"
+
+    @staticmethod
+    def ptr_parm_intent(node: Parm):
+        """Classify pointer parameter intent for hipFILE APIs.
+
+        Default to IN; specific OUT parameters are recognized by parameter
+        name conventions (handles like 'fhPtr', 'driver_ptr', sizes/offsets
+        that are typically input).
+        """
+        return ParmIntent.IN
+
+    @staticmethod
+    def ptr_rank(node: Node):
+        """All pointers in hipFILE are single-level (handles, buffers, paths)."""
+        return 1
+
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans hipFILE doxygen documentation strings."""
+        return raw_comment
+
+
+class comgr:
+    """Code generation controls for AMD COMGR (`amd_comgr/amd_comgr.h`).
+
+    Ported from the original `recipes/hip_python/comgr/generate_comgr.py`
+    when comgr was merged into the per-library hip recipe.
+    The `ptr_complicated_type_handler` here is a logic stub that needs
+    the project's util_types prefix; `pkg_compiler.generate_amd_comgr()`
+    wraps it with that prefix and falls back to `default_ptr_handler`
+    for everything else.
+    """
+
+    @staticmethod
+    def node_filter(node: Node):
+        return (
+            # use global_name because of anonymous funptrs
+            node.global_name("_").startswith("amd_comgr")
+            or node.name.startswith("AMD_COMGR_INTERFACE_VERSION")
+            or node.name == "code_object_info_s"
+        )
+
+    @staticmethod
+    def node_init(node: Node):
+        if isinstance(node, Function):
+            if not node.is_enum and node.name.startswith("amd_comgr"):
+                # amd_comgr routines without status return — force them
+                # to not throw exceptions and to always return
+                # AMD_COMGR_STATUS_SUCCESS as the first return value.
+                node.error_return_value_lazy_loader = None
+                node.modifiers_lazy_loader = " noexcept nogil"
+                node.prepend_python_return_value(
+                    "amd_comgr_status_s.AMD_COMGR_STATUS_SUCCESS",
+                    "amd_comgr_status_s",
+                    "Always returns `~.amd_comgr_status_s.AMD_COMGR_STATUS_SUCCESS`.",
+                )
+
+    @staticmethod
+    def ptr_rank(node):
+        # `Typed.is_pointer_to_char(degree=-1)` — only char pointers are
+        # treated as char sequences (rank 1). Everything else stays scalar.
+        if hasattr(node, "is_pointer_to_char") and node.is_pointer_to_char(degree=-1):
+            return 1
+        return 0
+
+    @staticmethod
+    def ptr_parm_intent(parm: Parm):
+        func_name, parm_index = parm.parent.name, parm.parm_index
+        if (func_name, parm_index) in (
+            ("amd_comgr_action_info_set_option_list", 1),
+        ):
+            return ParmIntent.IN
+        if func_name in (
+            "amd_comgr_get_isa_count",
+            "amd_comgr_get_version",
+            "amd_comgr_create_data_set",
+            "amd_comgr_create_action_info",
+        ):
+            return ParmIntent.OUT
+        if (func_name, parm_index) in (
+            ("comgr.amd_comgr_create_data", 1),
+            ("amd_comgr_status_string", 1),
+            ("amd_comgr_action_info_get_option_list_count", 1),
+            ("amd_comgr_create_data", 1),
+            ("amd_comgr_get_data_kind", 1),
+            ("amd_comgr_action_data_count", 2),
+            ("amd_comgr_action_data_get_data", 3),
+            ("amd_comgr_get_isa_name", 1),
+            ("amd_comgr_get_isa_metadata", 1),
+            ("amd_comgr_get_data_metadata", 1),
+            ("amd_comgr_get_metadata_kind", 1),
+            ("amd_comgr_get_metadata_map_size", 1),
+            ("amd_comgr_metadata_lookup", 2),
+            ("amd_comgr_get_metadata_list_size", 1),
+            ("amd_comgr_index_list_metadata", 2),
+            ("amd_comgr_create_symbolizer_info", 2),
+            ("amd_comgr_create_disassembly_info", 4),
+        ):
+            return ParmIntent.OUT
+        # INOUT (uncovered):
+        # amd_comgr_get_data, amd_comgr_get_data_name, amd_comgr_get_isa_name,
+        # amd_comgr_get_metadata_string, amd_comgr_iterate_map_metadata
+        return ParmIntent.INOUT
+
+    @staticmethod
+    def is_listofbytes_pointer(node: Node) -> bool:
+        """Whether a pointer node should be exposed as ListOfBytes.
+
+        Used by `pkg_compiler.generate_amd_comgr()` to wrap the special-case
+        `(amd_comgr_action_info_set_option_list, 1)` mapping with the
+        project's util_types prefix.
+        """
+        if isinstance(node, Parm):
+            return (node.parent.name, node.parm_index) == (
+                "amd_comgr_action_info_set_option_list", 1,
+            )
+        return False
+
+    @staticmethod
+    def raw_comment_cleaner(raw_comment: str):
+        """Cleans amd_comgr doxygen documentation strings."""
+        return raw_comment
+
+
+class llvm_c:
+    """Code generation controls shared across all `llvm-c/*.h` modules.
+
+    Ported from the closures in `recipes/hip_python/llvm/generate_llvm.py`
+    (`create_generator()` body, lines 65-135) when the LLVM recipe was
+    merged into the per-library hip recipe.
+
+    `is_listofpointer_param` and `is_ndbuffer_return` are static
+    predicates; `pkg_compiler.write_llvm_modules()` wraps them with the
+    project's util_types prefix to build the actual
+    `ptr_complicated_type_handler` closure (mirrors the comgr pattern).
+    """
+
+    @staticmethod
+    def ptr_rank(node: Node):
+        """Mirrors generate_llvm.py:65-76 — ParamTypes/Params/Dest are
+        arrays of pointers (rank 1); char* sequences are rank 1; everything
+        else is rank 0 (scalar)."""
+        if (node.parent.cursor.spelling, node.cursor.spelling) in (
+            ("LLVMFunctionType", "ParamTypes"),
+            ("LLVMGetParams", "Params"),
+            ("LLVMGetParamTypes", "Dest"),
+        ):
+            return 1
+        if node.is_pointer_to_char(degree=-1):
+            return 1
+        return 0
+
+    @staticmethod
+    def ptr_parm_intent(node: Parm):
+        """Mirrors generate_llvm.py:78-115 — INOUT for the array-out
+        params, OUT for `Out*`-prefixed names + a per-(fn, parm) lookup,
+        IN otherwise. Order matters."""
+        fn_name: str = node.parent.cursor.spelling
+        parm_name: str = node.cursor.spelling
+        if (fn_name, parm_name) in (
+            ("LLVMGetParams", "Params"),
+            ("LLVMGetParamTypes", "Dest"),
+            ("LLVMTargetMachineEmitToMemoryBuffer", "OutMemBuf"),
+            ("LLVMDisasmInstruction", "OutString"),
+        ):
+            return ParmIntent.INOUT
+        if (
+            fn_name in ("LLVMGetVersion",)
+            or parm_name in (
+                "OutEE",
+                "OutError",
+                "OutFn",
+                "OutInterp",
+                "OutJIT",
+                "OutM",
+                "OutMemBuf",
+                "OutMessage",
+                "OutMod",
+                "OutModule",
+            )
+            or (fn_name, parm_name) in (
+                ("LLVMGetValueName2", "Length"),
+                ("LLVMGetTargetFromTriple", "T"),
+                ("LLVMGetTargetFromTriple", "ErrorMessage"),
+            )
+        ):
+            return ParmIntent.OUT
+        return ParmIntent.IN
+
+    @staticmethod
+    def is_listofpointer_param(node: Node) -> bool:
+        """Whether a parameter pointer should be exposed as ListOfPointer.
+        Used by `pkg_compiler.write_llvm_modules()` to wrap the special-case
+        mapping with the project's util_types prefix."""
+        return (
+            node.parent.cursor.spelling,
+            node.cursor.spelling,
+        ) in (
+            ("LLVMFunctionType", "ParamTypes"),
+            ("LLVMGetParams", "Params"),
+            ("LLVMGetParamTypes", "Dest"),
+            ("LLVMRunFunction", "Args"),
+            ("LLVMGetBufferStart"),
+        )
+
+    @staticmethod
+    def is_ndbuffer_return(node: Node) -> bool:
+        """Whether a function return pointer should be exposed as NDBuffer.
+        Currently only `LLVMGetBufferStart`."""
+        return node.cursor.spelling in ("LLVMGetBufferStart",)
+
+    @staticmethod
+    def location_filter(header_relpath: str):
+        """Returns a node_filter closure that keeps declarations whose
+        `render_location()` contains `header_relpath`. Mirrors
+        `create_node_filter()` at generate_llvm.py:222-232."""
+        def _filter(node: Node):
+            if isinstance(node, MacroDefinition):
+                return False
+            return header_relpath in node.render_location()
+        return _filter
+
+
+class llvm_config:
+    """Code generation controls for `llvm/Config/llvm-config.h`.
+
+    Ported from the closures at generate_llvm.py:171-220 — selective
+    macro extraction with type classification.
+    """
+
+    # Target-/platform-specific macros we don't want to bake into bindings.
+    _NATIVE_MACROS = (
+        "LLVM_NATIVE_ARCH",
+        "LLVM_NATIVE_ASMPARSER",
+        "LLVM_NATIVE_ASMPRINTER",
+        "LLVM_NATIVE_DISASSEMBLER",
+        "LLVM_NATIVE_TARGET",
+        "LLVM_NATIVE_TARGETINFO",
+        "LLVM_NATIVE_TARGETMC",
+    )
+    _STR_MACROS = (
+        "LLVM_DEFAULT_TARGET_TRIPLE",
+        "LLVM_HOST_TRIPLE",
+        "LLVM_VERSION_STRING",
+    )
+    _INT_MACROS = (
+        "LLVM_VERSION_MAJOR",
+        "LLVM_VERSION_MINOR",
+        "LLVM_VERSION_PATCH",
+    )
+    _BOOL_MACROS = (
+        "LLVM_ENABLE_THREADS",
+        "LLVM_HAS_ATOMICS",
+        "LLVM_ON_UNIX",
+        "LLVM_USE_INTEL_JITEVENTS",
+        "LLVM_USE_OPROFILE",
+        "LLVM_USE_PERF",
+        "LLVM_FORCE_ENABLE_STATS",
+        "LLVM_ENABLE_ZLIB",
+        "LLVM_ENABLE_ZSTD",
+        "HAVE_SYSEXITS_H",
+        "LLVM_UNREACHABLE_OPTIMIZE",
+        "LLVM_ENABLE_DIA_SDK",
+    )
+
+    @staticmethod
+    def macro_type(node: MacroDefinition):
+        name = node.cursor.spelling
+        if name in llvm_config._NATIVE_MACROS:
+            return None  # skip — target/platform specific
+        if name in llvm_config._STR_MACROS:
+            return "const char *"
+        if name in llvm_config._INT_MACROS:
+            return "int"
+        if name in llvm_config._BOOL_MACROS:
+            return "bint"
+        if name in ("LLVM_ENABLE_PLUGINS",):  # existence means True
+            return True
+        return None
+
+    @staticmethod
+    def node_filter(node: Node):
+        if isinstance(node, MacroDefinition):
+            return llvm_config.macro_type(node) is not None
+        return False

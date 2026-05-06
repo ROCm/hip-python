@@ -98,9 +98,9 @@ def generate_cuda_interop_module_files(
     global HAVE_LEVENSHTEIN
 
     cuda_global_module_as_tuple = cuda_global_module_name.split(".")
-    # Modern layout: <repo_root>/python/hip-python-interop/<cuda parts>/
+    # Modern layout: <repo_root>/packages/hip-python-interop/src/<cuda parts>/
     cuda_parent_package_dir = os.path.join(
-        output_dir, "python", "hip-python-interop",
+        output_dir, "packages", "hip-python-interop", "src",
         *(cuda_global_module_as_tuple[:-1]),
     )
     cuda_parent_package = ".".join(cuda_global_module_as_tuple[:-1])

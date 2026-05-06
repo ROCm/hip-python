@@ -470,7 +470,7 @@ class CythonMixin(DoxygenMixin):
         """Render the declaration part for the Python interface."""
         return None
 
-    def render_python_interface_impl(self, cprefix: str):
+    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict):
         """Render the implementation part for the Python interface."""
         return None
 
@@ -719,17 +719,16 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
             return None
         return [f"{name}: Any"]
 
-    def render_python_interface_impl(self, cprefix: str):
+    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict):
         """Render a Python-facing macro definition assignment string.
         Args:
             cprefix: Prefix to apply to the C-level macro name when generating the right-hand side.
+            module_opts: Per-module rendering options. ``module_opts["all"]``
+                receives the macro's cython_global_name.
+                ``module_opts["docstring_attributes"]`` receives the docs entry.
         Returns:
             A string of the form ``"{name} = {rhs}"`` where ``name`` is the
             renamed macro identifier and ``rhs`` is either the prefixed macro name or a reconstructed string literal for string-like macros.
-        Side Effects:
-            - Appends a documentation entry for the macro to ``self.
-              docstring_attributes``.
-            - Registers the macro name in ``self.all``.
         Notes:
             - If the macro expands to a string-like value
               (``type_or_typename_or_value == str``),
@@ -759,7 +758,7 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
             python_type = CYTHON_AUTOCONV_TO_PYTHON_TYPES(cython_typename)
 
         # side effect: add to docstring attributes
-        self.docstring_attributes.append(
+        module_opts["docstring_attributes"].append(
             textwrap.dedent(
                 f"""\
                     {name} ({self.to_sphinx_pyobj(python_type)}):
@@ -768,7 +767,7 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
             )
         )
         # side effect: register in __all__
-        self.all.append(self.cython_global_name)
+        module_opts["all"].append(self.cython_global_name)
 
         # derive right-hand side
         if type_or_typename_or_value == str:
@@ -1067,7 +1066,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
             setattr(self, "_python_body_epilog", [])
         self._python_body_epilog.append(code)
 
-    def render_python_interface_impl(self, cprefix: str) -> str:
+    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
         """Render the implementation part for the Python interface.
 
         Note:
@@ -1117,7 +1116,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
             cprefix, all_properties_rendered
         )
         result += textwrap.indent("\n".join(self._python_body_epilog), indent)
-        self.all.append(self.cython_global_name)
+        module_opts["all"].append(self.cython_global_name)
         return result
 
 
@@ -1211,7 +1210,7 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
                     {docu.replace(nl," ").rstrip()}"""
             )
 
-    def render_python_interface_impl(self, cprefix: str):
+    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict):
         """Renders an enum.IntEnum class.
 
         Note:
@@ -1226,7 +1225,7 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
         if self.is_anonymous:
             for child_cursor in self.cursor.get_children():
                 name = self.renamer(child_cursor.spelling)
-                self.docstring_attributes += list(
+                module_opts["docstring_attributes"] += list(
                     self._render_python_enum_constant_docstrings()
                 )
             return "\n".join(self._render_python_enums(cprefix))
@@ -1275,8 +1274,8 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
                 ),
                 indent,
             )
-            self.all.append(base_class_name)
-            self.all.append(name)
+            module_opts["all"].append(base_class_name)
+            module_opts["all"].append(name)
             return result
 
 
@@ -1351,12 +1350,12 @@ class Typedef(tree.Typedef, CythonMixin, Typed):
             degree=(0, -1)
         ) or self.is_pointer_to_enum(degree=(0, -1))
 
-    def render_python_interface_impl(self, cprefix: str) -> str:
+    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
 
         name = self.cython_global_name
         if self.emits_python_alias():
             aliased = self.renamer(self.typeref.global_name(self.sep))
-            self.docstring_attributes.append(
+            module_opts["docstring_attributes"].append(
                 textwrap.dedent(
                     f"""\
                         {name}:
@@ -1364,7 +1363,7 @@ class Typedef(tree.Typedef, CythonMixin, Typed):
                         """
                 )
             )
-            self.all.append(name)
+            module_opts["all"].append(name)
             return f"{name} = {aliased}"
         return None
 
@@ -1408,7 +1407,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
             util_types_prefix=self.util_types_prefix,
         )
 
-    def render_python_interface_impl(self, cprefix: str) -> str:
+    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
         global indent
         name = self.cython_global_name
         template = Cython.Tempita.Template(
@@ -1416,7 +1415,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
             + "\n"
             + cythontemplates.wrapper_class_constantarray_get_element_template
         )
-        self.all.append(self.cython_global_name)
+        module_opts["all"].append(self.cython_global_name)
         return template.substitute(
             name=name,
             cname=self.cname(cprefix),
@@ -1462,14 +1461,14 @@ class FunctionPointer(CythonMixin):
             util_types_prefix=self.util_types_prefix,
         )
 
-    def render_python_interface_impl(self, cprefix: str) -> str:
+    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
 
         name = self.cython_global_name
         cname = cprefix + name
         template = Cython.Tempita.Template(
             cythontemplates.wrapper_class_impl_base_template
         )
-        self.all.append(name)
+        module_opts["all"].append(name)
         return template.substitute(
             name=name,
             cname=cname,
@@ -1563,8 +1562,12 @@ class Function(tree.Function, CythonMixin, Typed):
             Function.SignatureMember(value, typename, description)
         )
 
-    # Always return a tuple if there is at least one return value
-    python_interface_always_return_tuple = True
+    # NOTE: `python_interface_always_return_tuple` was previously a
+    # class-level attribute (default True) that recipes mutated globally.
+    # It is now per-generator opts under
+    # `module_opts["python_interface_always_return_tuple"]` (default False),
+    # threaded as a kwarg into `render_python_interface_impl` /
+    # `_render_python_docstring`.
 
     @property
     def has_python_body_prolog(self):
@@ -1661,9 +1664,18 @@ cdef void* {funptr_name} = NULL
     # flake8: noqa: C901
     # TODO break function apart to reduce complexity
     def _render_python_docstring(
-        self, out_arg_names: list, parm_python_types: dict
+        self, out_arg_names: list, parm_python_types: dict,
+        *, module_opts: dict = None,
     ):
-        """Converts doxygen comment to a Python docstring using the doxyparser API."""
+        """Converts doxygen comment to a Python docstring using the doxyparser API.
+
+        ``module_opts`` is the per-module rendering opts dict carried by
+        the active CythonModuleGenerator. Used here to read
+        ``python_interface_always_return_tuple``. When called outside of
+        the main render pass (.pyi stub generation, standalone docstring
+        rendering), pass None and the new default (False) applies.
+        """
+        _module_opts = module_opts if module_opts is not None else {}
         # TODO handle groups; issue detecting addgroup; detecting ingroup is easier
 
         doxyparsetree = self.doxygen_conv.parse_structure(
@@ -1834,7 +1846,7 @@ cdef void* {funptr_name} = NULL
             docstring_body += "\nReturns:\n"
             if (
                 len(docstring_returns) > 1
-                or self.python_interface_always_return_tuple
+                or _module_opts.get("python_interface_always_return_tuple", False)
             ):
                 docstring_body += f"{single_level_indent}A {self.to_sphinx_pyobj('tuple')} of size {len(docstring_returns)} that contains (in that order):\n\n"
                 prefix = "* "
@@ -2280,7 +2292,7 @@ cdef void* {funptr_name} = NULL
             indent,
         )
 
-    def render_python_interface_impl(self, cprefix: str) -> str:
+    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
         """Public API for generating the full Python interface."""
         (
             fully_specified,
@@ -2296,7 +2308,8 @@ cdef void* {funptr_name} = NULL
             f"def {self.cython_name}({', '.join(sig_args)}):\n"
             + textwrap.indent(
                 self._render_python_docstring(
-                    [p.name for p in out_parms], parm_python_types
+                    [p.name for p in out_parms], parm_python_types,
+                    module_opts=module_opts,
                 ),
                 indent,
             ).rstrip()
@@ -2325,7 +2338,7 @@ cdef void* {funptr_name} = NULL
                 comma = ","
                 result += f"{indent}return ({comma.join(out_args)})\n"
             elif len(out_args):
-                if self.python_interface_always_return_tuple:
+                if module_opts.get("python_interface_always_return_tuple", False):
                     result += f"{indent}return ({out_args[0]},)\n"
                 else:
                     result += f"{indent}return {out_args[0]}\n"
@@ -2334,7 +2347,7 @@ cdef void* {funptr_name} = NULL
                 f" function {self.cython_global_name}: not all parameters could be mapped"
             )
             result += f"{indent}pass"
-        self.all.append(self.cython_global_name)
+        module_opts["all"].append(self.cython_global_name)
         return result
 
     # ------------------------------------------------------------------
@@ -2423,6 +2436,7 @@ class CythonBackend:
         filename: str,
         util_pkg: str,
         warn_mode: control.Warnings = control.Warnings.IGNORE,
+        module_opts: dict = None,
         **opts,
     ):
         """See `CythonBackend.__init__` for further details."""
@@ -2437,6 +2451,7 @@ class CythonBackend:
             root,
             filename,
             util_pkg,
+            module_opts=module_opts,
             **opts,
         )
 
@@ -2456,6 +2471,7 @@ class CythonBackend:
         raw_comment_cleaner: callable = DEFAULT_RAW_COMMENT_CLEANER,
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
         node_init: callable = lambda node: None,
+        module_opts: dict = None,
     ):
         """Constructor.
 
@@ -2497,6 +2513,8 @@ class CythonBackend:
         self.root = root
         self.filename = filename
         self.util_pkg = util_pkg
+        self.module_opts = dict(module_opts) if module_opts else {}
+        self.module_opts.setdefault("python_interface_always_return_tuple", False)
         self.modifiers_lazy_loader = modifiers_lazy_loader
         self.error_return_value_lazy_loader = error_return_value_lazy_loader
         self.node_filter = node_filter
@@ -2802,15 +2820,24 @@ class CythonBackend:
 
         result = []
         cprefix = f"{cmodule}."
-        docstring_attributes = []
-        all = []  # required to define order
+        # Per-render-pass opts: configuration from the CythonModuleGenerator
+        # plus freshly allocated accumulator lists. Passed as an explicit
+        # kwarg into each node's render_python_interface_impl — no setattr
+        # injection, no class-attribute side effects.
+        module_opts = dict(self.module_opts)
+        module_opts["all"] = []  # required to define order
+        module_opts["docstring_attributes"] = []
         for node in self.walk_filtered_nodes():
-            setattr(node, "docstring_attributes", docstring_attributes)
-            setattr(node, "all", all)
-            contrib = node.render_python_interface_impl(cprefix=cprefix)
+            contrib = node.render_python_interface_impl(
+                cprefix=cprefix, module_opts=module_opts,
+            )
             if contrib is not None:
                 result.append(contrib)
-        return result, docstring_attributes, all
+        return (
+            result,
+            module_opts["docstring_attributes"],
+            module_opts["all"],
+        )
 
     def render_python_interface_decl_part(self, cython_c_bindings_module: str):
         """Returns the Python interface file content for the given headers."""
@@ -2853,6 +2880,7 @@ class CythonModuleGenerator:
         runtime_linking: bool = False,
         dll: str = None,
         cflags=[],
+        module_opts: dict = None,
         **opts,
     ):
         r"""Constructor.
@@ -2873,12 +2901,19 @@ class CythonModuleGenerator:
                 `runtime_linking` is specified. Defaults to None.
             cflags (list(str), optional):
                 Flags to pass to the C parser.
+            module_opts (dict, optional):
+                Per-module rendering options consumed inside ``render_python_interface_impl``.
+                Keys: ``python_interface_always_return_tuple`` (bool, default False).
+                The accumulator lists ``all`` and ``docstring_attributes`` are
+                allocated per render pass — do not seed them here.
             \*\*opts:
                 Further optional keyword arguments.
                 See `CythonBackend` for further details.
         """
         global default_c_interface_decl_prolog
         global default_python_interface_decl_prolog
+        self.module_opts = dict(module_opts) if module_opts else {}
+        self.module_opts.setdefault("python_interface_always_return_tuple", False)
         self.global_module_name = global_module_name
 
         parts = global_module_name.split(".")
@@ -2909,10 +2944,9 @@ class CythonModuleGenerator:
 
         if isinstance(header, str):
             filename = header
-            unsaved_files = None
+            content = None
         elif isinstance(header, tuple):
-            filename = header[0]
-            unsaved_files = [header]
+            filename, content = header
         else:
             raise ValueError("type of 'headers' must be str or tuple")
         _log.info(" " + filename)
@@ -2920,6 +2954,10 @@ class CythonModuleGenerator:
             abspath = os.path.join(include_dir, filename)
         else:
             abspath = filename
+        # libclang's unsaved_files keys must match the filename it tries to
+        # open (i.e. the abspath), not the relpath. Use the abspath here so
+        # in-memory rendered templates are actually served.
+        unsaved_files = [(abspath, content)] if content is not None else None
         cflags = self.cflags + ["-I", f"{include_dir}"]
         parser = cparser.CParser(
             abspath, append_cflags=cflags, unsaved_files=unsaved_files
@@ -2927,7 +2965,11 @@ class CythonModuleGenerator:
         parser.parse()
 
         self.backend = CythonBackend.from_libclang_translation_unit(
-            parser.translation_unit, header, util_pkg, **opts
+            parser.translation_unit,
+            header,
+            util_pkg,
+            module_opts=self.module_opts,
+            **opts,
         )
 
     def write_module_files(self, output_dir: str = None):

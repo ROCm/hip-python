@@ -10,3 +10,8 @@ recipes/python_cython/hsa/rocm-hsa/rocm/**
 recipes/python_cython/llvmc/rocm-llvm/rocm/**
 **/_venv
 hip-python-release-repo
+
+# Build artifacts
+build/
+*.egg-info/
+dist/
