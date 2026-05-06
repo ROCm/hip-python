@@ -69,7 +69,7 @@ def _module_to_pxd_relpath(opts, module_name):
         # decide hip vs libraries vs systems vs compiler by leaf name
         _HIP_CORE = {"hip", "hiprtc", "_hip_helpers", "_hiprtc_helpers"}
         _COMPILER_CORE = {"amd_comgr"}
-        _SYSTEMS_CORE = {"rccl", "roctx"}
+        _SYSTEMS_CORE = {"rccl", "roctx", "hipfile", "amdsmi"}
         bare = leaf[2:] if leaf.startswith("cy") else leaf
         if bare in _HIP_CORE:
             pkg = "rocm-bindings-hip"
@@ -96,8 +96,17 @@ def _all_emitted_modules(recipe_results):
         if name and name not in modules:
             modules.append(name)
 
+    # `llvm` is a multi-module parent entry that appears in both
+    # `hip_modules` (from `lib_names`) and `compiler_modules` (its
+    # AVAILABLE_GENERATORS pkg_short is "compiler"). It has no top-level
+    # cy* wrapper of its own — its real submodules surface via
+    # `llvm_modules` below. Adding `rocm.bindings.llvm` from either list
+    # would emit a stale literalinclude page and bucket it into the
+    # wrong wheel (rocm-bindings-libraries) downstream.
     hip_result = recipe_results.get("hip") or {}
     for name in hip_result.get("hip_modules") or []:
+        if name == "llvm":
+            continue
         _add(f"rocm.bindings.{name}")
     # The HIP recipe also emits CUDA interop modules.
     for name in ("driver", "runtime", "nvrtc"):
@@ -112,6 +121,8 @@ def _all_emitted_modules(recipe_results):
     # comgr modules now flow through the hip recipe's compiler_modules.
     hip_compiler = (recipe_results.get("hip") or {}).get("compiler_modules") or []
     for libname in hip_compiler:
+        if libname == "llvm":
+            continue  # see comment above
         # `compiler_modules` is a list of library short names (e.g. "amd_comgr"),
         # so prepend the rocm.bindings namespace to match the dotted form.
         _add(f"rocm.bindings.{libname}")
@@ -244,15 +255,21 @@ def write_toc_yml_in(opts, recipe_results):
         "HIP_PYTHON_INTEROP": [],
         "CYTHON_LEVEL": [],
     }
+    # llvm.c.* and llvm.config.* pages are nested under a single
+    # collapsible parent entry in COMPILER (see assembly below) so the
+    # 30+ submodules don't dominate the sidebar.
+    llvm_children = []
     _HIP_CORE = {"hip", "hiprtc"}
     _COMPILER_CORE = {"amd_comgr"}
-    _SYSTEMS_CORE = {"rccl", "roctx"}
+    _SYSTEMS_CORE = {"rccl", "roctx", "hipfile", "amdsmi"}
     for module in _all_emitted_modules(recipe_results):
         leaf = module.rsplit(".", 1)[-1]
         if leaf.startswith("_"):
             continue  # handcoded helpers
+        autoapi_path = "/".join(["python_api", *module.split("."), "index"])
         if module.startswith("rocm.bindings.llvm."):
-            section = "ROCM_BINDINGS_COMPILER"
+            llvm_children.append(autoapi_path)
+            section = None  # nested separately below
         elif module.startswith("rocm.bindings."):
             bare = leaf[2:] if leaf.startswith("cy") else leaf
             if bare in _HIP_CORE:
@@ -267,10 +284,8 @@ def write_toc_yml_in(opts, recipe_results):
             section = "HIP_PYTHON_INTEROP"
         else:
             continue
-        # High-level modules are autoapi-emitted; reference their
-        # natural slash/path/index location.
-        autoapi_path = "/".join(["python_api", *module.split("."), "index"])
-        sections[section].append(f"      - file: {autoapi_path}")
+        if section is not None:
+            sections[section].append(f"      - file: {autoapi_path}")
         # Each high-level entry has a paired cy* entry (in the cy subtree)
         # — that one IS a real generator-emitted page, so use the dotted
         # form to match the file the generator writes.
@@ -279,6 +294,15 @@ def write_toc_yml_in(opts, recipe_results):
             sections["CYTHON_LEVEL"].append(
                 f"      - file: python_api/{cy_dotted}"
             )
+
+    # Prepend the llvm subtree (parent + nested children) to COMPILER so
+    # the long list collapses under `rocm.bindings.llvm` in the sidebar.
+    if llvm_children:
+        nested = ["      - file: python_api/rocm/bindings/llvm/index",
+                  "        entries:"]
+        for child in llvm_children:
+            nested.append(f"          - file: {child}")
+        sections["ROCM_BINDINGS_COMPILER"] = nested + sections["ROCM_BINDINGS_COMPILER"]
 
     with open(template_path) as f:
         rendered = f.read()
