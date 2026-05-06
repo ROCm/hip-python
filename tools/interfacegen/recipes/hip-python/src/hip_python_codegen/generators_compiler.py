@@ -31,7 +31,7 @@ through one `AVAILABLE_GENERATORS` registry.
 import os
 
 from interfacegen.cython import CythonModuleGenerator
-from interfacegen.support.recipes import hip as controls
+from interfacegen.support.recipes import rocm as controls
 
 
 def _make_header_arg(header_relpath: str, header_content: str = None):
@@ -185,11 +185,24 @@ def write_llvm_modules(
     # Emit every discovered LLVM module — no per-module subset filter
     # (the wheel-level --include / --exclude is handled in
     # binding_generator.generate; users either get all of LLVM or none).
+    #
+    # `output_dir` is the per-package source dir (e.g.
+    # `.../rocm-bindings-compiler/src/rocm/bindings`), and
+    # `node.parent.py_global_path` is the dotted-name path
+    # (e.g. `rocm/bindings/llvm/c`). Naively joining the two would
+    # duplicate the `rocm/bindings/` prefix into the on-disk path
+    # (-> `.../src/rocm/bindings/rocm/bindings/llvm/c/...`). Strip
+    # the leading `rocm/bindings/` so the target ends up as
+    # `.../src/rocm/bindings/llvm/c/...` as expected.
+    _PREFIX_TO_STRIP = "rocm/bindings/"
     module_names = []
     for node in inctree.walk_files():
         if not isinstance(node, it.File):
             continue
-        target = os.path.join(output_dir, node.parent.py_global_path)
+        sub_path = node.parent.py_global_path
+        if sub_path.startswith(_PREFIX_TO_STRIP):
+            sub_path = sub_path[len(_PREFIX_TO_STRIP):]
+        target = os.path.join(output_dir, sub_path)
         os.makedirs(target, exist_ok=True)
         node.codegen.write_module_files(output_dir=target)
         module_names.append(node.py_global_name)
