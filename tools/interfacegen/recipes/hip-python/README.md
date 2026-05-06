@@ -53,9 +53,42 @@ or `--rocm-llvm-project-dir` must be provided.
 | Wheel (use with `--include` / `--exclude`) | Libraries it covers |
 |---|---|
 | `hip` | `hip`, `hiprtc` |
-| `systems` | `rccl`, `roctx`, `hipfile` |
-| `libraries` | `hipblas`, `hiprand`, `hipfft`, `hipsparse`, `hipsolver` |
+| `systems` | `rccl`, `roctx`, `hipfile`, `amdsmi`, `hsa`† |
+| `libraries` | `hipblas`, `hipblaslt`*†, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt`†, `hipsolver`, `hiptensor`*†, `hipdnn`*† |
 | `compiler` | `amd_comgr`, `llvm` (multi-module — every llvm-c/* header is emitted) |
+
+> **\*hipblaslt:** the upstream `hipblaslt/hipblaslt.h` (as of ROCm
+> 7.13.0 / hipBLASLt 1.2.2) unconditionally `#include`s `<memory>`,
+> `<regex>`, `<vector>` even though it is otherwise structured as a
+> C-API header (the C++ extension API lives in sibling
+> `hipblaslt-ext.hpp`). The codegen strips those three lines
+> in-memory before parsing — see
+> `_apply_header_workarounds` in `binding_generator.py`. The
+> Python-level binding works fine, but downstream Cython users who
+> `cimport rocm.bindings.cyhipblaslt` will need to compile their
+> extension as C++ until the upstream header is fixed.
+>
+> **†experimental** — `hipblaslt`, `hipsparselt`, `hiptensor`,
+> `hipdnn`, and `hsa` are newly added and marked experimental for
+> one release cycle. Pointer parameter classification (OUT vs INOUT)
+> is heuristic and subject to re-tuning based on user feedback;
+> other interface aspects (return values, opaque handles, scalar
+> types) are stable. File issues at the hip-python tracker for any
+> parameter classification that doesn't match the underlying C
+> semantics.
+>
+> **hsakmt is intentionally not bound** — `/opt/rocm/lib/` ships
+> only `libhsakmt.a` (a static archive). hip-python's runtime model
+> resolves shared libraries via `dlopen`, which can't consume `.a`.
+> Track upstream `ROCm/ROCT-Thunk-Interface` for a shared-library
+> variant. The `hsa` binding is unaffected — `libhsa-runtime64.so.1`
+> is present.
+>
+> **\*hiptensor / hipdnn**: only available via the `rocm-libraries`
+> source repository (no shipped header in `/opt/rocm/include` for
+> hipdnn's backend; hiptensor is install-target-only). Pass
+> `--rocm-libraries-dir` to `hip-python-generate` so the headers can
+> be located.
 
 ### Examples
 
@@ -144,7 +177,7 @@ recipes/hip-python/
     ├── docs_generator.py      # Sphinx page + TOC YAML emission
     ├── generators_hip.py      # hip + hiprtc generators
     ├── generators_libraries.py # math libs (hipblas/hipfft/...)
-    ├── generators_systems.py  # rccl + roctx + hipfile generators
+    ├── generators_systems.py  # rccl + roctx + hipfile + amdsmi generators
     ├── generators_compiler.py # amd_comgr + llvm generators
     ├── cuda_interop.py        # CUDA interop subgenerator
     └── hipify.py              # hipify-perl substitution parser
