@@ -35,7 +35,7 @@ of .h.in templates without requiring CMake configure.
 import textwrap
 
 from interfacegen.cython import CythonModuleGenerator
-from interfacegen.support.recipes import hip as controls
+from interfacegen.support.recipes import rocm as controls
 
 
 def _make_header_arg(header_relpath: str, header_content: str = None):
@@ -236,6 +236,163 @@ def generate_hipsparse(
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.hip import hipError_t, _hipDataType__Base # PY import enums
+    """
+    )
+    return generator
+
+
+def generate_hipblaslt(
+    *,
+    include_dir: str,
+    header_relpath: str = "hipblaslt/hipblaslt.h",
+    header_content: str = None,
+    runtime_linking: bool,
+    generator_args: list,
+    default_ptr_handler,
+):
+    generator = CythonModuleGenerator(
+        "rocm.bindings.hipblaslt",
+        include_dir,
+        _make_header_arg(header_relpath, header_content),
+        runtime_linking=runtime_linking,
+        util_pkg="rocm.bindings.util",
+        dll="libhipblaslt.so",
+        node_filter=controls.hipblaslt.node_filter,
+        ptr_parm_intent=controls.hipblaslt.ptr_parm_intent,
+        ptr_rank=controls.hipblaslt.ptr_rank,
+        ptr_complicated_type_handler=default_ptr_handler,
+        raw_comment_cleaner=controls.hipblaslt.raw_comment_cleaner,
+        cflags=generator_args,
+    )
+    generator.c_interface_decl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.cyhip cimport *
+    from rocm.bindings.cyhipblas cimport *
+    """
+    )
+    generator.python_interface_decl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.hip cimport *
+    from rocm.bindings.hipblas cimport *
+    """
+    )
+    generator.python_interface_impl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.hip import _hipDataType__Base
+    """
+    )
+    return generator
+
+
+def generate_hiptensor(
+    *,
+    include_dir: str,
+    header_relpath: str = "hiptensor/hiptensor.h",
+    header_content: str = None,
+    runtime_linking: bool,
+    generator_args: list,
+    default_ptr_handler,
+):
+    generator = CythonModuleGenerator(
+        "rocm.bindings.hiptensor",
+        include_dir,
+        _make_header_arg(header_relpath, header_content),
+        runtime_linking=runtime_linking,
+        util_pkg="rocm.bindings.util",
+        dll="libhiptensor.so",
+        node_filter=controls.hiptensor.node_filter,
+        ptr_parm_intent=controls.hiptensor.ptr_parm_intent,
+        ptr_rank=controls.hiptensor.ptr_rank,
+        ptr_complicated_type_handler=default_ptr_handler,
+        cflags=generator_args,
+    )
+    generator.c_interface_decl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.cyhip cimport *
+    """
+    )
+    generator.python_interface_decl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.hip cimport *
+    """
+    )
+    return generator
+
+
+def generate_hipdnn(
+    *,
+    include_dir: str,
+    header_relpath: str = "hipdnn_backend.h",
+    header_content: str = None,
+    runtime_linking: bool,
+    generator_args: list,
+    default_ptr_handler,
+):
+    generator = CythonModuleGenerator(
+        "rocm.bindings.hipdnn",
+        include_dir,
+        _make_header_arg(header_relpath, header_content),
+        runtime_linking=runtime_linking,
+        util_pkg="rocm.bindings.util",
+        dll="libhipdnn.so",
+        node_filter=controls.hipdnn.node_filter,
+        ptr_parm_intent=controls.hipdnn.ptr_parm_intent,
+        ptr_rank=controls.hipdnn.ptr_rank,
+        ptr_complicated_type_handler=default_ptr_handler,
+        cflags=generator_args,
+    )
+    generator.c_interface_decl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.cyhip cimport *
+    """
+    )
+    generator.python_interface_decl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.hip cimport *
+    """
+    )
+    return generator
+
+
+def generate_hipsparselt(
+    *,
+    include_dir: str,
+    header_relpath: str = "hipsparselt/hipsparselt.h",
+    header_content: str = None,
+    runtime_linking: bool,
+    generator_args: list,
+    default_ptr_handler,
+):
+    generator = CythonModuleGenerator(
+        "rocm.bindings.hipsparselt",
+        include_dir,
+        _make_header_arg(header_relpath, header_content),
+        runtime_linking=runtime_linking,
+        util_pkg="rocm.bindings.util",
+        dll="libhipsparselt.so",
+        node_filter=controls.hipsparselt.node_filter,
+        macro_type=controls.hipsparselt.macro_type,
+        ptr_parm_intent=controls.hipsparselt.ptr_parm_intent,
+        ptr_rank=controls.hipsparselt.ptr_rank,
+        raw_comment_cleaner=controls.hipsparselt.raw_comment_cleaner,
+        ptr_complicated_type_handler=default_ptr_handler,
+        cflags=generator_args,
+    )
+    generator.c_interface_decl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.cyhip cimport *
+    from rocm.bindings.cyhipsparse cimport *
+    """
+    )
+    generator.python_interface_decl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.hip cimport ihipStream_t, float2, double2
+    from rocm.bindings.hipsparse cimport *
+    """
+    )
+    generator.python_interface_impl_prolog += textwrap.dedent(
+        """\
+    from rocm.bindings.hip import hipError_t, _hipDataType__Base
     """
     )
     return generator

@@ -35,7 +35,7 @@ of .h.in templates without requiring CMake configure.
 import textwrap
 
 from interfacegen.cython import CythonModuleGenerator
-from interfacegen.support.recipes import hip as controls
+from interfacegen.support.recipes import rocm as controls
 
 
 def _make_header_arg(header_relpath: str, header_content: str = None):
@@ -133,6 +133,68 @@ def generate_hipfile(
         macro_type=controls.hipfile.macro_type,
         ptr_parm_intent=controls.hipfile.ptr_parm_intent,
         ptr_rank=controls.hipfile.ptr_rank,
+        ptr_complicated_type_handler=default_ptr_handler,
+        cflags=generator_args,
+    )
+    return generator
+
+
+def generate_amdsmi(
+    *,
+    include_dir: str,
+    header_relpath: str = "amd_smi/amdsmi.h",
+    header_content: str = None,
+    runtime_linking: bool,
+    generator_args: list,
+    default_ptr_handler,
+):
+    """Generator for AMD SMI (System Management Interface) bindings."""
+    generator = CythonModuleGenerator(
+        "rocm.bindings.amdsmi",
+        include_dir,
+        _make_header_arg(header_relpath, header_content),
+        runtime_linking=runtime_linking,
+        util_pkg="rocm.bindings.util",
+        dll="libamd_smi.so",
+        node_filter=controls.amdsmi.node_filter,
+        macro_type=controls.amdsmi.macro_type,
+        ptr_parm_intent=controls.amdsmi.ptr_parm_intent,
+        ptr_rank=controls.amdsmi.ptr_rank,
+        ptr_complicated_type_handler=default_ptr_handler,
+        cflags=generator_args,
+    )
+    return generator
+
+
+def generate_hsa(
+    *,
+    include_dir: str,
+    header_relpath: str = "hsa/hsa_ext_amd.h",
+    header_content: str = None,
+    runtime_linking: bool,
+    generator_args: list,
+    default_ptr_handler,
+):
+    """Generator for HSA (Heterogeneous System Architecture) bindings.
+
+    Binds `hsa_ext_amd.h`, which transitively includes `hsa.h`,
+    `hsa_ext_image.h`, and `hsa_ven_amd_pc_sampling.h`. The resulting
+    `rocm.bindings.hsa` module exposes core HSA + AMD extensions +
+    image extensions + AMD vendor PC-sampling in a single namespace
+    (all `hsa_*` / `HSA_*` symbols).
+
+    HSA is independent of HIP — no cross-imports needed.
+    """
+    generator = CythonModuleGenerator(
+        "rocm.bindings.hsa",
+        include_dir,
+        _make_header_arg(header_relpath, header_content),
+        runtime_linking=runtime_linking,
+        util_pkg="rocm.bindings.util",
+        dll="libhsa-runtime64.so.1",
+        node_filter=controls.hsa.node_filter,
+        ptr_parm_intent=controls.hsa.ptr_parm_intent,
+        ptr_rank=controls.hsa.ptr_rank,
         ptr_complicated_type_handler=default_ptr_handler,
         cflags=generator_args,
     )

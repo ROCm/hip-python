@@ -132,6 +132,7 @@ def get_libraries_header(header_relpath: str, rocm_libraries_dir: str):
     # Map header paths to repository locations
     mappings = {
         "hipblas/hipblas.h": "projects/hipblas/library/include/hipblas/hipblas.h",
+        "hipblaslt/hipblaslt.h": "projects/hipblaslt/library/include/hipblaslt/hipblaslt.h",
         "hipsolver/hipsolver.h": "projects/hipsolver/library/include/hipsolver/hipsolver.h",
         "hiprand/hiprand.h": "projects/hiprand/library/include/hiprand/hiprand.h",
         "hipsparse/hipsparse.h": "projects/hipsparse/library/include/hipsparse/hipsparse.h",
@@ -139,6 +140,7 @@ def get_libraries_header(header_relpath: str, rocm_libraries_dir: str):
         "hipfft/hipfftXt.h": "projects/hipfft/library/include/hipfft/hipfftXt.h",
         "hiptensor/hiptensor.h": "projects/hiptensor/library/include/hiptensor/hiptensor.h",
         "hipsparselt/hipsparselt.h": "projects/hipsparselt/library/include/hipsparselt/hipsparselt.h",
+        "hipdnn_backend.h": "projects/hipdnn/backend/include/hipdnn_backend.h",
     }
 
     if header_relpath not in mappings:
@@ -207,6 +209,34 @@ def get_llvm_header(header_relpath: str, rocm_llvm_project_dir: str):
     return None
 
 
+def _apply_header_workarounds(header_relpath: str, header_path: str, content: str | None):
+    """Apply per-header source patches before libclang sees the file.
+
+    Returns (path, content). If `content` is None on entry, reads
+    `header_path` from disk only when a workaround applies for this
+    header_relpath; otherwise leaves content as None (caller will use
+    the on-disk file directly).
+
+    Currently patches:
+
+    - `hipblaslt/hipblaslt.h` — strips the three unconditional C++
+      stdlib `#include` lines (`<memory>`, `<regex>`, `<vector>`)
+      that prevent the otherwise-C-compatible header from parsing
+      under libclang's `-x c` mode. Those includes are unused
+      anywhere in the public C API; the C++ extension API lives in
+      sibling `hipblaslt-ext.hpp`.
+      TODO: remove this workaround once the upstream bug is fixed
+      (track ROCm/hipBLASLt issue once filed).
+    """
+    if header_relpath == "hipblaslt/hipblaslt.h":
+        if content is None:
+            with open(header_path) as f:
+                content = f.read()
+        for bad in ("#include <memory>", "#include <regex>", "#include <vector>"):
+            content = content.replace(bad, f"// {bad}  /* stripped by hip-python codegen: see _apply_header_workarounds */")
+    return (header_path, content)
+
+
 def resolve_header_path(
     header_relpath: str,
     rocm_inc: str | None,
@@ -216,7 +246,8 @@ def resolve_header_path(
 ):
     """Resolve header file path from candidate locations with precedence.
 
-    Handles in-memory rendering of .h.in templates from repositories.
+    Handles in-memory rendering of .h.in templates from repositories
+    and per-header source workarounds (see `_apply_header_workarounds`).
 
     Args:
         header_relpath: Relative path like "hipfile.h", "roctracer/roctx.h", "rccl/rccl.h"
@@ -228,32 +259,37 @@ def resolve_header_path(
     Returns:
         Tuple of (header_path, rendered_content):
         - header_path: Absolute path to header file (or template)
-        - rendered_content: String content if template was rendered, None if using file directly
+        - rendered_content: String content if template was rendered or
+          patched in-memory, None if using file directly
 
     Raises:
         FileNotFoundError: If header not found in any candidate location
     """
+    located = None  # (path, content) once we find it
     # Priority 1: ROCM_INC (allows patching existing installation)
     if rocm_inc:
         candidate = os.path.join(rocm_inc, header_relpath)
         if os.path.exists(candidate):
-            return (candidate, None)  # Use file directly, no rendering
+            located = (candidate, None)  # Use file directly, no rendering
 
     # Priority 2: Repository-specific paths
-    if rocm_systems_dir:
+    if located is None and rocm_systems_dir:
         result = get_systems_header(header_relpath, rocm_systems_dir)
         if result:
-            return result
+            located = result
 
-    if rocm_libraries_dir:
+    if located is None and rocm_libraries_dir:
         result = get_libraries_header(header_relpath, rocm_libraries_dir)
         if result:
-            return result
+            located = result
 
-    if rocm_llvm_project_dir:
+    if located is None and rocm_llvm_project_dir:
         result = get_llvm_header(header_relpath, rocm_llvm_project_dir)
         if result:
-            return result
+            located = result
+
+    if located is not None:
+        return _apply_header_workarounds(header_relpath, located[0], located[1])
 
     # Build error message with all checked locations
     candidates = []
@@ -303,6 +339,7 @@ def build_generator_include_paths(
             "projects/hipfile/include",
             "projects/roctracer/inc",
             "projects/rccl/src",  # Where rendered rccl.h lives
+            "projects/amdsmi/include",
         ]:
             path = os.path.join(rocm_systems_dir, proj_inc)
             if os.path.exists(path):
@@ -311,12 +348,14 @@ def build_generator_include_paths(
     if rocm_libraries_dir:
         for proj_inc in [
             "projects/hipblas/library/include",
+            "projects/hipblaslt/library/include",
             "projects/hipsolver/library/include",
             "projects/hiprand/library/include",
             "projects/hipsparse/library/include",
             "projects/hipfft/library/include",
             "projects/hiptensor/library/include",
             "projects/hipsparselt/library/include",
+            "projects/hipdnn/backend/include",
         ]:
             path = os.path.join(rocm_libraries_dir, proj_inc)
             if os.path.exists(path):
@@ -600,12 +639,18 @@ AVAILABLE_GENERATORS = {
     "rccl":      (generators_systems.generate_rccl,        "systems",   "rccl/rccl.h"),
     "roctx":     (generators_systems.generate_roctx,       "systems",   "roctracer/roctx.h"),
     "hipfile":   (generators_systems.generate_hipfile,     "systems",   "hipfile.h"),
+    "amdsmi":    (generators_systems.generate_amdsmi,      "systems",   "amd_smi/amdsmi.h"),
+    "hsa":       (generators_systems.generate_hsa,         "systems",   "hsa/hsa_ext_amd.h"),
     # rocm-bindings-libraries
-    "hipblas":   (generators_libraries.generate_hipblas,   "libraries", "hipblas/hipblas.h"),
-    "hiprand":   (generators_libraries.generate_hiprand,   "libraries", "hiprand/hiprand.h"),
-    "hipfft":    (generators_libraries.generate_hipfft,    "libraries", "hipfft/hipfft.h"),
-    "hipsparse": (generators_libraries.generate_hipsparse, "libraries", "hipsparse/hipsparse.h"),
-    "hipsolver": (generators_libraries.generate_hipsolver, "libraries", "hipsolver/hipsolver.h"),
+    "hipblas":     (generators_libraries.generate_hipblas,     "libraries", "hipblas/hipblas.h"),
+    "hipblaslt":   (generators_libraries.generate_hipblaslt,   "libraries", "hipblaslt/hipblaslt.h"),
+    "hiprand":     (generators_libraries.generate_hiprand,     "libraries", "hiprand/hiprand.h"),
+    "hipfft":      (generators_libraries.generate_hipfft,      "libraries", "hipfft/hipfft.h"),
+    "hipsparse":   (generators_libraries.generate_hipsparse,   "libraries", "hipsparse/hipsparse.h"),
+    "hipsparselt": (generators_libraries.generate_hipsparselt, "libraries", "hipsparselt/hipsparselt.h"),
+    "hipsolver":   (generators_libraries.generate_hipsolver,   "libraries", "hipsolver/hipsolver.h"),
+    "hiptensor":   (generators_libraries.generate_hiptensor,   "libraries", "hiptensor/hiptensor.h"),
+    "hipdnn":      (generators_libraries.generate_hipdnn,      "libraries", "hipdnn_backend.h"),
     # rocm-bindings-compiler — both formerly their own recipes; now
     # libraries inside the hip recipe. amd_comgr is single-header;
     # llvm is multi-module (header_relpath=None signals the orchestrator
@@ -1034,6 +1079,28 @@ def write_cmake_module_lists(opts, recipe_results):
                 ("HIP_PYTHON_COMGR_MODULES", [m.split(".")[-1] for m in comgr_modules]),
             ):
                 f.write(f"set({var}\n    {' '.join(lst)})\n\n")
+
+
+def write_version_template_file(opts, recipe_results):
+    """Write `<output_dir>/VERSION.in` consumed by packages/CMakeLists.txt.
+
+    The template embeds the ROCm version and the codegen tool's own
+    rev-count; `@HIP_PYTHON_VERSION_SHORT@` is filled in at consumer
+    cmake-configure time from the consumer repo's `git rev-list --count
+    HEAD`. Format: `<rocm_version>.<codegen_rev_count>.@HIP_PYTHON_VERSION_SHORT@`.
+
+    `VERSION.in` (and the `VERSION` it renders to) MUST NOT be committed
+    on the codegen base branch; both are gitignored and emitted fresh by
+    every codegen run.
+    """
+    try:
+        codegen_rev_count = gitversion.git_head_rev_count()
+    except Exception:
+        codegen_rev_count = "0"
+    body = f"{opts.rocm_version}.{codegen_rev_count}.@HIP_PYTHON_VERSION_SHORT@"
+    path = os.path.join(opts.output_dir, "VERSION.in")
+    with open(path, "w") as f:
+        f.write(body)
 
 
 def write_cmake_version_files(opts, recipe_results):
