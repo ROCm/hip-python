@@ -27,6 +27,27 @@ import enum
 import clang.cindex
 
 
+# Workaround: the libclang Python bindings register TypeKind enum values
+# only up to whatever version they ship with. The on-system libclang
+# C library (e.g. ROCm-bundled, often newer than the pip wheel) returns
+# higher TypeKind ids — e.g. 32 (FLOAT16 in the C ABI) for some templated
+# typedefs reachable via AMD HIP math headers — which the bindings don't
+# know about, causing `TypeKind.from_id` to raise. Map unknown ids to
+# UNEXPOSED so the type-walker reaches its UNEXPOSED branch (treated as
+# a leaf) instead of aborting the entire translation unit.
+_orig_typekind_from_id = clang.cindex.TypeKind.from_id
+
+
+def _tolerant_typekind_from_id(id):
+    try:
+        return _orig_typekind_from_id(id)
+    except ValueError:
+        return clang.cindex.TypeKind.UNEXPOSED
+
+
+clang.cindex.TypeKind.from_id = classmethod(lambda cls, id: _tolerant_typekind_from_id(id))
+
+
 class TypeHandler:
 
     _INSTANCE = None
@@ -307,6 +328,19 @@ class TypeHandler:
             result = TypeHandler.TypeCategory.POINTER
         elif TypeHandler.match_arraylike_type(type_kind):
             result = TypeHandler.TypeCategory.ARRAY
+        elif type_kind == clang.cindex.TypeKind.EXTVECTOR:
+            # ext_vector_type (used by AMD HIP math headers) — categorize
+            # as ARRAY for layer-walk purposes; downstream matchers don't
+            # need to descend further (see walk_clang_type_layers).
+            result = TypeHandler.TypeCategory.ARRAY
+        elif type_kind == clang.cindex.TypeKind.UNEXPOSED:
+            # Libclang couldn't expose the underlying type (typically a
+            # C++ template instantiation reachable via included vendor
+            # headers). Treat as RECORD so we don't crash here; binding
+            # generation for the typedef itself will likely be skipped
+            # by node_filter, and downstream consumers must avoid these
+            # types in public C-API signatures.
+            result = TypeHandler.TypeCategory.RECORD
         elif TypeHandler.match_complex_type(type_kind):
             result = TypeHandler.TypeCategory.COMPLEX
         elif TypeHandler.match_function_type(type_kind):
@@ -382,6 +416,24 @@ class TypeHandler:
                 yield clang_type
                 if not postorder:
                     yield from descend_(named_type)
+            elif type_kind == clang.cindex.TypeKind.EXTVECTOR:
+                # Clang's ext_vector_type attribute (used by AMD HIP math
+                # headers like hip_bfloat16.h, hip_fp8.h for SIMD lane
+                # types). Walking into the element type isn't useful here
+                # — these typedefs are defined in vendor headers we don't
+                # bind, and the typedef detector that calls us only needs
+                # the leaf yielded so it can decide it's not a function
+                # pointer. Treat as a leaf so the wider TU still parses.
+                yield clang_type
+            elif type_kind == clang.cindex.TypeKind.UNEXPOSED:
+                # Libclang's catch-all for AST nodes the C interface
+                # cannot fully describe (typically C++ template
+                # instantiations and dependent types pulled in via
+                # vendor headers — e.g., hipsparselt.h includes the
+                # NVIDIA cuda_*.h shims). The typedef-detection caller
+                # only needs the leaf yielded so it can decide whether
+                # the typedef is a function pointer; skip the descent.
+                yield clang_type
             elif TypeHandler.match_other_type(type_kind):
                 raise RuntimeError(
                     f"handling types of kind '{type_kind.spelling}' not implemented"
