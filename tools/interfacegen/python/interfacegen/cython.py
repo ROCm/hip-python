@@ -252,12 +252,12 @@ import enum
 
 # doxygen parser
 DOXYGEN_CONV = doxyparser.DoxygenGrammar()
-DOXYGEN_CONV.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
-DOXYGEN_CONV.with_word.setParseAction(
+DOXYGEN_CONV.escaped.set_parse_action(doxyparser.format.PythonDocstrings.escaped)
+DOXYGEN_CONV.with_word.set_parse_action(
     doxyparser.format.PythonDocstrings.with_word
 )
-DOXYGEN_CONV.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
-DOXYGEN_CONV.frnd.setParseAction(doxyparser.format.PythonDocstrings.frnd)
+DOXYGEN_CONV.fdollar.set_parse_action(doxyparser.format.PythonDocstrings.fdollar)
+DOXYGEN_CONV.frnd.set_parse_action(doxyparser.format.PythonDocstrings.frnd)
 
 
 def reference_(tokens):
@@ -269,8 +269,8 @@ def reference_(tokens):
     )
 
 
-DOXYGEN_CONV.see_reference.setParseAction(reference_)
-DOXYGEN_CONV.in_text_reference.setParseAction(reference_)
+DOXYGEN_CONV.see_reference.set_parse_action(reference_)
+DOXYGEN_CONV.in_text_reference.set_parse_action(reference_)
 
 
 def other_parse_action(tokens):
@@ -280,7 +280,7 @@ def other_parse_action(tokens):
     return []  # suppress all others
 
 
-DOXYGEN_CONV.other.setParseAction(other_parse_action)
+DOXYGEN_CONV.other.set_parse_action(other_parse_action)
 
 # Mixins
 
@@ -389,7 +389,7 @@ class DoxygenMixin:
         body = DoxygenMixin._render_doxygen_section_body(section, outer_indent)
         if section.kind in ("see", "sa"):
             docstring_addition += (
-                self.doxygen_conv.see_reference.transformString(body)
+                self.doxygen_conv.see_reference.transform_string(body)
             )
         else:
             docstring_addition += body

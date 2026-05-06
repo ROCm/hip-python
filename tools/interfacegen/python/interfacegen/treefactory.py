@@ -33,6 +33,46 @@ from .support.recipes import control
 _log = logging.getLogger("interfacegen")
 
 
+# Map kind → keyword that prefixes a tagged-type's `cursor.type.spelling`.
+# A truly tagged type reports `enum foo` / `struct foo` / `union foo`;
+# an anonymous-typedef'd inner type reports just `foo` (the typedef
+# name, no kind keyword). This is the only signal that survives the
+# libclang behavior change in 17/18 — `cursor.spelling` used to be ""
+# for the inner type and is now the typedef name. See
+# `_is_anonymous_typedef_inner` below for the discriminator.
+_KIND_TO_TYPE_SPELLING_PREFIX = {
+    clang.cindex.CursorKind.ENUM_DECL: "enum ",
+    clang.cindex.CursorKind.STRUCT_DECL: "struct ",
+    clang.cindex.CursorKind.UNION_DECL: "union ",
+}
+
+
+def _is_anonymous_typedef_inner(cursor: clang.cindex.Cursor) -> bool:
+    """Return True if this struct/union/enum cursor is the inner type of
+    a `typedef <kind> {...} <name>;` declaration (anonymous-with-typedef).
+
+    Discriminator: a tagged type's `cursor.type.spelling` always carries
+    its kind keyword (`enum foo`, `struct foo`, `union foo`); an
+    anonymous-typedef'd inner type's `type.spelling` is the bare typedef
+    name (`foo_t`).
+
+    This used to be detected via `cursor.spelling == ""`, which worked
+    for libclang ≤16 (which left the inner spelling empty), but breaks
+    with libclang 17+ (which inlines the typedef name into the
+    cursor's spelling). The downstream consequence of mis-detection is
+    that `Enum._render_c_interface_head` emits `cdef enum foo_t:`
+    instead of `ctypedef enum foo_t:`, which Cython then turns into
+    `enum foo_t` in the C — an incomplete-type error since the
+    upstream defines no such tag (only the typedef name).
+    """
+    prefix = _KIND_TO_TYPE_SPELLING_PREFIX.get(cursor.kind)
+    if prefix is None:
+        # Defensive fallback: caller restricts this to ENUM/STRUCT/UNION,
+        # but if the kind set ever widens, preserve the legacy behavior.
+        return cursor.spelling == ""
+    return not cursor.type.spelling.startswith(prefix)
+
+
 # flake8: noqa: C901
 # TODO break function apart to reduce complexity
 def from_libclang_translation_unit(
@@ -117,7 +157,7 @@ def from_libclang_translation_unit(
             node = cls(
                 cursor,
                 root,
-                from_typedef_with_anon_child=(cursor.spelling == ""),
+                from_typedef_with_anon_child=_is_anonymous_typedef_inner(cursor),
             )
             descend_into_child_cursors_(node)
             root.append(node)
@@ -201,8 +241,8 @@ def from_libclang_translation_unit(
             type_decl_cursor = (
                 cursor.underlying_typedef_type.get_declaration()
             )  # FIX
-            if not len(
-                type_decl_cursor.spelling
+            if _is_anonymous_typedef_inner(
+                type_decl_cursor
             ):  # found anonymous struct/union/enum child
                 _log.debug(
                     f"handle_typedef_cursor_: typedefed enum/record: found anonymous {type_decl_cursor.type.kind} cursor with typedef name '{cursor.spelling}'"
@@ -247,7 +287,17 @@ def from_libclang_translation_unit(
         nonlocal structure_types
         nonlocal anon_structure_types
 
+        # libclang sometimes fills the cursor spelling with a synthetic
+        # `"struct (anonymous at /path:N:M)"` placeholder for anonymous
+        # nested types instead of the empty string. The ``is_anonymous()``
+        # method is the reliable indicator; keep the empty-spelling check
+        # as a fallback for older shapes.
         is_anonymous = cursor.spelling == ""
+        if not is_anonymous and hasattr(cursor, "is_anonymous"):
+            try:
+                is_anonymous = cursor.is_anonymous()
+            except Exception:
+                pass
 
         if cursor.kind in structure_types:
             cls = structure_types[cursor.kind]

@@ -28,8 +28,8 @@ grammar = doxyparser.DoxygenGrammar()
 
 
 def test_specific():
-    print(grammar.all.parseString(r"\a TEST"))
-    print(grammar.code.parseString(r"\code{.c}\endcode", parseAll=True))
+    print(grammar.all.parse_string(r"\a TEST"))
+    print(grammar.code.parse_string(r"\code{.c}\endcode", parse_all=True))
 
 
 def test_grammar():
@@ -117,14 +117,14 @@ def test_grammar():
     #   \p hipsparseXcsrmm2 multiplies the scalar \f$\alpha\f$ with a sparse \f$m \times k\f$.
     # """
 
-    for mtch in grammar.all.scanString(doxygen_input):
+    for mtch in grammar.all.scan_string(doxygen_input):
         print(mtch)
 
-    grammar.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
-    grammar.with_word.setParseAction(
+    grammar.escaped.set_parse_action(doxyparser.format.PythonDocstrings.escaped)
+    grammar.with_word.set_parse_action(
         doxyparser.format.PythonDocstrings.with_word
     )
-    grammar.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
+    grammar.fdollar.set_parse_action(doxyparser.format.PythonDocstrings.fdollar)
 
     for node in grammar.parse_structure(doxygen_input).walk():
         indent = " " * node.level
@@ -183,7 +183,7 @@ def test_comments():
     */
     """
 
-    # for tokens,start,end in pyp.cppStyleComment.scanString(comments):
+    # for tokens,start,end in pyp.cppStyleComment.scan_string(comments):
     #    print(tokens)
 
     print(doxyparser.remove_doxygen_comment_chars(comments))
@@ -191,7 +191,7 @@ def test_comments():
 
 def test_sections():
     print(
-        grammar.section.parseString(
+        grammar.section.parse_string(
             r"""  \details
       \p first line
     """

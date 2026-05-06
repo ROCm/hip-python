@@ -100,11 +100,48 @@ class Node:
     @property
     def is_cursor_anonymous(self):
         """If the cursor is anonymous.
+
         Note:
             Always use the raw cursor as 'name' might be overwritten.
+
+            libclang exposes both ``cursor.spelling`` and
+            ``cursor.is_anonymous()``. For some anonymous types
+            (e.g. an unnamed nested ``struct {…};`` member of a typedef'd
+            union) libclang fills ``spelling`` with a synthetic
+            ``"struct (anonymous at /path:N:M)"`` placeholder rather than an
+            empty string. Only ``is_anonymous()`` is reliable in that case;
+            the empty-spelling check still catches older shapes.
+
+            From libclang 17 onward, the inner type of a
+            ``typedef struct/union/enum {...} foo_t;`` no longer
+            reports ``cursor.spelling == ""`` — the typedef name is
+            inlined into the inner cursor's spelling. Detect that
+            case via ``cursor.type.spelling``: a tagged inner type
+            always carries its kind keyword (``enum foo``,
+            ``struct foo``, ``union foo``); a typedef'd anonymous
+            inner type carries just the typedef name.
         """
         assert isinstance(self, Node)
-        return len(self.cursor.spelling) == 0
+        if hasattr(self.cursor, "is_anonymous"):
+            try:
+                if self.cursor.is_anonymous():
+                    return True
+            except Exception:
+                pass
+        if len(self.cursor.spelling) == 0:
+            return True
+        # libclang 17+ shim: detect anonymous-typedef inner types whose
+        # spelling now carries the typedef name.
+        import clang.cindex
+        kind = getattr(self.cursor, "kind", None)
+        prefix = {
+            clang.cindex.CursorKind.ENUM_DECL: "enum ",
+            clang.cindex.CursorKind.STRUCT_DECL: "struct ",
+            clang.cindex.CursorKind.UNION_DECL: "union ",
+        }.get(kind)
+        if prefix is not None:
+            return not self.cursor.type.spelling.startswith(prefix)
+        return False
 
     @property
     def file(self):
@@ -329,6 +366,37 @@ class Typed:
         if asterisk_count > 0:
             result.append("*" * asterisk_count)
         return result
+
+    @staticmethod
+    def split_array_suffix(typename: str) -> tuple[str, str]:
+        """Strip trailing ``[N]`` (or ``[]``) tokens off a canonical typename.
+
+        C declarator syntax requires array suffixes to follow the variable
+        name (``void *arr[8]``), not precede the type (``void *[8] arr``).
+        Cython tolerates the prefix form for primitive types, but rejects
+        it once a ``*`` is present.
+
+        Used by the Cython field renderer to emit
+        ``f"{base} {name}{suffix}"`` instead of ``f"{typename} {name}"``.
+
+        Examples:
+            >>> Typed.split_array_suffix("void *[8]")
+            ('void *', '[8]')
+            >>> Typed.split_array_suffix("int[8][16]")
+            ('int', '[8][16]')
+            >>> Typed.split_array_suffix("int[]")
+            ('int', '[]')
+            >>> Typed.split_array_suffix("void *")
+            ('void *', '')
+            >>> Typed.split_array_suffix("int")
+            ('int', '')
+        """
+        tokens = list(Typed.tokenize_type_spelling(typename))
+        suffix = []
+        while tokens and tokens[-1].startswith("[") and tokens[-1].endswith("]"):
+            suffix.insert(0, tokens.pop())
+        base = " ".join(Typed._pack_asterisks(tokens))
+        return (base, "".join(suffix))
 
     @staticmethod
     def canonical_typename(

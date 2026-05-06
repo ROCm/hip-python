@@ -31,7 +31,7 @@ _log = logging.getLogger("interfacegen")
 
 # TODO implement: https://www.doxygen.nl/manual/htmlcmds.html
 
-pyp.ParserElement.setDefaultWhitespaceChars(" \t")
+pyp.ParserElement.set_default_whitespace_chars(" \t")
 
 
 def remove_doxygen_comment_chars(text: str, dedent=True):
@@ -46,7 +46,7 @@ def remove_doxygen_comment_chars(text: str, dedent=True):
     result = ""
     last_end = 0
 
-    for _, start, end in pyp.cppStyleComment.scanString(text):
+    for _, start, end in pyp.cppStyleComment.scan_string(text):
         result += text[last_end:start]
         comment = text[start:end]
         if comment.lstrip().startswith("//"):
@@ -178,10 +178,10 @@ class Node:
 
         Args:
             transforma_formatting (bool): Apply the ``DoxygenParser``
-               instance's ``formatting`` pyparser's ``transformString``
+               instance's ``formatting`` pyparser's ``transform_string``
                routine to the result. Defaults to False.
             transform_other (bool): Apply the ``DoxygenParser`` instance's
-              ``other`` pyparser's ``transformString`` routine to the result.
+              ``other`` pyparser's ``transform_string`` routine to the result.
               Defaults to False.
         """
         if self.end is not None:
@@ -671,7 +671,7 @@ class DoxygenGrammar:
         )
         escaped = pyp.Regex(
             r"\\(::|---?|[" + "".join(CHARS) + r"])"
-        ).setParseAction(lambda tk: tk[0][1:] if tk != "\\n" else "\n")
+        ).set_parse_action(lambda tk: tk[0][1:] if tk != "\\n" else "\n")
         del CHARS
         self._pyp_cmd(self.kinds["escaped"])
         # ex: \callergraph
@@ -903,7 +903,7 @@ class DoxygenGrammar:
 
         # \image['{'option[,option]'}'] <format> <file> ["caption"] [<sizeindication>=<size>]
         image_options = pyp.Group(
-            pyp.Optional(LBRACE + pyp.delimitedList(IDENT) + RBRACE)
+            pyp.Optional(LBRACE + pyp.DelimitedList(IDENT) + RBRACE)
         )
         image = (
             self._pyp_cmd("image")
@@ -938,7 +938,7 @@ class DoxygenGrammar:
 
         # \param '['dir']' <parameter-name> { parameter description }
         PARAM_DIR = pyp.Regex(r"\[\s*(in|out|inout|(\s*in,\s*out))\s*\]")
-        PARAM_NAMES = pyp.Group(pyp.delimitedList(IDENT))
+        PARAM_NAMES = pyp.Group(pyp.DelimitedList(IDENT))
         param = (
             self._pyp_cmd("param")
             + pyp.Optional("\n").suppress()
@@ -1080,7 +1080,7 @@ class DoxygenGrammar:
 
         Such ``TextBlock`` content can then be further processed
         by specifying a parse action for the respective
-        commands and then calling the ``<this_doxygenparser>.<pyparser>.transformString(text)``
+        commands and then calling the ``<this_doxygenparser>.<pyparser>.transform_string(text)``
         routine. The former can be done individually, or collectively via the command groups ``<this_doxygenparser>.formatting``
         and ``<this_doxygenparser>.other``. Returning ``None`` implies no action, ``[]`` that all
         tokens get removed.
@@ -1096,17 +1096,17 @@ class DoxygenGrammar:
             Inserts '\details*' sections for free text envclosed between sections, begin, or end of the input text.
         """
         tree = self.__tree
-        tree.section.setParseAction(Section)
-        tree.section_body.setParseAction(SectionBody)
-        tree.verbatim.setParseAction(VerbatimBlock)
-        tree.math_block.setParseAction(MathBlock)
+        tree.section.set_parse_action(Section)
+        tree.section_body.set_parse_action(SectionBody)
+        tree.verbatim.set_parse_action(VerbatimBlock)
+        tree.math_block.set_parse_action(MathBlock)
         verbatim_or_math = tree.verbatim | tree.math_block
         verbatim_or_math_ext = (
             verbatim_or_math | tree.fdollar | tree.frnd
         )  # include inline math
 
         preprocessed = "".join(original)  # copy the text
-        for tokens, start, end in verbatim_or_math_ext.scanString(original):
+        for tokens, start, end in verbatim_or_math_ext.scan_string(original):
             preprocessed = (
                 preprocessed[0:start]
                 + " " * (end - start)
@@ -1122,7 +1122,7 @@ class DoxygenGrammar:
             body_end = section_body.end
             previous_end = 0
             # print(f"{section_text=}")
-            for tokens, start, end in verbatim_or_math.scanString(
+            for tokens, start, end in verbatim_or_math.scan_string(
                 body_text[body_start:body_end]
             ):
                 # print(tokens)
@@ -1153,7 +1153,7 @@ class DoxygenGrammar:
             original, self
         )  # note; the use of original instead of preprocessed
         previous_end = 0
-        for tokens, start, end in tree.section.scanString(preprocessed):
+        for tokens, start, end in tree.section.scan_string(preprocessed):
             # print(f"{(start,end)=}")
             if start != previous_end:
                 # insert fake details section
@@ -1196,7 +1196,7 @@ class DoxygenGrammar:
         """
         result = text
         if transform_formatting:
-            result = self.formatting.transformString(result)
+            result = self.formatting.transform_string(result)
         if transform_other:
-            result = self.other.transformString(result)
+            result = self.other.transform_string(result)
         return result
