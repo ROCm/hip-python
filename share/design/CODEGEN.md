@@ -261,4 +261,5 @@ After this, `packages/build/dist/` (or whatever `HIP_PYTHON_WHEEL_OUTPUT_DIR` po
 
 ## See also
 
+- [BINDINGS.md](BINDINGS.md) — anatomy of the generated bindings (two-tier wrapper layout, GIL semantics, generated-function regions, naming conventions, pointer-arg intent classification, handcoded helpers)
 - [BUILDING.md](BUILDING.md) — the hip-python build system in detail
