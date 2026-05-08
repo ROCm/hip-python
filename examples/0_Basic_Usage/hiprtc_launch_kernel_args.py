@@ -44,10 +44,17 @@ from rocm.bindings import hip, hiprtc
 
 
 def hip_check(call_result):
-    err = call_result[0]
-    result = call_result[1:]
-    if len(result) == 1:
-        result = result[0]
+    if isinstance(call_result, tuple):
+        err = call_result[0]
+        result = call_result[1:]
+        if len(result) == 1:
+            result = result[0]
+    else:
+        # Single-output funcs (e.g. hipMemcpy after the with-nogil
+        # codegen refactor) return the bare hipError_t enum, not a
+        # 1-tuple. Treat that as an empty-result call.
+        err = call_result
+        result = ()
     if isinstance(err, hip.hipError_t) and err != hip.hipError_t.hipSuccess:
         raise RuntimeError(str(err))
     elif (
@@ -74,14 +81,13 @@ prog = hip_check(
     hiprtc.hiprtcCreateProgram(source, b"scale_vector", 0, [], [])
 )
 
-props = hip.hipDeviceProp_t()
-hip_check(hip.hipGetDeviceProperties(props, 0))
+props = hip_check(hip.hipGetDeviceProperties(0))
 arch = props.gcnArchName
 
 print(f"Compiling kernel for {arch}")
 
 cflags = [b"--offload-arch=" + arch]
-(err,) = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
+err = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
 if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
     log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(prog))
     log = bytearray(log_size)

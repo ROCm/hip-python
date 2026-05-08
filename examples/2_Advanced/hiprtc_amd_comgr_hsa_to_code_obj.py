@@ -47,10 +47,17 @@ print(f"{compile_via_comgr=}")
 
 
 def hip_check(call_result):
-    err = call_result[0]
-    result = call_result[1:]
-    if len(result) == 1:
-        result = result[0]
+    if isinstance(call_result, tuple):
+        err = call_result[0]
+        result = call_result[1:]
+        if len(result) == 1:
+            result = result[0]
+    else:
+        # Single-output funcs (e.g. hipMemcpy after the with-nogil
+        # codegen refactor) return the bare hipError_t enum, not a
+        # 1-tuple. Treat that as an empty-result call.
+        err = call_result
+        result = ()
     if isinstance(err, hip.hipError_t) and err != hip.hipError_t.hipSuccess:
         raise RuntimeError(str(err))
     elif (
@@ -277,8 +284,7 @@ amdhsa.version:
     kernel_prog = HsaProgram("kernel", arch, kernel_hsa)
     _, count = hip.hipGetDeviceCount()
     if count > 0:
-        props = hip.hipDeviceProp_t()
-        hip_check(hip.hipGetDeviceProperties(props, 0))
+        props = hip_check(hip.hipGetDeviceProperties(0))
         if arch == props.gcnArchName.decode().split(":")[0]:
             module = hip_check(hip.hipModuleLoadData(kernel_prog.code_obj))
             kernel = hip_check(

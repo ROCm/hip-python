@@ -41,10 +41,17 @@ from rocm.bindings import hip, hiprtc
 
 
 def hip_check(call_result):
-    err = call_result[0]
-    result = call_result[1:]
-    if len(result) == 1:
-        result = result[0]
+    if isinstance(call_result, tuple):
+        err = call_result[0]
+        result = call_result[1:]
+        if len(result) == 1:
+            result = result[0]
+    else:
+        # Single-output funcs (e.g. hipMemcpy after the with-nogil
+        # codegen refactor) return the bare hipError_t enum, not a
+        # 1-tuple. Treat that as an empty-result call.
+        err = call_result
+        result = ()
     if isinstance(err, hip.hipError_t) and err != hip.hipError_t.hipSuccess:
         raise RuntimeError(str(err))
     elif (
@@ -158,8 +165,7 @@ if __name__ in ("__test__", "__main__"):
     #     """
     # ).encode("utf-8")
 
-    props = hip.hipDeviceProp_t()
-    hip_check(hip.hipGetDeviceProperties(props, 0))
+    props = hip_check(hip.hipGetDeviceProperties(0))
     arch = props.gcnArchName
     gpugen = arch.decode("utf-8").split(":")[0]
     if gpugen not in kernel_llvm_ir:

@@ -46,10 +46,17 @@ from rocm import comgr
 
 
 def hip_check(call_result):
-    err = call_result[0]
-    result = call_result[1:]
-    if len(result) == 1:
-        result = result[0]
+    if isinstance(call_result, tuple):
+        err = call_result[0]
+        result = call_result[1:]
+        if len(result) == 1:
+            result = result[0]
+    else:
+        # Single-output funcs (e.g. hipMemcpy after the with-nogil
+        # codegen refactor) return the bare hipError_t enum, not a
+        # 1-tuple. Treat that as an empty-result call.
+        err = call_result
+        result = ()
     if isinstance(err, hip.hipError_t) and err != hip.hipError_t.hipSuccess:
         raise RuntimeError(str(err))
     elif (
@@ -238,8 +245,7 @@ if __name__ in ("__test__", "__main__"):
 
     _, num_devices = hip.hipGetDeviceCount()
     if autodetect_arch and num_devices > 0:
-        props = hip.hipDeviceProp_t()
-        hip_check(hip.hipGetDeviceProperties(props, 0))
+        props = hip_check(hip.hipGetDeviceProperties(0))
         arch = props.gcnArchName.decode()
 
     print(f"\n###  Properties of selected target (arch={arch}):\n\n```yaml")

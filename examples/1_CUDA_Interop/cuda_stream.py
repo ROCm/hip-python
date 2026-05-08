@@ -42,10 +42,17 @@ from cuda.bindings import runtime
 
 
 def cuda_check(call_result):
-    err = call_result[0]
-    result = call_result[1:]
-    if len(result) == 1:
-        result = result[0]
+    if isinstance(call_result, tuple):
+        err = call_result[0]
+        result = call_result[1:]
+        if len(result) == 1:
+            result = result[0]
+    else:
+        # Single-output funcs (e.g. cudaStreamCreate after the
+        # with-nogil codegen refactor) return the bare error enum,
+        # not a 1-tuple. Treat that as an empty-result call.
+        err = call_result
+        result = ()
     if (
         isinstance(err, runtime.cudaError_t)
         and err != runtime.cudaError_t.cudaSuccess
