@@ -39,7 +39,7 @@ import textwrap
 
 import interfacegen
 from interfacegen.cython import CythonModuleGenerator
-from interfacegen.support.recipes import hip as controls
+from interfacegen.support.recipes import rocm as controls
 from interfacegen.tree import MacroDefinition, Node, Parm
 
 

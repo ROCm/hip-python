@@ -36,7 +36,7 @@ from interfacegen.cparser import TypeHandler
 from interfacegen.fortran import FortranModuleGenerator
 from interfacegen.support import fortran as support
 from interfacegen.support import includetree as it
-from interfacegen.support.recipes import hip as controls
+from interfacegen.support.recipes import rocm as controls
 from interfacegen.tree import (
     MacroDefinition,
 )

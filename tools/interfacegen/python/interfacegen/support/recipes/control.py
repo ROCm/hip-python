@@ -23,10 +23,52 @@
 __author__ = "Advanced Micro Devices, Inc."
 
 import enum
+import functools
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from . import tree
+
+
+def fallback(*fallbacks):
+    """Chain rule callables: the wrapped function runs first; if it returns
+    None, each callable in ``fallbacks`` is tried in order. First non-None
+    wins; if every callable returns None, the chain returns None.
+
+    Intended for the per-library ``ptr_parm_intent`` / ``ptr_rank`` rules in
+    ``support.recipes.rocm`` so library-specific overrides delegate to
+    ``support.recipes.generic`` (modifier-based deductions) and finally to
+    ``DEFAULT_PTR_PARM_INTENT`` / ``DEFAULT_PTR_RANK``.
+
+    Decorator order: ``@staticmethod`` outside, ``@fallback(...)`` inside, so
+    ``fallback`` wraps the plain function before ``staticmethod`` turns it
+    into a descriptor::
+
+        class hip:
+            @staticmethod
+            @fallback(generic.conservative.ptr_parm_intent,
+                      DEFAULT_PTR_PARM_INTENT)
+            def ptr_parm_intent(parm):
+                if (parm.parent.name, parm.parm_index) == ("hipDeviceGetName", 0):
+                    return ParmIntent.OUT
+                return None  # defer
+    """
+
+    def deco(fn):
+        @functools.wraps(fn)
+        def wrapper(node):
+            r = fn(node)
+            if r is not None:
+                return r
+            for fb in fallbacks:
+                r = fb(node)
+                if r is not None:
+                    return r
+            return None
+
+        return wrapper
+
+    return deco
 
 
 class Warnings(enum.IntEnum):
@@ -59,7 +101,7 @@ RANK_ANY = -1
 
 
 def DEFAULT_PTR_RANK(node: "tree.Node"):
-    from . import tree
+    from interfacegen import tree
 
     assert isinstance(node, tree.Typed)
     if node.is_pointer_to_char():

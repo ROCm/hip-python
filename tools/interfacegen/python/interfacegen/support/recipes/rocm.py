@@ -60,6 +60,7 @@ TypeCategory = TypeHandler.TypeCategory
 # land.
 # ---------------------------------------------------------------------------
 _RUNTIME_INTENT_CHAIN = (
+    generic.documented_param_intent.ptr_parm_intent,
     generic.double_indirection_out.ptr_parm_intent,
     generic.opaque_typedef_is_handle.ptr_parm_intent,
     generic.status_return_out_pointer.ptr_parm_intent,
@@ -75,6 +76,7 @@ _RUNTIME_RANK_CHAIN = (
     DEFAULT_PTR_RANK,
 )
 _NUMERICAL_INTENT_CHAIN = (
+    generic.documented_param_intent.ptr_parm_intent,
     generic.double_indirection_out.ptr_parm_intent,
     generic.opaque_typedef_is_handle.ptr_parm_intent,
     generic.array_with_length_param.ptr_parm_intent,
@@ -90,6 +92,7 @@ _NUMERICAL_RANK_CHAIN = (
     DEFAULT_PTR_RANK,
 )
 _INPLACE_NUMERICAL_INTENT_CHAIN = (
+    generic.documented_param_intent.ptr_parm_intent,
     generic.double_indirection_out.ptr_parm_intent,
     generic.opaque_typedef_is_handle.ptr_parm_intent,
     generic.pointer_as_reference.ptr_parm_intent,
@@ -581,7 +584,10 @@ class rccl:
     @staticmethod
     def node_filter(node: Node):
         if not isinstance(node, MacroDefinition):
-            if node.name.startswith("nccl") or node.name.startswith("pnccl"):
+            # ``pnccl*`` is RCCL's profiling/instrumentation thin layer
+            # (PMPI-style mirror of every ``nccl*`` symbol). It's not part
+            # of the public binding surface — drop it.
+            if node.name.startswith("nccl"):
                 return True
         elif node.name in (
             "NCCL_MAJOR",
@@ -1090,39 +1096,6 @@ class amdsmi:
         # The two `_EXTRA_MACROS` names also fall through to "int".
         return "int"
 
-    # Doxygen `@param[in|out|in,out] <name>` regex. amdsmi.h tags 294 of
-    # 302 pointer parms; the recipe's verb-based heuristic below covers the
-    # ~8 undocumented stragglers.
-    _DOXY_PARAM_TAG_RE = re.compile(
-        r"@param\[(in|out|in,\s*out)\]\s+([A-Za-z_][A-Za-z0-9_]*)"
-    )
-    _DOXY_TAG_TO_INTENT = {
-        "in": ParmIntent.IN,
-        "out": ParmIntent.OUT,
-        "in,out": ParmIntent.INOUT,
-    }
-
-    @staticmethod
-    def _doxygen_intent(parm: Parm):
-        """Parse `@param[in|out|in,out] <pname>` from the parent function's
-        raw doxygen comment. Returns the documented intent or ``None`` if
-        the parm isn't tagged.
-
-        amdsmi.h is unusually well annotated — an audit found that trusting
-        the docs here resolves all 88 mismatches that the previous
-        verb-based heuristic produced (utilization_counters classified as
-        OUT instead of INOUT, socket_handles classified as OUT instead of
-        INOUT, and so on).
-        """
-        raw = parm.parent.raw_comment if parm.parent is not None else None
-        if not raw:
-            return None
-        pname = parm.name or ""
-        for tag, name_in_doc in amdsmi._DOXY_PARAM_TAG_RE.findall(raw):
-            if name_in_doc == pname:
-                return amdsmi._DOXY_TAG_TO_INTENT[tag.replace(" ", "")]
-        return None
-
     @staticmethod
     def ptr_parm_intent(node: Parm):
         """Classify pointer parameter intent for amdsmi APIs.
@@ -1130,7 +1103,10 @@ class amdsmi:
         Priority of rules (most specific first):
           1. Doxygen `@param[in|out|in,out]` tag on the parent function —
              trusted as the source of truth. Covers 294 of 302 pointer
-             parms in amdsmi.h.
+             parms in amdsmi.h. Delegated to
+             `generic.documented_param_intent` (the same helper now
+             slotted at the head of all `_*_INTENT_CHAIN` tuples for
+             libraries that don't have a custom dispatch).
           2. Opaque handle parameters — names ending in `_handle` are
              IN (typedef'd void* values, NOT pointer-to-output-buffer).
           3. INOUT name set — paired count/len params docs as @param[in,out].
@@ -1139,7 +1115,7 @@ class amdsmi:
           6. amdsmi_init / amdsmi_shut_down / amdsmi_status_string → IN.
           7. Default → IN.
         """
-        doxy = amdsmi._doxygen_intent(node)
+        doxy = generic.documented_param_intent.ptr_parm_intent(node)
         if doxy is not None:
             return doxy
         fname = node.parent.name
