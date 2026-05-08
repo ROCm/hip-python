@@ -34,6 +34,7 @@ of .h.in templates without requiring CMake configure.
 
 import textwrap
 
+import interfacegen.tree
 from interfacegen.cython import CythonModuleGenerator
 from interfacegen.support.recipes import rocm as controls
 
@@ -48,6 +49,35 @@ def _make_header_arg(header_relpath: str, header_content: str = None):
     if header_content is not None:
         return (header_relpath, header_content)
     return header_relpath
+
+
+def _make_status_node_init(prefix, status_type: str):
+    """Per-Function override: drop ``except? <STATUS> nogil`` for functions
+    whose return type is NOT ``<status_type>``.
+
+    ``prefix`` is either a single string or a tuple of strings (matched
+    via ``startswith``); pass a tuple for libs with multiple name
+    prefixes (e.g. RCCL has ``ncclX`` AND ``pncclX`` profiling variants).
+
+    See ``generators_libraries._make_status_node_init`` for the full
+    rationale (handles non-enum returns, different-enum returns, and
+    void returns; ``noexcept nogil`` is the right modifier for all of
+    them).
+    """
+    prefixes = (prefix,) if isinstance(prefix, str) else tuple(prefix)
+
+    def _init(node):
+        if isinstance(node, interfacegen.tree.Function):
+            if not node.name.startswith(prefixes):
+                return
+            try:
+                return_typename = node.cython_global_typename
+            except Exception:
+                return_typename = ""
+            if return_typename != status_type:
+                node.error_return_value_lazy_loader = None
+                node.modifiers_lazy_loader = " noexcept nogil"
+    return _init
 
 
 def generate_rccl(
@@ -66,6 +96,17 @@ def generate_rccl(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="librccl.so",
+        # rccl functions return ``ncclResult_t``; ``ncclInternalError``
+        # is the sentinel hijacked for Python-exception propagation.
+        modifiers_lazy_loader=" except? ncclInternalError nogil",
+        error_return_value_lazy_loader="ncclInternalError",
+        # ``pnccl*`` profiling-mirror helpers are filtered out by
+        # ``rccl.node_filter`` (see rocm.py) — only ``ncclX`` symbols
+        # appear here. Non-status-returning helpers like
+        # ``ncclGetErrorString`` (returns ``const char *``) and
+        # ``ncclResetDebugInit`` (returns ``void``) need ``noexcept
+        # nogil`` instead of ``except? ncclInternalError``.
+        node_init=_make_status_node_init("nccl", "ncclResult_t"),
         node_filter=controls.rccl.node_filter,
         macro_type=controls.rccl.macro_type,
         ptr_parm_intent=controls.rccl.ptr_parm_intent,
@@ -102,6 +143,11 @@ def generate_roctx(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libroctx64.so",
+        # roctx is a profiling-annotation API: functions return
+        # ``roctx_range_id_t`` (uint64) or void — no status enum to
+        # translate into Python exceptions. Module-wide ``noexcept
+        # nogil`` lets call sites be wrapped in ``with nogil:``.
+        modifiers_lazy_loader=" noexcept nogil",
         node_filter=controls.roctx.node_filter,
         macro_type=controls.roctx.macro_type,
         ptr_parm_intent=controls.roctx.ptr_parm_intent,
@@ -129,6 +175,11 @@ def generate_hipfile(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhipfile.so",
+        # hipfile functions return a ``hipFileError`` struct (by value),
+        # not an enum — no single-value sentinel for ``except?`` to
+        # match. Use module-wide ``noexcept nogil`` so call sites can
+        # still drop the GIL.
+        modifiers_lazy_loader=" noexcept nogil",
         node_filter=controls.hipfile.node_filter,
         macro_type=controls.hipfile.macro_type,
         ptr_parm_intent=controls.hipfile.ptr_parm_intent,
@@ -156,6 +207,9 @@ def generate_amdsmi(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libamd_smi.so",
+        modifiers_lazy_loader=" except? AMDSMI_STATUS_INTERNAL_EXCEPTION nogil",
+        error_return_value_lazy_loader="AMDSMI_STATUS_INTERNAL_EXCEPTION",
+        node_init=_make_status_node_init("amdsmi", "amdsmi_status_t"),
         node_filter=controls.amdsmi.node_filter,
         macro_type=controls.amdsmi.macro_type,
         ptr_parm_intent=controls.amdsmi.ptr_parm_intent,
@@ -192,6 +246,12 @@ def generate_hsa(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhsa-runtime64.so.1",
+        # hsa functions return ``hsa_status_t``; ``HSA_STATUS_ERROR`` is
+        # the generic failure sentinel hijacked for Python-exception
+        # propagation.
+        modifiers_lazy_loader=" except? HSA_STATUS_ERROR nogil",
+        error_return_value_lazy_loader="HSA_STATUS_ERROR",
+        node_init=_make_status_node_init("hsa", "hsa_status_t"),
         node_filter=controls.hsa.node_filter,
         ptr_parm_intent=controls.hsa.ptr_parm_intent,
         ptr_rank=controls.hsa.ptr_rank,
