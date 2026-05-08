@@ -38,7 +38,6 @@ __all__ = [
     # __all__ is important for generating the API documentation in source order
     "Pointer",
     "CStr",
-    "ImmortalCStr",
     "DeviceArray",
     "ListOfBytes",
     "ListOfPointer",
@@ -379,11 +378,6 @@ cdef class CStr(Pointer):
     # Mutating this dict happens with the GIL held (``init_from_pyobj``
     # is called from python-context wrappers), so there is no race
     # despite the cdef class being usable from many threads.
-    #
-    # See also `~.ImmortalCStr` for an older Py_INCREF-based variant
-    # that immortalizes both the wrapper instance AND the bytes
-    # without deduplicating; the intern-dict approach here pins only
-    # the bytes content and deduplicates by content.
     _retained_inputs = {}
 
     def __cinit__(self):
@@ -662,57 +656,6 @@ cdef class CStr(Pointer):
         """
         return bytes(self).decode(encoding=encoding, errors=errors)
 
-
-cdef class ImmortalCStr(CStr):
-    """Immortal version of `CStr` that sets
-    the reference count of itself `1` initially,
-    which prevents it from getting garbage collected.
-    Furthermore, increases the reference count
-    of wrapped bytes
-
-    Note:
-        Class name and implementation inspired from:
-        https://peps.python.org/pep-0683
-    """
-
-    def __cinit__(self):
-        CStr.__cinit__(self)
-        cpython.ref.Py_INCREF(self)
-
-    cdef void init_from_pyobj(self, object pyobj):
-        CStr.init_from_pyobj(self, pyobj)
-        cpython.ref.Py_INCREF(pyobj)
-
-    @staticmethod
-    cdef ImmortalCStr fromPtr(void* ptr):
-        cdef ImmortalCStr wrapper = ImmortalCStr.__new__(CStr)
-        wrapper._ptr = ptr
-        return wrapper
-
-    @staticmethod
-    def fromObj(pyobj):
-        """Creates an ImmortalCStr from the given object.
-
-        In case ``pyobj`` is itself a ``ImmortalCStr`` instance, this method
-        returns it directly. No new ``ImmortalCStr`` is created.
-        """
-        return ImmortalCStr.fromPyobj(pyobj)
-
-    @staticmethod
-    cdef ImmortalCStr fromPyobj(object pyobj):
-        cdef ImmortalCStr wrapper
-
-        if isinstance(pyobj, ImmortalCStr):
-            return pyobj
-        else:
-            wrapper = ImmortalCStr.__new__(ImmortalCStr)
-            wrapper.init_from_pyobj(pyobj)
-            return wrapper
-
-    def __init__(self, object pyobj):
-        """Constructor.
-        """
-        CStr.init_from_pyobj(self, pyobj)
 
 cdef class NDBuffer(Pointer):
     """Handler for contiguous n-dimensional buffers of various element types
