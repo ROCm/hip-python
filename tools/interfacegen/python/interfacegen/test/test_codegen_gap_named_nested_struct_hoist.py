@@ -134,6 +134,70 @@ def _topmost_prefix_filter(node):
     return _topmost_name(node).startswith("my_bdf_t")
 
 
+UNDERSCORE_TAG_HEADER = """
+typedef struct _hipFooAlgo_t {
+    unsigned long data[16];
+    unsigned long max_workspace_bytes;
+} hipFooAlgo_t;
+
+int hipFooSubmit(const hipFooAlgo_t *algo);
+"""
+
+
+def _hipfoo_prefix_filter(node):
+    """Mimics per-library `node_filter` shape: prefix-only on the node's own
+    name. Crucially, an underscore-prefixed struct tag like
+    ``_hipFooAlgo_t`` is REJECTED while its typedef alias ``hipFooAlgo_t``
+    is ACCEPTED — the same shape as `class hipblaslt.node_filter` in
+    `support/recipes/rocm.py`.
+    """
+    if isinstance(node, MacroDefinition):
+        return False
+    return (node.name or "").startswith(("hipFoo", "_hipFoo")) and not (
+        node.name or ""
+    ).startswith("_")  # explicit: leading-underscore tags are rejected
+
+
+def test_underscore_tagged_struct_admitted_via_typedef_referent(tmp_path):
+    """When a `typedef struct _Tag { ... } T;` is admitted via its alias
+    name (`T`) but the underlying tag (`_Tag`) is rejected by the same
+    prefix filter, the codegen must still emit a `cdef struct _Tag:`
+    block — otherwise `ctypedef _Tag T` and any function signature
+    referencing `_Tag *` are dangling identifiers and Cython compilation
+    fails with `'_Tag' is not a type identifier`.
+
+    This locks in the transitive-admit rule in
+    ``CythonModuleGenerator._transitively_admitted_records``: a Record
+    named as the ``Typedef.typeref`` of an admitted typedef is admitted
+    even if the user `node_filter` rejects it on its own name.
+    """
+    gen = make_generator(
+        UNDERSCORE_TAG_HEADER,
+        module_name="mod_u",
+        node_filter=_hipfoo_prefix_filter,
+    )
+    files = write_module(gen, tmp_path)
+    pxd = files["cymod_u.pxd"]
+
+    # The struct definition for the underscore-tagged type must be present
+    # so Cython can resolve `ctypedef _hipFooAlgo_t hipFooAlgo_t` and the
+    # `const _hipFooAlgo_t *algo` parameter in `hipFooSubmit`.
+    assert re.search(r"\bcdef\s+struct\s+_hipFooAlgo_t\b", pxd), (
+        f"expected `cdef struct _hipFooAlgo_t:` definition; full pxd:\n{pxd}"
+    )
+    # And the typedef alias must point at it.
+    assert re.search(r"ctypedef\s+_hipFooAlgo_t\s+hipFooAlgo_t", pxd), (
+        f"expected `ctypedef _hipFooAlgo_t hipFooAlgo_t`; full pxd:\n{pxd}"
+    )
+    # Source-order matters: the struct definition must precede the typedef.
+    struct_pos = pxd.find("cdef struct _hipFooAlgo_t")
+    typedef_pos = pxd.find("ctypedef _hipFooAlgo_t hipFooAlgo_t")
+    assert struct_pos != -1 and typedef_pos != -1 and struct_pos < typedef_pos, (
+        f"struct definition must come before its typedef alias; "
+        f"struct at {struct_pos}, typedef at {typedef_pos}; full pxd:\n{pxd}"
+    )
+
+
 def test_named_nested_struct_emitted_with_topmost_parent_filter(tmp_path):
     """Recipe-level workaround: when ``node_filter`` walks up to the
     topmost parent for prefix matching, the inner ``bdf_`` struct
