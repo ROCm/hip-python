@@ -30,8 +30,7 @@ from rocm.bindings import hip as hiprt
 
 device_printf_works = ROCM_VERSION_TUPLE[0:2] != (5, 5)
 
-props = hiprt.hipDeviceProp_t()
-hiprt.hipGetDeviceProperties(props, 0)
+_, props = hiprt.hipGetDeviceProperties(0)
 gpugen = props.gcnArchName.decode("utf-8").split(":")[0]
 have_compatible_gpu_target = gpugen == "gfx90a"
 have_rccl_support = gpugen not in ("gfx1151",)
@@ -71,6 +70,18 @@ python_examples = [
 if have_rccl_support:
     python_examples += [
         "0_Basic_Usage/rccl_comminitall_bcast.py"
+    ]
+
+try:
+    from rocm.bindings import amdsmi as _amdsmi  # noqa: F401
+    del _amdsmi
+    have_amdsmi = True
+except ImportError:
+    have_amdsmi = False
+
+if have_amdsmi:
+    python_examples += [
+        "0_Basic_Usage/amdsmi_enumerate_sockets.py",
     ]
 
 if device_printf_works:
