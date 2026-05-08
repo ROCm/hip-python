@@ -63,14 +63,6 @@ cdef class CStr(Pointer):
 
     cpdef void free(self)
 
-cdef class ImmortalCStr(CStr):
-
-    @staticmethod
-    cdef ImmortalCStr fromPtr(void* ptr)
-
-    @staticmethod
-    cdef ImmortalCStr fromPyobj(object pyobj)
-
 cdef class NDBuffer(Pointer):
     cdef size_t _itemsize  # itemsize is not part of the CUDA array interface
     cdef dict __dict__

@@ -26,7 +26,6 @@ cimport cpython.bool
 cimport cpython.buffer
 cimport cpython.bytes
 cimport cpython.long
-cimport cpython.ref
 cimport cpython.string
 cimport libc.stdint
 cimport libc.stdlib
@@ -39,7 +38,6 @@ __all__ = [
     # __all__ is important for generating the API documentation in source order
     "Pointer",
     "CStr",
-    "ImmortalCStr",
     "DeviceArray",
     "ListOfBytes",
     "ListOfPointer",
@@ -602,57 +600,6 @@ cdef class CStr(Pointer):
         """
         return bytes(self).decode(encoding=encoding, errors=errors)
 
-
-cdef class ImmortalCStr(CStr):
-    """Immortal version of `CStr` that sets
-    the reference count of itself `1` initially,
-    which prevents it from getting garbage collected.
-    Furthermore, increases the reference count
-    of wrapped bytes
-
-    Note:
-        Class name and implementation inspired from:
-        https://peps.python.org/pep-0683
-    """
-
-    def __cinit__(self):
-        CStr.__cinit__(self)
-        cpython.ref.Py_INCREF(self)
-
-    cdef void init_from_pyobj(self, object pyobj):
-        CStr.init_from_pyobj(self, pyobj)
-        cpython.ref.Py_INCREF(pyobj)
-
-    @staticmethod
-    cdef ImmortalCStr fromPtr(void* ptr):
-        cdef ImmortalCStr wrapper = ImmortalCStr.__new__(CStr)
-        wrapper._ptr = ptr
-        return wrapper
-
-    @staticmethod
-    def fromObj(pyobj):
-        """Creates an ImmortalCStr from the given object.
-
-        In case ``pyobj`` is itself a ``ImmortalCStr`` instance, this method
-        returns it directly. No new ``ImmortalCStr`` is created.
-        """
-        return ImmortalCStr.fromPyobj(pyobj)
-
-    @staticmethod
-    cdef ImmortalCStr fromPyobj(object pyobj):
-        cdef ImmortalCStr wrapper
-
-        if isinstance(pyobj, ImmortalCStr):
-            return pyobj
-        else:
-            wrapper = ImmortalCStr.__new__(ImmortalCStr)
-            wrapper.init_from_pyobj(pyobj)
-            return wrapper
-
-    def __init__(self, object pyobj):
-        """Constructor.
-        """
-        CStr.init_from_pyobj(self, pyobj)
 
 cdef class NDBuffer(Pointer):
     """Handler for contiguous n-dimensional buffers of various element types
