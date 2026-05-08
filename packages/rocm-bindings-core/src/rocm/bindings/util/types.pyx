@@ -356,6 +356,36 @@ cdef class CStr(Pointer):
     """
     # C members declared in declaration part ``types.pxd``
 
+    # Class-level intern table for string inputs that the wrapper
+    # hands a `const char*` to the backend. Keys = canonical bytes
+    # (the encoded form). Values = the same bytes object —
+    # ``setdefault(b, b)`` returns the existing canonical entry if
+    # already present, else inserts and returns the new one.
+    #
+    # Why: many ROCm/HIP backend functions (e.g. hiprtcCompileProgram
+    # via COMGR's compile cache) retain pointers to caller-supplied
+    # strings well past the call's return — a wrapper instance pin
+    # alone (or a transient Py_buffer acquisition) is not enough,
+    # because the bytes can still be collected once the wrapper goes
+    # out of scope. Interning the canonical bytes in this dict
+    # guarantees a program-lifetime address. Repeated calls with the
+    # same logical content reuse the same canonical bytes (and thus
+    # the same C pointer), so a backend that caches by pointer
+    # identity sees the expected hits. The high-water mark is bounded
+    # by the number of *unique* string contents ever passed (typical
+    # hip-python use: a handful of compile flags + kernel sources;
+    # not a leak that grows with call count).
+    #
+    # Mutating this dict happens with the GIL held (``init_from_pyobj``
+    # is called from python-context wrappers), so there is no race
+    # despite the cdef class being usable from many threads.
+    #
+    # See also `~.ImmortalCStr` for an older Py_INCREF-based variant
+    # that immortalizes both the wrapper instance AND the bytes
+    # without deduplicating; the intern-dict approach here pins only
+    # the bytes content and deduplicates by content.
+    _retained_inputs = {}
+
     def __cinit__(self):
         self._is_ptr_owner = False
         self._shape[0] = 0  # must be zero
@@ -393,11 +423,21 @@ cdef class CStr(Pointer):
     cdef void init_from_pyobj(self, object pyobj):
         """
         Note:
+            ``str`` and ``bytes`` inputs are interned in the
+            ``CStr._retained_inputs`` class dict for the program's
+            lifetime so the C pointer remains valid even after the
+            wrapper instance is collected and even if the backend
+            retains the pointer. ``str`` inputs are UTF-8 encoded.
+            See the ``_retained_inputs`` docstring for the
+            program-lifetime contract.
+
             If ``pyobj`` is an instance of `CStr`, only the pointer and
             length information is copied.
             Releasing an acquired Py_buffer and temporary memory are still obligations
             of the original object.
         """
+        cdef bytes b
+        cdef bytes canonical
         self._py_buffer_acquired = False
         if isinstance(pyobj, CStr):
             self._ptr = (<CStr>pyobj)._ptr
@@ -409,9 +449,30 @@ cdef class CStr(Pointer):
                          if pyobj.value is not None else NULL)
             self.get_or_determine_len()
         elif isinstance(pyobj, str):
-            raise RuntimeError("CStr.init_from_pyobj: currently no support for Python"
-                               + " `str` objects.")
-        elif cpython.buffer.PyObject_CheckBuffer(pyobj):  # handles 'bytes' too
+            # NEW path: UTF-8 encode + intern. The wrapper hands the
+            # canonical bytes' internal char buffer to the backend;
+            # the canonical bytes lives for the program's lifetime via
+            # the ``_retained_inputs`` class dict.
+            b = (<str>pyobj).encode("utf-8")
+            canonical = CStr._retained_inputs.setdefault(b, b)
+            self._ptr = <void*><const char*>canonical
+            self._shape[0] = len(canonical)
+        elif isinstance(pyobj, bytes):
+            # NEW path: intern bytes inputs as well. Previously this
+            # case fell through to PyObject_CheckBuffer which acquires
+            # a Py_buffer — that pins the source only while the wrapper
+            # is alive. Interning here pins the canonical bytes for the
+            # program's lifetime, which the backend may need.
+            canonical = CStr._retained_inputs.setdefault(pyobj, pyobj)
+            self._ptr = <void*><const char*>canonical
+            self._shape[0] = len(canonical)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            # Other buffer-protocol objects (numpy arrays, bytearray,
+            # memoryview, …). Intern doesn't make sense here — the
+            # source is typically a mutable buffer with content the
+            # caller wants to control. Stay on the Py_buffer path,
+            # which pins the source for the wrapper's lifetime via
+            # PyBuffer_Release in __dealloc__.
             err = cpython.buffer.PyObject_GetBuffer(
                 pyobj,
                 &self._py_buffer,
@@ -1533,20 +1594,24 @@ cdef class DeviceArray(NDBuffer):
         return wrapper
 
 cdef class ListOfBytes(Pointer):
-    """Handler for `list` / `tuple` whose entries are of type `bytes` or `~.CStr`
+    """Handler for `list` / `tuple` whose entries are `bytes`, `str`, or `~.CStr`.
 
     Datatype for handling Python `list` and `tuple` objects with entries of type
-    `bytes` or `~.CStr` that need to be converted to a pointer type when passed
-    to the underlying C function.
+    `bytes`, `str`, or `~.CStr` that need to be converted to a pointer type
+    when passed to the underlying C function. ``str`` entries are UTF-8 encoded
+    transparently.
 
     The type can be initialized from the following Python objects:
 
-    * `list` / `tuple` of `bytes / `~.CStr`:
+    * `list` / `tuple` of `bytes`, `str`, or `~.CStr`:
 
-        A `list` or `tuple` of `bytes` or `~.CStr` objects.
+        A `list` or `tuple` of `bytes`, `str`, or `~.CStr` objects.
         In this case, this type allocates an array of ``const char*`` pointers wherein
-        it stores the addresses from the `list`/ `tuple` entries. Furthermore, the
-        instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
+        it stores the addresses from the `list`/`tuple` entries. ``str`` entries are
+        UTF-8 encoded; ``bytes`` and the encoded form of ``str`` entries are interned
+        in the ``ListOfBytes._retained_inputs`` class dict for the program's lifetime
+        so the C pointers remain valid even if the backend retains them. Furthermore,
+        the instance's ``self._is_ptr_owner`` C attribute is set to `True`.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
@@ -1569,6 +1634,16 @@ cdef class ListOfBytes(Pointer):
     """
     # C members declared in declaration part ``types.pxd``
 
+    # Class-level intern table — same role as ``CStr._retained_inputs``
+    # (see that docstring for the program-lifetime contract). Keys =
+    # canonical bytes (the encoded form of each string element), or
+    # the ``CStr`` instance itself for `~.CStr` entries (so the
+    # CStr's underlying buffer is also pinned for the program's
+    # lifetime). Values = the same object — ``setdefault(k, k)``
+    # returns the canonical entry. Bounded by the number of unique
+    # element contents (and unique CStr instances) ever passed.
+    _retained_inputs = {}
+
     def __repr__(self):
         return f"<ListOfBytes object, _ptr={int(self)}>"
 
@@ -1584,11 +1659,19 @@ cdef class ListOfBytes(Pointer):
     cdef void init_from_pyobj(self, object pyobj):
         """
         Note:
+            String entries (``bytes`` and ``str``) are interned in the
+            ``ListOfBytes._retained_inputs`` class dict for the program's
+            lifetime; the ``void**`` array stores pointers into the
+            canonical bytes objects' internal buffers. ``str`` entries
+            are UTF-8 encoded. ``CStr`` entries are pinned by reference
+            (the CStr instance itself is added to the intern dict).
+
             If ``pyobj`` is an instance of `ListOfBytes`, only the pointer is copied.
             Releasing an acquired Py_buffer and temporary memory are still obligations
             of the original object.
         """
-        cdef const char* entry_as_cstr = NULL
+        cdef bytes b
+        cdef bytes canonical
 
         self._py_buffer_acquired = False
         self._is_ptr_owner = False
@@ -1597,16 +1680,25 @@ cdef class ListOfBytes(Pointer):
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void*))
             libc.string.memset(self._ptr, 0, len(pyobj)*sizeof(void*))
             for i, entry in enumerate(pyobj):
-                if isinstance(entry, bytes):
-                    # assumes pyobj/pyobj's entries won't be garbage collected
-                    # More details:
-                    # https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
-                    entry_as_cstr = entry
-                    (<void**>self._ptr)[i] = <void*>entry_as_cstr
+                if isinstance(entry, str):
+                    b = (<str>entry).encode("utf-8")
+                    canonical = ListOfBytes._retained_inputs.setdefault(b, b)
+                    (<void**>self._ptr)[i] = <void*><const char*>canonical
+                elif isinstance(entry, bytes):
+                    canonical = ListOfBytes._retained_inputs.setdefault(entry, entry)
+                    (<void**>self._ptr)[i] = <void*><const char*>canonical
                 elif isinstance(entry, CStr):
+                    # Pin the CStr instance itself in the intern dict.
+                    # Its underlying buffer (whether a malloc'd one,
+                    # a Py_buffer-bound one, or an interned-bytes one
+                    # via the new CStr str/bytes paths) lives as long
+                    # as the CStr instance does.
+                    ListOfBytes._retained_inputs.setdefault(entry, entry)
                     (<void**>self._ptr)[i] = (<CStr>entry)._ptr
                 else:
-                    raise ValueError("input element must be of type 'bytes'")
+                    raise TypeError(
+                        "input element must be of type 'bytes', 'str', or 'CStr'"
+                    )
         elif isinstance(pyobj, ListOfBytes):
             self._ptr = (<ListOfBytes>pyobj)._ptr
         else:
@@ -2261,3 +2353,20 @@ cdef class ListOfUnsignedLong(Pointer):
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
         if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
+
+
+def _clear_retained_inputs():
+    """Clear the program-lifetime intern dicts on `~.CStr` and
+    `~.ListOfBytes`.
+
+    NOT public API. Intended only for tests that need a clean
+    baseline for the dedup-bound assertions, and for embedding
+    scenarios that intentionally release ahead of process exit.
+
+    Calling this while any backend may still hold a pointer into
+    the canonical bytes is undefined behaviour — the backend will
+    dereference freed memory the next time it consults the
+    pointer.
+    """
+    CStr._retained_inputs.clear()
+    ListOfBytes._retained_inputs.clear()
