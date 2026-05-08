@@ -38,13 +38,15 @@ IF UNAME_SYSNAME == "Windows":
     from rocm.bindings.util.win32loader cimport (
         open_library as _open_library,
         close_library as _close_library,
-        load_symbol as _load_symbol
+        load_symbol as _load_symbol,
+        has_symbol as _has_symbol
     )
 ELSE:
     from rocm.bindings.util.posixloader cimport (
         open_library as _open_library,
         close_library as _close_library,
-        load_symbol as _load_symbol
+        load_symbol as _load_symbol,
+        has_symbol as _has_symbol
     )
 
 # Re-export with standard names (thin wrapper for proper PyInit_loader)
@@ -59,3 +61,10 @@ cdef int close_library(void* lib_handle) except 1 nogil:
 cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1 nogil:
     """Returns a symbol handle from an opened dynamic library via out parameter."""
     return _load_symbol(handle, lib_handle, name)
+
+cdef bint has_symbol(void* lib_handle, const char* name) nogil:
+    """Probe whether a symbol is exported by an opened dynamic library.
+
+    Non-raising counterpart to ``load_symbol``. Returns True/False.
+    """
+    return _has_symbol(lib_handle, name)

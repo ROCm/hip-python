@@ -80,3 +80,29 @@ cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1
         reason = posix.dlfcn.dlerror()
         raise RuntimeError(f"failed to dlsym '{name}': {reason}")
     return 0
+
+cdef bint has_symbol(void* lib_handle, const char* name) nogil:
+    """Probe whether a symbol is exported by an opened shared object.
+
+    Non-raising counterpart to ``load_symbol`` — returns ``True`` if
+    ``dlsym`` resolves the symbol, ``False`` otherwise. Useful for
+    feature detection against libraries that ship in two flavours
+    (e.g. a stripped system ``libLLVM.so`` versus a static-archive
+    aggregate that exports the ``LLVMInitializeAll*`` wrappers).
+
+    Args:
+        lib_handle (void*, in):
+            Shared object handle (must be non-NULL — call
+            ``open_library`` first).
+        name (char*, in):
+            Name of the symbol.
+    Returns:
+        True if the symbol resolves, False otherwise.
+    """
+    if lib_handle == NULL:
+        return False
+    # Clear any pending error from a prior dlsym/dlopen call so we
+    # only consider the result of THIS lookup.
+    posix.dlfcn.dlerror()
+    cdef void* sym = posix.dlfcn.dlsym(lib_handle, name)
+    return sym != NULL

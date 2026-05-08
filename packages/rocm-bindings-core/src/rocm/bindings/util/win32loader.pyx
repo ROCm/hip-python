@@ -94,3 +94,24 @@ cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1
         with gil:
             raise RuntimeError(f"failed to GetProcAddress '{name.decode('utf-8')}': error code {error_code}")
     return 0
+
+cdef bint has_symbol(void* lib_handle, const char* name) nogil:
+    """Probe whether a symbol is exported by an opened DLL.
+
+    Non-raising counterpart to ``load_symbol`` — returns ``True`` if
+    ``GetProcAddress`` resolves the symbol, ``False`` otherwise.
+    Useful for feature detection against libraries that ship in two
+    flavours.
+
+    Args:
+        lib_handle (void*, in):
+            DLL handle (must be non-NULL — call ``open_library`` first).
+        name (char*, in):
+            Name of the symbol.
+    Returns:
+        True if the symbol resolves, False otherwise.
+    """
+    if lib_handle == NULL:
+        return False
+    cdef FARPROC sym = GetProcAddress(<HMODULE>lib_handle, name)
+    return sym != NULL
