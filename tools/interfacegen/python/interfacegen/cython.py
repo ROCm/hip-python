@@ -833,36 +833,27 @@ class Typed:
 
     @property
     def cython_global_typename(self):
-        """Get a global name for the type of this node.
+        """Cython type spelling with elaborated tags substituted in.
 
-        To get a proper Cython typename, we need to strip trailing 'const' qualifiers, e.g. for 'char const *' and 'char * const', the Cython type is 'char *'/ We further need to replace struct/enum/union with just the identifier, e.g. for 'struct foo' the Cython type is just 'foo'
-        plus potentially a prefix.
+        Walks the Clang type layer hierarchy via
+        ``Typed.render_type`` (no token splitting) and produces
+        ``cython_decl()`` — leading ``const`` is preserved on the leaf;
+        per-pointer ``const``/``restrict``/``volatile`` are kept attached
+        to their ``*`` as Clang spells them.
         """
-
         assert isinstance(self, tree.Typed)
-        result = self.global_typename(
-            self.sep,
-            self.renamer,
-            prefer_canonical=True,
-            lstrip_const_qualifier=True,
-        )
-        # if "[]" in result: # Cython does not like this in signatures
-        #    result = result.replace("[]", "*")
-        return " ".join(
-            tk
-            for i, tk in enumerate(result.split(" "))
-            if tk != "const" or i == 0
-        )
+        return self.render_type(
+            self.sep, self.renamer, prefer_canonical=True
+        ).cython_decl()
 
     @property
     def cython_global_typename_no_const(self):
-        """Global typename without preceding 'const' qualifier (if present)."""
-
+        """:pyattr:`cython_global_typename` with the leading leaf-level
+        ``const`` stripped."""
         assert isinstance(self, tree.Typed)
-        result = self.cython_global_typename
-        if result.startswith("const "):
-            result = result[len("const ") :]
-        return result
+        return self.render_type(
+            self.sep, self.renamer, prefer_canonical=True
+        ).cython_decl_no_const()
 
     @property
     def actual_rank(self):
@@ -964,19 +955,17 @@ class Field(tree.Field, CythonMixin, Typed):
         _log.debug(
             f"<{self.render_location()}>[pre] render Cython repr. of {self.__class__.__name__},{self.cursor.kind=},{self.cursor.spelling=},type: {self.cursor.type.kind=}"
         )
-
-        typename = self.global_typename(
+        # ``field_decl`` walks the Clang type hierarchy via ``TypeHandler``
+        # and positions the array suffix after the variable name (Cython
+        # requires ``void *arr[8]``, not ``void *[8] arr``).
+        rendered = self.render_type(
             self.sep, self.renamer, prefer_canonical=True
         )
-        # Move trailing array suffix(es) to follow the field name.
-        # Required for Cython's parser when a `*` precedes the suffix
-        # (`void *arr[8]` not `void *[8] arr`); harmless no-op otherwise.
-        base, array_suffix = tree.Typed.split_array_suffix(typename)
         name = self._cython_and_c_name(self.name)
         _log.debug(
             f"<{self.render_location()}>[post] render Cython repr. of {self.__class__.__name__},{self.cursor.kind=},{self.cursor.spelling=},type: {self.cursor.type.kind=}"
         )
-        return f"{base} {name}{array_suffix}"
+        return rendered.field_decl(name)
 
     def render_python_property(self, record_cname: str):
 
@@ -3443,7 +3432,7 @@ class CythonModuleGenerator:
 
         self.backend = CythonBackend.from_libclang_translation_unit(
             parser.translation_unit,
-            header,
+            filename,
             util_pkg,
             module_opts=self.module_opts,
             **opts,
