@@ -42,7 +42,13 @@ classifiers = [
 ]
 
 dependencies = [
-    "cython >= 3.0, < 3.1",
+    # Floor is 3.1.0: Cython 3.0.x miscompiles `cdef T x = <T>expr`
+    # when T contains the `*const *` pattern (silently drops the
+    # initializer, leaves the local NULL — see
+    # share/design/UPSTREAM_BUGS/test_const_bug.pyx for the bisection).
+    # The codegen also defends with the split-form prehoist, so this
+    # floor is belt-and-suspenders.
+    "cython >= 3.1.0",
     "pyparsing",
     "libclang >= 14.0.1, != 15.0.3, != 15.0.6, <= 15.0.6.1",
 ]

@@ -33,6 +33,21 @@ Among other recipes, this repository contains a recipe for generating the low-le
 pip install .
 ```
 
+> **Cython 3.1.0 floor.** The codegen targets Cython and the
+> generated bindings depend on a working `cdef T x = <T>expr`
+> initializer for types that contain the inner `*const *` pattern
+> (e.g. `const char *const *`). Cython 3.0.x **silently
+> miscompiles** that statement — it parses the cdef but drops the
+> initializer, leaving the local NULL at runtime. The codegen
+> defends against this by emitting the prehoist as two separate
+> statements (bare cdef + assignment), and we additionally pin
+> `cython >= 3.1.0` so the underlying upstream bug isn't in the
+> toolchain. The fix landed in Cython 3.1.0; 3.1.x and 3.2.x emit
+> the assignment correctly. See
+> `python/interfacegen/test/test_typed_helpers.py` for the
+> regression tests that pin both the codegen split-form behaviour
+> and the trailing-const handling.
+
 ## Develop in editable mode
 
 Install in *editable* mode:
