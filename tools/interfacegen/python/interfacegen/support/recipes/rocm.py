@@ -231,6 +231,132 @@ class hip:
             return "char *"
         assert False, "Not implemented!"
 
+    # ---------------------------------------------------------------------
+    # Hardcoded ptr_parm_intent overrides for the HIP runtime API.
+    #
+    # These run BEFORE `_RUNTIME_INTENT_CHAIN` (and so before the new
+    # `generic.documented_param_intent` rule) — wired by the
+    # `@fallback(*_RUNTIME_INTENT_CHAIN)` decorator on `ptr_parm_intent`.
+    # The hardcoded entries are needed because the upstream HIP doxygen
+    # tags are wrong for two large families:
+    #
+    # 1. **`hipMemcpy*` `dst`-style outputs are tagged `@param[out]`
+    #    in `/opt/rocm/include/hip/hip_runtime_api.h`** but are
+    #    semantically INOUT — the caller allocates the destination
+    #    buffer (any rank: scalar, 1-D, 2-D, ...) and the function fills
+    #    it. Trusting the `[out]` tag would drop `dst` from the args and
+    #    return it as a fresh allocation, which doesn't match the C API
+    #    contract.
+    #
+    # 2. **Opaque-handle creators** (`hipStreamCreate`, `hipEventCreate`,
+    #    `hipMalloc*`, `hipModuleLoad*`, `hipModuleGet*`, `hipMemPool*`,
+    #    `hipGraph*`, `hipImport*`, `hipGetSymbol*`, `hipCtxCreate`,
+    #    `hipDevicePrimaryCtxRetain`, `hipExternalMemoryGetMappedBuffer`)
+    #    are tagged `@param[in, out]` for what is in fact a pure OUT
+    #    pointer of a scalar opaque struct — the caller does not
+    #    pre-populate, the function writes the new handle. Trusting the
+    #    `[in, out]` tag drags the OUT pointer back into the args
+    #    instead of into the return tuple.
+    #
+    # An upstream bug report has been filed against ROCm/HIP for the
+    # mistagged doxygen intent annotations in `hip_runtime_api.h`.
+    # Until those tags are fixed in the public header, the codegen
+    # has to special-case both families here.
+    # ---------------------------------------------------------------------
+
+    # `hipMemcpy*` family — every entry-pointer destination buffer.
+    # parm names follow the C signature: `dst`, `dstHost`, `dstDevice`,
+    # `dstArray`. Buffer rank is intentionally NOT pinned here — the
+    # ptr_rank chain still classifies these as "any rank" pointers.
+    _HIPMEMCPY_INOUT_DST_NAMES = frozenset((
+        "dst",
+        "dstHost",
+        "dstDevice",
+        "dstArray",
+        "dsts",  # hipMemcpyBatchAsync takes a list of dsts
+    ))
+
+    # Opaque-handle creators — function name + parm 0 -> OUT.
+    # Sourced by enumerating the pre-regen committed `hip.pyi` for
+    # functions whose old high-level signature dropped parm 0 entirely
+    # (i.e. it was always returned, never an input).
+    _HIP_HANDLE_CREATOR_OUT_PARM0 = frozenset((
+        # streams + events
+        "hipStreamCreate",
+        "hipStreamCreateWithFlags",
+        "hipStreamCreateWithPriority",
+        "hipExtStreamCreateWithCUMask",
+        "hipEventCreate",
+        "hipEventCreateWithFlags",
+        # memory allocators (return ptr/devPtr)
+        "hipMalloc",
+        "hipExtMallocWithFlags",
+        "hipMallocHost",
+        "hipMemAllocHost",
+        "hipHostMalloc",
+        "hipHostAlloc",
+        "hipMallocManaged",
+        "hipMallocAsync",
+        "hipMallocFromPoolAsync",
+        "hipMallocArray",
+        "hipMalloc3DArray",
+        "hipMemAlloc",
+        # mempool handle creators / importers
+        "hipMemPoolCreate",
+        "hipMemPoolImportFromShareableHandle",
+        "hipMemPoolImportPointer",
+        # module loaders
+        "hipModuleLoad",
+        "hipModuleLoadData",
+        "hipModuleLoadDataEx",
+        "hipModuleLoadFatBinary",
+        # symbol / function / global lookups
+        "hipModuleGetFunction",
+        "hipModuleGetGlobal",
+        "hipModuleGetTexRef",
+        "hipGetSymbolAddress",
+        "hipGetSymbolSize",
+        # graph creators + node adders (parm 0 is pGraphNode/pGraph OUT)
+        "hipGraphCreate",
+        "hipGraphClone",
+        "hipGraphInstantiate",
+        "hipGraphInstantiateWithFlags",
+        "hipGraphInstantiateWithParams",
+        "hipGraphAddNode",
+        "hipGraphAddKernelNode",
+        "hipGraphAddMemcpyNode",
+        "hipGraphAddMemcpyNode1D",
+        "hipGraphAddMemcpyNodeFromSymbol",
+        "hipGraphAddMemcpyNodeToSymbol",
+        "hipGraphAddMemsetNode",
+        "hipGraphAddHostNode",
+        "hipGraphAddChildGraphNode",
+        "hipGraphAddEmptyNode",
+        "hipGraphAddEventRecordNode",
+        "hipGraphAddEventWaitNode",
+        "hipGraphAddMemAllocNode",
+        "hipGraphAddMemFreeNode",
+        "hipGraphAddBatchMemOpNode",
+        "hipGraphAddExternalSemaphoresWaitNode",
+        "hipGraphAddExternalSemaphoresSignalNode",
+        # external resource importers
+        "hipImportExternalMemory",
+        "hipImportExternalSemaphore",
+        "hipExternalMemoryGetMappedBuffer",
+        # contexts
+        "hipCtxCreate",
+        "hipDevicePrimaryCtxRetain",
+        # texture / surface objects
+        "hipCreateTextureObject",
+        "hipCreateSurfaceObject",
+        "hipUserObjectCreate",
+    ))
+    # Pitch-style allocators write parm 0 (dev ptr) AND parm 1 (pitch).
+    _HIP_HANDLE_CREATOR_OUT_PARM01 = frozenset((
+        "hipMallocPitch",
+        "hipMemAllocPitch",
+    ))
+
     @staticmethod
     @fallback(*_RUNTIME_INTENT_CHAIN)
     def ptr_parm_intent(parm: Parm):
@@ -242,6 +368,25 @@ class hip:
         ``@fallback`` (see ``_RUNTIME_INTENT_CHAIN``).
         """
         func_name, parm_idx = parm.parent.name, parm.parm_index
+
+        # `hipMemcpy*` and `hipMemset*` `dst` outputs are INOUT (caller
+        # allocates buffer, function fills). Doxygen tags them
+        # `@param[out]` which is wrong — see comment block above. Match
+        # by function-name prefix + parm-name set so this also covers
+        # any future hipMemcpy* / hipMemset* variants without
+        # enumerating them.
+        if (func_name.startswith("hipMemcpy") or func_name.startswith("hipMemset")) \
+                and parm.name in hip._HIPMEMCPY_INOUT_DST_NAMES:
+            return ParmIntent.INOUT
+
+        # Opaque-handle creators: parm 0 (or parm 0+1 for pitch
+        # allocators) is OUT. Doxygen tags these `@param[in, out]`
+        # which is wrong — see comment block above.
+        if func_name in hip._HIP_HANDLE_CREATOR_OUT_PARM0 and parm_idx == 0:
+            return ParmIntent.OUT
+        if func_name in hip._HIP_HANDLE_CREATOR_OUT_PARM01 and parm_idx in (0, 1):
+            return ParmIntent.OUT
+
         if (func_name, parm_idx) in (
             ("hipDeviceGetName", 0),
             ("hipIpcGetMemHandle", 0),
@@ -745,6 +890,19 @@ class hipfft:
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
+        # `odata` in `hipfftExec*` is INOUT, NOT OUT — the caller
+        # allocates the (device) output buffer; the function fills it.
+        # Doxygen tags it `@param[out] odata` in
+        # `/opt/rocm/include/hipfft/hipfft.h`, which the new
+        # `documented_param_intent` rule trusts and would drop the
+        # `odata` arg from the python signature. Override here so it
+        # stays in args. Same upstream-doxygen issue as hipMemcpy /
+        # hipStreamCreate (see the upstream bug report filed against
+        # ROCm/HIP for the mistagged intent annotations).
+        if node.parent is not None and node.parent.name.startswith(
+            "hipfftExec"
+        ) and node.name == "odata":
+            return ParmIntent.INOUT
         if node.is_pointer_to_record(degree=2):
             return ParmIntent.OUT
         if node.name == "workSize":
@@ -1096,11 +1254,39 @@ class amdsmi:
         # The two `_EXTRA_MACROS` names also fall through to "int".
         return "int"
 
+    # Hardcoded overrides for amdsmi functions whose upstream doxygen
+    # `@param[in,out]` tag is semantically wrong. The amdsmi header
+    # uses `[in,out]` for two distinct cases:
+    #
+    #  - Genuine INOUT: the two-call count-then-fill pattern, where
+    #    the caller pre-populates a count value and the function
+    #    consumes/updates it (e.g. `socket_count` in
+    #    `amdsmi_get_socket_handles`). These stay routed through the
+    #    doxygen rule.
+    #
+    #  - Pure OUT mistagged as `[in,out]`: a fixed-size output buffer
+    #    or pointer-to-scalar that the caller does NOT pre-populate;
+    #    the function just writes (e.g. `version` in
+    #    `amdsmi_get_lib_version`). These need an override so the
+    #    parm is moved to the return tuple instead of being dragged
+    #    into the python args.
+    #
+    # An upstream bug report (same overloaded-tag pattern across
+    # many amdsmi `amdsmi_get_*` getters) has been filed against
+    # ROCm/amdsmi. This entry list is incremental — extend as
+    # additional ones surface.
+    _MISTAGGED_OUT = frozenset((
+        ("amdsmi_get_lib_version", 0),  # `version` is pure OUT
+    ))
+
     @staticmethod
     def ptr_parm_intent(node: Parm):
         """Classify pointer parameter intent for amdsmi APIs.
 
         Priority of rules (most specific first):
+          0. Hardcoded override for upstream-doxygen-mistagged parms
+             (`_MISTAGGED_OUT`). Runs BEFORE the doxygen rule because
+             the doxygen tag is the very thing that's wrong.
           1. Doxygen `@param[in|out|in,out]` tag on the parent function —
              trusted as the source of truth. Covers 294 of 302 pointer
              parms in amdsmi.h. Delegated to
@@ -1115,10 +1301,12 @@ class amdsmi:
           6. amdsmi_init / amdsmi_shut_down / amdsmi_status_string → IN.
           7. Default → IN.
         """
+        fname = node.parent.name
+        if (fname, node.parm_index) in amdsmi._MISTAGGED_OUT:
+            return ParmIntent.OUT
         doxy = generic.documented_param_intent.ptr_parm_intent(node)
         if doxy is not None:
             return doxy
-        fname = node.parent.name
         pname = node.name or ""
         if pname.endswith("_handle"):
             return ParmIntent.IN
