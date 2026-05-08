@@ -25,7 +25,7 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 """hipTensor reduction with NumPy.
 
 Mirrors the upstream `samples/03_reduction/reduction_c.c` C-API
-sample (`/src/rocm-libraries/projects/hiptensor/`) using the
+sample (`rocm-libraries/projects/hiptensor/`) using the
 hip-python bindings: FP32 4-D tensor reduction
 `C_{k,v} = alpha * sum_{m,h} A_{m,h,k,v} + beta * C_{k,v}` on a
 single GPU. Verified against `numpy.sum(A, axis=(0,1))`.

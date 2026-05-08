@@ -25,7 +25,7 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 """hipSPARSELt 2:4 structured-sparsity matmul.
 
 Mirrors the upstream `example_spmm_strided_batched.cpp` sample
-(`/src/rocm-libraries/projects/hipsparselt/clients/samples/`) using
+(`rocm-libraries/projects/hipsparselt/clients/samples/`) using
 the hip-python bindings: 2:4 structured-sparsity matmul on a single
 GPU. A is structured-sparse (50% zeros, 2-of-4 pattern), B is dense.
 

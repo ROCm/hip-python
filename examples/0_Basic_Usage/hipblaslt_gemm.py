@@ -25,7 +25,7 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 """hipBLASLt FP16 GEMM with NumPy.
 
 Mirrors the upstream `01_hipblaslt_gemm` C++ sample
-(`/src/rocm-libraries/projects/hipblaslt/clients/samples/`) using the
+(`rocm-libraries/projects/hipblaslt/clients/samples/`) using the
 hip-python bindings: compute D = alpha * A @ B + beta * C with
 half-precision inputs, FP32 accumulation, on a single GPU. Verifies
 the result against a NumPy reference.
