@@ -882,11 +882,24 @@ def test_nogil_inout_record_pointer_hoists_fromPyobj(tmp_path):
     """
     pyx = _emit_nogil_pyx(header, module_name="mod_ni", tmp_path=tmp_path)
     body = _extract_function_body(pyx, "op_inout")
+    # Wrapper bound to a typed cdef-class local first so it outlives
+    # the with-nogil block (otherwise the underlying buffer is freed
+    # at end-of-statement and the typed C pointer dangles — observed
+    # for `hiprtcCompileProgram` with a non-empty `options` list).
+    assert re.search(
+        r"cdef\s+stream_s\s+_cy_op_inout__arg_0_obj\s*=\s*"
+        r"stream_s\.fromPyobj\(s\)",
+        body,
+    ), f"missing typed wrapper bind:\n{body}"
+    # `cymod_ni.stream_s *` doesn't match the `*const *` bug shape
+    # so the renderer emits the combined cdef-with-initializer form.
+    # See test_call_arg_hoist_double_const_pointer_uses_split_form in
+    # test_typed_helpers.py for the bug-shape branch.
     assert re.search(
         r"cdef\s+cymod_ni\.stream_s\s*\*\s*_cy_op_inout__arg_0\s*=\s*"
-        r"stream_s\.fromPyobj\(s\)\.getElementPtr\(\)",
+        r"_cy_op_inout__arg_0_obj\.getElementPtr\(\)",
         body,
-    ), f"missing cprefix-prefixed fromPyobj hoist for INOUT record-ptr arg:\n{body}"
+    ), f"missing cprefix-prefixed pointer extract from bound wrapper:\n{body}"
     nogil_line = _nogil_block_body(body)
     _assert_no_python_in_nogil_call(nogil_line)
     assert "_cy_op_inout__arg_0" in nogil_line, (
@@ -941,11 +954,22 @@ def test_nogil_record_by_value_arg_hoists_dereferenced_value(tmp_path):
     """
     pyx = _emit_nogil_pyx(header, module_name="mod_nr", tmp_path=tmp_path)
     body = _extract_function_body(pyx, "op_rec")
+    # Wrapper bound to a typed cdef-class local first so it outlives
+    # the with-nogil block (see
+    # test_nogil_inout_record_pointer_hoists_fromPyobj).
+    assert re.search(
+        r"cdef\s+point_st\s+_cy_op_rec__arg_0_obj\s*=\s*"
+        r"point_st\.fromPyobj\(pt\)",
+        body,
+    ), f"missing typed wrapper bind:\n{body}"
+    # `cymod_nr.point_st` (record by value) doesn't match the
+    # `*const *` bug shape so the renderer emits the combined
+    # cdef-with-initializer form.
     assert re.search(
         r"cdef\s+cymod_nr\.point_st\s+_cy_op_rec__arg_0\s*=\s*"
-        r"point_st\.fromPyobj\(pt\)\.getElementPtr\(\)\[0\]",
+        r"_cy_op_rec__arg_0_obj\.getElementPtr\(\)\[0\]",
         body,
-    ), f"missing cprefix-prefixed record-by-value hoist:\n{body}"
+    ), f"missing cprefix-prefixed record-by-value extract from bound wrapper:\n{body}"
     nogil_line = _nogil_block_body(body)
     _assert_no_python_in_nogil_call(nogil_line)
     assert "_cy_op_rec__arg_0" in nogil_line, (
