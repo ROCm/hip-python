@@ -20,7 +20,6 @@ dependencies = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -37,7 +36,7 @@ Repository = "https://github.com/rocm/hip-python"
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
-build-dir = "../build/{wheel_tag}"
+build-dir = "../build/{wheel_tag}/rocm-bindings-libraries"
 cmake.source-dir = "."
 cmake.build-type = "Release"
 ninja.make-fallback = false

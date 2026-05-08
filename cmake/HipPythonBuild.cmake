@@ -178,6 +178,59 @@ function(hip_python_collect_cython_depends out_var)
   set(${out_var} ${_files} PARENT_SCOPE)
 endfunction()
 
+# Append cross-package include paths so cython cimports resolve.
+#
+# In the unified build (driven by `packages/CMakeLists.txt`),
+# `HIP_PYTHON_GLOBAL_INCLUDE_DIRS` already lists every enabled
+# package's root + `<root>/src`. Per-package CMakeLists then just
+# extend their local INCLUDE_DIRS with that variable.
+#
+# In the standalone wheel build (`python -m build` subprocess for a
+# single package), the unified-build's GLOBAL_INCLUDE_DIRS is not
+# forwarded into the scikit-build-core subprocess, so cross-package
+# cimports (e.g. `rocm.bindings.util.loader` from rocm-bindings-core,
+# `rocm.bindings.cyhip` from rocm-bindings-hip) would fail to resolve.
+#
+# This helper auto-discovers every sibling package in the
+# `packages/<pkg>/src` layout relative to the calling package's
+# parent directory and appends each `<sibling-root>` + `<sibling-src>`
+# to the named cache variable. No SIBLINGS argument is needed — the
+# discovery walks `${CMAKE_CURRENT_SOURCE_DIR}/../*` and includes
+# every entry that has an existing `<dir>/src` subdirectory. The
+# self-package's own root + src remain on the include list (the
+# caller has already added them); duplicates from autodiscovery are
+# harmless to Cython.
+#
+# Usage:
+#   hip_python_append_sibling_includes(MY_INCLUDE_DIRS)
+#
+# Wraps the `if(DEFINED HIP_PYTHON_GLOBAL_INCLUDE_DIRS) ... else() ...
+# endif()` idiom so each per-package CMakeLists drops the inline
+# branching AND avoids hard-coded sibling lists that drift as the
+# package set evolves.
+function(hip_python_append_sibling_includes out_var)
+  set(_local "${${out_var}}")
+  if(DEFINED HIP_PYTHON_GLOBAL_INCLUDE_DIRS)
+    list(APPEND _local ${HIP_PYTHON_GLOBAL_INCLUDE_DIRS})
+  else()
+    # Auto-discover siblings: every dir under packages/ that has its
+    # own src/ subdir. Conventionally each hip-python package is laid
+    # out as packages/<pkg>/src/rocm/bindings/... or
+    # packages/<pkg>/src/cuda/bindings/...
+    file(GLOB _sibling_roots
+      LIST_DIRECTORIES true
+      "${CMAKE_CURRENT_SOURCE_DIR}/../*"
+    )
+    foreach(_sibling_root IN LISTS _sibling_roots)
+      if(IS_DIRECTORY "${_sibling_root}" AND EXISTS "${_sibling_root}/src")
+        list(APPEND _local "${_sibling_root}" "${_sibling_root}/src")
+      endif()
+    endforeach()
+  endif()
+  set(${out_var} "${_local}" PARENT_SCOPE)
+endfunction()
+
+
 function(hip_python_resolve_python_package_dir out_var package_name fallback_dir)
   if(EXISTS "${fallback_dir}")
     set(${out_var} "${fallback_dir}" PARENT_SCOPE)
@@ -279,6 +332,15 @@ function(hip_python_add_wheel_target)
   # NOTE: per-package VERSION is populated at unified-CMake configure
   # time by the configure_file() loop in python/CMakeLists.txt, so it
   # already exists in ${ARG_PACKAGE_DIR}/VERSION when this command runs.
+  #
+  # We strip MAKEFLAGS/MFLAGS/MAKELEVEL/GNUMAKEFLAGS from the wheel-build
+  # subprocess. The outer all_wheels build runs under gmake which exports
+  # a jobserver pipe via MAKEFLAGS; scikit-build-core's nested ninja
+  # invocation tries to attach to that jobserver, fails to initialize
+  # the inherited file descriptors, and then gcc intermittently fails
+  # to write the dependency file mid-compile on the largest generated
+  # ``.c`` files (core.c is 200k+ lines). Detaching from the jobserver
+  # lets the nested ninja schedule its own jobs cleanly.
   set(WHEEL_COMMANDS
     # Create temporary directory
     COMMAND ${CMAKE_COMMAND} -E make_directory "${TEMP_WHEEL_DIR}"
@@ -286,7 +348,10 @@ function(hip_python_add_wheel_target)
     # Forward HIP_PYTHON_* CMake options so the per-package scikit-build-core
     # configure (which is a separate CMake invocation) sees the same values
     # as the top-level configure that drives all_wheels.
-    COMMAND ${Python_EXECUTABLE} -m build
+    COMMAND ${CMAKE_COMMAND} -E env
+            --unset=MAKEFLAGS --unset=MFLAGS
+            --unset=MAKELEVEL --unset=GNUMAKEFLAGS
+            ${Python_EXECUTABLE} -m build
             --wheel
             --no-isolation
             --outdir=${TEMP_WHEEL_DIR}

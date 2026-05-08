@@ -97,9 +97,19 @@ cp -av ${src_dir} ${build_dir}
 
 python3 -m venv ${wheels_venv}
 . ${wheels_venv}/bin/activate
+# The outer cmake invocation below forces ``-G "Unix Makefiles"`` so the
+# huge generated ``.c`` files (hipblas.c is 100+ MB) compile reliably —
+# ninja's jobserver-pipe inheritance from the outer make breaks down on
+# them and gcc intermittently fails to write the dependency file
+# mid-compile. The per-wheel scikit-build-core subprocess runs in its
+# own forked context (the inherited jobserver pipe is closed across the
+# fork) so ninja can be used safely there, and scikit-build-core
+# requires ninja unless ``ninja.make-fallback = true`` is set in the
+# package pyproject. Install it explicitly so the per-wheel build step
+# doesn't fail with ``Missing dependencies: ninja>=1.5``.
 pip install --upgrade pip auditwheel patchelf \
-    build "scikit-build-core>=0.11.2" "cmake>=3.26" \
-    "cython>=3.0,<3.1" "ninja>=1.11" setuptools
+    build "scikit-build-core>=0.11.2" "cmake>=3.26" "ninja>=1.5" \
+    "cython>=3.0,<3.1" setuptools
 
 if [ -d "/opt/rh/gcc-toolset-$(g++ -dumpversion)" ]; then
   toolchain="/opt/rh/gcc-toolset-$(g++ -dumpversion)/root/usr"
@@ -141,6 +151,15 @@ fi
 cd ${build_dir}
 
 cmake_args=(
+  # Force Unix Makefiles. Ninja (cmake's default when ninja is on PATH)
+  # is faster but unreliable here: scikit-build-core invokes us from
+  # within its own jobserver, ninja can't initialize the inherited
+  # jobserver pipe, and on the largest generated .c files (hipblas.c
+  # is 100+ MB) gcc intermittently fails to write the dependency file
+  # mid-compile. Make has no jobserver-inheritance quirk and serializes
+  # per-recipe deterministically — slightly slower, much more stable.
+  # Override with `CMAKE_GENERATOR=Ninja` env var if you really want it.
+  -G "${CMAKE_GENERATOR:-Unix Makefiles}"
   -S packages
   -B packages/build
   -DCMAKE_BUILD_TYPE=Release
