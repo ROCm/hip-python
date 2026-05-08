@@ -36,11 +36,10 @@ import os
 import textwrap
 
 import rocm.bindings.amd_comgr as _amd_comgr
+from rocm.bindings.util.types import CStr
 from rocm.version import ROCM_VERSION_TUPLE  # noqa: F401
 
 from . import amd_hsa_kernel_descriptor
-
-NUL = b"\x00"
 
 
 def to_bytes(obj):
@@ -61,14 +60,6 @@ def to_str(obj):
         raise ValueError(
             f"input argument must of type 'str' or 'bytes'; is: {type(obj)}"
         )
-
-
-def to_cstr(obj):
-    """Make 0-char-terminated bytes object, a C string."""
-    result = to_bytes(obj)
-    if result[-1] != NUL:
-        return result + NUL
-    return result
 
 
 def comgr_check(
@@ -546,16 +537,7 @@ def parse_code_symbols(
     return result
 
 
-class _KeepAliveMixin:
-
-    def _keep_alive(self, object):
-        if not hasattr(self, "__references__"):
-            self.__references__ = set()
-        self.__references__.add(object)
-        return object
-
-
-class Data(_KeepAliveMixin):
+class Data:
     @staticmethod
     def kind_str_to_enum(kind_str: str):
         """Prepends ``AMD_COMGR_DATA_KIND_`` to ``kind_str`` and looks up enum.
@@ -638,7 +620,7 @@ class Data(_KeepAliveMixin):
         self._name = to_bytes(name).decode("utf-8")
         comgr_check(
             _amd_comgr.amd_comgr_set_data_name(
-                self.get(), self._keep_alive(to_cstr(self._name))
+                self.get(), CStr(self._name)
             )
         )
 
@@ -749,7 +731,7 @@ class DataSet:
         return self._data_set
 
 
-class Action(_KeepAliveMixin):
+class Action:
     @staticmethod
     def action_kind_str_to_enum(action_kind_str: str):
         """Prepends ``AMD_COMGR_LANGUAGE_`` to ``action_kind_str`` and looks up
@@ -939,7 +921,7 @@ class Action(_KeepAliveMixin):
         comgr_check(
             _amd_comgr.amd_comgr_action_info_set_isa_name(
                 self._action_info,
-                self._keep_alive(to_cstr(isa_name)),
+                CStr(isa_name),
             )
         )
 
@@ -969,11 +951,15 @@ class Action(_KeepAliveMixin):
         # NOTE: Function `amd_comgr_action_info_set_option_list` wraps
         #       std::string around C string options inputs, which
         #       implies that a copy of each option input is created.
-        #       Therefore, the inputs don't need to be kept alive after
-        #       the function call.
+        #       Therefore, the inputs don't strictly need to outlive
+        #       this call. We still wrap each option in CStr because
+        #       (a) it gives a content-deduplicated, NUL-terminated
+        #       buffer for free, and (b) the per-content intern
+        #       remains bounded by the number of unique compile flags
+        #       ever passed.
         comgr_check(
             _amd_comgr.amd_comgr_action_info_set_option_list(
-                self.get(), [to_cstr(o) for o in options], len(options)
+                self.get(), [CStr(o) for o in options], len(options)
             )
         )
 
@@ -1158,7 +1144,7 @@ def disassemble_program(
 
     disassembly_info = comgr_check(
         _amd_comgr.amd_comgr_create_disassembly_info(
-            to_cstr(isa_name),
+            CStr(isa_name),
             ctypes.cast(read_memory_cb, ctypes.c_void_p),
             ctypes.cast(append_instruction_cb, ctypes.c_void_p),
             ctypes.cast(append_address_annotation_cb, ctypes.c_void_p),
