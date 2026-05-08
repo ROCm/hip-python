@@ -26,7 +26,7 @@ The build system is designed around three properties:
 | `rocm-bindings-core` | `packages/rocm-bindings-core/` | DLL loader (`posixloader`/`win32loader` + platform-agnostic `loader`), shared Cython types (`Pointer`, `CStr`, `NDBuffer`, …), and the `paths` module that does lazy ROCm library lookup. **Handcoded; not generator output.** |
 | `rocm-bindings-hip` | `packages/rocm-bindings-hip/` | `hip` and `hiprtc` bindings (high-level + cy*-prefixed C-level pairs). Helpers (`_hip_helpers`, `_hiprtc_helpers`) are handcoded. |
 | `rocm-bindings-libraries` | `packages/rocm-bindings-libraries/` | Math/FFT/random/sparse libraries: hipblas, hipsolver, hiprand, hipfft, hipsparse. List is generator-managed. |
-| `rocm-bindings-systems` | `packages/rocm-bindings-systems/` | System-level libraries: rccl (collective communication), roctx (profiling/tracing), hipfile (accelerated file I/O). Optional bundled `libhipfile.so`. List is generator-managed. |
+| `rocm-bindings-systems` | `packages/rocm-bindings-systems/` | System-level libraries: rccl (collective communication), roctx (profiling/tracing), hipfile (accelerated file I/O), amdsmi (system management interface). Optional bundled `libhipfile.so`. List is generator-managed. |
 | `rocm-bindings-compiler` | `packages/rocm-bindings-compiler/` | LLVM-C bindings, AMD COMGR bindings, optional bundled `libLLVM.so`. Module list is generator-managed. |
 | `hip-python-interop` | `packages/hip-python-interop/` | CUDA interop layer: `cuda.bindings.{driver,runtime,nvrtc}`. Implemented on top of HIP. |
 | `hip-python` | `packages/hip-python/` | Provides the `hip.*` namespace as an alias of `rocm.bindings.*` (`from hip import hip, hiprtc, hipblas, …` re-export). Pure Python. |

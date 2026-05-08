@@ -43,3 +43,8 @@ htmlcov/
 _build/
 docs/_build/
 /docs/
+
+# --- Codegen-emitted version files (must never be committed on codegen base) ---
+/VERSION
+/VERSION.in
+packages/*/VERSION

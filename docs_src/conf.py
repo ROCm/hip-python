@@ -87,17 +87,17 @@ default_role = (
 # Sphinx render the API surface without importing any compiled extension.
 #
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_PYTHON_ROOT = os.path.normpath(os.path.join(_HERE, "..", "python"))
+_PACKAGES_ROOT = os.path.normpath(os.path.join(_HERE, "..", "packages"))
 
 autoapi_type = "python"
 autoapi_dirs = [
-    os.path.join(_PYTHON_ROOT, "rocm-bindings-core", "rocm"),
-    os.path.join(_PYTHON_ROOT, "rocm-bindings-hip", "rocm"),
-    os.path.join(_PYTHON_ROOT, "rocm-bindings-libraries", "rocm"),
-    os.path.join(_PYTHON_ROOT, "rocm-bindings-systems", "rocm"),
-    os.path.join(_PYTHON_ROOT, "rocm-bindings-compiler", "rocm"),
-    os.path.join(_PYTHON_ROOT, "hip-python-interop", "cuda"),
-    os.path.join(_PYTHON_ROOT, "hip-python", "hip"),
+    os.path.join(_PACKAGES_ROOT, "rocm-bindings-core", "src", "rocm"),
+    os.path.join(_PACKAGES_ROOT, "rocm-bindings-hip", "src", "rocm"),
+    os.path.join(_PACKAGES_ROOT, "rocm-bindings-libraries", "src", "rocm"),
+    os.path.join(_PACKAGES_ROOT, "rocm-bindings-systems", "src", "rocm"),
+    os.path.join(_PACKAGES_ROOT, "rocm-bindings-compiler", "src", "rocm"),
+    os.path.join(_PACKAGES_ROOT, "hip-python-interop", "src", "cuda"),
+    os.path.join(_PACKAGES_ROOT, "hip-python", "src", "hip"),
 ]
 autoapi_root = "python_api"
 autoapi_keep_files = True
