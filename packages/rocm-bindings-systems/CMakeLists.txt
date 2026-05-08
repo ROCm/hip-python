@@ -26,10 +26,16 @@ hip_python_get_env_default(_hip_python_runtime_linking_default HIP_PYTHON_RUNTIM
 option(HIP_PYTHON_RUNTIME_LINKING "Whether libraries should resolve ROCm libraries at runtime" ${_hip_python_runtime_linking_default})
 
 # System-level libraries built into this package: collective communication
-# (rccl), tracing/profiling instrumentation (roctx), and accelerated file
-# I/O (hipfile). Math/FFT/random/sparse libraries live in the sibling
-# rocm-bindings-libraries wheel.
-set(HIP_PYTHON_ALL_SYSTEMS rccl roctx hipfile)
+# (rccl), tracing/profiling instrumentation (roctx), accelerated file I/O
+# (hipfile), and system management interface (amdsmi). Math/FFT/random/
+# sparse libraries live in the sibling rocm-bindings-libraries wheel.
+#
+# NOTE: the hsa binding is produced by the codegen but has a known
+# typedef-vs-tag resolution issue in its cython output. It is omitted
+# here until the codegen is fixed; same situation as the experimental
+# library bindings — see the comment in
+# packages/rocm-bindings-libraries/CMakeLists.txt.
+set(HIP_PYTHON_ALL_SYSTEMS rccl roctx hipfile amdsmi)
 
 # hipfile is conditional on the package being available — detect upfront so
 # the per-module foreach loop can skip it gracefully when not installed.
@@ -76,12 +82,13 @@ hip_python_collect_cython_depends(SYSTEMS_CYTHON_DEPENDS
 
 set(SYSTEMS_INCLUDE_DIRS
   "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
-# Use global include dirs if available (unified build), otherwise use local
-if(DEFINED HIP_PYTHON_GLOBAL_INCLUDE_DIRS)
-  list(APPEND SYSTEMS_INCLUDE_DIRS ${HIP_PYTHON_GLOBAL_INCLUDE_DIRS})
-endif()
+# Cross-package cimports: rocm.bindings.util.loader from
+# rocm-bindings-core; rccl additionally needs hipStream_t from
+# rocm-bindings-hip.
+hip_python_append_sibling_includes(SYSTEMS_INCLUDE_DIRS)
 
 # Build each enabled system module
 foreach(_lib IN LISTS HIP_PYTHON_SELECTED_SYSTEMS)

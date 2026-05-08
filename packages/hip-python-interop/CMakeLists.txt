@@ -30,12 +30,12 @@ hip_python_collect_cython_depends(CUDA_CYTHON_DEPENDS
 
 set(CUDA_INCLUDE_DIRS
   "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
-# Use global include dirs if available (unified build)
-if(DEFINED HIP_PYTHON_GLOBAL_INCLUDE_DIRS)
-  list(APPEND CUDA_INCLUDE_DIRS ${HIP_PYTHON_GLOBAL_INCLUDE_DIRS})
-endif()
+# Cross-package cimports: rocm.bindings.util.loader from
+# rocm-bindings-core, rocm.bindings.cyhip from rocm-bindings-hip.
+hip_python_append_sibling_includes(CUDA_INCLUDE_DIRS)
 
 # Build CUDA driver bindings
 hip_python_add_cython_module(

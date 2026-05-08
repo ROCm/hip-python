@@ -33,12 +33,11 @@ hip_python_collect_cython_depends(HIP_CYTHON_DEPENDS
 
 set(HIP_INCLUDE_DIRS
   "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
-# Use global include dirs if available (unified build), otherwise use local
-if(DEFINED HIP_PYTHON_GLOBAL_INCLUDE_DIRS)
-  list(APPEND HIP_INCLUDE_DIRS ${HIP_PYTHON_GLOBAL_INCLUDE_DIRS})
-endif()
+# Cross-package cimport: rocm.bindings.util.loader from rocm-bindings-core.
+hip_python_append_sibling_includes(HIP_INCLUDE_DIRS)
 
 # Determine link libraries based on runtime linking option
 if(NOT HIP_PYTHON_RUNTIME_LINKING)

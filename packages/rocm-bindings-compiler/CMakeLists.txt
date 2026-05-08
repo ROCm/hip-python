@@ -68,13 +68,13 @@ hip_python_collect_cython_depends(COMPILER_CYTHON_DEPENDS
 # Include directories
 set(COMPILER_INCLUDE_DIRS
   "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src"
   "${LLVM_INCLUDE_DIRS}"
   "${amd_comgr_INCLUDE_DIRS}"
 )
 
-if(DEFINED HIP_PYTHON_GLOBAL_INCLUDE_DIRS)
-  list(APPEND COMPILER_INCLUDE_DIRS ${HIP_PYTHON_GLOBAL_INCLUDE_DIRS})
-endif()
+# Cross-package cimport: rocm.bindings.util.loader from rocm-bindings-core.
+hip_python_append_sibling_includes(COMPILER_INCLUDE_DIRS)
 
 # Define module lists for selective building
 # Based on ROCM_LLVM_PYTHON_MODULE_LIST from _version.py.in

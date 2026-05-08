@@ -28,6 +28,16 @@ option(HIP_PYTHON_RUNTIME_LINKING "Whether libraries should resolve ROCm librari
 # Define all libraries to build (math/FFT/random/sparse).
 # RCCL (communication) and ROCTX (tracing) live in the sibling
 # rocm-bindings-systems wheel.
+#
+# NOTE: the experimental bindings (hipblaslt, hipsparselt, hiptensor,
+# hipdnn) are produced by the codegen but have a known typedef-vs-tag
+# resolution issue in their cython output (struct tag like
+# `_hipblasLtMatmulAlgo_t` is referenced without a matching
+# `cdef struct` declaration). They are intentionally omitted from the
+# build until the codegen handles that case; see
+# share/design/BINDINGS.md for the rollout plan. Once the codegen is
+# fixed this list can be replaced with the contents of
+# cmake/generated_modules.cmake (HIP_PYTHON_LIBRARIES_GENERATED_MODULES).
 set(HIP_PYTHON_ALL_LIBRARIES hipblas hipsolver hiprand hipfft hipsparse)
 
 # Allow selective building of libraries
@@ -42,12 +52,12 @@ hip_python_collect_cython_depends(LIBRARIES_CYTHON_DEPENDS
 
 set(LIBRARIES_INCLUDE_DIRS
   "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
-# Use global include dirs if available (unified build), otherwise use local
-if(DEFINED HIP_PYTHON_GLOBAL_INCLUDE_DIRS)
-  list(APPEND LIBRARIES_INCLUDE_DIRS ${HIP_PYTHON_GLOBAL_INCLUDE_DIRS})
-endif()
+# Cross-package cimports: rocm.bindings.util.loader from
+# rocm-bindings-core, rocm.bindings.cyhip from rocm-bindings-hip.
+hip_python_append_sibling_includes(LIBRARIES_INCLUDE_DIRS)
 
 # Build each enabled library
 foreach(_lib IN LISTS HIP_PYTHON_SELECTED_LIBRARIES)

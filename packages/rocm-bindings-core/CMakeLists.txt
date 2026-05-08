@@ -105,7 +105,7 @@ install(
 # IMPORTANT: These MUST be installed for rocm-bindings-core because
 # other packages (hip, libraries, compiler) cimport from util
 install(
-  FILES rocm/__init__.pxd
+  FILES src/rocm/__init__.pxd
   DESTINATION rocm
   COMPONENT rocm-bindings-core
 )
