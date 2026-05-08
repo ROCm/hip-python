@@ -181,8 +181,16 @@ alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
    python3 -m venv .venv
    . .venv/bin/activate
    pip install --upgrade pip
-   pip install build "scikit-build-core>=0.11.2" "cmake>=3.26" "ninja>=1.11" "cython>=3.0,<3.1"
+   pip install build "scikit-build-core>=0.11.2" "cmake>=3.26" "ninja>=1.11" "cython>=3.1.0"
    ```
+
+   > **Cython 3.1.0 is required.** Cython 3.0.x silently miscompiles
+   > a `cdef T x = <T>expr` initializer when `T` contains the inner
+   > `*const *` pattern (e.g. `const char *const *`), leaving the local
+   > NULL — the resulting wrapper segfaults inside the backend (e.g.
+   > `hiprtcCompileProgram`). Fixed upstream in Cython 3.1.0; see
+   > `share/design/BUILDING.md` (under "Cython version requirement")
+   > for details.
 
 4. Configure and build all wheels:
 

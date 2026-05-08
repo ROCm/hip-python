@@ -109,7 +109,7 @@ python3 -m venv ${wheels_venv}
 # doesn't fail with ``Missing dependencies: ninja>=1.5``.
 pip install --upgrade pip auditwheel patchelf \
     build "scikit-build-core>=0.11.2" "cmake>=3.26" "ninja>=1.5" \
-    "cython>=3.0,<3.1" setuptools
+    "cython>=3.1.0" setuptools
 
 if [ -d "/opt/rh/gcc-toolset-$(g++ -dumpversion)" ]; then
   toolchain="/opt/rh/gcc-toolset-$(g++ -dumpversion)/root/usr"

@@ -493,12 +493,63 @@ unified configure step, listed in each per-package
 - **C compiler** (GCC or Clang).
 - **Python 3.9+** with `pip>=24.0`, `venv`, and development headers.
 - **CMake ≥ 3.26** and **Ninja ≥ 1.11** recommended.
-- Python packages: `scikit-build-core>=0.11.2`, `cython>=3.0,<3.1`,
+- Python packages: `scikit-build-core>=0.11.2`, `cython>=3.1.0`,
   `build`. Optional for production wheels: `auditwheel`, `patchelf`.
+  See [Cython version requirement](#cython-version-requirement) for
+  why the floor is 3.1.0.
 - **ROCm SDK** at `${ROCM_PATH}` (defaults to `/opt/rocm`).
 - For docs builds: `sphinx`, `sphinx-autoapi`, `rocm-docs-core`, plus the
   rest of `docs_src/sphinx/requirements.txt`.
 - For developer-only stub regeneration (see next section): `mypy`.
+
+## Cython version requirement
+
+**Floor: `cython >= 3.1.0`.** Earlier 3.0.x releases (up to and
+including the latest 3.0.12) silently miscompile a specific Cython
+construct used by the interfacegen-generated bindings, producing a
+wrapper that segfaults at runtime.
+
+### The bug
+
+For a `cdef`-with-initializer where the type contains the inner
+`*const *` pattern (i.e. `const T *const *` or `T *const *` —
+shapes that arise naturally for C signatures like
+`hiprtcCompileProgram`'s
+`const char *const * options` or `hipSignalExternalSemaphoresAsync`'s
+`const hipExternalSemaphore_t * extSemArray`), Cython 3.0.x parses
+the statement, emits a warning
+`local variable 'x' referenced before assignment`, and then **drops
+the initializer assignment from the generated C**. The local is
+declared but never assigned. At runtime the call site passes
+whatever the stack happened to contain (typically `NULL`) to the
+backend, segfaulting on the first dereference.
+
+The bug is fixed in Cython 3.1.0 and later; 3.1.x and 3.2.x emit
+the assignment correctly with no warning. The interfacegen repo
+carries unit-test coverage that pins both the bug shape (the
+``*const *`` pattern) and the trailing-const handling — see
+``test_typed_helpers.py::test_call_arg_hoist_double_const_pointer_uses_split_form``
+and the sibling tests around it.
+
+### Defense in depth
+
+The interfacegen codegen also defends against the bug by emitting
+the wrapper-bound prehoist as **two separate statements** (bare
+cdef + a separate assignment), which Cython 3.0.x compiles
+correctly. So even on a buggy toolchain the generated bindings
+still run correctly. The 3.1.0 floor declared here is the upstream
+side of the same fix — the codegen split-form is the codegen side.
+Both layers exist so the fix can't silently regress on a future
+toolchain change.
+
+### What if I have to use Cython 3.0.x
+
+Don't, if you can avoid it. If you absolutely must (e.g. an
+internal toolchain pinned to a specific Cython release), the
+codegen split-form will keep our generated bindings working — but
+any *handcoded* Cython that uses the same `cdef T x = <T>expr`
+shape with `*const *` in `T` will silently fail. Audit handcoded
+`.pyx` files if you go this route.
 
 ## Regenerating stubs for handcoded Cython modules
 
