@@ -48,7 +48,7 @@ A release flow looks like this:
 
 The `hip-python` repo distinguishes two kinds of branches:
 
-### Codegen base branch — `dev/docharri/hip-python-codegen-base`
+### Codegen base branch
 
 Contains **only handcoded** content:
 
