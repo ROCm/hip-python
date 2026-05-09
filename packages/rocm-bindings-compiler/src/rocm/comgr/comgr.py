@@ -734,19 +734,27 @@ class DataSet:
 class Action:
     @staticmethod
     def action_kind_str_to_enum(action_kind_str: str):
-        """Prepends ``AMD_COMGR_LANGUAGE_`` to ``action_kind_str`` and looks up
-        enum.
+        """Prepends ``AMD_COMGR_ACTION_`` to ``action_kind_str`` and looks up
+        the enum on `~.amd_comgr_action_kind_s`.
 
         Note:
             Also converts ``action_kind_str`` to upper case.
 
-        The following ``action_kind_str`` keys can be used (state: ROCm 6.0.0):
+        The valid keys mirror the ``amd_comgr_action_kind_s`` enum
+        emitted by interfacegen from the ROCm headers — the canonical
+        list lives there. To stay in sync, the keys below are grouped
+        by the ROCm release that introduced them. Removed keys are
+        noted at the bottom; passing one will raise
+        :py:exc:`AttributeError` because the underlying cy* enum no
+        longer exposes the corresponding value.
+
+        Available since ROCm 6.0.0:
 
         SOURCE_TO_PREPROCESSOR:
             Preprocess each source data object in input in order. For each
             successful preprocessor invocation, add a source data object to
             result. Resolve any include source names using the names of
-            includedata objects in input. Resolve any include relative path
+            include data objects in input. Resolve any include relative path
             names using the working directory path in info. Preprocess the
             source for the language in info.
         ADD_PRECOMPILED_HEADERS:
@@ -760,18 +768,11 @@ class Action:
             input. Resolve any include relative path names using the working
             directory path in info. Produce bc for isa name in info. Compile
             the source for the language in info.
-        ADD_DEVICE_LIBRARIES:
-            (Removed in ROCm 6.4+) Copy all existing data objects in input to
-            output, then add the device-specific and language-specific bitcode
-            libraries required for compilation.
         LINK_BC_TO_BC:
             Link a collection of bitcodes, bundled bitcodes, and bundled
             bitcode archives in into a single composite (unbundled) bitcode.
             Any device library bc data object must be explicitly added to input
             if needed.
-        OPTIMIZE_BC_TO_BC:
-            Optimize each bc data object in input and create an optimized bc
-            data object to result.
         CODEGEN_BC_TO_RELOCATABLE:
             Perform code generation for each bc data object in input in order.
             For each successful code generation add a relocatable data object
@@ -809,16 +810,9 @@ class Action:
             (Deprecated from ROCm 7.1+ on) Disassemble each bytes data object
             in input in order. For each successful disassembly add a source
             data object to result. Only simple assembly language commands are
-            generate that corresponf to raw bytes are supported, not any
+            generated that correspond to raw bytes are supported, not any
             directives that control the code object layout, or symbolic branch
             targets or names.
-        COMPILE_SOURCE_TO_FATBIN:
-            Compile each source data object in input in order. For each
-            successful compilation add a fat binary to result. Resolve any
-            include source names using the names of include data objects in
-            input. Resolve any include relative path names using the working
-            directory path in info. Produce fat binary for isa name in info.
-            Compile the source for the language in info.
         COMPILE_SOURCE_WITH_DEVICE_LIBS_TO_BC:
             Compile each source data object in input in order. For each
             successful compilation add a bc data object to result. Resolve any
@@ -831,7 +825,7 @@ class Action:
         LAST:
             Marker for last valid action kind.
 
-        The following ``action_kind_str`` keys can be used with ROCm 6.2+:
+        Available since ROCm 6.2+:
 
         UNBUNDLE:
             Unbundle each source data object in input. These objects can be
@@ -839,7 +833,7 @@ class Action:
             successful unbundling, add a bc object or archive object to result,
             depending on the corresponding input.
 
-        The following ``action_kind_str`` keys can be used with ROCm 6.4+:
+        Available since ROCm 6.4+:
 
         COMPILE_SOURCE_TO_RELOCATABLE:
             Compile a single source data object in input in order. For each
@@ -850,10 +844,34 @@ class Action:
             object to result.
         TRANSLATE_SPIRV_TO_BC:
             Translate each source SPIR-V object in input into LLVM IR Bitcode.
-            For each successful translation, add a bc object to p result.
+            For each successful translation, add a bc object to result.
+        COMPILE_SPIRV_TO_RELOCATABLE:
+            Compile each source SPIR-V object in input into a relocatable.
+            For each successful compilation, add a relocatable object to
+            result.
+        COMPILE_SOURCE_TO_SPIRV:
+            Compile each HIP source data object in input in order. For each
+            successful compilation add a SPIR-V data object to result. Resolve
+            any include source names using the names of include data objects
+            in input. Resolve any include relative path names using the
+            working directory path in info. Compile the source for the
+            language in info.
 
-        The following ``action_kind_str`` keys can be used with ROCm 6.4+:
+        Removed upstream (no longer in the cy* enum from ROCm 7.13.0;
+        passing these will raise `AttributeError`):
 
+        ADD_DEVICE_LIBRARIES:
+            Removed in ROCm 6.4. Replaced by
+            ``COMPILE_SOURCE_WITH_DEVICE_LIBS_TO_BC`` (which fuses
+            the device-libs link into the compile step).
+        OPTIMIZE_BC_TO_BC:
+            Removed in an earlier ROCm release; never present in the
+            ROCm 7.13.0 enum that this binding was generated against.
+        COMPILE_SOURCE_TO_FATBIN:
+            Removed in an earlier ROCm release; the fat-binary build
+            path is now exercised via the
+            ``COMPILE_SOURCE_TO_EXECUTABLE`` /
+            ``COMPILE_SOURCE_TO_RELOCATABLE`` actions.
         """
         return getattr(
             _amd_comgr.amd_comgr_action_kind_s,
@@ -862,12 +880,17 @@ class Action:
 
     @staticmethod
     def lang_str_to_enum(lang_str: str):
-        """Prepends ``AMD_COMGR_LANGUAGE_`` to ``lang_str`` and looks up enum.
+        """Prepends ``AMD_COMGR_LANGUAGE_`` to ``lang_str`` and looks up
+        the enum on `~.amd_comgr_language_s`.
 
         Note:
             Also converts ``lang_str`` to upper case.
 
-        The following ``lang_str`` keys can be used (state: ROCm 6.0.0):
+        The valid keys mirror the ``amd_comgr_language_s`` enum
+        emitted by interfacegen from the ROCm headers — the canonical
+        list lives there.
+
+        Available since ROCm 6.0.0:
 
         NONE:
             No high level language.
@@ -875,12 +898,22 @@ class Action:
             OpenCL 1.2.
         OPENCL_2_0:
             OpenCL 2.0.
-        HC:
-            AMD Hetrogeneous C++ (HC).
         HIP:
             HIP.
         LAST:
             Marker for last valid language.
+
+        Available since ROCm 6.4+:
+
+        LLVM_IR:
+            LLVM IR, either textual (.ll) or bitcode (.bc) format.
+
+        Removed upstream (no longer in the cy* enum from ROCm 7.13.0;
+        passing it will raise `AttributeError`):
+
+        HC:
+            AMD Heterogeneous C++ (HC). The HC language was retired
+            from COMGR; use ``HIP`` instead.
         """
         return getattr(
             _amd_comgr.amd_comgr_language_s,
