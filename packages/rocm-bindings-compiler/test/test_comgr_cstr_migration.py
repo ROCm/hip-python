@@ -131,3 +131,148 @@ def test_keep_alive_mixin_removed():
     assert not hasattr(comgr_mod, "_KeepAliveMixin"), (
         "_KeepAliveMixin was deleted in the CStr migration; do not re-introduce."
     )
+
+
+# ---------------------------------------------------------------------------
+# *_str_to_enum: short form, full prefix form, case-insensitive matching
+# ---------------------------------------------------------------------------
+
+
+def test_action_kind_str_to_enum_accepts_short_and_full_prefix():
+    """``action_kind_str_to_enum`` accepts both the short form
+    (``"COMPILE_SOURCE_TO_BC"``) and the already-prefixed form
+    (``"AMD_COMGR_ACTION_COMPILE_SOURCE_TO_BC"``); both must
+    resolve to the exact same enum member."""
+    from rocm.comgr.comgr import Action
+
+    short = Action.action_kind_str_to_enum("COMPILE_SOURCE_TO_BC")
+    full = Action.action_kind_str_to_enum("AMD_COMGR_ACTION_COMPILE_SOURCE_TO_BC")
+    assert short is full
+    assert short.name == "AMD_COMGR_ACTION_COMPILE_SOURCE_TO_BC"
+
+
+def test_action_kind_str_to_enum_case_insensitive():
+    """Lowercase / mixed-case inputs are normalised to upper-case
+    before the lookup."""
+    from rocm.comgr.comgr import Action
+
+    upper = Action.action_kind_str_to_enum("LINK_BC_TO_BC")
+    lower = Action.action_kind_str_to_enum("link_bc_to_bc")
+    mixed = Action.action_kind_str_to_enum("Link_Bc_To_Bc")
+    full_mixed = Action.action_kind_str_to_enum(
+        "amd_comgr_action_link_bc_to_bc"
+    )
+    assert upper is lower is mixed is full_mixed
+
+
+def test_data_kind_str_to_enum_accepts_short_and_full_prefix():
+    from rocm.comgr.comgr import Data
+
+    short = Data.kind_str_to_enum("FATBIN")
+    full = Data.kind_str_to_enum("AMD_COMGR_DATA_KIND_FATBIN")
+    assert short is full
+    assert short.name == "AMD_COMGR_DATA_KIND_FATBIN"
+
+
+def test_lang_str_to_enum_accepts_short_and_full_prefix():
+    from rocm.comgr.comgr import Action
+
+    short = Action.lang_str_to_enum("HIP")
+    full = Action.lang_str_to_enum("AMD_COMGR_LANGUAGE_HIP")
+    assert short is full
+    assert short.name == "AMD_COMGR_LANGUAGE_HIP"
+
+
+# ---------------------------------------------------------------------------
+# valid_*() runtime introspection
+# ---------------------------------------------------------------------------
+
+
+def test_valid_action_kinds_contains_stable_baseline():
+    """``valid_action_kinds`` must return a non-empty list and
+    contain the ROCm 6.0.0 baseline keys that have shipped for years.
+    Newly added keys (e.g. SPIR-V) are NOT asserted here so the test
+    stays stable across ROCm version bumps."""
+    from rocm.comgr.comgr import Action
+
+    keys = Action.valid_action_kinds()
+    assert len(keys) > 0
+    baseline = {
+        "SOURCE_TO_PREPROCESSOR",
+        "ADD_PRECOMPILED_HEADERS",
+        "COMPILE_SOURCE_TO_BC",
+        "LINK_BC_TO_BC",
+        "CODEGEN_BC_TO_RELOCATABLE",
+        "CODEGEN_BC_TO_ASSEMBLY",
+        "LINK_RELOCATABLE_TO_RELOCATABLE",
+        "LINK_RELOCATABLE_TO_EXECUTABLE",
+        "ASSEMBLE_SOURCE_TO_RELOCATABLE",
+        "COMPILE_SOURCE_WITH_DEVICE_LIBS_TO_BC",
+        "LAST",
+    }
+    missing = baseline - set(keys)
+    assert not missing, (
+        f"valid_action_kinds() missing baseline keys: {missing}"
+    )
+    # Every returned key must round-trip through the lookup.
+    for k in keys:
+        Action.action_kind_str_to_enum(k)
+
+
+def test_valid_data_kinds_contains_stable_baseline():
+    from rocm.comgr.comgr import Data
+
+    keys = Data.valid_kinds()
+    baseline = {
+        "UNDEF", "SOURCE", "INCLUDE", "PRECOMPILED_HEADER",
+        "DIAGNOSTIC", "LOG", "BC", "RELOCATABLE", "EXECUTABLE",
+        "BYTES", "FATBIN", "AR", "BC_BUNDLE", "AR_BUNDLE", "LAST",
+    }
+    missing = baseline - set(keys)
+    assert not missing, (
+        f"Data.valid_kinds() missing baseline keys: {missing}"
+    )
+    for k in keys:
+        Data.kind_str_to_enum(k)
+
+
+def test_valid_languages_contains_stable_baseline():
+    from rocm.comgr.comgr import Action
+
+    keys = Action.valid_languages()
+    baseline = {"NONE", "OPENCL_1_2", "OPENCL_2_0", "HIP", "LAST"}
+    missing = baseline - set(keys)
+    assert not missing, (
+        f"valid_languages() missing baseline keys: {missing}"
+    )
+    for k in keys:
+        Action.lang_str_to_enum(k)
+
+
+# ---------------------------------------------------------------------------
+# Removed-upstream keys still raise (regression guard for the
+# Notes section in each docstring)
+# ---------------------------------------------------------------------------
+
+
+def test_removed_action_kinds_raise_attribute_error():
+    """Keys that were removed upstream (and called out in the
+    docstring's Notes section) must raise AttributeError — both
+    in short form and in full-prefix form."""
+    from rocm.comgr.comgr import Action
+
+    for short in ("ADD_DEVICE_LIBRARIES", "OPTIMIZE_BC_TO_BC",
+                  "COMPILE_SOURCE_TO_FATBIN"):
+        with pytest.raises(AttributeError):
+            Action.action_kind_str_to_enum(short)
+        with pytest.raises(AttributeError):
+            Action.action_kind_str_to_enum("AMD_COMGR_ACTION_" + short)
+
+
+def test_removed_languages_raise_attribute_error():
+    from rocm.comgr.comgr import Action
+
+    with pytest.raises(AttributeError):
+        Action.lang_str_to_enum("HC")
+    with pytest.raises(AttributeError):
+        Action.lang_str_to_enum("AMD_COMGR_LANGUAGE_HC")
