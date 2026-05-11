@@ -281,6 +281,13 @@ class TestCudaDriver(HIPTestCase):
         self.assertTrue(block > 0)
 
 
+    def test_context_synchronize(self):
+        # Test that context synchronization completes without error
+        # Must not call the deprecated hipCtxSynchronize,
+        # which returns hipErrorNotSupported on ROCm 7.0.2+
+        self.context.synchronize()
+
+
 class TestDevice(HIPTestCase):
     def test_device_get_uuid(self):
         # A device UUID looks like:

@@ -1490,7 +1490,7 @@ class Context(object):
         )
 
     def synchronize(self):
-        driver.cuCtxSynchronize()
+        driver.hipDeviceSynchronize()
 
     @contextlib.contextmanager
     def defer_cleanup(self):
