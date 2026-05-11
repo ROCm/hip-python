@@ -451,5 +451,153 @@ def test_raw_comment_cleaned_strips_group_brackets_from_own_comment(tmp_path):
     assert "@}" not in cleaned
 
 
+# -- Pattern C: #if-guarded decls --------------------------------------
+
+
+def test_pattern_c_if_guard_recovers_brief():
+    """Pattern C — hipsparse generic API shape. A doxygen comment sits
+    immediately before a `#if(...)` preprocessor block that wraps the
+    decl. libclang treats the `#if` as breaking the
+    "comment-immediately-preceding-declaration" association and
+    `cursor.raw_comment` comes back None. Walking the token stream
+    backwards, the doc comment is still there and unclaimed — Pattern C
+    inherits it."""
+    src = textwrap.dedent(
+        """\
+        /*! \\ingroup generic_module
+         *  \\brief Create a sparse vector.
+         *  \\details details body.
+         */
+        #if (!defined(CUDART_VERSION) || CUDART_VERSION > 10010)
+        int hipsparseCreateSpVec(int x);
+        #endif
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    fn = cursors["hipsparseCreateSpVec"]
+    # Sanity: libclang really did fail to attach (reproduces the bug).
+    assert not fn.raw_comment, (
+        f"libclang unexpectedly attached: {fn.raw_comment!r}"
+    )
+    assert fn.hash in idx, "Pattern C recovery did not fire"
+    inherited = idx[fn.hash]
+    assert "Create a sparse vector" in inherited
+    assert "generic_module" in inherited
+
+
+def test_pattern_c_if_guard_attribute_macro_between():
+    """A `HIPSPARSE_EXPORT`-style attribute macro between the `#if` and
+    the function declaration is normal in ROCm headers. The macro is an
+    IDENTIFIER token in the stream — it must NOT clear `pending_doc`."""
+    src = textwrap.dedent(
+        """\
+        #define HIPSPARSE_EXPORT
+        /*! \\brief Brief lives. */
+        #if 1
+        HIPSPARSE_EXPORT
+        int func_with_export(int x);
+        #endif
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    assert cursors["func_with_export"].hash in idx
+    assert "Brief lives" in idx[cursors["func_with_export"].hash]
+
+
+def test_pattern_c_intervening_decl_blocks_recovery():
+    """Negative case — a `;` between the doc comment and the target
+    decl signals a decl boundary; pending_doc must be cleared so we
+    don't accidentally inherit across an unrelated decl. Without the
+    boundary clear, `bar` would inherit `foo`'s doc.
+    """
+    src = textwrap.dedent(
+        """\
+        /*! \\brief Belongs to foo only. */
+        int foo(int x);
+        int bar(int x);
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    # foo gets its doc via libclang directly — not in the inheritance index.
+    assert cursors["foo"].hash not in idx
+    # bar must NOT inherit foo's doc.
+    assert cursors["bar"].hash not in idx
+
+
+def test_pattern_c_does_not_override_libclang_attached():
+    """If libclang already attached a real doc comment, Pattern C must
+    not clobber it. Only un-attached decls should be candidates."""
+    src = textwrap.dedent(
+        """\
+        /*! \\brief Stale doc — orphaned by trailing semicolon. */
+        ;
+        /*! \\brief Real doc for foo. */
+        int foo(int x);
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    # foo's libclang-attached doc wins; not added to inheritance index.
+    assert cursors["foo"].hash not in idx
+    # libclang attached the close-by comment, so raw_comment is set.
+    assert cursors["foo"].raw_comment
+    assert "Real doc for foo" in cursors["foo"].raw_comment
+
+
+def test_pattern_c_brace_block_clears_pending_doc():
+    """A `{ ... }` block (e.g. `enum { A, B };`) between a doc comment
+    and the next function decl is a boundary — the doc was claimed by
+    the enum, not by the upcoming function."""
+    src = textwrap.dedent(
+        """\
+        /*! \\brief Belongs to the enum. */
+        enum E { A, B };
+        int after_enum(int x);
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    assert cursors["after_enum"].hash not in idx
+
+
+def test_pattern_c_chain_of_guarded_decls():
+    """Multiple `#if`-guarded decls each preceded by their own doc — every
+    one should recover its brief independently. Reproduces the
+    hipsparse-generic-auxiliary.h shape with a chain of small Create/
+    Destroy/Get functions."""
+    src = textwrap.dedent(
+        """\
+        /*! \\brief brief A */
+        #if 1
+        int fa(int x);
+        #endif
+        /*! \\brief brief B */
+        #if 1
+        int fb(int x);
+        #endif
+        /*! \\brief brief C */
+        #if 1
+        int fc(int x);
+        #endif
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    # libclang may or may not attach to fa (depends on whether the
+    # leading `#if` is treated as breaking attachment).
+    for name, expected in (("fa", "brief A"),
+                           ("fb", "brief B"),
+                           ("fc", "brief C")):
+        c = cursors[name]
+        if c.raw_comment:
+            assert expected in c.raw_comment
+        else:
+            assert c.hash in idx, f"{name} not recovered via Pattern C"
+            assert expected in idx[c.hash]
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

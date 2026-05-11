@@ -260,6 +260,21 @@ def _build_inherited_comment_index(root):
         active_stack = per_file_stack.setdefault(filename, [])
         current_filename = filename
 
+        # Pattern-C invalidation: a `;` / `{` / `}` punctuation outside
+        # any active group block is a decl/block boundary — any pending
+        # doc comment that wasn't claimed by a function decl is now
+        # orphaned and must not "leak" forward to the next decl. This
+        # is what keeps `int foo(); int bar();` from making `bar`
+        # inherit `foo`'s upstream doc comment by accident. Inside an
+        # active stack, Pattern A/B owns the bookkeeping and we leave
+        # the marker alone.
+        if (
+            tok.kind == TokenKind.PUNCTUATION
+            and not active_stack
+            and tok.spelling in (";", "{", "}")
+        ):
+            per_file_last_doc.pop(filename, None)
+
         if tok.kind == TokenKind.COMMENT:
             spelling = tok.spelling
             opens = _comment_opens_group(spelling)
@@ -325,8 +340,6 @@ def _build_inherited_comment_index(root):
                 # @{ group with a bare marker (Pattern A fold above).
                 per_file_last_doc[filename] = (spelling, tok_index)
             continue
-        if not active_stack:
-            continue
         if tok.kind != TokenKind.IDENTIFIER:
             continue
         tok_cursor = clang.cindex.Cursor.from_location(tu, loc)
@@ -345,9 +358,29 @@ def _build_inherited_comment_index(root):
             key = tok_cursor.hash
         except Exception:
             continue
-        # First occurrence wins (the function's name token comes
-        # before its parameter list in source order).
-        index.setdefault(key, active_stack[-1])
+        if active_stack:
+            # First occurrence wins (the function's name token comes
+            # before its parameter list in source order).
+            index.setdefault(key, active_stack[-1])
+        else:
+            # Pattern C — function decl outside any @{ block, with no
+            # libclang-attached raw_comment. The most common cause is a
+            # `#if(...)` / `#elif(...)` preprocessor guard sitting
+            # between the doc comment and the decl: libclang treats the
+            # directive as breaking the "comment immediately preceding
+            # declaration" association even though doxygen itself
+            # happily walks past it. Hipsparse's generic API
+            # (`hipsparseCreateSpVec` etc.) is the canonical example.
+            #
+            # The pending_doc tracker holds the most recent unclaimed
+            # doc comment in this file; the boundary-clear above
+            # ensures it's invalidated whenever a `;` / `{` / `}`
+            # intervenes, so we don't accidentally inherit a comment
+            # from across a different decl.
+            recovered = per_file_last_doc.get(filename)
+            if recovered is not None:
+                index.setdefault(key, recovered[0])
+                per_file_last_doc.pop(filename, None)
 
     for filename, stack in per_file_stack.items():
         if stack:
