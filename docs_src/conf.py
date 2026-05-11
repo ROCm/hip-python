@@ -4,9 +4,47 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import os
+import re
 from datetime import datetime as _datetime
 
-_today = _datetime.today()
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_PACKAGES_ROOT = os.path.normpath(os.path.join(_HERE, "..", "packages"))
+
+
+def _read_generated_versions():
+    """Parse a `set(KEY "VAL")` cmake script into a dict.
+
+    Reads packages/rocm-bindings-hip/cmake/generated_versions.cmake
+    (the canonical file — all five per-package copies carry identical
+    HIP_PYTHON_GENERATED_* values per the interfacegen loop). Returns
+    an empty dict if the file is missing (ad-hoc local doc build
+    without codegen).
+    """
+    path = os.path.join(
+        _PACKAGES_ROOT,
+        "rocm-bindings-hip",
+        "cmake",
+        "generated_versions.cmake",
+    )
+    if not os.path.isfile(path):
+        return {}
+    out = {}
+    pattern = re.compile(r'set\(\s*([A-Z_][A-Z0-9_]*)\s+"([^"]*)"\s*\)')
+    with open(path, encoding="utf-8") as fh:
+        for m in pattern.finditer(fh.read()):
+            out[m.group(1)] = m.group(2)
+    return out
+
+
+_versions = _read_generated_versions()
+_codegen_date = _versions.get("HIP_PYTHON_GENERATED_DATE", "")
+if _codegen_date:
+    try:
+        _today = _datetime.fromisoformat(_codegen_date.replace("Z", "+00:00"))
+    except ValueError:
+        _today = _datetime.today()
+else:
+    _today = _datetime.today()
 
 # Rocm-docs-core
 external_projects_remote_repository = ""
@@ -86,9 +124,6 @@ default_role = (
 # the generator-emitted .pyi stubs (per share/design/CODEGEN.md), this lets
 # Sphinx render the API surface without importing any compiled extension.
 #
-_HERE = os.path.dirname(os.path.abspath(__file__))
-_PACKAGES_ROOT = os.path.normpath(os.path.join(_HERE, "..", "packages"))
-
 autoapi_type = "python"
 autoapi_dirs = [
     os.path.join(_PACKAGES_ROOT, "rocm-bindings-core", "src", "rocm"),

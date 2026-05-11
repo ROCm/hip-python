@@ -581,6 +581,41 @@ if(HIP_PYTHON_BUILD_DOCS)
   message(STATUS "  output:    ${HIP_PYTHON_DOCS_OUTPUT_DIR}")
   message(STATUS "  doctrees:  ${HIP_PYTHON_DOCS_DOCTREE_DIR}")
 
+  # Substitute landing-page version metadata. Read the canonical
+  # generated_versions.cmake (rocm-bindings-hip's copy — all five
+  # per-package copies carry identical HIP_PYTHON_GENERATED_* values
+  # per the interfacegen loop). When a per-source REV is empty (the
+  # codegen run did not consult that source tree), surface
+  # "*not consulted*" so the rendered note stays informative.
+  set(_versions_cmake
+      "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-hip/cmake/generated_versions.cmake")
+  if(EXISTS "${_versions_cmake}")
+    include("${_versions_cmake}")
+  endif()
+  foreach(_var
+      HIP_PYTHON_GENERATED_DATE
+      HIP_PYTHON_GENERATED_ROCM_VERSION
+      HIP_PYTHON_GENERATED_ROCM_LIBRARIES_REV
+      HIP_PYTHON_GENERATED_ROCM_SYSTEMS_REV
+      HIP_PYTHON_GENERATED_ROCM_LLVM_PROJECT_REV)
+    if(NOT DEFINED ${_var} OR "${${_var}}" STREQUAL "")
+      set(${_var} "unknown")
+    endif()
+  endforeach()
+  foreach(_src ROCM_LIBRARIES ROCM_SYSTEMS ROCM_LLVM_PROJECT)
+    set(_rev_var "HIP_PYTHON_GENERATED_${_src}_REV")
+    set(_disp_var "HIP_PYTHON_GENERATED_${_src}_REV_DISPLAY")
+    if("${${_rev_var}}" STREQUAL "" OR "${${_rev_var}}" STREQUAL "unknown")
+      set(${_disp_var} "*not consulted*")
+    else()
+      set(${_disp_var} "``${${_rev_var}}``")
+    endif()
+  endforeach()
+  configure_file(
+      "${_docs_source_dir}/index.rst.in"
+      "${_docs_source_dir}/index.rst"
+      @ONLY)
+
   add_custom_target(docs
     COMMAND "${CMAKE_COMMAND}" -E make_directory
             "${HIP_PYTHON_DOCS_OUTPUT_DIR}"

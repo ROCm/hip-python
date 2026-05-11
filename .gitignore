@@ -48,3 +48,6 @@ docs/_build/
 /VERSION
 /VERSION.in
 packages/*/VERSION
+
+# --- Sphinx index.rst rendered from index.rst.in by the docs target ---
+docs_src/index.rst

@@ -32,7 +32,14 @@ the porting of CUDA Python Python and Cython programs.
 
 .. note::
 
-   This documentation has been generated based on ROCm\ |trade| version {ROCM_VERSION_NAME}.
+   This documentation was generated on @HIP_PYTHON_GENERATED_DATE@ from
+   ROCm\ |trade| version @HIP_PYTHON_GENERATED_ROCM_VERSION@ headers.
+
+   Optional source trees consulted during codegen:
+
+   * ``ROCm/rocm-libraries``: @HIP_PYTHON_GENERATED_ROCM_LIBRARIES_REV_DISPLAY@
+   * ``ROCm/rocm-systems``: @HIP_PYTHON_GENERATED_ROCM_SYSTEMS_REV_DISPLAY@
+   * ``ROCm/llvm-project``: @HIP_PYTHON_GENERATED_ROCM_LLVM_PROJECT_REV_DISPLAY@
 
 Spotlight
 ---------
@@ -102,21 +109,15 @@ Spotlight
    .. grid-item-card:: HIP Python's Python API
 
       The full list of HIP Python Python variables, classes
-      and functions.
+      and functions. A few entry points:
 
-      * :doc:`python_api/rocm/bindings/util/index`
       * :doc:`python_api/rocm/bindings/hip/index`
       * :doc:`python_api/rocm/bindings/hiprtc/index`
       * :doc:`python_api/rocm/bindings/hipblas/index`
-      * :doc:`python_api/rocm/bindings/hipsolver/index`
-      * :doc:`python_api/rocm/bindings/rccl/index`
-      * :doc:`python_api/rocm/bindings/hiprand/index`
-      * :doc:`python_api/rocm/bindings/hipfft/index`
-      * :doc:`python_api/rocm/bindings/hipsparse/index`
-      * :doc:`python_api/rocm/bindings/roctx/index`
       * :doc:`python_api/rocm/bindings/amd_comgr/index`
-      * :doc:`python_api/hip/index` (``hip.*`` alias package)
-      * :doc:`python_api/rocm/comgr/index`
+      * :doc:`python_api/rocm/bindings/util/index`
+      * …
+      * :ref:`Full module index <modindex>`
 
    .. grid-item-card:: The CUDA Python Interoperability Layer's Python API
 
