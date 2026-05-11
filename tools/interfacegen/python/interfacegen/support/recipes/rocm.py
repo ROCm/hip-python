@@ -1189,9 +1189,21 @@ class hipdnn:
     `hipdnn*` / `HIPDNN_*` symbols.
     """
 
+    # Empty-body include-guard-style marker, not a value-carrying
+    # constant: `#define HIPDNN_CALLBACK_TYPES_DEFINED` after a
+    # corresponding `#ifndef`. The default macro_type would treat it
+    # as int and emit `__Pyx_PyLong_From_int(HIPDNN_CALLBACK_TYPES_DEFINED)`
+    # which expands to `__Pyx_PyLong_From_int()` ("too few arguments").
+    # Same shape as HSA's HSA_LARGE_MODEL — see the hsa class.
+    _CODEGEN_BLOCKLIST = frozenset((
+        "HIPDNN_CALLBACK_TYPES_DEFINED",
+    ))
+
     @staticmethod
     def node_filter(node: Node):
         if _is_useless_macro(node):
+            return False
+        if node.name in hipdnn._CODEGEN_BLOCKLIST:
             return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPDNN_")

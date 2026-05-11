@@ -406,12 +406,24 @@ def generate_hiptensor(
 def generate_hipdnn(
     *,
     include_dir: str,
-    header_relpath: str = "hipdnn_backend.h",
+    header_relpath: str = "hipdnn/backend/hipdnn_backend.h",
     header_content: str = None,
     runtime_linking: bool,
     generator_args: list,
     default_ptr_handler,
 ):
+    # Upstream hipdnn ships C-API headers that contain C++ `constexpr`
+    # constants (e.g. `constexpr hipdnnPluginLoadingMode_ext_t
+    # HIPDNN_DEFAULT_PLUGIN_LOADING_MODE = ...` in
+    # `HipdnnBackendPluginLoadingMode.h`). Without this define, both
+    # libclang's parse and the generated Cython .c's gcc compile fail
+    # on `unknown type name 'constexpr'`. Mapping the keyword to
+    # `const` is semantically equivalent for these declarations
+    # (compile-time constant of an enum type) and lets the bindings
+    # build with a stock C compiler. Filed-against-upstream as
+    # ROCm/rocm-libraries hipdnn issue (link in
+    # share/design/UPSTREAM_BUGS).
+    hipdnn_cflags = list(generator_args) + ["-Dconstexpr=const"]
     generator = CythonModuleGenerator(
         "rocm.bindings.hipdnn",
         include_dir,
@@ -426,7 +438,7 @@ def generate_hipdnn(
         ptr_parm_intent=controls.hipdnn.ptr_parm_intent,
         ptr_rank=controls.hipdnn.ptr_rank,
         ptr_complicated_type_handler=default_ptr_handler,
-        cflags=generator_args,
+        cflags=hipdnn_cflags,
     )
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\

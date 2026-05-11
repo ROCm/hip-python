@@ -142,7 +142,10 @@ def get_libraries_header(header_relpath: str, rocm_libraries_dir: str):
         "hipfft/hipfftXt.h": "projects/hipfft/library/include/hipfft/hipfftXt.h",
         "hiptensor/hiptensor.h": "projects/hiptensor/library/include/hiptensor/hiptensor.h",
         "hipsparselt/hipsparselt.h": "projects/hipsparselt/library/include/hipsparselt/hipsparselt.h",
-        "hipdnn_backend.h": "projects/hipdnn/backend/include/hipdnn_backend.h",
+        # `hipdnn/backend/hipdnn_backend.h` deliberately resolves to
+        # the rocm-install copy only — see the per-header comment in
+        # AVAILABLE_GENERATORS for the rationale (the CMake-generated
+        # `hipdnn_backend_export.h` is missing from the source tree).
     }
 
     if header_relpath not in mappings:
@@ -652,7 +655,18 @@ AVAILABLE_GENERATORS = {
     "hipsparselt": (generators_libraries.generate_hipsparselt, "libraries", "hipsparselt/hipsparselt.h"),
     "hipsolver":   (generators_libraries.generate_hipsolver,   "libraries", "hipsolver/hipsolver.h"),
     "hiptensor":   (generators_libraries.generate_hiptensor,   "libraries", "hiptensor/hiptensor.h"),
-    "hipdnn":      (generators_libraries.generate_hipdnn,      "libraries", "hipdnn_backend.h"),
+    # `hipdnn/backend/hipdnn_backend.h` is the install-dir layout
+    # (`/opt/rocm/include/hipdnn/backend/hipdnn_backend.h`). Don't be
+    # tempted to use the source-tree relative path
+    # (`hipdnn_backend.h`): the source tree at
+    # `projects/hipdnn/backend/include/` is missing the CMake-
+    # generated `hipdnn_backend_export.h` (which defines the
+    # `HIPDNN_BACKEND_EXPORT` attribute used on every public decl),
+    # so libclang silently drops 24 of the 29 function declarations.
+    # Reading from the install dir keeps the export header next to
+    # the umbrella header where the relative `#include "..."` finds
+    # it.
+    "hipdnn":      (generators_libraries.generate_hipdnn,      "libraries", "hipdnn/backend/hipdnn_backend.h"),
     # rocm-bindings-compiler — both formerly their own recipes; now
     # libraries inside the hip recipe. amd_comgr is single-header;
     # llvm is multi-module (header_relpath=None signals the orchestrator
