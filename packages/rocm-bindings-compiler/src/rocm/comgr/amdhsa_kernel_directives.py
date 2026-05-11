@@ -24,89 +24,108 @@
 
 # flake8: noqa
 
-"""AMD HSA kernel directives
+"""AMD HSA kernel directives.
 
-Note the JavaScript code for generating the main content of this file is shown
-below. You can copy and insert the code into your browser's console when
-visiting <https://llvm.org/docs/AMDGPUUsage.html> to regenerate or update
-the main content of this module.
-
-```js
-let directives = []
-const p_kd_property = /Controls (?<kd_prop>[A-Z0-9_]+) /
-const p_except = /\(except (?<exceptions>([A-Z0-9_]+)+)\)/
-const p_tgt_feat = /TargetFeatureSpecific\((?<feat>\w+)\)/
-document.body.querySelector("#amdhsa-kernel-directives-table").querySelectorAll("tr").forEach( tr => {
-    let cells = []
-    tr.querySelectorAll("td p").forEach( td => {
-        cells.push(td.textContent.replace(/(\r\n|\n|\r)/gm, " "));
-    })
-    if (cells.length > 0) {
-        // console.log(cells)
-        const found = cells[3].match(p_kd_property)
-        let kd_prop = ""
-        if (found) {
-            kd_prop = found.groups["kd_prop"].toLowerCase()
-        }
-
-        const supported_raw = cells[2]
-        const supported = supported_raw.replace(p_except,"").replaceAll(" ","").split(",")
-
-        const found2 = supported_raw.match(p_except)
-        let unsupported = []
-        if ( found2 ) {
-            unsupported = found2.groups["exceptions"].replaceAll(" ","").split(",")
-        }
-
-        let thedefault = cells[1]
-        const found3 = thedefault.replaceAll(" ","").match(p_tgt_feat)
-        if ( found3 ) {
-            thedefault = ":"+found3.groups["feat"]+"+";
-        } else if ( thedefault === "Required" ) {
-            thedefault = "REQUIRED";
-        } else {
-            thedefault = parseInt(thedefault);
-        }
-
-        // console.log(cells[1])
-
-        directives.push({
-            "dir": cells[0],
-            "kd_prop": kd_prop,
-            "default": thedefault,
-            "supported": supported,
-            "unsupported": unsupported,
-            "default_raw": cells[1],
-            "supported_raw": supported_raw,
-            "description": cells[3]
-        })
-    }
-})
-
-arch_supported_expressions = new Set()
-arch_unsupported_expressions = new Set()
-
-directives.forEach(
-    dir => {
-       dir["supported"].forEach(arch_supported_expressions .add, arch_supported_expressions)
-       dir["unsupported"].forEach(arch_unsupported_expressions.add, arch_unsupported_expressions)
-    }
-)
-let output = `
-
-# The content below was generated from https://llvm.org/docs/AMDGPUUsage.html
-
-# These expressions appear in the directives'"supported" list field.
-arch_supported_expressions = ${JSON.stringify(Array.from(arch_supported_expressions), null, 2)}
-
-# These expressions appear in the directives'"unsupported" list field.
-arch_unsupported_expressions = ${JSON.stringify(Array.from(arch_unsupported_expressions), null, 2)}
-
-directives = ${JSON.stringify(directives, null, 2)}`
-
-console.log(output)
-```
+The data tables below (``arch_supported_expressions``,
+``arch_unsupported_expressions``, ``directives``) are scraped from
+the upstream LLVM AMD GPU usage docs. The JavaScript snippet that
+performs the scrape is kept as a plain ``#``-comment block right
+below this docstring (out of the docstring on purpose: a markdown
+fenced JS block and the JS template-literal backticks confuse the
+RST/MyST parser used by sphinx-autoapi). To regenerate the data:
+open <https://llvm.org/docs/AMDGPUUsage.html>, paste the snippet
+into the browser console, and replace the data tables with the
+captured output.
 """
+
+# -----------------------------------------------------------------------------
+# JavaScript snippet for regenerating the data tables in this module.
+#
+# Open the LLVM AMD GPU usage docs in a browser:
+#   https://llvm.org/docs/AMDGPUUsage.html
+# Paste the snippet below into the browser console. The output printed
+# to the console replaces the `arch_supported_expressions`,
+# `arch_unsupported_expressions`, and `directives` literals below.
+#
+# Kept as a regular comment (not a docstring) on purpose: the embedded
+# ```js fence and the JS template-literal backticks would otherwise be
+# parsed as RST inline-code markers by sphinx-autoapi and render as a
+# string of "problematic" markers on the API doc page.
+#
+# js> let directives = []
+# js> const p_kd_property = /Controls (?<kd_prop>[A-Z0-9_]+) /
+# js> const p_except = /\(except (?<exceptions>([A-Z0-9_]+)+)\)/
+# js> const p_tgt_feat = /TargetFeatureSpecific\((?<feat>\w+)\)/
+# js> document.body.querySelector("#amdhsa-kernel-directives-table").querySelectorAll("tr").forEach( tr => {
+# js>     let cells = []
+# js>     tr.querySelectorAll("td p").forEach( td => {
+# js>         cells.push(td.textContent.replace(/(\r\n|\n|\r)/gm, " "));
+# js>     })
+# js>     if (cells.length > 0) {
+# js>         // console.log(cells)
+# js>         const found = cells[3].match(p_kd_property)
+# js>         let kd_prop = ""
+# js>         if (found) {
+# js>             kd_prop = found.groups["kd_prop"].toLowerCase()
+# js>         }
+# js>
+# js>         const supported_raw = cells[2]
+# js>         const supported = supported_raw.replace(p_except,"").replaceAll(" ","").split(",")
+# js>
+# js>         const found2 = supported_raw.match(p_except)
+# js>         let unsupported = []
+# js>         if ( found2 ) {
+# js>             unsupported = found2.groups["exceptions"].replaceAll(" ","").split(",")
+# js>         }
+# js>
+# js>         let thedefault = cells[1]
+# js>         const found3 = thedefault.replaceAll(" ","").match(p_tgt_feat)
+# js>         if ( found3 ) {
+# js>             thedefault = ":"+found3.groups["feat"]+"+";
+# js>         } else if ( thedefault === "Required" ) {
+# js>             thedefault = "REQUIRED";
+# js>         } else {
+# js>             thedefault = parseInt(thedefault);
+# js>         }
+# js>
+# js>         // console.log(cells[1])
+# js>
+# js>         directives.push({
+# js>             "dir": cells[0],
+# js>             "kd_prop": kd_prop,
+# js>             "default": thedefault,
+# js>             "supported": supported,
+# js>             "unsupported": unsupported,
+# js>             "default_raw": cells[1],
+# js>             "supported_raw": supported_raw,
+# js>             "description": cells[3]
+# js>         })
+# js>     }
+# js> })
+# js>
+# js> arch_supported_expressions = new Set()
+# js> arch_unsupported_expressions = new Set()
+# js>
+# js> directives.forEach(
+# js>     dir => {
+# js>        dir["supported"].forEach(arch_supported_expressions .add, arch_supported_expressions)
+# js>        dir["unsupported"].forEach(arch_unsupported_expressions.add, arch_unsupported_expressions)
+# js>     }
+# js> )
+# js> let output = `
+# js>
+# js> # The content below was generated from https://llvm.org/docs/AMDGPUUsage.html
+# js>
+# js> # These expressions appear in the directives'"supported" list field.
+# js> arch_supported_expressions = ${JSON.stringify(Array.from(arch_supported_expressions), null, 2)}
+# js>
+# js> # These expressions appear in the directives'"unsupported" list field.
+# js> arch_unsupported_expressions = ${JSON.stringify(Array.from(arch_unsupported_expressions), null, 2)}
+# js>
+# js> directives = ${JSON.stringify(directives, null, 2)}`
+# js>
+# js> console.log(output)
+# -----------------------------------------------------------------------------
 
 import re
 from typing import Generator
