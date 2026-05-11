@@ -522,11 +522,17 @@ function(hip_python_add_stubgen_target)
     # mypy.stubgen` does not work when mypy is installed as a
     # compiled .so (no code object for `-m`); the `stubgen` script
     # in the same venv works regardless of the install layout.
+    # --include-docstrings: copy `__doc__` from the compiled module
+    # into the generated .pyi. Without this, mypy stubgen emits only
+    # signatures, leaving sphinx-autoapi with empty class/method
+    # description columns on the rendered docs (rocm.bindings.util.types
+    # was the visible regression that motivated this flag).
     COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${_staging}
             ${HIP_PYTHON_STUBGEN_EXECUTABLE}
             --module ${ARG_MODULE}
             --output ${_stubgen_outdir}
             --include-private
+            --include-docstrings
     # Move the generated leaf .pyi from the dotted-path layout into
     # the source-tree destination next to the .pyx.
     COMMAND ${CMAKE_COMMAND} -E copy
