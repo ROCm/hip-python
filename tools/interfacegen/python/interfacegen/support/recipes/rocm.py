@@ -842,12 +842,27 @@ class rccl:
             return "char *"
         return "int"
 
+    # Hardcoded overrides for RCCL functions whose upstream doxygen
+    # `@param[out]` tag is wrong: the parm is actually a caller-
+    # allocated device buffer that the function writes into. Trusting
+    # the tag would push the buffer into the python return tuple,
+    # silently dropping it from the function signature so the user
+    # has no way to pass their own pre-allocated buffer.
+    _MISTAGGED_INOUT = frozenset((
+        # (funcname, parm_name)
+        ("ncclReduce",  "recvbuff"),
+        ("pncclReduce", "recvbuff"),
+    ))
+
     @staticmethod
     @fallback(*_INPLACE_NUMERICAL_INTENT_CHAIN)
     def ptr_parm_intent(node: Parm):
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
+        parent = node.parent
+        if parent is not None and (parent.name, node.name) in rccl._MISTAGGED_INOUT:
+            return ParmIntent.INOUT
         if node.is_pointer_to_record(degree=2):
             if (node.parent.name, node.name) in (
                 ("ncclCommInitAll", "comm"),
@@ -1532,10 +1547,31 @@ class hsa:
             return node.name.startswith("HSA_")
         return node.name.startswith("hsa_") or node.name.startswith("HSA_")
 
-    # HSA's API uses opaque `*_t` handles + numerical-rank pointer
-    # conventions that match hipBLAS heuristics — reuse them rather
-    # than carrying a parallel set.
-    ptr_parm_intent = hipblas.ptr_parm_intent
+    # Hardcoded overrides for HSA functions whose upstream doxygen
+    # `@param[out]` tag is wrong: the parm is actually a caller-
+    # allocated buffer (host or device memory the user manages).
+    # Trusting the tag would push the parm into the return tuple,
+    # silently dropping it from the function signature so the user
+    # has no way to pass their own pre-allocated buffer.
+    _MISTAGGED_INOUT = frozenset((
+        # (funcname, parm_name)
+        ("hsa_memory_copy", "dst"),
+    ))
+
+    @staticmethod
+    @fallback(*_NUMERICAL_INTENT_CHAIN)
+    def ptr_parm_intent(node: Parm):
+        """Intent classifier for HSA — overrides the upstream-doxygen-
+        mistagged caller-allocated buffers, otherwise defers to
+        hipblas (handle pointer-to-void degree=2 → OUT) and the chain.
+        """
+        parent = node.parent
+        if parent is not None and (parent.name, node.name) in hsa._MISTAGGED_INOUT:
+            return ParmIntent.INOUT
+        return hipblas.ptr_parm_intent.__wrapped__(node)
+
+    # HSA's pointer-rank conventions match hipBLAS heuristics — reuse
+    # them rather than carrying a parallel set.
     ptr_rank = hipblas.ptr_rank
 
 
