@@ -8,67 +8,606 @@ __test__: dict
 _clear_retained_inputs: _cython_3_2_4.cython_function_or_method
 
 class CStr(Pointer):
+    """CStr(pyobj)
+
+    Datatype for handling C strings (`char *` and related).
+
+    Datatype for handling C strings (`char *`). Cython's parameter
+    autoconversion creates duplicates of C strings and hence loses
+    the original data's address, which can be an issue.
+
+    This implementation assumes that this type is mainly used like a Python
+    `str` in cases where it is returned by a function.
+    Hence, the `__getitem__`, `__repr__` and `__str__` implementation of this class
+    decode the underlying data as `UTF-8` string. ASCII is a subset of UTF-8.
+    Note that this design choice is irrelevant for the case where the type is
+    used as adapter to convert Python arguments to a C string.
+
+    This datatype implements the Python buffer protocol. Therefore, different
+    decoding of the underlying data can be achieved by passing this type
+    to the constructor of `bytes` or to other array types or memory views that can deal
+    with Python buffers.
+
+    Warning:
+        When using this type as adapter, be aware that `bytes` and `str`
+        objects passed to the constructor of this class might get garbage collected.
+        If the called C library stores pointers to the data of these Python objects
+        into a library-managed data structure and the latter is then used
+        outside of the original scope, you might experience memory errors.
+
+    Limitation:
+        This class is only designed for handling strings that encode each
+        character with 8 bits (ASCII and UTF-8). Smaller or larger symbols are not
+        supported.
+
+    The type can be initialized from the following Python objects:
+
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        If needed, length information must be obtained via ``strlen`` in this case.
+        Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown
+        reasons. Therefore, it must be checked for this type first.
+
+    * `object` that implements the Python buffer protocol:
+
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`.
+
+    Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _shape (`Py_size_t[1]`, protected):
+            Size of the wrapped zero-terminated C char,
+            stored into first array element.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information."""
     _retained_inputs: ClassVar[dict] = ...
     __pyx_vtable__: ClassVar[PyCapsule] = ...
-    def __init__(self, pyobj) -> Any: ...
-    def decode(self, encoding=..., errors=...) -> Any: ...
-    def encode(self, encoding=..., errors=...) -> Any: ...
-    def free(self) -> void: ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.CStr` for information
+                        about accepted types for ``pyobj``.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
+    def decode(self, encoding=..., errors=...) -> Any:
+        """CStr.decode(self, /, encoding='utf-8', errors='strict')
+
+        Return a `str` object with respect to the enconding.
+
+        See:
+            `bytes.decode`"""
+    def encode(self, encoding=..., errors=...) -> Any:
+        """CStr.encode(self, /, encoding='utf-8', errors='strict')
+
+        Return a `bytes` object with respect to the encoding.
+
+        See:
+            `str.encode`"""
+    def free(self) -> void:
+        """CStr.free(self) -> void
+
+        Free dynamically allocated data.
+
+        Note:
+            Simply returns if the data pointer is NULL.
+        Note:
+            Throws `~.RuntimeError` if this instance does not own the data that ought
+            to be freed.
+        Note:
+            Unsets the _is_ptr_owner flag."""
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def malloc(self, Py_ssize_tsize_bytes) -> void: ...
-    def __bool__(self) -> bool: ...
-    def __buffer__(self, *args, **kwargs): ...
-    def __getitem__(self, subscript) -> Any: ...
-    def __len__(self) -> int: ...
-    def __reduce__(self): ...
-    def __release_buffer__(self, *args, **kwargs): ...
+    def fromObj(pyobj) -> Any:
+        """CStr.fromObj(pyobj)
+
+        Creates a CStr from the given object.
+
+        In case ``pyobj`` is itself a ``CStr`` instance, this method
+        returns it directly. No new ``CStr`` is created."""
+    def malloc(self, Py_ssize_tsize_bytes) -> void:
+        """CStr.malloc(self, Py_ssize_t size_bytes) -> void
+
+        Dynamically allocate a buffer of bytes for this CStr.
+
+        Args:
+            size_bytes (`Py_ssize_t`): The number of bytes to allocate.
+        Note:
+            Throws `~.RuntimeError` if the data pointer is not NULL as this
+            indicates that this instance handles external data.
+        Note:
+            Sets the _is_ptr_owner flag."""
+    def __bool__(self) -> bool:
+        """True if self else False"""
+    def __buffer__(self, *args, **kwargs):
+        """Return a buffer object that exposes the underlying memory of the object."""
+    def __getitem__(self, subscript) -> Any:
+        """CStr.__getitem__(self, subscript)
+
+        Get individual chars or slice the underlying chars.
+
+        Note:
+            Copies into a temporary str object
+            if `subscript` is a slice."""
+    def __len__(self) -> int:
+        """CStr.__len__(self) -> int
+
+        The number of chars/bytes of the C string.
+        """
+    def __reduce__(self):
+        """CStr.__reduce_cython__(self)"""
+    def __release_buffer__(self, *args, **kwargs):
+        """Release the buffer object that exposes the underlying memory of the object."""
 
 class DeviceArray(NDBuffer):
+    """Datatype for handling device buffers.
+
+        Datatype for handling device buffers returned by `~.hipMalloc` and related device
+        memory allocation routines.
+
+        This type implements the CUDA array interface protocol.
+
+        It can be initialized from the following Python objects:
+
+        * `None`:
+            This will set the ``self._ptr`` attribute to ``NULL``.
+            No shape and type information is available in this case!
+        * `object` that is accepted as input by `~.Pointer.__init__`:
+            In this case, init code from `~.Pointer` is used.
+            `~.Py_buffer` object ownership is not transferred
+            See `~.Pointer.__init__` for more information.
+            No shape and type information is available in this case!
+        * `int`:
+            Interprets the integer value as pointer address and writes it to ``self._ptr``.
+            No shape and type information is available in this case!
+        * `ctypes.c_void_p`:
+            Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+            No shape and type information is available in this case!
+        * `object` with ``__cuda_array_interface__`` member:
+            Takes the integer-valued pointer address, i.e. the first entry of the ``data``
+            tuple from `pyobj`'s member ``__cuda_array_interface__``  and writes it to
+            ``self._ptr``. Copies shape and type information.
+
+        Note:
+            Type checks are performed in the above order.
+
+        Note:
+            Shape and type information and other metadata can be modified or overwritten
+            after creation via the `~.configure` member function. be aware that you might
+            need to pass the ``_force=True`` keyword argument --- in particular if your
+            instance was created from a type that does not implement the CUDA array
+            interface protocol.
+        See:
+            `~.configure`
+
+        C Attributes:
+            _ptr (``void *``, protected):
+                Stores a pointer to the data of the original Python object.
+            _py_buffer (`~.Py_buffer`, protected):
+                Stores a pointer to the data of the original Python object.
+            _py_buffer_acquired (`bool`, protected):
+                Stores a pointer to the data of the original Python object.
+            _itemsize (``size_t``, protected):
+                Stores the itemsize.
+            __dict__ (`dict`, protected):
+                Dict with member ``__cuda_array_interface__``.
+    """
     __pyx_vtable__: ClassVar[PyCapsule] = ...
     @classmethod
-    def __init__(cls, *args, **kwargs) -> None: ...
+    def __init__(cls, *args, **kwargs) -> None:
+        """Create and return a new object.  See help(type) for accurate signature."""
     @staticmethod
-    def DeviceArray(pyobj) -> Any: ...
-    def __reduce__(self): ...
+    def DeviceArray(pyobj) -> Any:
+        """DeviceArray.DeviceArray(pyobj)
+
+        Creates a NDBuffer from the given object.
+
+        In case ``pyobj`` is itself a ``NDBuffer`` instance, this method
+        returns it directly. No new ``NDBuffer`` is created."""
+    def __reduce__(self):
+        """DeviceArray.__reduce_cython__(self)"""
 
 class ListOfBytes(Pointer):
+    """ListOfBytes(pyobj)
+
+    Handler for `list` / `tuple` whose entries are `bytes`, `str`, or `~.CStr`.
+
+    Datatype for handling Python `list` and `tuple` objects with entries of type
+    `bytes`, `str`, or `~.CStr` that need to be converted to a pointer type
+    when passed to the underlying C function. ``str`` entries are UTF-8 encoded
+    transparently.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of `bytes`, `str`, or `~.CStr`:
+
+        A `list` or `tuple` of `bytes`, `str`, or `~.CStr` objects.
+        In this case, this type allocates an array of ``const char*`` pointers wherein
+        it stores the addresses from the `list`/`tuple` entries. ``str`` entries are
+        UTF-8 encoded; ``bytes`` and the encoded form of ``str`` entries are interned
+        in the ``ListOfBytes._retained_inputs`` class dict for the program's lifetime
+        so the C pointers remain valid even if the backend retains them. Furthermore,
+        the instance's ``self._is_ptr_owner`` C attribute is set to `True`.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`."""
     _retained_inputs: ClassVar[dict] = ...
     __pyx_vtable__: ClassVar[PyCapsule] = ...
-    def __init__(self, pyobj) -> Any: ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.ListOfBytes` for information
+                        about accepted types for ``pyobj``.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def __reduce__(self): ...
+    def fromObj(pyobj) -> Any:
+        """ListOfBytes.fromObj(pyobj)
+
+        Creates a ListOfBytes from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfBytes`` instance, this method
+        returns it directly. No new ``ListOfBytes`` is created."""
+    def __reduce__(self):
+        """ListOfBytes.__reduce_cython__(self)"""
 
 class ListOfInt(Pointer):
+    """ListOfInt(pyobj)
+
+    Handler for `list` / `tuple` whose entries can be converted to C type ``int``
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be
+    converted to C type ``int``. Such entries might be of Python type `None`, `int`,
+    or of any `ctypes` integer type.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``int``:
+
+        A `list` or `tuple` of types that can be converted to C type ``int``.
+        In this case, this type allocates an array of C ``int`` values wherein it
+        stores the values obtained from the `list`/`tuple` entries. Furthermore, the
+        instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`."""
     __pyx_vtable__: ClassVar[PyCapsule] = ...
-    def __init__(self, pyobj) -> Any: ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.ListOfInt` for information
+                        about accepted types for ``pyobj``.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def __reduce__(self): ...
+    def fromObj(pyobj) -> Any:
+        """ListOfInt.fromObj(pyobj)
+
+        Creates a ListOfInt from the given object.
+
+        In case ``pyobj`` is itself a ``ListOfInt`` instance, this method
+        returns it directly. No new ``ListOfInt`` is created."""
+    def __reduce__(self):
+        """ListOfInt.__reduce_cython__(self)"""
 
 class ListOfPointer(Pointer):
+    """ListOfPointer(pyobj)
+
+    Handler for Python `list`/`tuple` whose entries can be converted to `~.Pointer`
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be
+    converted to type `~.Pointer`. Such entries might be of type `None`, `int`,
+    `ctypes.c_void_p`, Python buffer interface implementors, CUDA array interface
+    implementors, `~.Pointer`, subclasses of Pointer.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of `bytes`:
+
+        A `list` or `tuple` of types that can be converted to `~.Pointer`. In this
+        case, this type allocates an array of ``void *`` pointers wherein it stores the
+        addresses obtained from the `list`/`tuple` entries. Furthermore, the instance's
+        `self._is_ptr_owner` C attribute is set to `True` in this case.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer.__init__` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`."""
     __pyx_vtable__: ClassVar[PyCapsule] = ...
-    def __init__(self, pyobj) -> Any: ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.ListOfPointer` for information
+                        about accepted types for ``pyobj``.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def __reduce__(self): ...
+    def fromObj(pyobj) -> Any:
+        """ListOfPointer.fromObj(pyobj)
+
+        Creates a ListOfPointer from the given object.
+
+        In case ``pyobj`` is itself a ``ListOfPointer`` instance, this method
+        returns it directly. No new ``ListOfPointer`` is created."""
+    def __reduce__(self):
+        """ListOfPointer.__reduce_cython__(self)"""
 
 class ListOfUnsigned(Pointer):
+    """ListOfUnsigned(pyobj)
+
+    Handler for `list` / `tuple` whose entries can be converted to C ``unsigned``
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be
+    converted to C type ``unsigned``. Such entries might be of Python type `None`,
+    `int`, or of any `ctypes` integer type.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``unsigned``:
+
+        A `list` or `tuple` of types that can be converted to C type ``unsigned``.
+        In this case, this type allocates an array of C ``unsigned`` values wherein it
+        stores the values obtained from the `list`/`tuple` entries. Furthermore, the
+        instance's ``self._is_ptr_owner`` C attribute is set to `True` in this case.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`."""
     __pyx_vtable__: ClassVar[PyCapsule] = ...
-    def __init__(self, pyobj) -> Any: ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.ListOfUnsigned` for information
+                        about accepted types for ``pyobj``.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def __reduce__(self): ...
+    def fromObj(pyobj) -> Any:
+        """ListOfUnsigned.fromObj(pyobj)
+
+        Creates a ListOfUnsigned from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfUnsigned`` instance, this method
+        returns it directly. No new ``ListOfUnsigned`` is created."""
+    def __reduce__(self):
+        """ListOfUnsigned.__reduce_cython__(self)"""
 
 class ListOfUnsignedLong(Pointer):
+    """ListOfUnsignedLong(pyobj)
+
+    Handler for `list`/`tuple` whose entries can be converted to C ``unsigned long``
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be
+    converted to C type ``unsigned long``. Such entries might be of Python type
+    `None`, `int`, or of any `ctypes` integer type.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``unsigned long``:
+
+        A `list` or `tuple` of types that can be converted to C type ``unsigned long``.
+        In this case, this type allocates an array of C ``unsigned long`` values
+        wherein it stores the values obtained from the `list`/`tuple` entries.
+        Furthermore, the instance's `self._is_ptr_owner` C attribute is set to `True`
+        in this case.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`."""
     __pyx_vtable__: ClassVar[PyCapsule] = ...
-    def __init__(self, pyobj) -> Any: ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.ListOfUnsigned` for information
+                        about accepted types for ``pyobj``.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def __reduce__(self): ...
+    def fromObj(pyobj) -> Any:
+        """ListOfUnsignedLong.fromObj(pyobj)
+
+        Creates a ListOfUnsignedLong from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfUnsignedLong`` instance, this method
+        returns it directly. No new ``ListOfUnsignedLong`` is created."""
+    def __reduce__(self):
+        """ListOfUnsignedLong.__reduce_cython__(self)"""
 
 class NDBuffer(Pointer):
+    """NDBuffer(pyobj)
+
+    Handler for contiguous n-dimensional buffers of various element types
+
+    Datatype for handling contiguous n-dimensional buffers of various element types.
+    The buffer can be reshaped via its ``configure`` method.
+
+    Note:
+        This buffer does not provide any routines to read or write
+        elements of the buffer. Instead, its ``__getitem__`` operator is overloaded
+        to return ``NDBuffer`` instances pointing to contiguous subregions
+        or single elements of the original buffer. If this buffer is wrapped around
+        host data, users can convert it to types that allow access to the underlying
+        data such as `bytes`, `bytearray` or numpy array types as this type
+        implements the Python buffer protocol.
+
+    This type implements the CUDA array interface protocol. Note, however that it is
+    the user's obligation to only pass this type to consumers of the CUDA array
+    interface if and only if the underlying data is device data.
+
+    It can be initialized from the following Python objects:
+
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        No length information can be obtained in this case.
+        Note that `ctypes.c_void_p` seems to be identified as Python buffer for
+        unknown reasons. Therefore, it must be checked for this type first.
+
+    * `object` with ``__cuda_array_interface__`` member:
+        Takes the integer-valued pointer address, i.e. the first entry of the ``data``
+        tuple from ``pyobj``'s member ``__cuda_array_interface__``  and writes it to
+        ``self._ptr``. Copies shape and type information.
+
+    * `object` that implements the Python buffer protocol:
+
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Shape and type information and other metadata can be modified or overwritten
+        after creation via the `~.configure` member function. Be aware that you might
+        need to pass the ``_force=True`` keyword argument --- in particular if your
+        instance was created from a type that does not implement the CUDA array
+        interface protocol.
+    See:
+        `~.configure`
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer (`~.Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (`bool`, protected):
+            Stores a pointer to the data of the original Python object.
+        __dict__ (`dict`, protected):
+            Dict with member ``__cuda_array_interface__``.
+        _itemsize (``size_t``, protected):
+            Stores the itemsize. The item size is not member of
+            ``__cuda_array_interface__``.
+        _py_buffer_shape (``Py_Ssize_t*``, private):
+            A buffer to pass shape information to consumers
+            of this Python buffer."""
     NUMPY_CHAR_CODES: ClassVar[tuple] = ...
     __pyx_vtable__: ClassVar[PyCapsule] = ...
     is_read_only: Incomplete
@@ -78,24 +617,231 @@ class NDBuffer(Pointer):
     size: Incomplete
     stream_as_int: Incomplete
     typestr: Incomplete
-    def __init__(self, pyobj) -> Any: ...
-    def configure(self, **kwargs) -> Any: ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.NDBuffer` for information
+                        about accepted types for ``pyobj``.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+
+                Note:
+                    Shape and type information and other metadata can be modified or
+                    overwritten after creation via the `~.configure` member function. Be aware
+                    that you might need to pass the ``_force=True`` keyword argument --- in
+                    particular if your instance was created from a type that does not implement
+                    the CUDA array interface  protocol.
+                See:
+                    `~.configure`
+        """
+    def configure(self, **kwargs) -> Any:
+        """NDBuffer.configure(self, **kwargs)
+
+        (Re-)configure this contiguous n-dimensional buffer.
+
+        Warning:
+            When you reconfigure the buffer shape, previously acquired
+            views on this NDBuffer via the Python buffer protocol
+            might become invalid. Therefore, a `RuntimeException`
+            is thrown if this method is called while the view count
+            is greater than zero.
+
+        Keyword arguments:
+            shape (`tuple`):
+                A tuple that describes the extent per dimension.
+                The length of the tuple is the number of dimensions.
+            typestr (`str`):
+                A numpy typestr, see the notes for more details.
+            stream (`int` or `None`):
+                The stream to synchronize before consuming
+                this array. See first note for more details.
+                Only makes sense if this buffer wraps device data.
+            itemsize (`int`):
+                Size in bytes of each item. Defaults to 1. See the notes.
+            read_only (`bool`):
+                `NDBuffer` is read_only. Second entry of the
+                CUDA array interface 'data' tuple. Defaults to False.
+            _force(`bool`):
+                Ignore changes in the total number of bytes when
+                overriding shape, typestr, and/or itemsize.
+
+        Note:
+            More details on the keyword arguments can be found here:
+            https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html
+
+        Note:
+            This method does not automatically map all existing numpy/numba typestr to
+            appropriate number of bytes, i.e. `itemsize`. Hence, you need to specify
+            ``itemsize`` additionally when dealing with other datatypes than bytes
+            (typestr: ``'b'``)."""
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def __buffer__(self, *args, **kwargs): ...
-    def __getitem__(self, subscript) -> Any: ...
-    def __reduce__(self): ...
-    def __release_buffer__(self, *args, **kwargs): ...
+    def fromObj(pyobj) -> Any:
+        """NDBuffer.fromObj(pyobj)
+
+        Creates a NDBuffer from the given object.
+
+        In case ``pyobj`` is itself a ``NDBuffer`` instance, this method
+        returns it directly. No new ``NDBuffer`` is created."""
+    def __buffer__(self, *args, **kwargs):
+        """Return a buffer object that exposes the underlying memory of the object."""
+    def __getitem__(self, subscript) -> Any:
+        """NDBuffer.__getitem__(self, subscript)
+
+        Returns a contiguous subarray according to the subscript expression.
+
+        Returns a contiguous subarray according to the subscript expression.
+
+        Args:
+            subscript (`int`/`slice`/`tuple`):
+                Either an integer, a slice, or a tuple of slices and integers.
+
+        Note:
+            If the subscript is a single integer, e.g. `[i]`, the subarray
+            `[i,:,:,...,:]` is returned. A `KeyError` is raised if the extent of axis 0
+            is surpassed. This behavior is identical to that of numpy.
+
+        Raises:
+            `TypeError`:
+                If the subscript types are not 'int', 'slice' or a 'tuple' thereof.
+            `ValueError`:
+                If the subscripts do not yield an contiguous subarray. A single array
+                element is regarded as contiguous array of size 1."""
+    def __reduce__(self):
+        """NDBuffer.__reduce_cython__(self)"""
+    def __release_buffer__(self, *args, **kwargs):
+        """Release the buffer object that exposes the underlying memory of the object."""
 
 class Pointer:
+    """Pointer(pyobj=None)
+
+    Handler for Python arguments that need to be converted to a pointer type
+
+    Datatype for handling Python arguments that need to be converted to a pointer type
+    when passed to an underlying C function.
+
+    This type stores a C ``void *`` pointer to the original Python object's data plus
+    an additional `Py_buffer` object if the pointer has ben acquired from a Python
+    object that implements the
+    `Python buffer protocol <https://docs.python.org/3/c-api/buffer.html>`_.
+
+    This type can be constructed from input objects that are implementors of the
+    CUDA array interface protocol.
+
+    In summary, the type can be initialized from the following Python objects:
+
+    * `None`:
+
+        This will set the ``self._ptr`` attribute to ``NULL``.
+
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown
+        reasons. Therefore, it must be checked for this type first.
+
+    * `ctypes.c_void_p`:
+
+        Takes the pointer address ``pyobj.value`` and writes it to ``self._ptr``.
+        Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown
+        reasons. Therefore, it must be checked for this type first.
+
+    * `object` that implements the Python buffer protocol:
+
+        If the object represents a simple contiguous array,
+        writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
+        sets the `self._py_buffer_acquired` flag to `True`, and
+        writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+
+    * `object` that implements the CUDA array interface protocol:
+
+        Takes the integer-valued pointer address, i.e. the first entry of the ``data``
+        tuple from ``pyobj``'s member ``__cuda_array_interface__``  and writes it to
+        ``self._ptr``.
+
+    * `~.Pointer`:
+
+        Copies ``pyobj._ptr`` to ``self._ptr``.
+        `~.Py_buffer` object ownership is not transferred!
+
+    * `int`:
+
+        Interprets the integer value as pointer address and writes it to ``self._ptr``.
+
+    * `object` that has `as_c_void_p(self)` method:
+
+        Takes the pointer address ``pyobj.as_c_void_p().value`` and writes it to
+        ``self._ptr``.
+
+    Type checks are performed in the above order.
+
+    Note:
+        When initializing `~.Pointer` instances from a Python input object,
+        buffer types are checked first by purpose.
+        Acquiring/releasing a buffer typically implies that the reference count
+        of the buffer is incremented/decremented.
+        If the Python input object releases a buffer but a
+        `~.Pointer` instance still has acquired it,
+        the buffer data will not be freed until the `~.Pointer` instance is deleted.
+
+    C Attributes:
+        _ptr (C type ``void *``, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer (C type ``Py_buffer`, protected):
+            Stores a pointer to the data of the original Python object.
+        _py_buffer_acquired (C type ``bint``, protected):
+            Stores a pointer to the data of the original Python object."""
     __pyx_vtable__: ClassVar[PyCapsule] = ...
     is_ptr_null: Incomplete
-    def __init__(self, pyobj=...) -> Any: ...
-    def as_c_void_p(self) -> Any: ...
-    def createRef(self) -> Pointer: ...
+    def __init__(self, pyobj=...) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.Pointer` for information
+                        about accepted types for ``pyobj``.
+                        Defaults to None.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
+    def as_c_void_p(self) -> Any:
+        """Pointer.as_c_void_p(self)
+
+        Data pointer as ``ctypes.c_void_p``.
+        """
+    def createRef(self) -> Pointer:
+        """Pointer.createRef(self) -> Pointer
+
+        Creates are reference to this pointer.
+
+        Returns a `~.Pointer` that stores the address of this `~.Pointer's data pointer.
+
+        Note:
+            No ownership information is transferred."""
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def __bool__(self) -> bool: ...
-    def __getitem__(self, offset) -> Any: ...
-    def __int__(self) -> Any: ...
-    def __reduce__(self): ...
+    def fromObj(pyobj) -> Any:
+        """Pointer.fromObj(pyobj)
+
+        Creates a Pointer from the given object.
+
+        In case ``pyobj`` is itself a ``Pointer`` instance, this method
+        returns it directly. No new ``Pointer`` is created."""
+    def __bool__(self) -> bool:
+        """True if self else False"""
+    def __getitem__(self, offset) -> Any:
+        """Pointer.__getitem__(self, offset)
+
+        Returns new `Pointer` whose ``_ptr`` is offsetted by ``offset``
+
+        Args:
+            offset (`int`): Offset (in bytes) to add to this instance's pointer."""
+    def __int__(self) -> Any:
+        """Pointer.__int__(self)
+
+        Integer representation of the data pointer.
+        """
+    def __reduce__(self):
+        """Pointer.__reduce_cython__(self)"""

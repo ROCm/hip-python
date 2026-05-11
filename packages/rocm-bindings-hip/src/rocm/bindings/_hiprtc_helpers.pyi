@@ -7,8 +7,66 @@ __setstate_cython__: _cython_3_2_4.cython_function_or_method
 __test__: dict
 
 class HiprtcLinkCreate_option_ptr(rocm.bindings.util.types.Pointer):
+    """HiprtcLinkCreate_option_ptr(pyobj)
+
+    Type for handling Python `list` or `tuple` with `~.hiprtcJIT_option` entries.
+
+    Datatype for handling Python `list` or `tuple` objects with `~.hiprtcJIT_option`
+    entries.
+
+    This type can be initialized from the following Python objects:
+
+    * `list` or `tuple` object:
+
+      `list` or `tuple` object with `~.hiprtcJIT_option` entries.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+      In this case, init code from `~.Pointer` is used and the C attribute
+      `self._is_ptr_owner ` remains unchanged. See `~.Pointer.__init__` for more
+      information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    See:
+        `~.hiprtcLinkCreate`"""
     __pyx_vtable__: ClassVar[PyCapsule] = ...
-    def __init__(self, pyobj) -> Any: ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                This type can be initialized from the following Python objects:
+
+                * `list` or `tuple` object:
+
+                  `list` or `tuple` object with `~.hiprtcJIT_option` entries.
+
+                * `object` that is accepted as input by `~.Pointer.__init__`:
+
+                  In this case, init code from `~.Pointer` is used and the C attribute
+                  `self._is_ptr_owner ` remains unchanged. See `~.Pointer.__init__` for more
+                  information.
+
+                Note:
+                    Type checks are performed in the above order.
+
+                Args:
+                    pyobj (`object`):
+                        Must be either a `list` or `tuple` of objects that can be converted
+                        to `~.Pointer`, or any other `object` that is accepted as input by
+                        `~.Pointer.__init__`.
+
+                See:
+                    `~.hipModuleLaunchKernel`
+        """
     @staticmethod
-    def fromObj(pyobj) -> Any: ...
-    def __reduce__(self): ...
+    def fromObj(pyobj) -> Any:
+        """HiprtcLinkCreate_option_ptr.fromObj(pyobj)
+
+        Creates a HiprtcLinkCreate_option_ptr from the given object.
+
+        In case ``pyobj`` is itself a ``HiprtcLinkCreate_option_ptr`` instance,
+        this method returns it directly. No new ``HiprtcLinkCreate_option_ptr`` is
+        created."""
+    def __reduce__(self):
+        """HiprtcLinkCreate_option_ptr.__reduce_cython__(self)"""
