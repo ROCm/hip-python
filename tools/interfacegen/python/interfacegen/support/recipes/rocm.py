@@ -45,6 +45,90 @@ TypeCategory = TypeHandler.TypeCategory
 
 
 # ---------------------------------------------------------------------------
+# Useless-macro filters (Category A: visibility/deprecation attribute
+# macros; Category B: header guards). The strict-prefix node_filters used
+# by the prefix-admit recipes (hsa, amdsmi, hipdnn, hipblaslt,
+# hipsparselt, hiptensor) would otherwise drag these into the public
+# Python namespace as nonsense `int` constants.
+#
+# A. Visibility / linkage / deprecation attribute macros expand to
+#    `__attribute__(...)` decorators with no Python-level meaning
+#    (HSA_API_EXPORT, AMDSMI_DEPRECATED, HIPDNN_EXPORT, …).
+# B. Header guards (`#define <FILE>_H` / `_H_`) carry no value either.
+#    The body sanity check (empty or `1`) keeps the false-positive rate
+#    near zero.
+# ---------------------------------------------------------------------------
+
+_ATTRIBUTE_MACRO_SUFFIXES = (
+    "_EXPORT",
+    "_NO_EXPORT",
+    "_EXPORT_DECORATOR",
+    "_API_EXPORT",
+    "_API_IMPORT",
+    "_API",
+    "_CALL",
+    "_DEPRECATED",
+)
+
+_HEADER_GUARD_SUFFIXES = ("_H", "_H_")
+
+
+def _macro_body_tokens(node) -> "list[str]":
+    """Return the token spellings that make up a macro's body
+    (everything after the macro name, excluding the closing newline).
+    Returns an empty list if tokens can't be enumerated (e.g. for
+    nodes whose cursor was disposed) — the caller treats that as an
+    empty body.
+    """
+    cursor = getattr(node, "cursor", None)
+    if cursor is None:
+        return []
+    try:
+        tokens = list(cursor.get_tokens())
+    except Exception:
+        return []
+    # First token is the macro name itself; drop it.
+    return [t.spelling for t in tokens[1:]]
+
+
+def _macro_body_is_empty_or_one(node) -> bool:
+    """True iff a macro definition's body is empty (`#define FOO_H`)
+    or the literal token `1` (`#define FOO_H 1`). Other bodies are
+    treated as carrying a meaningful value and kept.
+    """
+    tokens = _macro_body_tokens(node)
+    if not tokens:
+        return True  # `#define FOO_H` (no body)
+    return len(tokens) == 1 and tokens[0] == "1"  # `#define FOO_H 1`
+
+
+def _is_attribute_macro(node) -> bool:
+    """True if `node` is a MacroDefinition whose name matches a
+    visibility / linkage / deprecation attribute pattern."""
+    if not isinstance(node, MacroDefinition):
+        return False
+    name = node.name or ""
+    return any(name.endswith(s) for s in _ATTRIBUTE_MACRO_SUFFIXES)
+
+
+def _is_header_guard_macro(node) -> bool:
+    """True if `node` is a MacroDefinition whose name matches the
+    `*_H` / `*_H_` header-guard convention AND whose body is the
+    typical empty / `1` shape."""
+    if not isinstance(node, MacroDefinition):
+        return False
+    name = node.name or ""
+    if not any(name.endswith(s) for s in _HEADER_GUARD_SUFFIXES):
+        return False
+    return _macro_body_is_empty_or_one(node)
+
+
+def _is_useless_macro(node) -> bool:
+    """True for either an attribute macro or a header guard."""
+    return _is_attribute_macro(node) or _is_header_guard_macro(node)
+
+
+# ---------------------------------------------------------------------------
 # Per-library @fallback chains (intent + rank), most-specific first.
 #
 # Composition derived from §(3b) of the design plan
@@ -665,6 +749,8 @@ class hipblaslt:
 
     @staticmethod
     def node_filter(node: Node):
+        if _is_useless_macro(node):
+            return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPBLASLT_")
         return node.name.startswith("hipblasLt") or node.name.startswith("HIPBLASLT_")
@@ -1005,6 +1091,8 @@ class hiptensor:
 
     @staticmethod
     def node_filter(node: Node):
+        if _is_useless_macro(node):
+            return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPTENSOR_")
         return node.name.startswith("hiptensor") or node.name.startswith("HIPTENSOR_")
@@ -1026,6 +1114,8 @@ class hipdnn:
 
     @staticmethod
     def node_filter(node: Node):
+        if _is_useless_macro(node):
+            return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPDNN_")
         return node.name.startswith("hipdnn") or node.name.startswith("HIPDNN_")
@@ -1050,6 +1140,8 @@ class hipsparselt:
 
     @staticmethod
     def node_filter(node: Node):
+        if _is_useless_macro(node):
+            return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPSPARSELT_")
         return node.name.startswith("hipsparseLt") or node.name.startswith("HIPSPARSELT_")
@@ -1228,6 +1320,8 @@ class amdsmi:
 
     @staticmethod
     def node_filter(node: Node):
+        if _is_useless_macro(node):
+            return False
         if isinstance(node, MacroDefinition):
             if node.name in amdsmi._SKIPPED_MACROS:
                 return False
@@ -1370,6 +1464,8 @@ class hsa:
 
     @staticmethod
     def node_filter(node: Node):
+        if _is_useless_macro(node):
+            return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HSA_")
         return node.name.startswith("hsa_") or node.name.startswith("HSA_")
