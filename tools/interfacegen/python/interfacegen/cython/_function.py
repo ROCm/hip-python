@@ -921,7 +921,12 @@ cdef void* {funptr_name} = NULL
                     c_type=_with_cprefix(parm.cython_global_typename_no_const),
                     plain_expr=f"{parm_name}.value",
                 ))
-                parm_python_types[parm.name] = parm.cython_global_typename
+                # Use the no_const spelling so the rendered docstring's
+                # `:py:obj:` reference doesn't carry a leading `const`
+                # (the Python-facing type doesn't have C cv-qualifiers
+                # — `const hiptensorWorksizePreference_t` would format
+                # as a broken `:py:obj:\`.const ...\`` link).
+                parm_python_types[parm.name] = parm.cython_global_typename_no_const
             elif parm.is_record or parm.is_basic_type_constantarray():
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
