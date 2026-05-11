@@ -336,6 +336,10 @@ class DoxygenMixin:
                     block.transformed_text
                 )
                 if inferred:
+                    # Annotate the block so `_render_doxygen_section_body`
+                    # can elide the same text from the details body and
+                    # avoid duplicating the promoted brief.
+                    block._promoted_to_brief = inferred
                     return inferred + "\n\n"
                 break  # first text block per section only
         # Part 12a: explicit @ingroup → @defgroup display title
@@ -377,11 +381,15 @@ class DoxygenMixin:
                 # \note texttext
                 # \note texttext
                 #    texttext
-                lines = (
-                    block.transformed_text.lstrip(":\n\t ")
-                    .rstrip()
-                    .splitlines()
-                )
+                text = block.transformed_text.lstrip(":\n\t ").rstrip()
+                # Part 11 elision — when this block's leading text was
+                # promoted as the inferred brief (no explicit `\brief`),
+                # strip it here to avoid duplicating the same paragraph
+                # in both the brief slot and the details body.
+                promoted = getattr(block, "_promoted_to_brief", None)
+                if promoted and text.startswith(promoted):
+                    text = text[len(promoted):].lstrip(":\n\t ")
+                lines = text.splitlines()
                 if len(lines):
                     firstline = lines[0]
                     other_lines = lines[1:]

@@ -100,5 +100,33 @@ def test_render_brief_falls_back_to_placeholder_when_no_text():
     assert "(No short description)" in out
 
 
+def test_promoted_brief_elided_from_details_body():
+    """When the first paragraph is promoted to the brief slot, the
+    same paragraph must NOT appear again in the rendered details body
+    — otherwise users see the same sentence twice in a row.
+
+    Reproduces the LLVMDIBuilderCreateCompileUnit case observed in
+    /build/hip-python/docs before the fix.
+    """
+    from interfacegen.cython import DoxygenMixin
+
+    raw = (
+        "A CompileUnit provides an anchor for all debugging information"
+        " generated during this instance of compilation.\n"
+    )
+    tree = DOXYGEN_CONV.parse_structure(raw)
+    sections = list(tree.children)
+    brief = DoxygenMixin._render_doxygen_brief(sections)
+    body = "".join(
+        DoxygenMixin._render_doxygen_section_body(s, "") for s in sections
+    )
+    # The brief must appear exactly once in the combined output.
+    combined = brief + body
+    assert combined.count("A CompileUnit provides") == 1, (
+        "Promoted brief was duplicated into the details body:\n"
+        f"  brief: {brief!r}\n  body: {body!r}"
+    )
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
