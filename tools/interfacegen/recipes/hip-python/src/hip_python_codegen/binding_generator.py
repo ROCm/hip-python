@@ -30,8 +30,10 @@ by Cython users of this project.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+import datetime
 import logging
 import os
+import subprocess
 import sys
 import tempfile
 import time
@@ -1118,13 +1120,48 @@ def write_cmake_version_files(opts, recipe_results):
         codegen_version = gitversion.version(append_hash=True, append_date=True)
     except Exception:
         codegen_branch = codegen_rev = codegen_version = ""
+
+    # Capture the upstream source-tree commits that contributed
+    # headers to this codegen run. Each is optional — when the
+    # caller didn't pass `--rocm-{systems,libraries,llvm-project}-dir`
+    # the corresponding field is empty (rendered as
+    # "*not consulted*" by the docs landing page).
+    def _git_head(path):
+        if not path:
+            return ""
+        try:
+            return subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=path,
+                text=True, stderr=subprocess.DEVNULL,
+            ).strip()
+        except Exception:
+            return ""
+
+    rocm_libraries_rev = _git_head(getattr(opts, "rocm_libraries_dir", None))
+    rocm_systems_rev = _git_head(getattr(opts, "rocm_systems_dir", None))
+    rocm_llvm_project_rev = _git_head(
+        getattr(opts, "rocm_llvm_project_dir", None)
+    )
+
+    # ISO-8601 UTC; pinned at codegen time so the docs landing page
+    # can show "generated on <DATE>" rather than the sphinx-build
+    # date (which would change every time someone rebuilds docs).
+    codegen_date = (
+        datetime.datetime.now(datetime.timezone.utc)
+        .replace(microsecond=0).isoformat()
+    )
+
     body = (
         _AUTOGEN_HEADER
-        + f'set(HIP_PYTHON_GENERATED_ROCM_VERSION    "{rocm_version}")\n'
-        + f'set(HIP_PYTHON_GENERATED_HIP_VERSION     "{hip_version_str}")\n'
-        + f'set(HIP_PYTHON_GENERATED_CODEGEN_BRANCH  "{codegen_branch}")\n'
-        + f'set(HIP_PYTHON_GENERATED_CODEGEN_REV     "{codegen_rev}")\n'
-        + f'set(HIP_PYTHON_GENERATED_CODEGEN_VERSION "{codegen_version}")\n'
+        + f'set(HIP_PYTHON_GENERATED_ROCM_VERSION         "{rocm_version}")\n'
+        + f'set(HIP_PYTHON_GENERATED_HIP_VERSION          "{hip_version_str}")\n'
+        + f'set(HIP_PYTHON_GENERATED_CODEGEN_BRANCH       "{codegen_branch}")\n'
+        + f'set(HIP_PYTHON_GENERATED_CODEGEN_REV          "{codegen_rev}")\n'
+        + f'set(HIP_PYTHON_GENERATED_CODEGEN_VERSION      "{codegen_version}")\n'
+        + f'set(HIP_PYTHON_GENERATED_DATE                 "{codegen_date}")\n'
+        + f'set(HIP_PYTHON_GENERATED_ROCM_LIBRARIES_REV   "{rocm_libraries_rev}")\n'
+        + f'set(HIP_PYTHON_GENERATED_ROCM_SYSTEMS_REV     "{rocm_systems_rev}")\n'
+        + f'set(HIP_PYTHON_GENERATED_ROCM_LLVM_PROJECT_REV "{rocm_llvm_project_rev}")\n'
     )
     for pkg in ("rocm-bindings-hip", "rocm-bindings-libraries",
                 "rocm-bindings-systems", "rocm-bindings-compiler",
