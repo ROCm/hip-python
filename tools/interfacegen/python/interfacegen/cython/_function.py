@@ -417,6 +417,14 @@ cdef void* {funptr_name} = NULL
         original C declaration: return type + function name + parm
         declarations as written in the source header.
 
+        Emitted as an RST ``.. rubric::`` (lighter than a section heading
+        so it doesn't pollute the page TOC) followed by a
+        ``.. code-block:: c`` so Sphinx applies C syntax highlighting to
+        the signature body. The rubric+code-block pair is left-anchored
+        — the ``single_level_indent`` parameter is used for the code
+        body inside the directive, matching the indentation Sphinx
+        expects for directive content.
+
         Synthesized from the libclang cursor's type spellings rather than
         the original source extent — robust to ``unsaved_files`` parsing
         and avoids needing a separate source-text accessor.
@@ -435,7 +443,8 @@ cdef void* {funptr_name} = NULL
             parts.append(f"{ptype} {pname}".rstrip())
         sig = f"{ret_type} {self.name}({', '.join(parts)})"
         return (
-            f"\n\nC signature\n-----------\n"
+            f"\n\n.. rubric:: C signature\n\n"
+            f".. code-block:: c\n\n"
             f"{single_level_indent}{sig}\n"
         )
 
