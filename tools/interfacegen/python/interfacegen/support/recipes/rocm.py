@@ -1097,10 +1097,72 @@ class hiptensor:
             return node.name.startswith("HIPTENSOR_")
         return node.name.startswith("hiptensor") or node.name.startswith("HIPTENSOR_")
 
-    # Reuse generic numerical heuristics; tensor APIs follow handle/
-    # descriptor + opaque-pointer conventions analogous to hipBLASLt.
-    ptr_parm_intent = hipblas.ptr_parm_intent
-    ptr_rank = hipblas.ptr_rank
+    # Hardcoded overrides for hiptensor functions whose upstream doxygen
+    # `@param[out]` tag is wrong: the parm is actually INOUT — the
+    # caller must pre-allocate the buffer (typically a hipMalloc'd
+    # device tensor or a sized attribute buffer) and the function
+    # writes into it. Trusting the doxygen tag would push these into
+    # the python return tuple, which is wrong because the caller
+    # still needs to control allocation/lifetime/sizing. Filed
+    # upstream against ROCm/rocm-libraries (hipTensor) as
+    # /tmp/hiptensor_doxygen_param_intent_mistags.md.
+    _MISTAGGED_INOUT = frozenset((
+        # (funcname, parm_name)
+        ("hiptensorOperationDescriptorGetAttribute", "buf"),
+        ("hiptensorPlanGetAttribute",                "buf"),
+        ("hiptensorContract",                        "D"),
+        ("hiptensorContract",                        "workspace"),
+        ("hiptensorContractTrinary",                 "E"),
+        ("hiptensorContractTrinary",                 "workspace"),
+        ("hiptensorElementwiseBinaryExecute",        "D"),
+        ("hiptensorElementwiseTrinaryExecute",       "D"),
+        ("hiptensorReduce",                          "D"),
+        ("hiptensorReduce",                          "workspace"),
+        # Bonus: hiptensorDestroy(handle) is also doxygen-mistagged
+        # (`@param[out] handle` on the destructor). Treat as IN.
+        # IN is the doxygen-rule default for non-pointer-to-pointer
+        # handles, so we don't need an explicit override here — the
+        # by-value `hiptensorHandle_t handle` parm doesn't even hit
+        # ptr_parm_intent.
+    ))
+
+    @staticmethod
+    @fallback(*_NUMERICAL_INTENT_CHAIN)
+    def ptr_parm_intent(node: Parm):
+        """Intent classifier for hipTensor.
+
+        Override for the upstream-doxygen-mistagged caller-allocated
+        buffers (see ``_MISTAGGED_INOUT``). Runs BEFORE the doxygen
+        rule because the doxygen tag is the very thing that's wrong.
+        Otherwise delegates to hipblas (handle pointer-to-void), then
+        the chain.
+        """
+        parent = node.parent
+        if parent is not None and (parent.name, node.name) in hiptensor._MISTAGGED_INOUT:
+            return ParmIntent.INOUT
+        # Delegate the tail to hipblas's body — preserves the
+        # `pointer-to-void degree=2 named handle → OUT` heuristic.
+        return hipblas.ptr_parm_intent.__wrapped__(node)
+
+    @staticmethod
+    @fallback(*_NUMERICAL_RANK_CHAIN)
+    def ptr_rank(node: Node):
+        """Pointer-rank classifier for hipTensor.
+
+        Override for the one currently-known scalar OUT param whose
+        generic chain misclassifies as a list.
+
+        ``hiptensorEstimateWorkspaceSize(uint64_t* workspaceSizeEstimate)``
+        is a single-element OUT (the function writes one ``uint64_t``).
+        Without this override the generic ``array_with_length_param``
+        rule would flag it as rank=1 and the Python wrapper would
+        return a ``ListOfUnsignedLong`` instead of a plain ``int``.
+        """
+        if isinstance(node, Parm) and node.name == "workspaceSizeEstimate":
+            return 0
+        # Delegate the tail to hipblas's body for the LAPACK-letter /
+        # alpha/beta handling.
+        return hipblas.ptr_rank.__wrapped__(node)
 
 
 class hipdnn:
