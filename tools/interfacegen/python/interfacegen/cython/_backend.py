@@ -59,6 +59,7 @@ __all__ = [
     'CythonModuleGenerator',
 ]
 
+
 class CythonBackend:
     def from_libclang_translation_unit(
         translation_unit: clang.cindex.TranslationUnit,

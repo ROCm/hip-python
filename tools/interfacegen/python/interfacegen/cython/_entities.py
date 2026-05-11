@@ -73,6 +73,7 @@ __all__ = [
     'Parm',
 ]
 
+
 class Root(tree.Root, CythonMixin):
     def __init__(self, *args, **kwargs):
         tree.Root.__init__(self, *args, **kwargs)
@@ -446,7 +447,7 @@ class Field(tree.Field, CythonMixin, Typed):
             ),
             brief_comment=_escape_for_triple_quoted_docstring(
                 self.doxygen_conv.transform_text_block(
-                    self.brief_comment
+                    _strip_group_brackets(self.brief_comment)
                     if self.brief_comment is not None
                     else "(undocumented)"
                 )
@@ -756,7 +757,7 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
                     \"""
                     pass
                 class {name}({base_class_name}):
-                    \"""{_escape_for_triple_quoted_docstring(self.brief_comment) if self.brief_comment is not None else name}
+                    \"""{_escape_for_triple_quoted_docstring(_strip_group_brackets(self.brief_comment)) if self.brief_comment is not None else name}
 
                     Attributes:
                 """
@@ -1047,5 +1048,4 @@ class Parm(tree.Parm, CythonMixin, Typed):
             return f"{parts[0]}{name}){parts[1]}"
         else:
             return f"{typename} {name}"
-
 

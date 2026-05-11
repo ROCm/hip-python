@@ -57,6 +57,7 @@ __all__ = [
     'Function',
 ]
 
+
 class Function(tree.Function, CythonMixin, Typed):
     class SignatureMember:
         def __init__(self, value: str, typename: str, description: str):
@@ -217,6 +218,7 @@ cdef void* {funptr_name} = NULL
             sections,
             log_prefix=f"<{self.render_location()}> function {self.name}: ",
             missing_text="(No short description, might be part of a group.)",
+            host_node=self if isinstance(self, tree.Node) else None,
         )
 
         # other sections, return values and parameters
@@ -402,6 +404,8 @@ cdef void* {funptr_name} = NULL
         # Clean result
         # remove multiple blank lines
         docstring_body = self.docstring_cleaner(docstring_body)
+        # Mop up any doxygen tags the structured parser left behind.
+        docstring_body = self._postprocess_leaked_doxygen_tags(docstring_body)
         # remove multiple blank lines
         docstring_body = re.sub(
             r"(\n\s*)+\n+", "\n\n", docstring_body
@@ -1382,5 +1386,4 @@ def _pyi_split_sig_arg(sig_arg: str):
         ctype, name = parts
     name = name.lstrip("*")
     return (ctype.strip() if ctype else None, name.strip(), default)
-
 
