@@ -163,6 +163,26 @@ endforeach()
 # __init__.py here. The runtime __init__.pxd marker is shipped by
 # rocm-bindings-core (the only package that installs it).
 
+# Install the high-level rocm.hipfile sub-package — handcoded Pythonic
+# wrapper around the auto-generated rocm.bindings.hipfile bindings.
+# Conditional on the hipfile bindings being built (which itself depends
+# on libhipfile.so being available); skip otherwise so the wheel doesn't
+# ship a wrapper for a binding the runtime can't load.
+if(HIP_PYTHON_HIPFILE_AVAILABLE AND "hipfile" IN_LIST HIP_PYTHON_SELECTED_SYSTEMS)
+  install(
+    FILES
+      src/rocm/hipfile/__init__.py
+      src/rocm/hipfile/buffer.py
+      src/rocm/hipfile/driver.py
+      src/rocm/hipfile/enums.py
+      src/rocm/hipfile/error.py
+      src/rocm/hipfile/file.py
+      src/rocm/hipfile/properties.py
+    DESTINATION rocm/hipfile
+    COMPONENT rocm-bindings-systems
+  )
+endif()
+
 # Configure and install version file
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/_version.py.in"
