@@ -305,6 +305,120 @@ def test_inheritance_index_warns_on_unclosed_open(interfacegen_warnings):
     assert any("unclosed" in m for m in interfacegen_warnings)
 
 
+def test_inheritance_index_pattern_a_doc_before_bare_opener_hipsparse_shape():
+    """Pattern A as used throughout hipSPARSE (and many other ROCm
+    libraries): a doc + `\\ingroup` comment placed BEFORE a bare
+    `/**@{*/` opener.
+
+    libclang merges the two adjacent comments into a single
+    raw_comment for the first decl. Without the pattern-A walker
+    fix, the rest of the lexical-block decls would inherit only the
+    bare `/**@{*/` (empty after the `_strip_group_brackets` pass);
+    with the fix the walker treats the prior comment as the active
+    opener content, so D/C/Z get the family description too.
+
+    Reference: /opt/rocm/include/hipsparse/internal/level1/hipsparse_axpyi.h
+    """
+    src = textwrap.dedent(
+        """\
+        /*! \\ingroup level1_module
+         *  \\brief Scale a sparse vector and add it to a dense vector.
+         *  \\details Long body, params, retvals, etc.
+         */
+        /**@{*/
+        int hipsparseSaxpyi(int handle, int nnz);
+        int hipsparseDaxpyi(int handle, int nnz);
+        int hipsparseCaxpyi(int handle, int nnz);
+        int hipsparseZaxpyi(int handle, int nnz);
+        /**@}*/
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    # Saxpyi has its own merged raw_comment via libclang — not in
+    # the inheritance index by design.
+    assert cursors["hipsparseSaxpyi"].hash not in idx
+    # D/C/Z inherit the prior doc comment via the pattern-A fold.
+    for name in ("hipsparseDaxpyi", "hipsparseCaxpyi", "hipsparseZaxpyi"):
+        assert cursors[name].hash in idx, (
+            f"{name} not in inheritance index (pattern-A fold failed)"
+        )
+        inherited = idx[cursors[name].hash]
+        assert "Scale a sparse vector" in inherited, (
+            f"{name} got: {inherited!r}"
+        )
+        assert "level1_module" in inherited
+
+
+def test_inheritance_index_pattern_b_doc_inside_at_brace_block():
+    """Pattern B from the official doxygen Member Groups example:
+    a doc comment placed INSIDE the `@{ … @}` block (after the opener,
+    before the first decl) is shared with every member of the lexical
+    group via doxygen's DISTRIBUTE_GROUP_DOC behavior.
+
+    libclang attaches the merged opener+doc to the first decl only;
+    our walker should recognise the inside-block doc comment and use
+    it as the inherited content for subsequent un-attached decls in
+    the block.
+
+    The reference snippet (from
+    https://www.doxygen.nl/manual/grouping.html#memgroup):
+
+        ///@{
+        /** Same documentation for both members. Details */
+        void func1InGroup1();
+        void func2InGroup1();
+        ///@}
+    """
+    src = textwrap.dedent(
+        """\
+        ///@{
+        /** Same documentation for both members. Details */
+        void func1InGroup1(void);
+        void func2InGroup1(void);
+        ///@}
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    # func1InGroup1 has its own (merged) raw_comment via libclang —
+    # not in the inheritance index by design.
+    assert cursors["func1InGroup1"].hash not in idx
+    # func2InGroup1 has no immediately-preceding comment per
+    # libclang. Without the pattern-B walker fix it would inherit
+    # the empty `///@{` opener; with the fix it inherits the
+    # inside-block doc comment.
+    assert cursors["func2InGroup1"].hash in idx
+    inherited = idx[cursors["func2InGroup1"].hash]
+    assert "Same documentation for both members" in inherited, (
+        f"Pattern-B inheritance failed: func2InGroup1 got {inherited!r}"
+    )
+
+
+def test_inheritance_index_pattern_b_most_recent_doc_wins():
+    """When multiple inside-block doc comments appear before any
+    decl, the most recent one wins — matching doxygen's
+    `comment immediately preceding declaration` rule.
+    """
+    src = textwrap.dedent(
+        """\
+        ///@{
+        /** First doc — should be replaced. */
+        /** Second doc — should win. */
+        void f1(void);
+        void f2(void);
+        ///@}
+        """
+    )
+    idx, tu = _index_for(src)
+    cursors = _function_cursors_by_name(tu)
+    # f2 inherits the most recent inside-block doc comment.
+    assert cursors["f2"].hash in idx
+    inherited = idx[cursors["f2"].hash]
+    assert "Second doc" in inherited
+    assert "First doc" not in inherited
+
+
 def test_raw_comment_cleaned_strips_group_brackets_from_own_comment(tmp_path):
     """The FIRST decl after `/*! @{ ... */` has the opener attached to
     it directly via libclang. The `@{` / `@}` markers must be stripped

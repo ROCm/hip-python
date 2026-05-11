@@ -190,18 +190,66 @@ def _build_inherited_comment_index(root):
         return index
 
     TokenKind = clang.cindex.TokenKind
-    try:
-        tokens = list(tu.cursor.get_tokens())
-    except Exception:
-        setattr(root, "_inherited_comment_index", index)
-        return index
+
+    # Collect every distinct file that contains an inheritable cursor.
+    # `tu.cursor.get_tokens()` only yields tokens from the main TU
+    # file; included headers (where the actual function decls and
+    # their @{ markers live) are NOT covered by that iterator. We
+    # enumerate the cursor tree and tokenize each file's full extent
+    # separately. The per-file end offset is taken from the
+    # max-extent of any cursor in that file — libclang rejects
+    # `SourceLocation.from_offset` past the file's actual size with
+    # silent zero-token returns, so an over-shoot here is fatal.
+    files_to_walk = {}    # filename -> (cxfile, max_extent_end_offset)
+    for child in cursor.walk_preorder() if hasattr(cursor, "walk_preorder") else []:
+        loc_file = getattr(child.location, "file", None)
+        if loc_file is None:
+            continue
+        try:
+            end_offset = child.extent.end.offset
+        except Exception:
+            try:
+                end_offset = child.location.offset
+            except Exception:
+                end_offset = 0
+        prev = files_to_walk.get(loc_file.name)
+        if prev is None or end_offset > prev[1]:
+            files_to_walk[loc_file.name] = (loc_file, end_offset)
+
+    # Aggregate tokens from every file we care about.
+    tokens = []
+    for fname, (cxfile, max_end) in files_to_walk.items():
+        # Try the disk-backed size first (covers includes); fall
+        # back to the cursor-derived end-offset for unsaved test
+        # files. We never over-shoot because libclang silently
+        # returns zero tokens for out-of-bounds extents.
+        try:
+            with open(fname, "rb") as fh:
+                size = len(fh.read())
+        except OSError:
+            size = max_end
+        try:
+            start = clang.cindex.SourceLocation.from_offset(tu, cxfile, 0)
+            end = clang.cindex.SourceLocation.from_offset(tu, cxfile, size)
+            extent = clang.cindex.SourceRange.from_locations(start, end)
+            tokens.extend(list(tu.get_tokens(extent=extent)))
+        except Exception:
+            continue
 
     # Track the active group-opener stack PER FILE — `@{` in one
     # header should not silently extend across an `#include` boundary
     # into another header. We segment by `tok.location.file.name`.
-    per_file_stack = {}    # filename -> list of opener comment strings
+    per_file_stack = {}      # filename -> list of opener comment strings
+    # Track the most-recent non-marker doc comment seen in each file.
+    # Used to fold a "doc BEFORE @{" pair (Pattern A) into a single
+    # opener content when the @{ comment is itself a bare marker —
+    # mirrors libclang's "merge adjacent comments" behavior. Key:
+    # filename → (last_comment_spelling, last_comment_token_index)
+    # so we can decide whether the prior comment is "close enough" to
+    # belong with the opener.
+    per_file_last_doc = {}
     current_filename = None
-    for tok in tokens:
+    for tok_index, tok in enumerate(tokens):
         loc = tok.location
         loc_file = getattr(loc, "file", None)
         filename = loc_file.name if loc_file is not None else None
@@ -219,9 +267,29 @@ def _build_inherited_comment_index(root):
             if opens and closes:
                 # Self-closing block — push and immediately pop is a
                 # net no-op for inheritance.
+                per_file_last_doc.pop(filename, None)
                 continue
             if opens:
-                active_stack.append(spelling)
+                # Pattern-A fold: if the @{ opener is a bare marker
+                # comment (e.g. `/**@{*/` or `///@{` — just the
+                # bracket plus surrounding comment delimiters, no
+                # description) AND the previous token in this file
+                # was a non-marker doc comment (i.e., they're an
+                # adjacent doc-then-opener pair), use the prior doc
+                # comment's content as the opener content. This
+                # mirrors libclang's merge-adjacent-comments
+                # behavior at the walker level.
+                is_bare_marker = _raw_comment_is_only_group_bracket(spelling)
+                prior = per_file_last_doc.get(filename)
+                if (
+                    is_bare_marker
+                    and prior is not None
+                    and prior[1] == tok_index - 1
+                ):
+                    active_stack.append(prior[0])
+                else:
+                    active_stack.append(spelling)
+                per_file_last_doc.pop(filename, None)
             elif closes:
                 if active_stack:
                     active_stack.pop()
@@ -232,6 +300,30 @@ def _build_inherited_comment_index(root):
                         filename,
                         getattr(loc, "line", "?"),
                     )
+                per_file_last_doc.pop(filename, None)
+            elif active_stack:
+                # Pattern-B (doc INSIDE the @{ … @} block). The active
+                # opener may be a bare marker like `///@{` or `/**@{*/`
+                # carrying no documentation; the real description sits
+                # in a separate doc comment placed between the opener
+                # and the first decl. Per doxygen's Member Groups
+                # feature (with DISTRIBUTE_GROUP_DOC=YES, or implicitly
+                # for class members), that doc comment is shared by
+                # every member of the lexical block — see the
+                # "Member Groups" section of the doxygen manual for the
+                # canonical example. Replace the active stack top so
+                # subsequent un-attached decls inherit the right text.
+                #
+                # Most-recent-doc-wins if multiple inside-block doc
+                # comments appear before any decl, matching doxygen's
+                # "comment immediately preceding declaration" rule.
+                active_stack[-1] = spelling
+                per_file_last_doc[filename] = (spelling, tok_index)
+            else:
+                # Bare doc comment outside any active block — remember
+                # it in case the immediately-following token opens an
+                # @{ group with a bare marker (Pattern A fold above).
+                per_file_last_doc[filename] = (spelling, tok_index)
             continue
         if not active_stack:
             continue
