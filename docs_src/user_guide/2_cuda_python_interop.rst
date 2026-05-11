@@ -271,7 +271,7 @@ of the :py:obj:`~.cythonize` call in line
    :language: python
    :start-after: [literalinclude-begin]
    :linenos:
-   :emphasize-lines: 38
+   :emphasize-lines: 39
    :name: cuda_cython_setup_py
    :caption: Setup Script
 
