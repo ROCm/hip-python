@@ -1539,9 +1539,40 @@ class hsa:
     dlopen-based runtime model.
     """
 
+    # Targeted exclusions where the codegen can't currently produce a
+    # well-formed binding. Keep this list as small as possible and
+    # link each entry to its tracking issue.
+    #
+    # `hsa_amd_memory_copy_op_s` (and its `_t` typedef + the only
+    # consumer `hsa_amd_memory_async_batch_copy`) — the C struct nests
+    # multiple anonymous unions of structs which the codegen currently
+    # collapses into synthesized `<parent>_struct_<N>` field types
+    # without emitting the matching `cdef struct` declarations,
+    # leaving Cython with an undefined type identifier. Fixing the
+    # nested-anonymous-union codegen path is a separate larger
+    # refactor; until then, omit just these three names so the rest
+    # of HSA compiles cleanly.
+    _CODEGEN_BLOCKLIST = frozenset((
+        "hsa_amd_memory_copy_op_s",
+        "hsa_amd_memory_copy_op_t",
+        "hsa_amd_memory_async_batch_copy",
+        # Feature-detection markers, not value-carrying constants:
+        # `#define HSA_LARGE_MODEL` (set when `__LP64__` is defined),
+        # `#define HSA_LITTLE_ENDIAN` (set when `LITTLEENDIAN_CPU` is
+        # defined). The default macro_type classifies them as ints,
+        # yielding a `__Pyx_PyLong_From_int(HSA_LARGE_MODEL)` call
+        # that expands to `__Pyx_PyLong_From_int()` — too few args.
+        # The C-side use is `#ifdef HSA_LARGE_MODEL`, never as an
+        # rvalue; nothing user-visible to expose.
+        "HSA_LARGE_MODEL",
+        "HSA_LITTLE_ENDIAN",
+    ))
+
     @staticmethod
     def node_filter(node: Node):
         if _is_useless_macro(node):
+            return False
+        if node.name in hsa._CODEGEN_BLOCKLIST:
             return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HSA_")
