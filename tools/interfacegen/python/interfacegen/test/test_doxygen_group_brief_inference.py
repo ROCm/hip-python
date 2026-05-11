@@ -44,6 +44,19 @@ def test_ingroup_names_empty_when_raw_is_none():
     assert DoxygenMixin._ingroup_names_from_raw("") == []
 
 
+def test_ingroup_names_multi_id_on_one_line():
+    """Per the doxygen spec, `\\ingroup x y z` puts the entity in 3
+    groups. Each id should be returned in source order."""
+    raw = "/** \\ingroup foo bar baz\n *  \\brief multi */"
+    assert DoxygenMixin._ingroup_names_from_raw(raw) == ["foo", "bar", "baz"]
+
+
+def test_ingroup_names_multi_id_strips_trailing_comment_delim():
+    """`\\ingroup foo */` — the trailing `*/` is not an id."""
+    raw = "/** \\ingroup foo */"
+    assert DoxygenMixin._ingroup_names_from_raw(raw) == ["foo"]
+
+
 # --- _build_group_index --------------------------------------------------
 
 
@@ -111,9 +124,11 @@ def test_build_group_index_uses_explicit_brief_when_present():
     assert idx["signals"] == ("Signals", "Wait/notify primitives.")
 
 
-def test_build_group_index_skips_addtogroup():
-    """Only @defgroup defines display titles; @addtogroup appends to a
-    group defined elsewhere and should NOT enter the index on its own."""
+def test_build_group_index_skips_untitled_addtogroup():
+    """`\\addtogroup id` without a title argument cannot establish a
+    display title — it just appends to whatever `\\defgroup` defined
+    elsewhere. With no defgroup in the TU the id stays out of the
+    index."""
     src = textwrap.dedent(
         """\
         /**
@@ -125,6 +140,70 @@ def test_build_group_index_skips_addtogroup():
     )
     idx = _parse_and_index(src)
     assert "wherever" not in idx
+
+
+def test_build_group_index_addtogroup_with_title_fills_in_when_no_defgroup():
+    """`\\addtogroup id title` IS a fallback title source per the
+    doxygen group priority hierarchy: when no `\\defgroup` defines
+    the id, addtogroup's optional title argument provides the display
+    title. ROCm's prefixsums / generalized_identity_operations / ~70
+    other group ids are reachable only via this rule."""
+    src = textwrap.dedent(
+        """\
+        /**
+         *  \\addtogroup prefixsums Prefix Sums
+         *  \\brief Inclusive and exclusive scan algorithms.
+         */
+        int placeholder(void);
+        """
+    )
+    idx = _parse_and_index(src)
+    assert "prefixsums" in idx
+    title, brief = idx["prefixsums"]
+    assert title == "Prefix Sums"
+    assert "Inclusive and exclusive scan algorithms." in brief
+
+
+def test_build_group_index_defgroup_wins_over_addtogroup():
+    """Priority hierarchy: when both `\\defgroup id title1` and
+    `\\addtogroup id title2` exist for the same id, defgroup wins."""
+    src = textwrap.dedent(
+        """\
+        /**
+         *  \\defgroup memory Memory Management (defgroup)
+         *  \\brief Operations on device-side memory.
+         */
+        int defgroup_anchor(void);
+        /**
+         *  \\addtogroup memory Memory Management (addtogroup)
+         *  \\brief Should NOT replace the defgroup brief.
+         */
+        int addtogroup_anchor(void);
+        """
+    )
+    idx = _parse_and_index(src)
+    title, brief = idx["memory"]
+    assert title == "Memory Management (defgroup)"
+    assert "Operations on device-side memory." in brief
+
+
+def test_build_group_index_addtogroup_with_at_brace_marker():
+    """`\\addtogroup id title @{` (the `@{` opens a group block) — the
+    title regex must stop at `@{` and not capture it. ROCm uses this
+    shape extensively (e.g. `\\addtogroup memory Memory Management @{`)."""
+    src = textwrap.dedent(
+        """\
+        /** \\addtogroup memory Memory Management @{ */
+        int member1(void);
+        int member2(void);
+        /** @} */
+        """
+    )
+    idx = _parse_and_index(src)
+    assert "memory" in idx
+    title, _brief = idx["memory"]
+    assert title == "Memory Management"
+    assert "@{" not in title
 
 
 # --- _render_doxygen_brief integration ----------------------------------

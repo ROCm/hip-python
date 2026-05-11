@@ -225,22 +225,42 @@ class DoxygenMixin:
     # marker; the doxyparser flattens it into a `with_single_line_text`
     # token rather than a Section, so we scrape the raw comment with
     # a regex (cheaper than introspecting the section tree).
-    _INGROUP_RE = re.compile(r"[@\\]ingroup\s+(\w+)")
+    # `\ingroup` takes a space-separated list of group ids on a single
+    # line per the doxygen spec — `\ingroup foo bar baz` adds the
+    # current entity to all three groups. Capture the rest of the line
+    # and let the caller split on identifier tokens to drop trailing
+    # comment delimiters (`*/`) and whitespace.
+    _INGROUP_RE = re.compile(r"[@\\]ingroup\s+([^\n]+)")
+    _GROUP_ID_RE = re.compile(r"\w+")
 
     @staticmethod
     def _ingroup_names_from_raw(raw_comment: str) -> "list[str]":
         """Return the list of group IDs this comment registers via
-        `@ingroup <ID>` (in source order). Empty list if none."""
+        ``@ingroup <ID> [<ID>...]`` lines (in source order). Empty
+        list if none. Multi-id syntax on one line is supported."""
         if not raw_comment:
             return []
-        return DoxygenMixin._INGROUP_RE.findall(raw_comment)
+        out = []
+        for line in DoxygenMixin._INGROUP_RE.findall(raw_comment):
+            out.extend(DoxygenMixin._GROUP_ID_RE.findall(line))
+        return out
 
     # @defgroup <ID> <Display Title>  — the doxyparser puts these in
     # the `other` alternation, not as their own Section, so we scrape
-    # raw comments with a regex. Skips @addtogroup intentionally per
-    # doxygen spec (addtogroup appends; only defgroup defines title).
+    # raw comments with a regex.
     _DEFGROUP_RE = re.compile(
         r"[@\\]defgroup\s+(?P<id>\w+)\s+(?P<title>[^\n]+)",
+    )
+    # @addtogroup <ID> [<Display Title>]  — primary purpose is to
+    # append docs to an existing group, but per doxygen's group
+    # priority hierarchy `\addtogroup` is also a *fallback* title
+    # source: if no `\defgroup` defines the id, `\addtogroup id title`
+    # provides the title. ROCm headers exploit this in roughly 70
+    # cases (e.g. `\addtogroup prefixsums Prefix Sums`).  The title
+    # group is non-greedy so we don't swallow the trailing `\n` or
+    # the `@{` opener that often follows.
+    _ADDTOGROUP_TITLED_RE = re.compile(
+        r"[@\\]addtogroup\s+(?P<id>\w+)\s+(?P<title>[^\n@\\{]+?)\s*(?:[@\\][{}]|\n|\*/|$)",
     )
     # @brief inside a (clean) defgroup comment block.
     _BRIEF_LINE_RE = re.compile(r"[@\\](?:brief|short)\s+(?P<text>[^\n]+)")
@@ -249,55 +269,80 @@ class DoxygenMixin:
     def _build_group_index(root):
         """Walk a tree.Root and return ``{group_id: (display_title, brief)}``.
 
-        Built from ``@defgroup <ID> <Display Title>`` markers in any
-        node's raw_comment. The brief is the explicit ``@brief`` line
+        Two-pass build per doxygen's group priority hierarchy:
+
+        1. ``\\defgroup <ID> <Display Title>`` — primary source.
+           Defines the group's identity (id, title, optional brief).
+        2. ``\\addtogroup <ID> <Display Title>`` — fallback source.
+           Per the doxygen manual, `\\addtogroup` is primarily for
+           appending docs to an existing group, but if the group has
+           no `\\defgroup`, the optional title argument provides the
+           title. Only filled in when no `\\defgroup` already exists
+           for the id.
+
+        ``\\weakgroup`` is the third tier (lowest priority) but ROCm
+        headers do not use it, so it's not implemented.
+
+        The brief for either source is the explicit ``@brief`` line
         in the same comment if present, else the first sentence of
         the comment body via ``_infer_brief_from_first_text``.
-        Memoized on root.
 
-        Per doxygen spec, ``@addtogroup <ID>`` does NOT define a new
-        group's display title — it appends to a group defined
-        elsewhere — so the index is built solely from ``@defgroup``.
+        Memoized on root.
         """
         cached = getattr(root, "_doxygen_group_index", None)
         if cached is not None:
             return cached
         index = {}
-        seen_raw = set()
+        # Cache cleaned-comment text per raw_comment so we don't run
+        # the cleaner twice across the two passes.
+        cleaned_by_raw = {}
         for node in root.walk(postorder=False):
             raw = getattr(node, "raw_comment", None)
-            if not raw or raw in seen_raw:
+            if not raw or raw in cleaned_by_raw:
                 continue
-            seen_raw.add(raw)
             try:
                 cleaner = (
                     node.raw_comment_cleaner
                     if hasattr(node, "raw_comment_cleaner")
                     else (lambda s: s)
                 )
-                cleaned = doxyparser.remove_doxygen_comment_chars(cleaner(raw))
+                cleaned_by_raw[raw] = doxyparser.remove_doxygen_comment_chars(
+                    cleaner(raw)
+                )
             except Exception:
-                cleaned = raw
+                cleaned_by_raw[raw] = raw
+
+        def _record(group_id, title, cleaned, body_start):
+            """Add or refine a group entry."""
+            brief = ""
+            brief_m = DoxygenMixin._BRIEF_LINE_RE.search(cleaned)
+            if brief_m:
+                brief = brief_m.group("text").strip()
+            else:
+                body = cleaned[body_start:].lstrip("\n\r\t ")
+                brief = DoxygenMixin._infer_brief_from_first_text(body)
+            existing = index.get(group_id)
+            if existing is None or (existing[1] == "" and brief):
+                index[group_id] = (title, brief or "")
+
+        # Pass 1: \defgroup wins.
+        for cleaned in cleaned_by_raw.values():
             for m in DoxygenMixin._DEFGROUP_RE.finditer(cleaned):
                 group_id = m.group("id")
                 title = m.group("title").strip() or group_id
-                # Compute the brief from the same comment block.
-                # Look for @brief first; otherwise take the first
-                # sentence after the @defgroup line.
-                brief = ""
-                brief_m = DoxygenMixin._BRIEF_LINE_RE.search(cleaned)
-                if brief_m:
-                    brief = brief_m.group("text").strip()
-                else:
-                    # Body after the defgroup line — slice from the
-                    # match end onward, then run the Part 11 helper.
-                    body = cleaned[m.end():].lstrip("\n\r\t ")
-                    brief = DoxygenMixin._infer_brief_from_first_text(body)
-                # Don't overwrite with an empty brief if a non-empty
-                # one was already registered elsewhere.
-                existing = index.get(group_id)
-                if existing is None or (existing[1] == "" and brief):
-                    index[group_id] = (title, brief or "")
+                _record(group_id, title, cleaned, m.end())
+        # Pass 2: \addtogroup id title fills in only when \defgroup
+        # didn't already register the id. (Same id may appear in
+        # multiple addtogroup comments — first one wins.)
+        for cleaned in cleaned_by_raw.values():
+            for m in DoxygenMixin._ADDTOGROUP_TITLED_RE.finditer(cleaned):
+                group_id = m.group("id")
+                if group_id in index:
+                    continue
+                title = m.group("title").strip()
+                if not title:
+                    continue
+                _record(group_id, title, cleaned, m.end())
         setattr(root, "_doxygen_group_index", index)
         return index
 
