@@ -274,9 +274,25 @@ class CythonBackend:
             rejects them — see ``_transitively_admitted_records`` for
             the rationale (leading-underscore tag names like
             ``_hipblasLtMatmulAlgo_t``).
+
+            ``AnonymousFunctionPointer`` nodes are admitted transitively
+            whenever their enclosing parent (the Function or Record that
+            owns the inline `T (*)(...)` parameter or field) is itself
+            admitted. The synthesized name (`anon_funptr_0`,
+            `anon_funptr_1`, …) carries no library prefix and would
+            never match a strict-prefix recipe filter, but the parent
+            decl's rendering uses
+            ``<parent_name>_anon_funptr_<N>`` as the parameter type —
+            so the matching ``ctypedef`` MUST be emitted, otherwise
+            Cython sees an undeclared identifier and falls back to
+            "Python object" inference (which then fails under
+            ``nogil``). HSA's `hsa_iterate_agents` etc. exhibit this.
         """
         from .. import tree
         transitive_records = self._transitively_admitted_records()
+        # Decide once whether the parent of an AnonymousFunctionPointer
+        # is admitted, by re-running the user filter on the parent.
+        # Cheap because `node_filter` is a pure predicate.
         for node in self.root.walk(postorder=True):
             if isinstance(node, CythonMixin):
                 if not isinstance(node, (Field, Parm, Root)):
@@ -285,6 +301,13 @@ class CythonBackend:
                         not admitted
                         and isinstance(node, tree.Record)
                         and node.name in transitive_records
+                    ):
+                        admitted = True
+                    if (
+                        not admitted
+                        and isinstance(node, tree.AnonymousFunctionPointer)
+                        and node.parent is not None
+                        and self.node_filter(node.parent)
                     ):
                         admitted = True
                     if admitted:
