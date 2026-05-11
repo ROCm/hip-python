@@ -138,7 +138,7 @@ It produces six wheels:
   `hiptensor`*, `hipdnn`* (* = experimental, see [Known Limitations](#known-limitations))
 - `rocm-bindings-systems` — system-level libraries: `rccl`
   (collective communication), `roctx` (profiling/tracing),
-  `hipfile`, `amdsmi`, `hsa`* (HSA runtime + AMD extensions)
+  `hipfile`*, `amdsmi`, `hsa`* (HSA runtime + AMD extensions)
 - `rocm-bindings-compiler` — LLVM-C and AMD COMGR bindings (with optional bundled `libLLVM.so`)
 - `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer
 
@@ -447,9 +447,9 @@ and `hip-python-as-cuda/dist/`.
 
 ### Experimental libraries
 
-The newly added bindings — `hipblaslt`, `hipsparselt`, `hiptensor`,
-`hipdnn`, and `hsa` — are marked **experimental** for one release
-cycle. What this means in practice:
+The newly added bindings — `hipfile`, `hipblaslt`, `hipsparselt`,
+`hiptensor`, `hipdnn`, and `hsa` — are marked **experimental** for
+one release cycle. What this means in practice:
 
 - The Python-level API surface is generated automatically from the
   upstream C headers and is functional today, but parameter
@@ -462,6 +462,24 @@ cycle. What this means in practice:
   classification that doesn't match the underlying C semantics.
 - All other interfaces (return values, opaque handles, scalar types)
   are stable.
+
+> [!IMPORTANT]
+> The shared libraries backing `hipfile`, `hipblaslt`, `hipsparselt`,
+> `hiptensor`, and `hipdnn` may **not be part of a standard ROCm
+> installation**. If `dlopen` of `libhipfile.so`, `libhipblaslt.so`,
+> `libhipsparselt.so`, `libhiptensor.so`, or `libhipDNN.so` fails on
+> your system, you have to build the corresponding library manually
+> by following the build instructions in its source package:
+>
+> - `hipblaslt`, `hipsparselt`, `hiptensor`, `hipdnn` — see the
+>   per-library README under
+>   <https://github.com/ROCm/rocm-libraries>.
+> - `hipfile` — see the per-library README under
+>   <https://github.com/ROCm/rocm-systems>.
+>
+> After building, install the resulting `.so` into a directory on
+> `LD_LIBRARY_PATH` (or `${ROCM_PATH}/lib`) so hip-python's loader
+> can find it at runtime.
 
 ### `hsakmt` is intentionally not bound
 
