@@ -58,6 +58,9 @@ __all__ = [
     '_raw_comment_is_only_group_bracket',
     '_strip_group_brackets',
     '_build_inherited_comment_index',
+    '_COPYDOC_RE',
+    '_build_copydoc_target_index',
+    '_resolve_copydoc_in_text',
 ]
 
 # doxygen parser
@@ -393,3 +396,96 @@ def _build_inherited_comment_index(root):
 
     setattr(root, "_inherited_comment_index", index)
     return index
+
+
+# Doxygen accepts both `\copydoc <name>` and `@copydoc <name>`. The
+# link-object grammar is `<word>` plus optional `()` (member function
+# specifier — meaningless for our C-only inputs but accepted silently).
+# Capture the bare identifier; qualified references (`Class::method`,
+# overload-disambiguating `nm(args)`) are left as literals — same
+# graceful degradation as the unknown-reference case.
+_COPYDOC_RE = re.compile(r"[@\\]copydoc\s+(\w+)\s*(?:\(\))?")
+
+
+def _build_copydoc_target_index(root):
+    """Return ``{symbol_name: cleaned_text}`` for every FUNCTION_DECL
+    in the TU that has a non-empty libclang-attached
+    ``cursor.raw_comment``. The stored text is passed through
+    ``_strip_group_brackets`` and
+    ``doxyparser.remove_doxygen_comment_chars`` BEFORE caching — so
+    substitution into another (already-cleaned) comment never
+    produces nested ``/* ... */`` delimiters.
+
+    Memoized on ``root`` via the ``_copydoc_target_index`` attribute.
+
+    Cached values are NOT recursively resolved — ``\\copydoc``
+    directives inside a target body are resolved lazily by
+    ``_resolve_copydoc_in_text``. Per-call resolution keeps cycle
+    detection granular instead of baked into the cache.
+    """
+    cached = getattr(root, "_copydoc_target_index", None)
+    if cached is not None:
+        return cached
+    index = {}
+    cursor = root.cursor
+    tu = cursor.translation_unit
+    if tu is not None:
+        for c in cursor.walk_preorder() if hasattr(cursor, "walk_preorder") else []:
+            if c.kind != clang.cindex.CursorKind.FUNCTION_DECL:
+                continue
+            if not c.spelling or not c.raw_comment:
+                continue
+            stripped = _strip_group_brackets(c.raw_comment)
+            cleaned = doxyparser.remove_doxygen_comment_chars(stripped)
+            index.setdefault(c.spelling, cleaned)
+    setattr(root, "_copydoc_target_index", index)
+    return index
+
+
+def _resolve_copydoc_in_text(text, root, _seen=None):
+    """Substitute every ``\\copydoc <ref>`` directive in ``text``
+    with the referenced symbol's cleaned raw_comment. The input
+    ``text`` must ALREADY have been passed through
+    ``doxyparser.remove_doxygen_comment_chars`` — substitution drops
+    plain doxygen content (no ``/* */`` delimiters, no per-line
+    ``*`` markers) into plain doxygen content, so no nested-comment
+    artifacts arise. Transitive: if a substituted body itself
+    contains further ``\\copydoc`` directives those are resolved in
+    turn. Cycle-safe via the ``_seen`` accumulator.
+
+    Substitution semantics:
+
+    * The ``\\copydoc <ref>`` directive is replaced with the
+      target's cleaned raw_comment text verbatim.
+    * Surrounding tags in the same comment (``\\ingroup``,
+      ``\\deprecated``, ``\\param``, …) are preserved.
+    * Reference to an unknown symbol: leave the directive in place
+      as a literal (matches doxygen's behavior — emits "no matching
+      definition" but doesn't crash).
+    * Reference forming a cycle: stop at the cycle point, leave the
+      innermost directive as a literal.
+
+    Called from ``DoxygenMixin._raw_comment_cleaned`` as the final
+    step, after ``remove_doxygen_comment_chars`` has stripped the
+    source comment's own delimiters. doxygen itself resolves
+    ``\\copydoc`` at XML-generation time; libclang does not, so we
+    do it here.
+    """
+    if not text or _COPYDOC_RE.search(text) is None:
+        return text  # fast path: no directives
+    if _seen is None:
+        _seen = set()
+    targets = _build_copydoc_target_index(root)
+
+    def _sub(match):
+        name = match.group(1)
+        if name in _seen:
+            return match.group(0)  # cycle — leave verbatim
+        target_cleaned = targets.get(name)
+        if target_cleaned is None:
+            return match.group(0)  # unknown — leave verbatim
+        return _resolve_copydoc_in_text(
+            target_cleaned, root, _seen | {name},
+        )
+
+    return _COPYDOC_RE.sub(_sub, text)

@@ -547,7 +547,14 @@ class CythonMixin(DoxygenMixin):
             # declaration in a block.
             raw = _strip_group_brackets(raw)
             cleaned_raw_comment = self.raw_comment_cleaner(raw)
-            return doxyparser.remove_doxygen_comment_chars(cleaned_raw_comment)
+            cleaned = doxyparser.remove_doxygen_comment_chars(cleaned_raw_comment)
+            # Resolve transitively any \copydoc / @copydoc directives.
+            # Runs LAST (on already-delimiter-stripped text) so the
+            # target index — also stored as cleaned text — drops
+            # plain doxygen content into plain doxygen content with
+            # no nested-comment artifacts. doxygen itself resolves
+            # \copydoc at XML-generation time; libclang does not.
+            return _resolve_copydoc_in_text(cleaned, self.get_root())
         return ""
 
     def _remove_doxygen_comment_chars(self, text: str):
