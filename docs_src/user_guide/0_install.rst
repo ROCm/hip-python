@@ -66,8 +66,19 @@ for your ROCm\ |trade| HIP SDK installation.
 
 .. admonition:: Example
 
-   If you have the ROCm\ |trade| HIP SDK 5.6.0 installed, any
-   HIP Python package with version ``5.6.0.X.Y`` can be used.
+   If you have the ROCm\ |trade| HIP SDK 7.13.0 installed, any
+   HIP Python package with version ``7.13.0.X.Y`` can be used.
+
+.. tip::
+
+   The pip commands below pin the first three components (the ROCm
+   version) using PEP 440's compatible-release operator
+   ``~=7.13.0.0``. This is equivalent to
+   ``>=7.13.0.0, ==7.13.0.*`` — pip is allowed to pick newer
+   ``CODEGEN_VERSION`` / ``RELEASE_VERSION`` updates within the
+   ``7.13.0`` line but is forbidden from sliding forward to
+   ``7.14.0``, where the pinned ROCm SDK might no longer be
+   compatible.
 
 .. note::
 
@@ -95,29 +106,145 @@ Installation Commands
 
       python3 -m pip install --upgrade pip
 
-After having identified the correct package for your ROCm\ |trade| installation,
-type:
+HIP Python ships as **seven separate wheels**, so that you only install
+the runtime dependencies you actually need. The sections below cover
+the three common installation shapes; pick one that matches your use
+case.
+
+Full installation (everything)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The simplest path — pulls in every binding wheel plus the
+``hip.*`` alias shim:
 
 .. code-block:: shell
 
-   python3 -m pip install -i https://test.pypi.org/simple hip-python>=<rocm_version>.<hip_python_version>
+   python3 -m pip install hip-python~=7.13.0.0
 
-or if you have a HIP Python wheel somewhere in your filesystem:
+This installs ``rocm-bindings-{core,hip,libraries,systems,compiler}``,
+``hip-python-interop``, and the ``hip-python`` alias — roughly 100 MB
+total wheel content. Use this when you don't yet know which subset
+of ROCm libraries you'll be calling.
+
+If you have a HIP Python wheel somewhere in your filesystem:
 
 .. code-block:: shell
 
    python3 -m pip install <path/to/hip_python>.whl
 
-.. warning::
+.. _subsec_install_wrapper_module:
 
-   Currently, we have not uploaded any HIP Python packages to PyPI yet. So far we
-   have only uploaded packages to TestPyPI, mainly intended for internal testing
-   purposes. If you find similar named packages on PyPI they may been provided by
-   others, possibly with malicious intent.
+Wrapper module (``hip-python``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``hip-python`` wheel is a thin **alias package**. It exposes
+``hip``, ``hiprtc``, ``hipblas``, etc. as re-exports of the
+canonical ``rocm.bindings.*`` modules, so legacy code that does
+``from hip import hip, hiprtc, hipblas`` keeps working unchanged.
+It contains no bindings of its own — just a tiny shim — and
+declares the binding wheels as runtime dependencies. Installing
+``hip-python`` therefore drags in the bindings transitively:
+
+.. code-block:: shell
+
+   python3 -m pip install hip-python~=7.13.0.0
+
+Pick this if your existing code uses the ``from hip import ...``
+import style. New code should prefer importing from
+``rocm.bindings.*`` directly and skip this wrapper.
+
+.. _subsec_install_interop_module:
+
+CUDA interoperability layer (``hip-python-interop``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``hip-python-interop`` wheel ships the
+``cuda.bindings.{driver,runtime,nvrtc}`` modules — drop-in
+replacements for the corresponding ``cuda-python`` modules,
+implemented on top of HIP. Use this to port CUDA Python code to
+AMD GPUs with minimal source changes (see
+:ref:`/user_guide/2_cuda_python_interop` for the porting guide):
+
+.. code-block:: shell
+
+   python3 -m pip install \
+       hip-python-interop~=7.13.0.0
+
+The interop wheel depends on ``rocm-bindings-hip`` and
+``rocm-bindings-libraries`` (it forwards calls into them), so pip
+will install those automatically.
+
+.. _subsec_install_individual_bindings:
+
+Individual binding components
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For minimal install footprints (containerised builds, embedded
+deployments) install only the binding wheels you actually need:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 32 68
+
+   * - Wheel
+     - When to install
+   * - ``rocm-bindings-core``
+     - Always — it provides the DLL loader and shared types every
+       other binding depends on.
+   * - ``rocm-bindings-hip``
+     - You call ``hip.*`` (HIP runtime) or ``hiprtc.*``
+       (just-in-time kernel compilation) directly.
+   * - ``rocm-bindings-libraries``
+     - You call into the math/FFT/random/sparse libraries
+       (``hipblas``, ``hipsolver``, ``hiprand``, ``hipfft``,
+       ``hipsparse``, plus the experimental ``hipblaslt``,
+       ``hipsparselt``, ``hiptensor``, ``hipdnn``).
+   * - ``rocm-bindings-systems``
+     - You call the system-level libraries: ``rccl`` (collective
+       communication), ``roctx`` (profiling/tracing),
+       :py:obj:`rocm.hipfile` (accelerated file I/O), ``amdsmi``
+       (system management), or ``hsa`` (HSA runtime + AMD
+       extensions).
+   * - ``rocm-bindings-compiler``
+     - You call AMD COMGR (``amd_comgr`` or the higher-level
+       :py:obj:`rocm.comgr`) or the LLVM-C bindings
+       (``rocm.bindings.llvm.c.*``).
+
+Example — install only HIP + HIPRTC + the math libraries:
+
+.. code-block:: shell
+
+   python3 -m pip install \
+       rocm-bindings-core~=7.13.0.0 \
+       rocm-bindings-hip~=7.13.0.0 \
+       rocm-bindings-libraries~=7.13.0.0
+
+The transitive dependency chain (``rocm-bindings-core`` is pulled
+in automatically by every other wheel) is declared in each
+wheel's metadata, so you can equivalently just install the leaves
+you want and let pip figure out the dependencies.
 
 .. note::
 
-   The first option will only be available after the public release on PyPI.
+   Some bindings (``hipfile``, ``hipblaslt``, ``hipsparselt``,
+   ``hiptensor``, ``hipdnn``) require shared libraries that may
+   not be part of a standard ROCm installation. See
+   :ref:`hipfile_known_limitations` and the project README for
+   build-from-source instructions if ``dlopen`` of the
+   corresponding ``.so`` fails on your system.
+
+.. note::
+
+   HIP Python is published on the public PyPI under the
+   ``hip-python`` / ``hip-python-interop`` /
+   ``rocm-bindings-{core,hip,libraries,systems,compiler}`` project
+   names. The commands above use pip's default index — no
+   ``--extra-index-url`` / ``-i`` is required.
+
+   Older releases were only available on TestPyPI for internal
+   testing. Documentation that still recommends
+   ``-i https://test.pypi.org/simple`` is out of date — prefer the
+   default-index commands shown here.
 
 .. |trade| unicode:: U+02122 .. TRADEMARK SIGN
    :ltrim:

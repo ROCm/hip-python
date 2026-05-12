@@ -39,6 +39,7 @@ subtrees:
   - caption: "rocm-bindings-systems"
     entries:
 @TOC_ENTRIES_ROCM_BINDINGS_SYSTEMS@
+      - file: python_api/rocm/hipfile/index
   - caption: "rocm-bindings-compiler"
     entries:
 @TOC_ENTRIES_ROCM_BINDINGS_COMPILER@
