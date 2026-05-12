@@ -200,6 +200,17 @@ def generate_amdsmi(
     default_ptr_handler,
 ):
     """Generator for AMD SMI (System Management Interface) bindings."""
+    # Define ENABLE_ESMI_LIB so the 75 `amdsmi_*_cpu_*` functions
+    # gated by `#ifdef ENABLE_ESMI_LIB` (CPU energy/freq/boost-limit
+    # monitoring) get parsed and bound. Without this define libclang
+    # silently skips the entire ESMI block in `amd_smi/amdsmi.h`
+    # (lines 7082-8550 in the 7.13 header). The backing
+    # `libamd_smi.so` resolves these symbols at runtime via the
+    # lazy-loader; if the installed library was compiled without
+    # ESMI support, the first call surfaces a clear "symbol not
+    # found" rather than the symbol being silently absent at the
+    # Python layer.
+    amdsmi_cflags = list(generator_args) + ["-DENABLE_ESMI_LIB"]
     generator = CythonModuleGenerator(
         "rocm.bindings.amdsmi",
         include_dir,
@@ -215,7 +226,7 @@ def generate_amdsmi(
         ptr_parm_intent=controls.amdsmi.ptr_parm_intent,
         ptr_rank=controls.amdsmi.ptr_rank,
         ptr_complicated_type_handler=default_ptr_handler,
-        cflags=generator_args,
+        cflags=amdsmi_cflags,
     )
     return generator
 
