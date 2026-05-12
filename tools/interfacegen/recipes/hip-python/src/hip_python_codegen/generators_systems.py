@@ -248,8 +248,24 @@ def generate_hsa(
     image extensions + AMD vendor PC-sampling in a single namespace
     (all `hsa_*` / `HSA_*` symbols).
 
+    Additionally pre-includes `hsa_ext_finalize.h` (the BRIG/HSAIL
+    finalizer extension: `hsa_ext_program_create` /
+    `hsa_ext_program_finalize` / etc.) via a `-include` cflag so
+    libclang's parse surfaces those decls. `hsa_ext_amd.h` does not
+    pull the finalize header in transitively, and there is no
+    upstream `#define` switch that would do so — only
+    `hsa_api_trace.h` includes it, gated behind
+    `AMD_INTERNAL_BUILD` plus a tooling-internal `inc/` path that
+    isn't shipped in the install tree. The matching gcc-side
+    `-include` (so the Cython-generated `.c` compile sees the same
+    typedefs) lives in
+    `packages/rocm-bindings-systems/CMakeLists.txt` keyed on
+    `_lib STREQUAL "hsa"` — same codegen-side ↔ wheel-build-side
+    parity pattern as amdsmi's `ENABLE_ESMI_LIB`.
+
     HSA is independent of HIP — no cross-imports needed.
     """
+    hsa_cflags = list(generator_args) + ["-include", "hsa/hsa_ext_finalize.h"]
     generator = CythonModuleGenerator(
         "rocm.bindings.hsa",
         include_dir,
@@ -267,6 +283,6 @@ def generate_hsa(
         ptr_parm_intent=controls.hsa.ptr_parm_intent,
         ptr_rank=controls.hsa.ptr_rank,
         ptr_complicated_type_handler=default_ptr_handler,
-        cflags=generator_args,
+        cflags=hsa_cflags,
     )
     return generator

@@ -1551,6 +1551,19 @@ class hsa:
     dlopen-based runtime model.
     """
 
+    # Foreign-prefix types declared inside the parsed HSA headers
+    # that nonetheless need to surface in the binding because they
+    # appear in admitted function signatures. The `BrigModuleHeader`
+    # opaque struct (and its `BrigModule_t` pointer typedef) is
+    # referenced by `hsa_ext_program_add_module` /
+    # `hsa_ext_program_iterate_modules` parameters — without the
+    # ctypedef, Cython can't resolve the type identifier in the
+    # rendered function signature.
+    _EXTRA_TYPES = frozenset((
+        "BrigModuleHeader",
+        "BrigModule_t",
+    ))
+
     # Targeted exclusions where the codegen can't currently produce a
     # well-formed binding. Keep this list as small as possible and
     # link each entry to its tracking issue.
@@ -1586,6 +1599,8 @@ class hsa:
             return False
         if node.name in hsa._CODEGEN_BLOCKLIST:
             return False
+        if node.name in hsa._EXTRA_TYPES:
+            return True
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HSA_")
         return node.name.startswith("hsa_") or node.name.startswith("HSA_")
