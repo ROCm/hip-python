@@ -212,6 +212,30 @@ def from_libclang_translation_unit(
                 root,
             )
             root.append(node)
+        elif backend.Typedef.match_typedefed_typedef(cursor.type):
+            # `typedef A B;` where A is itself a typedef. Listed BEFORE
+            # the basic / void / pointer / record-or-enum matchers
+            # because those classify by the *resolved* leaf category
+            # (a typedef chain bottoming out in `int` would otherwise
+            # match `match_typedefed_basic_type` and skip the chain
+            # handling). Treat the wrapping typedef exactly like any
+            # other Typedef and record A's cursor as the typeref so
+            # the renderer can substitute the alias name rather than
+            # falling through to the canonical spelling — which
+            # otherwise leaks the elaborated `struct Foo *` form into
+            # function signatures and breaks the Cython compile. HSA's
+            # `typedef BrigModule_t hsa_ext_module_t;` (in
+            # `hsa_ext_finalize.h`) is the motivating case.
+            _log.debug(
+                f"handle_typedef_cursor_: typedef of typedef: found {cursor.type.kind} with typedef name '{cursor.spelling}'"
+            )
+            node = backend.Typedef(cursor, root)
+            typeref_cursor = first_child_cursor_of_kinds_(
+                cursor, (clang.cindex.CursorKind.TYPE_REF,)
+            )
+            if typeref_cursor is not None:
+                node.typeref = root.lookup_type_from_cursor(typeref_cursor)
+            root.append(node)
         elif backend.Typedef.match_typedefed_basic_type(cursor.type):
             _log.debug(
                 f"handle_typedef_cursor_: typedefed basic type: found {cursor.type.kind} with typedef name '{cursor.spelling}'"

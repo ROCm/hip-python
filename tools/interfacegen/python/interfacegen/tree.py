@@ -1018,6 +1018,37 @@ class Typedef(Type, Typed):
             cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()
         )[:2] == [clang.cindex.TypeKind.TYPEDEF, clang.cindex.TypeKind.POINTER]
 
+    @staticmethod
+    def match_typedefed_typedef(clang_type: clang.cindex.Type):
+        """If the type is a typedef whose immediate underlying is itself
+        a typedef.
+
+        Catches the chain ``typedef A B;`` where ``A`` is itself
+        ``typedef X A;`` for some upstream ``X``. Layer shape is
+        ``[TYPEDEF, TYPEDEF, ...]``.
+
+        Note this matcher MUST be checked BEFORE
+        ``match_typedefed_basic_type`` /
+        ``match_typedefed_record_or_enum`` etc. in
+        ``treefactory.handle_typedef_cursor_``: those matchers
+        classify by the *resolved* leaf category, so a typedef chain
+        bottoming out in (say) ``int`` would also match
+        ``match_typedefed_basic_type`` and skip the chain handling.
+        Routing chains through this matcher keeps the typeref link
+        to the underlying typedef intact, so the renderer
+        substitutes the alias name (e.g. ``hsa_ext_module_t``)
+        instead of the canonical spelling (e.g.
+        ``struct BrigModuleHeader *`` — which Cython rejects).
+
+        HSA's ``typedef BrigModule_t hsa_ext_module_t;`` (declared in
+        ``hsa_ext_finalize.h`` after
+        ``typedef struct BrigModuleHeader* BrigModule_t;``) is the
+        motivating case.
+        """
+        return list(
+            cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()
+        )[:2] == [clang.cindex.TypeKind.TYPEDEF, clang.cindex.TypeKind.TYPEDEF]
+
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
