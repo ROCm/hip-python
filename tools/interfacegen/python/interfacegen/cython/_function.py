@@ -818,7 +818,40 @@ cdef void* {funptr_name} = NULL
             ) or parm.is_pointer_to_function_proto(
                 degree=1, incomplete_array=True
             ):
-                parm_typename = parm_innermost_type.cython_global_name
+                # The default rendering uses a per-type wrapper class
+                # named after the innermost record (e.g. `hipblasContext`
+                # for `hipblasHandle_t *`). That requires the wrapper
+                # class to actually be emitted in this binding, which
+                # in turn requires the recipe filter to admit the
+                # innermost record. For foreign-prefix records like
+                # libc `FILE` / `_IO_FILE` the filter rejects them and
+                # the wrapper class is never defined — Cython would
+                # fail with `undeclared name not builtin: _IO_FILE`.
+                # Fall back to the handler-driven generic wrapper (same
+                # path that the void-pointer branch below uses), which
+                # defaults to `rocm.bindings.util.types.Pointer`. The
+                # recipe can override per-binding via
+                # `ptr_complicated_type_handler`.
+                c_type = _with_cprefix(parm.cython_global_typename_no_const)
+                node_filter = getattr(parm, "node_filter", None)
+                if (
+                    node_filter is None
+                    or parm_innermost_type is None
+                    or node_filter(parm_innermost_type)
+                ):
+                    # Per-type wrapper IS emitted — `getElementPtr()`
+                    # already returns the typed pointer, no cast.
+                    parm_typename = parm_innermost_type.cython_global_name
+                    pointer_extract = "getElementPtr()"
+                    cast_open = ""
+                else:
+                    # Foreign record — fall back to the generic
+                    # Pointer wrapper. `getPtr()` returns `void *`, so
+                    # the call needs an explicit cast to the cy*
+                    # parameter type.
+                    parm_typename = parm.ptr_complicated_type_handler(parm)
+                    pointer_extract = "getPtr()"
+                    cast_open = f"<{c_type}>"
                 sig_args.append(f"object {parm_name}")
                 parm_python_types[parm.name] = (
                     f"{parm_typename}/object"  # use original name as key
@@ -830,10 +863,11 @@ cdef void* {funptr_name} = NULL
                 # struct / typedef from the cy* module rather than
                 # the same-named Python wrapper class in this file.
                 _append_call_arg(hoist=CallArgHoist(
-                    c_type=_with_cprefix(parm.cython_global_typename_no_const),
+                    c_type=c_type,
                     wrapper_class=parm_typename,
                     wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
-                    pointer_extract="getElementPtr()",
+                    pointer_extract=pointer_extract,
+                    cast_open=cast_open,
                 ))
             elif parm.is_pointer_to_constantarray_of_basic_type(
                 degree=1, incomplete_array=True

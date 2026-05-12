@@ -414,9 +414,24 @@ def generate_hiptensor(
         ptr_complicated_type_handler=default_ptr_handler,
         cflags=generator_args,
     )
+    # `hiptensorLoggerSetFile(FILE * file)` is the lone consumer of a
+    # libc-defined struct in hiptensor's public surface. Cython ships
+    # an opaque `ctypedef struct FILE` in
+    # `Cython/Includes/libc/stdio.pxd`. cimport it twice — once
+    # under its public `FILE` name and once aliased to `_IO_FILE`
+    # (glibc's canonical struct tag, which is what the codegen
+    # renderer emits for the function-decl parameter type because
+    # libclang reports the canonical spelling). The alias lets a
+    # single libc-defined opaque type back BOTH spellings the
+    # binding references. The high-level wrapper rendering for this
+    # parm routes through `rocm.bindings.util.types.Pointer` via the
+    # foreign-record fallback in
+    # `_function.py:handle_in_inout_ptr_`.
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.cyhip cimport *
+    from libc.stdio cimport FILE
+    from libc.stdio cimport FILE as _IO_FILE
     """
     )
     generator.python_interface_decl_prolog += textwrap.dedent(

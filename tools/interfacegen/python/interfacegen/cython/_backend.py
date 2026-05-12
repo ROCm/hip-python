@@ -199,6 +199,16 @@ class CythonBackend:
                         "ptr_complicated_type_handler",
                         self.ptr_complicated_type_handler,
                     )
+                    # Make the recipe filter reachable from the
+                    # parm at render time. Used by the
+                    # pointer-to-record code path in `_function.py`
+                    # to decide whether the innermost record is
+                    # actually emitted as a per-type wrapper class
+                    # — if not (foreign-prefix record like libc
+                    # `FILE` / `_IO_FILE`), the renderer falls
+                    # back to the handler-driven generic wrapper
+                    # (default: `rocm.bindings.util.types.Pointer`).
+                    setattr(node, "node_filter", self.node_filter)
                 elif isinstance(node, Typedef):
                     setattr(
                         node,
