@@ -214,6 +214,27 @@ def get_llvm_header(header_relpath: str, rocm_llvm_project_dir: str):
     return None
 
 
+# Shim-include subdirectory under each wheel's source tree. The
+# codegen materialises patched copies of upstream headers here at
+# generation time; the wheel's CMakeLists prepends this directory
+# to the include search path so gcc sees the patched header before
+# the unpatched on-disk copy in /opt/rocm/include. Without that,
+# libclang's `unsaved_files` patch only takes effect at parse time
+# — the eventual gcc compile of the Cython-generated `.c` would
+# re-`#include` the unpatched header and break.
+SHIM_INCLUDES_SUBDIR = "shim_includes"
+
+
+def _stripped_include_marker(line: str) -> str:
+    """Comment-out a `#include` line in a way that makes the
+    `_apply_header_workarounds` provenance obvious. Used by the
+    per-header patches below."""
+    return (
+        f"// {line}  /* stripped by hip-python codegen: "
+        "see binding_generator._apply_header_workarounds */"
+    )
+
+
 def _apply_header_workarounds(header_relpath: str, header_path: str, content: str | None):
     """Apply per-header source patches before libclang sees the file.
 
@@ -224,22 +245,97 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
 
     Currently patches:
 
-    - `hipblaslt/hipblaslt.h` — strips the three unconditional C++
-      stdlib `#include` lines (`<memory>`, `<regex>`, `<vector>`)
-      that prevent the otherwise-C-compatible header from parsing
-      under libclang's `-x c` mode. Those includes are unused
-      anywhere in the public C API; the C++ extension API lives in
-      sibling `hipblaslt-ext.hpp`.
-      TODO: remove this workaround once the upstream bug is fixed
-      (track ROCm/hipBLASLt issue once filed).
+    - `hipblaslt/hipblaslt.h` — three problems:
+
+      1. Strips `<memory>` / `<regex>` / `<vector>` C++ stdlib
+         `#include` lines (none of those types are referenced in
+         the public C API; the C++ extension API lives in sibling
+         `hipblaslt-ext.hpp`).
+      2. Strips `<hip/hip_bfloat16.h>` because that header
+         transitively pulls in `hip/amd_detail/amd_hip_bfloat16.h`
+         whose `struct hip_bfloat16` declaration uses C++ syntax
+         (constructors, conversion operators).
+      3. Injects an inline POD `typedef struct hip_bfloat16
+         { uint16_t data; } hip_bfloat16;` so the downstream
+         `typedef hip_bfloat16 hipblasLtBfloat16;` in the
+         transitively-included `hipblaslt-types.h` resolves to a
+         C-compatible POD type.
+
+      Tracked upstream as
+      `share/design/UPSTREAM_BUGS/hipblaslt_c_api_requires_cxx_compile.md`.
+
+    - `hipsparselt/hipsparselt.h` — strips `<hip/hip_bfloat16.h>`
+      and `<hip/hip_fp8.h>` (under `__HIP_PLATFORM_AMD__`). Both
+      headers are pulled in by hipsparselt.h but neither
+      `hip_bfloat16` nor `hip_fp8` is actually referenced anywhere
+      in the public hipSPARSELt API — they are dead-weight
+      includes. With them removed the header parses cleanly under
+      gcc. Tracked upstream as
+      `share/design/UPSTREAM_BUGS/hipsparselt_c_api_requires_cxx_compile.md`.
     """
     if header_relpath == "hipblaslt/hipblaslt.h":
         if content is None:
             with open(header_path) as f:
                 content = f.read()
-        for bad in ("#include <memory>", "#include <regex>", "#include <vector>"):
-            content = content.replace(bad, f"// {bad}  /* stripped by hip-python codegen: see _apply_header_workarounds */")
+        # Strip the four problematic includes:
+        #   <memory>/<regex>/<vector> — C++ stdlib, unused.
+        #   <hip/hip_bfloat16.h> — pulls in C++-only struct
+        #     `hip_bfloat16` with constructors / conversion
+        #     operators that gcc rejects in C mode.
+        #   "hipblaslt-types.h" — declares hipblasLtHalf /
+        #     hipblasLtBfloat16 / hipblasLtInt8/Int32 typedefs
+        #     plus pulls in the C++-only hipblaslt extension
+        #     types (hipblaslt_e8/e5m3/bfloat6/float6/float4)
+        #     and <hip/hip_fp8.h>. NONE of these are used in
+        #     `hipblaslt.h`'s public API surface (verified via
+        #     `comm -12` — zero name overlap), so the entire
+        #     include is dead-weight for binding consumers.
+        for bad in (
+            "#include <memory>",
+            "#include <regex>",
+            "#include <vector>",
+            "#include <hip/hip_bfloat16.h>",
+            '#include "hipblaslt-types.h"',
+        ):
+            content = content.replace(bad, _stripped_include_marker(bad))
+    elif header_relpath == "hipsparselt/hipsparselt.h":
+        if content is None:
+            with open(header_path) as f:
+                content = f.read()
+        for bad in (
+            "#include <hip/hip_bfloat16.h>",
+            "#include <hip/hip_fp8.h>",
+        ):
+            content = content.replace(bad, _stripped_include_marker(bad))
     return (header_path, content)
+
+
+def _persist_shim_header(
+    header_relpath: str,
+    content: str,
+    output_dir: str,
+    package: str = "rocm-bindings-libraries",
+):
+    """Write a patched header to the wheel's `shim_includes/` directory
+    so the gcc compile of the Cython-generated `.c` reads it from
+    there (the wheel's CMakeLists prepends `shim_includes` to the
+    include search path) instead of falling through to the
+    unpatched copy in `/opt/rocm/include`.
+
+    Caller must have a non-None `content` (i.e. a patch fired in
+    `_apply_header_workarounds`); otherwise this is a no-op the
+    caller skips. The destination is
+    `<output_dir>/packages/<package>/shim_includes/<header_relpath>`.
+    """
+    if content is None:
+        return
+    shim_path = os.path.join(
+        output_dir, "packages", package, SHIM_INCLUDES_SUBDIR, header_relpath
+    )
+    os.makedirs(os.path.dirname(shim_path), exist_ok=True)
+    with open(shim_path, "w") as f:
+        f.write(content)
+    _log.info(f"  wrote shim header: {shim_path}")
 
 
 def resolve_header_path(
@@ -464,6 +560,19 @@ def _worker_generate_library(
                 rocm_llvm_project_dir,
             )
             include_dir = _resolve_include_dir(header_path, header_relpath)
+
+            # Persist any patched header content to the wheel's
+            # `shim_includes/` directory so the gcc compile of the
+            # Cython-generated `.c` reads the patched copy via the
+            # CMakeLists' include-path prepend, not the unpatched
+            # original under /opt/rocm/include.
+            if header_content is not None:
+                _persist_shim_header(
+                    header_relpath,
+                    header_content,
+                    output_dir_root,
+                    package=_PKG_TO_DIR[pkg_short][0],
+                )
 
             kwargs = dict(
                 include_dir=include_dir,
@@ -832,6 +941,18 @@ def generate(opts):  # noqa: C901
                 print(f"[skip] {libname}: header not found", file=sys.stderr)
                 return
             include_dir = _resolve_include_dir(header_path, header_relpath)
+            # Persist any patched header content to the wheel's
+            # `shim_includes/` directory so the gcc compile of the
+            # Cython-generated `.c` reads the patched copy via the
+            # CMakeLists' include-path prepend, not the unpatched
+            # original under /opt/rocm/include.
+            if header_content is not None:
+                _persist_shim_header(
+                    header_relpath,
+                    header_content,
+                    output_dir,
+                    package=_PKG_TO_DIR[pkg_short][0],
+                )
             kwargs = dict(common_kwargs)
             kwargs["include_dir"] = include_dir
             kwargs["header_relpath"] = header_relpath

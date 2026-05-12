@@ -538,18 +538,25 @@ def generate_hipsparselt(
     from rocm.bindings.hipsparse cimport *
     """
     )
-    # hipsparselt's API takes hipsparse enum arguments directly
-    # (`hipsparseOperation_t`, `hipsparseOrder_t`, etc.) — the
-    # generated `.pyx` runtime-checks them via
-    # `isinstance(arg, _<EnumName>__Base)`. Those base classes live in
-    # `rocm.bindings.hipsparse`; without the star-import Cython
-    # compile fails with `undeclared name not builtin:
-    # _hipsparseOperation_t__Base`. Same shape as the hipsolver and
-    # hipblaslt prologs.
+    # hipsparselt's API takes a small set of hipsparse enum
+    # arguments directly (`hipsparseOperation_t`,
+    # `hipsparseOrder_t`) — the generated `.pyx` runtime-checks
+    # them via `isinstance(arg, _<EnumName>__Base)`. Those base
+    # classes live in `rocm.bindings.hipsparse`; without the
+    # explicit Python-level import Cython compile fails with
+    # `undeclared name not builtin: _hipsparseOperation_t__Base`.
+    # Import only the names actually needed (rather than `import *`)
+    # — broader star-imports pull in `cdef class` types that
+    # collide with the ones cimport'd above and trigger
+    # `Cannot overwrite C type` at module init time.
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
-    from rocm.bindings.hip import hipError_t, _hipDataType__Base
-    from rocm.bindings.hipsparse import *
+    from rocm.bindings.hip import hipError_t, _hipDataType__Base, _hipLibraryPropertyType__Base
+    from rocm.bindings.hipsparse import (
+        hipsparseStatus_t,
+        _hipsparseOperation_t__Base,
+        _hipsparseOrder_t__Base,
+    )
     """
     )
     return generator
