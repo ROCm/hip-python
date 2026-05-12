@@ -242,6 +242,14 @@ def generate_hipfft(
     generator_args: list,
     default_ptr_handler,
 ):
+    # NOTE: `hipfft.h` does not `#include` the eXtended-API header
+    # `hipfftXt.h`, so the 17 `hipfftXt*` entry points are not part
+    # of this binding. Folding both headers into a synthetic TU
+    # surfaced multiple downstream codegen issues (OUT-pointer
+    # hoisting for `hipfftXtExecDescriptor*`, missing
+    # `hipLibXtDesc_t` resolution, missing imports for `hipDataType`).
+    # Adding the Xt API is tracked separately; see
+    # share/design/CODEGEN.md for the gap list.
     generator = CythonModuleGenerator(
         "rocm.bindings.hipfft",
         include_dir,
