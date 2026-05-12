@@ -345,7 +345,13 @@ def generate_hipblaslt(
         # enum, NOT a separate hipblasLt enum) — same sentinel.
         modifiers_lazy_loader=" except? HIPBLAS_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPBLAS_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hipblaslt", "hipblasStatus_t"),
+        # NOTE: prefix is camelCase "hipblasLt" — the C functions
+        # spell it that way (hipblasLtCreate, hipblasLtInitialize,
+        # ...) and the prefix match in `_make_status_node_init` is
+        # case-sensitive. A lowercase "hipblaslt" prefix never
+        # matches and the void-return / non-status-return fixup
+        # silently doesn't fire.
+        node_init=_make_status_node_init("hipblasLt", "hipblasStatus_t"),
         node_filter=controls.hipblaslt.node_filter,
         ptr_parm_intent=controls.hipblaslt.ptr_parm_intent,
         ptr_rank=controls.hipblaslt.ptr_rank,
@@ -365,9 +371,19 @@ def generate_hipblaslt(
     from rocm.bindings.hipblas cimport *
     """
     )
+    # The hipblaslt API surface uses several hipblas enums directly
+    # (`hipblasComputeType_t`, `hipblasOperation_t`, etc.) — the
+    # generated `.pyx` does runtime `isinstance(arg,
+    # _<EnumName>__Base)` checks against those enums' Python wrapper
+    # base classes. Those wrapper classes live in `rocm.bindings.hipblas`
+    # at module scope; without the star-import they aren't visible to
+    # hipblaslt's `.pyx` and Cython compile fails with `undeclared
+    # name not builtin: _hipblasComputeType_t__Base`. Same shape as
+    # hipsolver's prolog above.
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.hip import _hipDataType__Base
+    from rocm.bindings.hipblas import *
     """
     )
     return generator
@@ -481,7 +497,12 @@ def generate_hipsparselt(
         # hipsparse enum, NOT a separate hipsparseLt enum).
         modifiers_lazy_loader=" except? HIPSPARSE_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPSPARSE_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hipsparselt", "hipsparseStatus_t"),
+        # NOTE: prefix is camelCase "hipsparseLt" — same case-
+        # sensitivity caveat as `generate_hipblaslt` above. The C
+        # functions spell it that way (hipsparseLtInitialize,
+        # hipsparseLtMatmulPlanInit, ...) and a lowercase prefix
+        # would silently skip the void-return fixup.
+        node_init=_make_status_node_init("hipsparseLt", "hipsparseStatus_t"),
         node_filter=controls.hipsparselt.node_filter,
         macro_type=controls.hipsparselt.macro_type,
         ptr_parm_intent=controls.hipsparselt.ptr_parm_intent,
@@ -502,9 +523,18 @@ def generate_hipsparselt(
     from rocm.bindings.hipsparse cimport *
     """
     )
+    # hipsparselt's API takes hipsparse enum arguments directly
+    # (`hipsparseOperation_t`, `hipsparseOrder_t`, etc.) — the
+    # generated `.pyx` runtime-checks them via
+    # `isinstance(arg, _<EnumName>__Base)`. Those base classes live in
+    # `rocm.bindings.hipsparse`; without the star-import Cython
+    # compile fails with `undeclared name not builtin:
+    # _hipsparseOperation_t__Base`. Same shape as the hipsolver and
+    # hipblaslt prologs.
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.hip import hipError_t, _hipDataType__Base
+    from rocm.bindings.hipsparse import *
     """
     )
     return generator

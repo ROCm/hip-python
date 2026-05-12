@@ -747,10 +747,26 @@ class hipblaslt:
     relies on `from rocm.bindings.cyhip cimport *`).
     """
 
+    # Foreign-prefix types that nonetheless need to surface in this
+    # binding because they appear in admitted typedefs / function
+    # signatures. `hip_bfloat16` is referenced by
+    # `typedef hip_bfloat16 hipblasLtBfloat16;` in
+    # `hipblaslt-types.h`. Unlike hipblas's analogous typedef
+    # (which has a fallback `typedef struct hipblasBfloat16 { uint16_t
+    # data; }` definition that the codegen collapses into a `cdef
+    # struct`), hipblaslt only has the raw typedef — so without
+    # admitting `hip_bfloat16` the alias would reference an
+    # undeclared type identifier.
+    _EXTRA_TYPES = frozenset((
+        "hip_bfloat16",
+    ))
+
     @staticmethod
     def node_filter(node: Node):
         if _is_useless_macro(node):
             return False
+        if node.name in hipblaslt._EXTRA_TYPES:
+            return True
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPBLASLT_")
         return node.name.startswith("hipblasLt") or node.name.startswith("HIPBLASLT_")
