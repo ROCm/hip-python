@@ -22,8 +22,8 @@
 
 .. _ch_datatypes:
 
-HIP Python's Adapter Types
-==========================
+Adapter Types
+=============
 
 This chapter highlights some of the datatypes that HIP Python's Python
 interfaces use to convert various Python objects to the C datatypes expected

@@ -310,12 +310,30 @@ cdef class CStr(Pointer):
     to the constructor of `bytes` or to other array types or memory views that can deal
     with Python buffers.
 
+    Pinning of `str` and `bytes` inputs:
+        `str` and `bytes` arguments are interned in the
+        `~.CStr._retained_inputs` class dict for the lifetime of the
+        program, so the C pointer handed to the backend remains valid
+        even after the wrapper instance is collected and even if the
+        backend retains the pointer past the call's return (the COMGR
+        compile cache reached via `~.bindings.hiprtc` is one such
+        backend). Repeated calls with logically equal content reuse the
+        same canonical bytes object and therefore the same C pointer,
+        which preserves backend caches keyed on pointer identity. The
+        intern table only grows with the number of *distinct* string
+        contents ever passed.
+
     Warning:
-        When using this type as adapter, be aware that `bytes` and `str`
-        objects passed to the constructor of this class might get garbage collected.
-        If the called C library stores pointers to the data of these Python objects
-        into a library-managed data structure and the latter is then used
-        outside of the original scope, you might experience memory errors.
+        The program-lifetime pin above only applies to `str` and `bytes`
+        inputs. When the wrapper is constructed from another
+        buffer-protocol object (`bytearray`, `numpy.ndarray`,
+        `memoryview`, …) the source is pinned only for the wrapper
+        instance's lifetime via `Py_buffer` acquisition. If the called
+        C library stores the pointer into a library-managed structure
+        and the wrapper then goes out of scope, memory errors are
+        possible — pass a `bytes`/`str` (which is interned) or hold a
+        Python-side reference to the source for as long as the backend
+        may dereference it.
 
     Limitation:
         This class is only designed for handling strings that encode each
@@ -331,12 +349,33 @@ cdef class CStr(Pointer):
         Note that `ctypes.c_void_p` seems to be identified as Python buffer for unknown
         reasons. Therefore, it must be checked for this type first.
 
+    * `str`:
+
+        UTF-8 encoded, then interned via
+        ``CStr._retained_inputs.setdefault(b, b)``. ``self._ptr`` points
+        into the canonical bytes object and is valid for the program's
+        lifetime.
+
+    * `bytes`:
+
+        Interned via ``CStr._retained_inputs.setdefault(pyobj, pyobj)``.
+        ``self._ptr`` points into the canonical bytes object and is
+        valid for the program's lifetime.
+
     * `object` that implements the Python buffer protocol:
+
+        Note that `bytes` also implements the buffer protocol but is
+        intercepted by the dedicated branch above so it takes the
+        intern path instead of `Py_buffer` acquisition. This branch
+        therefore handles `bytearray`, `numpy.ndarray`, `memoryview`,
+        and similar mutable / typed buffers.
 
         If the object represents a simple contiguous array,
         writes the `Py_buffer` associated with ``pyobj`` to `self._py_buffer`,
         sets the `self._py_buffer_acquired` flag to `True`, and
         writes `self._py_buffer.buf` to the data pointer `self._ptr`.
+        The source is pinned only for the wrapper's lifetime (see
+        Warning above).
 
     * `object` that is accepted as input by `~.Pointer.__init__`.
 

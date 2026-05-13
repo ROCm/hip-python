@@ -97,7 +97,7 @@ Spotlight
 
       * :doc:`/user_guide/3_jit_compilation`
 
-   .. grid-item-card:: HIP Python's Adapter Types
+   .. grid-item-card:: Adapter Types
 
       Learn about the datatypes that HIP Python uses to translate between C and Python
       and that are designed to ease interoperability with other
