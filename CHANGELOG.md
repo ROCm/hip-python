@@ -1,0 +1,104 @@
+# Changelog
+
+## \*.\*.\*.\*.70 (2026-05-26)
+
+**Scope.** Summarizes everything on
+`dev/docharri/hip-python-codegen-base` not yet on
+`origin/amd-integration` (70 commits). The 5th version slot is
+the commit-count vs `amd-integration`; the other slots are
+placeholders until the broader version scheme lands.
+
+### Package layout overhaul
+
+Renamed `python/` → `packages/`, switched every wheel to the
+PEP 621 src-layout, and adopted PEP 639 metadata. The
+previously monolithic tree is now seven independently buildable
+wheels: `rocm-bindings-core`, `rocm-bindings-hip`,
+`rocm-bindings-libraries`, `rocm-bindings-systems` (new),
+`rocm-bindings-compiler`, `hip-python-interop`, and the
+`hip-python` metapackage (pure-Python alias namespace).
+
+### Build infrastructure
+
+CMake + scikit-build-core became the unified build system
+(`packages/CMakeLists.txt`). Each wheel now has its own
+`_version.py`, sdist target, and `cmake/HipPythonBuild.cmake`
+helper copy so it can build standalone. The cross-package
+include-path machinery was simplified — `HIP_PYTHON_GLOBAL_INCLUDE_DIRS`
+gave way to a sibling-includes helper that resolves cimports
+from each package's `src/` root. A `ci/internal/build-wheels.sh`
+driver builds all wheels; ninja is provisioned for per-wheel
+builds detached from any outer make jobserver. Auditwheel-repair
+support is opt-in via `HIP_PYTHON_AUDITWHEEL_REPAIR=ON`.
+
+### New + reorganized bindings
+
+`amdsmi` lands as the first member of `rocm-bindings-systems`,
+which also absorbs `rccl` and `roctx` from the old layout. The
+`hipfile` high-level Python API was ported from upstream
+`hipfile.python` and lives at `rocm.hipfile`. Library bindings
+were sorted into stable / experimental / deferred tiers — the
+experimental ones (`hipblaslt`, `hipsparselt`, `hiptensor`,
+`hipdnn`) ship behind explicit READMEs; `hsakmt` is deferred.
+The `comgr` high-level package migrated to `CStr`, gained
+cross-linked docstrings, accepts full enum names, and exposes
+`valid_*()` introspection helpers.
+
+### Cython runtime polish
+
+Generated `cy*` call sites are now wrapped in `with nogil:` for
+parallel callability. `util.types.CStr` and `ListOfBytes` carry
+a program-lifetime intern dict that pins `str`/`bytes` inputs
+for the lifetime of the wrapping object — closing a class of
+use-after-free bugs around string ownership. A non-raising
+`has_symbol` probe was added on both posix and win32 loader
+backends so callers can detect missing entry points without
+exception flow. Cython floor bumped to `>=3.1.0` (3.0.x
+mis-emits some `*const *` parameters; documented in
+`share/design/UPSTREAM_BUGS.md`).
+
+### Docs pipeline
+
+Sphinx input migrated from MyST-Markdown to reStructuredText,
+and the extension switched from `sphinx.ext.autodoc` to
+`sphinx-autoapi` — autoapi parses the source tree directly
+(including generator-emitted `.pyi` stubs), so the docs build
+no longer needs the compiled wheels on `sys.path`. The source
+tree was renamed `docs/` → `docs_src/` so `docs/` is free for
+generated HTML output. The landing page now substitutes
+`HIP_PYTHON_GENERATED_*` metadata from
+`generated_versions.cmake` (codegen date, ROCm version, source
+tree commit hashes). A new `ci/docs/` directory and
+`.readthedocs.yaml` provide a thin wrapper for Read the Docs
+and local doc builds — they invoke the cmake docs target with
+`HIP_PYTHON_BUILD_DOCS_ONLY=ON`, which skips
+`hip_python_initialize()` so configure works without `/opt/rocm`.
+
+### Handcoded-stub regeneration
+
+Five handcoded Cython modules (`util.types`, `util.loader`,
+`util.posixloader`, `_hip_helpers`, `_hiprtc_helpers`) keep
+companion `.pyi` stubs for sphinx-autoapi. A new opt-in
+`HIP_PYTHON_ENABLE_STUBGEN=ON` cmake flow drives `stubgen
+--include-docstrings` to regenerate them; `ci/docs/regenerate-stubs.sh`
+wraps the whole thing as a one-command developer tool.
+
+### Examples + design docs
+
+Examples were reorganized for the new package layout and
+extended with single-GPU samples for the new bindings
+(`amdsmi`, hipfile, comgr, the new libraries). New
+`share/design/` documents — `BINDINGS.md`, `BUILDING.md`,
+`CODEGEN.md`, `UPSTREAM_BUGS.md` — describe the generated
+bindings shape, the wheel build, the codegen contract, and
+tracked upstream bugs respectively. The README gained
+experimental-marker conventions and per-wheel install tables.
+
+---
+
+**Cross-reference.** Everything under
+`packages/*/src/rocm/bindings/` (the `.pxd`/`.pyx`/`.pyi`
+trio per module) and `docs_src/sphinx/_toc.yml.in` is
+emitted by **interfacegen** — see that repo's `CHANGELOG.md`
+for the generator-side changes that produced the contents
+of those files.
