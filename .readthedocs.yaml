@@ -1,0 +1,24 @@
+# Read the Docs configuration for hip-python.
+# https://docs.readthedocs.io/en/stable/config-file/v2.html
+#
+# RTD is configured (web UI) to track a release branch that carries
+# committed codegen artifacts (e.g. develop/therock-7.13.0-preview);
+# ci/docs/build.sh assumes those artifacts exist and the cmake docs
+# target fails fast otherwise.
+#
+# build.commands (RTD's escape hatch) is used rather than the
+# higher-level sphinx: key because the cmake configure step does
+# pre-sphinx substitution that the standard sphinx integration
+# can't trigger.
+# https://docs.readthedocs.io/en/stable/build-customization.html
+
+version: 2
+
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.12"
+  commands:
+    - pip install cmake
+    - pip install -r docs_src/sphinx/requirements.txt
+    - bash ci/docs/build.sh "${READTHEDOCS_OUTPUT}/html"

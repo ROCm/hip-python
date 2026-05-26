@@ -5,7 +5,26 @@ project(hip-python-all LANGUAGES C)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
 include(HipPythonBuild)
 
-hip_python_initialize()
+# Docs-only mode: render the Sphinx documentation without setting up
+# the wheel build. Skips hip_python_initialize() (the ROCm path check)
+# and forces every per-package HIP_PYTHON_BUILD_* option OFF, so cmake
+# configure works in environments without /opt/rocm — most notably
+# Read the Docs. See ci/docs/build.sh and .readthedocs.yaml.
+option(HIP_PYTHON_BUILD_DOCS_ONLY
+       "Render only the Sphinx documentation; skip wheel build setup" OFF)
+
+if(HIP_PYTHON_BUILD_DOCS_ONLY)
+  set(HIP_PYTHON_BUILD_DOCS       ON  CACHE BOOL "" FORCE)
+  set(HIP_PYTHON_BUILD_CORE       OFF CACHE BOOL "" FORCE)
+  set(HIP_PYTHON_BUILD_HIP        OFF CACHE BOOL "" FORCE)
+  set(HIP_PYTHON_BUILD_LIBRARIES  OFF CACHE BOOL "" FORCE)
+  set(HIP_PYTHON_BUILD_SYSTEMS    OFF CACHE BOOL "" FORCE)
+  set(HIP_PYTHON_BUILD_COMPILER   OFF CACHE BOOL "" FORCE)
+  set(HIP_PYTHON_BUILD_INTEROP    OFF CACHE BOOL "" FORCE)
+  set(HIP_PYTHON_BUILD_HIP_PYTHON OFF CACHE BOOL "" FORCE)
+else()
+  hip_python_initialize()
+endif()
 
 # Version management: Generate VERSION file from VERSION.in
 # HIP_PYTHON_VERSION_SHORT can be set via environment or defaults to commit count
@@ -627,6 +646,16 @@ if(HIP_PYTHON_BUILD_DOCS)
       "${_docs_source_dir}/index.rst"
       @ONLY)
 
+  # Forward CMAKE_BUILD_PARALLEL_LEVEL to sphinx as -j when set,
+  # otherwise leave it unspecified (sphinx's own default = single
+  # process). Native `cmake --build … --target docs` is unchanged
+  # unless the user passes --parallel N or exports the env var.
+  set(_sphinx_jobs_flag)
+  if(DEFINED ENV{CMAKE_BUILD_PARALLEL_LEVEL}
+      AND NOT "$ENV{CMAKE_BUILD_PARALLEL_LEVEL}" STREQUAL "")
+    set(_sphinx_jobs_flag -j "$ENV{CMAKE_BUILD_PARALLEL_LEVEL}")
+  endif()
+
   add_custom_target(docs
     COMMAND "${CMAKE_COMMAND}" -E make_directory
             "${HIP_PYTHON_DOCS_OUTPUT_DIR}"
@@ -634,6 +663,7 @@ if(HIP_PYTHON_BUILD_DOCS)
             "${HIP_PYTHON_DOCS_DOCTREE_DIR}"
     COMMAND "${Python_EXECUTABLE}" -m sphinx
             -T -E -b html
+            ${_sphinx_jobs_flag}
             -d "${HIP_PYTHON_DOCS_DOCTREE_DIR}"
             -D language=en
             "${_docs_source_dir}"
