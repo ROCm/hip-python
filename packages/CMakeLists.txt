@@ -602,11 +602,22 @@ if(HIP_PYTHON_BUILD_DOCS)
       set(${_var} "unknown")
     endif()
   endforeach()
+  # rocm-systems and llvm-project are always consulted during codegen
+  # (hiprtc_runtime.h + the clang Python bindings respectively), so an
+  # empty rev there means the codegen run didn't pass the corresponding
+  # --rocm-{systems,llvm-project}-dir flag — render that as
+  # "*hash not recorded*" so the always-used framing in index.rst.in
+  # stays accurate. rocm-libraries is recipe-optional, so "*not consulted*"
+  # remains the correct phrasing when its rev is empty.
   foreach(_src ROCM_LIBRARIES ROCM_SYSTEMS ROCM_LLVM_PROJECT)
     set(_rev_var "HIP_PYTHON_GENERATED_${_src}_REV")
     set(_disp_var "HIP_PYTHON_GENERATED_${_src}_REV_DISPLAY")
     if("${${_rev_var}}" STREQUAL "" OR "${${_rev_var}}" STREQUAL "unknown")
-      set(${_disp_var} "*not consulted*")
+      if("${_src}" STREQUAL "ROCM_LIBRARIES")
+        set(${_disp_var} "*not consulted*")
+      else()
+        set(${_disp_var} "*hash not recorded*")
+      endif()
     else()
       set(${_disp_var} "``${${_rev_var}}``")
     endif()

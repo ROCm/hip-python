@@ -35,11 +35,16 @@ the porting of CUDA Python Python and Cython programs.
    This documentation was generated on @HIP_PYTHON_GENERATED_DATE@ from
    ROCm\ |trade| version @HIP_PYTHON_GENERATED_ROCM_VERSION@ headers.
 
+   Source trees always consulted during codegen:
+
+   * ``ROCm/rocm-systems``: @HIP_PYTHON_GENERATED_ROCM_SYSTEMS_REV_DISPLAY@
+     — supplies ``hiprtc_runtime.h`` (constructed/copied from this repo).
+   * ``ROCm/llvm-project``: @HIP_PYTHON_GENERATED_ROCM_LLVM_PROJECT_REV_DISPLAY@
+     — supplies ``clang`` Python bindings compatible with ROCm Clang.
+
    Optional source trees consulted during codegen:
 
    * ``ROCm/rocm-libraries``: @HIP_PYTHON_GENERATED_ROCM_LIBRARIES_REV_DISPLAY@
-   * ``ROCm/rocm-systems``: @HIP_PYTHON_GENERATED_ROCM_SYSTEMS_REV_DISPLAY@
-   * ``ROCm/llvm-project``: @HIP_PYTHON_GENERATED_ROCM_LLVM_PROJECT_REV_DISPLAY@
 
 Spotlight
 ---------
