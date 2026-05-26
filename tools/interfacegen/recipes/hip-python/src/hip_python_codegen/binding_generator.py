@@ -1257,10 +1257,18 @@ def write_cmake_version_files(opts, recipe_results):
         codegen_branch = codegen_rev = codegen_version = ""
 
     # Capture the upstream source-tree commits that contributed
-    # headers to this codegen run. Each is optional — when the
-    # caller didn't pass `--rocm-{systems,libraries,llvm-project}-dir`
-    # the corresponding field is empty (rendered as
-    # "*not consulted*" by the docs landing page).
+    # headers to this codegen run.
+    #
+    # rocm-systems and llvm-project are ALWAYS consulted during codegen
+    # (the former supplies ``hiprtc_runtime.h``, the latter the ``clang``
+    # Python bindings used to parse the C headers), so the docs landing
+    # page always renders their commit hashes. If the caller didn't pass
+    # ``--rocm-systems-dir`` / ``--rocm-llvm-project-dir`` the rev is
+    # empty and the page falls back to "*hash not recorded*" — emit a
+    # warning so this is loud rather than silent.
+    #
+    # rocm-libraries is recipe-optional; an empty value there is rendered
+    # as "*not consulted*" by the docs landing page.
     def _git_head(path):
         if not path:
             return ""
@@ -1277,6 +1285,26 @@ def write_cmake_version_files(opts, recipe_results):
     rocm_llvm_project_rev = _git_head(
         getattr(opts, "rocm_llvm_project_dir", None)
     )
+    for _label, _path, _rev in (
+        ("--rocm-systems-dir",
+         getattr(opts, "rocm_systems_dir", None), rocm_systems_rev),
+        ("--rocm-llvm-project-dir",
+         getattr(opts, "rocm_llvm_project_dir", None),
+         rocm_llvm_project_rev),
+    ):
+        if not _path:
+            print(
+                f"WARNING: {_label} not supplied; the docs landing page "
+                "will show '*hash not recorded*' for this always-consulted "
+                "source tree.",
+                file=sys.stderr,
+            )
+        elif not _rev:
+            print(
+                f"WARNING: could not extract git HEAD from {_label}={_path!r}; "
+                "the docs landing page will show '*hash not recorded*'.",
+                file=sys.stderr,
+            )
 
     # ISO-8601 UTC; pinned at codegen time so the docs landing page
     # can show "generated on <DATE>" rather than the sphinx-build
