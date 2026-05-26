@@ -97,8 +97,7 @@ cu_stream_callback_pyobj = CFUNCTYPE(None, cu_stream, c_int, py_object)
 USE_NV_BINDING = True  #: HIP/AMD: always use HIP Python bindings
 
 if USE_NV_BINDING:
-    import hip as _hip
-    from cuda import cuda as binding
+    from cuda.bindings import runtime as binding
 
     # We define it here so we don't need to
     # use a magic number 0 in places where we want the default stream.
@@ -108,8 +107,12 @@ if USE_NV_BINDING:
     HIP_STREAM_LEGACY = 0  # TODO(HIP/AMD) check if legacy stream can be replaced by default stream
     HIP_STREAM_PER_THREAD = 2
 
-    # HIP: we need to
-    hipDeviceptr_t = CUdeviceptr = _hip._util.types.Pointer
+    try: # modern HIP Python bindings
+        from rocm.bindings.util.types import Pointer as CUdeviceptr
+    except ImportError: # legacy HIP Python bindings
+        from hip._util.types import Pointer as CUdeviceptr
+    hipDeviceptr_t = CUdeviceptr
+
 else:
     raise NotImplementedError()
 
