@@ -95,7 +95,7 @@ cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1
             raise RuntimeError(f"failed to GetProcAddress '{name.decode('utf-8')}': error code {error_code}")
     return 0
 
-cdef bint has_symbol(void* lib_handle, const char* name) nogil:
+cdef bint has_symbol(void* lib_handle, const char* name) noexcept nogil:
     """Probe whether a symbol is exported by an opened DLL.
 
     Non-raising counterpart to ``load_symbol`` — returns ``True`` if

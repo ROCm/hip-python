@@ -62,7 +62,7 @@ cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1
     """Returns a symbol handle from an opened dynamic library via out parameter."""
     return _load_symbol(handle, lib_handle, name)
 
-cdef bint has_symbol(void* lib_handle, const char* name) nogil:
+cdef bint has_symbol(void* lib_handle, const char* name) noexcept nogil:
     """Probe whether a symbol is exported by an opened dynamic library.
 
     Non-raising counterpart to ``load_symbol``. Returns True/False.

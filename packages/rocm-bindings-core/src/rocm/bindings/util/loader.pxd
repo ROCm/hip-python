@@ -31,4 +31,4 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 cdef int open_library(void** lib_handle, const char* path) except 1 nogil
 cdef int close_library(void* lib_handle) except 1 nogil
 cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1 nogil
-cdef bint has_symbol(void* lib_handle, const char* name) nogil
+cdef bint has_symbol(void* lib_handle, const char* name) noexcept nogil
