@@ -1,25 +1,29 @@
 # Build system design
 
 This document describes the hip-python build system: its layout, the
-six packages it produces, the shared CMake helpers, and the supported
+seven packages it produces, the shared CMake helpers, and the supported
 build invocations.
 
 ## Goals
 
 The build system is designed around three properties:
 
-1. **Six independent wheels, one source tree.** Each of the six Python
-   packages can be built and installed on its own, but they share build
-   wiring (CMake helpers, generated module lists, namespace markers).
-2. **Generator-friendly.** Module counts and source filenames in four
-   of the five generator-owned packages can grow between ROCm releases
-   without requiring per-package CMake edits — the CMake build reads
-   generator-emitted include files (see [CODEGEN.md](CODEGEN.md)).
+1. **Seven independent wheels, one source tree.** Each of the seven
+   Python packages can be built and installed on its own, but they share
+   build wiring (CMake helpers, generated module lists, namespace
+   markers). Six of the seven are compiled (Cython extensions); the
+   seventh, `hip-python`, is a pure-Python metapackage.
+2. **Generator-friendly.** Module counts and source filenames in three
+   of the five generator-owned packages (`rocm-bindings-libraries`,
+   `rocm-bindings-systems`, `rocm-bindings-compiler`) can grow between
+   ROCm releases without requiring per-package CMake edits — the CMake
+   build reads generator-emitted include files (see
+   [CODEGEN.md](CODEGEN.md)).
 3. **Cython-source-only generator.** The Python packaging metadata
    (`pyproject.toml`, `_version.py.in`, `__init__.py`, `setup.cfg`) is
    handcoded and never overwritten by the generator.
 
-## The six packages
+## The seven packages
 
 | Package | Source path | Provides |
 |---|---|---|
@@ -31,7 +35,7 @@ The build system is designed around three properties:
 | `hip-python-interop` | `packages/hip-python-interop/` | CUDA interop layer: `cuda.bindings.{driver,runtime,nvrtc}`. Implemented on top of HIP. |
 | `hip-python` | `packages/hip-python/` | Provides the `hip.*` namespace as an alias of `rocm.bindings.*` (`from hip import hip, hiprtc, hipblas, …` re-export). Pure Python. |
 
-All six packages contribute to two PEP 420 implicit namespace packages
+All seven packages contribute to two PEP 420 implicit namespace packages
 at runtime: `rocm.bindings.*` and `cuda.bindings.*`. Multiple packages
 add modules to the same namespace; only `rocm-bindings-core` ships the
 runtime `__init__.pxd` markers for `rocm/` and `rocm/bindings/`.
@@ -321,8 +325,9 @@ extensions, and (for the compiler package) builds or copies
 Responsibilities:
 
 1. **Per-package opt-in.** `option(HIP_PYTHON_BUILD_<NAME> …)` for each
-   of the five packages. Disabling one skips its `add_subdirectory()`
-   and its wheel target.
+   of the six compiled packages, plus `HIP_PYTHON_BUILD_HIP_PYTHON` for
+   the pure-Python metapackage. Disabling one skips its
+   `add_subdirectory()` and its wheel target.
 
 2. **Cross-package include paths.** Builds the
    `HIP_PYTHON_GLOBAL_INCLUDE_DIRS` list from the enabled package source
@@ -415,7 +420,7 @@ assembly.
 
 ## Generator-managed CMake includes
 
-Two of the four generator-owned packages have module lists that change
+Three of the five generator-owned packages have module lists that change
 between ROCm releases. To keep `CMakeLists.txt` stable across releases,
 these packages source the module list from a generator-emitted include
 file:
@@ -469,7 +474,7 @@ nvrtc) are stable across releases.
 
 | Option | Default | Effect |
 |---|---|---|
-| `HIP_PYTHON_BUILD_<NAME>` | `ON` | Enable/disable each of the five packages (UTIL, HIP, LIBRARIES, COMPILER, INTEROP). |
+| `HIP_PYTHON_BUILD_<NAME>` | `ON` | Enable/disable each of the six compiled packages (CORE, HIP, LIBRARIES, SYSTEMS, COMPILER, INTEROP). |
 | `HIP_PYTHON_BUILD_HIP_PYTHON` | `ON` | Build the legacy `hip-python` metapackage shim. |
 | `HIP_PYTHON_AUDITWHEEL_REPAIR` | `OFF` | Run `auditwheel repair` after each wheel build. |
 | `HIP_PYTHON_WHEEL_OUTPUT_DIR` | `${CMAKE_BINARY_DIR}/dist` | Where `*.whl` files land. |
@@ -498,7 +503,7 @@ nvrtc) are stable across releases.
 - **Top-of-namespace** (`rocm/`, `rocm/bindings/`, `cuda/`,
   `cuda/bindings/`): handcoded, committed in every package's source
   tree. Required at build time so cross-package `cimport` resolves
-  inside any of the four generator-owned packages.
+  inside any of the generator-owned packages.
 - **Deeper in the hierarchy** (`rocm/bindings/llvm/`,
   `rocm/bindings/llvm/c/`, …): emitted by the consolidated generator
   alongside the `.pxd`/`.pyx` files. See [CODEGEN.md](CODEGEN.md).
@@ -526,7 +531,8 @@ install(
 ```
 
 This keeps the runtime install tree free of duplicate namespace markers
-that could conflict between the five wheels.
+that could conflict between the five `rocm-bindings-*` wheels that share
+the `rocm/bindings` namespace.
 
 ## Standalone (sdist) build outside the unified tree
 
@@ -761,7 +767,7 @@ documentation files.
 cd packages && cmake -B build                 # one-time, populates VERSION + cmake helper
 cd packages/rocm-bindings-core && python3 -m build --wheel --no-isolation
 
-# Full build, all five packages (run from packages/ subdir):
+# Full build, all seven packages (run from packages/ subdir):
 cd packages && cmake -B build && cmake --build build --target all_wheels -j$(nproc)
 
 # Production manylinux wheels:
