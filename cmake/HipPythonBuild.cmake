@@ -347,8 +347,27 @@ function(hip_python_add_wheel_target)
     # outer make's MAKEFLAGS. The resulting wheel carries a generic
     # linux_<arch> platform tag; the auditwheel/copy/stamp tail below
     # retags it to manylinux exactly as before.
+    #
+    # Resolve the assembler from the unified top-level source dir
+    # (CMAKE_SOURCE_DIR is `packages/`, so `../cmake` is the repo-root
+    # cmake dir where the script lives). We deliberately do NOT use
+    # CMAKE_CURRENT_FUNCTION_LIST_DIR: this shared helper is mirrored
+    # into each packages/<pkg>/cmake/ and re-included, and one package
+    # (rocm-bindings-compiler) includes its local mirror by absolute
+    # path. Because that mirror is a different file path,
+    # include_guard(GLOBAL) does not block it and it re-defines these
+    # functions, leaving FUNCTION_LIST_DIR pointing at a per-package
+    # mirror dir that does not contain the assembler script. The
+    # assembler is only ever invoked from the unified build, so anchoring
+    # to CMAKE_SOURCE_DIR is correct for every caller.
     set(_assemble_script
-        "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/hip_python_assemble_wheel.py")
+        "${CMAKE_SOURCE_DIR}/../cmake/hip_python_assemble_wheel.py")
+    if(NOT EXISTS "${_assemble_script}")
+      message(FATAL_ERROR
+        "Wheel assembler script not found at ${_assemble_script}. "
+        "It must live in the repo-root cmake/ directory next to "
+        "HipPythonBuild.cmake.")
+    endif()
     set(WHEEL_COMMANDS
       COMMAND ${CMAKE_COMMAND} -E make_directory "${TEMP_WHEEL_DIR}"
       COMMAND ${Python_EXECUTABLE} "${_assemble_script}"
