@@ -754,6 +754,11 @@ documentation files.
 
 ```sh
 # Fastest dev iteration on a single package:
+# NOTE: requires a one-time unified configure first (`cd packages &&
+# cmake -B build`) to populate the gitignored per-package VERSION and
+# mirror the shared cmake helper. Without it, scikit-build-core fails
+# with `FileNotFoundError: VERSION`. See section B.
+cd packages && cmake -B build                 # one-time, populates VERSION + cmake helper
 cd packages/rocm-bindings-core && python3 -m build --wheel --no-isolation
 
 # Full build, all five packages (run from packages/ subdir):
