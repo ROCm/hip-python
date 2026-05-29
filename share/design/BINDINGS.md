@@ -128,6 +128,115 @@ falls back to the with-gil emitter (single-line cy* call + inline
 Python wrap) — both modes are first-class options.
 
 
+## Loader error contract — the implicit `except 1` return
+
+The handcoded loaders in `rocm-bindings-core`
+(`rocm/bindings/util/posixloader.pyx` and `win32loader.pyx`) follow a
+contract that is easy to misread, because the error return value is
+*never written in the source*:
+
+```cython
+cdef int open_library(void** lib_handle, const char* path) except 1 nogil:
+    lib_handle[0] = posix.dlfcn.dlopen(path, posix.dlfcn.RTLD_NOW)
+    cdef char* reason = NULL
+    if lib_handle[0] == NULL:
+        reason = posix.dlfcn.dlerror()
+        with gil:
+            raise RuntimeError(f"failed to dlopen '{str(path)}': {str(reason)}")
+    return 0
+```
+
+`open_library`, `close_library`, and `load_symbol` are all declared
+`cdef int ... except 1 nogil`. The success path is an explicit
+`return 0`; the error path is a `raise` inside a `with gil:` block.
+There is no `return 1` anywhere — and there must not be.
+
+**The `1` is synthesized by Cython.** For an `except 1` function
+(note: no `?`, so `1` is an unambiguous error sentinel, never a
+legitimate return value), Cython generates a C return value of `1`
+whenever an exception propagates out of the body. Writing `return 1`
+by hand would be redundant at best and would defeat the sentinel at
+worst. The docstrings' "Positive number if something has gone wrong,
+'0' otherwise" describe this Cython-synthesized value, not literal
+source code.
+
+**Why `with gil:` is mandatory.** A `raise` touches the Python
+runtime (it allocates the exception object and sets the thread-state
+error indicator), which is illegal inside a `nogil` body without
+first reacquiring the GIL. The `with gil:` block does two things at
+once: it sets the Python error indicator (`PyErr`) *and* it triggers
+the `except 1` error path that produces the `1` return value. Both
+effects are required — the return value tells a `nogil` caller that
+something failed without it having to touch Python; the error
+indicator carries the actual exception for whenever the GIL is next
+held.
+
+**Caller side.** The generated `__init` / `__init_symbol` helpers in
+`interfacegen.cython._backend` are themselves `except 1 nogil` and
+chain the contract upward:
+
+```cython
+cdef int __init() except 1 nogil:
+    ...
+        return loader.open_library(&_lib_handle, dll)   # propagates 0 or 1
+    return 0
+
+cdef int __init_symbol(void** result, const char* name) except 1 nogil:
+    ...
+        init_result = __init()
+        if init_result > 0:        # non-zero ⇒ open_library failed
+            return init_result
+    ...
+        return loader.load_symbol(result, _lib_handle, name)
+    return 0
+```
+
+Because every layer shares the same `except 1` sentinel, a single
+`raise` deep in `open_library` has two simultaneous consequences:
+
+1. the non-zero `1` return propagates up the `cdef` call chain (each
+   `except 1` caller sees the sentinel and re-enters its own error
+   path), and
+2. the Python error indicator stays set, so the original
+   `RuntimeError` re-raises as an ordinary Python exception the moment
+   control reaches a GIL-holding Python entry point (the high-level
+   `def` wrapper or `__init_symbol`'s callers).
+
+A caller that only ever inspects the `int` return value will still
+behave correctly — it sees a non-zero value and bails — but the
+exception is *not* lost; it surfaces with its full message once the
+GIL is reacquired.
+
+**Contrast with `has_symbol`.** The non-raising probe
+`has_symbol(...)` is declared `noexcept nogil` and returns a real
+`bint`. It must never raise, so it has no error sentinel to reserve.
+This is exactly why the generated `__has_symbol` cannot simply call
+`__init()` and let an exception propagate — it wraps the call in
+`with gil: try/except` and returns `False` on failure instead of
+threading an error value through:
+
+```cython
+cdef bint __has_symbol(const char* name) noexcept nogil:
+    ...
+    if _lib_handle == NULL:
+        with gil:
+            try:
+                init_result = __init()
+            except Exception:
+                return False
+        ...
+```
+
+**Cross-platform parity.** The posix loader (`dlopen`/`dlsym`/
+`dlclose`) and the win32 loader (`LoadLibraryA`/`GetProcAddress`/
+`FreeLibrary`) implement the identical `except 1` contract — only the
+underlying OS calls differ. The posix variant has a canonical recipe
+template at
+`interfacegen/recipes/python_cython/_util/posixloader.pyx` that is
+copied into the package; `win32loader.pyx` is the handcoded sibling
+that mirrors the same contract.
+
+
 ## Naming convention for generated locals
 
 All generated locals follow a uniform `_cy_<func>__<role>` prefix
