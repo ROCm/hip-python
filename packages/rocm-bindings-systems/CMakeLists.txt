@@ -114,6 +114,18 @@ foreach(_lib IN LISTS HIP_PYTHON_SELECTED_SYSTEMS)
     endif()
   endif()
 
+  # Per-module C preprocessor defines. amdsmi's generated cython names
+  # the ESMI types/functions because the codegen parses the header with
+  # -DENABLE_ESMI_LIB (see interfacegen recipes/hip-python/src/
+  # hip_python_codegen/generators_systems.py, generate_amdsmi). gcc must
+  # see the same define or the C preprocessor strips those type
+  # definitions back out of amd_smi/amdsmi.h and the symbols dangle with
+  # "unknown type name". Keep these two sides in parity.
+  set(_lib_compile_definitions)
+  if(_lib STREQUAL "amdsmi")
+    set(_lib_compile_definitions ENABLE_ESMI_LIB)
+  endif()
+
   # Build C-level bindings (cy*.pyx)
   hip_python_add_cython_module(
     TARGET rocm_bindings_systems_cy${_lib}
@@ -124,6 +136,7 @@ foreach(_lib IN LISTS HIP_PYTHON_SELECTED_SYSTEMS)
     CYTHON_INCLUDE_DIRS ${SYSTEMS_INCLUDE_DIRS} ${_extra_includes}
     INCLUDE_DIRS ${SYSTEMS_INCLUDE_DIRS} ${_extra_includes}
     LINK_LIBRARIES ${_lib_link_libraries}
+    COMPILE_DEFINITIONS ${_lib_compile_definitions}
     DEPENDS ${SYSTEMS_CYTHON_DEPENDS}
   )
 
@@ -137,6 +150,7 @@ foreach(_lib IN LISTS HIP_PYTHON_SELECTED_SYSTEMS)
     CYTHON_INCLUDE_DIRS ${SYSTEMS_INCLUDE_DIRS} ${_extra_includes}
     INCLUDE_DIRS ${SYSTEMS_INCLUDE_DIRS} ${_extra_includes}
     LINK_LIBRARIES ${_lib_link_libraries}
+    COMPILE_DEFINITIONS ${_lib_compile_definitions}
     DEPENDS ${SYSTEMS_CYTHON_DEPENDS}
   )
 
