@@ -22,7 +22,10 @@ classifiers = [
     "Topic :: Software Development :: Code Generators",
 ]
 dependencies = [
-    "cython",
+    # Floor is 3.1.0: Cython 3.0.x miscompiles `cdef T x = <T>expr` for
+    # `*const *` types (silently drops the initializer). See
+    # share/design/UPSTREAM_BUGS/cython_const_pointer_initializer_bug.md.
+    "cython >= 3.1.0",
     "libclang",
     "pyparsing",
     # `interfacegen` is a path-relative editable install — see
