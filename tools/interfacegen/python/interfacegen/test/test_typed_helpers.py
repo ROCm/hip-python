@@ -98,7 +98,7 @@ def test_field_decl_re_renders_valid_c_declarator():
 # ---------------------------------------------------------------------------
 # has_symbol codegen helper emission (Issue 4b in the typed-waddling-meteor
 # plan). When `runtime_linking=True`, the generator must emit:
-#   - in cy<mod>.pxd: a public `cdef bint __has_symbol(const char* name) nogil`
+#   - in cy<mod>.pxd: a public `cdef bint __has_symbol(const char* name) noexcept nogil`
 #                     declaration so the high-level python module can cimport it.
 #   - in cy<mod>.pyx: the matching impl alongside `__init` / `__init_symbol`.
 #   - in <mod>.pyx:   a python-visible `def has_symbol(name) -> bool:` wrapper
@@ -137,12 +137,12 @@ def test_has_symbol_emitted_under_runtime_linking(tmp_path):
     files = _write_module(gen, tmp_path)
 
     pxd = files["cyhsmod.pxd"]
-    assert "cdef bint __has_symbol(const char* name) nogil" in pxd, (
+    assert "cdef bint __has_symbol(const char* name) noexcept nogil" in pxd, (
         f"expected `__has_symbol` declaration in cy*.pxd; full pxd:\n{pxd}"
     )
 
     cy_pyx = files["cyhsmod.pyx"]
-    assert "cdef bint __has_symbol(const char* name) nogil:" in cy_pyx, (
+    assert "cdef bint __has_symbol(const char* name) noexcept nogil:" in cy_pyx, (
         f"expected `__has_symbol` impl in cy*.pyx; full pyx:\n{cy_pyx}"
     )
     # Sanity: the impl actually delegates to loader.has_symbol.

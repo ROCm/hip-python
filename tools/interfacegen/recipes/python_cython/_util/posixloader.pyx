@@ -39,7 +39,8 @@ cdef int open_library(void** lib_handle, const char* path) except 1 nogil:
     cdef char* reason = NULL
     if lib_handle[0] == NULL:
         reason = posix.dlfcn.dlerror()
-        raise RuntimeError(f"failed to dlopen '{str(path)}': {str(reason)}")
+        with gil:
+            raise RuntimeError(f"failed to dlopen '{str(path)}': {str(reason)}")
     return 0
 
 cdef int close_library(void* lib_handle) except 1 nogil:
@@ -52,12 +53,14 @@ cdef int close_library(void* lib_handle) except 1 nogil:
         Positive number if something has gone wrong, '0' otherwise.
     """
     if lib_handle == NULL:
-        raise RuntimeError("handle is NULL")
+        with gil:
+            raise RuntimeError("handle is NULL")
     cdef int rtype = posix.dlfcn.dlclose(lib_handle)
     cdef char* reason = NULL
     if rtype != 0:
         reason = posix.dlfcn.dlerror()
-        raise RuntimeError(f"failed to dclose given handle: {reason}")
+        with gil:
+            raise RuntimeError(f"failed to dclose given handle: {reason}")
     return 0
 
 cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1 nogil:
@@ -78,5 +81,6 @@ cdef int load_symbol(void** handle, void* lib_handle, const char* name) except 1
     cdef char* reason = NULL
     if handle[0] == NULL:
         reason = posix.dlfcn.dlerror()
-        raise RuntimeError(f"failed to dlsym '{name}': {reason}")
+        with gil:
+            raise RuntimeError(f"failed to dlsym '{name}': {reason}")
     return 0

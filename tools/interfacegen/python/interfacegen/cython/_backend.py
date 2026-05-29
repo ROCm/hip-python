@@ -496,7 +496,7 @@ class CythonBackend:
                     return loader.load_symbol(result,{lib_handle}, name)
                 return 0
 
-            cdef bint __has_symbol(const char* name) nogil:
+            cdef bint __has_symbol(const char* name) noexcept nogil:
                 # Non-raising symbol-presence probe. Lazy-loads the DLL
                 # the same way __init_symbol does, then asks the loader
                 # whether the symbol exists. Returns False on any DLL
@@ -537,7 +537,7 @@ class CythonBackend:
         # `__init`/`__init_symbol`/`__has_symbol` helpers all live in
         # the runtime-linking prologue).
         if runtime_linking:
-            parts.append("cdef bint __has_symbol(const char* name) nogil")
+            parts.append("cdef bint __has_symbol(const char* name) noexcept nogil")
         return nl.join(parts)
 
     def render_c_interface_impl_part(
