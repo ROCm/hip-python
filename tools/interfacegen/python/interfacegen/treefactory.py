@@ -106,12 +106,22 @@ def from_libclang_translation_unit(
         clang.cindex.CursorKind.ENUM_DECL: backend.AnonymousEnum,
     }
 
+    # Tracks top-level function spellings already emitted for this
+    # translation unit. C has no function overloading, so two top-level
+    # FUNCTION_DECL cursors with the same spelling are redeclarations of
+    # the same entity (legal C) — libclang surfaces each distinctly, but
+    # we must only build one Function node, otherwise downstream emitters
+    # produce duplicate declarations. See
+    # share/design/UPSTREAM_BUGS/hip_runtime_api_duplicate_function_declarations.md.
+    seen_function_spellings = set()
+
     def handle_top_level_cursor_(
         cursor: clang.cindex.Cursor, root
     ):  # t: backend.Root
         """Handle cursors whose parent is the cursor of kind TRANSLATION_UNIT."""
         nonlocal structure_types
         nonlocal warn_mode
+        nonlocal seen_function_spellings
 
         if cursor.kind in structure_types.keys():
             handle_top_level_record_or_enum_cursor_(cursor, root)
@@ -128,6 +138,12 @@ def from_libclang_translation_unit(
         elif cursor.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
             root.append(backend.MacroDefinition(cursor, root))
         elif cursor.kind == clang.cindex.CursorKind.FUNCTION_DECL:
+            # Skip redeclarations: the spelling was already emitted as a
+            # Function node. Check before building the node so duplicates
+            # skip the wasted construction, not just the append.
+            if cursor.spelling in seen_function_spellings:
+                return
+            seen_function_spellings.add(cursor.spelling)
             typeref_cursor = first_child_cursor_of_kinds_(
                 cursor, (clang.cindex.CursorKind.TYPE_REF,)
             )

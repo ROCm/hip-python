@@ -37,6 +37,8 @@ def make_generator(
     renamer=None,
     util_pkg: str = "rocm.bindings.util",
     modifiers_lazy_loader: str = "",
+    runtime_linking: bool = False,
+    dll: str = None,
 ):
     """Build a CythonModuleGenerator backed by an in-memory header.
 
@@ -65,6 +67,8 @@ def make_generator(
         include_dir=None,
         header=("input.h", header_text),
         util_pkg=util_pkg,
+        runtime_linking=runtime_linking,
+        dll=dll,
         **kw,
     )
 
