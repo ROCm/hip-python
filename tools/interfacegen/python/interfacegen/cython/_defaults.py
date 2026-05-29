@@ -351,67 +351,47 @@ class CallArgHoist:
             f"{self.pointer_extract}{self.cast_close}"
         )
 
-    # Pattern that matches a c_type containing an *inner* `const`
-    # qualifier on a pointer that is itself dereferenced — e.g.
-    # ``const char *const *``, ``void *const *``,
-    # ``T *const * const`` etc. The defining signal is `*const *`
-    # (asterisk, const, whitespace, asterisk): the const sits between
-    # two levels of indirection. A *trailing* const on the outermost
-    # pointer (e.g. ``void *const`` with no following ``*``) does NOT
-    # match — that case is handled separately via const-stripping.
-    _NEEDS_SPLIT_FORM = re.compile(r"\*\s*const\s+\*")
-
     # Strip a trailing ``const`` qualifier (with surrounding whitespace)
     # from the END of a c_type — e.g. ``void *const`` → ``void *``,
-    # ``T * const`` → ``T *``. Cython rejects ``cdef T x`` and
-    # subsequent assignment when T is a const-qualified pointer
-    # (3.1+ as a hard error; 3.0.x as a silent codegen bug). Stripping
-    # the outermost const from the cdef *local* type is safe — local
-    # variables don't need C-style const protection (the local is
-    # only assigned once at the prehoist line); the cast on the right
-    # keeps the original c_type so the rhs is type-correct against
-    # the C function signature.
+    # ``T * const`` → ``T *``. Cython rejects a const-qualified pointer
+    # local with ``Assignment to const 'x'`` (3.1+ as a hard error;
+    # 3.0.x miscompiled it silently). Stripping the outermost const
+    # from the cdef *local* type is safe — local variables don't need
+    # C-style const protection (the local is only assigned once at the
+    # prehoist line); the cast on the right keeps the original c_type
+    # so the rhs is type-correct against the C function signature.
     _STRIP_TRAILING_CONST = re.compile(r"\s*\bconst\b\s*$")
 
     def render_prehoist(self, arg_name: str) -> str:
         """Multi-line form for the with-nogil emitter.
 
-        Cython 3.0.x has a codegen bug: ``cdef T x = <T>expr`` silently
-        drops the initializer (emitting only the declaration) when ``T``
-        contains the ``*const *`` pattern (e.g. ``const char *const *``,
-        the C signature for a pointer-to-array-of-const-strings). The
-        compiler warns ``local variable 'x' referenced before assignment``
-        and the resulting C leaves the variable uninitialised. Passing
-        the uninitialised local to a backend then gives a NULL options
-        pointer at the call site, segfaulting inside the vendor
-        library at the first dereference. Workaround: split the cdef
-        into a bare declaration plus a separate assignment, which
-        bypasses the bug.
+        Emits the combined ``cdef T x = <T>expr`` form. This relies on
+        the project-wide Cython >= 3.1.0 build floor (pinned in every
+        requirements/pyproject file): Cython 3.0.x silently miscompiled
+        ``cdef T x = <T>expr`` for the ``*const *`` shape (e.g.
+        ``const char *const *``), dropping the initializer and leaving
+        a NULL local. 3.1+ compiles that form correctly, so the
+        former bare-cdef + separate-assignment split is no longer
+        needed. The historical workaround (and the Cython repro) is
+        preserved in
+        ``share/design/UPSTREAM_BUGS/cython_const_pointer_initializer_bug.md``.
 
-        Two transformations are applied to make the prehoist
-        toolchain-safe across Cython 3.0.12 + 3.1.x + 3.2.x:
+        One transformation remains:
 
-        1. **Trailing-const strip.** If the c_type ends in ``const``
-           (e.g. ``void *const``, ``T * const``), strip that trailing
-           const from the cdef *local* type. The cast on the rhs
-           keeps the original c_type so the assignment is still
-           type-correct against the C function signature. Why: Cython
-           3.1+ rejects ``cdef T x = ...`` for const-qualified T as
-           ``Assignment to const 'x'`` (and 3.0.x silently miscompiles
-           the same form). A local doesn't need the const — the
-           const-correctness contract is between the call expression
-           and the C function parameter type.
-        2. **Split-vs-combined branching.** If the (post-strip) c_type
-           matches the ``*const *`` bug shape, emit a bare cdef
-           declaration and a separate assignment so Cython 3.0.x
-           emits the assignment in the C output. Otherwise emit the
-           combined ``cdef T x = expr`` form (more readable).
+        * **Trailing-const strip.** If the c_type ends in ``const``
+          (e.g. ``void *const``, ``T * const``), strip that trailing
+          const from the cdef *local* type. The cast on the rhs keeps
+          the original c_type so the assignment is still type-correct
+          against the C function signature. Cython 3.1+ rejects
+          ``cdef T x = ...`` for const-qualified T with
+          ``Assignment to const 'x'``; a local doesn't need the const —
+          the const-correctness contract is between the call expression
+          and the C function parameter type.
 
-        See ``test_call_arg_hoist_double_const_pointer_uses_split_form``,
+        See ``test_call_arg_hoist_double_const_pointer_uses_combined_form``,
         ``test_call_arg_hoist_trailing_const_strips_const``, and
         ``test_call_arg_hoist_const_substring_in_identifier_not_stripped``
-        in test_typed_helpers.py for the regression coverage that
-        pins both transformations.
+        in test_typed_helpers.py for the regression coverage.
         """
         if self.plain_expr is not None:
             return f"cdef {self.c_type} {arg_name} = {self.plain_expr}"
@@ -419,14 +399,6 @@ class CallArgHoist:
         prefix = f"cdef {self.wrapper_class} {obj_name} = {self.wrapper_factory}\n"
         rhs = f"{self.cast_open}{obj_name}.{self.pointer_extract}{self.cast_close}"
         cdef_type = self._STRIP_TRAILING_CONST.sub("", self.c_type)
-        if self._NEEDS_SPLIT_FORM.search(cdef_type):
-            # Bug-shape: emit bare cdef + separate assignment so
-            # Cython 3.0.x emits the assignment in the C output.
-            return (
-                f"{prefix}"
-                f"cdef {cdef_type} {arg_name}\n"
-                f"{arg_name} = {rhs}"
-            )
         return f"{prefix}cdef {cdef_type} {arg_name} = {rhs}"
 
 

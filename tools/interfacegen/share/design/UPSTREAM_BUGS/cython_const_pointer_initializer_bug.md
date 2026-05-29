@@ -176,6 +176,70 @@ silently drops the initializer either way. The cast on the rhs can
 keep the original type, the assignment is still type-correct
 against any C function signature that requires the const.
 
+## Former code-generator workaround (removed; superseded by the Cython >= 3.1.0 floor)
+
+For a period the code generator implemented workaround #1 (split
+form) automatically: the with-nogil call-arg hoist renderer
+(`CallArgHoist.render_prehoist` in
+`python/interfacegen/cython/_defaults.py`) detected the `*const *`
+shape and emitted a bare `cdef` declaration plus a separate
+assignment instead of the combined cdef-with-initializer.
+
+That branch was **removed** once the project committed to a
+Cython >= 3.1.0 build floor (pinned in every requirements/pyproject
+file): 3.1+ compiles the combined form correctly (see the
+cross-version table above), so the split is no longer needed and the
+combined form is more readable. The trailing-const strip (the second
+transformation below) is **retained** — Cython 3.1+ still hard-errors
+on a const-qualified local (`Assignment to const 'x'`).
+
+The removed logic, preserved here so it can be revived if the floor
+is ever lowered:
+
+```python
+import re
+
+# Matches an *inner* const on a dereferenced pointer — the dangerous
+# `*const *` shape (asterisk, const, whitespace, asterisk). A trailing
+# const (e.g. `void *const` with no following `*`) does NOT match.
+_NEEDS_SPLIT_FORM = re.compile(r"\*\s*const\s+\*")
+
+# Strip a trailing `const` from the END of a c_type (e.g. `void *const`
+# -> `void *`). RETAINED in the current generator.
+_STRIP_TRAILING_CONST = re.compile(r"\s*\bconst\b\s*$")
+
+def render_prehoist(self, arg_name: str) -> str:
+    if self.plain_expr is not None:
+        return f"cdef {self.c_type} {arg_name} = {self.plain_expr}"
+    obj_name = f"{arg_name}_obj"
+    prefix = f"cdef {self.wrapper_class} {obj_name} = {self.wrapper_factory}\n"
+    rhs = f"{self.cast_open}{obj_name}.{self.pointer_extract}{self.cast_close}"
+    cdef_type = self._STRIP_TRAILING_CONST.sub("", self.c_type)
+    if self._NEEDS_SPLIT_FORM.search(cdef_type):
+        # Bug-shape: emit bare cdef + separate assignment so
+        # Cython 3.0.x emits the assignment in the C output.
+        return (
+            f"{prefix}"
+            f"cdef {cdef_type} {arg_name}\n"
+            f"{arg_name} = {rhs}"
+        )
+    return f"{prefix}cdef {cdef_type} {arg_name} = {rhs}"
+```
+
+Example contrast for the `const char *const *` options argument of
+`hiprtcCompileProgram` (wrapper-bound hoist):
+
+```cython
+# Former split form (emitted for the `*const *` shape on 3.0.x):
+cdef rocm.bindings.util.types.ListOfBytes _cy_f__arg_2_obj = rocm.bindings.util.types.ListOfBytes.fromPyobj(options)
+cdef const char *const * _cy_f__arg_2
+_cy_f__arg_2 = <const char *const *>_cy_f__arg_2_obj.getPtr()
+
+# Current combined form (safe on Cython >= 3.1.0):
+cdef rocm.bindings.util.types.ListOfBytes _cy_f__arg_2_obj = rocm.bindings.util.types.ListOfBytes.fromPyobj(options)
+cdef const char *const * _cy_f__arg_2 = <const char *const *>_cy_f__arg_2_obj.getPtr()
+```
+
 ## Suggested upstream fix
 
 The bug appears to be in Cython's analysis of `cdef`-with-initializer

@@ -891,10 +891,11 @@ def test_nogil_inout_record_pointer_hoists_fromPyobj(tmp_path):
         r"stream_s\.fromPyobj\(s\)",
         body,
     ), f"missing typed wrapper bind:\n{body}"
-    # `cymod_ni.stream_s *` doesn't match the `*const *` bug shape
-    # so the renderer emits the combined cdef-with-initializer form.
-    # See test_call_arg_hoist_double_const_pointer_uses_split_form in
-    # test_typed_helpers.py for the bug-shape branch.
+    # The renderer always emits the combined cdef-with-initializer
+    # form (the former `*const *` split workaround was removed under
+    # the Cython >= 3.1.0 floor). See
+    # test_call_arg_hoist_double_const_pointer_uses_combined_form in
+    # test_typed_helpers.py.
     assert re.search(
         r"cdef\s+cymod_ni\.stream_s\s*\*\s*_cy_op_inout__arg_0\s*=\s*"
         r"_cy_op_inout__arg_0_obj\.getElementPtr\(\)",
@@ -962,9 +963,8 @@ def test_nogil_record_by_value_arg_hoists_dereferenced_value(tmp_path):
         r"point_st\.fromPyobj\(pt\)",
         body,
     ), f"missing typed wrapper bind:\n{body}"
-    # `cymod_nr.point_st` (record by value) doesn't match the
-    # `*const *` bug shape so the renderer emits the combined
-    # cdef-with-initializer form.
+    # `cymod_nr.point_st` (record by value) — the renderer emits the
+    # combined cdef-with-initializer form.
     assert re.search(
         r"cdef\s+cymod_nr\.point_st\s+_cy_op_rec__arg_0\s*=\s*"
         r"_cy_op_rec__arg_0_obj\.getElementPtr\(\)\[0\]",

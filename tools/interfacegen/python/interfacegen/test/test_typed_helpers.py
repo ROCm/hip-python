@@ -208,22 +208,17 @@ def test_call_arg_hoist_plain_renders_single_cdef():
 
 def test_call_arg_hoist_wrapper_bound_splits_into_two_cdefs():
     """A wrapper-bound hoist (Python wrapper temporary owns the C
-    buffer the pointer references) renders two cdef lines for the
-    bug-shape c_type: one typed cdef-class binding for the wrapper
-    (so it outlives the with-nogil block) and one cdef for the
-    extracted pointer.
+    buffer the pointer references) renders two cdef lines: one typed
+    cdef-class binding for the wrapper (so it outlives the with-nogil
+    block) and one cdef for the extracted pointer.
 
-    For c_types that match the ``*const *`` bug shape, the cdef
-    is emitted as a bare declaration plus a separate assignment
-    (split form) — this works around a Cython 3.0.x codegen bug
-    where ``cdef T x = <T>expr`` silently drops the initializer
-    for that type pattern. See
-    ``test_call_arg_hoist_double_const_pointer_uses_split_form``
-    for the regression that pinned this down. The renderer's
-    decision logic is also tested in
-    ``test_call_arg_hoist_trailing_const_keeps_combined_form``
-    (combined form for trailing const, which Cython rejects on a
-    separate assignment line).
+    Both cdefs use the combined ``cdef T x = <T>expr`` form. The
+    former bare-cdef + separate-assignment split for the ``*const *``
+    shape (a Cython 3.0.x codegen-bug workaround) has been removed now
+    that the project enforces a Cython >= 3.1.0 build floor; see
+    ``test_call_arg_hoist_double_const_pointer_uses_combined_form``.
+    The trailing-const strip is still exercised by
+    ``test_call_arg_hoist_trailing_const_strips_const``.
     """
     h = cython.CallArgHoist(
         c_type="const char *const *",
@@ -236,8 +231,7 @@ def test_call_arg_hoist_wrapper_bound_splits_into_two_cdefs():
     expected = (
         "cdef rocm.bindings.util.types.ListOfBytes _cy_f__arg_2_obj = "
         "rocm.bindings.util.types.ListOfBytes.fromPyobj(options)\n"
-        "cdef const char *const * _cy_f__arg_2\n"
-        "_cy_f__arg_2 = "
+        "cdef const char *const * _cy_f__arg_2 = "
         "<const char *const *>_cy_f__arg_2_obj.getPtr()"
     )
     assert out == expected
@@ -261,8 +255,7 @@ def test_call_arg_hoist_wrapper_bound_records_by_value_dereferences():
         pointer_extract="getElementPtr()[0]",
     )
     out = h.render_prehoist("_cy_op_rec__arg_0")
-    # `cymod.point_st` doesn't match the `*const *` bug shape, so
-    # the renderer emits the combined cdef-with-initializer form.
+    # The renderer emits the combined cdef-with-initializer form.
     assert out == (
         "cdef point_st _cy_op_rec__arg_0_obj = point_st.fromPyobj(pt)\n"
         "cdef cymod.point_st _cy_op_rec__arg_0 = "
@@ -270,26 +263,21 @@ def test_call_arg_hoist_wrapper_bound_records_by_value_dereferences():
     )
 
 
-def test_call_arg_hoist_double_const_pointer_uses_split_form():
+def test_call_arg_hoist_double_const_pointer_uses_combined_form():
     """Regression: the prehoist for a wrapper-bound arg whose c_type
     contains ``*const *`` (e.g. the ``const char *const *`` shape used
-    for ``hiprtcCompileProgram``'s ``options`` arg) must emit the
-    cdef declaration and the assignment as **two separate statements**.
+    for ``hiprtcCompileProgram``'s ``options`` arg) emits the combined
+    ``cdef T x = <T>expr`` form on a single line.
 
-    Cython 3.0.x miscompiles ``cdef T x = <T>expr`` for that exact
-    shape: it parses both halves but silently drops the initializer,
-    producing a C local that is declared but never assigned. At
-    runtime, the uninitialised local is passed to the backend (e.g.
-    ``hiprtcCompileProgram`` receives ``options = NULL``), and the
-    library segfaults on the first dereference inside its own
-    options-parsing loop. Symptom in the wild: a non-deterministic
-    SIGSEGV inside ``libhiprtc.so`` after a varying number of
-    ``hiprtc_launch_kernel_args`` invocations.
-
-    The fix: emit the bare ``cdef T x`` declaration, then a separate
-    ``x = <T>expr`` assignment. Cython emits the assignment correctly
-    when it stands alone. Verified with a minimal Cython repro
-    (``cython_const_bug.pyx``) on Cython 3.0.12.
+    Cython 3.0.x miscompiled that form for this exact shape (it parsed
+    both halves but silently dropped the initializer, leaving a NULL
+    local that segfaulted the vendor library on first dereference), so
+    the generator used to split it into a bare ``cdef T x`` plus a
+    separate ``x = <T>expr`` assignment. That workaround was removed
+    once the project pinned a Cython >= 3.1.0 build floor (3.1+
+    compiles the combined form correctly). The historical workaround
+    and the cross-version repro live in
+    ``share/design/UPSTREAM_BUGS/cython_const_pointer_initializer_bug.md``.
     """
     h = cython.CallArgHoist(
         c_type="const char *const *",
@@ -299,17 +287,15 @@ def test_call_arg_hoist_double_const_pointer_uses_split_form():
         cast_open="<const char *const *>",
     )
     rendered = h.render_prehoist("_cy_arg_2")
-    # The assignment must appear on a line by itself, not glued to
-    # the cdef. If the renderer ever regresses to ``cdef T x = ...``,
-    # this assertion catches it before the build pipeline ships a
-    # broken wheel.
-    assert "cdef const char *const * _cy_arg_2\n_cy_arg_2 = " in rendered, (
-        f"render_prehoist produced inlined cdef-and-assign for double-const "
-        f"pointer, which Cython miscompiles. Got:\n{rendered}"
+    # Combined cdef-with-initializer form on a single line.
+    assert "cdef const char *const * _cy_arg_2 = " in rendered, (
+        f"render_prehoist must emit the combined form for double-const "
+        f"pointer (safe on Cython >= 3.1.0). Got:\n{rendered}"
     )
-    # And the *combined* ``cdef T x = <T>expr`` form must NOT appear.
-    assert "cdef const char *const * _cy_arg_2 = " not in rendered, (
-        f"render_prehoist regressed to the buggy inline form:\n{rendered}"
+    # The former split form (bare cdef + separate assignment) must
+    # NOT reappear.
+    assert "cdef const char *const * _cy_arg_2\n_cy_arg_2 = " not in rendered, (
+        f"render_prehoist regressed to the obsolete split form:\n{rendered}"
     )
 
 
