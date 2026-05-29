@@ -257,9 +257,35 @@ def render_clang_type(
             parent_essential
         )
 
-    layers = tuple(_layer_from_clang_type(ct) for ct in outer_layer_clang)
+    raw_layers = [_layer_from_clang_type(ct) for ct in outer_layer_clang]
 
     is_base_const = leaf_layer.is_const_qualified()
+
+    # libclang reports an array's *element*-type ``const`` qualification on
+    # the ARRAY layer itself rather than on the element. When an incomplete
+    # array decays to a pointer (``T[]`` -> ``T *``), that ``const`` must be
+    # re-attached to the element's outermost representation, otherwise it is
+    # silently dropped. Concretely:
+    #   ``double *const[]``  must render ``double *const *`` (const belongs to
+    #                        the inner element pointer), not ``double **``;
+    #   ``const double[]``   must render ``const double *`` (const belongs to
+    #                        the leaf base), not ``double *``.
+    # The decayed array pointer itself is never const (arrays decay to plain
+    # pointers). Keeping this faithful matters because the high-level
+    # ``CallArgHoist`` renders the same parm from the canonical spelling
+    # (which preserves the const); a mismatch makes the C compiler warn that
+    # the cy* call discards a ``const`` qualifier.
+    for i, ct in enumerate(outer_layer_clang):
+        if ct.kind != _TypeKind.INCOMPLETEARRAY or not ct.is_const_qualified():
+            continue
+        if i + 1 < len(raw_layers):
+            raw_layers[i + 1] = dataclasses.replace(
+                raw_layers[i + 1], is_const=True
+            )
+        else:
+            is_base_const = True
+
+    layers = tuple(raw_layers)
     is_base_unsigned = leaf_layer.kind in (
         _TypeKind.UCHAR,
         _TypeKind.USHORT,

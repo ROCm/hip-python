@@ -154,6 +154,44 @@ def test_incomplete_array_decays_to_pointer():
     assert rendered.cython_decl() == "int *"
 
 
+@pytest.mark.parametrize(
+    "ctype,expected_decl,expected_no_const",
+    [
+        # Array of const-pointers: the element ``T *const`` keeps its const
+        # on the inner pointer once the array decays. libclang reports that
+        # element const on the ARRAY layer, so the decay must re-attach it.
+        # Regression: this used to drop the const and render ``double **``,
+        # which made the high-level CallArgHoist (``double *const *``) clash
+        # with the cy* signature (C "discards const qualifier" warning).
+        ("double *const[]", "double *const *", "double *const *"),
+        # hipblas ``*Batched`` shape (e.g. hipblasHaxpyBatched's ``y``).
+        (
+            "unsigned short *const[]",
+            "unsigned short *const *",
+            "unsigned short *const *",
+        ),
+        # Array of const elements: the const lands on the leaf base.
+        ("const double[]", "const double *", "double *"),
+        ("const int[]", "const int *", "int *"),
+        # Array of (non-const) pointer-to-const: unchanged, const stays deep
+        # (the leading leaf const is stripped only by the no_const form).
+        ("const char *[]", "const char **", "char **"),
+        # Array of pointer-to-const-pointer: inner const preserved, no shift.
+        ("int *const *[]", "int *const **", "int *const **"),
+    ],
+)
+def test_incomplete_array_of_const_decays_preserve_const(
+    ctype, expected_decl, expected_no_const
+):
+    """An incomplete array whose element type is ``const``-qualified must
+    propagate that ``const`` onto the element's outermost layer when it
+    decays to a pointer — not onto (or off of) the decayed array pointer."""
+    header = f"void f({ctype} x);"
+    rendered = _parm_render(header, "f", 0, prefer_canonical=True)
+    assert rendered.cython_decl() == expected_decl
+    assert rendered.cython_decl_no_const() == expected_no_const
+
+
 # ---------------------------------------------------------------------------
 # Pointer-to-array shapes (require parentheses)
 # ---------------------------------------------------------------------------
