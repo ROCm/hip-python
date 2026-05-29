@@ -140,9 +140,12 @@ cmake --build build --target all_wheels -j$(nproc)
 This is the canonical build flow. It:
 
 - Configures every enabled package via the unified `packages/CMakeLists.txt`.
-- Compiles all Cython extensions across all packages.
-- Invokes `python -m build --wheel --no-isolation` for each enabled
-  package via per-package wheel targets.
+- Compiles all Cython extensions across all packages **once**, in the
+  unified build tree.
+- Assembles each of the six compiled wheels from that already-compiled
+  output (see [Wheel assembly: compile once, then collect](#wheel-assembly-compile-once-then-collect)
+  below) rather than recompiling. The pure-Python `hip-python`
+  metapackage is still built with `python -m build`.
 - Optionally runs `auditwheel repair` when
   `-DHIP_PYTHON_AUDITWHEEL_REPAIR=ON`.
 
@@ -185,6 +188,63 @@ cmake --build build --target compiler_wheel
 cmake --build build --target interop_wheel
 cmake --build build --target hip_python_wheel
 ```
+
+#### Wheel assembly: compile once, then collect
+
+The unified build compiles every Cython extension once. Naively
+building each wheel with `python -m build` would compile every
+extension a **second** time, because `python -m build` re-invokes
+scikit-build-core, which runs its own CMake configure+build in a
+*separate* build tree.
+
+That second compile is unavoidable as long as scikit-build-core owns
+the build, and the two trees cannot share artifacts:
+
+- **A CMake build directory is pinned to one source root.** Its
+  `CMakeCache.txt` records `CMAKE_HOME_DIRECTORY`. The unified build's
+  root is `packages/`; each per-package scikit-build configure roots at
+  the package directory (`cmake.source-dir = "."`). Two configures with
+  different roots cannot share one build directory.
+- **ninja/make incrementality is per-tree.** A target is skipped only
+  when its output already exists *inside that build tree* and is newer
+  than its inputs, tracked in that tree's own dependency log. A `.so`
+  compiled in the unified tree is invisible to scikit-build-core's tree.
+
+So the unified flow does not call `python -m build` for the compiled
+packages. Instead, `hip_python_add_wheel_target` runs
+[`cmake/hip_python_assemble_wheel.py`](../../cmake/hip_python_assemble_wheel.py),
+which reproduces exactly what scikit-build-core would have packed:
+
+1. **`cmake --install <unified-build> --component <pkg> --prefix
+   <staging>`** — copies the package's compiled `.so` modules and its
+   explicitly `install()`-ed files (`.pxd`, `.pyi`, pure `.py`,
+   generated `_version.py`) into a staging dir, applying each target's
+   `INSTALL_RPATH` (so bundled-lib lookups like the compiler package's
+   `$ORIGIN/..` libLLVM keep working). This is the `install.components`
+   half of a scikit-build-core wheel.
+2. **Source overlay** — copies the `wheel.packages` source subtree
+   (`src/rocm` -> `rocm/`, or `src/cuda/` for interop) on top, adding
+   the source-only files (`.pyx`, `.pyi` stubs, namespace markers,
+   pure-Python modules) that are not produced by the CMake install.
+   Installed files win on the (byte-identical) overlap.
+3. **`.dist-info` metadata** — `METADATA` is generated with
+   `pyproject-metadata` from the package's `pyproject.toml` (the same
+   PEP 621 -> core-metadata path scikit-build-core uses), with the
+   dynamic version filled in from the per-package `VERSION` file.
+   `WHEEL` and `RECORD` are written directly.
+4. **Pack** — the staging tree is zipped into a wheel carrying a generic
+   `linux_<arch>` platform tag.
+
+The auditwheel/copy/stamp tail of `hip_python_add_wheel_target` is
+unchanged: when `HIP_PYTHON_AUDITWHEEL_REPAIR=ON`, `auditwheel repair`
+retags the assembled wheel to its `manylinux_*` aliases exactly as it
+did for the `python -m build` output.
+
+This affects **only** the unified `all_wheels` flow. The single-package
+(section B) and sdist (section C) builds still invoke scikit-build-core
+directly and compile normally — they have no unified tree to collect
+from. The assembler therefore needs `pyproject-metadata` in the build
+environment (see [Build requirements](#build-requirements)).
 
 ### B. Single-package build (development loop)
 
@@ -272,10 +332,12 @@ Responsibilities:
    without any per-package include-dir boilerplate.
 
 3. **Wheel targets.** For each enabled package, calls
-   `hip_python_add_wheel_target()` which invokes
-   `python -m build --wheel --no-isolation` against the package
-   directory. The aggregate `all_wheels` target depends on all enabled
-   wheel targets.
+   `hip_python_add_wheel_target()`. For the six compiled packages this
+   assembles the wheel from the unified build's compiled output (see
+   [Wheel assembly](#wheel-assembly-compile-once-then-collect)); for the
+   pure-Python `hip-python` metapackage it invokes
+   `python -m build --wheel --no-isolation`. The aggregate `all_wheels`
+   target depends on all enabled wheel targets.
 
 4. **Optional auditwheel repair.** When `HIP_PYTHON_AUDITWHEEL_REPAIR=ON`,
    each wheel target additionally runs `auditwheel repair` to produce
@@ -331,9 +393,25 @@ that disable individual modules at configure time.
 
 #### `hip_python_add_wheel_target(...)`
 
-Creates a CMake custom target that runs `python -m build` against a
-single package source directory. Optionally performs `auditwheel repair`
-when `HIP_PYTHON_AUDITWHEEL_REPAIR=ON`.
+Creates a CMake custom target that produces a single package's wheel
+into `${HIP_PYTHON_WHEEL_OUTPUT_DIR}`.
+
+- When called with `COMPONENT <name>` (the six compiled packages), it
+  runs [`cmake/hip_python_assemble_wheel.py`](../../cmake/hip_python_assemble_wheel.py)
+  to assemble the wheel from the unified build's already-compiled
+  output: `cmake --install` of that component into a staging dir, the
+  `wheel.packages` source overlay, `pyproject-metadata`-generated
+  `.dist-info`, then pack. No recompile. See
+  [Wheel assembly](#wheel-assembly-compile-once-then-collect).
+- Without `COMPONENT` (the pure-Python `hip-python` metapackage), it
+  runs `python -m build --wheel --no-isolation` against the package
+  directory.
+
+In both cases, when `HIP_PYTHON_AUDITWHEEL_REPAIR=ON` the target then
+runs `auditwheel repair` to retag/repair the wheel. The `DEPENDS`
+argument gates the target on the package's compile aggregate target
+(`package_rocm_bindings_<pkg>`) so the `.so` files exist before
+assembly.
 
 ## Generator-managed CMake includes
 
@@ -494,7 +572,10 @@ unified configure step, listed in each per-package
 - **Python 3.9+** with `pip>=24.0`, `venv`, and development headers.
 - **CMake ≥ 3.26** and **Ninja ≥ 1.11** recommended.
 - Python packages: `scikit-build-core>=0.11.2`, `cython>=3.1.0`,
-  `build`. Optional for production wheels: `auditwheel`, `patchelf`.
+  `build`, `pyproject-metadata>=0.9` (used by the unified build's
+  wheel assembler — see
+  [Wheel assembly](#wheel-assembly-compile-once-then-collect)).
+  Optional for production wheels: `auditwheel`, `patchelf`.
   See [Cython version requirement](#cython-version-requirement) for
   why the floor is 3.1.0.
 - **ROCm SDK** at `${ROCM_PATH}` (defaults to `/opt/rocm`).

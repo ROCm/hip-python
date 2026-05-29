@@ -107,9 +107,15 @@ python3 -m venv ${wheels_venv}
 # requires ninja unless ``ninja.make-fallback = true`` is set in the
 # package pyproject. Install it explicitly so the per-wheel build step
 # doesn't fail with ``Missing dependencies: ninja>=1.5``.
+# pyproject-metadata is used by cmake/hip_python_assemble_wheel.py to
+# generate each wheel's core metadata from its pyproject.toml (the same
+# PEP 621 -> METADATA path scikit-build-core uses). The unified
+# all_wheels flow assembles the six compiled wheels from the already
+# compiled build output instead of recompiling via `python -m build`;
+# see share/design/BUILDING.md.
 pip install --upgrade pip auditwheel patchelf \
     build "scikit-build-core>=0.11.2" "cmake>=3.26" "ninja>=1.5" \
-    "cython>=3.1.0" setuptools
+    "cython>=3.1.0" setuptools "pyproject-metadata>=0.9"
 
 if [ -d "/opt/rh/gcc-toolset-$(g++ -dumpversion)" ]; then
   toolchain="/opt/rh/gcc-toolset-$(g++ -dumpversion)/root/usr"

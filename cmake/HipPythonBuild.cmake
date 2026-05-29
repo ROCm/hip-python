@@ -313,7 +313,7 @@ endfunction()
 
 function(hip_python_add_wheel_target)
   set(options "")
-  set(oneValueArgs TARGET PACKAGE_DIR OUTPUT_DIR)
+  set(oneValueArgs TARGET PACKAGE_DIR OUTPUT_DIR COMPONENT)
   set(multiValueArgs DEPENDS)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -328,36 +328,73 @@ function(hip_python_add_wheel_target)
   # Always use temporary directory for initial wheel build
   set(TEMP_WHEEL_DIR "${CMAKE_CURRENT_BINARY_DIR}/${ARG_TARGET}_temp")
 
-  # Build the wheel command sequence.
-  # NOTE: per-package VERSION is populated at unified-CMake configure
-  # time by the configure_file() loop in python/CMakeLists.txt, so it
-  # already exists in ${ARG_PACKAGE_DIR}/VERSION when this command runs.
-  #
-  # We strip MAKEFLAGS/MFLAGS/MAKELEVEL/GNUMAKEFLAGS from the wheel-build
-  # subprocess. The outer all_wheels build runs under gmake which exports
-  # a jobserver pipe via MAKEFLAGS; scikit-build-core's nested ninja
-  # invocation tries to attach to that jobserver, fails to initialize
-  # the inherited file descriptors, and then gcc intermittently fails
-  # to write the dependency file mid-compile on the largest generated
-  # ``.c`` files (core.c is 200k+ lines). Detaching from the jobserver
-  # lets the nested ninja schedule its own jobs cleanly.
-  set(WHEEL_COMMANDS
-    # Create temporary directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${TEMP_WHEEL_DIR}"
-    # Build wheel to temporary directory.
-    # Forward HIP_PYTHON_* CMake options so the per-package scikit-build-core
-    # configure (which is a separate CMake invocation) sees the same values
-    # as the top-level configure that drives all_wheels.
-    COMMAND ${CMAKE_COMMAND} -E env
-            --unset=MAKEFLAGS --unset=MFLAGS
-            --unset=MAKELEVEL --unset=GNUMAKEFLAGS
-            ${Python_EXECUTABLE} -m build
-            --wheel
-            --no-isolation
-            --outdir=${TEMP_WHEEL_DIR}
-            -Ccmake.define.HIP_PYTHON_BUNDLE_LIBLLVM=${HIP_PYTHON_BUNDLE_LIBLLVM}
-            -Ccmake.define.HIP_PYTHON_FORCE_BUILD_LIBLLVM=${HIP_PYTHON_FORCE_BUILD_LIBLLVM}
-  )
+  if(ARG_COMPONENT)
+    # ----------------------------------------------------------------
+    # Assemble the wheel from the unified build's compiled output.
+    #
+    # The unified build has already compiled every Cython extension for
+    # this package. Running `python -m build` here would re-invoke
+    # scikit-build-core, which compiles every extension a SECOND time in
+    # its own per-package build tree (a different CMake source root, so
+    # the unified build's object files cannot be reused -- see
+    # share/design/BUILDING.md). Instead, the assembler collects the
+    # already-compiled install component plus the wheel.packages source
+    # overlay and packs an equivalent wheel, so each module is compiled
+    # exactly once.
+    #
+    # `cmake --install` only copies files (no nested build), so there is
+    # no jobserver-inheritance hazard and no need to detach from the
+    # outer make's MAKEFLAGS. The resulting wheel carries a generic
+    # linux_<arch> platform tag; the auditwheel/copy/stamp tail below
+    # retags it to manylinux exactly as before.
+    set(_assemble_script
+        "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/hip_python_assemble_wheel.py")
+    set(WHEEL_COMMANDS
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${TEMP_WHEEL_DIR}"
+      COMMAND ${Python_EXECUTABLE} "${_assemble_script}"
+              --cmake "${CMAKE_COMMAND}"
+              --build-dir "${CMAKE_BINARY_DIR}"
+              --component "${ARG_COMPONENT}"
+              --package-dir "${ARG_PACKAGE_DIR}"
+              --output-dir "${TEMP_WHEEL_DIR}"
+              --config $<CONFIG>
+    )
+  else()
+    # ----------------------------------------------------------------
+    # Pure-Python packages (hip-python) have no compiled extensions and
+    # use the setuptools backend, so there is nothing to collect from the
+    # unified build -- build them directly with `python -m build`.
+    #
+    # NOTE: per-package VERSION is populated at unified-CMake configure
+    # time by the configure_file() loop in packages/CMakeLists.txt, so it
+    # already exists in ${ARG_PACKAGE_DIR}/VERSION when this command runs.
+    #
+    # We strip MAKEFLAGS/MFLAGS/MAKELEVEL/GNUMAKEFLAGS from the wheel-build
+    # subprocess. The outer all_wheels build runs under gmake which exports
+    # a jobserver pipe via MAKEFLAGS; scikit-build-core's nested ninja
+    # invocation tries to attach to that jobserver, fails to initialize
+    # the inherited file descriptors, and then gcc intermittently fails
+    # to write the dependency file mid-compile on the largest generated
+    # ``.c`` files (core.c is 200k+ lines). Detaching from the jobserver
+    # lets the nested ninja schedule its own jobs cleanly.
+    set(WHEEL_COMMANDS
+      # Create temporary directory
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${TEMP_WHEEL_DIR}"
+      # Build wheel to temporary directory.
+      # Forward HIP_PYTHON_* CMake options so the per-package scikit-build-core
+      # configure (which is a separate CMake invocation) sees the same values
+      # as the top-level configure that drives all_wheels.
+      COMMAND ${CMAKE_COMMAND} -E env
+              --unset=MAKEFLAGS --unset=MFLAGS
+              --unset=MAKELEVEL --unset=GNUMAKEFLAGS
+              ${Python_EXECUTABLE} -m build
+              --wheel
+              --no-isolation
+              --outdir=${TEMP_WHEEL_DIR}
+              -Ccmake.define.HIP_PYTHON_BUNDLE_LIBLLVM=${HIP_PYTHON_BUNDLE_LIBLLVM}
+              -Ccmake.define.HIP_PYTHON_FORCE_BUILD_LIBLLVM=${HIP_PYTHON_FORCE_BUILD_LIBLLVM}
+    )
+  endif()
 
   # Add auditwheel repair or direct copy to output directory
   if(HIP_PYTHON_AUDITWHEEL_REPAIR)
