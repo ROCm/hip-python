@@ -178,6 +178,11 @@ cmake_args=(
   -DHIP_PYTHON_BUILD_SYSTEMS=${build_systems}
   -DHIP_PYTHON_BUILD_COMPILER=ON
   -DHIP_PYTHON_BUILD_INTEROP=${build_interop}
+  # Build a self-contained libLLVM.so from the LLVM static archives
+  # (--whole-archive) so static-only symbols such as
+  # LLVMInitializeAllTargetInfos are exported; the system shared
+  # libLLVM.so omits them and numba.hip fails at dlsym otherwise.
+  -DHIP_PYTHON_FORCE_BUILD_LIBLLVM=ON
   -DHIP_PYTHON_AUDITWHEEL_REPAIR=ON
   -DHIP_PYTHON_WHEEL_OUTPUT_DIR=${BUILD_ARTIFACTS_DIR}
 )
