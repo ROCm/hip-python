@@ -85,6 +85,51 @@ shape; before the refactor the cy* call was inlined inside a
 single Python expression and held the GIL throughout.
 
 
+## Return-value contract: status-first tuple
+
+Every non-LLVM library binding returns a `tuple` whose first
+element is the library's status code/enum (`hipError_t`,
+`hiprtcResult`, `amd_comgr_status_t`, `hipblasStatus_t`,
+`hsa_status_t`, ...), followed by any OUT values. Callers can
+therefore always unpack uniformly:
+
+```python
+status, *out_values = some_binding(...)
+```
+
+This is driven by the per-generator
+`module_opts["python_interface_always_return_tuple"]` flag (a key
+on `CythonModuleGenerator`, default `False`; see
+[CODEGEN.md](CODEGEN.md)). The flag interacts with two emission
+paths in
+`interfacegen.cython.Function.render_python_interface_impl`:
+
+| Case | What the generator emits |
+|---|---|
+| C function returns the status enum | The status wrap (`hipError_t(_cy_..._retval)`) is `out_args.insert(0, ...)`'d as element 0 automatically. |
+| C function returns a non-status value (`const char*`, `int`, `void`, a *different* enum) | The recipe's `node_init` prepends a synthetic success code via `prepend_python_return_value(...)` (e.g. `hipError_t.hipSuccess`, `hiprtcResult.HIPRTC_SUCCESS`, `hipblasStatus_t.HIPBLAS_STATUS_SUCCESS`), so element 0 is still a status. |
+| Exactly one return value total | With the flag set, a 1-tuple `(status,)` is emitted instead of a bare `status`, so the shape never collapses. |
+
+Concretely, the prepend lives in each per-library generator's
+`node_init`: `generators_hip.py`'s `hip_node_init` /
+`hiprtc_node_init`, and the shared `_make_status_node_init(prefix,
+status_type, success_const)` helper in `generators_libraries.py`
+and `generators_systems.py`. The same helper also downgrades the
+function's lazy-loader modifier from `except? <SENTINEL> nogil` to
+`noexcept nogil` for these non-status returns (the `except?`
+sentinel only type-checks when the function actually returns the
+status enum).
+
+Two systems modules (`roctx`, `hipfile`) have no status enum at
+all — they set the flag purely for shape uniformity (bare returns
+become 1-tuples) and prepend nothing.
+
+The LLVM C bindings opt **out** (`module_opts={"python_interface
+_always_return_tuple": False}` in `generators_compiler.py`'s
+`write_llvm_modules`): the LLVM-C API has no status-return
+convention, so its wrappers return bare values, matching upstream.
+
+
 ## GIL semantics — what runs where
 
 The high-level wrapper alternates between GIL-held and
