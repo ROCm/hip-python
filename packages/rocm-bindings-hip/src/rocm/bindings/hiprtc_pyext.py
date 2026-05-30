@@ -22,9 +22,10 @@
 # SOFTWARE.
 
 import ctypes
+import warnings
 
-from hip import hiprtc as _hiprtc
-from hip._util import types as _types
+from rocm.bindings import hiprtc as _hiprtc
+from rocm.bindings.util import types as _types
 
 __all__ = [
     "HiprtcLinkCreateOpts",
@@ -34,6 +35,11 @@ __all__ = [
 
 class HiprtcLinkCreateOpts:
     r"""Converts a Python map to appropriate argument types for `~.hiprtcLinkCreate`.
+
+    .. deprecated::
+        Use `~.rocm.bindings.hiprtc` directly. This helper predates the
+        modern ``rocm.bindings`` bindings and is kept only for backward
+        compatibility; it will be removed in a future release.
 
     Implements ``__getitem__`` to allow writing:
 
@@ -126,6 +132,12 @@ class HiprtcLinkCreateOpts:
             `~.hiprtcJIT_option` (exists after ROCm 6.4.0) for more details.
 
         """
+        warnings.warn(
+            "HiprtcLinkCreateOpts is deprecated; use rocm.bindings.hiprtc "
+            "directly.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if not kwargs:
             self.num_opts = 0
             self.keys = None
@@ -310,6 +322,11 @@ class HiprtcLinkCreateOpts:
 def hiprtcLinkCreate2(**kwargs):
     r"""Variant of `~.hiprtc.hiprtcLinkCreate` that takes link options via keyword args.
 
+    .. deprecated::
+        Use `~.rocm.bindings.hiprtc` directly. This helper predates the
+        modern ``rocm.bindings`` bindings and is kept only for backward
+        compatibility; it will be removed in a future release.
+
     Variant of `~.hiprtc.hiprtcLinkCreate` that takes link options via keyword args:
 
     ```python
@@ -370,4 +387,9 @@ def hiprtcLinkCreate2(**kwargs):
     See:
         `~.HiprtcLinkCreateOpts`.
     """
+    warnings.warn(
+        "hiprtcLinkCreate2 is deprecated; use rocm.bindings.hiprtc directly.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     return _hiprtc.hiprtcLinkCreate(*HiprtcLinkCreateOpts(**kwargs))
