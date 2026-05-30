@@ -51,9 +51,10 @@ def _make_header_arg(header_relpath: str, header_content: str = None):
     return header_relpath
 
 
-def _make_status_node_init(prefix, status_type: str):
+def _make_status_node_init(prefix, status_type: str, success_const: str):
     """Per-Function override: drop ``except? <STATUS> nogil`` for functions
-    whose return type is NOT ``<status_type>``.
+    whose return type is NOT ``<status_type>``, and prepend the status
+    enum's success value as their first Python return value.
 
     ``prefix`` is either a single string or a tuple of strings (matched
     via ``startswith``); pass a tuple for libs with multiple name
@@ -62,7 +63,9 @@ def _make_status_node_init(prefix, status_type: str):
     See ``generators_libraries._make_status_node_init`` for the full
     rationale (handles non-enum returns, different-enum returns, and
     void returns; ``noexcept nogil`` is the right modifier for all of
-    them).
+    them, and the ``<status_type>.<success_const>`` prepend keeps the
+    status-first-tuple contract uniform under
+    ``python_interface_always_return_tuple``).
     """
     prefixes = (prefix,) if isinstance(prefix, str) else tuple(prefix)
 
@@ -77,6 +80,11 @@ def _make_status_node_init(prefix, status_type: str):
             if return_typename != status_type:
                 node.error_return_value_lazy_loader = None
                 node.modifiers_lazy_loader = " noexcept nogil"
+                node.prepend_python_return_value(
+                    f"{status_type}.{success_const}",
+                    status_type,
+                    f"Always returns `~.{status_type}.{success_const}`.",
+                )
     return _init
 
 
@@ -96,6 +104,7 @@ def generate_rccl(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="librccl.so",
+        module_opts={"python_interface_always_return_tuple": True},
         # rccl functions return ``ncclResult_t``; ``ncclInternalError``
         # is the sentinel hijacked for Python-exception propagation.
         modifiers_lazy_loader=" except? ncclInternalError nogil",
@@ -106,7 +115,9 @@ def generate_rccl(
         # ``ncclGetErrorString`` (returns ``const char *``) and
         # ``ncclResetDebugInit`` (returns ``void``) need ``noexcept
         # nogil`` instead of ``except? ncclInternalError``.
-        node_init=_make_status_node_init("nccl", "ncclResult_t"),
+        node_init=_make_status_node_init(
+            "nccl", "ncclResult_t", "ncclSuccess"
+        ),
         node_filter=controls.rccl.node_filter,
         macro_type=controls.rccl.macro_type,
         ptr_parm_intent=controls.rccl.ptr_parm_intent,
@@ -146,7 +157,10 @@ def generate_roctx(
         # roctx is a profiling-annotation API: functions return
         # ``roctx_range_id_t`` (uint64) or void — no status enum to
         # translate into Python exceptions. Module-wide ``noexcept
-        # nogil`` lets call sites be wrapped in ``with nogil:``.
+        # nogil`` lets call sites be wrapped in ``with nogil:``. There
+        # is no status to prepend, so the always-return-tuple flag just
+        # wraps bare returns in a 1-tuple for shape uniformity.
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" noexcept nogil",
         node_filter=controls.roctx.node_filter,
         macro_type=controls.roctx.macro_type,
@@ -178,7 +192,9 @@ def generate_hipfile(
         # hipfile functions return a ``hipFileError`` struct (by value),
         # not an enum — no single-value sentinel for ``except?`` to
         # match. Use module-wide ``noexcept nogil`` so call sites can
-        # still drop the GIL.
+        # still drop the GIL. No status enum to prepend; the
+        # always-return-tuple flag only wraps bare returns in a 1-tuple.
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" noexcept nogil",
         node_filter=controls.hipfile.node_filter,
         macro_type=controls.hipfile.macro_type,
@@ -218,9 +234,12 @@ def generate_amdsmi(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libamd_smi.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? AMDSMI_STATUS_INTERNAL_EXCEPTION nogil",
         error_return_value_lazy_loader="AMDSMI_STATUS_INTERNAL_EXCEPTION",
-        node_init=_make_status_node_init("amdsmi", "amdsmi_status_t"),
+        node_init=_make_status_node_init(
+            "amdsmi", "amdsmi_status_t", "AMDSMI_STATUS_SUCCESS"
+        ),
         node_filter=controls.amdsmi.node_filter,
         macro_type=controls.amdsmi.macro_type,
         ptr_parm_intent=controls.amdsmi.ptr_parm_intent,
@@ -273,12 +292,15 @@ def generate_hsa(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhsa-runtime64.so.1",
+        module_opts={"python_interface_always_return_tuple": True},
         # hsa functions return ``hsa_status_t``; ``HSA_STATUS_ERROR`` is
         # the generic failure sentinel hijacked for Python-exception
         # propagation.
         modifiers_lazy_loader=" except? HSA_STATUS_ERROR nogil",
         error_return_value_lazy_loader="HSA_STATUS_ERROR",
-        node_init=_make_status_node_init("hsa", "hsa_status_t"),
+        node_init=_make_status_node_init(
+            "hsa", "hsa_status_t", "HSA_STATUS_SUCCESS"
+        ),
         node_filter=controls.hsa.node_filter,
         ptr_parm_intent=controls.hsa.ptr_parm_intent,
         ptr_rank=controls.hsa.ptr_rank,

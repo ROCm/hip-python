@@ -46,9 +46,10 @@ def _make_header_arg(header_relpath: str, header_content: str = None):
     return header_relpath
 
 
-def _make_status_node_init(prefix, status_type: str):
+def _make_status_node_init(prefix, status_type: str, success_const: str):
     """Per-Function override: drop ``except? <STATUS> nogil`` for functions
-    whose return type is NOT ``<status_type>``.
+    whose return type is NOT ``<status_type>``, and prepend the status
+    enum's success value as their first Python return value.
 
     ``prefix`` is either a single string or a tuple of strings (matched
     via ``startswith``); pass a tuple when the library uses several name
@@ -71,10 +72,16 @@ def _make_status_node_init(prefix, status_type: str):
     ``nogil`` declaration still applies (so ``with nogil:`` blocks at call
     sites are valid) but no exception-translation watcher is inserted.
 
+    In addition, because the module opts into
+    ``python_interface_always_return_tuple`` (status-first-tuple contract),
+    these non-status functions get ``<status_type>.<success_const>``
+    prepended as their first return value via
+    ``prepend_python_return_value`` so callers can always unpack
+    ``status, *rest = fn(...)``. ``<status_type>`` resolves to the Python
+    IntEnum class (either named directly or aliased from its tag name).
+
     Same overall pattern as ``hip_node_init`` / ``hiprtc_node_init`` in
-    ``generators_hip.py``; those don't need the ``status_type`` check
-    because hip's own non-status-returning functions are all non-enum
-    (struct/void/char*).
+    ``generators_hip.py``.
     """
     prefixes = (prefix,) if isinstance(prefix, str) else tuple(prefix)
 
@@ -92,6 +99,11 @@ def _make_status_node_init(prefix, status_type: str):
             if return_typename != status_type:
                 node.error_return_value_lazy_loader = None
                 node.modifiers_lazy_loader = " noexcept nogil"
+                node.prepend_python_return_value(
+                    f"{status_type}.{success_const}",
+                    status_type,
+                    f"Always returns `~.{status_type}.{success_const}`.",
+                )
     return _init
 
 
@@ -111,9 +123,12 @@ def generate_hipblas(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhipblas.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPBLAS_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPBLAS_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hipblas", "hipblasStatus_t"),
+        node_init=_make_status_node_init(
+            "hipblas", "hipblasStatus_t", "HIPBLAS_STATUS_SUCCESS"
+        ),
         node_filter=controls.hipblas.node_filter,
         ptr_parm_intent=controls.hipblas.ptr_parm_intent,
         ptr_rank=controls.hipblas.ptr_rank,
@@ -155,9 +170,12 @@ def generate_hipsolver(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhipsolver.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPSOLVER_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPSOLVER_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hipsolver", "hipsolverStatus_t"),
+        node_init=_make_status_node_init(
+            "hipsolver", "hipsolverStatus_t", "HIPSOLVER_STATUS_SUCCESS"
+        ),
         node_filter=controls.hipsolver.node_filter,
         ptr_parm_intent=controls.hipsolver.ptr_parm_intent,
         ptr_rank=controls.hipsolver.ptr_rank,
@@ -210,9 +228,15 @@ def generate_hiprand(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhiprand.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPRAND_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPRAND_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hiprand", "hiprandStatus_t"),
+        # note: hipRAND defines named enum via `typedef enum hiprandStatus {..} hiprandStatus_t`
+        #       while other libraries define anonymous enums via `typedef enum {..} <status_type>_t`.
+        #       So the _make_status_node_init call passes the non-`_t` status type as 2nd argument.
+        node_init=_make_status_node_init(
+            "hiprand", "hiprandStatus", "HIPRAND_STATUS_SUCCESS"
+        ),
         node_filter=controls.hiprand.node_filter,
         macro_type=controls.hiprand.macro_type,
         ptr_parm_intent=controls.hiprand.ptr_parm_intent,
@@ -257,9 +281,12 @@ def generate_hipfft(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhipfft.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPFFT_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPFFT_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hipfft", "hipfftResult"),
+        node_init=_make_status_node_init(
+            "hipfft", "hipfftResult_t", "HIPFFT_SUCCESS"
+        ),
         node_filter=controls.hipfft.node_filter,
         macro_type=controls.hipfft.macro_type,
         ptr_parm_intent=controls.hipfft.ptr_parm_intent,
@@ -296,9 +323,12 @@ def generate_hipsparse(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhipsparse.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPSPARSE_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPSPARSE_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hipsparse", "hipsparseStatus_t"),
+        node_init=_make_status_node_init(
+            "hipsparse", "hipsparseStatus_t", "HIPSPARSE_STATUS_SUCCESS"
+        ),
         node_filter=controls.hipsparse.node_filter,
         macro_type=controls.hipsparse.macro_type,
         ptr_parm_intent=controls.hipsparse.ptr_parm_intent,
@@ -341,6 +371,7 @@ def generate_hipblaslt(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhipblaslt.so",
+        module_opts={"python_interface_always_return_tuple": True},
         # hipblaslt functions return ``hipblasStatus_t`` (the hipblas
         # enum, NOT a separate hipblasLt enum) — same sentinel.
         modifiers_lazy_loader=" except? HIPBLAS_STATUS_INTERNAL_ERROR nogil",
@@ -351,7 +382,9 @@ def generate_hipblaslt(
         # case-sensitive. A lowercase "hipblaslt" prefix never
         # matches and the void-return / non-status-return fixup
         # silently doesn't fire.
-        node_init=_make_status_node_init("hipblasLt", "hipblasStatus_t"),
+        node_init=_make_status_node_init(
+            "hipblasLt", "hipblasStatus_t", "HIPBLAS_STATUS_SUCCESS"
+        ),
         node_filter=controls.hipblaslt.node_filter,
         ptr_parm_intent=controls.hipblaslt.ptr_parm_intent,
         ptr_rank=controls.hipblaslt.ptr_rank,
@@ -405,9 +438,12 @@ def generate_hiptensor(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhiptensor.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPTENSOR_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPTENSOR_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hiptensor", "hiptensorStatus_t"),
+        node_init=_make_status_node_init(
+            "hiptensor", "hiptensorStatus_t", "HIPTENSOR_STATUS_SUCCESS"
+        ),
         node_filter=controls.hiptensor.node_filter,
         ptr_parm_intent=controls.hiptensor.ptr_parm_intent,
         ptr_rank=controls.hiptensor.ptr_rank,
@@ -470,9 +506,12 @@ def generate_hipdnn(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhipdnn.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPDNN_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPDNN_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init("hipdnn", "hipdnnStatus_t"),
+        node_init=_make_status_node_init(
+            "hipdnn", "hipdnnStatus_t", "HIPDNN_STATUS_SUCCESS"
+        ),
         node_filter=controls.hipdnn.node_filter,
         ptr_parm_intent=controls.hipdnn.ptr_parm_intent,
         ptr_rank=controls.hipdnn.ptr_rank,
@@ -508,6 +547,7 @@ def generate_hipsparselt(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhipsparselt.so",
+        module_opts={"python_interface_always_return_tuple": True},
         # hipsparselt functions return ``hipsparseStatus_t`` (the
         # hipsparse enum, NOT a separate hipsparseLt enum).
         modifiers_lazy_loader=" except? HIPSPARSE_STATUS_INTERNAL_ERROR nogil",
@@ -517,7 +557,9 @@ def generate_hipsparselt(
         # functions spell it that way (hipsparseLtInitialize,
         # hipsparseLtMatmulPlanInit, ...) and a lowercase prefix
         # would silently skip the void-return fixup.
-        node_init=_make_status_node_init("hipsparseLt", "hipsparseStatus_t"),
+        node_init=_make_status_node_init(
+            "hipsparseLt", "hipsparseStatus_t", "HIPSPARSE_STATUS_SUCCESS"
+        ),
         node_filter=controls.hipsparselt.node_filter,
         macro_type=controls.hipsparselt.macro_type,
         ptr_parm_intent=controls.hipsparselt.ptr_parm_intent,

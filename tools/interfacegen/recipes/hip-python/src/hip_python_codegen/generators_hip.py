@@ -138,6 +138,7 @@ def generate_hip(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libamdhip64.so",
+        module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? hipErrorInitializationError nogil",
         error_return_value_lazy_loader="hipErrorInitializationError",
         # we hijack hipError_t constant hipErrorInitializationError for
@@ -228,8 +229,17 @@ def generate_hiprtc(
     def hiprtc_node_init(node: Node):
         if isinstance(node, interfacegen.tree.Function):
             if not node.is_enum and node.name.startswith("hiprtc"):
+                # hiprtc routines that do not return hiprtcResult are
+                # forced to not throw and to always return
+                # hiprtcResult.HIPRTC_SUCCESS as the first return value,
+                # so the status-first-tuple contract holds uniformly.
                 node.error_return_value_lazy_loader = None
                 node.modifiers_lazy_loader = " noexcept nogil"
+                node.prepend_python_return_value(
+                    "hiprtcResult.HIPRTC_SUCCESS",
+                    "hiprtcResult",
+                    "Always returns `~.hiprtcResult.HIPRTC_SUCCESS`.",
+                )
 
     generator = CythonModuleGenerator(
         "rocm.bindings.hiprtc",
@@ -238,6 +248,7 @@ def generate_hiprtc(
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
         dll="libhiprtc.so",
+        module_opts={"python_interface_always_return_tuple": True},
         # we hijack hiprtcResult constant HIPRTC_ERROR_INTERNAL_ERROR
         # for propagating exceptions.
         modifiers_lazy_loader=" except? HIPRTC_ERROR_INTERNAL_ERROR nogil",
