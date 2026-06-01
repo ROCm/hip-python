@@ -96,7 +96,6 @@ from . import dispatcher  # noqa: F401, E402
 from . import kernels  # noqa: F401, E402
 from . import target  # noqa: F401, E402
 from . import testing  # noqa: F401, E402
-from . import tests  # noqa: F401, E402
 from . import api, args, errors, hipdecl, hipimpl  # noqa: F401, E402
 from .compiler import compile_llvm_ir  # noqa: F401, E402
 from .compiler import compile_llvm_ir_for_current_device  # noqa: F401, E402

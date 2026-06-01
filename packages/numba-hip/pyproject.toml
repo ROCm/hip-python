@@ -62,7 +62,6 @@ Documentation = "https://github.com/rocm/numba-hip"
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["numba.hip", "numba.hip.*"]
-exclude = ["numba.hip.tests"]
 
 [tool.black]
 line-length = 79
