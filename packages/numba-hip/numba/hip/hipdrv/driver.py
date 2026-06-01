@@ -107,10 +107,8 @@ if USE_NV_BINDING:
     HIP_STREAM_LEGACY = 0  # TODO(HIP/AMD) check if legacy stream can be replaced by default stream
     HIP_STREAM_PER_THREAD = 2
 
-    try: # modern HIP Python bindings
-        from rocm.bindings.util.types import Pointer as CUdeviceptr
-    except ImportError: # legacy HIP Python bindings
-        from hip._util.types import Pointer as CUdeviceptr
+    from rocm.bindings.util.types import Pointer as CUdeviceptr
+    from rocm.bindings import hip as _hip
     hipDeviceptr_t = CUdeviceptr
 
 else:
@@ -347,7 +345,7 @@ class Driver(object):  #: HIP/AMD: modified
         Checks the CUDA Python interoperability layer for any other functions.
         """
         if fname.startswith("hip"):
-            libfn = getattr(_hip.hip, fname, None)
+            libfn = getattr(_hip, fname, None)
         else:
             libfn = getattr(binding, fname)
 
@@ -972,9 +970,9 @@ class HostOnlyHIPMemoryManager(BaseHIPMemoryManager):
 
             def allocator():
                 if attach_global:
-                    flags = _hip.hip.hipMemAttachGlobal
+                    flags = _hip.hipMemAttachGlobal
                 else:
-                    flags = _hip.hip.hipMemAttachHost
+                    flags = _hip.hipMemAttachHost
 
                 return driver.cuMemAllocManaged(size, flags)
 
@@ -1454,7 +1452,7 @@ class Context(object):
             # stream synchronizes with stream 0 (this is different from the
             # default stream, which we define also as CU_STREAM_DEFAULT when
             # the NV binding is in use).
-            flags = _hip.hip.hipStreamDefault
+            flags = _hip.hipStreamDefault
             handle = driver.cuStreamCreate(
                 flags
             )  # alias of hipStreamCreateWithFlags
@@ -2530,16 +2528,10 @@ def launch_kernel(
 if USE_NV_BINDING:
     jitty = binding.CUjitInputType
 
-    if hasattr(jitty, "HIPRTC_JIT_INPUT_LLVM_BITCODE"):
-        FILE_EXTENSION_MAP = dict(
-            ll=jitty.HIPRTC_JIT_INPUT_LLVM_BITCODE,
-            bc=jitty.HIPRTC_JIT_INPUT_LLVM_BITCODE,
-        )
-    else:
-        FILE_EXTENSION_MAP = dict(
-            ll=jitty.hipJitInputLLVMBitcode,
-            bc=jitty.hipJitInputLLVMBitcode,
-        )
+    FILE_EXTENSION_MAP = dict(
+        ll=jitty.hipJitInputLLVMBitcode,
+        bc=jitty.hipJitInputLLVMBitcode,
+    )
 else:
     raise NotImplementedError
 
@@ -2681,9 +2673,9 @@ class CudaPythonLinker(Linker):
             # options.update(HIPRTC_JIT_TARGET = 1)
             pass
 
-        from hip import hiprtc as hiprtc_bindings
+        from rocm.bindings import hiprtc_pyext
 
-        args_handler = hiprtc_bindings.ext.HiprtcLinkCreateOpts(**options)
+        args_handler = hiprtc_pyext.HiprtcLinkCreateOpts(**options)
         self.handle = driver.cuLinkCreate(*args_handler)
 
         weakref.finalize(self, driver.cuLinkDestroy, self.handle)
@@ -2714,12 +2706,7 @@ class CudaPythonLinker(Linker):
         namebuf = name.encode("utf8")
         self._keep_alive += [buf, namebuf]
         try:
-            try:
-                input_type = (
-                    binding.CUjitInputType.HIPRTC_JIT_INPUT_LLVM_BITCODE
-                )
-            except AttributeError:
-                input_type = binding.CUjitInputType.hipJitInputLLVMBitcode
+            input_type = binding.CUjitInputType.hipJitInputLLVMBitcode
             driver.cuLinkAddData(
                 self.handle, input_type, buf, len(buf), namebuf, 0, None, None
             )

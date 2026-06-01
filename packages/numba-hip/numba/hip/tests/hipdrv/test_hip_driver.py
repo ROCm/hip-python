@@ -48,8 +48,8 @@
 import textwrap
 from ctypes import c_int, c_void_p, sizeof
 
-from hip import hip as _hip  # via 'hip-python'
-from hip import hiprtc as _hiprtc
+from rocm.bindings import hip as _hip
+from rocm.bindings import hiprtc as _hiprtc
 
 from numba.hip.hipdrv import devices
 from numba.hip.hipdrv import driver as _driver

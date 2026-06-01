@@ -41,11 +41,11 @@ import threading
 
 import numba.core.imputils as imputils
 import numba.core.typing.templates as typing_templates
-import rocm.clang.cindex as ci
-from hip import HIP_VERSION_TUPLE, ROCM_VERSION_TUPLE
+import rocm.bindings.clang.cindex as ci
+from rocm.version import HIP_VERSION_TUPLE, ROCM_VERSION_TUPLE
 from llvmlite import ir
 from numba.core import cgutils, types
-from rocm.amd_comgr import amd_comgr as comgr
+from rocm import comgr
 
 from numba.hip.amdgcn import ISA_INFOS
 from numba.hip.typing_lowering import stubs as numba_hip_stubs
@@ -148,7 +148,7 @@ class HIPDeviceLib:
         hiprtc_runtime_source = HIPSource(
             filename=filename,
             source=(
-                comgr.ext.HIPRTC_RUNTIME_HEADER
+                comgr.HIPRTC_RUNTIME_HEADER
                 + HIPDeviceLib._create_extensions()
                 + HIPDeviceLib._create_overloads()
                 + USER_HIP_EXTENSIONS
@@ -774,7 +774,7 @@ class HIPDeviceLib:
         """Returns the ROCm LLVM module derived from the HIP device lib.
 
         Returns:
-            `rocm.llvm.c.types.LLVMOpaqueModule`:
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule`:
                 The ROCm LLVM module wrapper.
         """
         if self._module is None:
@@ -836,5 +836,5 @@ class HIPDeviceLib:
             comgr_logging=False,
             source=hipdevicelib_src,
             to_llvm_ir=False,
-        )  # TODO logbuf, diagnosticbuf not accessible currently due to error check method in rocm.amd_comgr.amd_comgr.ext
+        )  # TODO logbuf, diagnosticbuf not accessible currently due to error check method in rocm.comgr
         return bcbuf

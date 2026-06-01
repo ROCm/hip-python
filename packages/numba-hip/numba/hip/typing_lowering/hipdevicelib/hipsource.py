@@ -34,7 +34,7 @@ in the file.
 import logging
 import textwrap
 
-import rocm.clang.cindex as ci
+import rocm.bindings.clang.cindex as ci
 
 from . import cparser
 
@@ -503,7 +503,7 @@ __all__ = [
 #     import pprint
 
 #     ci.Config.set_library_path("/opt/rocm/llvm/lib")
-#     from rocm.amd_comgr import amd_comgr as comgr
+#     from rocm import comgr
 
 #     import llvmutils
 #     import comgrutils
@@ -533,7 +533,7 @@ __all__ = [
 #         return name.split(".")
 
 #     _hiprtc_runtime_hip_source = HIPSource(
-#         source=comgr.ext.HIPRTC_RUNTIME_HEADER,
+#         source=comgr.HIPRTC_RUNTIME_HEADER,
 #         filter=_hiprtc_runtime_header_filter,
 #         append_cflags=["-D__HIPCC_RTC__"],
 #     )
@@ -548,7 +548,7 @@ __all__ = [
 #     _hiprtc_runtime_hip_source.check_for_duplicates(log_errors=True)
 #     wrappers = _hiprtc_runtime_hip_source.render_device_function_wrappers(prefix=PREFIX)
 
-#     from hip import HIP_VERSION_TUPLE
+#     from rocm.version import HIP_VERSION_TUPLE
 
 #     coordinates = ""
 #     for kind in ("threadIdx", "blockIdx", "blockDim", "gridDim"):
@@ -561,7 +561,7 @@ __all__ = [
 #             """
 #             )
 
-#     hipdevicelib_source = comgr.ext.HIPRTC_RUNTIME_HEADER + wrappers + coordinates
+#     hipdevicelib_source = comgr.HIPRTC_RUNTIME_HEADER + wrappers + coordinates
 
 #     # print(hipdevicelib_source)
 #     (bcbuf, logbuf, diagnosticbuf) = comgrutils.compile_hip_source_to_llvm(

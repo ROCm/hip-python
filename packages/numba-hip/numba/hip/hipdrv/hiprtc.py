@@ -124,7 +124,7 @@ class HIPRTC:
         """
         with _hiprtc_lock:
             if cls.__INSTANCE is None:
-                from hip import hiprtc
+                from rocm.bindings import hiprtc
 
                 cls.__INSTANCE = inst = object.__new__(cls)
 

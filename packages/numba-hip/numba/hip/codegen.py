@@ -351,7 +351,7 @@ class _LinkerDependencyHandler:
 
         Returns:
             `numba.hip.llvmutils.LLVMModuleWrapper`:
-                A wrapper around `rocm.llvm.c.types.LLVMOpaqueModule`, with methods to obtain
+                A wrapper around `rocm.bindings.llvm.c.types.LLVMOpaqueModule`, with methods to obtain
                 the wrapped module and its LLVM IR representation.
         """
         # note buf_args might be buf and buf_len
@@ -1107,9 +1107,9 @@ class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
             )
 
         # for inspecting the code object)
-        # import rocm.amd_comgr.amd_comgr as comgr
+        # from rocm import comgr
         # import pprint
-        # pprint.pprint(list(comgr.ext.parse_code_symbols(codeobj,len(codeobj)).keys()))
+        # pprint.pprint(list(comgr.parse_code_symbols(codeobj,len(codeobj)).keys()))
 
         self._codeobj_cache[amdgpu_arch] = codeobj
         self._linkerinfo_cache[amdgpu_arch] = log

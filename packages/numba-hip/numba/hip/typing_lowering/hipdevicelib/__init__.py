@@ -32,10 +32,10 @@ Attributes:
 import os
 import threading
 
-import rocm.clang.cindex as ci
+import rocm.bindings.clang.cindex as ci
 
 # isort: off
-from rocm.llvm.config.llvm_config import (
+from rocm.bindings.llvm.config.llvm_config import (
     LLVM_VERSION_MAJOR as _LLVM_VERSION_MAJOR,
     LLVM_VERSION_MINOR as _LLVM_VERSION_MINOR,
     LLVM_VERSION_PATCH as _LLVM_VERSION_PATCH,

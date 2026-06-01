@@ -1,3 +1,21 @@
+# numba-hip 0.2.0 (30 May 2026)
+
+* **Hard cut to the ROCm 7.13.0+ HIP Python bindings.** numba-hip now
+  requires `rocm-bindings-hip`, `rocm-bindings-compiler`, and
+  `hip-python-interop` `>=7.13.0` as core dependencies; the legacy
+  per-ROCm `[project.optional-dependencies]` extras (which pinned the
+  old `hip-python` / `hip-python-as-cuda` / `rocm-llvm-python`
+  packages) have been removed.
+* Migrate to the new binding namespaces: `rocm.bindings.*` (e.g.
+  `rocm.bindings.hip`, `rocm.bindings.hiprtc`), `rocm.comgr`, and
+  `rocm.bindings.util.types`.
+* Port `from hip import hiprtc` to `from rocm.bindings import hiprtc`,
+  and route the link-options helper through `rocm.bindings.hiprtc_pyext`
+  (the old `hiprtc.ext` shim no longer exists).
+* Remove legacy-binding compatibility duck typing in `hipdrv/driver.py`
+  and fix the undefined module-global `_hip` reference (now bound to
+  `rocm.bindings.hip`).
+
 # numba-hip 0.1.6 (09 Feb 2026)
 
 * Add fallback option to use AMD-SMI for UUID detection.

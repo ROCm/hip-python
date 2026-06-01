@@ -22,7 +22,7 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
-import rocm.clang.cindex as ci
+import rocm.bindings.clang.cindex as ci
 
 
 def walk_cursors(root: ci.Cursor, postorder=False):

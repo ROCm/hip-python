@@ -33,13 +33,13 @@ in human-readable and bitcode format.
 import copy
 import re
 
-from rocm.llvm.c.analysis import (
+from rocm.bindings.llvm.c.analysis import (
     LLVMVerifierFailureAction,
     LLVMVerifyModule,
 )
-from rocm.llvm.c.bitreader import LLVMGetBitcodeModuleInContext2
-from rocm.llvm.c.bitwriter import LLVMWriteBitcodeToMemoryBuffer
-from rocm.llvm.c.core import (  # LLVMDeleteFunction,; LLVMDeleteGlobal,
+from rocm.bindings.llvm.c.bitreader import LLVMGetBitcodeModuleInContext2
+from rocm.bindings.llvm.c.bitwriter import LLVMWriteBitcodeToMemoryBuffer
+from rocm.bindings.llvm.c.core import (  # LLVMDeleteFunction,; LLVMDeleteGlobal,
     LLVMAliasGetAliasee,
     LLVMCallConv,
     LLVMContextCreate,
@@ -75,9 +75,9 @@ from rocm.llvm.c.core import (  # LLVMDeleteFunction,; LLVMDeleteGlobal,
     LLVMSetVisibility,
     LLVMVisibility,
 )
-from rocm.llvm.c.irreader import LLVMParseIRInContext
-from rocm.llvm.c.linker import LLVMLinkModules2
-from rocm.llvm.c.types import (
+from rocm.bindings.llvm.c.irreader import LLVMParseIRInContext
+from rocm.bindings.llvm.c.linker import LLVMLinkModules2
+from rocm.bindings.llvm.c.types import (
     LLVMOpaqueContext,
     LLVMOpaqueModule,
     LLVMOpaqueValue,
@@ -142,7 +142,7 @@ def _parse_llvm_ir_in_context(context, ir, ir_len: int = -1):
     Note:
         Both formats human-readable LLVM IR LLVM assembly and
         LLVM bitcode are supported by routine
-        `rocm.llvm.c.irreader.LLVMParseIRInContext`
+        `rocm.bindings.llvm.c.irreader.LLVMParseIRInContext`
         which is called by this function.
 
     Note:
@@ -293,13 +293,13 @@ def to_ir(mod, mod_len: int = -1):
         Hence, The result might look differently to the original input.
 
     Args:
-        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`):
+            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
         mod_len (`int`, optional):
             Length of the buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
             Defaults to ``-1``. Not used at all if ``mod`` is an instance of
-            `rocm.llvm.c.types.LLVMOpaqueModule`.
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
     Returns:
         `bytes`:
             Always returns the resulting buffer as `bytes` object.
@@ -344,13 +344,13 @@ def to_bc(mod, mod_len: int = -1):
     """Convert human-readable LLVM IR or LLVM bitcode to LLVM bitcode.
 
     Args:
-        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`):
+            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
         mod_len (`int`, optional):
             Length of the buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
             Defaults to ``-1``. Not used at all if ``mod`` is an instance of
-            `rocm.llvm.c.types.LLVMOpaqueModule`.
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
     Returns:
         `bytes`:
             Always returns the resulting buffer as `bytes` object.
@@ -406,13 +406,13 @@ def verify(mod, mod_len: int = -1):
     """Verifies the contents of an LLVM module.
 
     Args:
-        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`):
+            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
         mod_len (`int`, optional):
             Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
             Defaults to ``-1``. Not used at all if ``mod`` is an instance of
-            `rocm.llvm.c.types.LLVMOpaqueModule`.
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
     """
     if isinstance(mod, LLVMOpaqueModule):
         _verify(mod)
@@ -434,11 +434,11 @@ class LLVMModuleWrapper:
         """LLVM module wrapper.
 
         Args:
-            context (`rocm.llvm.c.tpyes.LLVMOpaqueContext`):
+            context (`rocm.bindings.llvm.c.tpyes.LLVMOpaqueContext`):
                 The LLVM context to create modules in.
-            mod (`rocm.llvm.c.types.LLVMOpaqueModule`, `LLVMModuleWrapper`, or UTF-8 `str`, or Python buffer like `bytes`):
-                An 'rocm.llvm.c.types.LLVMOpaqueModule', `LLVMModuleWrapper`, or a buffer that contains LLVM IR or LLVM BC.
-                If you pass an `rocm.llvm.c.types.LLVMOpaqueModule`, then
+            mod (`rocm.bindings.llvm.c.types.LLVMOpaqueModule`, `LLVMModuleWrapper`, or UTF-8 `str`, or Python buffer like `bytes`):
+                An 'rocm.bindings.llvm.c.types.LLVMOpaqueModule', `LLVMModuleWrapper`, or a buffer that contains LLVM IR or LLVM BC.
+                If you pass an `rocm.bindings.llvm.c.types.LLVMOpaqueModule`, then
                 code content is serialized to BC.
             mod_len (`int`, optional):
                 Length of the LLVM IR/BC buffer. Callers can specify numbers smaller than 1
@@ -509,7 +509,7 @@ def link_modules(
             The modules to link. The output
             A list that contains entries of the following kind:
 
-            1. Instance of `rocm.llvm.c.types.LLVMOpaqueModule`:
+            1. Instance of `rocm.bindings.llvm.c.types.LLVMOpaqueModule`:
                  ROCm LLVM Python module type.
             2. Instance of `numba.hip.util.llvmutils.LLVMModuleWrapper`:
                  Numba HIP wrapper for ROCm LLVM Python modules.
@@ -523,7 +523,7 @@ def link_modules(
                    Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
                    or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
                    Defaults to ``-1``. Not used at all if ``mod`` is an instance of
-                   `rocm.llvm.c.types.LLVMOpaqueModule`.
+                   `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
         to_bc (`bool`, optional):
             If the result should be LLVM bitcode instead of human-readable LLVM IR.
             Defaults to `True`.
@@ -789,13 +789,13 @@ def clean_up_kernel_module(
 
     Args:
         mod (UTF-8 `str`, or implementor of the Python buffer protocol such as
-            `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+            `bytes`, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`):
+            Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
         mod_len (`int`, optional):
             Length of the LLVM IR buffer. Callers can specify numbers smaller than 1
             or ``None`` to indicate that the buffer length should be derived via ``len(mod)``.
             Defaults to ``-1``. Not used at all if ``mod`` is an instance of
-            `rocm.llvm.c.types.LLVMOpaqueModule`.
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
         to_bc (`bool`, optional):
             Return LLVM bitcode (True) or LLVM IR (False).
             Defaults to True.

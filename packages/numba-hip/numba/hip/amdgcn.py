@@ -47,22 +47,22 @@ import logging
 import multiprocessing as mp
 import threading
 
-from rocm.amd_comgr import amd_comgr as comgr
-from rocm.llvm.c.core import (
+from rocm import comgr
+from rocm.bindings.llvm.c.core import (
     LLVMContextCreate,
     LLVMContextDispose,
     LLVMDisposeMessage,
 )
-from rocm.llvm.c.error import (
+from rocm.bindings.llvm.c.error import (
     LLVMDisposeErrorMessage,
     LLVMGetErrorMessage,
 )
-from rocm.llvm.c.target import (
+from rocm.bindings.llvm.c.target import (
     LLVMInitializeAllTargetInfos,
     LLVMInitializeAllTargetMCs,
     LLVMInitializeAllTargets,
 )
-from rocm.llvm.c.targetmachine import (
+from rocm.bindings.llvm.c.targetmachine import (
     LLVMCodeGenOptLevel,
     LLVMCodeModel,
     LLVMCopyStringRepOfTargetData,
@@ -72,8 +72,8 @@ from rocm.llvm.c.targetmachine import (
     LLVMGetTargetFromTriple,
     LLVMRelocMode,
 )
-from rocm.llvm.c.transforms import passbuilder
-from rocm.llvm.c.types import LLVMOpaqueModule
+from rocm.bindings.llvm.c.transforms import passbuilder
+from rocm.bindings.llvm.c.types import LLVMOpaqueModule
 
 from numba.hip.util import llvmutils
 
@@ -202,7 +202,7 @@ class ISAInfo:
 TRIPLE = "amdgcn-amd-amdhsa"
 ISA_INFOS: dict = {
     isa_name.replace(f"{TRIPLE}--", ""): ISAInfo(entry)
-    for isa_name, entry in comgr.ext.get_isa_metadata_all().items()
+    for isa_name, entry in comgr.get_isa_metadata_all().items()
 }
 
 
@@ -312,15 +312,15 @@ class AMDGPUTargetMachine:
         to_bc: bool = False,
         **pass_builder_opts,
     ):
-        r"""Optimizes LLVM IR, bitcode, or `rocm.llvm.c.types.LLVMOpaqueModule`.
+        r"""Optimizes LLVM IR, bitcode, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
 
         Args:
-            mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-                Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+            mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`):
+                Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
             mod_len (`int`, optional):
                 Length of the LLVM IR/BC buffer. Must be supplied if it cannot
                 be obtained via ``len(mod)``. Not used at all if ``mod`` is an instance of
-                `rocm.llvm.c.types.LLVMOpaqueModule`.
+                `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
             passes (UTF-8 `str`):
                 The format of this string is the same as opt's -passes argument for the new pass
                 manager. Individual passes may be specified, separated by commas. Full
@@ -415,12 +415,12 @@ class AMDGPUTargetMachine:
         Calls ``self.optimize_llvm_ir`` with ``passes='verify'``.
 
         Args:
-            mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.llvm.c.types.LLVMOpaqueModule`):
-                Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.llvm.c.types.LLVMOpaqueModule`.
+            mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`):
+                Either a buffer that contains LLVM IR or LLVM BC or an instance of `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
             mod_len (`int`, optional):
                 Length of the LLVM IR/BC buffer. Must be supplied if it cannot
                 be obtained via ``len(mod)``. Not used at all if ``mod`` is an instance of
-                `rocm.llvm.c.types.LLVMOpaqueModule`.
+                `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
         See:
             `~.AMDGPUTargetMachine.optimize_llvm_ir`.
         Returns:

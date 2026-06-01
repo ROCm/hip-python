@@ -31,8 +31,8 @@ from numba.hip.amdgcn import AMDGPUTargetMachine
 
 def test_00_print_datalayout():
     # import pprint
-    # from rocm.amd_comgr import amd_comgr as comgr
-    # pprint.pprint(comgr.ext.get_isa_metadata_all())
+    # from rocm import comgr
+    # pprint.pprint(comgr.get_isa_metadata_all())
     # pprint.pprint(ISA_INFOS)
     machine = AMDGPUTargetMachine(target_cpu="gfx90a")
     assert machine.data_layout in (

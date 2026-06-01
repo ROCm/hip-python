@@ -25,7 +25,7 @@ __author__ = "Advanced Micro Devices, Inc."
 """Mappings from `clang.cindex.Type` to `numba.core.types` and `llvmlite.ir` types.
 """
 
-import rocm.clang.cindex as ci
+import rocm.bindings.clang.cindex as ci
 from llvmlite import ir
 from numba.core import types
 
@@ -121,7 +121,9 @@ def map_clang_to_numba_core_type(clang_type: ci.Type):
     if numba_type:
         return numba_type
     elif cparser.clang_type_kind(clang_type) == ci.TypeKind.ENUM:
-        return _clang_to_numba_core_map(clang_type.enum_type)
+        return map_clang_to_numba_core_type(
+            clang_type.get_declaration().enum_type
+        )
     elif cparser.clang_type_kind(clang_type) in (
         ci.TypeKind.RECORD,
         ci.TypeKind.CONSTANTARRAY,
@@ -153,7 +155,9 @@ def map_clang_to_llvmlite_type(clang_type: ci.Type):
     if numba_type:
         return numba_type
     elif cparser.clang_type_kind(clang_type) == ci.TypeKind.ENUM:
-        return _clang_to_llvmlite_map(clang_type.enum_type)
+        return map_clang_to_llvmlite_type(
+            clang_type.get_declaration().enum_type
+        )
     elif cparser.clang_type_kind(clang_type) in (
         ci.TypeKind.RECORD,
         ci.TypeKind.CONSTANTARRAY,

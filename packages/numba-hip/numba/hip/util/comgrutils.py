@@ -24,51 +24,24 @@ __author__ = "Advanced Micro Devices, Inc."
 
 """AMD COMGR Utilities.
 
-Utitilies that make use of the `rocm.amd_comgr` interfaces
-that are shipped with the ROCm LLVM Python project.
+Utitilies that make use of the `rocm.comgr` interfaces
+that are shipped with the ROCm Python bindings.
 """
 
-import shlex
-
-from rocm.amd_comgr import amd_comgr as comgr
+from rocm import comgr
 
 from . import llvmutils
 
-if hasattr(comgr.ext, "disassemble_code_obj_function"):
-    disassemble_code_obj_function = comgr.ext.disassemble_code_obj_function
+disassemble_code_obj_function = comgr.disassemble_code_obj_function
+disassemble_amdhsa_code_obj_v6_kernel = comgr.disassemble_amdhsa_code_obj_v6_kernel
 
-    disassemble_amdhsa_code_obj_v6_kernel = (
-        comgr.ext.disassemble_amdhsa_code_obj_v6_kernel
-    )
-else:
+compile_bc = comgr.compile_bc
+compile_bc_to_hsa = comgr.compile_bc_to_hsa
+compile_hsa = comgr.compile_hsa
 
-    def disassemble_code_obj_function(*args, **kwargs):
-        raise NotImplementedError(
-            "The installed version of rocm-llvm-python "
-            "does not provide function 'comgr.ext."
-            "disassemble_code_obj_function'."
-        )
-
-
-if hasattr(comgr.ext, "compile_bc_to_hsa"):
-    has_compile_bc = True
-
-    compile_bc = comgr.ext.compile_bc
-    compile_bc_to_hsa = comgr.ext.compile_bc_to_hsa
-    compile_hsa = comgr.ext.compile_hsa
-else:
-    has_compile_bc = False
-
-    def compile_bc_to_hsa(*args, **kwargs):
-        raise NotImplementedError(
-            "The installed version of rocm-llvm-python "
-            "does not provide function 'comgr.ext."
-            "compile_bc_to_hsa'."
-        )
-
-
-has_compile_bc_to_hsa = has_compile_bc
-has_compile_hsa = has_compile_bc
+has_compile_bc = True
+has_compile_bc_to_hsa = True
+has_compile_hsa = True
 
 
 llvm_amdgpu_kernel_visibility = "protected"
@@ -109,13 +82,7 @@ def compile_hip_source_to_llvm(
         extra_opts=extra_opts,
     )
 
-    try:
-        result = comgr.ext.compile_hip_to_bc(**kwargs)
-    except TypeError:
-        # NOTE: older versions of ROCm LLVM Python expect a `str` for `extra_opts`.
-        kwargs["extra_opts"] = shlex.join(extra_opts)
-        result = comgr.ext.compile_hip_to_bc(**kwargs)
-    (llvm_bc_or_ir, log, diagnostic) = result
+    (llvm_bc_or_ir, log, diagnostic) = comgr.compile_hip_to_bc(**kwargs)
 
     if to_llvm_ir:
         llvm_bc_or_ir = llvmutils.to_ir_from_bc(
