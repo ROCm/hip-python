@@ -64,26 +64,30 @@ _LLVM_VERSION_STRING = (
 
 def _setup_libclang():
     """Initialize libclang."""
-    if _hipconfig.LIBCLANG_FILE:
-        ci.conf.set_library_file(_hipconfig.LIBCLANG_FILE)
-        _ = ci.conf.get_cindex_library()  # try to create binding
-    else:
-        if _hipconfig.LIBCLANG_PATH:
-            prefix = _hipconfig.LIBCLANG_PATH
+    # `ci.Config` is process-global; once libclang has been loaded its
+    # `set_library_*` setters raise. Guard against a second import of this
+    # package (e.g. a shadow copy on sys.path) re-running setup and crashing.
+    if not ci.Config.loaded:
+        if _hipconfig.LIBCLANG_FILE:
+            ci.conf.set_library_file(_hipconfig.LIBCLANG_FILE)
+            _ = ci.conf.get_cindex_library()  # try to create binding
         else:
-            prefix = _hipconfig.get_rocm_path("llvm", "lib")
-        try:
-            ci.conf.set_library_path(prefix)
-            _ = ci.conf.get_cindex_library()  # try to create binding
-        except ci.LibclangError:
-            # Also check for filenames such as `libclang.so.19.0.0git`.
-            ci.conf.set_library_file(
-                os.path.join(
-                    prefix,
-                    f"libclang.so.{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}git",
+            if _hipconfig.LIBCLANG_PATH:
+                prefix = _hipconfig.LIBCLANG_PATH
+            else:
+                prefix = _hipconfig.get_rocm_path("llvm", "lib")
+            try:
+                ci.conf.set_library_path(prefix)
+                _ = ci.conf.get_cindex_library()  # try to create binding
+            except ci.LibclangError:
+                # Also check for filenames such as `libclang.so.19.0.0git`.
+                ci.conf.set_library_file(
+                    os.path.join(
+                        prefix,
+                        f"libclang.so.{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}git",
+                    )
                 )
-            )
-            _ = ci.conf.get_cindex_library()  # try to create binding
+                _ = ci.conf.get_cindex_library()  # try to create binding
 
     _cparser.CParser.set_clang_res_dir(
         _hipconfig.get_rocm_path(
