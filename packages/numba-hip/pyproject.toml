@@ -60,7 +60,7 @@ Homepage = "https://github.com/rocm/numba-hip"
 Documentation = "https://github.com/rocm/numba-hip"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["numba.hip", "numba.hip.*"]
 exclude = ["numba.hip.tests"]
 
