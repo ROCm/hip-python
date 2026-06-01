@@ -70,7 +70,7 @@ arch = props.gcnArchName
 print(f"Compiling kernel for {arch}")
 
 cflags = [b"--offload-arch=" + arch]
-err = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
+(err,) = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
 if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
     log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(prog))
     log = bytearray(log_size)
