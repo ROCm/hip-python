@@ -438,22 +438,20 @@ class Driver(object):  #: HIP/AMD: modified
         If no HIP context is active, return None.
 
         Note:
-            On the HIP implementation:
-
-            While the CUDA implementation returns CUDA_SUCCESS and None
-            if no context is bound to the calling CPU thread
-            (https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html),
-            the HIP implementation returns hipErrorInvalidContext.
-            (https://github.com/ROCm/clr/blob/28743d8dbd47423ce5b97e7b6931e3db25f22d68/hipamd/src/hip_context.cpp#L245)
-            Therefore, we have to catch the consequent HipAPIError and
-            return None ourselves here.
+            The deprecated ``cuCtxPopCurrent`` is replaced by restoring the
+            previously current device (recorded by ``Context.push`` in the
+            thread-local device stack) via ``cudaSetDevice``. The returned
+            handle is the primary-context handle of the device that was current
+            before the restore, preserving the previous contract. Returns None
+            when the stack is empty (nothing to pop).
         """
-        with self.get_active_context() as ac:
-            if ac.devnum is not None:
-                try:
-                    return driver.cuCtxPopCurrent()
-                except HipAPIError:
-                    return None
+        stack = _get_device_stack()
+        if not stack:
+            return None
+        cur = int(driver.cudaGetDevice())
+        handle = driver.get_device(cur).get_primary_context().handle
+        driver.cudaSetDevice(stack.pop())
+        return handle
 
     def get_active_context(self):
         """Returns an instance of ``_ActiveContext``."""
@@ -492,22 +490,18 @@ class _ActiveContext(object):
         # Not cached. Query the driver API.
         else:
             if USE_NV_BINDING:
-                hctx = driver.cuCtxGetCurrent()
-                if int(hctx) == 0:
-                    hctx = None
+                # The deprecated context APIs (``cuCtxGetCurrent``/
+                # ``cuCtxGetDevice``) are replaced by the device-based
+                # ``cudaGetDevice``. In the HIP device model a device is always
+                # current, and the active context is that device's primary
+                # context.
+                devnum = int(driver.cudaGetDevice())
+                hctx = driver.get_device(devnum).get_primary_context().handle
             else:
                 raise NotImplementedError()
 
-            if hctx is None:
-                devnum = None
-            else:
-                if USE_NV_BINDING:
-                    devnum = int(driver.cuCtxGetDevice())
-                else:
-                    raise NotImplementedError()
-
-                self._tls_cache.ctx_devnum = (hctx, devnum)
-                is_top = True
+            self._tls_cache.ctx_devnum = (hctx, devnum)
+            is_top = True
 
         self._is_top = is_top
         self.context_handle = hctx
@@ -526,6 +520,21 @@ class _ActiveContext(object):
 
 
 driver = Driver()
+
+
+#: Thread-local stack of device ordinals used to emulate the (now deprecated)
+#: HIP context stack on top of the device-based ``hipSetDevice``/``hipGetDevice``
+#: model. ``Context.push`` records the previously current device here so that
+#: ``pop`` can restore it.
+_device_ctx_stack = threading.local()
+
+
+def _get_device_stack():
+    s = getattr(_device_ctx_stack, "stack", None)
+    if s is None:
+        s = []
+        _device_ctx_stack.stack = s
+    return s
 
 
 class Device(object):
@@ -601,10 +610,7 @@ class Device(object):
         self.attributes = {}
 
         # Get the architecture string
-        props = binding.cudaDeviceProp()  # is actually: hipDeviceProp_t
-        driver.cudaGetDeviceProperties(
-            props, 0
-        )  # Driver's function wrapper will check for errors
+        props = driver.cudaGetDeviceProperties(0)  # Driver's function wrapper will check for errors
         amdgpu_arch_plus_features = props.gcnArchName.decode("utf-8")
         if hipconfig.DEFAULT_ARCH_WITH_FEATURES:
             self.amdgpu_arch = amdgpu_arch_plus_features
@@ -1330,7 +1336,11 @@ class Context(object):
         """
         Pushes this context on the current CPU Thread.
         """
-        driver.cuCtxPushCurrent(self.handle)
+        # The deprecated ``cuCtxPushCurrent`` is replaced by ``cudaSetDevice``.
+        # Record the previously current device so ``pop`` can restore it,
+        # emulating the (now removed) context stack on the device model.
+        _get_device_stack().append(int(driver.cudaGetDevice()))
+        driver.cudaSetDevice(int(self.device.id))
         self.prepare_for_use()
 
     def pop(self):
@@ -1382,7 +1392,10 @@ class Context(object):
     def enable_peer_access(self, peer_context, flags=0):
         """Enable peer access between the current context and the peer context"""
         assert flags == 0, "*flags* is reserved and MUST be zero"
-        driver.cuCtxEnablePeerAccess(peer_context, flags)
+        # The deprecated ``cuCtxEnablePeerAccess`` is replaced by the
+        # device-based ``cudaDeviceEnablePeerAccess``, which takes the peer
+        # device ordinal instead of a context handle.
+        driver.cudaDeviceEnablePeerAccess(int(peer_context.device.id), flags)
 
     def can_access_peer(self, peer_device):
         """Returns a bool indicating whether the peer access between the
