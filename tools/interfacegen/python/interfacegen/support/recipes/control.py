@@ -104,6 +104,10 @@ def DEFAULT_PTR_RANK(node: "tree.Node"):
     from interfacegen import tree
 
     assert isinstance(node, tree.Typed)
-    if node.is_pointer_to_char():
-        return 0
+    # Every pointer defaults to rank 1. ``char *`` is intentionally NOT
+    # special-cased to rank 0 here: a NUL-terminated string is rank-1
+    # data (see ``generic.string_z``), and the single-char-by-reference
+    # case is rare enough to require an explicit per-parameter rank-0
+    # override. The scalar-vs-string / IN-vs-OUT distinction for char
+    # pointers is made downstream in the complicated-type handler.
     return 1

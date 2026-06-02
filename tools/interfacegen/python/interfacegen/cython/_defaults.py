@@ -259,7 +259,20 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
         assert isinstance(node, tree.Typed)
         if node.is_pointer_to_constantarray_of_basic_type(degree=-1):
             return f"{util_types_prefix}Pointer"
-        elif node.actual_rank == 1:
+        # ``char **`` OUT returns a single NUL-terminated string => ``CStr``.
+        # This is decided here, independent of rank: a ``char **`` is rank-0
+        # in the runtime chain (``double_indirection_out`` claims it before
+        # ``string_z``), so it never reaches the rank-1 block below. An IN
+        # array-of-strings (argv) or a field/return is NOT matched (no OUT
+        # intent) and falls through to ``Pointer`` (recipes override to
+        # ``ListOfBytes`` where needed).
+        if (
+            node.is_pointer_to_char(degree=2)
+            and isinstance(node, tree.Parm)
+            and node.is_out_ptr
+        ):
+            return f"{util_types_prefix}CStr"
+        if node.actual_rank == 1:
             innermost_type_kind = next(
                 node.clang_type_layer_kinds(postorder=-1, canonical=True)
             )
@@ -270,7 +283,19 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
             elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
                 return f"{util_types_prefix}ListOfUnsignedLong"
             elif innermost_type_kind == clang.cindex.TypeKind.CHAR_S:
-                return f"{util_types_prefix}CStr"
+                # A NUL-terminated string is rank-1 data regardless of
+                # indirection depth (see ``generic.string_z``). Degree +
+                # intent — not rank — pick the wrapper:
+                #   * ``char *`` (degree<=1) => the buffer itself => ``CStr``
+                #     (covers IN/INOUT params, return values, and fields;
+                #     also ``char[]`` whose pointer degree is 0).
+                #   * ``char **`` at rank 1 (e.g. numerical chain via
+                #     ``DEFAULT_PTR_RANK``): an OUT slot returns one string
+                #     => ``CStr``; an IN array-of-strings falls through.
+                if node.get_pointer_degree() <= 1:
+                    return f"{util_types_prefix}CStr"
+                if isinstance(node, tree.Parm) and node.is_out_ptr:
+                    return f"{util_types_prefix}CStr"
             # TODO consider other char types?
         if node.actual_rank == 2:
             return f"{util_types_prefix}ListOfPointer"

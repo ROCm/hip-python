@@ -198,8 +198,15 @@ class pointer_as_reference:
 class string_z:
     """GIR / SAL ``_In_z_`` / ``_Outptr_result_z_`` convention.
 
-    * ``const char *p``  => ``IN``,  rank 0
-    * ``char **p``       => ``OUT``, rank 0  (``char *`` ambiguous => defer)
+    * ``const char *p``  => ``IN``,  rank 1
+    * ``char **p``       => ``OUT``, rank 1  (``char *`` ambiguous => defer)
+
+    The ``_z`` suffix means "zero-terminated string". A NUL-terminated
+    string is rank-1 *data* regardless of how many pointer layers wrap it,
+    so ``ptr_rank`` reports ``1`` for both ``char *`` and ``char **``. Rank
+    is deliberately *not* the lever that separates a single string from an
+    array-of-strings or IN from OUT — that distinction is made downstream
+    in the complicated-type handler, keyed on pointer degree + intent.
     """
 
     @staticmethod
@@ -219,9 +226,9 @@ class string_z:
         if not hasattr(node, "is_pointer_to_char"):
             return None
         if node.is_pointer_to_char(degree=1):
-            return 0
+            return 1
         if node.is_pointer_to_char(degree=2):
-            return 0
+            return 1
         return None
 
 

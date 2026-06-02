@@ -206,9 +206,38 @@ def test_string_z(root):
     assert generic.string_z.ptr_parm_intent(p_unknown) is None
     assert generic.string_z.ptr_parm_intent(p_out) == ParmIntent.OUT
 
-    assert generic.string_z.ptr_rank(p_in) == 0
-    assert generic.string_z.ptr_rank(p_unknown) == 0
-    assert generic.string_z.ptr_rank(p_out) == 0
+    # A zero-terminated string is rank-1 *data* irrespective of how many
+    # pointer layers wrap it: both ``char *`` and ``char **`` report rank 1.
+    assert generic.string_z.ptr_rank(p_in) == 1
+    assert generic.string_z.ptr_rank(p_unknown) == 1
+    assert generic.string_z.ptr_rank(p_out) == 1
+
+
+# ---------------------------------------------------------------------------
+# CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER: char-pointer wrapper selection
+# ---------------------------------------------------------------------------
+def test_default_ptr_handler_char_pointers(root):
+    """Rank is 1 for every char pointer (DEFAULT_PTR_RANK); the handler uses
+    pointer degree + intent — not rank — to pick the wrapper."""
+    handler = cython.CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER()
+
+    # char* (degree 1) is the string buffer itself => CStr, independent of
+    # intent (IN/INOUT params, return values, and fields all share this).
+    assert handler(_parm(root, "f_str_in")) == "CStr"       # const char *
+    assert handler(_parm(root, "f_str_unknown")) == "CStr"  # char *
+
+    # char** (degree 2): an OUT slot returns a single string => CStr; an IN
+    # array-of-strings (argv) must NOT be clobbered => falls through to
+    # Pointer (recipes override to ListOfBytes where needed).
+    p_out = _parm(root, "f_str_out")  # char **
+    original_intent = p_out.ptr_intent
+    try:
+        p_out.ptr_intent = lambda node: ParmIntent.OUT
+        assert handler(p_out) == "CStr"
+        p_out.ptr_intent = lambda node: ParmIntent.IN
+        assert handler(p_out) == "Pointer"
+    finally:
+        p_out.ptr_intent = original_intent
 
 
 # ---------------------------------------------------------------------------

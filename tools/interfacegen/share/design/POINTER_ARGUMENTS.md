@@ -88,7 +88,7 @@ the stack that matches the library family.
 | 2 | **pointer_as_reference**            | non-const `T*` parm                                                                              | INOUT                                    | "Reference school" — Ropert; cprogramming.com |
 | 3 | **pointer_as_value**                | non-const `T*` parm whose pointee is not itself a pointer                                       | IN                                       | "Value school" — cprogramming.com |
 | 4 | **double_indirection_out**          | non-const `T**` (esp. `void**`, `struct**`, `enum**`)                                           | OUT, rank 0 (callee-allocates)           | GIR `(out)` for double-indirection on a structure parameter; SAL `_Outptr_`. COM `[out]` requires a pointer. |
-| 5 | **string_z**                        | `const char *` ⇒ IN, scalar; `char *` ⇒ ambiguous; `char **` ⇒ OUT scalar                       | as listed                                | GIR / SAL `_In_z_`, `_Outptr_result_z_` |
+| 5 | **string_z**                        | `const char *` ⇒ IN; `char *` ⇒ ambiguous intent; `char **` ⇒ OUT. **All char pointers are rank 1** — a NUL-terminated string is rank-1 data (see §4) | as listed | GIR / SAL `_In_z_`, `_Outptr_result_z_` |
 | 6 | **array_with_length_param**         | `T *buf` adjacent to integer parm whose name names the length (`n`, `len`, `count`, `*_size`)  | `buf` is rank 1; intent follows pointee const | GIR `(array length=N)`. SAL `_In_reads_(n)` / `_Out_writes_(n)`. *(deferred — relational rule)* |
 | 7 | **zero_terminated_array**           | `T**` where elements are sentinel-terminated                                                    | rank 1                                   | GIR `(array zero-terminated=1)`. *(deferred)* |
 | 8 | **status_return_out_pointer**       | function return type is an integer/error status enum AND parm is the only non-const pointer parm | that parm is OUT                         | C tradition: status code as return value, results via OUT pointer (POSIX, every Khronos API, every ROCm runtime). *(deferred — needs return-type access)* |
@@ -99,6 +99,79 @@ Conventions #6–8 are sketched in `generic.py` with TODO bodies; they need
 relational access (sibling parms, function return type) that the
 `tree.Parm` API doesn't yet expose ergonomically. They're slated for a
 follow-up.
+
+## 4. Char pointers: zero-terminated strings map to `CStr`
+
+A `char *` is, in the overwhelming majority of C APIs, a NUL-terminated
+string (or a caller-allocated string buffer); a `char **` is either an OUT
+slot that returns one string or an array-of-strings. interfacegen encodes
+this as a deliberate, library-agnostic default so bindings expose
+`rocm.bindings.util.types.CStr` rather than an opaque `Pointer` for these.
+
+### 4.1 Rank: a string is rank-1 data, regardless of indirection depth
+
+`string_z` is named for the SAL `_z` ("zero-terminated") family. A
+zero-terminated string is **rank-1 data** no matter how many pointer layers
+wrap it, so `string_z.ptr_rank` reports `1` for **both** `char *` (degree 1)
+and `char **` (degree 2). Rank is deliberately *not* the lever that
+separates a single string from an array-of-strings, or IN from OUT.
+
+`DEFAULT_PTR_RANK` (the final fallback in `control.py`) likewise returns `1`
+for every pointer — `char *` is **no longer special-cased to rank 0**.
+Several recipes already forced `char *` → rank 1 (`roctx`, `comgr`,
+`llvm_c`); making it the default just aligns the rest of the tree with them.
+The rare genuine single-`char`-by-reference parameter is the exception, and
+is handled by an explicit per-parameter **rank-0 override** (see §4.4).
+
+### 4.2 Wrapper choice: pointer degree + intent, decided in the handler
+
+`double_indirection_out` (convention #4) claims any `T**` — including
+`char **` — as **rank 0** in the runtime chain, so the wrapper for a char
+pointer cannot be chosen from rank alone. It is chosen in
+`CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER`
+(`interfacegen/cython/_defaults.py`) by **pointer degree + intent**:
+
+| Shape     | Intent                       | Wrapper                                                                 |
+|-----------|------------------------------|-------------------------------------------------------------------------|
+| `char *`  | any (IN / INOUT / return / field) | `CStr` (the string buffer itself; also `char[]`)                   |
+| `char **` | OUT                          | `CStr` (the slot returns a single string)                               |
+| `char **` | IN / field / return          | falls through to `Pointer` (recipe overrides to `ListOfBytes` for argv) |
+
+The `char **` OUT check is intent-scoped
+(`isinstance(node, tree.Parm) and node.is_out_ptr`) and runs *before* the
+rank-based branches precisely because `char **` is rank 0 and would
+otherwise never be reached. An IN `char **` (an argv-style array of strings)
+is intentionally **not** matched, so it is never clobbered into a single
+`CStr`.
+
+### 4.3 Auto-allocated OUT string buffers (`hipDeviceGetName`)
+
+Some functions are conceptually INOUT — the caller allocates a `char *`
+buffer and passes its length — but read more naturally as OUT, returning the
+filled string. `hipDeviceGetName(char *name, int len, …)` and
+`hipDeviceGetPCIBusId` are the canonical cases. The behavior is the
+composition of three pieces:
+
+1. an intent override forces the parm to OUT (`hip.ptr_parm_intent`);
+2. the recipe `node_init` prepends `name.malloc(len)` before the C call;
+3. rank-1 ⇒ the handler emits `CStr`, so `name.malloc(len)` is valid.
+
+Only (3) used to be missing: at rank 0 the parm degraded to a scalar
+`cdef char name` and `name.malloc(...)` was nonsense. Contrast a `char **`
+OUT such as `hipDrvGetErrorName`, where the callee points the slot at its own
+internal storage — it gets `CStr` via §4.2 and correctly receives **no**
+`malloc`. (Only the degree-1 caller-allocates functions are in the recipe's
+malloc set.)
+
+### 4.4 Exceptions and escape hatches
+
+- **Single `char` OUT** (rare): give the parm an explicit rank-0 override in
+  the recipe. At rank 0 the OUT codepath takes the scalar branch and emits
+  `cdef char name` / `&name`.
+- **Binary `char *` buffer** (not a string): override the parm via the
+  recipe `ptr_complicated_type_handler` to `NDBuffer` / `Pointer`.
+- **`char **` array-of-strings IN** (argv): left as `Pointer` by default;
+  override to `ListOfBytes` where the array semantics matter.
 
 **Chain-order convention** for intent rules:
 
@@ -128,7 +201,7 @@ contributors don't try to use them):
 - `restrict` — aliasing hint, no direction signal.
 - `volatile` — memory-model qualifier, no direction or shape signal.
 
-## 4. Module layout
+## 5. Module layout
 
 ```
 interfacegen/
@@ -163,7 +236,7 @@ interfacegen/
   tuples) — module-level chain composites used by per-library classes so
   the recipe sites stay short.
 
-## 5. How to add a new convention
+## 6. How to add a new convention
 
 1. Add a class to `interfacegen/support/recipes/generic.py`. Mirror the
    shape of the existing classes:
@@ -188,7 +261,7 @@ interfacegen/
 4. Add a smoke test in `python/interfacegen/test/test_generic_recipes.py`
    covering the trigger and at least one negative case.
 
-## 6. How to bind a new ROCm library
+## 7. How to bind a new ROCm library
 
 1. Create a class in `interfacegen/support/recipes/rocm.py`:
    ```python
@@ -217,7 +290,7 @@ interfacegen/
    misclassifications. The recipe pattern in `rcd.ptr_parm_intent` (the
    `ncclCommInitAll` exceptions) is the canonical example.
 
-## 7. Unclassifiable-pointer fallback policy
+## 8. Unclassifiable-pointer fallback policy
 
 When every callable in the chain (including `DEFAULT_PTR_PARM_INTENT`)
 returns `None`, the cython backend applies a final, deliberately permissive
@@ -252,7 +325,7 @@ cross-reference ROCm documentation, to understand what they're passing
 when an `INOUT` `Pointer` shows up, and to verify any ctypes wiring
 matches the C ABI.
 
-## 8. Pointers / further reading
+## 9. Pointers / further reading
 
 - Microsoft SAL — *Understanding SAL*: <https://learn.microsoft.com/en-us/cpp/code-quality/understanding-sal>
 - GObject Introspection annotations: <https://gi.readthedocs.io/en/latest/annotations/giannotations.html>
