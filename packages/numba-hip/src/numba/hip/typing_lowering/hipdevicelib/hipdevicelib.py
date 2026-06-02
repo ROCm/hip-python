@@ -47,6 +47,7 @@ from llvmlite import ir
 from numba.core import cgutils, types
 from rocm import comgr
 
+from numba.hip import hipconfig
 from numba.hip.amdgcn import ISA_INFOS
 from numba.hip.typing_lowering import stubs as numba_hip_stubs
 from numba.hip.util import comgrutils, llvmutils
@@ -837,4 +838,15 @@ class HIPDeviceLib:
             source=hipdevicelib_src,
             to_llvm_ir=False,
         )  # TODO logbuf, diagnosticbuf not accessible currently due to error check method in rocm.comgr
+        if hipconfig.DEVICE_LIB_LINKONCE_ODR:
+            # Demote only the known-culprit, header-defined device functions
+            # with external linkage (e.g. cooperative_groups::this_cluster) to
+            # 'linkonce_odr' so they do not cause 'symbol multiply defined' when
+            # this device library is linked against an external module that
+            # carries the same symbol. Restricting this to an allow-list leaves
+            # the device library's own wrapper/getter functions at their
+            # original linkage so kernels can still resolve them.
+            bcbuf = llvmutils.set_linkage_for_functions(
+                bcbuf, hipconfig.DEVICE_LIB_LINKONCE_ODR_SYMBOLS
+            )
         return bcbuf

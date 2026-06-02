@@ -54,6 +54,26 @@ Attributes (Controllable via Environment Variables ``NUMBA_HIP_<attribute>``):
         Apply a couple of steps to minimize the produced LLVM IR.
         Warning enabling this feature can have significant impact on performance.
         Defaults to ``False``.
+    DEVICE_LIB_LINKONCE_ODR (`bool`):
+        Demote a fixed allow-list of known-culprit symbols in the generated
+        device-library bitcode to ``linkonce_odr`` linkage (see
+        ``DEVICE_LIB_LINKONCE_ODR_SYMBOLS``). Such definitions become
+        discardable at link time instead of triggering 'symbol multiply
+        defined'. This helps when HIP headers define device functions with
+        external linkage (example: ``cooperative_groups::this_cluster``, which
+        collided when the device library was linked against an external
+        ``-fgpu-rdc`` module). Only the explicitly listed symbols are touched;
+        the device library's own wrapper/getter functions keep their original
+        linkage so kernels can still resolve them. Note that this only helps if
+        a single external file is linked; if two or more external files each
+        define the same external symbol, they will still collide with each
+        other. Defaults to ``True``.
+    DEVICE_LIB_LINKONCE_ODR_SYMBOLS (list of `str`):
+        The exact (mangled) symbol names demoted to ``linkonce_odr`` when
+        ``DEVICE_LIB_LINKONCE_ODR`` is enabled. Defaults to the single known
+        culprit ``_ZN18cooperative_groups12this_clusterEv``. Override via the
+        ``NUMBA_HIP_DEVICE_LIB_LINKONCE_ODR_SYMBOLS`` environment variable as a
+        comma-separated list of mangled names.
     LIBCLANG_PATH (`bool`):
         Specify the path to the folder that contains
         the libclang shared object. Per default
@@ -113,6 +133,34 @@ MINIMIZE_IR = bool(
 )  # Apply a couple of steps to minimize the produced LLVM IR.
 # Warning enabling this feature can have significant impact on performance.
 # Defaults to ``False``.
+
+DEVICE_LIB_LINKONCE_ODR = bool(
+    int(os.environ.get("NUMBA_HIP_DEVICE_LIB_LINKONCE_ODR", True))
+)  # Demote a fixed allow-list of known-culprit symbols (see
+# DEVICE_LIB_LINKONCE_ODR_SYMBOLS) in the generated device-library bitcode to
+# 'linkonce_odr'. Such definitions become discardable at link time instead of
+# triggering 'symbol multiply defined'. This helps when HIP headers define
+# device functions with external linkage (example:
+# cooperative_groups::this_cluster, which collided when the device library was
+# linked against an external -fgpu-rdc module). Defaults to True (on).
+#
+# NOTE: Only the explicitly listed symbols are touched, so the device library's
+# own wrapper/getter functions keep their original linkage and remain
+# resolvable by kernels. This only helps if a SINGLE external file is linked;
+# if two or more external files each define the same external symbol, they will
+# still collide with each other.
+
+DEVICE_LIB_LINKONCE_ODR_SYMBOLS = [
+    s
+    for s in os.environ.get(
+        "NUMBA_HIP_DEVICE_LIB_LINKONCE_ODR_SYMBOLS",
+        # cooperative_groups::this_cluster()
+        "_ZN18cooperative_groups12this_clusterEv",
+    ).split(",")
+    if s.strip()
+]  # Exact (mangled) symbol names demoted to 'linkonce_odr' when
+# DEVICE_LIB_LINKONCE_ODR is enabled. Comma-separated list via the environment
+# variable.
 
 LIBCLANG_PATH = os.environ.get("NUMBA_HIP_LIBCLANG_PATH", None)
 LIBCLANG_FILE = os.environ.get("NUMBA_HIP_LIBCLANG_FILE", None)

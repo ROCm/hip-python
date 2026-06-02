@@ -560,6 +560,79 @@ def link_modules(
     return result
 
 
+def set_linkage_for_functions(
+    mod, names, linkage=None, mod_len: int = -1, to_bc: bool = True
+):
+    """Set the linkage of selected defined functions in a module.
+
+    Iterates all functions in ``mod`` and, for each one that is a definition
+    (i.e. not just a declaration) *and* whose name is contained in ``names``,
+    sets its linkage to ``linkage`` (defaults to ``linkonce_odr``). With
+    ``linkonce_odr`` linkage such definitions become discardable at link time
+    and coalesce with/yield to an identically named definition from another
+    module instead of triggering 'symbol multiply defined'.
+
+    Only the explicitly named symbols are touched. This is intentional: a
+    blanket demotion of *every* defined function would also demote definitions
+    that the consuming module legitimately needs (e.g. the device-library
+    wrapper/getter functions a kernel calls), making them discardable and
+    leading to 'undefined symbol' errors at the final link.
+
+    Args:
+        mod (UTF-8 `str`, or implementor of the Python buffer protocol such as
+            `bytes`, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`):
+            Either a buffer that contains LLVM IR or LLVM BC or an instance of
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
+        names (iterable of `str`):
+            Exact function (symbol) names whose linkage should be changed. Any
+            defined function whose name is not in this collection is left
+            untouched.
+        linkage (`rocm.bindings.llvm.c.core.LLVMLinkage`, optional):
+            The linkage to assign. Defaults to
+            `LLVMLinkage.LLVMLinkOnceODRLinkage`.
+        mod_len (`int`, optional):
+            Length of the buffer. Callers can specify numbers smaller than 1
+            or ``None`` to indicate that the buffer length should be derived via
+            ``len(mod)``. Defaults to ``-1``. Not used at all if ``mod`` is an
+            instance of `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
+        to_bc (`bool`, optional):
+            Return LLVM bitcode (True) or human-readable LLVM IR (False).
+            Defaults to True. Ignored if ``mod`` is an
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule` (which is modified
+            in place and not serialized).
+
+    Returns:
+        `bytes` or `None`:
+            The resulting module as LLVM bitcode or human-readable LLVM IR
+            (depending on ``to_bc``) if ``mod`` is a buffer. If ``mod`` is an
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule`, it is modified in
+            place and `None` is returned.
+    """
+    if linkage is None:
+        linkage = LLVMLinkage.LLVMLinkOnceODRLinkage
+
+    names = set(names)
+
+    def set_linkage_(mod):  # type: (LLVMOpaqueModule) -> None
+        if not names:
+            return
+        for fn, name in _iter_functions(mod):
+            if LLVMIsDeclaration(fn) == 0 and name in names:
+                LLVMSetLinkage(fn, linkage)
+
+    if isinstance(mod, LLVMOpaqueModule):
+        set_linkage_(mod)
+        return None
+    else:
+        context = LLVMContextCreate()
+        (llvm_mod,) = _get_module_in_context(context, mod, mod_len)
+        set_linkage_(llvm_mod)
+        result = _to_bc(llvm_mod) if to_bc else _to_ir(llvm_mod)
+        # NOTE: module seems to be owned by context; only dispose the context.
+        LLVMContextDispose(context)
+        return result
+
+
 def _llvm_value_name_as_str(llvm_value):  # type: (LLVMOpaqueValue) -> str
     """Gets LLVM value's name as Python 'str'."""
     name_cstr = LLVMGetValueName2(llvm_value)[0]
