@@ -4,7 +4,8 @@
 - [`ROCm/HIP`](https://github.com/ROCm/HIP) for `hip_runtime_api.h`
 - [`ROCm/amdsmi`](https://github.com/ROCm/amdsmi) for `amd_smi/amdsmi.h`
 
-**Encountered on:** 2026-05-08
+**Encountered on:** 2026-05-08 (Families 1–3); 2026-06-02 (Family 4,
+caller-provided input pointers tagged `@param[out]`)
 
 **Affected ROCm version:** 7.13.0 (`/opt/rocm/.info/version` reports
 `7.13.0`; line numbers below are from this checkout). The same
@@ -16,14 +17,16 @@ affected `@param[…]` annotations have been touched in years.
 
 ## Title
 
-`hip_runtime_api.h` — `@param[out] dst` for `hipMemcpy*` and
+`hip_runtime_api.h` — `@param[out] dst` for `hipMemcpy*`,
 `@param[in, out]` for opaque-handle creators (`hipStreamCreate`,
 `hipEventCreate`, `hipModuleLoad*`, `hipMalloc*`, `hipMemPool*`,
-`hipGraph*`, `hipImport*`) misclassify parameter intent.
+`hipGraph*`, `hipImport*`), and `@param[out]` for caller-provided
+**input** pointers (`hipHostRegister`, `hipMemcpyToSymbol*`)
+misclassify parameter intent.
 
 ## Summary
 
-Two large families of public HIP runtime API functions carry
+Several families of public HIP runtime API functions carry
 doxygen `@param[…]` tags whose intent does not match the C semantics:
 
 1. **`hipMemcpy*` family** tags the destination buffer parameter as
@@ -43,7 +46,15 @@ doxygen `@param[…]` tags whose intent does not match the C semantics:
    function writes the new handle and the prior contents (if any) are
    discarded.
 
-Both mistags break any tooling that derives parameter intent from
+3. **Caller-provided input pointers** (`hipHostRegister`,
+   `hipMemcpyToSymbol`, `hipMemcpyToSymbolAsync`) tag a read-only / only-read
+   input pointer as `@param[out]`. The C contract is `[in]`: the caller
+   allocates/owns the memory and the function merely registers it
+   (`hipHostRegister`) or reads the destination symbol address
+   (`hipMemcpyToSymbol*`, where the parameter is even `const`-qualified —
+   `const void* symbol` — which directly contradicts `[out]`).
+
+These mistags break any tooling that derives parameter intent from
 doxygen tags (binding generators, swagger-style documentation walkers,
 static analyzers). Specifically, the AMD `hip-python` codegen
 (`/src/interfacegen`) recently added a generic
@@ -53,9 +64,12 @@ chain. Trusting these tags causes the regenerated python bindings to:
   return value (wrong — there is no allocation function called); and
 - drag the OUT handle pointer of `hipStreamCreate` and friends into the
   argument list (wrong — the handle is conceptually returned, not
-  passed in).
+  passed in); and
+- drop the input pointer of `hipHostRegister` / force `hipMemcpyToSymbol*`'s
+  `symbol` to `NULL` (wrong — these are required inputs; see Family 4 for
+  the broken generated signatures).
 
-We have had to special-case both families in the codegen rule chain;
+We have had to special-case all three families in the codegen rule chain;
 fixing the tags upstream lets us drop the workaround.
 
 ## Reproducer (text inspection)
@@ -121,6 +135,41 @@ hipMemcpyBatchAsync
 ```
 
 (Plus any future `hipMemcpy*` variant — the rule is uniform.)
+
+The **`hipMemset*` family** shares the identical mismatch on its
+destination buffer (`@param[out]` → `@param[in,out]`): the caller
+allocates the device buffer and the function fills it.
+
+```
+hipMemset
+hipMemsetAsync
+hipMemsetD8
+hipMemsetD8Async
+hipMemsetD16
+hipMemsetD16Async
+hipMemsetD32
+hipMemsetD32Async
+hipMemset2D
+hipMemset2DAsync
+hipMemsetD2D8
+hipMemsetD2D8Async
+hipMemsetD2D16
+hipMemsetD2D16Async
+hipMemsetD2D32
+hipMemsetD2D32Async
+```
+
+**Destination-name inconsistency (important for any name-based tooling).**
+The destination parameter is *not* named uniformly across this family.
+Most use `dst`, but **`hipMemsetD8`, `hipMemsetD8Async`, `hipMemsetD16`,
+`hipMemsetD16Async`, and `hipMemsetD32` name it `dest`** — while the
+otherwise-parallel `hipMemsetD32Async` uses `dst`. A binding generator
+that keys its INOUT override on the parameter name (as `hip-python` does
+via `_HIPMEMCPY_INOUT_DST_NAMES`) must list **both** `dst` and `dest`, or
+the five `dest` variants fall through to the `@param[out]` tag and the
+generated binding drops the buffer entirely (it memsets `NULL`). Aligning
+the upstream parameter name to `dst` everywhere would also remove this
+foot-gun.
 
 ### Family 2 — opaque-handle creators
 
@@ -240,6 +289,42 @@ keeping `[in,out]` only for the genuine count-then-fill pattern. A
 clean separation makes the codegen and any documentation tooling
 deterministic.
 
+### Family 4 — `hip_runtime_api.h` caller-provided input pointers tagged `@param[out]`
+
+*(Confirmed 2026-06-02 on ROCm 7.13.0; line numbers from this checkout.)*
+
+The mirror image of Family 1: instead of an `[out]` that should be
+`[in,out]`, these are an `@param[out]` that should be a plain `@param[in]`.
+The parameter is a caller-provided **input** pointer — the caller owns the
+memory and the function only reads it (or just reads the pointer value).
+`[out]` semantics (callee-produces-a-fresh-result) are simply wrong here.
+
+| line | function | parameter | C type | actual semantics |
+|------|----------|-----------|--------|------------------|
+| 4596 | `hipHostRegister` | `hostPtr` | `void *` | IN — caller allocates the host memory; the call only registers it for device access. (`hipHostUnregister` correctly tags the same pointer `@param[in]`.) |
+| 5068 | `hipMemcpyToSymbol` | `symbol` | `const void *` | IN — the destination device symbol *address* is an input; the `const` qualifier already proves read-only, directly contradicting `[out]`. |
+| 5084 | `hipMemcpyToSymbolAsync` | `symbol` | `const void *` | IN — same as `hipMemcpyToSymbol`. |
+
+Suggested fix: `@param[out]` → `@param[in]` for each of the three
+parameters above.
+
+**Why this one is not merely cosmetic — it produces broken bindings.**
+Because `documented_param_intent` trusts the `[out]` tag, the generated
+`hip-python` bindings before the workaround were:
+
+```text
+# hostPtr is dropped from the signature entirely — the buffer to register
+# can never be passed:
+def hipHostRegister(unsigned long sizeBytes, unsigned int flags): ...
+
+# symbol is initialized to NULL, passed to the C call as NULL, and returned
+# instead of accepted — hipMemcpyToSymbol can never target a real symbol:
+def hipMemcpyToSymbol(object src, unsigned long sizeBytes, unsigned long offset, object kind):
+    cdef ...Pointer symbol = ...Pointer.fromPtr(NULL)
+    ...
+    return (hipError_t(...), None if symbol._ptr == NULL else symbol)
+```
+
 ## Why this is more than cosmetic
 
 Doxygen `@param[…]` tags are increasingly consumed by automated
@@ -260,10 +345,12 @@ parameters are caller-allocated vs callee-written) closes the loop.
 
 - **`class hip.ptr_parm_intent`** hardcodes the correct intent for the
   hip-runtime families (Memcpy/Memset INOUT, opaque-handle creators
-  OUT) and short-circuits the generic `documented_param_intent` rule
-  via the `@fallback` decorator. See the comment block immediately
-  above the `_HIPMEMCPY_INOUT_DST_NAMES` /
-  `_HIP_HANDLE_CREATOR_OUT_PARM0` definitions for the full rationale.
+  OUT, and the Family-4 input pointers `hipHostRegister` /
+  `hipMemcpyToSymbol*` forced to IN) and short-circuits the generic
+  `documented_param_intent` rule via the `@fallback` decorator. See the
+  comment block immediately above the `_HIPMEMCPY_INOUT_DST_NAMES` /
+  `_HIP_HANDLE_CREATOR_OUT_PARM0` definitions for the full rationale, and
+  the explicit `(func_name, parm_idx) -> ParmIntent.IN` tuple for Family 4.
 
 - **`class hipfft.ptr_parm_intent`** hardcodes `odata` in the
   `hipfftExec*` family as INOUT (the upstream tag `@param[out]` is

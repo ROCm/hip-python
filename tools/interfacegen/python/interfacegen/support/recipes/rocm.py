@@ -342,22 +342,40 @@ class hip:
     #    `[in, out]` tag drags the OUT pointer back into the args
     #    instead of into the return tuple.
     #
+    # 3. **Caller-provided INPUT pointers tagged `@param[out]`**
+    #    (Family 4 in UPSTREAM_BUGS): `hipHostRegister`'s `void* hostPtr`
+    #    is a caller-allocated buffer the function only registers, and
+    #    `hipMemcpyToSymbol*`'s `const void* symbol` is a read-only input
+    #    (the `const` self-contradicts the `[out]` tag). Both are
+    #    semantically IN. Trusting the `[out]` tag drops `hostPtr` from
+    #    the args entirely and forces `symbol` to NULL — see the explicit
+    #    `(func, parm_idx) -> IN` entries below.
+    #
     # An upstream bug report has been filed against ROCm/HIP for the
     # mistagged doxygen intent annotations in `hip_runtime_api.h`.
     # Until those tags are fixed in the public header, the codegen
-    # has to special-case both families here.
+    # has to special-case these families here.
     # ---------------------------------------------------------------------
 
-    # `hipMemcpy*` family — every entry-pointer destination buffer.
-    # parm names follow the C signature: `dst`, `dstHost`, `dstDevice`,
-    # `dstArray`. Buffer rank is intentionally NOT pinned here — the
-    # ptr_rank chain still classifies these as "any rank" pointers.
+    # `hipMemcpy*` / `hipMemset*` family — every entry-pointer destination
+    # buffer. parm names follow the C signature: `dst`, `dstHost`,
+    # `dstDevice`, `dstArray`, and `dest`. Buffer rank is intentionally NOT
+    # pinned here — the ptr_rank chain still classifies these as "any rank"
+    # pointers.
+    #
+    # NOTE: the destination name is inconsistent upstream. Most functions use
+    # `dst`, but `hipMemsetD8`/`D8Async`/`D16`/`D16Async`/`D32` name it
+    # `dest` (while `hipMemsetD32Async` uses `dst`). Both must be listed or
+    # the `dest` variants fall through to the `@param[out]` doxygen tag and
+    # the generated binding drops the buffer (memsets NULL). See
+    # UPSTREAM_BUGS Family 1.
     _HIPMEMCPY_INOUT_DST_NAMES = frozenset((
         "dst",
         "dstHost",
         "dstDevice",
         "dstArray",
         "dsts",  # hipMemcpyBatchAsync takes a list of dsts
+        "dest",  # hipMemsetD8/D8Async/D16/D16Async/D32
     ))
 
     # Opaque-handle creators — function name + parm 0 -> OUT.
@@ -486,7 +504,17 @@ class hip:
             ("hipExtStreamGetCUMask", 2),
         ):
             return ParmIntent.INOUT
-        if (func_name, parm_idx) in (("hipExtStreamCreateWithCUMask", 2),):
+        if (func_name, parm_idx) in (
+            ("hipExtStreamCreateWithCUMask", 2),
+            # Family 4 (see UPSTREAM_BUGS): caller-provided INPUT pointer
+            # mistagged `@param[out]` in `hip_runtime_api.h`. Without these
+            # overrides `documented_param_intent` trusts the `[out]` tag and
+            # the generated binding drops the arg (`hipHostRegister`) or
+            # passes NULL (`hipMemcpyToSymbol*`).
+            ("hipHostRegister", 0),         # void* hostPtr   (caller-allocated)
+            ("hipMemcpyToSymbol", 0),       # const void* symbol
+            ("hipMemcpyToSymbolAsync", 0),  # const void* symbol
+        ):
             return ParmIntent.IN
 
         # HIP-specific naming: certain void** parms with these names are OUT
