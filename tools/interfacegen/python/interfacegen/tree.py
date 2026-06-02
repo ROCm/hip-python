@@ -1027,6 +1027,15 @@ class Typedef(Type, Typed):
         ``typedef X A;`` for some upstream ``X``. Layer shape is
         ``[TYPEDEF, TYPEDEF, ...]``.
 
+        libclang 17+ interposes an ``ELABORATED`` layer when the
+        immediate underlying type is a *named* typedef, so ``B``'s
+        canonical layer walk reports ``[TYPEDEF, ELABORATED, TYPEDEF,
+        ...]`` rather than the older ``[TYPEDEF, TYPEDEF, ...]``. Skip
+        those passthrough ``ELABORATED`` layers before inspecting the
+        first two kinds so the chain still matches across libclang
+        versions (same approach as
+        ``generic.opaque_typedef_is_handle._is_typedef_to_pointer``).
+
         Note this matcher MUST be checked BEFORE
         ``match_typedefed_basic_type`` /
         ``match_typedefed_record_or_enum`` etc. in
@@ -1045,9 +1054,17 @@ class Typedef(Type, Typed):
         ``typedef struct BrigModuleHeader* BrigModule_t;``) is the
         motivating case.
         """
-        return list(
-            cparser.TypeHandler.get(clang_type).clang_type_layer_kinds()
-        )[:2] == [clang.cindex.TypeKind.TYPEDEF, clang.cindex.TypeKind.TYPEDEF]
+        kinds = [
+            k
+            for k in cparser.TypeHandler.get(
+                clang_type
+            ).clang_type_layer_kinds()
+            if k != clang.cindex.TypeKind.ELABORATED
+        ]
+        return kinds[:2] == [
+            clang.cindex.TypeKind.TYPEDEF,
+            clang.cindex.TypeKind.TYPEDEF,
+        ]
 
     def __init__(
         self,
