@@ -300,14 +300,17 @@ def write_toc_yml_in(opts, recipe_results):
                 f"      - file: python_api/{cy_dotted}"
             )
 
-    # Prepend the llvm subtree (parent + nested children) to COMPILER so
-    # the long list collapses under `rocm.bindings.llvm` in the sidebar.
+    # Reference only the llvm package index. sphinx-autoapi emits nested
+    # toctrees inside the package index pages (rocm.bindings.llvm -> c /
+    # config -> submodules), so the submodules already render as an
+    # expandable `rocm.bindings.llvm.c` subtree. Listing them explicitly
+    # here too made every llvm submodule appear twice. Mirrors how every
+    # other subpackage (e.g. rocm.hipfile) is represented: parent only.
     if llvm_children:
-        nested = ["      - file: python_api/rocm/bindings/llvm/index",
-                  "        entries:"]
-        for child in llvm_children:
-            nested.append(f"          - file: {child}")
-        sections["ROCM_BINDINGS_COMPILER"] = nested + sections["ROCM_BINDINGS_COMPILER"]
+        sections["ROCM_BINDINGS_COMPILER"] = (
+            ["      - file: python_api/rocm/bindings/llvm/index"]
+            + sections["ROCM_BINDINGS_COMPILER"]
+        )
 
     with open(template_path) as f:
         rendered = f.read()
