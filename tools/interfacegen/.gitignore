@@ -6,8 +6,6 @@ hip/_util/*.c
 hip/_version.py
 hip/__init__.py
 .vscode
-recipes/python_cython/hsa/rocm-hsa/rocm/**
-recipes/python_cython/llvmc/rocm-llvm/rocm/**
 **/_venv
 hip-python-release-repo
 
