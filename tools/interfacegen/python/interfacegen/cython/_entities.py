@@ -371,22 +371,51 @@ class Typed:
         return self.ptr_intent(self) is None
 
     @property
+    def intent(self):
+        """Effective intent verdict from the rule chain (unclassified
+        coerced to INOUT). Read ``.direction`` for the coarse IN/OUT/INOUT
+        data-flow direction and ``.allocated_by_callee`` for the
+        orthogonal caller-vs-callee allocation axis."""
+        return self.effective_ptr_intent
+
+    @property
     def is_out_ptr(self):
-        """If this parameter has been specified as out parameter."""
+        """If this parameter has been specified as out parameter.
+
+        Uses the coarse ``direction`` so a callee-allocated OUT
+        (``OUT_CALLEE_ALLOCATED``) is still recognized as an out-pointer.
+        """
         assert self.is_ptr
-        return self.effective_ptr_intent == control.ParmIntent.OUT
+        return self.intent.direction == control.ParmIntent.OUT
 
     @property
-    def is_inout_ptr(self):
-        """If this is an inout parameter."""
-        assert self.is_ptr
-        return self.effective_ptr_intent == control.ParmIntent.INOUT
+    def is_out_callee_allocated_ptr(self):
+        """If this out parameter is callee-allocated (fresh handle / scalar
+        / string produced by the callee).
 
-    @property
-    def is_in_ptr(self):
-        """If this is an inout parameter."""
+        Two sources, in priority order:
+
+        1. The explicit ``OUT_CALLEE_ALLOCATED`` hint
+           (``intent.allocated_by_callee``) from the recipe — authoritative
+           for buffers/handles whose callee-allocation is *not* derivable
+           from rank (``hipMalloc``'s ``void**`` buffer, ``T**`` handles,
+           ``char**`` strings, opaque-handle creators).
+        2. A Cython-only structural fallback: an ``OUT`` pointer to a
+           single (rank-0) slot is callee-allocated — the callee writes a
+           fresh scalar the binding returns. This catches scalar OUTs that
+           a rule left as plain ``OUT`` (doxygen-derived or library
+           default), without the recipe having to spell out the
+           Cython-specific allocation axis.
+
+        The rank-0 fallback is purely additive; the explicit hint remains
+        load-bearing for buffers/handles (which may be rank>=1).
+        """
         assert self.is_ptr
-        return self.effective_ptr_intent == control.ParmIntent.IN
+        if self.intent.allocated_by_callee:
+            return True
+        ptr_rank = getattr(self, "ptr_rank", None)
+        is_scalar_slot = callable(ptr_rank) and ptr_rank(self) == 0
+        return self.is_out_ptr and is_scalar_slot
 
     @property
     def is_autoconverted_by_cython(self):

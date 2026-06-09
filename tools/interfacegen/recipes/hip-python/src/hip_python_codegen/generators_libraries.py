@@ -462,7 +462,7 @@ def generate_hiptensor(
     # binding references. The high-level wrapper rendering for this
     # parm routes through `rocm.bindings.util.types.Pointer` via the
     # foreign-record fallback in
-    # `_function.py:handle_in_inout_ptr_`.
+    # `_function.py:handle_caller_allocated_ptr_`.
     generator.c_interface_decl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.cyhip cimport *

@@ -245,22 +245,14 @@ class Typed:
         return self.get_pointer_degree() > actual_rank
 
     @property
-    def is_out_ptr(self):
-        """If this parameter has been specified as out parameter."""
-        assert self.is_ptr
-        return self.ptr_intent(self) == control.ParmIntent.OUT
-
-    @property
-    def is_inout_ptr(self):
-        """If this is an inout parameter."""
-        assert self.is_ptr
-        return self.ptr_intent(self) == control.ParmIntent.INOUT
-
-    @property
-    def is_in_ptr(self):
-        """If this is an inout parameter."""
-        assert self.is_ptr
-        return self.ptr_intent(self) == control.ParmIntent.IN
+    def intent(self):
+        """Effective intent verdict from the rule chain (unclassified
+        coerced to INOUT). Fortran is a direction-only backend: it reads
+        ``.direction`` and ignores the ``.allocated_by_callee`` axis."""
+        verdict = self.ptr_intent(self)
+        if verdict is None:
+            return control.ParmIntent.INOUT
+        return verdict
 
     # TODO fortran fix this
     @property
@@ -341,7 +333,7 @@ class Parm(tree.Parm, FortranMixin, Typed):
         """
         name = self.fortran_name
         if self.is_any_pointer:
-            if self.ptr_intent(self) == control.ParmIntent.OUT:
+            if self.intent.direction == control.ParmIntent.OUT:
                 return f"type(c_ptr) :: {name}"
             else:
                 return f"type(c_ptr), value :: {name}"

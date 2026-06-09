@@ -588,7 +588,15 @@ cdef void* {funptr_name} = NULL
                 c_interface_prehoist.append(hoist.render_prehoist(arg_name))
                 c_interface_call_args.append(arg_name)
 
-        def handle_out_ptr_parm(parm: Parm):
+        def handle_callee_allocated_ptr_parm(parm: Parm):
+            # Handles OUT_CALLEE_ALLOCATED pointers only (dispatch keys on
+            # `is_out_callee_allocated_ptr`, i.e. `intent.allocated_by_callee`):
+            # the callee produces a fresh value / handle / string, which is
+            # synthesized as a return-tuple entry. Caller-allocated OUT
+            # buffers (plain OUT) take the caller-allocated path instead and
+            # never reach here. On a shape this can't synthesize it raises
+            # `CodegenUnsupportedPattern`; the dispatcher then degrades to
+            # the caller-allocated path.
             nonlocal out_args
             nonlocal out_parms
             nonlocal c_interface_call_args
@@ -804,7 +812,10 @@ cdef void* {funptr_name} = NULL
                 ),
             )
 
-        def handle_in_inout_ptr_(parm: Parm):
+        def handle_caller_allocated_ptr_(parm: Parm):
+            # Handles IN and INOUT pointers — both caller-allocated: the
+            # caller owns the buffer and the callee reads (IN) and/or
+            # fills (INOUT) it.
             global indent
             nonlocal c_interface_call_args
             nonlocal sig_args
@@ -925,7 +936,33 @@ cdef void* {funptr_name} = NULL
             ):
                 emit_data_handle_for_ptr_to_void_basic_enum_(parm, cprefix)
             else:
-                assert False, "should not be entered"
+                # Worst case: a pointer shape none of the structured
+                # branches above bind (e.g. a caller-allocated OUT
+                # `T *const **` / `T *const[]`). The caller owns the
+                # buffer, so bind it as the generic Pointer wrapper
+                # (`ptr_complicated_type_handler` defaults to
+                # `rocm.bindings.util.types.Pointer`) and let the user
+                # wire it via Pointer / ctypes. Never crash. This mirrors
+                # the foreign-record fallback above. A recipe can override
+                # the wrapper per-binding via `ptr_complicated_type_handler`.
+                c_type = _with_cprefix(parm.cython_global_typename_no_const)
+                parm_typename = parm.ptr_complicated_type_handler(parm)
+                _log.warning(
+                    f"<{self.render_location()}> function {self.name}: "
+                    f"parm {parm.name}: no structured caller-allocated "
+                    f"binding for canonical type "
+                    f"{parm.cursor.type.get_canonical().spelling!r}; "
+                    f"falling back to generic {parm_typename} wrapper"
+                )
+                sig_args.append(f"object {parm_name}")
+                parm_python_types[parm.name] = f"{parm_typename}/object"
+                _append_call_arg(hoist=CallArgHoist(
+                    c_type=c_type,
+                    wrapper_class=parm_typename,
+                    wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
+                    pointer_extract="getPtr()",
+                    cast_open=f"<{c_type}>",
+                ))
 
         def handle_value_parm_(parm: Parm):
             if parm.is_autoconverted_by_cython:
@@ -993,25 +1030,27 @@ cdef void* {funptr_name} = NULL
             parm_name = parm.cython_name
             assert isinstance(parm, Parm)
             if parm.is_ptr:
-                if parm.is_out_ptr:
-                    # assert parm.is_indirection  # make exception
+                if parm.is_out_callee_allocated_ptr:
+                    # OUT_CALLEE_ALLOCATED is the only intent that adds a
+                    # return-tuple entry: the callee produces a fresh
+                    # handle / scalar / string and we synthesize it as a
+                    # return value. Snapshot mutable state so we can roll
+                    # back if that synthesis can't build this parm's shape
+                    # (e.g. `T *const **` / `T *const[]` — middle-const
+                    # pointer shapes the codegen doesn't yet support). On
+                    # an unsupported shape, degrade to the caller-allocated
+                    # path: drop the synthesized entry and re-bind as a
+                    # plain OUT pointer, so the return tuple is unchanged
+                    # and the caller passes a Pointer / complicated type.
                     _log.debug(
-                        f"<{self.render_location()}> function {self.name}: parm {parm.name}: classified as OUT-PTR"
+                        f"<{self.render_location()}> function {self.name}: parm {parm.name}: classified as OUT-PTR (callee-allocated)"
                     )
-                    # Snapshot mutable state so we can roll back if the
-                    # OUT-handler can't synthesize a binding for this
-                    # parm's shape (e.g. `T *const **` / `T *const[]`
-                    # — middle-const pointer shapes the codegen doesn't
-                    # yet support). On unsupported shapes, degrade to
-                    # the INOUT/IN handler so the function still gets a
-                    # binding (the parm semantics may be slightly off
-                    # but the wheel builds).
                     _snap_out_parms = len(out_parms)
                     _snap_out_args = len(out_args)
                     _snap_call_args = len(c_interface_call_args)
                     _snap_prolog = len(prolog)
                     try:
-                        handle_out_ptr_parm(parm)
+                        handle_callee_allocated_ptr_parm(parm)
                     except CodegenUnsupportedPattern as exc:
                         del out_parms[_snap_out_parms:]
                         del out_args[_snap_out_args:]
@@ -1020,16 +1059,22 @@ cdef void* {funptr_name} = NULL
                         parm_python_types.pop(parm.name, None)
                         _log.warning(
                             f"<{self.render_location()}> function {self.name}: "
-                            f"parm {parm.name}: OUT codepath unsupported for "
-                            f"canonical type {exc.canonical_type!r}; "
-                            f"degrading to INOUT/IN binding"
+                            f"parm {parm.name}: callee-allocated OUT codepath "
+                            f"unsupported for canonical type "
+                            f"{exc.canonical_type!r}; degrading to "
+                            f"caller-allocated (plain OUT) binding"
                         )
-                        handle_in_inout_ptr_(parm)
-                else:  # in ptr
+                        handle_caller_allocated_ptr_(parm)
+                else:
+                    # IN, plain (caller-allocated) OUT, and INOUT all share
+                    # the caller-allocated path: the caller owns the buffer
+                    # and we never add a return-tuple entry. This handler is
+                    # total — unsupported shapes fall back to the generic
+                    # Pointer wrapper rather than crashing.
                     _log.debug(
-                        f"<{self.render_location()}> function {self.name}: parm {parm.name}: classified as INOUT-PTR"
+                        f"<{self.render_location()}> function {self.name}: parm {parm.name}: classified as IN/OUT/INOUT-PTR (caller-allocated)"
                     )
-                    handle_in_inout_ptr_(parm)
+                    handle_caller_allocated_ptr_(parm)
             else:  # no ptr
                 _log.debug(
                     f"<{self.render_location()}> function {self.name}: parm {parm.name}: classified as IN-VALUE"

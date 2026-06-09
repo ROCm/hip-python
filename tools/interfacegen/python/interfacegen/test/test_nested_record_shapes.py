@@ -531,11 +531,11 @@ SHAPE_TRIPLE_POINTER_CONST_MIDDLE = r"""
  * `hipGraphNode_t` is a typedef for `struct hipGraphNode *`, so the
  * fully-expanded type is `struct hipGraphNode *const **` — a triple
  * pointer with a const at the middle level. The codegen's
- * `handle_out_ptr_parm` doesn't have a branch for this shape and
- * raises CodegenUnsupportedPattern. After the graceful-degrade fix
- * in cython.py:2284, the codegen catches the exception and falls
- * through to handle_in_inout_ptr_ — the parm is still bound, just
- * as INOUT instead of OUT.
+ * `handle_callee_allocated_ptr_parm` doesn't have a branch for this
+ * shape and raises CodegenUnsupportedPattern. After the
+ * graceful-degrade fix in cython.py:2284, the codegen catches the
+ * exception and falls through to handle_caller_allocated_ptr_ — the
+ * parm is still bound, just as INOUT instead of OUT.
  *
  * Real-world hit: `hipStreamGetCaptureInfo_v2` parm `dependencies_out`.
  */
@@ -682,11 +682,13 @@ from interfacegen.support.recipes import control as _ctrl
 
 def _intent_outprefix(parm):
     """Pointer-intent rule for synthetic GIL-release tests: parms whose
-    name starts with ``out_`` are OUT, everything else falls back to
-    the default classifier. Lets a single header drive both code paths.
+    name starts with ``out_`` are callee-allocated OUT (they drive the
+    return-value synthesis codepath), everything else falls back to the
+    default classifier. Lets a single header drive both code paths
+    (callee-allocated synthesis vs. the caller-allocated handler).
     """
     if parm.cython_name.startswith("out_"):
-        return _ctrl.ParmIntent.OUT
+        return _ctrl.ParmIntent.OUT_CALLEE_ALLOCATED
     return _ctrl.DEFAULT_PTR_PARM_INTENT(parm)
 
 

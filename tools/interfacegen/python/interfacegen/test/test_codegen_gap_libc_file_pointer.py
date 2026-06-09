@@ -4,7 +4,7 @@
 """Regression test for the foreign-record pointer-parameter fallback.
 
 The `is_pointer_to_record(degree=1)` branch in
-`_function.py:handle_in_inout_ptr_` previously hardcoded the per-type
+`_function.py:handle_caller_allocated_ptr_` previously hardcoded the per-type
 wrapper class as `parm_innermost_type.cython_global_name`. That assumes
 the wrapper class is actually emitted in the binding — which only
 happens when the recipe filter admits the innermost record. For

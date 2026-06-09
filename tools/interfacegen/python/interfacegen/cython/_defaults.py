@@ -79,8 +79,8 @@ indent = " " * 4
 
 class CodegenUnsupportedPattern(Exception):
     """Raised when the cython backend reaches a parameter or field shape
-    that ``handle_out_ptr_parm`` / ``handle_in_inout_ptr_`` (and friends)
-    have no branch for.
+    that ``handle_callee_allocated_ptr_parm`` /
+    ``handle_caller_allocated_ptr_`` (and friends) have no branch for.
 
     Carries the function name, parm name, and canonical C type so callers
     (notably the gap test suite) can isolate which pattern is missing
