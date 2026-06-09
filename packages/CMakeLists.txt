@@ -27,29 +27,47 @@ else()
   hip_python_initialize()
 endif()
 
-# Version management: Generate VERSION file from VERSION.in
-# HIP_PYTHON_VERSION_SHORT can be set via environment or defaults to commit count
-if(NOT DEFINED HIP_PYTHON_VERSION_SHORT)
-  execute_process(
-    COMMAND git rev-list --count HEAD
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/.."
-    OUTPUT_VARIABLE HIP_PYTHON_VERSION_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    ERROR_QUIET
-  )
-  if(NOT HIP_PYTHON_VERSION_SHORT)
-    set(HIP_PYTHON_VERSION_SHORT "0")
+# Version management
+# -------------------
+# The hip-python version is hardcoded in the repo-root HIP_PYTHON_VERSION
+# file (e.g. `0.0.1`) — it is no longer derived from git history. CMake
+# renders the actual repo-root VERSION from it at configure time:
+#
+#   * Release branches commit a VERSION.in template that embeds the ROCm
+#     version, e.g. `7.13.0.@HIP_PYTHON_VERSION@`. When present it is
+#     configured (@ONLY) with HIP_PYTHON_VERSION substituted in.
+#   * Otherwise (development branches, where VERSION.in is absent) VERSION
+#     is the HIP_PYTHON_VERSION value verbatim.
+#
+# The rendered VERSION and its per-package copies are gitignored;
+# VERSION.in is committed only on release branches. The version can be
+# overridden explicitly with `-DHIP_PYTHON_VERSION=...`.
+if(NOT DEFINED HIP_PYTHON_VERSION)
+  set(_hp_version_file "${CMAKE_CURRENT_SOURCE_DIR}/../HIP_PYTHON_VERSION")
+  if(NOT EXISTS "${_hp_version_file}")
+    message(FATAL_ERROR
+      "HIP_PYTHON_VERSION file not found at ${_hp_version_file}. "
+      "It holds the hardcoded hip-python version (e.g. 0.0.1).")
   endif()
+  file(READ "${_hp_version_file}" HIP_PYTHON_VERSION)
+  string(STRIP "${HIP_PYTHON_VERSION}" HIP_PYTHON_VERSION)
 endif()
 
-# Configure VERSION file at repository root
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION"
-  @ONLY
-)
+# Render the repo-root VERSION. A release-only VERSION.in template (which
+# may reference @HIP_PYTHON_VERSION@) takes precedence; otherwise VERSION
+# is HIP_PYTHON_VERSION verbatim.
+set(_hp_version_in "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION.in")
+if(EXISTS "${_hp_version_in}")
+  configure_file(
+    "${_hp_version_in}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION"
+    @ONLY
+  )
+else()
+  file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION" "${HIP_PYTHON_VERSION}\n")
+endif()
 
-# Read the generated VERSION for use in subprojects
+# Read the rendered VERSION for use in subprojects
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION" HIP_PYTHON_VERSION_FULL)
 string(STRIP "${HIP_PYTHON_VERSION_FULL}" HIP_PYTHON_VERSION_FULL)
 

@@ -46,7 +46,7 @@ runtime `__init__.pxd` markers for `rocm/` and `rocm/bindings/`.
 hip-python/
 ├── cmake/
 │   ├── HipPythonBuild.cmake       Shared helpers (see below)
-│   └── render_version.cmake
+│   └── HipPythonCodegen.cmake     Configure-time HIP Python code generation
 ├── packages/
 │   ├── CMakeLists.txt             Unified top-level build; orchestrates all seven packages + docs
 │   ├── rocm-bindings-core/        per-package: pyproject.toml + CMakeLists.txt + cmake/ + src/rocm/
@@ -598,13 +598,28 @@ sources and its installed dependencies.
 
 `metadata.version.input = "VERSION"` (per-package) is read by
 scikit-build-core **before** CMake runs. So `VERSION` must already
-exist locally:
+exist locally.
+
+The canonical version is **hardcoded**, not derived from git history:
+the repo-root `HIP_PYTHON_VERSION` file holds the hip-python version
+(starts at `0.0.1`). At configure time the unified `cmake -B build`
+renders the repo-root `VERSION` from it:
+
+- **Release branches** commit a `VERSION.in` template that embeds the
+  ROCm version, e.g. `7.13.0.@HIP_PYTHON_VERSION@`; CMake configures it
+  (`@ONLY`) with `HIP_PYTHON_VERSION` substituted in.
+- **Development branches** have no `VERSION.in`, so `VERSION` is the
+  `HIP_PYTHON_VERSION` value verbatim.
+
+`HIP_PYTHON_VERSION` and (on release branches) `VERSION.in` are tracked;
+the rendered `VERSION` and per-package copies are gitignored. Override
+with `-DHIP_PYTHON_VERSION=...`.
 
 - **Source-tree wheel/sdist build**: the unified
   `cmake -B build` from `packages/` does a `configure_file()` of
   repo-root `VERSION` → each `packages/<pkg>/VERSION`. Run the
   unified configure once before any per-package `python -m build`
-  invocation. Both files are gitignored.
+  invocation.
 - **sdist install path** (downstream consumer of the .tar.gz): the
   sdist already contains `VERSION` (added via `sdist.include`).
   pip extracts it and scikit-build reads it directly — no source

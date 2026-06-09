@@ -48,9 +48,11 @@ _build/
 docs/_build/
 /docs/
 
-# --- Codegen-emitted version files (must never be committed on codegen base) ---
+# --- Rendered version files (written at CMake configure; never committed) ---
+# VERSION is rendered from the hardcoded HIP_PYTHON_VERSION (and, on
+# release branches, the committed VERSION.in template). HIP_PYTHON_VERSION
+# and VERSION.in are tracked; only the rendered outputs are ignored.
 /VERSION
-/VERSION.in
 packages/*/VERSION
 
 # --- Sphinx index.rst rendered from index.rst.in by the docs target ---
