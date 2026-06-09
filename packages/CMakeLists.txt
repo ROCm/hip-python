@@ -221,6 +221,15 @@ if(HIP_PYTHON_BUILD_INTEROP)
   )
 endif()
 
+# Optional configure-time code generation. MUST run before the
+# add_subdirectory() calls below so the generated sources and per-package
+# cmake/generated_modules.cmake lists exist before each package is
+# configured. No-op unless HIP_PYTHON_RUN_CODEGEN=ON. See
+# cmake/HipPythonCodegen.cmake and share/design/CODEGEN.md.
+if(NOT HIP_PYTHON_BUILD_DOCS_ONLY)
+  include(HipPythonCodegen)
+endif()
+
 # Build packages in dependency order (only if enabled)
 if(HIP_PYTHON_BUILD_CORE)
   message(STATUS "Building rocm-bindings-core")
