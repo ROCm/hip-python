@@ -225,7 +225,11 @@ overrides: `HIP_PYTHON_ROCM_SYSTEMS_DIR`, `HIP_PYTHON_ROCM_LIBRARIES_DIR`,
 numba-hip (`numba_hip_wheel` / `numba_hip_sdist`) is a pure-Python
 package with its own independent version (not mirrored from the repo-root
 `VERSION`); it is part of `all_wheels`/`all_sdists` and gated by
-`HIP_PYTHON_BUILD_NUMBA_HIP`.
+`HIP_PYTHON_BUILD_NUMBA_HIP`. Its test suite lives in the repo-root
+`tests/numba-hip/` (outside any importable package, so it exercises the
+*installed* `numba.hip`), and is run by the unified `ci/internal/test.sh`
+alongside the hip-python example suite — numba-hip no longer carries its
+own `ci/` scripts.
 
 The unified build is shell-free outside `ci/`: wheel/sdist artifacts are
 copied with `cmake -E copy_directory` (no `cp`/`sh` glob), so the build
