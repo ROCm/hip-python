@@ -87,13 +87,13 @@ the stack that matches the library family.
 | 1 | **conservative**                    | innermost-pointee `const`, OR an array layer present                                            | IN; rank ≥ 1 only when an array layer exists | SAL (`_In_` ⇒ read-only), GIR, COM/IDL — universal agreement |
 | 2 | **pointer_as_reference**            | non-const `T*` parm                                                                              | INOUT                                    | "Reference school" — Ropert; cprogramming.com |
 | 3 | **pointer_as_value**                | non-const `T*` parm whose pointee is not itself a pointer                                       | IN                                       | "Value school" — cprogramming.com |
-| 4 | **double_indirection_out**          | non-const `T**` (esp. `void**`, `struct**`, `enum**`)                                           | OUT, rank 0 (callee-allocates)           | GIR `(out)` for double-indirection on a structure parameter; SAL `_Outptr_`. COM `[out]` requires a pointer. |
-| 5 | **string_z**                        | `const char *` ⇒ IN; `char *` ⇒ ambiguous intent; `char **` ⇒ OUT. **All char pointers are rank 1** — a NUL-terminated string is rank-1 data (see §4) | as listed | GIR / SAL `_In_z_`, `_Outptr_result_z_` |
+| 4 | **double_indirection_out**          | non-const `T**` (esp. `void**`, `struct**`, `enum**`)                                           | OUT_CALLEE_ALLOCATED; rank 0 for a typed `T**` handle slot, **rank 1 for `void**`** (untyped callee-allocated byte buffer, the `hipMalloc` idiom). Callee-allocation is the hint, *independent* of rank. | GIR `(out)` for double-indirection on a structure parameter; SAL `_Outptr_`. COM `[out]` requires a pointer. |
+| 5 | **string_z**                        | `const char *` ⇒ IN; `char *` ⇒ ambiguous intent; `char **` ⇒ OUT_CALLEE_ALLOCATED. **All char pointers are rank 1** — a NUL-terminated string is rank-1 data (see §4) | as listed | GIR / SAL `_In_z_`, `_Outptr_result_z_` |
 | 6 | **array_with_length_param**         | `T *buf` adjacent to integer parm whose name names the length (`n`, `len`, `count`, `*_size`)  | `buf` is rank 1; intent follows pointee const | GIR `(array length=N)`. SAL `_In_reads_(n)` / `_Out_writes_(n)`. *(deferred — relational rule)* |
 | 7 | **zero_terminated_array**           | `T**` where elements are sentinel-terminated                                                    | rank 1                                   | GIR `(array zero-terminated=1)`. *(deferred)* |
 | 8 | **status_return_out_pointer**       | function return type is an integer/error status enum AND parm is the only non-const pointer parm | that parm is OUT                         | C tradition: status code as return value, results via OUT pointer (POSIX, every Khronos API, every ROCm runtime). *(deferred — needs return-type access)* |
-| 9 | **opaque_typedef_is_handle**        | type is a typedef whose canonical form is `T*`                                                   | rank 0 (the typedef is a scalar handle)  | Universal opaque-handle pattern (`FILE*`, `cl_context`, `VkInstance`, `cudaStream_t`, `hipStream_t`) |
-| 10 | **documented_param_intent**         | parent function's raw doxygen comment carries `@param[in\|out\|in,out] <pname>` (or `\param[…]`) | the documented intent (IN / OUT / INOUT) | Doxygen direction tags — explicit author intent. Originated as `amdsmi._doxygen_intent`; an audit found it resolved 88 mismatches a verb-based heuristic produced for amdsmi.h alone. |
+| 9 | **opaque_typedef_is_handle**        | type is a typedef whose canonical form is `T*` **with `T` not `void`**                            | rank 0 (the typedef is a scalar handle). **`void*`-canonical typedefs (`hipDeviceptr_t`, `CUdeviceptr`) are excluded** — a `void*` is untyped byte storage, a buffer, not a scalar handle, so the rule defers and the parm ranks as a rank-1 buffer. | Universal opaque-handle pattern (`FILE*`, `cl_context`, `VkInstance`, `cudaStream_t`, `hipStream_t`) — but **not** `void*` device-pointer aliases |
+| 10 | **documented_param_intent**         | parent function's raw doxygen comment carries `@param[in\|out\|in,out] <pname>` (or `\param[…]`) | the documented intent (IN / OUT / INOUT); a `[out]` on a **callee-allocated shape** refines to OUT_CALLEE_ALLOCATED. The shape test is structural, not rank-only: rank-0 scalar/handle/string, OR a non-const double-indirection `T**`/`void**`, OR a `char**`. A `[out]` on a caller-sized buffer (a single `T*` the callee fills) stays plain OUT. | Doxygen direction tags — explicit author intent. Originated as `amdsmi._doxygen_intent`; an audit found it resolved 88 mismatches a verb-based heuristic produced for amdsmi.h alone. |
 
 Conventions #6–8 are sketched in `generic.py` with TODO bodies; they need
 relational access (sibling parms, function return type) that the
@@ -144,24 +144,57 @@ otherwise never be reached. An IN `char **` (an argv-style array of strings)
 is intentionally **not** matched, so it is never clobbered into a single
 `CStr`.
 
-### 4.3 Auto-allocated OUT string buffers (`hipDeviceGetName`)
+### 4.3 Binding-allocated OUT string buffers (`hipDeviceGetName`)
 
-Some functions are conceptually INOUT — the caller allocates a `char *`
-buffer and passes its length — but read more naturally as OUT, returning the
-filled string. `hipDeviceGetName(char *name, int len, …)` and
-`hipDeviceGetPCIBusId` are the canonical cases. The behavior is the
-composition of three pieces:
+Some functions are *caller-allocated* in C — the caller hands in a `char *`
+buffer and a length — but read far more naturally in Python as a function
+that simply **returns** the filled string. `hipDeviceGetName(char *name,
+int len, …)`, `hipDeviceGetPCIBusId(char *pciBusId, int len, …)`, and
+`hipGraphInstantiate(…, char *pLogBuffer, size_t bufferSize)` are the
+canonical cases. The binding allocates the buffer for the user, passes it,
+and returns it as a `CStr`.
 
-1. an intent override forces the parm to OUT (`hip.ptr_parm_intent`);
-2. the recipe `node_init` prepends `name.malloc(len)` before the C call;
-3. rank-1 ⇒ the handler emits `CStr`, so `name.malloc(len)` is valid.
+Crucially, this is a **Cython-only ergonomic, not a cross-backend truth**: in
+C these buffers are caller-allocated, and a direction-only backend (Fortran)
+should keep them as plain caller-allocated `OUT`. So the machinery lives in
+the HIP *Cython recipe generator* (`recipes/hip-python/.../generators_hip.py`),
+**not** in the shared `controls.hip` (`support/recipes/rocm.py`) — mirroring
+the `hipMalloc` → `DeviceArray` treatment, which is likewise a Cython-only
+override in the same generator. A single map drives both halves:
 
-Only (3) used to be missing: at rank 0 the parm degraded to a scalar
-`cdef char name` and `name.malloc(...)` was nonsense. Contrast a `char **`
-OUT such as `hipDrvGetErrorName`, where the callee points the slot at its own
-internal storage — it gets `CStr` via §4.2 and correctly receives **no**
-`malloc`. (Only the degree-1 caller-allocates functions are in the recipe's
-malloc set.)
+```python
+# generators_hip.py — (func, buffer_parm) -> size_parm
+_CSTR_OUT_BUFFERS = {
+    ("hipDeviceGetName",     "name"):       "len",
+    ("hipDeviceGetPCIBusId", "pciBusId"):   "len",
+    ("hipGraphInstantiate",  "pLogBuffer"): "bufferSize",
+}
+```
+
+The behavior is the composition of three pieces:
+
+1. a Cython-only intent wrapper (`hip_ptr_parm_intent`) returns
+   **`OUT_CALLEE_ALLOCATED`** for the mapped buffers and otherwise delegates
+   to `controls.hip.ptr_parm_intent`. This routes the parm down the
+   callee-allocated path (§8) so it becomes a **return value**, dropping out
+   of the Python argument list;
+2. the recipe `node_init` prepends `<buf>.malloc(<size>)` before the C call
+   (e.g. `name.malloc(len)`, `pLogBuffer.malloc(bufferSize)`), so the binding
+   owns the allocation;
+3. the synthesis path emits `cdef CStr <buf> = CStr.fromPtr(NULL)`, the
+   prepend `malloc`s it **under the GIL** before the `nogil` block, the call
+   passes `<char *><buf>._ptr`, and the `CStr` is appended to the returned
+   tuple — see §4.2 (rank-1 `char *` ⇒ `CStr`).
+
+The intent override and the `malloc` prepend are driven off the *same* map,
+so they cannot drift: a buffer marked `OUT_CALLEE_ALLOCATED` without a
+matching `malloc` would pass a NULL pointer to C.
+
+Contrast a `char **` OUT such as `hipDrvGetErrorName`, where the callee points
+the slot at its **own internal storage** — it is classified
+`OUT_CALLEE_ALLOCATED` structurally by `string_z` (§3 #5), gets `CStr` via
+§4.2, and correctly receives **no** `malloc` (it is not in `_CSTR_OUT_BUFFERS`).
+Only the degree-1, binding-allocates buffers are in the map.
 
 ### 4.4 Exceptions and escape hatches
 
@@ -308,6 +341,159 @@ fallback:
 The cython `Parm` exposes `effective_ptr_intent` (chain verdict, `None` →
 `INOUT`) and `is_ptr_intent_unclassified` (true iff the fallback applied).
 
+### Two-axis intent: direction vs. allocation
+
+`ParmIntent` carries two orthogonal axes so consumers never destructure
+the enum by hand:
+
+- **direction** (`ParmIntent.direction`) — the coarse `IN` / `OUT` /
+  `INOUT` data-flow vocabulary. This is what direction-only backends
+  reason in (Fortran `intent(in/out/inout)`); they compare
+  `parm.intent.direction` and ignore the allocation axis entirely.
+- **allocated_by_callee** (`ParmIntent.allocated_by_callee`) — a boolean
+  meaningful only for `OUT`. The Python/Cython layer reads it to decide
+  caller-vs-callee allocation.
+
+`OUT_CALLEE_ALLOCATED` is a strict refinement of `OUT` (it coarsens back
+to `OUT` via `.direction`), distinguishing a fresh callee-produced
+scalar / opaque handle / NUL-terminated string from a caller-allocated
+buffer the callee merely fills. The doxygen `@param[out]` tag cannot
+express this difference, which is exactly why a dedicated enum value is
+needed.
+
+**`OUT_CALLEE_ALLOCATED` is a best-effort hint, layered on top of the
+coarse `IN`/`OUT`/`INOUT` direction.** Rules should provide it wherever
+they can prove callee-allocation — the structural producers
+(`double_indirection_out` for `T**`, `string_z` for `char**`) and the
+documented rank-0/double-indirection promotion in
+`documented_param_intent`. A binding generator is free to treat it as
+plain `OUT` by reading `.direction`; direction-only backends (Fortran)
+do exactly that and ignore the allocation axis entirely.
+
+**The allocation axis is derived, not solely prescribed.** `@param[out]`
+denotes output *direction* only — it says nothing about who allocates.
+A caller-allocated output buffer (e.g. `hipMemcpy`'s `dst`, a rank-1
+`void*`) is correctly tagged `[out]` and stays in the args; allocation
+is decided separately. The recipe layer therefore prescribes only the
+two real, language-agnostic properties — direction (`IN`/`OUT`/`INOUT`)
+and rank (0 = single slot, ≥1 = sized buffer) — plus the explicit hint
+where it is genuinely known. The Cython generator then *derives* the
+allocation axis:
+
+```python
+is_out_callee_allocated_ptr = (
+    intent.allocated_by_callee          # explicit hint (authoritative)
+    or (is_out_ptr and ptr_rank == 0)   # additive scalar fallback
+)
+```
+
+The first disjunct is authoritative for buffers/handles carrying the
+hint (independent of rank). The second is an additive *fallback* that
+promotes a scalar OUT a rule left as plain `OUT` (so a leaked rank-0
+scalar still returns a bare value, not a `Pointer`).
+
+The rank-0 fallback assumes a rank-0 `OUT` slot is a value the callee
+*produces*. That is wrong for the rare case of a caller-*provided*
+rank-0 handle the callee writes *into* — e.g. `hipMemcpyHtoA`'s
+`hipArray_t dstArray` (a `struct hipArray*`, rank-0 record handle the
+caller created with `hipMallocArray`). Such a destination must stay a
+caller-allocated argument. Rather than complicate the generic fallback,
+the recipe handles these with a targeted per-parameter **rank override
+to 1** (HIP's `_HIPMEMCPY_RECORD_DST_NAMES`, gated on
+`is_pointer_to_record(degree=1)`): at rank 1 the fallback no longer
+fires and the parm stays caller-allocated, while its honest `OUT`
+direction is preserved. The `void*`-alias destinations
+(`hipDeviceptr_t`) need no override — `opaque_typedef_is_handle` already
+defers for `void*`, so they are rank-1 buffers.
+
+**Callee-allocation is decoupled from rank and from the wrapper type.**
+A callee-allocated parameter can be a scalar, a handle, *or* a buffer:
+`hipMalloc(void** ptr, size)` is callee-allocated and rank-1, rendered
+by the complicated-type handler as a `DeviceArray` (a byte sequence),
+not a scalar. Who allocates (the allocation axis) and what Python type
+is returned (the wrapper) are separate decisions — which is why the
+hint cannot be reconstructed from rank-0 alone and must be preserved for
+such sites.
+
+Both backends consume the effective verdict through `parm.intent` and
+branch on `parm.intent.direction` directly. The cython `Parm` keeps two
+convenience predicates over that verdict — `is_out_ptr`
+(`intent.direction == OUT`) and `is_out_callee_allocated_ptr`
+(the derivation above) — because the cython OUT dispatch reads
+them; the IN / INOUT cases need no predicate (they are the dispatch's
+default branch).
+
+### Producers of `OUT_CALLEE_ALLOCATED`
+
+The hint is no longer the output of a single rule — it is emitted from three
+layers, consulted in the precedence order of §4.4 (per-library hardcodes
+first, then `documented_param_intent`, then the structural rules). Any
+producer that can *prove* callee-allocation should emit it; a consumer that
+doesn't care reads `.direction` and sees plain `OUT`.
+
+**1. Generic structural rules** (`support/recipes/generic.py`, library-agnostic):
+
+| Rule (§3) | Trigger | Rank emitted |
+|-----------|---------|-------------:|
+| `double_indirection_out` (#4) | non-const `T**` — `void**`, `record**`, `enum**`, `basic**` | 0 for a typed handle slot; **1 for `void**`** (the `hipMalloc` byte-buffer idiom) |
+| `string_z` (#5) | non-const `char **` (returned string) | 1 |
+| `documented_param_intent` (#10) | a doxygen `@param[out]` **on a callee-allocated shape** — the `_is_callee_allocated_out_shape` test: rank-0 scalar/handle/string, OR a non-const `T**`/`void**`, OR a `char**`. A `[out]` on a caller-sized `T*` buffer stays plain `OUT`. | inherited |
+
+**2. Per-library hardcoded overrides** (`support/recipes/rocm.py`, highest
+precedence — these run before the structural chain):
+
+- **HIP opaque-handle creators** — `_HIP_HANDLE_CREATOR_OUT_PARM0` (parm 0)
+  and `_HIP_HANDLE_CREATOR_OUT_PARM01` (parms 0 and 1): `hipStreamCreate`,
+  `hipEventCreate`, `hipMalloc*`, `hipModule{Load,Get}*`, `hipMemPool*`,
+  `hipGraph*`, `hipCtxCreate`, … Doxygen mistags these `@param[in, out]`;
+  the override restores them to callee-allocated OUT (see UPSTREAM_BUGS
+  Family 2).
+- **HIP `void**` named slots** — a `void**` named `devPtr` / `ptr` /
+  `dev_ptr` / `data` / `dptr` is a handle-creation slot.
+- **HIP scalar-via-pointer OUTs** — `pointer-to-enum` (degree 1), and
+  non-`char` `pointer-to-basic-type` (degree 1): the callee writes a fresh
+  scalar through the slot. (These will be subsumed by
+  `status_return_out_pointer` (#8) once that relational rule lands.)
+- **hipBLAS / hipSOLVER handle creators** — a `void**` named `handle`
+  (`hipblasCreate`, `hipsolverCreate`).
+
+**3. Cython-only recipe-generator overrides** (`generators_hip.py`):
+
+- the binding-allocated `char *` string buffers in `_CSTR_OUT_BUFFERS`
+  (`hipDeviceGetName.name`, `hipDeviceGetPCIBusId.pciBusId`,
+  `hipGraphInstantiate.pLogBuffer`; §4.3). These are deliberately **absent
+  from `controls.hip`** so that direction-only backends keep them as plain
+  caller-allocated `OUT`; only the HIP Cython backend promotes them.
+
+The first two layers feed the shared intent chain consumed by every backend;
+the third wraps that chain for the HIP Cython generator alone. All three
+ultimately set the same `ParmIntent.OUT_CALLEE_ALLOCATED` value, which the
+Cython dispatch below turns into a synthesized return.
+
+### Cython dispatch: two pointer paths keyed on allocation
+
+`Function._analyze_parms` routes each pointer parm down one of two
+handlers, keyed purely on `is_out_callee_allocated_ptr` (which already
+implies direction `OUT`):
+
+- **`handle_callee_allocated_ptr_parm`** — the *only* path that adds a
+  return-tuple entry. Reached solely by `OUT_CALLEE_ALLOCATED`: the
+  callee produces a fresh handle / scalar / string and the codegen
+  synthesizes it as a return value. If the shape can't be synthesized it
+  raises `CodegenUnsupportedPattern`; the dispatcher rolls the entry back
+  and degrades to the caller-allocated path (the param stays a plain OUT
+  pointer, the return tuple is unchanged, and the caller passes a
+  `Pointer`).
+- **`handle_caller_allocated_ptr_`** — the shared path for **IN**, plain
+  caller-allocated **OUT**, and **INOUT**. The caller owns the buffer, so
+  it never adds a return-tuple entry. It is *total*: any shape the
+  structured branches don't bind falls back to the generic `Pointer`
+  wrapper (via `ptr_complicated_type_handler`) instead of crashing.
+
+So a plain (caller-allocated) `OUT` buffer is bound as a caller-passed
+argument, while a callee-allocated `OUT` becomes a return value — the
+concrete payoff of the orthogonal allocation axis.
+
 ### Always-on: original C signature in every generated docstring
 
 Independent of the fallback path, every generated function binding's
@@ -325,10 +511,81 @@ cross-reference ROCm documentation, to understand what they're passing
 when an `INOUT` `Pointer` shows up, and to verify any ctypes wiring
 matches the C ABI.
 
-## 9. Pointers / further reading
+## 9. Prior art: annotation systems and conventions
 
-- Microsoft SAL — *Understanding SAL*: <https://learn.microsoft.com/en-us/cpp/code-quality/understanding-sal>
-- GObject Introspection annotations: <https://gi.readthedocs.io/en/latest/annotations/giannotations.html>
-- C++ Core Guidelines, F.15–F.21 (in/out conventions): <https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines>
-- Mathieu Ropert, "Input-output arguments: reference, pointers or values?"
-- COM/IDL `[in]`, `[out]` directional attributes
+C deliberately erases the intent/rank information interfacegen needs (§1), so
+none of it can be recovered from the language alone. Other ecosystems hit the
+same wall and bolted a *parameter-annotation layer* on top of C to recover it
+— for static analysis, for RPC marshalling, or for auto-generating
+cross-language bindings (exactly our problem). The conventions cataloged in §3
+are distilled from these systems; the "Sourced from" column there cites them by
+the shorthands defined below. Where a system and interfacegen disagree on a
+term, this section is the glossary of record.
+
+### 9.1 SAL — Microsoft Source-code Annotation Language
+
+SAL is a set of macros (`_In_`, `_Out_`, `_Inout_`, `_Outptr_`,
+`_In_reads_(n)`, `_Out_writes_(n)`, `_In_z_`, `_Outptr_result_z_`, …) that
+annotate C/C++ function parameters with direction, buffer extent, and
+nullability. They expand to nothing in a normal build and are consumed by the
+MSVC `/analyze` static analyzer. SAL is the closest match to interfacegen's
+model because it separates the same axes we do: `_In_`/`_Out_`/`_Inout_` is
+our **direction**, `_..._reads_(n)`/`_..._writes_(n)` is our **rank** (a sized
+buffer), `_Outptr_` is our `OUT_CALLEE_ALLOCATED` double-indirection case, and
+the `_z_` family is our `string_z` NUL-terminated-string convention.
+
+- *Understanding SAL*: <https://learn.microsoft.com/en-us/cpp/code-quality/understanding-sal>
+- *Annotating function parameters and return values*: <https://learn.microsoft.com/en-us/cpp/code-quality/annotating-function-parameters-and-return-values>
+
+### 9.2 GIR — GObject Introspection annotations
+
+GObject Introspection (GIR) is the GLib/GTK machinery that scrapes annotated C
+headers to auto-generate bindings for Python, JavaScript, Rust, and others —
+the same end goal as interfacegen. Its in-comment annotations
+(`(in)`, `(out)`, `(inout)`, `(array length=N)`, `(array zero-terminated=1)`,
+`(transfer …)`, `(nullable)`) map directly onto our conventions: `(out)` on a
+double-indirection parameter is our `double_indirection_out`,
+`(array length=N)` is `array_with_length_param`, and
+`(array zero-terminated=1)` is `zero_terminated_array`. The `(transfer …)`
+ownership annotation has no direct interfacegen analogue but informs who frees
+callee-allocated returns.
+
+- GObject Introspection annotation reference: <https://gi.readthedocs.io/en/latest/annotations/giannotations.html>
+
+### 9.3 COM / IDL (MIDL) — directional parameter attributes
+
+COM interfaces are described in Microsoft Interface Definition Language (MIDL),
+where every parameter is tagged `[in]`, `[out]`, or `[in, out]` (plus
+extent attributes `[size_is]`, `[length_is]`, `[max_is]`). The MIDL compiler
+uses these to generate RPC marshalling stubs — it must know direction to know
+which way to copy bytes across a process boundary, the same reason a binding
+generator must. A MIDL-relevant rule we lean on: **all `[out]` parameters must
+be pointers** (you can't return through a by-value argument in C), and a
+callee-allocated `[out]` handle must be a pointer-to-pointer — precisely the
+shape interfacegen classifies as `OUT_CALLEE_ALLOCATED`.
+
+- `[in]` attribute: <https://learn.microsoft.com/en-us/windows/win32/midl/in>
+- `[out]` attribute: <https://learn.microsoft.com/en-us/windows/win32/midl/out-idl>
+- Anatomy of an IDL file (worked `[in]`/`[out]`/`[in, out]` example): <https://learn.microsoft.com/en-us/windows/win32/com/anatomy-of-an-idl-file>
+
+### 9.4 C++ Core Guidelines and the "reference vs. value" schools
+
+These are *style* guidance rather than machine-readable annotation systems, but
+they are the source of conventions #2 and #3 (`pointer_as_reference` vs.
+`pointer_as_value`) — the two opposed readings of a bare non-const `T*`. The
+C++ Core Guidelines (F.15–F.21) codify the "outputs leave via the return value,
+in-out via non-const reference" position; Ropert's article surveys the
+reference/pointer/value trade-off and is why the doc names the two camps.
+
+- C++ Core Guidelines, F.15–F.21 (parameter-passing conventions): <https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f-call>
+- Mathieu Ropert, *Input-output arguments: reference, pointers or values?*: <https://mropert.github.io/2018/04/03/output_arguments/>
+
+### 9.5 The status-return / OUT-pointer idiom
+
+Not a formal annotation system but a near-universal C convention underpinning
+`status_return_out_pointer` (#8): the function returns an integer/enum status
+code and delivers its real result through an OUT pointer. POSIX, every Khronos
+API (OpenGL, Vulkan, OpenCL), and every ROCm runtime entry point
+(`hipError_t hipFoo(…, T* out)`) follow it. interfacegen exploits the inverse:
+a single non-const pointer parameter on a status-returning function is almost
+always that OUT slot.
