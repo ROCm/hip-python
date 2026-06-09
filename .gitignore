@@ -27,12 +27,14 @@ pip-wheel-metadata/
 _venv/
 venv/
 
-# --- test / coverage ---
+# --- test / coverage / type & lint caches ---
 .pytest_cache/
 .coverage
 .coverage.*
 htmlcov/
 .tox/
+.mypy_cache/
+.ruff_cache/
 
 # --- editor / OS noise ---
 .idea/
