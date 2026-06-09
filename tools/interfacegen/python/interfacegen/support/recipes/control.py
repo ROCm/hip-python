@@ -90,6 +90,32 @@ class ParmIntent(enum.IntEnum):
     IN = 0
     INOUT = 1
     OUT = 2
+    OUT_CALLEE_ALLOCATED = 3
+
+    @property
+    def direction(self) -> "ParmIntent":
+        """Coarsen to the IN/OUT/INOUT direction vocabulary used by
+        direction-only backends (Fortran). ``OUT_CALLEE_ALLOCATED`` maps
+        to ``OUT``; all other members map to themselves.
+
+        ``OUT_CALLEE_ALLOCATED`` is a strict refinement of ``OUT`` along
+        an orthogonal allocation axis (see ``allocated_by_callee``), not a
+        new direction. Backends that only reason about data-flow direction
+        (e.g. Fortran ``intent(in/out/inout)``) consult this property so
+        they never have to enumerate the refined members.
+        """
+        if self is ParmIntent.OUT_CALLEE_ALLOCATED:
+            return ParmIntent.OUT
+        return self
+
+    @property
+    def allocated_by_callee(self) -> bool:
+        """True iff this intent denotes a callee-allocated ``OUT`` (a fresh
+        handle / scalar / NUL-terminated string produced by the callee,
+        whose prior slot contents are discarded). False for ``IN`` /
+        ``INOUT`` and for caller-allocated ``OUT`` (e.g. a caller-sized
+        array buffer the callee fills)."""
+        return self is ParmIntent.OUT_CALLEE_ALLOCATED
 
 
 def DEFAULT_PTR_PARM_INTENT(node: "tree.Parm"):
