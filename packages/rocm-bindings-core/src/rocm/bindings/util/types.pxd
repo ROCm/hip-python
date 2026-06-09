@@ -59,7 +59,7 @@ cdef class CStr(Pointer):
 
     cdef const char* getElementPtr(self)
 
-    cpdef void malloc(self, Py_ssize_t size_bytes)
+    cpdef void malloc(self, Py_ssize_t content_len)
 
     cpdef void free(self)
 

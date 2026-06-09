@@ -558,11 +558,24 @@ cdef class CStr(Pointer):
             wrapper.init_from_pyobj(pyobj)
             return wrapper
 
-    cpdef void malloc(self, Py_ssize_t size_bytes):
-        """Dynamically allocate a buffer of bytes for this CStr.
+    cpdef void malloc(self, Py_ssize_t content_len):
+        """Allocate a zeroed buffer with room for ``content_len`` chars plus a
+        NUL terminator.
+
+        Allocates ``content_len + 1`` bytes and zero-fills them, so the buffer
+        is always NUL-terminated: even a C callee that writes all
+        ``content_len`` bytes without terminating leaves the appended trailing
+        byte as the terminator, keeping ``strlen``-based length reporting
+        in-bounds.
 
         Args:
-            size_bytes (`Py_ssize_t`): The number of bytes to allocate.
+            content_len (`Py_ssize_t`): Number of content (non-terminator)
+                bytes to reserve. The actual allocation is ``content_len + 1``
+                to hold the appended NUL terminator.
+        Note:
+            ``malloc`` appends a NUL terminator byte; pass the buffer capacity
+            the C callee will be told about (e.g. HIP's ``len``), not
+            ``len + 1``.
         Note:
             Throws `~.RuntimeError` if the data pointer is not NULL as this
             indicates that this instance handles external data.
@@ -571,8 +584,8 @@ cdef class CStr(Pointer):
         """
         if self._ptr != NULL:
             raise RuntimeError("Data pointer must be NULL.")
-        self._ptr = libc.stdlib.malloc(size_bytes)
-        libc.string.memset(<void*>self._ptr, 0, size_bytes)
+        self._ptr = libc.stdlib.malloc(content_len + 1)
+        libc.string.memset(<void*>self._ptr, 0, content_len + 1)
         self._is_ptr_owner = True
 
     cpdef void free(self):
