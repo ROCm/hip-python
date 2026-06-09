@@ -17,25 +17,31 @@ affected `@param[…]` annotations have been touched in years.
 
 ## Title
 
-`hip_runtime_api.h` — `@param[out] dst` for `hipMemcpy*`,
-`@param[in, out]` for opaque-handle creators (`hipStreamCreate`,
-`hipEventCreate`, `hipModuleLoad*`, `hipMalloc*`, `hipMemPool*`,
-`hipGraph*`, `hipImport*`), and `@param[out]` for caller-provided
-**input** pointers (`hipHostRegister`, `hipMemcpyToSymbol*`)
-misclassify parameter intent.
+`hip_runtime_api.h` — `@param[in, out]` for opaque-handle creators
+(`hipStreamCreate`, `hipEventCreate`, `hipModuleLoad*`, `hipMalloc*`,
+`hipMemPool*`, `hipGraph*`, `hipImport*`) and `@param[out]` for
+caller-provided **input** pointers (`hipHostRegister`,
+`hipMemcpyToSymbol*`) misclassify parameter intent. (The `@param[out]`
+on `hipMemcpy*`/`hipMemset*` destinations is **correct** — see Family 1
+— and is listed only to record that it was reviewed and is not a bug.)
 
 ## Summary
 
 Several families of public HIP runtime API functions carry
 doxygen `@param[…]` tags whose intent does not match the C semantics:
 
-1. **`hipMemcpy*` family** tags the destination buffer parameter as
-   `@param[out]`, but it is in fact `@param[in,out]`: the caller
-   pre-allocates the destination buffer (any rank: scalar, 1-D, 2-D,
-   3-D, host- or device-resident), and `hipMemcpy*` writes into it.
-   `[out]` semantics in the doxygen vocabulary mean callee-allocated /
-   caller-readback (a fresh resource is produced); that is not what
-   `hipMemcpy*` does.
+1. **`hipMemcpy*` / `hipMemset*` family** — *not an upstream bug; kept
+   for the record.* The destination buffer is tagged `@param[out]`,
+   which is **correct**: `[out]` denotes the data-flow *direction* only
+   (the callee writes the destination), and that is exactly what these
+   functions do. Whether the buffer is caller- or callee-*allocated* is
+   an orthogonal axis the doxygen vocabulary does not encode, so `[out]`
+   is not wrong here. The earlier claim that `[out]` should be
+   `[in,out]` was mistaken — it conflated direction with allocation.
+   Keeping the destination caller-allocated (so it stays an argument
+   rather than a synthesized return) is the binding generator's job, not
+   the header's; see "Workaround" below for how `hip-python` derives the
+   allocation axis from pointer rank.
 
 2. **Opaque-handle creators** (`hipStreamCreate*`, `hipEventCreate*`,
    `hipModuleLoad*`, `hipMalloc*`, `hipMemPool*`, `hipGraph*`,
@@ -54,14 +60,12 @@ doxygen `@param[…]` tags whose intent does not match the C semantics:
    (`hipMemcpyToSymbol*`, where the parameter is even `const`-qualified —
    `const void* symbol` — which directly contradicts `[out]`).
 
-These mistags break any tooling that derives parameter intent from
-doxygen tags (binding generators, swagger-style documentation walkers,
-static analyzers). Specifically, the AMD `hip-python` codegen
-(`/src/interfacegen`) recently added a generic
+These mistags (Families 2–4) break any tooling that derives parameter
+intent from doxygen tags (binding generators, swagger-style
+documentation walkers, static analyzers). Specifically, the AMD
+`hip-python` codegen (`/src/interfacegen`) recently added a generic
 `documented_param_intent` rule at the head of every per-library intent
 chain. Trusting these tags causes the regenerated python bindings to:
-- drop `dst` from `hipMemcpy*` and present it as a callee-allocated
-  return value (wrong — there is no allocation function called); and
 - drag the OUT handle pointer of `hipStreamCreate` and friends into the
   argument list (wrong — the handle is conceptually returned, not
   passed in); and
@@ -69,8 +73,9 @@ chain. Trusting these tags causes the regenerated python bindings to:
   `symbol` to `NULL` (wrong — these are required inputs; see Family 4 for
   the broken generated signatures).
 
-We have had to special-case all three families in the codegen rule chain;
-fixing the tags upstream lets us drop the workaround.
+We have had to special-case Families 2–4 in the codegen rule chain;
+fixing the tags upstream lets us drop those workarounds. Family 1 needs
+no upstream change.
 
 ## Reproducer (text inspection)
 
@@ -92,12 +97,18 @@ hipError_t hipStreamCreate(hipStream_t* stream);
 
 ## Suggested fix
 
-### Family 1 — `hipMemcpy*` `dst` (and the parallel `dstHost`, `dstDevice`, `dstArray`, `dsts`)
+### Family 1 — `hipMemcpy*` / `hipMemset*` destinations — NO upstream change needed
 
-`@param[out]` → `@param[in,out]`.
+The `@param[out]` on the destination buffer is **correct**: it states the
+data-flow direction (the callee writes the destination), which is true.
+There is no upstream fix to make here — the earlier `[out]`→`[in,out]`
+suggestion was wrong (it conflated direction with allocation). The
+binding generator keeps these destinations as caller-allocated arguments
+on its own (see "Workaround"). This family is retained only for the
+record and for the destination-name inconsistency note below, which is a
+genuine (if minor) upstream foot-gun for *name-based* tooling.
 
-Affected entry points (function names; the same mismatch exists on the
-`dst`-style parameter of each):
+For reference, the entry points whose destination is `[out]` (correctly):
 
 ```
 hipMemcpy
@@ -136,9 +147,9 @@ hipMemcpyBatchAsync
 
 (Plus any future `hipMemcpy*` variant — the rule is uniform.)
 
-The **`hipMemset*` family** shares the identical mismatch on its
-destination buffer (`@param[out]` → `@param[in,out]`): the caller
-allocates the device buffer and the function fills it.
+The **`hipMemset*` family** has the same (correct) `@param[out]` on its
+destination buffer — the caller allocates the device buffer and the
+function fills it (direction OUT):
 
 ```
 hipMemset
@@ -159,17 +170,19 @@ hipMemsetD2D32
 hipMemsetD2D32Async
 ```
 
-**Destination-name inconsistency (important for any name-based tooling).**
-The destination parameter is *not* named uniformly across this family.
-Most use `dst`, but **`hipMemsetD8`, `hipMemsetD8Async`, `hipMemsetD16`,
-`hipMemsetD16Async`, and `hipMemsetD32` name it `dest`** — while the
-otherwise-parallel `hipMemsetD32Async` uses `dst`. A binding generator
-that keys its INOUT override on the parameter name (as `hip-python` does
-via `_HIPMEMCPY_INOUT_DST_NAMES`) must list **both** `dst` and `dest`, or
-the five `dest` variants fall through to the `@param[out]` tag and the
-generated binding drops the buffer entirely (it memsets `NULL`). Aligning
-the upstream parameter name to `dst` everywhere would also remove this
-foot-gun.
+**Destination-name inconsistency (minor; only matters for name-based
+tooling).** The destination parameter is *not* named uniformly across
+this family. Most use `dst`, but **`hipMemsetD8`, `hipMemsetD8Async`,
+`hipMemsetD16`, `hipMemsetD16Async`, and `hipMemsetD32` name it `dest`**
+— while the otherwise-parallel `hipMemsetD32Async` uses `dst`. This no
+longer affects `hip-python`: those destinations are `hipDeviceptr_t`
+(`void*` aliases) and `void*`, which the codegen ranks as rank-1
+buffers regardless of name (see "Workaround"), so they stay
+caller-allocated without any name-based override. The only name-keyed
+override that remains is for the `hipArray_t` (`record*`) destinations,
+and it is gated on the *type* (`is_pointer_to_record(degree=1)`), not on
+the name alone. Aligning the upstream parameter name to `dst` everywhere
+would still be a tidiness win for other name-based tooling.
 
 ### Family 2 — opaque-handle creators
 
@@ -344,13 +357,32 @@ parameters are caller-allocated vs callee-written) closes the loop.
 `/src/interfacegen/python/interfacegen/support/recipes/rocm.py`:
 
 - **`class hip.ptr_parm_intent`** hardcodes the correct intent for the
-  hip-runtime families (Memcpy/Memset INOUT, opaque-handle creators
-  OUT, and the Family-4 input pointers `hipHostRegister` /
-  `hipMemcpyToSymbol*` forced to IN) and short-circuits the generic
-  `documented_param_intent` rule via the `@fallback` decorator. See the
-  comment block immediately above the `_HIPMEMCPY_INOUT_DST_NAMES` /
-  `_HIP_HANDLE_CREATOR_OUT_PARM0` definitions for the full rationale, and
+  genuinely-mistagged families (opaque-handle creators
+  `OUT_CALLEE_ALLOCATED`, and the Family-4 input pointers
+  `hipHostRegister` / `hipMemcpyToSymbol*` forced to IN) and
+  short-circuits the generic `documented_param_intent` rule via the
+  `@fallback` decorator. (`OUT_CALLEE_ALLOCATED` is the callee-allocated
+  refinement of `OUT`; it coarsens back to `OUT` for direction-only
+  backends via `ParmIntent.direction`.) See the comment block above the
+  `_HIP_HANDLE_CREATOR_OUT_PARM0` definition for the full rationale and
   the explicit `(func_name, parm_idx) -> ParmIntent.IN` tuple for Family 4.
+
+- **Family 1 (no upstream bug) is handled purely by the allocation-axis
+  inference, not by faking the direction.** The allocation axis (caller-
+  vs callee-allocated) is derived from pointer *rank*: `[out]` to a
+  rank≥1 buffer is caller-allocated and stays an argument; `[out]` to a
+  rank-0 scalar slot is callee-allocated and becomes a return value.
+  - The `void*`-alias destinations (`hipDeviceptr_t`, plain `void*`)
+    fall out correctly with **no override**: `generic.opaque_typedef_is_handle`
+    defers for `void*`-canonical typedefs, so they rank as rank-1
+    buffers (a `void*` is untyped storage, not an opaque scalar handle).
+  - Only the `hipArray_t` (`record*`) destinations need a targeted
+    override (`_HIPMEMCPY_RECORD_DST_NAMES`, gated on
+    `is_pointer_to_record(degree=1)`): they are genuine rank-0 handles,
+    so `hip.ptr_parm_intent` pins them to `OUT` and `hip.ptr_rank`
+    overrides their rank to 1, keeping the caller-provided array in the
+    args. The generic rank-0 callee-allocation fallback is left
+    unchanged.
 
 - **`class hipfft.ptr_parm_intent`** hardcodes `odata` in the
   `hipfftExec*` family as INOUT (the upstream tag `@param[out]` is

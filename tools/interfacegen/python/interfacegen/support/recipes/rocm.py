@@ -322,25 +322,35 @@ class hip:
     # `generic.documented_param_intent` rule) — wired by the
     # `@fallback(*_RUNTIME_INTENT_CHAIN)` decorator on `ptr_parm_intent`.
     # The hardcoded entries are needed because the upstream HIP doxygen
-    # tags are wrong for two large families:
+    # tags are wrong (or under-expressive) for the following families:
     #
-    # 1. **`hipMemcpy*` `dst`-style outputs are tagged `@param[out]`
-    #    in `/opt/rocm/include/hip/hip_runtime_api.h`** but are
-    #    semantically INOUT — the caller allocates the destination
-    #    buffer (any rank: scalar, 1-D, 2-D, ...) and the function fills
-    #    it. Trusting the `[out]` tag would drop `dst` from the args and
-    #    return it as a fresh allocation, which doesn't match the C API
-    #    contract.
+    # 1. **`hipMemcpy*` / `hipMemset*` `hipArray_t` destinations** are
+    #    caller-allocated output buffers that must stay in the args.
+    #    `[out]` denotes output *direction* only, which is correct here —
+    #    the issue is the *allocation* axis. The `void*`-alias destinations
+    #    (`hipDeviceptr_t`, plain `void*`) are handled generically:
+    #    `opaque_typedef_is_handle` defers for `void*`-canonical typedefs,
+    #    so they rank as rank-1 buffers and stay caller-allocated with no
+    #    override. Only the `*A*` variants whose destination is a
+    #    `hipArray_t` (`struct hipArray*`, a genuine rank-0 `record*`
+    #    handle) need help: a plain rank-0 OUT would be promoted to a
+    #    callee-allocated return by the rank-0 inference and dropped. We
+    #    pin those to OUT here and override their rank to 1 in `ptr_rank`
+    #    (`_HIPMEMCPY_RECORD_DST_NAMES`, gated on
+    #    `is_pointer_to_record(degree=1)`), leaving the generic rank-0
+    #    fallback unchanged.
     #
     # 2. **Opaque-handle creators** (`hipStreamCreate`, `hipEventCreate`,
     #    `hipMalloc*`, `hipModuleLoad*`, `hipModuleGet*`, `hipMemPool*`,
     #    `hipGraph*`, `hipImport*`, `hipGetSymbol*`, `hipCtxCreate`,
     #    `hipDevicePrimaryCtxRetain`, `hipExternalMemoryGetMappedBuffer`)
-    #    are tagged `@param[in, out]` for what is in fact a pure OUT
-    #    pointer of a scalar opaque struct — the caller does not
-    #    pre-populate, the function writes the new handle. Trusting the
-    #    `[in, out]` tag drags the OUT pointer back into the args
-    #    instead of into the return tuple.
+    #    are tagged `@param[in, out]` for what is in fact a callee-
+    #    allocated OUT pointer of a scalar opaque struct
+    #    (`ParmIntent.OUT_CALLEE_ALLOCATED`) — the caller does not
+    #    pre-populate, the function produces a fresh handle and the
+    #    prior slot contents are discarded. Trusting the `[in, out]` tag
+    #    drags the OUT pointer back into the args instead of into the
+    #    return tuple.
     #
     # 3. **Caller-provided INPUT pointers tagged `@param[out]`**
     #    (Family 4 in UPSTREAM_BUGS): `hipHostRegister`'s `void* hostPtr`
@@ -357,25 +367,26 @@ class hip:
     # has to special-case these families here.
     # ---------------------------------------------------------------------
 
-    # `hipMemcpy*` / `hipMemset*` family — every entry-pointer destination
-    # buffer. parm names follow the C signature: `dst`, `dstHost`,
-    # `dstDevice`, `dstArray`, and `dest`. Buffer rank is intentionally NOT
-    # pinned here — the ptr_rank chain still classifies these as "any rank"
-    # pointers.
+    # `hipMemcpy*` / `hipMemset*` destinations that are `hipArray_t`
+    # (`struct hipArray*`, a genuine rank-0 record* handle). These are
+    # caller-allocated output buffers and must stay in the python args.
+    # void*-alias destinations (`hipDeviceptr_t`, plain `void*`) need no
+    # entry: `opaque_typedef_is_handle` defers for `void*`-canonical
+    # typedefs, so they rank as rank-1 buffers and stay caller-allocated
+    # via the generic rule. Only the `record*` destinations are rank-0; the
+    # rank-0 callee-allocation inference would otherwise drop them, so we
+    # pin them to OUT and override their rank to 1 (see `ptr_parm_intent` /
+    # `ptr_rank` and UPSTREAM_BUGS Family 1).
     #
-    # NOTE: the destination name is inconsistent upstream. Most functions use
-    # `dst`, but `hipMemsetD8`/`D8Async`/`D16`/`D16Async`/`D32` name it
-    # `dest` (while `hipMemsetD32Async` uses `dst`). Both must be listed or
-    # the `dest` variants fall through to the `@param[out]` doxygen tag and
-    # the generated binding drops the buffer (memsets NULL). See
-    # UPSTREAM_BUGS Family 1.
-    _HIPMEMCPY_INOUT_DST_NAMES = frozenset((
+    # The destination parameter is named `dstArray` on the `*A*` driver
+    # variants and `dst` on `hipMemcpy2DToArray`/`*Async`; both are listed.
+    # The `is_pointer_to_record(degree=1)` gate at the use sites keeps this
+    # from matching the like-named `void*` destinations (e.g.
+    # `hipMemcpyAtoH`'s `void* dst`) or the `record*` *source* arrays
+    # (`srcArray`).
+    _HIPMEMCPY_RECORD_DST_NAMES = frozenset((
         "dst",
-        "dstHost",
-        "dstDevice",
         "dstArray",
-        "dsts",  # hipMemcpyBatchAsync takes a list of dsts
-        "dest",  # hipMemsetD8/D8Async/D16/D16Async/D32
     ))
 
     # Opaque-handle creators — function name + parm 0 -> OUT.
@@ -471,33 +482,54 @@ class hip:
         """
         func_name, parm_idx = parm.parent.name, parm.parm_index
 
-        # `hipMemcpy*` and `hipMemset*` `dst` outputs are INOUT (caller
-        # allocates buffer, function fills). Doxygen tags them
-        # `@param[out]` which is wrong — see comment block above. Match
-        # by function-name prefix + parm-name set so this also covers
-        # any future hipMemcpy* / hipMemset* variants without
-        # enumerating them.
+        # `hipMemcpy*` / `hipMemset*` destinations that are `hipArray_t`
+        # (a genuine rank-0 `record*` handle) are caller-allocated output
+        # buffers and must stay in the args. Pin them to OUT — the honest
+        # direction for a destination — and rely on the rank-1 override in
+        # `ptr_rank` to keep the unchanged rank-0 callee-allocation
+        # inference from dropping them into the return tuple. The
+        # like-named `void*` destinations (`hipDeviceptr_t`, plain `void*`)
+        # are rank-1 buffers via the generic rule and need no override; the
+        # `is_pointer_to_record(degree=1)` gate excludes them (and the
+        # `record*` source arrays). See UPSTREAM_BUGS Family 1.
         if (func_name.startswith("hipMemcpy") or func_name.startswith("hipMemset")) \
-                and parm.name in hip._HIPMEMCPY_INOUT_DST_NAMES:
-            return ParmIntent.INOUT
+                and parm.name in hip._HIPMEMCPY_RECORD_DST_NAMES \
+                and parm.is_pointer_to_record(degree=1):
+            return ParmIntent.OUT
 
         # Opaque-handle creators: parm 0 (or parm 0+1 for pitch
-        # allocators) is OUT. Doxygen tags these `@param[in, out]`
-        # which is wrong — see comment block above.
+        # allocators) is callee-allocated OUT — the callee produces a
+        # fresh handle/pointer and the caller's slot is discarded.
+        # Doxygen tags these `@param[in, out]` which is wrong — see
+        # comment block above.
         if func_name in hip._HIP_HANDLE_CREATOR_OUT_PARM0 and parm_idx == 0:
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         if func_name in hip._HIP_HANDLE_CREATOR_OUT_PARM01 and parm_idx in (0, 1):
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
 
         if (func_name, parm_idx) in (
             ("hipDeviceGetName", 0),
             ("hipIpcGetMemHandle", 0),
-            ("hipMemGetAddressRange", 0),
             ("hipDeviceGetUuid", 0),
             ("hipDeviceGetPCIBusId", 0),
             ("hipDrvGetErrorName", 1),
             ("hipDrvGetErrorString", 1),
         ):
+            # Mixed shapes, all OUT — the allocation axis is derived
+            # downstream from rank by the Cython layer, so we declare
+            # only the direction here: caller-sized char buffers (name,
+            # pciBusId, error strings) are rank-1 and stay caller-
+            # allocated OUT; scalar handle/struct slots (uuid, ipc
+            # handle) are rank-0 and become callee-allocated.
+            #
+            # NOTE: `hipMemGetAddressRange`'s `pbase` is deliberately NOT
+            # listed here. It is a `hipDeviceptr_t*` (canonically `void**`):
+            # a callee-produced pointer returned through a pointer-to-pointer
+            # slot. Pinning it to plain OUT here would, under the
+            # `void**`->rank-1 convention, miss the rank-0 callee-allocation
+            # fallback and wrongly emit it as a caller arg. Deferring to the
+            # chain lets `documented_param_intent` / `double_indirection_out`
+            # classify it as OUT_CALLEE_ALLOCATED (a return), which is correct.
             return ParmIntent.OUT
         if (func_name, parm_idx) in (
             ("hipPointerGetAttribute", 0),
@@ -517,22 +549,24 @@ class hip:
         ):
             return ParmIntent.IN
 
-        # HIP-specific naming: certain void** parms with these names are OUT
-        # (handle creation slots).
+        # HIP-specific naming: certain void** parms with these names are
+        # callee-allocated OUT (handle creation slots — the callee
+        # produces a fresh pointer through the void** slot).
         if parm.is_pointer_to_void(degree=2):
             if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
-                return ParmIntent.OUT
+                return ParmIntent.OUT_CALLEE_ALLOCATED
         # HIP runtime convention: pointer-to-enum is always a scalar OUT
-        # (generally a status/attribute return through pointer).
+        # (generally a status/attribute return through pointer). The
+        # callee writes a fresh value into the scalar slot.
         if parm.is_pointer_to_enum(degree=1):
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         # HIP runtime convention: scalar-via-pointer OUT for non-string
-        # basic-type pointers. Subsumed by `status_return_out_pointer`
-        # once that relational rule lands.
+        # basic-type pointers (callee writes a fresh scalar). Subsumed by
+        # `status_return_out_pointer` once that relational rule lands.
         if parm.is_pointer_to_basic_type(degree=1) and not parm.is_pointer_to_char(
             degree=1
         ):
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None  # defer to chain
 
     @staticmethod
@@ -541,6 +575,21 @@ class hip:
         """Actual rank of the variables underlying pointer indirections."""
         if isinstance(node, Parm):
             func_name, parm_idx = node.parent.name, node.parm_index
+            # `hipMemcpy*` / `hipMemset*` `hipArray_t` (record*) destinations
+            # are caller-allocated output buffers. They rank as scalar (0)
+            # by default (record* handle), which would let the rank-0
+            # callee-allocation inference drop them from the signature.
+            # Override to rank 1 so the (unchanged) inference treats them as
+            # caller-allocated buffers, keeping the caller-provided array in
+            # the args. Paired with the OUT pin in `ptr_parm_intent`; see
+            # UPSTREAM_BUGS Family 1. The `is_pointer_to_record(degree=1)`
+            # gate excludes the `void*` destinations and `record*` sources.
+            if (
+                (func_name.startswith("hipMemcpy") or func_name.startswith("hipMemset"))
+                and node.name in hip._HIPMEMCPY_RECORD_DST_NAMES
+                and node.is_pointer_to_record(degree=1)
+            ):
+                return 1
             if (func_name, parm_idx) in (
                 ("hipDrvPointerGetAttributes", 1),
                 ("hipMemRangeGetAttributes", 2),
@@ -622,9 +671,14 @@ class hiprtc:
             ("hiprtcGetCodeSize", "codeSizeRet"),
             ("hiprtcGetBitcodeSize", "bitcode_size"),
             ("hiprtcLinkCreate", "hip_link_state_ptr"),
-            ("hiprtcLinkComplete", "bin_out"),  # rank == 1
             ("hiprtcLinkComplete", "size_out"),
         )
+        # NOTE: `hiprtcLinkComplete`'s `bin_out` (`void**`) is deliberately
+        # NOT in `out_parms`. It is a callee-produced pointer returned through
+        # a pointer-to-pointer slot; pinning it to plain OUT would (under the
+        # `void**`->rank-1 convention) miss the rank-0 callee-allocation
+        # fallback and wrongly emit it as a caller arg. Deferring to the chain
+        # lets `double_indirection_out` classify it as OUT_CALLEE_ALLOCATED.
         inout_parms = (  # these buffers must be allocated by user
             ("hiprtcGetCode", "code"),
             ("hiprtcGetProgramLog", "log"),
@@ -684,7 +738,9 @@ class hipblas:
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_void(degree=2) and node.name == "handle":
-            return ParmIntent.OUT
+            # `T* handle` creator (e.g. hipblasCreate) — callee produces a
+            # fresh opaque handle through the void** slot.
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None  # defer to chain
 
     @staticmethod
@@ -818,7 +874,8 @@ class hipsolver:
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_void(degree=2) and node.name == "handle":
-            return ParmIntent.OUT
+            # hipsolverCreate-style handle creator — callee-allocated.
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None  # defer to chain
 
     @staticmethod
@@ -897,6 +954,7 @@ class rccl:
                 ("pncclCommInitAll", "comm"),
             ):
                 return ParmIntent.INOUT
+            # `ncclComm_t* comm` creators — callee produces fresh handles.
             return ParmIntent.OUT
         if node.is_pointer_to_record(degree=1):
             if (node.parent.name, node.name) == "ncclGetUniqueId":
@@ -1033,6 +1091,7 @@ class hipfft:
         ) and node.name == "odata":
             return ParmIntent.INOUT
         if node.is_pointer_to_record(degree=2):
+            # `hipfftHandle* plan` creator — callee-allocated handle.
             return ParmIntent.OUT
         if node.name == "workSize":
             return ParmIntent.OUT
@@ -1082,6 +1141,7 @@ class hipsparse:
         """
         func_name = node.parent.name
         if node.is_pointer_to_record(degree=2):
+            # opaque descriptor/handle creator — callee-allocated.
             return ParmIntent.OUT
         if func_name == "hipsparseCreate":
             return ParmIntent.OUT
@@ -1656,9 +1716,43 @@ class hsa:
             return ParmIntent.INOUT
         return hipblas.ptr_parm_intent.__wrapped__(node)
 
-    # HSA's pointer-rank conventions match hipBLAS heuristics — reuse
-    # them rather than carrying a parallel set.
-    ptr_rank = hipblas.ptr_rank
+    @staticmethod
+    @fallback(*_NUMERICAL_RANK_CHAIN)
+    def ptr_rank(node: Node):
+        """Scalar-oriented pointer ranks for HSA.
+
+        HSA parameters do not follow hipBLAS's LAPACK naming
+        conventions, so borrowing ``hipblas.ptr_rank`` left every
+        unmatched pointer at the chain default (rank 1), leaking scalar
+        OUT handles/values as rank-1 buffers. Classify the genuine
+        single-slot shapes as rank 0 (mirrors ``hip`` / ``amdsmi``):
+        opaque handles (canonicalize to ``void*`` / ``void**``),
+        pointer-to-enum, pointer-to-record, and non-string
+        pointer-to-basic-type. ``void**`` stays rank 0 here (an HSA
+        handle slot) rather than taking the generic byte-buffer rank-1
+        path. Everything else defers to the chain (documented arrays /
+        buffers stay rank 1).
+        """
+        if isinstance(node, Parm):
+            # Opaque handles canonicalize to void*; pointer-to-handle is
+            # void** — both are single-slot, not byte buffers.
+            if node.is_pointer_to_void(degree=1) or node.is_pointer_to_void(
+                degree=2
+            ):
+                return 0
+            if (
+                (
+                    node.is_pointer_to_basic_type(degree=1)
+                    and not node.is_pointer_to_char(degree=1)
+                )
+                or node.is_pointer_to_enum(degree=1)
+                or node.is_pointer_to_record(degree=1)
+                or node.is_pointer_to_record(degree=2)
+            ):
+                return 0
+        elif isinstance(node, Field):
+            pass  # nothing to do
+        return None  # defer to chain
 
 
 class hipfile:

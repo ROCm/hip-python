@@ -73,7 +73,12 @@ def test_doxygen_inout_overrides_set_verb_to_in():
 
 
 def test_doxygen_out_overrides_handle_name_to_out():
-    """Names ending in `_handle` would default to IN, but @param[out] wins."""
+    """Names ending in `_handle` would default to IN, but @param[out] wins.
+
+    `void **node_handle` is a double-indirection slot, so the `[out]`
+    refines to the callee-allocated flavor (the callee writes a fresh
+    handle pointer); the coarse direction is still OUT.
+    """
     root = _build("""
         /**
          *  @param[out] node_handle the new node handle is written here.
@@ -81,7 +86,9 @@ def test_doxygen_out_overrides_handle_name_to_out():
         int amdsmi_get_node_handle(void **node_handle);
     """)
     p = _parm(root, "amdsmi_get_node_handle", "node_handle")
-    assert rocm.amdsmi.ptr_parm_intent(p) == ParmIntent.OUT
+    verdict = rocm.amdsmi.ptr_parm_intent(p)
+    assert verdict == ParmIntent.OUT_CALLEE_ALLOCATED
+    assert verdict.direction == ParmIntent.OUT
 
 
 def test_doxygen_out_overrides_inout_name_set():
@@ -199,12 +206,16 @@ def test_real_amdsmi_doxygen_audit_zero_unintended_mismatches():
             if doc is None:
                 continue  # undocumented parm — verb fallback applies
             verdict = rocm.amdsmi.ptr_parm_intent(p)
-            if verdict == doc:
+            # Compare on the coarse direction: a scalar `@param[out]` may
+            # refine to OUT_CALLEE_ALLOCATED, which still satisfies the
+            # documented `[out]` direction (the allocation axis is
+            # orthogonal and not expressed by the doxygen tag).
+            if verdict.direction == doc:
                 continue
             # An intentional override is allowed iff the recipe's
             # verdict matches the documented expected override.
             expected = intentional.get((n.name, p.name))
-            if expected is not None and verdict.name == expected:
+            if expected is not None and verdict.direction.name == expected:
                 continue
             mismatches.append((n.name, p.name, doc.name, verdict.name))
 
