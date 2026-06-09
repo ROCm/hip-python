@@ -1218,28 +1218,6 @@ def write_cmake_module_lists(opts, recipe_results):
                 f.write(f"set({var}\n    {' '.join(lst)})\n\n")
 
 
-def write_version_template_file(opts, recipe_results):
-    """Write `<output_dir>/VERSION.in` consumed by packages/CMakeLists.txt.
-
-    The template embeds the ROCm version and the codegen tool's own
-    rev-count; `@HIP_PYTHON_VERSION_SHORT@` is filled in at consumer
-    cmake-configure time from the consumer repo's `git rev-list --count
-    HEAD`. Format: `<rocm_version>.<codegen_rev_count>.@HIP_PYTHON_VERSION_SHORT@`.
-
-    `VERSION.in` (and the `VERSION` it renders to) MUST NOT be committed
-    on the codegen base branch; both are gitignored and emitted fresh by
-    every codegen run.
-    """
-    try:
-        codegen_rev_count = gitversion.git_head_rev_count()
-    except Exception:
-        codegen_rev_count = "0"
-    body = f"{opts.rocm_version}.{codegen_rev_count}.@HIP_PYTHON_VERSION_SHORT@"
-    path = os.path.join(opts.output_dir, "VERSION.in")
-    with open(path, "w") as f:
-        f.write(body)
-
-
 def write_cmake_version_files(opts, recipe_results):
     """Write per-package `cmake/generated_versions.cmake` (plan §B.7)."""
     rocm_version = opts.rocm_version

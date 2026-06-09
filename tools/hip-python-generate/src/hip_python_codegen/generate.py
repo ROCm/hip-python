@@ -177,7 +177,6 @@ def main(argv=None):
     binding_generator.write_namespace_markers(opts, recipe_results)
     binding_generator.write_cmake_module_lists(opts, recipe_results)
     binding_generator.write_cmake_version_files(opts, recipe_results)
-    binding_generator.write_version_template_file(opts, recipe_results)
     docs_generator.write_docs_pages(opts, recipe_results)
     docs_generator.write_toc_yml_in(opts, recipe_results)
 
