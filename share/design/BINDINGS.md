@@ -275,11 +275,9 @@ cdef bint __has_symbol(const char* name) noexcept nogil:
 **Cross-platform parity.** The posix loader (`dlopen`/`dlsym`/
 `dlclose`) and the win32 loader (`LoadLibraryA`/`GetProcAddress`/
 `FreeLibrary`) implement the identical `except 1` contract — only the
-underlying OS calls differ. The posix variant has a canonical recipe
-template at
-`interfacegen/recipes/python_cython/_util/posixloader.pyx` that is
-copied into the package; `win32loader.pyx` is the handcoded sibling
-that mirrors the same contract.
+underlying OS calls differ. Both are handcoded and committed in
+`rocm-bindings-core` as `src/rocm/bindings/util/posixloader.pyx` and
+`win32loader.pyx`, mirroring the same contract.
 
 
 ## Naming convention for generated locals
