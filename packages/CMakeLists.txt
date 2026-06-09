@@ -22,6 +22,7 @@ if(HIP_PYTHON_BUILD_DOCS_ONLY)
   set(HIP_PYTHON_BUILD_COMPILER   OFF CACHE BOOL "" FORCE)
   set(HIP_PYTHON_BUILD_INTEROP    OFF CACHE BOOL "" FORCE)
   set(HIP_PYTHON_BUILD_HIP_PYTHON OFF CACHE BOOL "" FORCE)
+  set(HIP_PYTHON_BUILD_NUMBA_HIP  OFF CACHE BOOL "" FORCE)
 else()
   hip_python_initialize()
 endif()
@@ -133,6 +134,12 @@ option(HIP_PYTHON_BUILD_HIP_PYTHON "Package hip-python metadata package" ON)
 if(NOT HIP_PYTHON_BUILD_HIP_PYTHON)
   message(STATUS "hip-python metadata package disabled (packaging will be skipped)")
 endif()
+
+# numba-hip is a pure-Python package that keeps its OWN independent
+# version (read from packages/numba-hip/{pyproject.toml,setup.py}); it is
+# deliberately excluded from the repo-root VERSION mirror loop above and
+# builds standalone via `python -m build` (no native extensions).
+option(HIP_PYTHON_BUILD_NUMBA_HIP "Build numba-hip package" ON)
 
 # Validate dependencies
 if(HIP_PYTHON_BUILD_HIP AND NOT HIP_PYTHON_BUILD_CORE)
@@ -325,6 +332,17 @@ if(HIP_PYTHON_BUILD_HIP_PYTHON)
   message(STATUS "Wheel target enabled: hip_python_wheel")
 endif()
 
+if(HIP_PYTHON_BUILD_NUMBA_HIP)
+  # Pure Python, no C extensions and no COMPONENT — reuses the same
+  # `python -m build` path as the hip-python metapackage above.
+  hip_python_add_wheel_target(
+    TARGET numba_hip_wheel
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/numba-hip"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Wheel target enabled: numba_hip_wheel")
+endif()
+
 # Aggregate target to build all wheels
 set(ALL_WHEEL_TARGETS)
 if(HIP_PYTHON_BUILD_CORE)
@@ -347,6 +365,9 @@ if(HIP_PYTHON_BUILD_INTEROP)
 endif()
 if(HIP_PYTHON_BUILD_HIP_PYTHON)
   list(APPEND ALL_WHEEL_TARGETS hip_python_wheel)
+endif()
+if(HIP_PYTHON_BUILD_NUMBA_HIP)
+  list(APPEND ALL_WHEEL_TARGETS numba_hip_wheel)
 endif()
 
 if(ALL_WHEEL_TARGETS)
@@ -426,6 +447,15 @@ if(HIP_PYTHON_BUILD_HIP_PYTHON)
   message(STATUS "Sdist target enabled: hip_python_sdist")
 endif()
 
+if(HIP_PYTHON_BUILD_NUMBA_HIP)
+  hip_python_add_sdist_target(
+    TARGET numba_hip_sdist
+    PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/numba-hip"
+    OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+  )
+  message(STATUS "Sdist target enabled: numba_hip_sdist")
+endif()
+
 # Aggregate target to build all sdists.
 set(ALL_SDIST_TARGETS)
 if(HIP_PYTHON_BUILD_CORE)
@@ -448,6 +478,9 @@ if(HIP_PYTHON_BUILD_INTEROP)
 endif()
 if(HIP_PYTHON_BUILD_HIP_PYTHON)
   list(APPEND ALL_SDIST_TARGETS hip_python_sdist)
+endif()
+if(HIP_PYTHON_BUILD_NUMBA_HIP)
+  list(APPEND ALL_SDIST_TARGETS numba_hip_sdist)
 endif()
 
 if(ALL_SDIST_TARGETS)
