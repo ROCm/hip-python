@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hip-python-codegen"
+version = "0.1.0"
+description = "Code generator for the hip-python ROCm Python bindings."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Advanced Micro Devices, Inc.", email = "hip-python.maintainer@amd.com" },
+]
+keywords = ["rocm", "hip", "python", "bindings", "cython", "code-generation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Code Generators",
+]
+dependencies = [
+    # Floor is 3.1.0: Cython 3.0.x miscompiles `cdef T x = <T>expr` for
+    # `*const *` types (silently drops the initializer). See
+    # share/design/UPSTREAM_BUGS/cython_const_pointer_initializer_bug.md.
+    "cython >= 3.1.0",
+    "libclang",
+    "pyparsing",
+    # `interfacegen` is a path-relative editable install — see
+    # dev-requirements.txt. It is intentionally not in this list because
+    # PEP 508 path deps are not portable across checkouts.
+]
+
+[project.scripts]
+hip-python-generate = "hip_python_codegen.generate:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
