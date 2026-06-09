@@ -6,7 +6,13 @@ def test_postprocessing():
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     module_name = "numbacompat"
 
-    file_path = f"{parent_dir}/../../src/numba/hip/util/{module_name}.py"
+    # Load the util module straight from the in-tree source. This test
+    # lives at tests/numba-hip/isolated/, so the package source root is
+    # three levels up under packages/numba-hip/src/.
+    file_path = (
+        f"{parent_dir}/../../../packages/numba-hip/src/"
+        f"numba/hip/util/{module_name}.py"
+    )
 
     spec = importlib.util.spec_from_file_location(module_name, file_path)
     numbacompat = importlib.util.module_from_spec(spec)
