@@ -147,9 +147,13 @@ def test_conservative_rank(root, fname, expected):
 @pytest.mark.parametrize(
     "fname,expected_intent,expected_rank",
     [
-        ("f_double_ptr_unknown", ParmIntent.OUT, 0),
-        ("f_struct_double_ptr", ParmIntent.OUT, 0),
-        ("f_void_double_ptr", ParmIntent.OUT, 0),
+        ("f_double_ptr_unknown", ParmIntent.OUT_CALLEE_ALLOCATED, 0),
+        ("f_struct_double_ptr", ParmIntent.OUT_CALLEE_ALLOCATED, 0),
+        # `void**` is the untyped callee-allocated byte-buffer idiom
+        # (`hipMalloc`); it reports rank 1 while typed `T**` handle slots
+        # remain rank 0. Callee-allocation (the OUT_CALLEE_ALLOCATED hint)
+        # is independent of rank.
+        ("f_void_double_ptr", ParmIntent.OUT_CALLEE_ALLOCATED, 1),
         # const T** => not OUT (intent), and rank-rule still fires (rank-only
         # convention does not check const). The `conservative` rule above
         # would catch the IN before this in a real chain.
@@ -204,7 +208,13 @@ def test_string_z(root):
 
     assert generic.string_z.ptr_parm_intent(p_in) == ParmIntent.IN
     assert generic.string_z.ptr_parm_intent(p_unknown) is None
-    assert generic.string_z.ptr_parm_intent(p_out) == ParmIntent.OUT
+    # `char **` returns a single callee-produced string.
+    assert (
+        generic.string_z.ptr_parm_intent(p_out)
+        == ParmIntent.OUT_CALLEE_ALLOCATED
+    )
+    # Coarsens back to OUT for direction-only consumers.
+    assert generic.string_z.ptr_parm_intent(p_out).direction == ParmIntent.OUT
 
     # A zero-terminated string is rank-1 *data* irrespective of how many
     # pointer layers wrap it: both ``char *`` and ``char **`` report rank 1.
@@ -385,6 +395,31 @@ def test_documented_param_intent_no_param_tag(doxy_root):
     """Doxygen present but no @param tags → return None."""
     p = _parm(doxy_root, "f_no_param", 0)
     assert generic.documented_param_intent.ptr_parm_intent(p) is None
+
+
+def test_documented_param_intent_scalar_out_is_callee_allocated(doxy_root):
+    """A documented `@param[out]` refines to OUT_CALLEE_ALLOCATED for a
+    scalar (rank-0) slot, but stays plain OUT for an array (rank-1+) slot.
+
+    The doxygen `[out]` tag cannot express callee-allocation of a sized
+    buffer, so only the scalar/handle/string case (rank 0) is upgraded;
+    a caller-sized array buffer remains caller-allocated OUT.
+    """
+    p = _parm(doxy_root, "f_at_param", 1)  # `int *y` tagged @param[out]
+    original = p.ptr_rank
+    try:
+        p.ptr_rank = lambda node: 0  # scalar slot
+        verdict = generic.documented_param_intent.ptr_parm_intent(p)
+        assert verdict == ParmIntent.OUT_CALLEE_ALLOCATED
+        assert verdict.direction == ParmIntent.OUT  # coarse view unchanged
+
+        p.ptr_rank = lambda node: 1  # array buffer
+        assert (
+            generic.documented_param_intent.ptr_parm_intent(p)
+            == ParmIntent.OUT
+        )
+    finally:
+        p.ptr_rank = original
 
 
 def test_documented_param_intent_no_direction_bracket(doxy_root):

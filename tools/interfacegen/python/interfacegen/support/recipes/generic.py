@@ -119,6 +119,18 @@ class double_indirection_out:
     """``T**`` non-const => callee-allocates / returns a handle through the
     pointer-to-pointer slot. GIR ``(out)`` rule for double-indirection on a
     structure parameter; SAL ``_Outptr_`` equivalent.
+
+    Classifies as ``OUT_CALLEE_ALLOCATED``: the callee produces a fresh
+    handle/pointer and writes it through the slot; the caller does not
+    pre-allocate the pointee. ``.direction`` coarsens this back to ``OUT``
+    for direction-only backends.
+
+    Rank: a typed ``T**`` (``record**``/``enum**``/``basic**``) is a single
+    handle/pointer slot, so rank 0. An untyped ``void**`` is the
+    callee-allocated *buffer* idiom (``hipMalloc(void** ptr, size)``) — a
+    sized byte buffer rendered as a rank-1 ``DeviceArray`` — so it reports
+    rank 1. Callee-allocation is independent of rank here: both still emit
+    the ``OUT_CALLEE_ALLOCATED`` hint, which is authoritative.
     """
 
     @staticmethod
@@ -135,7 +147,7 @@ class double_indirection_out:
         if parm.has_innermost_type_layer_const_modifier:
             return None
         if double_indirection_out._matches(parm):
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None
 
     @staticmethod
@@ -144,6 +156,10 @@ class double_indirection_out:
 
         if not isinstance(node, tree.Typed):
             return None
+        # ``void**`` is an untyped callee-allocated byte buffer (rank-1
+        # ``DeviceArray``); typed ``T**`` is a single handle/pointer slot.
+        if node.is_pointer_to_void(degree=2):
+            return 1
         if double_indirection_out._matches(node):
             return 0
         return None
@@ -199,7 +215,8 @@ class string_z:
     """GIR / SAL ``_In_z_`` / ``_Outptr_result_z_`` convention.
 
     * ``const char *p``  => ``IN``,  rank 1
-    * ``char **p``       => ``OUT``, rank 1  (``char *`` ambiguous => defer)
+    * ``char **p``       => ``OUT_CALLEE_ALLOCATED``, rank 1
+      (``char *`` ambiguous => defer)
 
     The ``_z`` suffix means "zero-terminated string". A NUL-terminated
     string is rank-1 *data* regardless of how many pointer layers wrap it,
@@ -218,7 +235,7 @@ class string_z:
         if parm.is_pointer_to_char(degree=2):
             if parm.has_innermost_type_layer_const_modifier:
                 return None
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None
 
     @staticmethod
@@ -277,10 +294,28 @@ class opaque_typedef_is_handle:
     @staticmethod
     def ptr_rank(node):
         from interfacegen import tree
+        from clang.cindex import TypeKind
 
         if not isinstance(node, tree.Typed):
             return None
         if opaque_typedef_is_handle._is_typedef_to_pointer(node):
+            # A typedef whose canonical form is ``void *`` (e.g.
+            # ``hipDeviceptr_t = void*``, ``CUdeviceptr``) is a byte-buffer
+            # pointer, NOT an opaque handle: the pointee is untyped storage
+            # the caller owns, not a scalar handle value. Defer so the
+            # generic ``void*`` rule ranks it as a rank-1 buffer. Only
+            # typedefs to a *typed* pointer (``record*`` handles like
+            # ``hipStream_t = ihipStream_t*``, ``hipArray_t = hipArray*``)
+            # are genuine rank-0 scalar handles.
+            canonical_kinds = list(
+                node.typehandler.clang_type_layer_kinds(canonical=True)
+            )
+            if (
+                len(canonical_kinds) >= 2
+                and canonical_kinds[0] == TypeKind.POINTER
+                and canonical_kinds[1] == TypeKind.VOID
+            ):
+                return None
             return 0
         return None
 
@@ -372,6 +407,46 @@ _DOXY_TAG_TO_INTENT = {
 }
 
 
+def _ptr_rank_is_scalar(parm):
+    """True iff ``parm``'s pointer rank is 0 per its assigned rank rule —
+    i.e. a single scalar / opaque-handle / NUL-terminated-string slot
+    rather than an array buffer.
+    """
+    ptr_rank = getattr(parm, "ptr_rank", None)
+    if ptr_rank is None:
+        return False
+    return ptr_rank(parm) == 0
+
+
+def _is_callee_allocated_out_shape(parm):
+    """True iff an ``OUT`` ``parm`` is callee-allocated *by shape* — the
+    callee produces a fresh value/pointer through the slot rather than
+    filling a caller-sized buffer.
+
+    Three structural shapes qualify, independent of rank (callee-allocation
+    is *not* a rank function, only correlated with it):
+
+    * rank-0 scalar / opaque-handle / single returned string slot;
+    * a non-const double-indirection ``T**`` (incl. ``void**``, the
+      ``hipMalloc`` byte-buffer idiom) — ``double_indirection_out`` flags
+      these as ``OUT_CALLEE_ALLOCATED``; or
+    * a non-const ``char**`` returned string (``string_z``).
+
+    A caller-sized buffer (a rank-1+ single ``T*`` the callee fills, e.g.
+    ``hipMemcpy``'s ``dst`` or a ``char name[]`` slot) does NOT qualify and
+    stays plain ``OUT`` / caller-allocated.
+    """
+    if _ptr_rank_is_scalar(parm):
+        return True
+    if getattr(parm, "has_innermost_type_layer_const_modifier", False):
+        return False
+    if double_indirection_out._matches(parm):
+        return True
+    if hasattr(parm, "is_pointer_to_char") and parm.is_pointer_to_char(degree=2):
+        return True
+    return False
+
+
 def _iter_doxygen_param_tags(raw_comment):
     r"""Yield ``(direction, parm_name)`` tuples from a function's
     raw doxygen comment.
@@ -423,5 +498,17 @@ class documented_param_intent:
         for direction, name_in_doc in _iter_doxygen_param_tags(raw):
             if name_in_doc == pname and direction is not None:
                 key = direction.replace(" ", "")
-                return _DOXY_TAG_TO_INTENT.get(key)
+                intent = _DOXY_TAG_TO_INTENT.get(key)
+                # A documented `[out]` on a callee-allocated *shape* (rank-0
+                # scalar / handle / string, OR a non-const double-indirection
+                # `T**`/`void**`, OR a `char**` returned string) denotes a
+                # callee-allocated result. This is structural, not rank-only:
+                # a `void**` buffer is rank-1 yet still callee-allocated, so a
+                # documented `[out] void**` must stay callee. `[out]` on a
+                # caller-sized buffer (single `T*` the callee fills) stays
+                # plain OUT — the doxygen standard cannot express callee-
+                # allocation of such a buffer.
+                if intent is ParmIntent.OUT and _is_callee_allocated_out_shape(parm):
+                    return ParmIntent.OUT_CALLEE_ALLOCATED
+                return intent
         return None
