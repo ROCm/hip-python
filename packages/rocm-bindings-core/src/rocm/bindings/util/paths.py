@@ -48,8 +48,12 @@ def get_library_path(shortname: str, bundled_location: Optional[Path] = None) ->
     installation methods and platforms:
 
     1. Bundled location - Recursively search rocm package for library
-    2. rocm_sdk.find_libraries() - TheRock Python package installation
-    3. ROCM_PATH environment variable - Traditional Linux installation
+    2. rocm_sdk.find_libraries() - TheRock Python package installation.
+       For the LLVM toolchain (clang/LLVM), which rocm_sdk does not register,
+       anchor on 'amdhip64' and resolve the sibling <core>/lib/llvm/lib, then
+       fall back to rocm_sdk._devel.get_devel_root() (the rocm-sdk-devel tree).
+    3. ROCM_PATH / ROCM_HOME environment variable - Traditional Linux install
+       (LLVM and clang resolve under <rocm>/llvm/lib, versioned soname allowed)
     4. Basename fallback - Rely on system loader (PATH on Windows, LD_LIBRARY_PATH on Linux)
 
     This is designed to be called lazily when a library is first accessed,
@@ -122,6 +126,46 @@ def get_library_path(shortname: str, bundled_location: Optional[Path] = None) ->
             if lib_file.is_file():
                 return str(lib_file).encode('utf-8')
 
+    # 2b. LLVM toolchain libs (clang, LLVM) are NOT registered in
+    #     rocm_sdk.ALL_LIBRARIES, so find_libraries(shortname) cannot find them
+    #     (see ROCM_SDK_PACKAGING_BUG_REPORT.md). For TheRock/rocm_sdk wheel
+    #     installs, anchor on a library that IS registered and shipped by
+    #     rocm-sdk-core, then walk to the sibling llvm/lib directory.
+    if shortname in ('LLVM', 'clang'):
+        try:
+            from rocm_sdk import find_libraries
+            # Forward-compat: prefer a direct hit if these ever get registered.
+            try:
+                direct = find_libraries(shortname)
+                if direct:
+                    return str(direct[0]).encode('utf-8')
+            except Exception:
+                pass
+            # Cheap tier first: anchor on core (today's toolchain home). This
+            # avoids forcing the devel-root tarball expansion below when core
+            # still carries the toolchain.
+            anchor = find_libraries('amdhip64')
+            if anchor:
+                llvm_lib = Path(anchor[0]).parent / 'llvm' / 'lib'
+                matches = sorted(llvm_lib.glob(f'{lib_name}*'))
+                if matches:
+                    return str(matches[0]).encode('utf-8')
+        except Exception:
+            pass  # rocm_sdk not installed / not a wheel install; fall through
+
+        # 2c. Canonical (post-fix) home: the rocm-sdk-devel tree. Triggers a
+        #     lazy _devel.tar expansion on first use, so it runs only after the
+        #     cheap core anchor above misses. numba-hip needs the toolchain
+        #     anyway, so requiring rocm[devel] in that future is acceptable.
+        try:
+            from rocm_sdk._devel import get_devel_root
+            llvm_lib = Path(get_devel_root()) / 'lib' / 'llvm' / 'lib'
+            matches = sorted(llvm_lib.glob(f'{lib_name}*'))
+            if matches:
+                return str(matches[0]).encode('utf-8')
+        except Exception:
+            pass  # devel not installed; fall through
+
     # 2. Try rocm_sdk API (TheRock installation)
     #    This is the official recommended approach for ROCm 7.9+
     try:
@@ -134,17 +178,26 @@ def get_library_path(shortname: str, bundled_location: Optional[Path] = None) ->
         # Continue with fallback options
         pass
 
-    # 3. Try ROCM_PATH environment variable (Unix traditional install)
+    # 3. Try ROCM_PATH / ROCM_HOME environment variables (Unix traditional install)
     #    On Windows, traditional HIP SDK installs DLLs to System32, not a ROCm directory
     if sys.platform not in ('win32', 'cygwin'):
-        rocm_path = os.environ.get('ROCM_PATH', '/opt/rocm')
+        rocm_path = (
+            os.environ.get('ROCM_PATH')
+            or os.environ.get('ROCM_HOME')
+            or '/opt/rocm'
+        )
         lib_name = f'{lib_prefix}{shortname}.{lib_ext}'
 
-        # Special case for LLVM: check llvm/lib subdirectory
-        if shortname == 'LLVM':
-            lib_file = Path(rocm_path) / 'llvm' / 'lib' / lib_name
+        # LLVM toolchain libs (LLVM, clang) live under llvm/lib.
+        if shortname in ('LLVM', 'clang'):
+            llvm_lib = Path(rocm_path) / 'llvm' / 'lib'
+            lib_file = llvm_lib / lib_name
             if lib_file.exists():
                 return str(lib_file).encode('utf-8')
+            # ROCm often ships only a versioned soname (e.g. libclang.so.23.0git).
+            matches = sorted(llvm_lib.glob(f'{lib_name}*'))
+            if matches:
+                return str(matches[0]).encode('utf-8')
 
         # Standard location: lib subdirectory
         lib_file = Path(rocm_path) / 'lib' / lib_name
