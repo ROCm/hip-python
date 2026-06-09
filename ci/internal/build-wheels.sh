@@ -16,18 +16,24 @@ set -xeu
 #
 # Steps:
 #
-#   1. (optional) Run the hip-python codegen against /opt/rocm
-#      (+ optional rocm-systems / rocm-libraries source trees) to
-#      (re)populate packages/<wheel>/src/rocm/bindings/*.{pxd,pyx,pyi}
-#      and cmake/generated_modules.cmake. SKIPPED BY DEFAULT —
-#      pass SKIP_CODEGEN=false to enable. CI normally consumes the
-#      pre-generated content already committed to the source tree.
+#   1. (optional) Install the in-tree codegen tool so the
+#      `hip-python-generate` console script is on PATH. Codegen itself
+#      now runs at CMake CONFIGURE time (step 2) via
+#      -DHIP_PYTHON_RUN_CODEGEN=ON, which (re)populates
+#      packages/<wheel>/src/rocm/bindings/*.{pxd,pyx,pyi} and
+#      cmake/generated_modules.cmake before the build graph is created.
+#      SKIPPED BY DEFAULT — pass SKIP_CODEGEN=false to enable. CI
+#      normally consumes the pre-generated content committed to the tree.
 #
 #   2. Configure + build the enabled wheels with scikit-build-core
-#      via the unified `packages/CMakeLists.txt` aggregate target.
+#      via the unified `packages/CMakeLists.txt` aggregate target. When
+#      codegen is enabled the configure call BLOCKS while it runs
+#      (several minutes up to ~30 min). `all_wheels` also builds
+#      numba-hip.
 #
 # Required env:
-#   SRC_DIR              parent of hip_python/ AND interfacegen/
+#   SRC_DIR              parent of hip_python/ (interfacegen + the codegen
+#                        tool now live inside hip_python/tools/)
 #   BUILD_DIR            scratch dir for the working copy
 #   BUILD_ARTIFACTS_DIR  where wheels land (HIP_PYTHON_WHEEL_OUTPUT_DIR)
 #
@@ -37,8 +43,8 @@ set -xeu
 #   ROCM_SYSTEMS_DIR          ${SRC_DIR}/rocm-systems if it exists
 #   ROCM_LIBRARIES_DIR        ${SRC_DIR}/rocm-libraries if it exists
 #   ROCM_LLVM_PROJECT_DIR     ${SRC_DIR}/llvm-project if it exists
-#   INTERFACEGEN_DIR          ${SRC_DIR}/interfacegen
-#   HIP_PYTHON_CODEGEN_DIR    ${INTERFACEGEN_DIR}/recipes/hip-python
+#   INTERFACEGEN_DIR          ${src_dir}/tools/interfacegen
+#   HIP_PYTHON_CODEGEN_DIR    ${src_dir}/tools/hip-python-generate
 #   MAX_JOBS                  default 16
 #   SCCACHE_ENABLE            default false
 #   SKIP_CODEGEN              default true (skip step 1; consume
@@ -58,8 +64,8 @@ wheels_venv=$(mktemp -d)
 
 rocm_path=${ROCM_PATH:-/opt/rocm}
 rocm_version=${ROCM_VERSION:-7.13.0}
-interfacegen_dir=${INTERFACEGEN_DIR:-${SRC_DIR}/interfacegen}
-hip_python_codegen_dir=${HIP_PYTHON_CODEGEN_DIR:-${interfacegen_dir}/recipes/hip-python}
+interfacegen_dir=${INTERFACEGEN_DIR:-${src_dir}/tools/interfacegen}
+hip_python_codegen_dir=${HIP_PYTHON_CODEGEN_DIR:-${src_dir}/tools/hip-python-generate}
 max_jobs=${MAX_JOBS:-16}
 
 # Default optional source-tree paths to ${SRC_DIR}/<repo> if they exist.
@@ -122,14 +128,22 @@ if [ -d "/opt/rh/gcc-toolset-$(g++ -dumpversion)" ]; then
   export CCC_OVERRIDE_OPTIONS="+--gcc-toolchain=${toolchain}"
 fi
 
-### step 1 — codegen (skipped by default)
+### step 1 — install the codegen tool (skipped by default)
+#
+# Codegen now runs at CMake configure time (step 2) via
+# -DHIP_PYTHON_RUN_CODEGEN=ON. Here we only need to make the
+# `hip-python-generate` console script importable/on PATH so the
+# configure-time find_program(hip-python-generate) succeeds.
 
+run_codegen=false
 if [[ "${SKIP_CODEGEN:-true}" != "true" ]]; then
+  run_codegen=true
+
   # Install the codegen tool. interfacegen is referenced as a path
   # dependency from hip-python-codegen's dev-requirements.txt; the
-  # relative `../../../` path resolves only from the recipes dir,
-  # so install both explicitly with absolute paths to keep this
-  # script invocation-location-independent.
+  # relative path resolves only from the recipe dir, so install both
+  # explicitly with absolute paths to keep this script
+  # invocation-location-independent.
   pip install --upgrade "${interfacegen_dir}"
   pip install --upgrade "${hip_python_codegen_dir}"
 
@@ -138,18 +152,6 @@ if [[ "${SKIP_CODEGEN:-true}" != "true" ]]; then
   # mapping them to UNEXPOSED, but we still want a reasonably new
   # binding so common newer types resolve naturally.
   pip install --upgrade "libclang>=18,<19"
-
-  codegen_args=(
-    "${build_dir}"
-    --rocm-version "${rocm_version}"
-    --rocm-path "${rocm_path}"
-    --license-path "${build_dir}/LICENSE"
-  )
-  [[ -n "${rocm_systems_dir}"      ]] && codegen_args+=(--rocm-systems-dir   "${rocm_systems_dir}")
-  [[ -n "${rocm_libraries_dir}"    ]] && codegen_args+=(--rocm-libraries-dir "${rocm_libraries_dir}")
-  [[ -n "${rocm_llvm_project_dir}" ]] && codegen_args+=(--rocm-llvm-project-dir "${rocm_llvm_project_dir}")
-
-  hip-python-generate "${codegen_args[@]}"
 fi
 
 ### step 2 — configure + build the enabled wheels
@@ -193,6 +195,22 @@ if [[ "${SCCACHE_ENABLE:-false}" == "true" ]]; then
     -DCMAKE_C_COMPILER_LAUNCHER=sccache
     -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   )
+fi
+
+# Configure-time codegen: when enabled the `cmake` call below BLOCKS
+# while hip-python-generate runs (several minutes up to ~30 min) and
+# regenerates the sources + cmake/generated_modules.cmake before any
+# target is created, so the subsequent single `cmake --build` compiles
+# the freshly generated set in one pass.
+if [[ "${run_codegen}" == "true" ]]; then
+  cmake_args+=(
+    -DHIP_PYTHON_RUN_CODEGEN=ON
+    -DHIP_PYTHON_ROCM_PATH=${rocm_path}
+    -DHIP_PYTHON_ROCM_VERSION=${rocm_version}
+  )
+  [[ -n "${rocm_systems_dir}"      ]] && cmake_args+=(-DHIP_PYTHON_ROCM_SYSTEMS_DIR=${rocm_systems_dir})
+  [[ -n "${rocm_libraries_dir}"    ]] && cmake_args+=(-DHIP_PYTHON_ROCM_LIBRARIES_DIR=${rocm_libraries_dir})
+  [[ -n "${rocm_llvm_project_dir}" ]] && cmake_args+=(-DHIP_PYTHON_ROCM_LLVM_PROJECT_DIR=${rocm_llvm_project_dir})
 fi
 
 cmake "${cmake_args[@]}"
