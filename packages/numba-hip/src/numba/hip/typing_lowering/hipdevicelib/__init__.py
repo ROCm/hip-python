@@ -29,8 +29,8 @@ Attributes:
         TODO document 'unsupported_stubs'
 """
 
-import os
 import threading
+from pathlib import Path
 
 import rocm.bindings.clang.cindex as ci
 
@@ -62,49 +62,89 @@ _LLVM_VERSION_STRING = (
 )
 
 
+def _highest_version_dir(clang_root: Path):
+    """Return the highest-versioned subdir of a clang resource root, or None."""
+    if clang_root.is_dir():
+        versions = sorted(p for p in clang_root.iterdir() if p.is_dir())
+        if versions:
+            return str(versions[-1])  # e.g. '23' or '23.0.0'
+    return None
+
+
+def _resolve_clang_res_dir(libclang_file):
+    """Resolve the clang resource dir.
+
+    The resource dir is always a sibling of libclang: <dir>/clang/<version>.
+    Deriving it from the resolved libclang makes it track the install method
+    (traditional /opt/rocm, TheRock/rocm_sdk wheel, or env override). Falls
+    back to the rocm-sdk-devel tree and then the traditional ROCm layout.
+    """
+    # Primary: sibling of the resolved libclang (covers core-today and the
+    # likely post-fix case where libclang and its resource dir move together).
+    if libclang_file:
+        clang_root = Path(libclang_file).resolve().parent / "clang"
+        res = _highest_version_dir(clang_root)
+        if res:
+            return res
+    # Fallback A: the rocm-sdk-devel tree (covers the "split" case where the
+    # resource dir lives in devel even though libclang was found elsewhere).
+    try:
+        from rocm_sdk._devel import get_devel_root
+
+        res = _highest_version_dir(
+            Path(get_devel_root()) / "lib" / "llvm" / "lib" / "clang"
+        )
+        if res:
+            return res
+    except Exception:
+        pass
+    # Fallback B: traditional /opt/rocm layout.
+    return _hipconfig.get_rocm_path(
+        (  # variant 1
+            "llvm",
+            "lib",
+            "clang",
+            f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
+        ),
+        (  # variant 2
+            "llvm",
+            "lib",
+            "clang",
+            f"{_LLVM_VERSION_MAJOR}",
+        ),
+    )
+
+
 def _setup_libclang():
     """Initialize libclang."""
     # `ci.Config` is process-global; once libclang has been loaded its
     # `set_library_*` setters raise. Guard against a second import of this
     # package (e.g. a shadow copy on sys.path) re-running setup and crashing.
+    libclang_file = None
     if not ci.Config.loaded:
         if _hipconfig.LIBCLANG_FILE:
-            ci.conf.set_library_file(_hipconfig.LIBCLANG_FILE)
-            _ = ci.conf.get_cindex_library()  # try to create binding
-        else:
-            if _hipconfig.LIBCLANG_PATH:
-                prefix = _hipconfig.LIBCLANG_PATH
+            # Highest priority: explicit file override (NUMBA_HIP_LIBCLANG_FILE).
+            libclang_file = _hipconfig.LIBCLANG_FILE
+            ci.conf.set_library_file(libclang_file)
+        elif _hipconfig.LIBCLANG_PATH:
+            # Next: explicit directory override (NUMBA_HIP_LIBCLANG_PATH).
+            matches = sorted(Path(_hipconfig.LIBCLANG_PATH).glob("libclang.so*"))
+            if matches:
+                libclang_file = str(matches[0])
+                ci.conf.set_library_file(libclang_file)
             else:
-                prefix = _hipconfig.get_rocm_path("llvm", "lib")
-            try:
-                ci.conf.set_library_path(prefix)
-                _ = ci.conf.get_cindex_library()  # try to create binding
-            except ci.LibclangError:
-                # Also check for filenames such as `libclang.so.19.0.0git`.
-                ci.conf.set_library_file(
-                    os.path.join(
-                        prefix,
-                        f"libclang.so.{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}git",
-                    )
-                )
-                _ = ci.conf.get_cindex_library()  # try to create binding
+                ci.conf.set_library_path(_hipconfig.LIBCLANG_PATH)
+        else:
+            # Otherwise reuse the shared rocm-bindings resolver (handles
+            # ROCM_PATH/ROCM_HOME, the rocm_sdk wheel anchor, and the
+            # versioned libclang soname).
+            from rocm.bindings.util.paths import get_library_path
 
-    _cparser.CParser.set_clang_res_dir(
-        _hipconfig.get_rocm_path(
-            (  # variant 1
-                "llvm",
-                "lib",
-                "clang",
-                f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
-            ),
-            (  # variant 2
-                "llvm",
-                "lib",
-                "clang",
-                f"{_LLVM_VERSION_MAJOR}",
-            ),
-        )
-    )
+            libclang_file = get_library_path("clang").decode("utf-8")
+            ci.conf.set_library_file(libclang_file)
+        _ = ci.conf.get_cindex_library()  # validate the binding loads
+
+    _cparser.CParser.set_clang_res_dir(_resolve_clang_res_dir(libclang_file))
 
 
 _setup_libclang()
