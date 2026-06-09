@@ -1,0 +1,148 @@
+# Copyright (c) 2012, Anaconda, Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+# Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# Redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in the
+# documentation and/or other materials provided with the distribution.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# MIT License
+#
+# Modifications Copyright (C) 2023-2024 Advanced Micro Devices, Inc. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# Re export
+#: from .stubs import (threadIdx, blockIdx, blockDim, gridDim, laneid, warpsize,
+#:                     syncwarp, shared, local, const, atomic,
+#:                     shfl_sync_intrinsic, vote_sync_intrinsic, match_any_sync, #: TODO: HIP/AMD: provide the correct intrinsics, support trivial _sync intrinsics
+#:                     match_all_sync, threadfence_block, threadfence_system,
+#:                     threadfence, selp, popc, brev, clz, ffs, fma, cbrt, cg,
+#:                     activemask, lanemask_lt, nanosleep, fp16,
+#:                     _vector_type_stubs)
+from .typing_lowering import hip as _hip
+from .typing_lowering import hipdevicelib as _hipdevicelib
+
+globals().update(_hipdevicelib.thestubs)
+globals().update(_hip.thestubs)
+
+from numba.cuda.cudadrv.runtime import runtime  # noqa: E402
+
+#: from .cudadrv import nvvm #: FIXME: HIP/AMD: not supported
+from numba.hip import initialize  # noqa: E402
+
+from .api import *  # noqa: F403, E402
+from .api import _auto_device  # noqa: F401, E402
+from .args import In, InOut, Out  # noqa: F401, E402
+from .decorators import declare_device, jit  # noqa: F401, E402
+from .errors import KernelRuntimeError  # noqa: F401, E402
+from .hipdrv.driver import BaseHIPMemoryManager  # noqa: F401, E402
+from .hipdrv.driver import GetIpcHandleMixin  # noqa: F401, E402
+from .hipdrv.driver import HostOnlyCUDAMemoryManager  # noqa: F401, E402
+from .hipdrv.driver import HostOnlyHIPMemoryManager  # noqa: F401, E402
+from .hipdrv.driver import IpcHandle  # noqa: F401, E402
+from .hipdrv.driver import MappedMemory  # noqa: F401, E402
+from .hipdrv.driver import MemoryInfo  # noqa: F401, E402
+from .hipdrv.driver import MemoryPointer  # noqa: F401, E402
+from .hipdrv.driver import PinnedMemory  # noqa: F401, E402
+from .hipdrv.driver import set_memory_manager  # noqa: F401, E402
+from .hipdrv.error import HipSupportError  # noqa: E402
+
+CudaSupportError = HipSupportError
+
+#: from .intrinsics import (grid, gridsize, syncthreads, syncthreads_and,
+#:                          syncthreads_count, syncthreads_or)
+from .intrinsics import grid, gridsize  # noqa: F401, E402
+
+#: from .kernels import reduction #: FIXME: HIP/AMD: not supported yet
+
+#: reduce = Reduce = reduction.Reduce #: FIXME: HIP/AMD: not supported yet
+
+
+def is_available():
+    """Returns a boolean to indicate the availability of a CUDA GPU.
+
+    This will initialize the driver if it hasn't been initialized.
+    """
+    # whilst `driver.is_available` will init the driver itself,
+    # the driver initialization may raise and as a result break
+    # test discovery/orchestration as `cuda.is_available` is often
+    # used as a guard for whether to run a CUDA test, the try/except
+    # below is to handle this case.
+    driver_is_available = False
+    try:
+        driver_is_available = driver.driver.is_available  # noqa: F405
+    except HipSupportError:
+        pass
+
+    return driver_is_available  # and nvvm.is_available() TODO(HIP/AMD): check if required
+
+
+def is_supported_version():
+    """Returns True if the CUDA Runtime is a supported version.
+
+    Unsupported versions (e.g. newer versions than those known to Numba)
+    may still work; this function provides a facility to check whether the
+    current Numba version is tested and known to work with the current
+    runtime version. If the current version is unsupported, the caller can
+    decide how to act. Options include:
+
+    - Continuing silently,
+    - Emitting a warning,
+    - Generating an error or otherwise preventing the use of CUDA.
+    """
+
+    return runtime.is_supported_version()
+
+
+def cuda_error():
+    """Returns None if there was no error initializing the CUDA driver.
+    If there was an error initializing the driver, a string describing the
+    error is returned.
+    """
+    return (
+        driver.driver.initialization_error  # noqa: F405
+    )  # driver avail via 'from api import *'
+
+
+# make all cuda names also available via hip name
+for k, v in list(globals().items()):
+    if "cuda" in k:
+        hip_name = k.replace("cuda", "hip")
+        if hip_name not in globals():
+            globals()[hip_name] = v
+
+initialize.initialize_all()
