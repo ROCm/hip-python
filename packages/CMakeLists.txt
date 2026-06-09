@@ -100,8 +100,12 @@ endif()
 # Auditwheel repair option
 option(HIP_PYTHON_AUDITWHEEL_REPAIR "Run auditwheel repair on generated wheels" OFF)
 
-# Early validation: check if auditwheel is available when repair is requested
-if(HIP_PYTHON_AUDITWHEEL_REPAIR)
+# Early validation: check if auditwheel is available when repair is requested.
+# auditwheel is a Linux-only ELF retagger, so this is skipped on Windows
+# (HipPythonBuild.cmake gates the repair branch the same way and falls
+# back to a plain copy, which is correct since the assembler already
+# emits win_amd64 tags).
+if(HIP_PYTHON_AUDITWHEEL_REPAIR AND NOT WIN32)
   find_program(AUDITWHEEL_EXECUTABLE auditwheel)
   if(NOT AUDITWHEEL_EXECUTABLE)
     message(FATAL_ERROR
@@ -110,6 +114,8 @@ if(HIP_PYTHON_AUDITWHEEL_REPAIR)
   endif()
   message(STATUS "Auditwheel found: ${AUDITWHEEL_EXECUTABLE}")
   message(STATUS "Wheel repair enabled - manylinux wheels will be created")
+elseif(HIP_PYTHON_AUDITWHEEL_REPAIR AND WIN32)
+  message(STATUS "HIP_PYTHON_AUDITWHEEL_REPAIR ignored on Windows (auditwheel is Linux-only); wheels are copied as-is with their native win tag")
 endif()
 
 # Package build options - allow selective building of packages

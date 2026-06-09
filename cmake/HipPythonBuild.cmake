@@ -415,25 +415,32 @@ function(hip_python_add_wheel_target)
     )
   endif()
 
-  # Add auditwheel repair or direct copy to output directory
-  if(HIP_PYTHON_AUDITWHEEL_REPAIR)
+  # Add auditwheel repair or direct copy to output directory.
+  #
+  # auditwheel is a Linux-only ELF tool, so the repair branch is gated on
+  # `NOT WIN32` (in addition to the opt-in HIP_PYTHON_AUDITWHEEL_REPAIR).
+  # On Windows the build always falls through to the cross-platform
+  # copy_directory path below -- the assembler already emits the correct
+  # win_amd64 platform tag, so no retag is needed. The temp dir holds
+  # only the freshly produced wheel, so copy_directory needs no glob.
+  if(HIP_PYTHON_AUDITWHEEL_REPAIR AND NOT WIN32)
     list(APPEND WHEEL_COMMANDS
       # Create final output directory
       COMMAND ${CMAKE_COMMAND} -E make_directory "${ARG_OUTPUT_DIR}"
       # Repair wheel with --exclude "*" to prevent bundling ROCm libraries
       # Use --allow-pure-python-wheel to handle pure Python wheels gracefully
       # Output goes directly to final output directory
-      # Use shell to expand glob pattern
+      # Use shell to expand glob pattern (Linux-only branch)
       COMMAND sh -c "${AUDITWHEEL_EXECUTABLE} repair --exclude '*' --allow-pure-python-wheel -w '${ARG_OUTPUT_DIR}' '${TEMP_WHEEL_DIR}'/*.whl"
       # Remove temporary directory (contains original linux wheel)
       COMMAND ${CMAKE_COMMAND} -E rm -rf "${TEMP_WHEEL_DIR}"
     )
   else()
     list(APPEND WHEEL_COMMANDS
-      # Create final output directory
-      COMMAND ${CMAKE_COMMAND} -E make_directory "${ARG_OUTPUT_DIR}"
-      # Copy wheel from temporary to output directory using shell glob
-      COMMAND sh -c "cp '${TEMP_WHEEL_DIR}'/*.whl '${ARG_OUTPUT_DIR}/'"
+      # Copy the produced wheel to the output directory. The temp dir
+      # contains only the single .whl, so a recursive directory copy is
+      # equivalent to the old shell glob but works on every platform.
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${TEMP_WHEEL_DIR}" "${ARG_OUTPUT_DIR}"
       # Remove temporary directory
       COMMAND ${CMAKE_COMMAND} -E rm -rf "${TEMP_WHEEL_DIR}"
     )
@@ -501,8 +508,10 @@ function(hip_python_add_sdist_target)
             --sdist
             --no-isolation
             --outdir=${TEMP_SDIST_DIR}
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${ARG_OUTPUT_DIR}"
-    COMMAND sh -c "cp '${TEMP_SDIST_DIR}'/*.tar.gz '${ARG_OUTPUT_DIR}/'"
+    # Copy the produced sdist to the output dir. The temp dir holds only
+    # the single .tar.gz, so a recursive directory copy replaces the old
+    # shell glob and works on every platform (no `sh`/`cp`).
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${TEMP_SDIST_DIR}" "${ARG_OUTPUT_DIR}"
     COMMAND ${CMAKE_COMMAND} -E rm -rf "${TEMP_SDIST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E touch "${STAMP_FILE}"
     WORKING_DIRECTORY "${ARG_PACKAGE_DIR}"
