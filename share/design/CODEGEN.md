@@ -241,10 +241,10 @@ To run the generator end-to-end against a checked-out codegen base branch:
 cd /path/to/hip-python
 git switch codegen/base
 
-# One-time install of the codegen tool:
-cd /path/to/interfacegen/recipes/hip-python
+# One-time install of the codegen tool (now in-tree under tools/):
+cd /path/to/hip-python/tools/hip-python-generate
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r dev-requirements.txt   # editable interfacegen
+pip install -r dev-requirements.txt   # editable interfacegen (../interfacegen)
 pip install .                         # hip-python-codegen + runtime deps
 
 # Each release run:
@@ -254,8 +254,26 @@ hip-python-generate \
     --rocm-path /opt/rocm
 
 cd /path/to/hip-python
-cmake -S python -B build && cmake --build build --target all_wheels
+cmake -S packages -B build && cmake --build build --target all_wheels
 ```
+
+Alternatively, let CMake run the generator for you at configure time
+(it invokes the same `hip-python-generate` tool, so it must be installed
+as above). This keeps the whole flow to a single configure + build:
+
+```sh
+cmake -S packages -B build \
+    -DHIP_PYTHON_RUN_CODEGEN=ON \
+    -DHIP_PYTHON_ROCM_PATH=/opt/rocm \
+    -DHIP_PYTHON_ROCM_VERSION=X.Y.Z
+cmake --build build --target all_wheels
+```
+
+Codegen then runs DURING the `cmake -S packages -B build` configure
+(before any build target exists), so it is SLOW and blocks configure for
+several minutes up to ~30 min depending on core count. A stamp guard
+skips it on no-op reconfigures; pass `-DHIP_PYTHON_FORCE_CODEGEN=ON` to
+force a re-run. See BUILDING.md "Optional configure-time code generation".
 
 After this, `packages/build/dist/` (or whatever `HIP_PYTHON_WHEEL_OUTPUT_DIR` points to) contains the wheels.
 

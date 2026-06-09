@@ -191,7 +191,48 @@ cmake --build build --target libraries_wheel
 cmake --build build --target compiler_wheel
 cmake --build build --target interop_wheel
 cmake --build build --target hip_python_wheel
+cmake --build build --target numba_hip_wheel   # pure Python, own version
 ```
+
+### Optional configure-time code generation
+
+The Cython sources and per-package `cmake/generated_modules.cmake` lists
+are normally consumed pre-generated from the source tree. To regenerate
+them as part of the build, enable codegen at configure time:
+
+```sh
+cmake -S packages -B build \
+  -DHIP_PYTHON_RUN_CODEGEN=ON \
+  -DHIP_PYTHON_ROCM_PATH=/opt/rocm \
+  -DHIP_PYTHON_ROCM_VERSION=7.13.0
+cmake --build build --target all_wheels
+```
+
+This runs the `hip-python-generate` tool (install it first:
+`pip install tools/hip-python-generate`) **during the configure step**,
+before any build target is created — so a single configure + single
+build picks up the freshly generated sources even when the module set
+changes. Because it runs at configure time and libclang parses every
+ROCm header, it is **SLOW**: `cmake -S packages -B build` blocks for
+several minutes up to ~30 min depending on core count. A SHA256 stamp
+guard (over the ROCm version/path and the optional source-dir inputs)
+skips regeneration on no-op reconfigures; pass
+`-DHIP_PYTHON_FORCE_CODEGEN=ON` to force a re-run. Optional header-source
+overrides: `HIP_PYTHON_ROCM_SYSTEMS_DIR`, `HIP_PYTHON_ROCM_LIBRARIES_DIR`,
+`HIP_PYTHON_ROCM_LLVM_PROJECT_DIR`, `HIP_PYTHON_CLANG_RESOURCE_DIR`,
+`HIP_PYTHON_CODEGEN_INCLUDE`. See [CODEGEN.md](CODEGEN.md).
+
+numba-hip (`numba_hip_wheel` / `numba_hip_sdist`) is a pure-Python
+package with its own independent version (not mirrored from the repo-root
+`VERSION`); it is part of `all_wheels`/`all_sdists` and gated by
+`HIP_PYTHON_BUILD_NUMBA_HIP`.
+
+The unified build is shell-free outside `ci/`: wheel/sdist artifacts are
+copied with `cmake -E copy_directory` (no `cp`/`sh` glob), so the build
+works on Windows. The only remaining `sh -c` is the optional
+`auditwheel repair`, which is a Linux-only ELF retagger and is gated on
+`NOT WIN32` (Windows wheels already carry the correct `win_amd64` tag and
+are copied as-is).
 
 #### Wheel assembly: compile once, then collect
 
@@ -476,7 +517,12 @@ nvrtc) are stable across releases.
 |---|---|---|
 | `HIP_PYTHON_BUILD_<NAME>` | `ON` | Enable/disable each of the six compiled packages (CORE, HIP, LIBRARIES, SYSTEMS, COMPILER, INTEROP). |
 | `HIP_PYTHON_BUILD_HIP_PYTHON` | `ON` | Build the legacy `hip-python` metapackage shim. |
-| `HIP_PYTHON_AUDITWHEEL_REPAIR` | `OFF` | Run `auditwheel repair` after each wheel build. |
+| `HIP_PYTHON_BUILD_NUMBA_HIP` | `ON` | Build the pure-Python `numba-hip` wheel/sdist (own independent version). |
+| `HIP_PYTHON_AUDITWHEEL_REPAIR` | `OFF` | Run `auditwheel repair` after each wheel build (Linux only; ignored on Windows). |
+| `HIP_PYTHON_RUN_CODEGEN` | `OFF` | Run `hip-python-generate` at configure time (SLOW; blocks configure). |
+| `HIP_PYTHON_ROCM_VERSION` | _(empty)_ | ROCm version for codegen (`--rocm-version`); required when `HIP_PYTHON_RUN_CODEGEN=ON`. |
+| `HIP_PYTHON_ROCM_PATH` | `/opt/rocm` (or `$ROCM_PATH`/`$ROCM_HOME`) | ROCm install passed to codegen (`--rocm-path`). |
+| `HIP_PYTHON_FORCE_CODEGEN` | `OFF` | Bypass the codegen stamp guard and force regeneration. |
 | `HIP_PYTHON_WHEEL_OUTPUT_DIR` | `${CMAKE_BINARY_DIR}/dist` | Where `*.whl` files land. |
 | `ROCM_PATH` | `/opt/rocm` (or `$ROCM_PATH`/`$ROCM_HOME`) | ROCm SDK location. |
 | `HIP_PLATFORM` | `amd` | Only `amd` and `hcc` are supported. |
