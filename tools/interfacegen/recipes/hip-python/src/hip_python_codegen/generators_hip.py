@@ -40,7 +40,20 @@ import textwrap
 import interfacegen
 from interfacegen.cython import CythonModuleGenerator
 from interfacegen.support.recipes import rocm as controls
+from interfacegen.support.recipes.control import ParmIntent
 from interfacegen.tree import MacroDefinition, Node, Parm
+
+
+# Cython-only: char* OUT buffers the binding allocates (CStr.malloc) and
+# RETURNS, sized by a by-value length input. In C these are caller-allocated
+# (Fortran keeps them as plain OUT); the returned-CStr form is a Python
+# ergonomic, so it lives here, not in controls.hip. Maps
+# (func, buffer_parm) -> size_parm.
+_CSTR_OUT_BUFFERS = {
+    ("hipDeviceGetName", "name"): "len",
+    ("hipDeviceGetPCIBusId", "pciBusId"): "len",
+    ("hipGraphInstantiate", "pLogBuffer"): "bufferSize",
+}
 
 
 def _toclassname(name: str) -> str:
@@ -96,6 +109,11 @@ def generate_hip(
 
         return default_ptr_handler(parm)
 
+    def hip_ptr_parm_intent(parm: Node):
+        if (parm.parent.name, parm.name) in _CSTR_OUT_BUFFERS:
+            return ParmIntent.OUT_CALLEE_ALLOCATED
+        return controls.hip.ptr_parm_intent(parm)
+
     def hip_node_init(node: Node):
         if isinstance(node, interfacegen.tree.Function):
             if not node.is_enum and node.name.startswith("hip"):
@@ -110,16 +128,11 @@ def generate_hip(
                     "Always returns `~.hipError_t.hipSuccess`.",
                 )
         elif isinstance(node, interfacegen.tree.Parm):
-            func_name, parm_idx = node.parent.name, node.parm_index
-            if (func_name, parm_idx) in (
-                ("hipDeviceGetName", 0),
-                ("hipDeviceGetPCIBusId", 0),
-            ):
-                func = node.parent
-                assert isinstance(func, interfacegen.cython.Function)
-                len_param: interfacegen.tree.Parm = func.get_parm(1)
-                func.python_body_prepend_before_c_interface_call(
-                    f"{node.name}.malloc({len_param.name})"
+            key = (node.parent.name, node.name)
+            if key in _CSTR_OUT_BUFFERS:
+                size_name = _CSTR_OUT_BUFFERS[key]
+                node.parent.python_body_prepend_before_c_interface_call(
+                    f"{node.name}.malloc({size_name})"
                 )
 
     def renamer(name: str):
@@ -147,7 +160,7 @@ def generate_hip(
         node_init=hip_node_init,
         renamer=renamer,
         node_filter=controls.hip.node_filter,
-        ptr_parm_intent=controls.hip.ptr_parm_intent,
+        ptr_parm_intent=hip_ptr_parm_intent,
         ptr_rank=controls.hip.ptr_rank,
         ptr_complicated_type_handler=hip_ptr_complicated_type_handler,
         macro_type=macro_type,
