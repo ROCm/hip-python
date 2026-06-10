@@ -31,6 +31,7 @@ by Cython users of this project.
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import datetime
+import importlib.metadata
 import logging
 import os
 import subprocess
@@ -1218,21 +1219,86 @@ def write_cmake_module_lists(opts, recipe_results):
                 f.write(f"set({var}\n    {' '.join(lst)})\n\n")
 
 
+def _render_core_version_py(opts, **values):
+    """Render ``rocm-bindings-core/version.py.in`` -> ``src/rocm/version.py``.
+
+    The rendered module is the runtime source of truth for ``rocm.version``.
+    It is git-ignored on the codegen base branch and committed only on
+    release branches (see ``ci/internal/prepare-release.sh``).
+    """
+    core = Path(opts.output_dir, "packages", "rocm-bindings-core")
+    template = core / "version.py.in"
+    target = core / "src" / "rocm" / "version.py"
+    if not template.is_file():
+        print(
+            f"WARNING: {template} not found; skipping version.py render.",
+            file=sys.stderr,
+        )
+        return
+    if not values.get("rocm_version") or not values.get("hip_version_name"):
+        print(
+            "WARNING: ROCm/HIP version unavailable; skipping version.py "
+            "render (run the hip recipe to populate it).",
+            file=sys.stderr,
+        )
+        return
+    substitutions = {
+        "@ROCM_VERSION_NAME@": values["rocm_version"],
+        "@HIP_VERSION_NAME@": values["hip_version_name"],
+        "@HIP_COMMIT@": values["hip_commit"],
+        "@HIP_FULL_VERSION@": values["hip_version_name"],
+        "@BASE_BRANCH@": values["base_branch"],
+        "@BASE_REV@": values["base_rev"],
+        "@BASE_VERSION@": values["base_version"],
+        "@INTERFACEGEN_VERSION@": values["interfacegen_version"],
+    }
+    text = template.read_text(encoding="utf-8")
+    for placeholder, value in substitutions.items():
+        text = text.replace(placeholder, value)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text, encoding="utf-8")
+
+
 def write_cmake_version_files(opts, recipe_results):
-    """Write per-package `cmake/generated_versions.cmake` (plan §B.7)."""
-    rocm_version = opts.rocm_version
+    """Write the codegen-time version metadata.
+
+    Renders ``rocm-bindings-core/version.py.in`` into ``src/rocm/version.py``
+    (the runtime source of truth for ``rocm.version``) and writes the
+    per-package ``cmake/generated_versions.cmake`` consumed by the docs
+    landing page. Only the hip-python base branch version + git hash and the
+    interfacegen version are recorded — no revision counts.
+    """
+    rocm_version = str(opts.rocm_version)
     hip_version = recipe_results.get("hip", {}).get("hip_version")
     if hip_version:
         major, minor, patch, githash = hip_version
         hip_version_str = f"{major}.{minor}.{patch}-{githash}" if githash else f"{major}.{minor}.{patch}"
+        hip_commit = githash or ""
     else:
         hip_version_str = ""
+        hip_commit = ""
+
+    # hip-python base branch provenance: version + hash only, never a count.
     try:
-        codegen_branch = gitversion.git_current_branch()
-        codegen_rev = gitversion.git_rev()
-        codegen_version = gitversion.version(append_hash=True, append_date=True)
+        base_branch = gitversion.git_current_branch()
     except Exception:
-        codegen_branch = codegen_rev = codegen_version = ""
+        base_branch = ""
+    try:
+        base_rev = gitversion.git_rev()
+    except Exception:
+        base_rev = ""
+    try:
+        base_version = (
+            Path(opts.output_dir, "HIP_PYTHON_VERSION")
+            .read_text(encoding="utf-8")
+            .strip()
+        )
+    except Exception:
+        base_version = ""
+    try:
+        interfacegen_version = importlib.metadata.version("interfacegen")
+    except Exception:
+        interfacegen_version = ""
 
     # Capture the upstream source-tree commits that contributed
     # headers to this codegen run.
@@ -1292,13 +1358,26 @@ def write_cmake_version_files(opts, recipe_results):
         .replace(microsecond=0).isoformat()
     )
 
+    # Render the runtime version module from the committed template.
+    _render_core_version_py(
+        opts,
+        rocm_version=rocm_version,
+        hip_version_name=hip_version_str,
+        hip_commit=hip_commit,
+        base_branch=base_branch,
+        base_rev=base_rev,
+        base_version=base_version,
+        interfacegen_version=interfacegen_version,
+    )
+
     body = (
         _AUTOGEN_HEADER
         + f'set(HIP_PYTHON_GENERATED_ROCM_VERSION         "{rocm_version}")\n'
         + f'set(HIP_PYTHON_GENERATED_HIP_VERSION          "{hip_version_str}")\n'
-        + f'set(HIP_PYTHON_GENERATED_CODEGEN_BRANCH       "{codegen_branch}")\n'
-        + f'set(HIP_PYTHON_GENERATED_CODEGEN_REV          "{codegen_rev}")\n'
-        + f'set(HIP_PYTHON_GENERATED_CODEGEN_VERSION      "{codegen_version}")\n'
+        + f'set(HIP_PYTHON_GENERATED_BASE_BRANCH          "{base_branch}")\n'
+        + f'set(HIP_PYTHON_GENERATED_BASE_REV             "{base_rev}")\n'
+        + f'set(HIP_PYTHON_GENERATED_BASE_VERSION         "{base_version}")\n'
+        + f'set(HIP_PYTHON_GENERATED_INTERFACEGEN_VERSION "{interfacegen_version}")\n'
         + f'set(HIP_PYTHON_GENERATED_DATE                 "{codegen_date}")\n'
         + f'set(HIP_PYTHON_GENERATED_ROCM_LIBRARIES_REV   "{rocm_libraries_rev}")\n'
         + f'set(HIP_PYTHON_GENERATED_ROCM_SYSTEMS_REV     "{rocm_systems_rev}")\n'
@@ -1311,5 +1390,3 @@ def write_cmake_version_files(opts, recipe_results):
         Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
         with open(path, "w") as f:
             f.write(body)
-
-
