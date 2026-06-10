@@ -181,7 +181,7 @@ What this does in practice:
   ``dlopen``-resolves these at runtime via the
   :py:obj:`rocm.bindings.util.loader` shim, so they MUST NOT be
   bundled into the wheel.
-- The ``manylinux_2_28_x86_64`` (or matching) tag is added to the
+- The ``manylinux_2_17_x86_64`` (or matching) tag is added to the
   wheel filename, making it pip-installable on systems older than
   the build host's glibc.
 

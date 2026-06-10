@@ -332,7 +332,7 @@ for ``yaml.dump`` --- see the example file for a full walk-through
 that prints metadata, symbols, and disassembly side by side.
 
 For the documentation of ``rocm.comgr`` itself, see
-:doc:`/python_api_manual/rocm.comgr`.
+:doc:`/python_api/rocm/comgr/index`.
 
 .. _sec_jit_further_examples:
 

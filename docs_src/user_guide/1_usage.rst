@@ -31,8 +31,8 @@ this chapter.
 
 .. note::
 
-   All examples in this chapter have been tested with ROCm\ |trade| 5.4.3 on Ubuntu
-   22. The :ref:`ch_license` applies to all examples in this chapter.
+   All examples in this chapter have been tested with ROCm\ |trade| 7.13 on Ubuntu
+   22.04. The :ref:`ch_license` applies to all examples in this chapter.
 
 Basic Usage (Python)
 --------------------
@@ -428,7 +428,7 @@ Monte Carlo with hipRAND
 .. note::
 
    This example was derived from a similar example in the
-   `rocRAND repository on Github <https://github.com/ROCmSoftwarePlatform/rocRAND/tree/develop>`__.
+   `rocRAND repository on Github <https://github.com/ROCm/rocRAND/tree/develop>`__.
    See this repository for another higher-level interface to hipran and rocrand
    (:py:obj:`ctypes`-based, no Cython interfaces).
 
@@ -636,8 +636,8 @@ You can import the Python objects that you need as shown below:
    :linenos:
    :caption: Importing HIP Python Modules into Cython ``*.pyx`` file
 
-   from hip import hip # enum types, enum aliases, fields
-   from hip import hiprtc
+   from rocm.bindings import hip # enum types, enum aliases, fields
+   from rocm.bindings import hiprtc
    # ...
 
 In the same file, you can **also or alternatively** ``cimport`` the ``cdef``
@@ -647,13 +647,13 @@ entities as shown below:
    :linenos:
    :caption: Importing HIP Python Cython declaration files (``*.pxd``) into a Cython ``*.pxd`` or ``*.pyx`` file
 
-   from hip cimport chip   # direct access to C interfaces and lazy function loaders
-   from hip cimport chiprtc
+   from rocm.bindings cimport cyhip   # direct access to C interfaces and lazy function loaders
+   from rocm.bindings cimport cyhiprtc
    # ...
 
-   from hip cimport hip # access to `cdef class` and `ctypedef` types
-                        # that have been created per C struct/union/typedef
-   from hip cimport hiprtc
+   from rocm.bindings cimport hip # access to `cdef class` and `ctypedef` types
+                                  # that have been created per C struct/union/typedef
+   from rocm.bindings cimport hiprtc
    # ...
 
 Compiling a Cython module
@@ -676,6 +676,9 @@ interfaces.
    import os, sys
 
    mymodule = "mymodule"
+
+   # We only assume HIP/HIPRTC is used, so only `amdhip64` is linked.
+   rocm_libs = ["amdhip64"]
 
    from setuptools import Extension, setup
    from Cython.Build import cythonize

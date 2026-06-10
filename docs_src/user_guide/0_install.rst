@@ -117,17 +117,27 @@ case.
 Full installation (everything)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The simplest path — pulls in every binding wheel plus the
-``hip.*`` alias shim:
+A plain ``hip-python`` install pulls in only the core and HIP
+bindings plus the ``hip.*`` alias shim:
 
 .. code-block:: shell
 
    python3 -m pip install hip-python~=7.13.0.0
 
-This installs ``rocm-bindings-{core,hip,libraries,systems,compiler}``,
-``hip-python-interop``, and the ``hip-python`` alias — roughly 100 MB
-total wheel content. Use this when you don't yet know which subset
-of ROCm libraries you'll be calling.
+This installs ``rocm-bindings-core``, ``rocm-bindings-hip``, and the
+``hip-python`` alias. The math (``libraries``), system (``systems``),
+and compiler (``compiler``) bindings are optional extras, and the CUDA
+interop layer is a separate wheel. To pull in everything, request the
+extras and add the interop wheel:
+
+.. code-block:: shell
+
+   python3 -m pip install \
+       "hip-python[libraries,systems,compiler]~=7.13.0.0" \
+       hip-python-interop~=7.13.0.0
+
+Use this when you don't yet know which subset of ROCm libraries
+you'll be calling.
 
 If you have a HIP Python wheel somewhere in your filesystem:
 
@@ -173,9 +183,8 @@ AMD GPUs with minimal source changes (see
    python3 -m pip install \
        hip-python-interop~=7.13.0.0
 
-The interop wheel depends on ``rocm-bindings-hip`` and
-``rocm-bindings-libraries`` (it forwards calls into them), so pip
-will install those automatically.
+The interop wheel depends on ``rocm-bindings-hip`` (it forwards
+calls into it), so pip will install that automatically.
 
 .. _subsec_install_individual_bindings:
 
@@ -231,9 +240,8 @@ you want and let pip figure out the dependencies.
 
    Some bindings (``hipfile``, ``hipblaslt``, ``hipsparselt``,
    ``hiptensor``, ``hipdnn``) require shared libraries that may
-   not be part of a standard ROCm installation. See
-   :ref:`hipfile_known_limitations` and the project README for
-   build-from-source instructions if ``dlopen`` of the
+   not be part of a standard ROCm installation. See the project
+   README for build-from-source instructions if ``dlopen`` of the
    corresponding ``.so`` fails on your system.
 
 .. note::

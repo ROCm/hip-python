@@ -34,7 +34,7 @@ on-the-fly for enum error types.
 
 .. note::
 
-   All examples in this chapter have been tested with ROCm\ |trade| 5.4.3 on Ubuntu 22.
+   All examples in this chapter have been tested with ROCm\ |trade| 7.13 on Ubuntu 22.04.
    The :ref:`ch_license` applies to all examples in this chapter.
 
 Installation
@@ -154,7 +154,7 @@ module variable with the same name in :py:obj:`cuda.bindings.driver`,
 HIP analogues to the following constants:
 
 * ``cudaError_t.cudaErrorStartupFailure``
-* ``cudaError_t.cudaError_t.cudaErrorNotPermitted``
+* ``cudaError_t.cudaErrorNotPermitted``
 * ``cudaError_t.cudaErrorSystemNotReady``
 * ``cudaError_t.cudaErrorSystemDriverMismatch``
 * ``cudaError_t.cudaErrorCompatNotSupportedOnDevice``

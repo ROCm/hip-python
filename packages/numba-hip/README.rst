@@ -182,120 +182,53 @@ Installation
 
    Other versions have not been tested; using the Numba HIP backend with these versions might work or not.
 
-Important things to know before installing
-------------------------------------------
-
-Make sure that your ``pip`` is upgraded by running
-
-.. code-block:: bash
-
-   pip install --upgrade pip
-
-Dependencies of Numba HIP are currently partially distributed via Test PyPI.
-Therefore, you need to specify an extra index URL in your ``pip`` config
-as shown below:
-
-.. code-block:: bash
-
-   pip config set global.extra-index-url https://test.pypi.org/simple
-
-Those dependencies further are depending on a particular ROCm release.
-We use optional dependency lists to make this configurable; see the
-``pyproject.toml`` file for more details.
-To install dependencies for a ROCm release of a particular version, you need
-to specify an dependency key in the format
-``rocm-<major>-<minor>-<patch>`` (example: ``rocm-7-2-0``) when building
-the Numba HIP package. If you leave the key aside, ``pip`` will either use
-already installed versions of the dependencies or install the latest release
-of these dependencies, which are compatible with the most recent release of ROCm
-but potentially not with older ROCm releases.
-
-Install via Github URL
-----------------------
-
-The easiest way to install Numba HIP is by passing the repository URL and
-optionally the branch that you want to build directly to ``pip``:
+Numba HIP is part of the `HIP Python <https://github.com/rocm/hip-python>`_
+monorepo. Its runtime dependencies (``rocm-bindings-hip``,
+``rocm-bindings-compiler``, ``hip-python-interop``) are published on PyPI for
+every supported ROCm release, so for most users a plain ``pip install`` is all
+that is needed. Make sure your ``pip`` is current first:
 
 .. code-block:: bash
 
    pip install --upgrade pip
-   pip config set global.extra-index-url https://test.pypi.org/simple
-   # syntax 1: pip install git+<URL>@<branch>
-   # syntax 2: pip install "numba-hip[rocm-<major>-<minor>-<patch>] @ git+<URL>@<branch>"
-   pip install "numba-hip[rocm-7-2-0] @ git+https://github.com/ROCm/numba-hip.git"
-     # alternatively: checkout a branch like 'dev':
-     # pip install "numba-hip[rocm-7-2-0] @ git+https://github.com/ROCm/numba-hip.git@dev"
 
-.. note:: ROCm key must agree with your environment
-
-   Do not forget to change the ROCm version ``rocm-7-2-0``
-   (format: ``rocm-<major>-<minor>-<patch>``) to a key that agrees with your
-   ROCm installation so that dependency versions compatible with your
-   ROCm installation are installed by ``pip``.
-
-Install with optional test dependencies:
+Install from PyPI
+-----------------
 
 .. code-block:: bash
 
-   pip install --upgrade pip
-   pip config set global.extra-index-url https://test.pypi.org/simple
-   # syntax 1: pip install "numba-hip[test] @  git+<URL>@<branch>"
-   # syntax 2: pip install "numba-hip[rocm-<major>-<minor>-<patch>,test] @ git+<URL>@<branch>"
-   pip install "numba-hip[rocm-7-2-0,test] @ git+https://github.com/ROCm/numba-hip.git"
-     # alternatively: checkout a branch like 'dev':
-     # pip install "numba-hip[rocm-7-2-0,test] @ git+https://github.com/ROCm/numba-hip.git@dev"
+   pip install numba-hip
 
-Install via pip install
------------------------
+This pulls in the matching ``rocm-bindings-*`` and ``hip-python-interop``
+wheels for the most recent supported ROCm release. ROCm itself must already be
+installed on the system (see the HIP Python install guide for details).
 
-After cloning the repository, you can also install the package via ``pip install``:
+Build from the hip-python monorepo
+-----------------------------------
 
-.. code-block:: bash
-
-   git clone https://github.com/ROCm/numba-hip.git
-     # alternatively: checkout a branch like 'dev':
-     # pip clone https://github.com/ROCm/numba-hip.git -b branch
-   pip install --upgrade pip
-   pip config set global.extra-index-url https://test.pypi.org/simple
-   python3 -m pip install .[rocm-7-2-0]
-     # alternatively: install optional test dependencies:
-     # variant 1: python3 -m pip install .[test]
-     # variant 2: python3 -m pip install .[rocm-7-2-0,test]
-
-.. note:: ROCm key must agree with your environment
-
-   Do not forget to change the ROCm version ``rocm-7-2-0``
-   (format: ``rocm-<major>-<minor>-<patch>``) to a key that agrees with your
-   ROCm installation so that dependency versions compatible with your
-   ROCm installation are installed by ``pip``.
-
-Create a wheel via PyPA build
------------------------------
-
-After cloning the repository, you can also build a Python wheel
-and then distribute it (or install it):
+To build Numba HIP together with the rest of HIP Python from source, use the
+unified CMake build at the repository root:
 
 .. code-block:: bash
 
-   git clone https://github.com/ROCm/numba-hip.git
-     # alternatively: checkout a branch like 'dev':
-     # pip clone https://github.com/ROCm/numba-hip.git -b branch
-   pip install --upgrade pip
-   pip config set global.extra-index-url https://test.pypi.org/simple
-   pip install build # install PyPA build 
-   python3 -m build --wheel .
+   git clone https://github.com/rocm/hip-python.git
+   cd hip-python/packages
+   cmake -B build
+   cmake --build build --target numba_hip_wheel   # just numba-hip
+   # or: cmake --build build --target all_wheels   # every package
 
-   # optional: install the wheel:
-   pip install dist/*.whl
-   # alternatively: install optional test dependencies:
-   # pip3 install dist/numba_hip-0.1-py3-none-any.whl[rocm-7-2-0]
+The wheel lands in ``packages/build/dist/``. See the top-level ``README.md``
+for the full build instructions and options.
 
-.. note:: ROCm key must agree with your environment
+Install with test dependencies
+-------------------------------
 
-   Do not forget to change the ROCm version ``rocm-7-2-0``
-   (format: ``rocm-<major>-<minor>-<patch>``) to a key that agrees with your
-   ROCm installation so that dependency versions compatible with your
-   ROCm installation are installed by ``pip``.
+The test extras (``pytest``, ``cffi``) are exposed as a dependency group:
+
+.. code-block:: bash
+
+   cd packages/numba-hip
+   pip install --group test
 
 Contact
 =======

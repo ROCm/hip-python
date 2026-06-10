@@ -1,74 +1,30 @@
 # rocm-bindings-compiler
 
-Python bindings for ROCm compiler infrastructure:
-- **LLVM C API bindings**: Comprehensive access to LLVM compiler infrastructure
-- **AMD Code Object Manager (Comgr)**: Manipulate code objects for AMD GPUs
-- **Clang indexing library**: Parse and analyze C/C++ code
+Python bindings for the ROCm compiler stack: the LLVM-C API, the AMD Code Object
+Manager (COMGR), and the Clang indexing library.
 
-## Installation
+Part of [HIP Python](https://github.com/rocm/hip-python). Full docs:
+<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
+
+## Install
 
 ```bash
-pip install rocm-bindings-compiler
+pip install rocm-bindings-compiler    # or: pip install hip-python[compiler]
 ```
 
 ## Usage
 
-### LLVM C API
-
 ```python
-from rocm.bindings.llvm import c
-
-# Get default target triple
-triple = c.target.get_default_triple()
-print(f"Default target: {triple}")
-
-# Create a module
-module = c.core.LLVMModuleCreateWithName(b"my_module")
+from rocm.bindings.llvm import c          # LLVM-C API
+from rocm.bindings import amd_comgr        # COMGR C bindings
+import rocm.comgr                          # high-level COMGR wrapper
+from rocm.bindings.clang import cindex     # Clang indexing
 ```
 
-### AMD Comgr
+> This package was previously distributed as `rocm-llvm-python`; its modules
+> moved under the `rocm.bindings.*` namespace (e.g. `rocm.llvm` ->
+> `rocm.bindings.llvm`, `rocm.amd_comgr.amd_comgr` -> `rocm.bindings.amd_comgr`).
 
-```python
-from rocm.bindings import comgr
+## Dependencies
 
-# Create a data set
-data_set = comgr.create_data_set()
-```
-
-### Clang
-
-```python
-from rocm.bindings.clang import cindex
-
-# Parse a C file
-index = cindex.Index.create()
-tu = index.parse('hello.c')
-```
-
-## Migrated from rocm-llvm-python
-
-This package was previously distributed as `rocm-llvm-python`. The following namespace changes were made:
-
-- `rocm.llvm.*` → `rocm.bindings.llvm.*`
-- `rocm.amd_comgr.amd_comgr` → `rocm.bindings.comgr` (simplified)
-- `rocm.clang.*` → `rocm.bindings.clang.*`
-
-### Migration Guide
-
-Update your imports:
-
-```python
-# Old
-from rocm.llvm import c
-import rocm.amd_comgr.amd_comgr as comgr
-from rocm.clang import cindex
-
-# New
-from rocm.bindings.llvm import c
-import rocm.bindings.comgr as comgr
-from rocm.bindings.clang import cindex
-```
-
-## License
-
-MIT License. See LICENSE file for details.
+- `rocm-bindings-core`

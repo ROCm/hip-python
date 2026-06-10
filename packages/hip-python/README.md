@@ -1,49 +1,40 @@
 # hip-python
 
-Backward compatibility package for HIP Python bindings.
+Backward-compatibility metapackage that exposes the `hip.*` namespace as an
+alias of `rocm.bindings.*`, so existing `from hip import hip, hiprtc` code keeps
+working. Optional extras pull in the rest of the bindings.
 
-This is a metadata package that re-exports modules from the new `rocm.bindings` namespace packages. It maintains compatibility with code written for older versions of hip-python.
+Part of [HIP Python](https://github.com/rocm/hip-python). Full docs:
+<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
 
-## Installation
+The HIP Python ecosystem consists of:
+
+- `rocm-bindings-core` — shared types, loaders, ROCm path resolution
+- `rocm-bindings-hip` — HIP and HIPRTC bindings
+- `rocm-bindings-libraries` — math libraries (hipBLAS, hipSOLVER, hipFFT, ...)
+- `rocm-bindings-systems` — system libraries (RCCL, ROCTX, amdsmi, HSA)
+- `rocm-bindings-compiler` — LLVM-C, COMGR, Clang bindings
+- `hip-python-interop` — CUDA interop layer (`cuda.bindings.*`)
+- `hip-python` — this metapackage
+
+## Install
 
 ```bash
-# Install with core HIP bindings
-pip install hip-python
-
-# Install with all ROCm libraries (hipBLAS, hipSOLVER, etc.)
-pip install hip-python[libraries]
+pip install hip-python                  # core + HIP only
+pip install hip-python[libraries]       # + math libraries
+pip install hip-python[systems]         # + RCCL/ROCTX/amdsmi/HSA
+pip install hip-python[compiler]        # + LLVM/COMGR/Clang
 ```
 
 ## Usage
 
-### Old import style (still works)
 ```python
-from hip import hip, hiprtc
-from hip import hipblas  # Requires [libraries] extra
+from hip import hip, hiprtc                 # legacy alias namespace
+from rocm.bindings import hip, hiprtc       # recommended for new code
 ```
 
-### New import style (recommended)
-```python
-from rocm.bindings import hip, hiprtc
-from rocm.bindings import hipblas  # Requires rocm-bindings-libraries
-```
+## Dependencies
 
-## Package Structure
-
-The hip-python ecosystem now consists of:
-- **rocm-bindings-core** - Utility types and loaders
-- **rocm-bindings-hip** - HIP and HIPRTC bindings
-- **rocm-bindings-libraries** - hipBLAS, hipSOLVER, RCCL, etc.
-- **hip-python** - This backward compatibility package (meta-package)
-
-## Migration Guide
-
-For new projects, prefer the new namespace structure:
-- `from rocm.bindings import hip` instead of `from hip import hip`
-- Install specific packages (`rocm-bindings-hip`) instead of the meta-package
-
-Existing code continues to work without changes.
-
-## License
-
-MIT License - Copyright (c) 2023-2024 Advanced Micro Devices, Inc.
+- `rocm-bindings-core`
+- `rocm-bindings-hip`
+- Optional extras: `[libraries]`, `[systems]`, `[compiler]`

@@ -1,12 +1,12 @@
 # rocm-bindings-hip
 
-HIP and HIPRTC Python bindings for ROCm.
+Python bindings for the HIP runtime API and HIPRTC (runtime compilation of
+HIP/CUDA kernels).
 
-This package provides Python bindings for:
-- **HIP Runtime API** - GPU kernel execution, memory management, device control
-- **HIPRTC** - Runtime compilation of HIP/CUDA kernels
+Part of [HIP Python](https://github.com/rocm/hip-python). Full docs:
+<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
 
-## Installation
+## Install
 
 ```bash
 pip install rocm-bindings-hip
@@ -17,18 +17,9 @@ pip install rocm-bindings-hip
 ```python
 from rocm.bindings import hip, hiprtc
 
-# Check HIP version
 print(hip.hipRuntimeGetVersion())
-
-# Allocate device memory
-ptr = hip.hipMalloc(1024)
 ```
 
 ## Dependencies
 
-- `rocm-bindings-core` - Common utility types and loaders
-
-## Related Packages
-
-- `rocm-bindings-libraries` - Additional ROCm libraries (hipBLAS, hipSOLVER, etc.)
-- `hip-python` - Backward-compatible metadata package
+- `rocm-bindings-core`

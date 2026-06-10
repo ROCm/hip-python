@@ -1,6 +1,6 @@
 # hip-python-codegen
 
-Code generator for the [hip-python](https://github.com/ROCm/hip-python) ROCm
+Code generator for the [hip-python](https://github.com/rocm/hip-python) ROCm
 Python bindings. Parses the ROCm C headers (and optionally the
 `rocm-systems` / `rocm-libraries` / `llvm-project` source repositories) and
 emits Cython `.pxd`/`.pyx` files plus the cmake module/version include
@@ -160,14 +160,14 @@ For each run, it writes:
 - `cmake/generated_versions.cmake` per affected wheel.
 - `docs_src/python_api/<dotted-module-name>.rst` Sphinx wrapper pages.
 
-It does NOT produce hand-coded files (`__init__.py`, `_version.py.in`,
-`pyproject.toml`, `setup.py`, etc.). Those live in the hip-python repo
+It does NOT produce hand-coded files (`__init__.py`, `pyproject.toml`,
+`setup.py`, `CMakeLists.txt`, etc.). Those live in the hip-python repo
 on the codegen base branch as the source of truth.
 
 ## Repository layout
 
 ```
-recipes/hip-python/
+tools/hip-python-generate/
 ├── pyproject.toml             # CLI entry-point + runtime deps
 ├── README.md                  # this file
 ├── dev-requirements.txt       # interfacegen path install

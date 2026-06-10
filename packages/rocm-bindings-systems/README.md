@@ -1,27 +1,18 @@
 # rocm-bindings-systems
 
-Python bindings for ROCm system-level libraries.
+Python bindings for ROCm system-level libraries: RCCL (collective
+communication), ROCTX (profiling/tracing), amdsmi, and the HSA runtime.
 
-This package provides bindings for:
+The math libraries (hipBLAS, hipSOLVER, hipRAND, hipFFT, hipSPARSE, ...) live in
+the sibling `rocm-bindings-libraries` package.
 
-- **RCCL** - ROCm Communication Collectives Library (multi-GPU
-  communication primitives modeled on NCCL).
-- **ROCTX** - ROCm profiling and tracing instrumentation API.
+Part of [HIP Python](https://github.com/rocm/hip-python). Full docs:
+<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
 
-The math/FFT/random/sparse libraries (hipBLAS, hipSOLVER, hipRAND,
-hipFFT, hipSPARSE) live in the sibling `rocm-bindings-libraries`
-wheel.
-
-## Installation
+## Install
 
 ```bash
-pip install rocm-bindings-systems
-```
-
-Or via the `hip-python` metapackage's optional extra:
-
-```bash
-pip install hip-python[systems]
+pip install rocm-bindings-systems    # or: pip install hip-python[systems]
 ```
 
 ## Usage
@@ -29,10 +20,6 @@ pip install hip-python[systems]
 ```python
 from rocm.bindings import rccl, roctx
 
-# RCCL: collective communication
-nccl_id = rccl.ncclGetUniqueId()
-
-# ROCTX: tracing markers
 roctx.roctxRangePush("my-region")
 # ... compute work ...
 roctx.roctxRangePop()
@@ -40,11 +27,5 @@ roctx.roctxRangePop()
 
 ## Dependencies
 
-- `rocm-bindings-core` - Common utility types
-- `rocm-bindings-hip` - HIP runtime and HIPRTC
-
-## Related packages
-
-- `rocm-bindings-libraries` - Math libraries (hipBLAS, hipFFT, ...)
-- `hip-python` - Top-level package that re-exports `rocm.bindings.*`
-  under the legacy `hip.*` namespace.
+- `rocm-bindings-core`
+- `rocm-bindings-hip`

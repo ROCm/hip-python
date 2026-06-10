@@ -1,36 +1,29 @@
 # rocm-bindings-libraries
 
-Python bindings for ROCm libraries.
+Python bindings for the ROCm math libraries: hipBLAS, hipBLASLt, hipSOLVER,
+hipRAND, hipFFT, hipSPARSE (and other experimental math libraries).
 
-This package provides bindings for:
-- **hipBLAS** - GPU-accelerated basic linear algebra
-- **hipSOLVER** - GPU-accelerated linear algebra solvers
-- **RCCL** - ROCm Communication Collectives Library
-- **hipRAND** - GPU random number generation
-- **hipFFT** - Fast Fourier Transform library
-- **hipSPARSE** - Sparse linear algebra routines
-- **ROCTX** - ROCm profiling and tracing API
+The system-level libraries (RCCL, ROCTX, amdsmi, HSA) live in the sibling
+`rocm-bindings-systems` package.
 
-## Installation
+Part of [HIP Python](https://github.com/rocm/hip-python). Full docs:
+<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
+
+## Install
 
 ```bash
-pip install rocm-bindings-libraries
+pip install rocm-bindings-libraries   # or: pip install hip-python[libraries]
 ```
 
 ## Usage
 
 ```python
-from rocm.bindings import hipblas, hipsolver, rccl, hiprand, hipfft, hipsparse, roctx
+from rocm.bindings import hipblas, hipsolver, hiprand, hipfft, hipsparse
 
-# Use hipBLAS
 handle = hipblas.hipblasCreate()
 ```
 
 ## Dependencies
 
-- `rocm-bindings-core` - Common utility types
-- `rocm-bindings-hip` - HIP runtime and HIPRTC
-
-## Related Packages
-
-- `hip-python` - Backward-compatible metadata package
+- `rocm-bindings-core`
+- `rocm-bindings-hip`

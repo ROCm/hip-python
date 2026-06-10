@@ -35,7 +35,7 @@ In particular, we are interested to learn:
 Reporting Issues
 ----------------
 
-We use `GitHub Issues <https://github.com/ROCmSoftwarePlatform/hip-python/issues>`__
+We use `GitHub Issues <https://github.com/rocm/hip-python/issues>`__
 to track public **bugs** and **enhancement requests**.
 
 If you have found an issue, please check the `HIP Python documentation

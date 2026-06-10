@@ -1,12 +1,12 @@
 # rocm-bindings-core
 
-Utility types and loaders for ROCm Python bindings.
+Shared foundation for the ROCm Python bindings: common type definitions, the
+POSIX shared-library loader, and ROCm path resolution.
 
-This package provides:
-- Common type definitions used across ROCm bindings
-- POSIX library loading utilities for runtime library resolution
+Part of [HIP Python](https://github.com/rocm/hip-python). Full docs:
+<https://rocm.docs.amd.com/projects/hip-python/en/latest/index.html>
 
-## Installation
+## Install
 
 ```bash
 pip install rocm-bindings-core
@@ -18,4 +18,9 @@ pip install rocm-bindings-core
 from rocm.bindings.util import types, posixloader
 ```
 
-This is a low-level package typically used as a dependency by other ROCm binding packages.
+This is a low-level package, normally pulled in automatically as a dependency of
+the other `rocm-bindings-*` packages.
+
+## Dependencies
+
+- None — this is the base package the other bindings depend on.

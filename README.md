@@ -195,12 +195,12 @@ alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
 4. Configure and build all wheels:
 
    ```shell
-   cd python
+   cd packages
    cmake -B build
    cmake --build build --target all_wheels -j$(nproc)
    ```
 
-   Wheels for all five packages plus the `hip-python` metapackage land in
+   Wheels for all six packages plus the `hip-python` metapackage land in
    `packages/build/dist/`.
 
 5. Install the wheels:
@@ -217,7 +217,7 @@ populate the per-package `VERSION` and shared cmake helper (both gitignored):
 
 ```shell
 # One-time: populate per-package VERSION + cmake helper from the repo-root files
-cd python && cmake -B build && cd ..
+cd packages && cmake -B build && cd ..
 
 # Build just rocm-bindings-core:
 cd packages/rocm-bindings-core
@@ -239,7 +239,7 @@ build provides per-package `<pkg>_sdist` targets and an aggregate
 `all_sdists` that mirrors `all_wheels`:
 
 ```shell
-cd python
+cd packages
 cmake -B build
 cmake --build build --target all_sdists       # build sdists for every enabled package
 # or one at a time:
@@ -261,7 +261,7 @@ configure time:
 
 ```shell
 # Build only core, hip, and libraries (skip compiler and interop):
-cd python
+cd packages
 cmake -B build \
   -DHIP_PYTHON_BUILD_COMPILER=OFF \
   -DHIP_PYTHON_BUILD_INTEROP=OFF
@@ -271,7 +271,7 @@ cmake --build build --target all_wheels
 You can also build a single package's wheel from the unified build:
 
 ```shell
-cd python
+cd packages
 cmake -B build
 cmake --build build --target core_wheel        # rocm-bindings-core only
 cmake --build build --target hip_wheel         # rocm-bindings-hip only
@@ -295,7 +295,7 @@ matching `.pyi`, opt in to the developer-only stubgen targets:
 
 ```shell
 pip install mypy                                    # one-time
-cd python
+cd packages
 cmake -B build -DHIP_PYTHON_ENABLE_STUBGEN=ON
 cmake --build build --target all_stubs              # all handcoded modules
 # or one package at a time:
@@ -355,6 +355,7 @@ For deeper documentation:
 
 - [share/design/BUILDING.md](share/design/BUILDING.md) — Build system architecture, helper functions, package layout, full CMake target/option reference
 - [share/design/CODEGEN.md](share/design/CODEGEN.md) — How the interfacegen code generator interacts with the hip-python source tree to produce a release
+- [share/design/BINDINGS.md](share/design/BINDINGS.md) — The bindings emission contract: how generated `rocm.bindings.*` modules are structured
 
 > [!NOTE]
 > See the HIP Python developer guide for more details:
@@ -368,10 +369,11 @@ For deeper documentation:
 |---|---|---|
 | `ROCM_PATH` | `/opt/rocm` (or `$ROCM_PATH`/`$ROCM_HOME`) | Path to the ROCm installation. |
 | `HIP_PLATFORM` | `amd` | HIP backend selector. Only `amd` and `hcc` are supported. |
-| `HIP_PYTHON_BUILD_<NAME>` | `ON` | Per-package opt-in: `UTIL`, `HIP`, `LIBRARIES`, `COMPILER`, `INTEROP`, `HIP_PYTHON`. |
+| `HIP_PYTHON_BUILD_<NAME>` | `ON` | Per-package opt-in: `CORE`, `HIP`, `LIBRARIES`, `SYSTEMS`, `COMPILER`, `INTEROP`, `HIP_PYTHON`, `NUMBA_HIP`. |
 | `HIP_PYTHON_RUNTIME_LINKING` | `ON` | When `ON`, generated extensions resolve ROCm shared libraries lazily at runtime; when `OFF`, they link against them at build time. |
 | `HIP_PYTHON_ENABLE_LIB_<NAME>` | `ON` | Per-library toggle inside `rocm-bindings-libraries` (e.g. `HIP_PYTHON_ENABLE_LIB_HIPRAND=OFF`). |
 | `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON` | Bundle `libLLVM.so` inside the `rocm-bindings-compiler` wheel. |
+| `HIP_PYTHON_FORCE_BUILD_LIBLLVM` | `OFF` | Build the bundled `libLLVM.so` from source instead of reusing the ROCm-provided library. |
 | `HIP_PYTHON_AUDITWHEEL_REPAIR` | `OFF` | Run `auditwheel repair` to produce manylinux wheels. |
 | `HIP_PYTHON_WHEEL_OUTPUT_DIR` | `${CMAKE_BINARY_DIR}/dist` | Wheel output directory. |
 | `HIP_PYTHON_BUILD_DOCS` | `OFF` | Build the Sphinx HTML documentation as a CMake target (`docs`). |
@@ -394,7 +396,7 @@ be built or installed first.
 pip install -r docs_src/sphinx/requirements.txt
 
 # Configure and build the docs:
-cd python
+cd packages
 cmake -B build -DHIP_PYTHON_BUILD_DOCS=ON
 cmake --build build --target docs
 # open ../docs/index.html
@@ -413,35 +415,30 @@ cmake --build build --target docs
 The doc input language is **reStructuredText** (under `docs_src/`), distinct
 from the Markdown READMEs and design documents at the repo root.
 
-## Legacy Build from Source
+## Developer
 
-These are the original script-based build instructions for older releases up to
-and including ROCm 7.2.2.
+Tooling and scripts for contributors.
 
-1. Install ROCm.
-1. Install `pip`, virtual environment and development headers for Python 3:
+**Code generator.** The Cython/Python bindings are not handwritten — they are
+generated from the ROCm C headers by an in-tree code generator:
 
-   ```shell
-   # Ubuntu:
-   sudo apt install python3-pip python3-venv python3-dev
-   ```
+- [`tools/interfacegen`](tools/interfacegen) — the clang-based binding generator
+  (with its own README and design docs).
+- [`tools/hip-python-generate`](tools/hip-python-generate) — the hip-python
+  codegen CLI/recipe that drives interfacegen for this repo.
 
-1. Check out the feature branch `release/rocm-rel-X.Y[.Z]` for your particular
-   ROCm installation.
-1. Initialize the branch:
+See [share/design/CODEGEN.md](share/design/CODEGEN.md) and
+[share/design/BINDINGS.md](share/design/BINDINGS.md) for the generator contract.
 
-   ```shell
-   ./init.sh
-   ```
+**CI scripts** (under [`ci/`](ci)):
 
-1. Build the packages:
-
-   ```shell
-   ./build_hip_python_pkgs.sh --hip --cuda --post-clean
-   ```
-
-The legacy build process produces Python binary wheels in `hip-python/dist/`
-and `hip-python-as-cuda/dist/`.
+- `ci/internal/build-wheels.sh` — build the package wheels (full or light mode).
+- `ci/internal/prepare-release.sh` — author the release-only `VERSION.in` template
+  on a `release/rocm-rel-*` branch.
+- `ci/internal/test.sh` — run the unified example and numba-hip test suites.
+- `ci/docs/build.sh` — render the Sphinx documentation (thin wrapper over the
+  `docs` CMake target).
+- `ci/docs/regenerate-stubs.sh` — regenerate the handcoded-Cython `.pyi` stubs.
 
 ## Known Limitations
 
