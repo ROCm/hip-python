@@ -159,9 +159,7 @@ def write_version_py_in(
             __author__ = "{author}"
 
             VERSION = __version__ = "{version}.{{VERSION_SHORT}}"
-            LONG_VERSION = __long_version__ = "{long_version}.{{VERSION}}"
             {global_var_prefix}_CODEGEN_BRANCH = "{gitversion.git_current_branch()}"
-            {global_var_prefix}_CODEGEN_VERSION = "{gitversion.version(append_hash=True,append_date=True)}"
             {global_var_prefix}_CODEGEN_REV = "{gitversion.git_rev()}"
             {global_var_prefix}_BRANCH = "{{BRANCH}}"
             {global_var_prefix}_VERSION = "{{VERSION}}"

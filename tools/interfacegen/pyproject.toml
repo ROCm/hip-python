@@ -21,7 +21,7 @@
 # SOFTWARE.
 [project]
 name = "interfacegen"
-version = "0.1"
+version = "0.2"
 description = "InterfaceGen: Generate bindings and whole packages from C header files."
 readme = { file = "README.md", content-type = "text/markdown" }
 authors = [{ name = "Advanced Micro Devices, Inc." }]
@@ -59,8 +59,8 @@ dev = ["pytest"]
 extra = ["levenshtein"]
 
 [project.urls]
-Homepage = "https://github.com/AMD-AI/Interfacegen"
-Documentation = "https://github.com/AMD-AI/Interfacegen"
+Homepage = "https://github.com/rocm/hip-python"
+Documentation = "https://github.com/rocm/hip-python"
 
 [tool.setuptools]
 license-files = ["LICENSE"]

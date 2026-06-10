@@ -26,8 +26,6 @@ import os
 import re
 import textwrap
 
-from . import gitversion
-
 
 def get_bool_environ_var(env_var, default):
     yes_vals = ("true", "1", "t", "y", "yes")
@@ -104,12 +102,11 @@ def versions(
         + rocm_version_patch
     )
 
-    version: str = (
-        f"{rocm_version_name}.{gitversion.git_branch_rev_count(gitversion.git_current_branch())}"
-    )
-    long_version: str = (
-        f"{rocm_version_name}.{gitversion.version(append_hash=True,append_date=True)}"
-    )
+    # No revision counts: the version is the plain ROCm version name and
+    # long_version mirrors it (codegen provenance is recorded separately in
+    # rocm-bindings-core/version.py).
+    version: str = rocm_version_name
+    long_version: str = version
     return (rocm_version, rocm_version_name, version, long_version)
 
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Retired commit-count versioning
+
+Removed the commit-count machinery from `support/gitversion.py`
+(`version()`, `git_branch_rev_count()`, `__MAIN_BRANCH__`, and the
+upstream/local-distance helpers), keeping only `git_rev()`,
+`git_current_branch()`, `git_describe()`, and `git_is_clean()`. The
+`support._base.versions()` helper no longer appends a commit count,
+and `support.cython.write_version_py_in()` no longer emits the
+count-composed `LONG_VERSION`/`_CODEGEN_VERSION`.
+
 ## \*.\*.\*.57.\* (2026-05-26)
 
 **Scope.** Summarizes everything on
