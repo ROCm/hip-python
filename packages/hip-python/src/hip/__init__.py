@@ -31,55 +31,49 @@ Old code continues to work: from hip import hip, hiprtc, hipblas, etc.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-# Version attributes are lazy-loaded from rocm.bindings.hip
+import importlib.metadata
+
+# VERSION/__version__ are sourced lazily from the installed distribution
+# metadata (scikit-build derives the version from the rendered VERSION file).
 _dynamic_version_attrs = {
     "VERSION",
     "__version__",
-    "LONG_VERSION",
-    "__long_version__",
-    "HIP_PYTHON_CODEGEN_BRANCH",
-    "HIP_PYTHON_CODEGEN_VERSION",
-    "HIP_PYTHON_CODEGEN_REV",
-    "HIP_PYTHON_BRANCH",
-    "HIP_PYTHON_VERSION",
-    "HIP_PYTHON_REV",
 }
 
-# Import from canonical location
-try:
-    from rocm.version import (
-        ROCM_VERSION,
-        ROCM_VERSION_NAME,
-        rocm_version_name,
-        ROCM_VERSION_TUPLE,
-        rocm_version_tuple,
-        HIP_VERSION,
-        HIP_VERSION_NAME,
-        hip_version_name,
-        HIP_VERSION_TUPLE,
-        hip_version_tuple,
-    )
-except ImportError:
-    # Fallback if rocm-bindings-core not installed (shouldn't happen in practice)
-    ROCM_VERSION = 71300000
-    ROCM_VERSION_NAME = rocm_version_name = "7.13.0"
-    ROCM_VERSION_TUPLE = rocm_version_tuple = (7, 13, 0)
-    HIP_VERSION = 71326154
-    HIP_VERSION_NAME = hip_version_name = "7.13.26154-92b7431876"
-    HIP_VERSION_TUPLE = hip_version_tuple = (7, 13, 26154, "92b7431876")
+# Re-export the ROCm/HIP version metadata from the canonical, generated
+# source of truth (rocm-bindings-core renders rocm/version.py at codegen
+# time). rocm-bindings-core is a hard dependency, so a failed import here
+# is a real, loud error rather than something to paper over.
+from rocm.version import (
+    ROCM_VERSION,
+    ROCM_VERSION_NAME,
+    rocm_version_name,
+    ROCM_VERSION_TUPLE,
+    rocm_version_tuple,
+    HIP_VERSION,
+    HIP_VERSION_NAME,
+    hip_version_name,
+    HIP_VERSION_TUPLE,
+    hip_version_tuple,
+)
 
 
 def __getattr__(name):
     """Lazy-load version attributes and re-export modules from rocm.bindings."""
     # Check if it's a version attribute
     if name in _dynamic_version_attrs:
-        try:
-            from rocm.bindings.hip import _version
-            value = getattr(_version, name)
-            globals()[name] = value
-            return value
-        except (ImportError, AttributeError):
+        value = None
+        for _dist in ("hip-python", "rocm-bindings-hip"):
+            try:
+                value = importlib.metadata.version(_dist)
+                break
+            except importlib.metadata.PackageNotFoundError:
+                continue
+        if value is None:
             raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
+        globals()["VERSION"] = value
+        globals()["__version__"] = value
+        return value
 
     # Try to import from rocm.bindings namespace
     # First try rocm.bindings.{name} (for hip, hiprtc)
