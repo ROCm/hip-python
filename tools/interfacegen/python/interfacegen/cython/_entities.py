@@ -40,7 +40,7 @@ import textwrap
 import typing
 
 import clang.cindex
-import Cython.Tempita
+import tempita
 
 from .. import cparser, cythontemplates, doxyparser, tree
 from ..support import cython as support
@@ -459,7 +459,7 @@ class Field(tree.Field, CythonMixin, Typed):
     def render_python_property(self, record_cname: str):
 
         attr = self.renamer(self.name)
-        template = Cython.Tempita.Template(
+        template = tempita.Template(
             cythontemplates.wrapper_class_record_property_template
         )
 
@@ -557,7 +557,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
     def render_python_interface_decl(self, cprefix: str) -> str:
 
         name = self.renamer(self.global_name(self.sep))
-        template = Cython.Tempita.Template(
+        template = tempita.Template(
             cythontemplates.wrapper_class_decl_template
         )
         return template.substitute(
@@ -573,7 +573,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
 
         global python_interface_record_properties_name
         name = self.cython_global_name
-        template = Cython.Tempita.Template(
+        template = tempita.Template(
             cythontemplates.wrapper_class_impl_base_template.rstrip("\n")
             + "\n\n"
             + cythontemplates.wrapper_class_record_init_template
@@ -948,7 +948,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
     def render_python_interface_decl(self, cprefix: str) -> str:
 
         name = self.cython_global_name
-        template = Cython.Tempita.Template(
+        template = tempita.Template(
             cythontemplates.wrapper_class_decl_template
         )
         return template.substitute(
@@ -962,7 +962,7 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
     def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
         global indent
         name = self.cython_global_name
-        template = Cython.Tempita.Template(
+        template = tempita.Template(
             cythontemplates.wrapper_class_impl_base_template.rstrip("\n")
             + "\n"
             + cythontemplates.wrapper_class_constantarray_get_element_template
@@ -1002,7 +1002,7 @@ class FunctionPointer(CythonMixin):
 
         name = self.cython_global_name
         cname = cprefix + name
-        template = Cython.Tempita.Template(
+        template = tempita.Template(
             cythontemplates.wrapper_class_decl_template
         )
         return template.substitute(
@@ -1017,7 +1017,7 @@ class FunctionPointer(CythonMixin):
 
         name = self.cython_global_name
         cname = cprefix + name
-        template = Cython.Tempita.Template(
+        template = tempita.Template(
             cythontemplates.wrapper_class_impl_base_template
         )
         module_opts["all"].append(name)

@@ -40,7 +40,6 @@ import textwrap
 import typing
 
 import clang.cindex
-import Cython.Tempita
 
 from .. import cparser, cythontemplates, doxyparser, tree
 from ..support import cython as support

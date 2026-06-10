@@ -19,10 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-# Floor is 3.1.0: Cython 3.0.x miscompiles `cdef T x = <T>expr` for
-# `*const *` types (silently drops the initializer). See
-# share/design/UPSTREAM_BUGS/cython_const_pointer_initializer_bug.md.
-cython >= 3.1.0
+# interfacegen only needs Tempita (text templating) at runtime; the
+# Fortran/hipfort recipe emits no Cython, so the Cython compile floor
+# never applied here.
+Tempita >= 0.6.0
 pyparsing
 libclang >= 14.0.1, != 15.0.3, != 15.0.6, <= 15.0.6.1
 # optional:
