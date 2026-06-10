@@ -28,6 +28,7 @@ subtrees:
       - file: user_guide/5_report_bugs
       - file: user_guide/6_license
       - file: user_guide/7_build_from_source
+      - file: user_guide/8_numba_hip
   - caption: "rocm-bindings-core"
     entries:
       - file: python_api/rocm/bindings/util/index
