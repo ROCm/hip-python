@@ -99,9 +99,8 @@ status, *out_values = some_binding(...)
 
 This is driven by the per-generator
 `module_opts["python_interface_always_return_tuple"]` flag (a key
-on `CythonModuleGenerator`, default `False`; see
-[CODEGEN.md](CODEGEN.md)). The flag interacts with two emission
-paths in
+on `CythonModuleGenerator`, default `False`). The flag interacts
+with two emission paths in
 `interfacegen.cython.Function.render_python_interface_impl`:
 
 | Case | What the generator emits |
@@ -332,9 +331,10 @@ cy* call sees:
   that captured the result of `T.fromPyobj(parm).getElementPtr()`
   (IN/INOUT wrapper).
 
-See `share/design/CODEGEN.md` for where intent rules slot into the
-overall pipeline; the rule chain itself lives in
-`interfacegen/python/interfacegen/support/recipes/`.
+See [CODEGEN.md](CODEGEN.md) for where intent rules slot into the
+overall pipeline, and [POINTER_ARGUMENTS.md](POINTER_ARGUMENTS.md) for
+the pointer intent/degree decision table; the rule chain itself lives in
+`tools/interfacegen/python/interfacegen/support/recipes/`.
 
 
 ## Handcoded helpers the generator builds on

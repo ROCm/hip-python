@@ -34,8 +34,7 @@ option(HIP_PYTHON_RUNTIME_LINKING "Whether libraries should resolve ROCm librari
 # resolution issue in their cython output (struct tag like
 # `_hipblasLtMatmulAlgo_t` is referenced without a matching
 # `cdef struct` declaration). They are intentionally omitted from the
-# build until the codegen handles that case; see
-# share/design/BINDINGS.md for the rollout plan. Once the codegen is
+# build until the codegen handles that case. Once the codegen is
 # fixed this list can be replaced with the contents of
 # cmake/generated_modules.cmake (HIP_PYTHON_LIBRARIES_GENERATED_MODULES).
 set(HIP_PYTHON_ALL_LIBRARIES hipblas hipsolver hiprand hipfft hipsparse)

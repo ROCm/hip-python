@@ -23,8 +23,8 @@ A release flow looks like this:
                            v
 +--------------------+  parses & renders  +-----------------------+
 |   interfacegen     | -----------------> | hip-python codegen    |
-|   recipes/         |                    | base branch (handcoded|
-|   hip_python/      |                    | sources + build files)|
+|   + hip-python-    |                    | base branch (handcoded|
+|   generate         |                    | sources + build files)|
 +--------------------+                    +-----------+-----------+
                                                        |
                                                   generated
@@ -74,23 +74,23 @@ The generator's responsibility is **strictly Cython source generation** plus the
 ### Generator-owned outputs
 
 For each release run, the `hip-python-generate` CLI (after `pip install`
-from `recipes/hip-python/`) writes:
+from `tools/hip-python-generate/`) writes:
 
 | Path | Content |
 |---|---|
 | `packages/rocm-bindings-hip/src/rocm/bindings/{,cy}{hip,hiprtc}.{pxd,pyx}` | HIP runtime + RTC bindings |
 | `packages/rocm-bindings-libraries/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipsolver, hiprand, hipfft, hipsparse |
-| `packages/rocm-bindings-systems/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx |
+| `packages/rocm-bindings-systems/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx, hipfile, amdsmi, hsa |
 | `packages/rocm-bindings-compiler/src/rocm/bindings/{,cy}amd_comgr.{pxd,pyx}` | AMD COMGR |
 | `packages/rocm-bindings-compiler/src/rocm/bindings/llvm/c/**/*.{pxd,pyx}` | LLVM-C suite (~30 modules + transforms + config) |
 | `packages/hip-python-interop/src/cuda/bindings/{,cy}{driver,runtime,nvrtc}.{pxd,pyx}` | CUDA interop layer (HIP-as-CUDA) |
 | `__init__.pxd` files **below** `rocm/bindings/` and `cuda/bindings/` | Cython namespace markers (build-time only, never installed) |
 | `packages/rocm-bindings-libraries/cmake/generated_modules.cmake` | Module list for the libraries package — drives the per-library CMake foreach loop. |
-| `packages/rocm-bindings-systems/cmake/generated_modules.cmake` | Module list for the systems package (rccl, roctx). |
+| `packages/rocm-bindings-systems/cmake/generated_modules.cmake` | Module list for the systems package (rccl, roctx, hipfile, amdsmi, hsa). |
 | `packages/rocm-bindings-compiler/cmake/generated_modules.cmake` | LLVM-C / transforms / config / COMGR module lists. |
 | `packages/rocm-bindings-core/src/rocm/version.py` | Runtime version module rendered from the handcoded `rocm-bindings-core/version.py.in` template. Exposes the ROCm/HIP versions + commit and codegen provenance (base branch/rev/version, interfacegen version) via `rocm.version`. Like the other generator outputs it is absent on the base branch and committed on release branches by the release commit's `git add packages`. |
 | `packages/rocm-bindings-{hip,libraries,systems,compiler}/cmake/generated_versions.cmake`<br>`packages/hip-python-interop/cmake/generated_versions.cmake` | Version metadata for the docs landing page: ROCm version, HIP version, hip-python base branch/rev/version, interfacegen version, codegen date, and upstream source-tree revs. |
-| `<package>/<rocm-or-cuda>/<…>/<name>.pyi` (high-level modules only) | Type-stub files emitted alongside every high-level `<name>.pxd`/`.pyx` pair. Used by static type checkers (mypy, pyright) and IDEs to resolve symbol signatures without the compiled extensions on `sys.path`. The cy* C-level wrappers do **not** get `.pyi` — they are `cimport`-only and have no honest Python type-system equivalents (see plan §B.2). Installed alongside the corresponding `.so`. |
+| `<package>/<rocm-or-cuda>/<…>/<name>.pyi` (high-level modules only) | Type-stub files emitted alongside every high-level `<name>.pxd`/`.pyx` pair. Used by static type checkers (mypy, pyright) and IDEs to resolve symbol signatures without the compiled extensions on `sys.path`. The cy* C-level wrappers do **not** get `.pyi` — they are `cimport`-only and have no honest Python type-system equivalents. Installed alongside the corresponding `.so`. |
 
 > **Note on handcoded Cython modules.** The handful of handcoded
 > `.pyx` files in `rocm-bindings-core` (`rocm.bindings.util.{types,
@@ -101,7 +101,7 @@ from `recipes/hip-python/`) writes:
 > [BUILDING.md](BUILDING.md) §"Regenerating stubs for handcoded
 > Cython modules" for the workflow.
 | `docs_src/python_api/<dotted-module-name>.rst` (high-level modules) | Sphinx wrapper page that points `sphinx-autoapi` at the high-level Python module. One file per generated module (`rocm.bindings.hipblas.rst`, `cuda.bindings.driver.rst`, etc.). |
-| `docs_src/python_api/<dotted-module-name>.rst` (cy* wrappers) | Sphinx wrapper page for each generated `cy<name>.pxd`. Uses `literalinclude` to embed the .pxd source with Cython syntax highlighting — the `.pxd` itself is the readable, source-of-truth contract for downstream Cython users. No autoapi or `.pyi` involved. (See plan §B.3.) |
+| `docs_src/python_api/<dotted-module-name>.rst` (cy* wrappers) | Sphinx wrapper page for each generated `cy<name>.pxd`. Uses `literalinclude` to embed the .pxd source with Cython syntax highlighting — the `.pxd` itself is the readable, source-of-truth contract for downstream Cython users. No autoapi or `.pyi` involved. |
 
 ### Forbidden outputs (handcoded; generator must NEVER write)
 
@@ -138,15 +138,16 @@ The end-to-end release flow:
        --rocm-path /opt/rocm
    ```
    (Install via `pip install -r dev-requirements.txt && pip install .`
-   inside `recipes/hip-python/`; see that directory's `README.md`.)
+   inside `tools/hip-python-generate/`; see that directory's `README.md`.)
 
    After installation, running the CLI writes:
-   - `.pxd`/`.pyx` files into the four generator-owned packages
+   - `.pxd`/`.pyx` files into the five generator-owned packages
+     (hip, libraries, systems, compiler, and the hip-python-interop shim)
    - `__init__.pxd` namespace markers below `rocm/bindings/` and `cuda/bindings/`
    - `cmake/generated_modules.cmake` for libraries and compiler
    - `cmake/generated_versions.cmake` for every package
 
-3. **Verify the round-trip.** A clean `cmake -S python -B build && cmake --build build --target all_wheels` should produce manylinux-compatible wheels for all six packages with no Cython errors.
+3. **Verify the round-trip.** A clean `cmake -S packages -B build && cmake --build build --target all_wheels` should produce manylinux-compatible wheels for all six packages with no Cython errors.
 
 4. **Author the release-only `VERSION.in`** embedding the ROCm version
    (writes `VERSION.in = X.Y.Z.@HIP_PYTHON_VERSION@`; `@HIP_PYTHON_VERSION@`
@@ -178,7 +179,7 @@ set(HIP_PYTHON_LIBRARIES_GENERATED_MODULES
 
 # packages/rocm-bindings-systems/cmake/generated_modules.cmake
 set(HIP_PYTHON_SYSTEMS_GENERATED_MODULES
-    rccl roctx)
+    rccl roctx hipfile amdsmi hsa)
 ```
 
 The corresponding `CMakeLists.txt` does:
@@ -215,10 +216,10 @@ cmodule_name = f"cy{self.module_name}"
 
 Every site that emits a C-level module name — filenames, package-relative `cimport` paths, qualified attribute references inside generated bodies — flows through this single line.
 
-## Repository layout (interfacegen side)
+## Repository layout (generator side)
 
 ```
-interfacegen/recipes/hip-python/
+tools/hip-python-generate/
 ├── pyproject.toml              CLI entry-point + runtime deps (hip-python-codegen)
 ├── README.md                   CLI usage
 ├── dev-requirements.txt        path-relative interfacegen install
@@ -228,7 +229,7 @@ interfacegen/recipes/hip-python/
     ├── docs_generator.py       Sphinx page + TOC YAML emission
     ├── generators_hip.py       hip + hiprtc generators
     ├── generators_libraries.py hipblas/hipsolver/hiprand/hipfft/hipsparse generators
-    ├── generators_systems.py   rccl/roctx/hipfile generators
+    ├── generators_systems.py   rccl/roctx/hipfile/amdsmi/hsa generators
     ├── generators_compiler.py  amd_comgr + llvm generators
     ├── cuda_interop.py         CUDA interop (driver/runtime/nvrtc) subgenerator
     └── hipify.py               hipify-perl substitution parser

@@ -157,7 +157,7 @@ and returns it as a `CStr`.
 Crucially, this is a **Cython-only ergonomic, not a cross-backend truth**: in
 C these buffers are caller-allocated, and a direction-only backend (Fortran)
 should keep them as plain caller-allocated `OUT`. So the machinery lives in
-the HIP *Cython recipe generator* (`recipes/hip-python/.../generators_hip.py`),
+the HIP *Cython recipe generator* (`tools/hip-python-generate/.../generators_hip.py`),
 **not** in the shared `controls.hip` (`support/recipes/rocm.py`) — mirroring
 the `hipMalloc` → `DeviceArray` treatment, which is likewise a Cython-only
 override in the same generator. A single map drives both halves:
