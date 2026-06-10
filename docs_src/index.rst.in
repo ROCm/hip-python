@@ -33,7 +33,9 @@ the porting of CUDA Python Python and Cython programs.
 .. note::
 
    This documentation was generated on @HIP_PYTHON_GENERATED_DATE@ from
-   ROCm\ |trade| version @HIP_PYTHON_GENERATED_ROCM_VERSION@ headers.
+   ROCm\ |trade| version @HIP_PYTHON_GENERATED_ROCM_VERSION@ headers by
+   interfacegen @HIP_PYTHON_GENERATED_INTERFACEGEN_VERSION@ from hip-python
+   @HIP_PYTHON_GENERATED_BASE_VERSION@ (``@HIP_PYTHON_GENERATED_BASE_REV@``).
 
    Source trees always consulted during codegen:
 

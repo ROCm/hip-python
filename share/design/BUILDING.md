@@ -20,8 +20,10 @@ The build system is designed around three properties:
    build reads generator-emitted include files (see
    [CODEGEN.md](CODEGEN.md)).
 3. **Cython-source-only generator.** The Python packaging metadata
-   (`pyproject.toml`, `_version.py.in`, `__init__.py`, `setup.cfg`) is
-   handcoded and never overwritten by the generator.
+   (`pyproject.toml`, `__init__.py`, `setup.cfg`) is handcoded and never
+   overwritten by the generator. (The one rendered exception is
+   `rocm-bindings-core/src/rocm/version.py`, produced from the handcoded
+   `version.py.in` template — see [CODEGEN.md](CODEGEN.md).)
 
 ## The seven packages
 
@@ -71,7 +73,7 @@ Every wheel has the same three top-level subdirectories:
 | `cmake/HipPythonBuild.cmake` | Shared CMake helper, mirrored from the repo-root `cmake/` at configure time. |
 | `bundled/<libname>/CMakeLists.txt` | Optional. Build/detect a vendored shared library and copy it into the wheel. See section below. |
 
-Plus per-wheel `pyproject.toml`, `CMakeLists.txt`, `VERSION`, `_version.py.in`, `LICENSE`, `README.md`.
+Plus per-wheel `pyproject.toml`, `CMakeLists.txt`, `VERSION`, `LICENSE`, `README.md`.
 
 The `src/` layout is a PyPA convention (not a PEP). It keeps the importable
 package isolated from build artifacts and tooling so test runs against the
@@ -266,8 +268,8 @@ which reproduces exactly what scikit-build-core would have packed:
 
 1. **`cmake --install <unified-build> --component <pkg> --prefix
    <staging>`** — copies the package's compiled `.so` modules and its
-   explicitly `install()`-ed files (`.pxd`, `.pyi`, pure `.py`,
-   generated `_version.py`) into a staging dir, applying each target's
+   explicitly `install()`-ed files (`.pxd`, `.pyi`, pure `.py`)
+   into a staging dir, applying each target's
    `INSTALL_RPATH` (so bundled-lib lookups like the compiler package's
    `$ORIGIN/..` libLLVM keep working). This is the `install.components`
    half of a scikit-build-core wheel.
@@ -625,10 +627,13 @@ with `-DHIP_PYTHON_VERSION=...`.
   pip extracts it and scikit-build reads it directly — no source
   tree, no unified configure needed.
 - **`hip_python_resolve_version()`** (in
-  `cmake/HipPythonBuild.cmake`) reads `VERSION` from the package
-  dir at CMake configure time and exports
-  `HIP_PYTHON_VERSION_FULL` so per-package `_version.py.in`
-  configure_file calls keep working.
+  `cmake/HipPythonBuild.cmake`) ensures the per-package `VERSION`
+  file exists at CMake configure time (populating it from the
+  repo-root `VERSION` on sdist builds). scikit-build-core reads the
+  distribution version from that `VERSION` file directly
+  (`metadata.version.input = "VERSION"`), so `importlib.metadata`
+  is the runtime version source — there is no longer a generated
+  `_version.py`.
 
 The shared `cmake/HipPythonBuild.cmake` follows the same model:
 mirrored into each `packages/<pkg>/cmake/HipPythonBuild.cmake` by the

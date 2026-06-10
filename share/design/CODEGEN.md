@@ -52,14 +52,14 @@ The `hip-python` repo distinguishes two kinds of branches:
 
 Contains **only handcoded** content:
 
-- All build infrastructure: `cmake/HipPythonBuild.cmake`, every per-package `CMakeLists.txt`, `pyproject.toml` files, `_version.py.in` templates, `setup.cfg`, `MANIFEST.in`.
-- The `rocm-bindings-core` package in full — its loader, types, and `paths` modules are handcoded and not produced by the generator.
+- All build infrastructure: `cmake/HipPythonBuild.cmake`, every per-package `CMakeLists.txt`, `pyproject.toml` files, the `rocm-bindings-core/version.py.in` template, `setup.cfg`, `MANIFEST.in`.
+- The `rocm-bindings-core` package — its loader, types, and `paths` modules are handcoded and not produced by the generator. The one exception is `rocm/version.py`, which the generator renders from the handcoded `rocm-bindings-core/version.py.in` template (like the other generator outputs it is absent on the base branch and committed on release branches).
 - Per-package `__init__.py` files (Python runtime markers).
 - Top-of-namespace `__init__.pxd` markers (`rocm/__init__.pxd`, `rocm/bindings/__init__.pxd`, `cuda/__init__.pxd`, `cuda/bindings/__init__.pxd`) committed in each package source tree.
 - The handcoded helper Cython modules `_hip_helpers.{pxd,pyx}` and `_hiprtc_helpers.{pxd,pyx}` in `rocm-bindings-hip`.
 - Documentation, examples, license.
 
-A bare clone of the codegen base branch is **not buildable** — the generator must run into it first to populate the `.pxd`/`.pyx` files for `hip`, `hiprtc` (`rocm-bindings-hip`); `hipblas`, `hipsolver`, `hiprand`, `hipfft`, `hipsparse` (`rocm-bindings-libraries`); `rccl`, `roctx` (`rocm-bindings-systems`); `amd_comgr`, the LLVM-C suite (`rocm-bindings-compiler`); and the CUDA interop layer.
+A bare clone of the codegen base branch is **not buildable** — the generator must run into it first to populate the `.pxd`/`.pyx` files for `hip`, `hiprtc` (`rocm-bindings-hip`); `hipblas`, `hipsolver`, `hiprand`, `hipfft`, `hipsparse` (`rocm-bindings-libraries`); `rccl`, `roctx` (`rocm-bindings-systems`); `amd_comgr`, the LLVM-C suite (`rocm-bindings-compiler`); the CUDA interop layer; and `rocm/version.py` (`rocm-bindings-core`, rendered from `version.py.in`).
 
 ### Release branches — `release/rocm-rel-X.Y[.Z]`
 
@@ -88,7 +88,8 @@ from `recipes/hip-python/`) writes:
 | `packages/rocm-bindings-libraries/cmake/generated_modules.cmake` | Module list for the libraries package — drives the per-library CMake foreach loop. |
 | `packages/rocm-bindings-systems/cmake/generated_modules.cmake` | Module list for the systems package (rccl, roctx). |
 | `packages/rocm-bindings-compiler/cmake/generated_modules.cmake` | LLVM-C / transforms / config / COMGR module lists. |
-| `packages/rocm-bindings-{hip,libraries,compiler}/cmake/generated_versions.cmake`<br>`packages/hip-python-interop/cmake/generated_versions.cmake` | Version metadata: ROCm version, HIP version, code-generator branch/rev, hip-python branch/rev. Consumed by the existing `configure_file("_version.py.in" "_version.py")` flow. |
+| `packages/rocm-bindings-core/src/rocm/version.py` | Runtime version module rendered from the handcoded `rocm-bindings-core/version.py.in` template. Exposes the ROCm/HIP versions + commit and codegen provenance (base branch/rev/version, interfacegen version) via `rocm.version`. Like the other generator outputs it is absent on the base branch and committed on release branches by the release commit's `git add packages`. |
+| `packages/rocm-bindings-{hip,libraries,systems,compiler}/cmake/generated_versions.cmake`<br>`packages/hip-python-interop/cmake/generated_versions.cmake` | Version metadata for the docs landing page: ROCm version, HIP version, hip-python base branch/rev/version, interfacegen version, codegen date, and upstream source-tree revs. |
 | `<package>/<rocm-or-cuda>/<…>/<name>.pyi` (high-level modules only) | Type-stub files emitted alongside every high-level `<name>.pxd`/`.pyx` pair. Used by static type checkers (mypy, pyright) and IDEs to resolve symbol signatures without the compiled extensions on `sys.path`. The cy* C-level wrappers do **not** get `.pyi` — they are `cimport`-only and have no honest Python type-system equivalents (see plan §B.2). Installed alongside the corresponding `.so`. |
 
 > **Note on handcoded Cython modules.** The handful of handcoded
@@ -105,7 +106,7 @@ from `recipes/hip-python/`) writes:
 ### Forbidden outputs (handcoded; generator must NEVER write)
 
 - `__init__.py` files anywhere
-- `_version.py.in` templates
+- the `version.py.in` template (the generator *reads* it to render `rocm/version.py`, but never writes the template itself)
 - `setup.py`, `setup.cfg`, `MANIFEST.in`, `pyproject.toml`
 - `requirements.txt` files inside generated package trees
 - The two top-of-namespace `__init__.pxd` files in each package
@@ -147,14 +148,23 @@ The end-to-end release flow:
 
 3. **Verify the round-trip.** A clean `cmake -S python -B build && cmake --build build --target all_wheels` should produce manylinux-compatible wheels for all six packages with no Cython errors.
 
-4. **Commit and push the release branch.**
+4. **Author the release-only `VERSION.in`** embedding the ROCm version
+   (writes `VERSION.in = X.Y.Z.@HIP_PYTHON_VERSION@`; `@HIP_PYTHON_VERSION@`
+   stays literal for CMake's `configure_file`):
    ```sh
-   git add packages/
+   ci/internal/prepare-release.sh X.Y.Z
+   ```
+
+5. **Commit and push the release branch.** `git add packages/` captures the
+   rendered `version.py` and the other generator outputs (none are
+   git-ignored; they are simply absent on the base branch).
+   ```sh
+   git add packages/ VERSION.in
    git commit -m "[chore] generate bindings for ROCm X.Y.Z"
    git push origin release/rocm-rel-X.Y
    ```
 
-5. **Build wheels for distribution** (CI builds them with `auditwheel repair` for the manylinux tag) and upload to PyPI.
+6. **Build wheels for distribution** (CI builds them with `auditwheel repair` for the manylinux tag) and upload to PyPI.
 
 ## Adding or removing modules
 
@@ -189,9 +199,9 @@ When a new module appears, the generator simply adds it to the list and emits th
 
 Cython's cross-package `cimport` resolution requires that every directory along a namespace path contains a package marker (`__init__.pxd` or `__init__.py`). In hip-python:
 
-- The two top-of-namespace markers per package (`rocm/__init__.pxd` and `rocm/bindings/__init__.pxd`; or `cuda/`, `cuda/bindings/`) are **handcoded** because they exist regardless of generator output. They live on the codegen base branch.
+- The two top-of-namespace markers per package (`rocm/__init__.pxd` and `rocm/bindings/__init__.pxd`; or `cuda/`, `cuda/bindings/`) are **handcoded** because they exist regardless of generator output. They live on the codegen base branch. `rocm-bindings-core` also handcodes `rocm/bindings/util/__init__.pxd` (the `util/` subtree is handcoded, not generator-owned).
 - Markers below those (`rocm/bindings/llvm/__init__.pxd`, `rocm/bindings/llvm/c/__init__.pxd`, etc.) are **generator-emitted** because the directory tree they describe is generator-owned.
-- All non-`util` markers are **build-time only** — they are NOT installed. `rocm-bindings-core` is the single component that installs the runtime namespace markers (`rocm/__init__.pxd`, `rocm/bindings/__init__.pxd`).
+- Most markers are **build-time only** — they are NOT installed. `rocm-bindings-core` is the single component that installs the runtime namespace markers (`rocm/__init__.pxd`, `rocm/bindings/__init__.pxd`, and `rocm/bindings/util/__init__.pxd`); the `util` marker is installed so the other packages' cross-package `cimport rocm.bindings.util.{types,loader}` resolves against the installed core. At Python runtime `rocm.bindings.util` is a PEP 420 namespace package (no `__init__.py`; the import system ignores the `.pxd`).
 
 This keeps the runtime install tree clean (one marker per namespace level, contributed by `rocm-bindings-core`) while letting Cython resolve cross-package `cimport` at build time inside every package's source tree.
 

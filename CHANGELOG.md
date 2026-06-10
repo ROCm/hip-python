@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+### Version metadata overhaul
+
+Retired the commit-count-derived version slots. The runtime
+source of truth for the ROCm/HIP version is now
+`rocm-bindings-core/src/rocm/version.py`, rendered by the code
+generator from the tracked `version.py.in` template; it carries
+the ROCm/HIP version + commit plus codegen provenance (hip-python
+base branch version + git hash and the interfacegen version). The
+rendered `version.py` is git-ignored on the codegen base branch
+and committed on release branches via the new
+`ci/internal/prepare-release.sh`, which also generates `VERSION.in`
+(`<rocm_version>.@HIP_PYTHON_VERSION@`). The `[tool.rocm-bindings]`
+pyproject sections and the per-package `_version.py.in` templates
+were removed; `VERSION`/`__version__` now come from
+`importlib.metadata`, and `LONG_VERSION`/`__long_version__` were
+dropped.
+
 ## \*.\*.\*.\*.70 (2026-05-26)
 
 **Scope.** Summarizes everything on

@@ -59,7 +59,11 @@ The ROCm\ |trade| HIP SDK is versioned according to the below scheme:
 
 While HIP Python packages are versioned according to:
 
-``ROCM_VERSION_MAJOR.ROCM_VERSION_MINOR.ROCM_VERSION_PATCH.HIP_PYTHON_CODEGEN_VERSION.HIP_PYTHON_RELEASE_VERSION``
+``ROCM_VERSION_MAJOR.ROCM_VERSION_MINOR.ROCM_VERSION_PATCH.HIP_PYTHON_VERSION``
+
+where ``HIP_PYTHON_VERSION`` is the independently incremented hip-python
+package version (tracked in the repo-root ``HIP_PYTHON_VERSION`` file, e.g.
+``0.0.1``).
 
 Any version of HIP Python that matches the first three numbers is suitable
 for your ROCm\ |trade| HIP SDK installation.
@@ -67,7 +71,7 @@ for your ROCm\ |trade| HIP SDK installation.
 .. admonition:: Example
 
    If you have the ROCm\ |trade| HIP SDK 7.13.0 installed, any
-   HIP Python package with version ``7.13.0.X.Y`` can be used.
+   HIP Python package with version ``7.13.0.*`` can be used.
 
 .. tip::
 
@@ -75,10 +79,9 @@ for your ROCm\ |trade| HIP SDK installation.
    version) using PEP 440's compatible-release operator
    ``~=7.13.0.0``. This is equivalent to
    ``>=7.13.0.0, ==7.13.0.*`` — pip is allowed to pick newer
-   ``CODEGEN_VERSION`` / ``RELEASE_VERSION`` updates within the
-   ``7.13.0`` line but is forbidden from sliding forward to
-   ``7.14.0``, where the pinned ROCm SDK might no longer be
-   compatible.
+   ``HIP_PYTHON_VERSION`` updates within the ``7.13.0`` line but is
+   forbidden from sliding forward to ``7.14.0``, where the pinned
+   ROCm SDK might no longer be compatible.
 
 .. note::
 

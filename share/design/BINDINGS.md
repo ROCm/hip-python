@@ -362,7 +362,7 @@ Everything described above is what the generator *emits*. The
 generator does not own:
 
 - `__init__.py` files, `pyproject.toml`, `setup.cfg`, `MANIFEST.in`,
-  `_version.py.in` templates — see CODEGEN.md §"Forbidden outputs".
+  the `version.py.in` template — see CODEGEN.md §"Forbidden outputs".
 - The `rocm-bindings-core` runtime (loader, types, paths) and the
   `rocm-bindings-hip` helper modules (`_hip_helpers`,
   `_hiprtc_helpers`).
