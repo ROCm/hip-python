@@ -56,8 +56,8 @@ test = ["pytest", "cffi"]
 dev = ["pytest", "cffi"]
 
 [project.urls]
-Homepage = "https://github.com/rocm/numba-hip"
-Documentation = "https://github.com/rocm/numba-hip"
+Homepage = "https://github.com/rocm/hip-python"
+Documentation = "https://github.com/rocm/hip-python"
 
 [tool.setuptools.packages.find]
 where = ["src"]
