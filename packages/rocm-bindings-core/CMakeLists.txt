@@ -114,6 +114,11 @@ install(
   DESTINATION rocm/bindings
   COMPONENT rocm-bindings-core
 )
+install(
+  FILES src/rocm/bindings/util/__init__.pxd
+  DESTINATION rocm/bindings/util
+  COMPONENT rocm-bindings-core
+)
 
 # Install .pxd files for cimport from other packages
 if(WIN32)
@@ -133,23 +138,9 @@ else()
     COMPONENT rocm-bindings-core
   )
 endif()
-
-# Configure and install version file
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/_version.py.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  @ONLY
-)
-install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  DESTINATION rocm/bindings/util
-  COMPONENT rocm-bindings-core
-)
-
 # Install Python modules
 install(
   FILES
-    src/rocm/bindings/util/__init__.py
     src/rocm/bindings/util/paths.py
   DESTINATION rocm/bindings/util
   COMPONENT rocm-bindings-core
