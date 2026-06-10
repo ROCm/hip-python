@@ -57,20 +57,3 @@ sdist.include = [
     "bundled/libllvm/CMakeLists.txt",
     "bundled/libllvm/Target.cpp",
 ]
-
-# Custom ROCm metadata
-[tool.rocm-bindings]
-# User-facing version information (exposed via rocm.version module)
-rocm_version = "7.13.0"
-hip_version = "7.13.26154"
-hip_commit = "92b7431876"
-hip_full_version = "7.13.26154-92b7431876"
-
-# Build metadata (NOT exposed to Python users, build-time only)
-# Placeholders will be filled by build system
-codegen_branch = "{codegen_branch}"
-codegen_version = "{codegen_version}"
-codegen_rev = "{codegen_rev}"
-base_branch = "{branch}"
-base_version = "{version}"
-base_rev = "{rev}"
