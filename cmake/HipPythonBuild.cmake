@@ -23,10 +23,11 @@ function(hip_python_get_env_default out_var env_var default_value)
   endif()
 endfunction()
 
-# Resolve the package version string for the calling per-package
-# CMakeLists.txt and export it as HIP_PYTHON_VERSION_FULL,
-# HIP_PYTHON_VERSION_NAME, and HIP_PYTHON_LONG_VERSION_NAME in
-# the parent scope.
+# Ensure the per-package VERSION file exists for the calling
+# per-package CMakeLists.txt (populating it from the repo-root VERSION
+# on sdist builds) and export it as HIP_PYTHON_VERSION_FULL in the
+# parent scope. scikit-build-core reads the version from the VERSION
+# file directly (metadata.version.input = "VERSION" in pyproject.toml).
 #
 # Behavior:
 # - sdist build (SKBUILD_STATE=sdist): copy repo-root ../../VERSION
@@ -60,8 +61,6 @@ function(hip_python_resolve_version)
   file(READ "${_pkg_version_file}" _hp_version)
   string(STRIP "${_hp_version}" _hp_version)
   set(HIP_PYTHON_VERSION_FULL "${_hp_version}" PARENT_SCOPE)
-  set(HIP_PYTHON_VERSION_NAME "${_hp_version}" PARENT_SCOPE)
-  set(HIP_PYTHON_LONG_VERSION_NAME "${_hp_version}" PARENT_SCOPE)
 endfunction()
 
 function(hip_python_initialize)

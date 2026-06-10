@@ -196,19 +196,6 @@ if(HIP_PYTHON_HIPFILE_AVAILABLE AND "hipfile" IN_LIST HIP_PYTHON_SELECTED_SYSTEM
     COMPONENT rocm-bindings-systems
   )
 endif()
-
-# Configure and install version file
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/_version.py.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  @ONLY
-)
-install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  DESTINATION rocm/bindings
-  COMPONENT rocm-bindings-systems
-)
-
 # Optional libhipfile bundling. MUST come after the foreach loop above
 # because bundled/libhipfile/CMakeLists.txt sets RPATH on the cyhipfile /
 # hipfile cython module targets created in that loop. The subdirectory

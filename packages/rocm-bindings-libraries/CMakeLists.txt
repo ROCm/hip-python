@@ -125,19 +125,6 @@ endforeach()
 # (rocm-bindings-core, rocm-bindings-hip, rocm-bindings-libraries)
 # to contribute modules to the same namespace.
 # See: https://peps.python.org/pep-0420/
-
-# Configure and install version file
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/_version.py.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  @ONLY
-)
-install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  DESTINATION rocm/bindings
-  COMPONENT rocm-bindings-libraries
-)
-
 # Aggregate target for this package (for build.targets in pyproject.toml)
 # Dynamically collect all targets based on selected libraries
 set(_all_library_targets)

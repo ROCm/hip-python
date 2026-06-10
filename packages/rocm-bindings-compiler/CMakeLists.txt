@@ -77,7 +77,6 @@ set(COMPILER_INCLUDE_DIRS
 hip_python_append_sibling_includes(COMPILER_INCLUDE_DIRS)
 
 # Define module lists for selective building
-# Based on ROCM_LLVM_PYTHON_MODULE_LIST from _version.py.in
 set(LLVM_C_MODULES
   disassembler lljit lto debuginfo executionengine
   orc analysis disassemblertypes blake3 remarks
@@ -327,19 +326,6 @@ install(
   DESTINATION rocm/comgr
   COMPONENT rocm-bindings-compiler
 )
-
-# Version file
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/_version.py.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  @ONLY
-)
-install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  DESTINATION rocm/bindings/llvm
-  COMPONENT rocm-bindings-compiler
-)
-
 # Aggregate target
 if(TARGET rocmllvm AND BUILD_BUNDLED_LIBLLVM)
   add_custom_target(package_rocm_bindings_compiler

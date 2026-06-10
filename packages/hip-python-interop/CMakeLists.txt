@@ -105,19 +105,6 @@ endif()
 # They intentionally have NO __init__.py files to allow multiple packages
 # to contribute modules to the same namespace.
 # See: https://peps.python.org/pep-0420/
-
-# Configure and install version file
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/_version.py.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  @ONLY
-)
-install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  DESTINATION cuda/bindings
-  COMPONENT hip-python-interop
-)
-
 # Aggregate target for this package (for build.targets in pyproject.toml)
 add_custom_target(package_hip_python_interop
   DEPENDS cuda_bindings_driver cuda_bindings_runtime cuda_bindings_nvrtc

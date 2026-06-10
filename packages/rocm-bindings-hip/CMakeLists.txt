@@ -152,19 +152,6 @@ install(
   DESTINATION rocm/bindings
   COMPONENT rocm-bindings-hip
 )
-
-# Configure and install version file
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/_version.py.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  @ONLY
-)
-install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
-  DESTINATION rocm/bindings
-  COMPONENT rocm-bindings-hip
-)
-
 # NOTE: src/rocm/bindings/ is a PEP 420 implicit namespace package
 # It intentionally has NO __init__.py file to allow multiple packages
 # (rocm-bindings-core, rocm-bindings-hip, rocm-bindings-libraries)
