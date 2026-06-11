@@ -364,10 +364,16 @@ endif()
 if(HIP_PYTHON_BUILD_NUMBA_HIP)
   # Pure Python, no C extensions and no COMPONENT — reuses the same
   # `python -m build` path as the hip-python metapackage above.
+  #
+  # SKIP_AUDITWHEEL: numba-hip's setup.py forces a non-pure (platlib)
+  # wheel tagged py3-none-linux_x86_64, but it ships no ELF/shared
+  # library, so auditwheel repair rejects it. Skip the repair and copy
+  # the wheel through as-is.
   hip_python_add_wheel_target(
     TARGET numba_hip_wheel
     PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/numba-hip"
     OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
+    SKIP_AUDITWHEEL
   )
   message(STATUS "Wheel target enabled: numba_hip_wheel")
 endif()

@@ -311,7 +311,7 @@ function(hip_python_add_cython_module)
 endfunction()
 
 function(hip_python_add_wheel_target)
-  set(options "")
+  set(options "SKIP_AUDITWHEEL")
   set(oneValueArgs TARGET PACKAGE_DIR OUTPUT_DIR COMPONENT)
   set(multiValueArgs DEPENDS)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -422,7 +422,11 @@ function(hip_python_add_wheel_target)
   # copy_directory path below -- the assembler already emits the correct
   # win_amd64 platform tag, so no retag is needed. The temp dir holds
   # only the freshly produced wheel, so copy_directory needs no glob.
-  if(HIP_PYTHON_AUDITWHEEL_REPAIR AND NOT WIN32)
+  # SKIP_AUDITWHEEL: some targets produce a platform-tagged wheel with no
+  # ELF/shared library (e.g. numba-hip, which setup.py marks non-pure for
+  # platlib placement). auditwheel rejects those ("not a platform wheel"),
+  # so they must fall through to the plain copy path below.
+  if(HIP_PYTHON_AUDITWHEEL_REPAIR AND NOT WIN32 AND NOT ARG_SKIP_AUDITWHEEL)
     list(APPEND WHEEL_COMMANDS
       # Create final output directory
       COMMAND ${CMAKE_COMMAND} -E make_directory "${ARG_OUTPUT_DIR}"
