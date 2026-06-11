@@ -28,7 +28,7 @@ build-backend = "setuptools.build_meta"
 name = "numba-hip"
 version = "0.2.0"
 description = "Numba HIP - Numba backend for AMD GPUs"
-readme = { file = "README.rst", content-type = "text/x-rst" }
+readme = { file = "README.md", content-type = "text/markdown" }
 authors = [{ name = "Advanced Micro Devices, Inc." }]
 license = "MIT"
 license-files = ["LICENSE"]
