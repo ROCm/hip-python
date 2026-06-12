@@ -1937,8 +1937,20 @@ class llvm_c:
     @staticmethod
     def ptr_parm_intent(node: Parm):
         """Mirrors generate_llvm.py:78-115 — INOUT for the array-out
-        params, OUT for `Out*`-prefixed names + a per-(fn, parm) lookup,
-        IN otherwise. Order matters."""
+        params, OUT_CALLEE_ALLOCATED for `Out*`-prefixed names + a
+        per-(fn, parm) lookup, IN otherwise. Order matters.
+
+        The `Out*` / per-(fn, parm) block covers callee-produced outputs:
+        opaque handles (`OutEE`, `OutMemBuf`, `T`, ...), scalar outputs
+        (`LLVMGetVersion` Major/Minor/Patch, `LLVMGetValueName2` Length),
+        and callee-allocated strings (`OutError`, `OutMessage`,
+        `ErrorMessage`). They are pinned to `OUT_CALLEE_ALLOCATED` so the
+        binding turns them into Python return values regardless of rank.
+        The explicit callee-allocation hint is load-bearing for the
+        `char **` string params: their rank-1 classification (a NUL-
+        terminated char sequence) would otherwise fail the rank-0
+        structural fallback in `is_out_callee_allocated_ptr` and leave
+        them as positional arguments."""
         fn_name: str = node.parent.cursor.spelling
         parm_name: str = node.cursor.spelling
         if (fn_name, parm_name) in (
@@ -1968,7 +1980,7 @@ class llvm_c:
                 ("LLVMGetTargetFromTriple", "ErrorMessage"),
             )
         ):
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return ParmIntent.IN
 
     @staticmethod

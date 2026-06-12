@@ -468,3 +468,63 @@ def test_iter_doxygen_param_tags_empty():
     """Empty / None raw_comment yields nothing."""
     assert list(generic._iter_doxygen_param_tags(None)) == []
     assert list(generic._iter_doxygen_param_tags("")) == []
+
+
+# ---------------------------------------------------------------------------
+# llvm_c recipe — callee-allocated OUT params (char** error strings)
+# ---------------------------------------------------------------------------
+_LLVM_HEADER = """
+typedef struct LLVMOpaqueTargetMachine *LLVMTargetRef;
+typedef struct LLVMOpaqueMemoryBuffer *LLVMMemoryBufferRef;
+typedef int LLVMBool;
+
+LLVMBool LLVMGetTargetFromTriple(const char *Triple, LLVMTargetRef *T, char **ErrorMessage);
+LLVMBool LLVMCreateMemoryBufferWithContentsOfFile(const char *Path, LLVMMemoryBufferRef *OutMemBuf, char **OutMessage);
+"""
+
+
+@pytest.fixture(scope="module")
+def llvm_root():
+    parser = CParser("llvm.h", unsaved_files=[("llvm.h", _LLVM_HEADER)])
+    parser.parse()
+    return treefactory.from_libclang_translation_unit(
+        backend=cython,
+        translation_unit=parser.translation_unit,
+    )
+
+
+def test_llvm_callee_allocated_out_params(llvm_root):
+    """Regression: the `char **` error-string OUT params of the LLVM
+    target/memory-buffer creators must classify as OUT_CALLEE_ALLOCATED.
+
+    Without the explicit callee-allocation hint these `char **` params
+    are rank-1 (NUL-terminated char sequence), so the rank-0 structural
+    fallback in `is_out_callee_allocated_ptr` never fires and they leak
+    into the Python signature as positional arguments instead of becoming
+    return-tuple entries (cf. the `LLVMGetTargetFromTriple() takes exactly
+    2 positional arguments (1 given)` failure).
+    """
+    from interfacegen.support.recipes.rocm import llvm_c
+
+    # `char **` callee-allocated error strings => OUT_CALLEE_ALLOCATED.
+    err = _parm(llvm_root, "LLVMGetTargetFromTriple", 2)  # char **ErrorMessage
+    out_msg = _parm(
+        llvm_root, "LLVMCreateMemoryBufferWithContentsOfFile", 2
+    )  # char **OutMessage
+    for p in (err, out_msg):
+        verdict = llvm_c.ptr_parm_intent(p)
+        assert verdict == ParmIntent.OUT_CALLEE_ALLOCATED
+        assert verdict.allocated_by_callee
+        assert verdict.direction == ParmIntent.OUT
+
+    # The opaque handle OUT slots are also callee-allocated returns.
+    t = _parm(llvm_root, "LLVMGetTargetFromTriple", 1)  # LLVMTargetRef *T
+    out_buf = _parm(
+        llvm_root, "LLVMCreateMemoryBufferWithContentsOfFile", 1
+    )  # LLVMMemoryBufferRef *OutMemBuf
+    assert llvm_c.ptr_parm_intent(t) == ParmIntent.OUT_CALLEE_ALLOCATED
+    assert llvm_c.ptr_parm_intent(out_buf) == ParmIntent.OUT_CALLEE_ALLOCATED
+
+    # The leading `const char *` input remains a plain IN argument.
+    triple = _parm(llvm_root, "LLVMGetTargetFromTriple", 0)
+    assert llvm_c.ptr_parm_intent(triple) == ParmIntent.IN
