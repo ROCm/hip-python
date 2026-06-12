@@ -23,7 +23,7 @@
 # Find LLVM using ROCm's LLVM installation
 message(STATUS "=== bundled/libllvm/CMakeLists.txt: Starting libLLVM detection ===")
 if(DEFINED ROCM_PATH)
-  set(LLVM_DIR "${ROCM_PATH}/llvm/lib/cmake/llvm}")
+  set(LLVM_DIR "${ROCM_PATH}/lib/llvm/lib/cmake/llvm")
   message(STATUS "ROCM_PATH is set to: ${ROCM_PATH}")
 endif()
 
