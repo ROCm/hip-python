@@ -1860,7 +1860,7 @@ class comgr:
             "amd_comgr_create_data_set",
             "amd_comgr_create_action_info",
         ):
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         if (func_name, parm_index) in (
             ("comgr.amd_comgr_create_data", 1),
             ("amd_comgr_status_string", 1),
@@ -1880,7 +1880,7 @@ class comgr:
             ("amd_comgr_create_symbolizer_info", 2),
             ("amd_comgr_create_disassembly_info", 4),
         ):
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         # INOUT (uncovered):
         # amd_comgr_get_data, amd_comgr_get_data_name, amd_comgr_get_isa_name,
         # amd_comgr_get_metadata_string, amd_comgr_iterate_map_metadata
