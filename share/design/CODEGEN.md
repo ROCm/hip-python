@@ -146,6 +146,8 @@ The end-to-end release flow:
    - `__init__.pxd` namespace markers below `rocm/bindings/` and `cuda/bindings/`
    - `cmake/generated_modules.cmake` for libraries and compiler
    - `cmake/generated_versions.cmake` for every package
+   - `docs_src/sphinx/_toc.yml.in` (rendered from `_toc.yml.in.in`) and the
+     `docs_src/python_api/*.rst` cy* literalinclude pages
 
 3. **Verify the round-trip.** A clean `cmake -S packages -B build && cmake --build build --target all_wheels` should produce manylinux-compatible wheels for all six packages with no Cython errors.
 
@@ -156,11 +158,13 @@ The end-to-end release flow:
    ci/internal/prepare-release.sh X.Y.Z
    ```
 
-5. **Commit and push the release branch.** `git add packages/` captures the
-   rendered `version.py` and the other generator outputs (none are
-   git-ignored; they are simply absent on the base branch).
+5. **Commit and push the release branch.** `git add` captures the rendered
+   `version.py` and the other generator outputs (none are git-ignored; they
+   are simply absent on the base branch). This includes the docs-side outputs
+   under `docs_src/` (`_toc.yml.in` + the `python_api/*.rst` cy* pages) that
+   `ci/docs/build.sh` consumes without re-running codegen.
    ```sh
-   git add packages/ VERSION.in
+   git add packages/ VERSION.in docs_src/sphinx/_toc.yml.in docs_src/python_api
    git commit -m "[chore] generate bindings for ROCm X.Y.Z"
    git push origin release/rocm-rel-X.Y
    ```

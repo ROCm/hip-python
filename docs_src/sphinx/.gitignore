@@ -1,11 +1,3 @@
-# _toc.yml.in is generator output (rendered from _toc.yml.in.in by the
-# hip-python code generator, which substitutes the `@TOC_ENTRIES_*@`
-# placeholders with the discovered per-package module list). Like the
-# generated Cython sources, it is committed on release branches so the
-# Sphinx build works from a fresh checkout (e.g. Read the Docs running
-# ci/docs/build.sh) without re-running codegen. On the handcoded codegen
-# base branch it is simply absent until the generator has run.
-
 # _toc.yml is rendered from _toc.yml.in by rocm-docs-core at Sphinx
 # build time (variable substitution for ${branch}, ${url}, etc.).
 _toc.yml
