@@ -73,6 +73,25 @@ string(STRIP "${HIP_PYTHON_VERSION_FULL}" HIP_PYTHON_VERSION_FULL)
 
 message(STATUS "hip-python version: ${HIP_PYTHON_VERSION_FULL}")
 
+# Inter-package dependency constraint prefix
+# ------------------------------------------
+# Each package's pyproject.toml pins its hip-python siblings with a
+# compatible-release constraint (e.g. `rocm-bindings-core~=7.13.0.0`).
+# Rather than hardcode that prefix (which drifts from VERSION), derive
+# it here from the first (up to) four dot-separated segments of the
+# rendered VERSION and substitute it into each per-package
+# pyproject.toml.in at configure time (see the loop below). For the
+# canonical `7.13.0.0.0.1` this yields `7.13.0.0`; on development
+# branches without VERSION.in (where VERSION is e.g. `0.0.1`) it
+# degrades gracefully to the verbatim value.
+string(REPLACE "." ";" _hp_ver_parts "${HIP_PYTHON_VERSION_FULL}")
+list(LENGTH _hp_ver_parts _hp_ver_len)
+if(_hp_ver_len GREATER 4)
+  list(SUBLIST _hp_ver_parts 0 4 _hp_ver_parts)
+endif()
+string(REPLACE ";" "." HIP_PYTHON_DEP_VERSION "${_hp_ver_parts}")
+message(STATUS "hip-python dependency constraint prefix: ${HIP_PYTHON_DEP_VERSION}")
+
 # Populate per-package VERSION files (gitignored, single source of truth
 # is the repo-root VERSION). Each per-package CMakeLists.txt and
 # pyproject.toml then reads `./VERSION`, which lets every package build
@@ -88,6 +107,20 @@ foreach(_hp_pkg
     "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION"
     "${CMAKE_CURRENT_SOURCE_DIR}/${_hp_pkg}/VERSION"
     COPYONLY)
+  # Render each package's pyproject.toml from its committed
+  # pyproject.toml.in template (when present), substituting
+  # @HIP_PYTHON_DEP_VERSION@ so the inter-package dependency
+  # constraints track the canonical VERSION. Packages without
+  # version-dependent siblings (rocm-bindings-core) ship a plain
+  # committed pyproject.toml and have no template. The rendered
+  # pyproject.toml is gitignored (the .in template is the source of
+  # truth) and is what standalone/sdist builds consume.
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${_hp_pkg}/pyproject.toml.in")
+    configure_file(
+      "${CMAKE_CURRENT_SOURCE_DIR}/${_hp_pkg}/pyproject.toml.in"
+      "${CMAKE_CURRENT_SOURCE_DIR}/${_hp_pkg}/pyproject.toml"
+      @ONLY)
+  endif()
   # Mirror the shared cmake helper into each per-package cmake/ dir so
   # the helper is present locally for both standalone single-package
   # builds AND sdist packaging (sdist.include picks it up from the

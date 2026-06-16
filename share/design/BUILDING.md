@@ -648,6 +648,32 @@ mirrored into each `packages/<pkg>/cmake/HipPythonBuild.cmake` by the
 unified configure step, listed in each per-package
 `sdist.include`, gitignored.
 
+### How inter-package dependency constraints stay in sync
+
+Packages that depend on hip-python siblings pin them with a
+compatible-release constraint (e.g.
+`rocm-bindings-core~=7.13.0.0`). To keep that constraint from drifting
+away from the canonical `VERSION`, those packages **do not** commit a
+`pyproject.toml`. Instead they commit a `pyproject.toml.in` template
+whose dependency lines reference `@HIP_PYTHON_DEP_VERSION@`, and the
+unified `cmake -B build` renders `pyproject.toml` from it (`@ONLY`) in
+the same per-package `configure_file()` loop that mirrors `VERSION`.
+
+`HIP_PYTHON_DEP_VERSION` is derived in `packages/CMakeLists.txt` from
+the first (up to) four dot-separated segments of the rendered
+`VERSION` — so `7.13.0.0.0.1` yields the `7.13.0.0` prefix, while a
+development-branch `0.0.1` degrades to that verbatim value.
+
+The rendered `pyproject.toml` is gitignored and is what the
+standalone single-package build, the unified wheel assembler
+(`pyproject-metadata` reads it for `.dist-info`), and the sdist tarball
+all consume — downstream `pip install` never sees the `.in` template.
+`rocm-bindings-core` (no version-dependent siblings) and `numba-hip`
+(independent version) have no template and keep a tracked
+`pyproject.toml`. As with `VERSION`, run the unified configure once
+before any per-package `python -m build`, or the rendered
+`pyproject.toml` will be missing.
+
 ## Build requirements
 
 - **Linux** (only platform tested; manylinux wheels target

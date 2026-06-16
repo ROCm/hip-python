@@ -55,5 +55,19 @@ docs/_build/
 /VERSION
 packages/*/VERSION
 
+# --- Rendered pyproject.toml (configure-time output of pyproject.toml.in) ---
+# Packages with version-dependent siblings ship a committed
+# pyproject.toml.in template; CMake renders pyproject.toml from it at
+# configure time, substituting the inter-package dependency constraint
+# prefix (@HIP_PYTHON_DEP_VERSION@). Only the rendered outputs are
+# ignored. rocm-bindings-core and numba-hip have no template and keep a
+# tracked pyproject.toml.
+packages/rocm-bindings-hip/pyproject.toml
+packages/rocm-bindings-compiler/pyproject.toml
+packages/rocm-bindings-libraries/pyproject.toml
+packages/rocm-bindings-systems/pyproject.toml
+packages/hip-python-interop/pyproject.toml
+packages/hip-python/pyproject.toml
+
 # --- Sphinx index.rst rendered from index.rst.in by the docs target ---
 docs_src/index.rst

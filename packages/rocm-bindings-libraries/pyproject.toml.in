@@ -3,18 +3,19 @@ requires = ["scikit-build-core>=0.11.2", "cython>=3.1.0"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "hip-python-interop"
+name = "rocm-bindings-libraries"
 dynamic = ["version"]
-description = "CUDA API bindings for HIP interoperability (driver, runtime, NVRTC)"
+description = "ROCm library Python bindings (hipBLAS, hipSOLVER, RCCL, hipRAND, hipFFT, hipSPARSE, ROCTX)"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
-dependencies = [
-    "rocm-bindings-hip~=7.13.0.0",
-]
 authors = [
     {name = "Advanced Micro Devices, Inc.", email = "hip-python.maintainer@amd.com"},
+]
+dependencies = [
+    "rocm-bindings-core~=@HIP_PYTHON_DEP_VERSION@",
+    "rocm-bindings-hip~=@HIP_PYTHON_DEP_VERSION@"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -35,23 +36,25 @@ Repository = "https://github.com/rocm/hip-python"
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
-build-dir = "../build/{wheel_tag}/hip-python-interop"
+build-dir = "../build/{wheel_tag}/rocm-bindings-libraries"
 cmake.source-dir = "."
 cmake.build-type = "Release"
 ninja.make-fallback = false
-wheel.packages = ["src/cuda"]
+wheel.packages = ["src/rocm"]
 metadata.version.provider = "scikit_build_core.metadata.regex"
 metadata.version.input = "VERSION"
 metadata.version.regex = "(?P<value>.*)"
-build.targets = ["package_hip_python_interop"]
-install.components = ["hip-python-interop"]
+build.targets = ["package_rocm_bindings_libraries"]
+install.components = ["rocm-bindings-libraries"]
 
 # Include .pxd files for cimport
 sdist.include = [
     "VERSION",
     "cmake/HipPythonBuild.cmake",
-    "src/cuda/bindings/*.pxd",
-    "src/cuda/bindings/*.pyx"
+    "src/*/*.pxd",
+    "src/*/*/*.pxd",
+    "src/*/*.pyx",
+    "src/*/*/*.pyx"
 ]
 
 [tool.cibuildwheel]
