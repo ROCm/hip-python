@@ -2,6 +2,7 @@ include_guard(GLOBAL)
 
 include(CMakeParseArguments)
 
+set(Python_FIND_VIRTUALENV FIRST)
 find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 
 function(hip_python_get_rocm_path_default out_var)
