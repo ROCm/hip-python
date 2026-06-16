@@ -79,6 +79,32 @@ def remove_doxygen_comment_chars(text: str, dedent=True):
                 result += result_line
                 if has_linebreak:
                     result += "\n"
+        elif comment.lstrip()[0:2] == "/*":
+            # plain (non-doxygen) C block comment: strip the /* */ delimiters
+            # and any leading '*' continuation markers so stray '*' characters
+            # do not leak into docstrings and trip docutils inline-markup rules.
+            lines = comment.splitlines(keepends=True)
+            for i, ln in enumerate(lines):
+                has_linebreak = ln.endswith("\n")
+                result_line = ln.rstrip()
+                if i == 0:
+                    idx = result_line.find("/*")
+                    result_line = result_line.replace(
+                        result_line[idx : idx + 2],
+                        " " * 2,
+                        1,
+                    )  # preserve indentation
+                if i == len(lines) - 1:
+                    idx = result_line.rfind("*/")
+                    if idx >= 0:
+                        result_line = result_line[:idx]
+                if result_line.lstrip().startswith("*"):
+                    result_line = result_line.replace(
+                        "*", " ", 1
+                    )  # preserve indentation
+                result += result_line
+                if has_linebreak:
+                    result += "\n"
         else:  # other comment
             result += comment
         last_end = end
@@ -123,8 +149,13 @@ class format:
 
         @staticmethod
         def fdollar(tokens):
-            r"""\f$ .. \f$"""
-            return f":math:`{tokens[1]}`"
+            r"""\f$ .. \f$
+
+            Collapse internal whitespace/newlines so the inline ``:math:`` role
+            stays on a single line and has no space before the closing backtick;
+            otherwise docutils reports inline-markup and indentation errors.
+            """
+            return f":math:`{' '.join(tokens[1].split())}`"
 
         @staticmethod
         def frnd(tokens):
@@ -132,7 +163,7 @@ class format:
             Note:
                 No explicit latex mode in sphinxdoc.
             """
-            return f"`{tokens[1]}`"
+            return f"`{' '.join(tokens[1].split())}`"
 
         @staticmethod
         def reference(tokens):

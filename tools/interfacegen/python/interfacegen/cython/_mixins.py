@@ -462,13 +462,13 @@ class DoxygenMixin:
                 inner_indent = outer_indent + " " * 3
                 result += f"\n{outer_indent}.. math::\n"
                 if block.env is not None:
-                    result += "{inner_indent}:nowrap:"
-                    result += rf"{inner_indent}\begin{{{block.env}}}\n"
+                    result += f"{inner_indent}:nowrap:\n"
+                    result += f"\n{inner_indent}\\begin{{{block.env}}}\n"
                 result += "\n"
                 code = textwrap.dedent(block.code)
                 result += textwrap.indent(code, inner_indent).rstrip() + "\n"
                 if block.env is not None:
-                    result += rf"{inner_indent}\end{{{block.env}}}\n"
+                    result += f"{inner_indent}\\end{{{block.env}}}\n"
                 result += "\n"
         return result
 

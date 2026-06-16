@@ -197,3 +197,52 @@ def test_sections():
     """
         )
     )
+
+
+def test_fdollar_inline_math_single_line():
+    """Inline ``\\f$..\\f$`` math must collapse to a single line with no space
+    before the closing backtick (docutils inline-markup requirement)."""
+    local_grammar = doxyparser.DoxygenGrammar()
+    local_grammar.fdollar.set_parse_action(
+        doxyparser.format.PythonDocstrings.fdollar
+    )
+
+    # trailing space before the closing delimiter must be dropped
+    (result,) = local_grammar.fdollar.parse_string(
+        r"\f$ D = alpha * opReduce(opA(A)) + beta * opC(C) \f$",
+        parse_all=True,
+    )
+    assert result == ":math:`D = alpha * opReduce(opA(A)) + beta * opC(C)`"
+    assert " `" not in result  # no space immediately before closing backtick
+
+    # multi-line content must be collapsed onto a single line
+    (result,) = local_grammar.fdollar.parse_string(
+        "\\f$\\mathcal{E} \\gets \\alpha \\mathcal{A}\n"
+        "    \\mathcal{B}\n"
+        "    + \\beta \\mathcal{D}\\f$",
+        parse_all=True,
+    )
+    assert "\n" not in result
+    assert (
+        result
+        == r":math:`\mathcal{E} \gets \alpha \mathcal{A} \mathcal{B} + \beta \mathcal{D}`"
+    )
+
+
+def test_plain_block_comment_stripped():
+    """Plain (non-doxygen) ``/* .. */`` comments must have their delimiters and
+    leading ``*`` markers stripped so stray asterisks do not leak into
+    docstrings."""
+    comment = textwrap.dedent(
+        """\
+        /* matrix A values are updated inplace
+         * to be the preconditioner M values */
+        """
+    )
+    result = doxyparser.remove_doxygen_comment_chars(comment)
+    assert "/*" not in result
+    assert "*/" not in result
+    assert "matrix A values are updated inplace" in result
+    assert "to be the preconditioner M values" in result
+    # the leading continuation '*' must be gone
+    assert not any(ln.lstrip().startswith("*") for ln in result.splitlines())
