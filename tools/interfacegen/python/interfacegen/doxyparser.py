@@ -69,7 +69,10 @@ def remove_doxygen_comment_chars(text: str, dedent=True):
                         " " * 3,
                         1,
                     )  # preserve indentation, note: /** or /*!
-                elif i == len(lines) - 1:
+                # independent `if` (not `elif`): a single-line `/*! .. */`
+                # must have *both* its opener and closer stripped, otherwise
+                # the trailing `*/` leaks into the docstring.
+                if i == len(lines) - 1:
                     idx = result_line.rfind("*/")
                     if idx >= 0:
                         result_line = result_line[:idx]

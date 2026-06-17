@@ -248,6 +248,29 @@ def test_plain_block_comment_stripped():
     assert not any(ln.lstrip().startswith("*") for ln in result.splitlines())
 
 
+def test_single_line_doc_comment_strips_closer():
+    """A single-line ``/*! .. */`` (or ``/** .. */``) must have its trailing
+    ``*/`` stripped, otherwise the residue leaks into the docstring."""
+    assert "*/" not in doxyparser.remove_doxygen_comment_chars("/*! @endcond */")
+    assert "*/" not in doxyparser.remove_doxygen_comment_chars("/** brief */")
+    assert (
+        doxyparser.remove_doxygen_comment_chars("/** brief */").strip() == "brief"
+    )
+
+
+def test_group_and_cond_only_comment_is_not_documentation():
+    """Comments made up solely of group/condition markers and delimiters carry
+    no documentation and must be classified as bare so they are dropped."""
+    from interfacegen.cython import _doxygen
+
+    assert _doxygen._raw_comment_is_only_group_bracket("/*! @endcond */\n/*! @} */")
+    assert _doxygen._raw_comment_is_only_group_bracket("///@{")
+    # a real doc comment must NOT be treated as bare
+    assert not _doxygen._raw_comment_is_only_group_bracket(
+        "/** Does a real thing. */"
+    )
+
+
 def test_see_reference_drops_trailing_parens():
     """``@see foo()`` must produce a single clean role with no trailing ``()``
     (a ``(`` right after the closing backtick is invalid RST inline-markup)."""

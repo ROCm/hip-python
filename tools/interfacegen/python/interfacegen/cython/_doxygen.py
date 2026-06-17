@@ -132,21 +132,30 @@ def _comment_closes_group(spelling: str) -> bool:
     return "@}" in spelling or r"\}" in spelling
 
 
-# Comments whose stripped body matches one of these are bracket markers,
-# not real documentation. libclang sometimes attaches a bare `//! @}`
-# close to the next decl after a closed group block; treat that as "no
-# real raw_comment" so inheritance can still fire.
-_GROUP_BRACKET_RE = re.compile(
-    r"^\s*(?:/\*[!*]?|//[!/]?)?\s*[@\\][{}]\s*(?:\*+/)?\s*$"
+# Tokens that are pure doxygen structure, not documentation: comment
+# delimiters, leading `*` continuation markers, group brackets (`@{`/`@}`),
+# and condition markers (`@cond [label]`/`@endcond`). A comment whose body is
+# made up solely of these (possibly spanning multiple lines) carries no real
+# documentation. libclang sometimes attaches such a block — e.g.
+# `/*! @endcond */ /*! @} */` — to the next declaration; treat it as "no real
+# raw_comment" so it is neither rendered nor blocks inheritance.
+_GROUP_MARKER_RE = re.compile(
+    r"/\*[!*]?|\*+/|//[!/]?|[@\\][{}]|[@\\]cond\b[^\n]*|[@\\]endcond\b|^[ \t]*\*+",
+    re.MULTILINE,
 )
+# Back-compat alias (historically referenced name).
+_GROUP_BRACKET_RE = _GROUP_MARKER_RE
 
 
 def _raw_comment_is_only_group_bracket(raw_comment: str) -> bool:
-    """True if `raw_comment` is a bare `@{` / `@}` bracket marker
-    with no documentation content."""
+    """True if `raw_comment` carries no real documentation — only doxygen
+    group/condition markers (`@{`/`@}`, `@cond`/`@endcond`) and comment
+    delimiters/`*` markers, possibly across multiple lines."""
     if not raw_comment:
         return False
-    return bool(_GROUP_BRACKET_RE.match(raw_comment.strip()))
+    residue = _GROUP_MARKER_RE.sub("", raw_comment)
+    # only whitespace / stray slashes left over -> not documentation
+    return residue.strip(" \t\r\n/") == ""
 
 
 def _strip_group_brackets(text: str) -> str:
