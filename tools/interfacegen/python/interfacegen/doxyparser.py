@@ -172,6 +172,10 @@ class format:
         @staticmethod
         def reference(tokens):
             reference: str = re.sub(r"\(\s*\)$", "", tokens[0])
+            if "::" in reference:
+                # C++ namespace reference — only the C API is exposed, so
+                # leave it as plain text instead of emitting a bogus target.
+                return tokens[0]
             reference = reference.replace("#", ".").replace("::", ".")
             return f":py:obj:`{reference.lstrip('.')}`"
 

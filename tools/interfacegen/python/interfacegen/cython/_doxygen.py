@@ -72,9 +72,19 @@ DOXYGEN_CONV.fdollar.set_parse_action(doxyparser.format.PythonDocstrings.fdollar
 DOXYGEN_CONV.frnd.set_parse_action(doxyparser.format.PythonDocstrings.frnd)
 
 
+# C++ namespace-qualified references (those containing `::`) point at symbols
+# that hip-python does not expose — only the C API is wrapped. Leave them as
+# plain text by default; set this to True to re-enable `::` -> `.` conversion.
+python_interface_convert_cxx_namespace_references = False
+
+
 def reference_(tokens):
     global python_interface_pyobj_role_template
+    global python_interface_convert_cxx_namespace_references
     reference: str = re.sub(r"\(\s*\)$", "", tokens[0])
+    if "::" in reference and not python_interface_convert_cxx_namespace_references:
+        # C++ namespace reference — leave untouched (matched text unchanged).
+        return tokens[0]
     reference = reference.replace("#", ".").replace("::", ".")
     return python_interface_pyobj_role_template.format(
         name=reference.lstrip(".")

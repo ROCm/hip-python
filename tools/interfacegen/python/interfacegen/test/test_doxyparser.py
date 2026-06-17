@@ -283,19 +283,31 @@ def test_see_reference_drops_trailing_parens():
     assert "`(" not in out
 
 
+def test_cxx_namespace_reference_left_untouched():
+    """``::``-qualified (C++ namespace) references are not exposed by the C-only
+    bindings; they must be left as plain text, not converted to a role."""
+    from interfacegen.cython import _doxygen
+
+    out = _doxygen.DOXYGEN_CONV.see_reference.transform_string(
+        "llvm::llvm_shutdown"
+    )
+    assert out == "llvm::llvm_shutdown"
+    assert ":py:obj:" not in out
+
+
 def test_see_reference_no_double_wrap():
-    """A ``::``-qualified reference must yield exactly one role. Rendering a
+    """A ``#``-qualified reference must yield exactly one role. Rendering a
     see/sa body with the reference pass disabled (``transform_references=False``)
     and then a single ``see_reference`` pass must not nest roles."""
     from interfacegen.cython import _doxygen
 
     g = _doxygen.DOXYGEN_CONV
     body = g.transform_text_block(
-        "llvm::llvm_shutdown",
+        "#llvm_shutdown",
         transform_formatting=True,
         transform_other=True,
         transform_references=False,
     )
     out = g.see_reference.transform_string(body)
-    assert out == ":py:obj:`.llvm.llvm_shutdown`"
+    assert out == ":py:obj:`.llvm_shutdown`"
     assert out.count(":py:obj:") == 1
