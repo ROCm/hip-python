@@ -311,3 +311,28 @@ def test_see_reference_no_double_wrap():
     out = g.see_reference.transform_string(body)
     assert out == ":py:obj:`.llvm_shutdown`"
     assert out.count(":py:obj:") == 1
+
+
+def _retval_sections(text):
+    return [
+        node
+        for node in grammar.parse_structure(text).walk()
+        if getattr(node, "kind", None) == "retval"
+    ]
+
+
+def test_retval_accepts_bare_and_quoted_names():
+    """``\\retval`` must parse for a bare identifier as well as a
+    markdown-quoted (`` `FOO` ``) return value name, exposing the name as the
+    section's second token so it can be aggregated into the return value."""
+    bare = _retval_sections(
+        "\\retval MY_STATUS_OK When everything is fine.\n"
+    )
+    assert len(bare) == 1
+    assert str(bare[0].tokens[1]).strip("`") == "MY_STATUS_OK"
+
+    quoted = _retval_sections(
+        "\\retval `MY_STATUS_OK` When everything is fine.\n"
+    )
+    assert len(quoted) == 1
+    assert str(quoted[0].tokens[1]).strip("`") == "MY_STATUS_OK"

@@ -242,6 +242,21 @@ cdef void* {funptr_name} = NULL
                     section, outer_indent=single_level_indent
                 ).lstrip("-* \t")
                 docstring_returns.append(descr)
+            elif section.kind == "retval":
+                # \retval entries always describe the C return value (the
+                # first tuple entry). Aggregate each one into the return
+                # value description rather than rendering separate
+                # "Retval:" sections (which would drop the value name).
+                # tokens[1] is the return value name; it may have been
+                # markdown-quoted in the header (`` `FOO` ``).
+                retval_name = str(section.tokens[1]).strip("`")
+                descr = self._render_doxygen_section_body(
+                    section, outer_indent=""
+                ).strip().lstrip("-* \t").strip()
+                entry = self.to_sphinx_pyobj(retval_name)
+                if descr:
+                    entry += f": {descr}"
+                docstring_returns.append(entry)
             elif section.kind == "param":
                 # ['\\param', '[in]', 'param1', 'Description text is here.']
                 names = section.tokens[2]
@@ -321,14 +336,14 @@ cdef void* {funptr_name} = NULL
                 f"{CythonMixin.to_sphinx_pyobj(retval_typename)}"
             )
             if len(docstring_returns) > 1:
-                combined_docstring_return += (
-                    f": One of:\n{single_level_indent*2}-"
-                    + textwrap.indent(
-                        "\n- ".join(
-                            [textwrap.dedent(e) for e in docstring_returns]
-                        ),
-                        single_level_indent * 2,
-                    )
+                bullets = []
+                for e in docstring_returns:
+                    e = textwrap.dedent(e).strip()
+                    # Align continuation lines under the bullet text.
+                    e = e.replace("\n", "\n  ")
+                    bullets.append(f"- {e}")
+                combined_docstring_return += ": One of:\n" + textwrap.indent(
+                    "\n".join(bullets), single_level_indent * 2
                 )
             elif len(docstring_returns) == 1:
                 combined_docstring_return += ": " + docstring_returns[0]

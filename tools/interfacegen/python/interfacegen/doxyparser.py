@@ -1008,7 +1008,13 @@ class DoxygenGrammar:
         )
 
         # \retval <return value> { description }
-        retval = self._pyp_cmd("retval") + IDENT + section_body
+        # The return value is normally a bare identifier, but doxygen also
+        # accepts markdown-quoted (`` `FOO` ``), ``#``-prefixed and
+        # ``::``-qualified names. Accept all of these so the section parses
+        # (and aggregates into the C return value) instead of leaking to the
+        # post-pass regex fallback.
+        RETVAL_NAME = pyp.QuotedString("`") | pyp.Regex(r"#?[A-Za-z_][\w:#]*")
+        retval = self._pyp_cmd("retval") + RETVAL_NAME + section_body
 
         # \showdate "<format>" [ <date_time> ]
         showdate = (
