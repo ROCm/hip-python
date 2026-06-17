@@ -76,7 +76,7 @@ Spotlight
       Learn how to launch your own kernels and how the different
       libraries interact.
 
-      * :doc:`/user_guide/1_usage`
+      * :doc:`/user_guide/1_basic_usage`
 
       .. image:: _static/hip_usage.PNG
          :width: 240
@@ -111,7 +111,7 @@ Spotlight
       packages such as `NumPy <https://numpy.org>`__ and
       `Numba <https://numba.pydata.org/>`__.
 
-      * :doc:`/user_guide/4_datatypes`
+      * :doc:`/user_guide/5_adapters`
 
    .. grid-item-card:: GPU Programming with Numba HIP
 
@@ -121,7 +121,7 @@ Spotlight
       CPU/GPU code reuse, and linking external HIP/CUDA C++ device
       functions via the Foreign Function Interface.
 
-      * :doc:`/user_guide/8_numba_hip`
+      * :doc:`/user_guide/4_numba_hip`
 
    .. grid-item-card:: HIP Python's Python API
 

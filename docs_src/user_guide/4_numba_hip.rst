@@ -14,8 +14,8 @@
 
 .. _numba_hip:
 
-Numba HIP
-=========
+Kernel Programming in Python with Numba HIP
+==========================================
 
 `Numba <https://numba.pydata.org/>`__ is a just-in-time (JIT) compiler that
 turns a subset of Python and NumPy into fast machine code. **Numba HIP** is the
