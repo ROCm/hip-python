@@ -246,3 +246,33 @@ def test_plain_block_comment_stripped():
     assert "to be the preconditioner M values" in result
     # the leading continuation '*' must be gone
     assert not any(ln.lstrip().startswith("*") for ln in result.splitlines())
+
+
+def test_see_reference_drops_trailing_parens():
+    """``@see foo()`` must produce a single clean role with no trailing ``()``
+    (a ``(`` right after the closing backtick is invalid RST inline-markup)."""
+    from interfacegen.cython import _doxygen
+
+    out = _doxygen.DOXYGEN_CONV.see_reference.transform_string(
+        "hipdnnBackendCreateDescriptor()"
+    )
+    assert out == ":py:obj:`.hipdnnBackendCreateDescriptor`"
+    assert "`(" not in out
+
+
+def test_see_reference_no_double_wrap():
+    """A ``::``-qualified reference must yield exactly one role. Rendering a
+    see/sa body with the reference pass disabled (``transform_references=False``)
+    and then a single ``see_reference`` pass must not nest roles."""
+    from interfacegen.cython import _doxygen
+
+    g = _doxygen.DOXYGEN_CONV
+    body = g.transform_text_block(
+        "llvm::llvm_shutdown",
+        transform_formatting=True,
+        transform_other=True,
+        transform_references=False,
+    )
+    out = g.see_reference.transform_string(body)
+    assert out == ":py:obj:`.llvm.llvm_shutdown`"
+    assert out.count(":py:obj:") == 1

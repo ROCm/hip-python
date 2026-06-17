@@ -23,6 +23,7 @@
 __author__ = "Advanced Micro Devices, Inc."
 
 import logging
+import re
 import textwrap
 
 import pyparsing as pyp
@@ -167,8 +168,8 @@ class format:
 
         @staticmethod
         def reference(tokens):
-            reference: str = tokens[0].replace("#", ".")
-            reference = reference.replace("::", ".")
+            reference: str = re.sub(r"\(\s*\)$", "", tokens[0])
+            reference = reference.replace("#", ".").replace("::", ".")
             return f":py:obj:`{reference.lstrip('.')}`"
 
 
@@ -204,7 +205,12 @@ class Node:
     def input_string(self):
         return self.root._input_string
 
-    def get_text(self, transform_formatting=False, transform_other=False):
+    def get_text(
+        self,
+        transform_formatting=False,
+        transform_other=False,
+        transform_references=True,
+    ):
         """Returns the text contained by this node.
 
         Args:
@@ -214,12 +220,17 @@ class Node:
             transform_other (bool): Apply the ``DoxygenParser`` instance's
               ``other`` pyparser's ``transform_string`` routine to the result.
               Defaults to False.
+            transform_references (bool): If `False`, the reference rewrite is
+              excluded from the formatting pass. Defaults to True.
         """
         if self.end is not None:
             assert isinstance(self.parser, DoxygenGrammar)
             text = self.input_string[self.begin : self.end]
             return self.parser.transform_text_block(
-                text, transform_formatting, transform_other
+                text,
+                transform_formatting,
+                transform_other,
+                transform_references,
             )
         else:
             raise RuntimeError("'end' must not be `None`")
@@ -902,8 +913,11 @@ class DoxygenGrammar:
         # class#member
         # class::member
         # #class#member
-        see_reference = pyp.Regex(r"(#|::)?(\w+(#|::)?)+")
-        in_text_reference = pyp.Regex(r"(#|::)(\w+(#|::)?)+")
+        # optional trailing ``()`` is consumed so it does not leak after the
+        # generated role (a ``(`` right after the closing backtick is invalid
+        # RST inline-markup and makes docutils render the role literally).
+        see_reference = pyp.Regex(r"(#|::)?(\w+(#|::)?)+(\(\s*\))?")
+        in_text_reference = pyp.Regex(r"(#|::)(\w+(#|::)?)+(\(\s*\))?")
 
         # \file [<name>]
         file = self._pyp_cmd("file") + OPT_WORD_OF_PRINTABLES
@@ -1044,6 +1058,10 @@ class DoxygenGrammar:
         verbatim = code | verbatim_no_args | verbatim_with_caption | startuml
         math_block = fbr | fcurly
         formatting = escaped | with_word | fdollar | frnd | in_text_reference
+        # Same as ``formatting`` but without the reference rewrite. Used when a
+        # section (``see``/``sa``) applies its own single reference pass, so we
+        # do not double-wrap ``::``-qualified names into nested roles.
+        formatting_no_ref = escaped | with_word | fdollar | frnd
         other = (
             no_args
             | with_single_line_text
@@ -1209,6 +1227,7 @@ class DoxygenGrammar:
         text: str,
         transform_formatting: bool = True,
         transform_other: bool = True,
+        transform_references: bool = True,
     ) -> str:
         """Transforms a simple text block, i.e. text that is assumed to not contain any doxygen sections and no verbatim *blocks*.
 
@@ -1221,13 +1240,21 @@ class DoxygenGrammar:
             text (str): The text to transform.
             transform_formatting (bool, optional): If `self.formatting` should be applied. Defaults to `True`.
             transform_other (bool, optional): If `self.other` should be applied. Defaults to `True`.
+            transform_references (bool, optional): If `False`, the reference
+              rewrite (``in_text_reference``) is excluded by using
+              ``self.formatting_no_ref``. Defaults to `True`.
 
         Returns:
             str: The transformed text after applying the parse actions of both parsers.
         """
         result = text
         if transform_formatting:
-            result = self.formatting.transform_string(result)
+            parser = (
+                self.formatting
+                if transform_references
+                else self.formatting_no_ref
+            )
+            result = parser.transform_string(result)
         if transform_other:
             result = self.other.transform_string(result)
         return result

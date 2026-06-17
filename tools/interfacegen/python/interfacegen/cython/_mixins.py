@@ -415,8 +415,15 @@ class DoxygenMixin:
         return f"{missing_text}\n\n"
 
     @staticmethod
-    def _render_doxygen_section_body(section, outer_indent) -> str:
-        """Renders the body of a doxygen section."""
+    def _render_doxygen_section_body(
+        section, outer_indent, transform_references=True
+    ) -> str:
+        """Renders the body of a doxygen section.
+
+        ``transform_references=False`` skips the inline reference rewrite so a
+        caller (``see``/``sa``) can run its own single reference pass without
+        double-wrapping ``::``-qualified names.
+        """
         result = ""
         for block in section.blocks:
             if isinstance(block, doxyparser.TextBlock):
@@ -425,7 +432,11 @@ class DoxygenMixin:
                 # \note texttext
                 # \note texttext
                 #    texttext
-                text = block.transformed_text.lstrip(":\n\t ").rstrip()
+                text = block.get_text(
+                    transform_formatting=True,
+                    transform_other=True,
+                    transform_references=transform_references,
+                ).lstrip(":\n\t ").rstrip()
                 # Part 11 elision — when this block's leading text was
                 # promoted as the inferred brief (no explicit `\brief`),
                 # strip it here to avoid duplicating the same paragraph
@@ -483,13 +494,21 @@ class DoxygenMixin:
                 f"\n{section.kind[0].upper() + section.kind[1:]}:\n"
             )
             outer_indent = single_level_indent
-        body = DoxygenMixin._render_doxygen_section_body(section, outer_indent)
         if section.kind in ("see", "sa"):
+            # Render without the inline reference pass, then convert the
+            # bare/``::``-qualified name exactly once. Running both passes
+            # double-wraps ``::``-qualified names (the literal ``py``/``obj``
+            # from the first ``:py:obj:`` output get re-wrapped by the second).
+            body = DoxygenMixin._render_doxygen_section_body(
+                section, outer_indent, transform_references=False
+            )
             docstring_addition += (
                 self.doxygen_conv.see_reference.transform_string(body)
             )
         else:
-            docstring_addition += body
+            docstring_addition += DoxygenMixin._render_doxygen_section_body(
+                section, outer_indent
+            )
         return docstring_addition
 
 

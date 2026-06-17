@@ -74,8 +74,8 @@ DOXYGEN_CONV.frnd.set_parse_action(doxyparser.format.PythonDocstrings.frnd)
 
 def reference_(tokens):
     global python_interface_pyobj_role_template
-    reference: str = tokens[0].replace("#", ".")
-    reference = reference.replace("::", ".")
+    reference: str = re.sub(r"\(\s*\)$", "", tokens[0])
+    reference = reference.replace("#", ".").replace("::", ".")
     return python_interface_pyobj_role_template.format(
         name=reference.lstrip(".")
     )
