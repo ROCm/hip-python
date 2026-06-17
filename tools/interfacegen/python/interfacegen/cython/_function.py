@@ -311,7 +311,11 @@ cdef void* {funptr_name} = NULL
                 f"<{self.render_location()}> function {self.name}: doxygen: has return section but is void."
             )
         combined_docstring_return = None
-        if len(docstring_returns):
+        if not self.is_void:
+            # Always document the (status enum) return value when the function
+            # is non-void, even if there is no `@return` section. The runtime
+            # wrapper returns it as element 0 of the tuple, so it must be the
+            # first documented return entry; otherwise it is silently dropped.
             retval_typename = self._python_interface_retval_typename()
             combined_docstring_return = (
                 f"{CythonMixin.to_sphinx_pyobj(retval_typename)}"
@@ -328,6 +332,8 @@ cdef void* {funptr_name} = NULL
                 )
             elif len(docstring_returns) == 1:
                 combined_docstring_return += ": " + docstring_returns[0]
+            else:
+                combined_docstring_return += ": (undocumented)"
             docstring_returns.clear()
 
         # Prepend user-prescribed return values
