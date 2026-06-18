@@ -1426,7 +1426,7 @@ cdef void* {funptr_name} = NULL
 
     def render_pyi_stub(
         self, cprefix: str, *, override_name: str = None,
-        base: str = None,
+        base: str = None, module_opts: dict = None,
     ):
         """Function override of `CythonMixin.render_pyi_stub`.
 
@@ -1468,7 +1468,8 @@ cdef void* {funptr_name} = NULL
                 py_params.append(pname)
         try:
             docstring = self._render_python_docstring(
-                [p.name for p in out_parms], parm_python_types
+                [p.name for p in out_parms], parm_python_types,
+                module_opts=module_opts,
             )
         except Exception:
             docstring = None

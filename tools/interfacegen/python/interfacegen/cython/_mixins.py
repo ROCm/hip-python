@@ -667,7 +667,7 @@ class CythonMixin(DoxygenMixin):
 
     def render_pyi_stub(
         self, cprefix: str, *, override_name: str = None,
-        base: str = None,
+        base: str = None, module_opts: dict = None,
     ):
         """Render this node as a `.pyi` type-stub fragment.
 

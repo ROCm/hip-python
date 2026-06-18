@@ -868,7 +868,10 @@ class CythonModuleGenerator:
                 rendered_name = name
             if not rendered_name or not rendered_name.isidentifier():
                 continue
-            stub = node.render_pyi_stub(cprefix, override_name=rendered_name)
+            stub = node.render_pyi_stub(
+                cprefix, override_name=rendered_name,
+                module_opts=self.module_opts,
+            )
             if not stub:
                 continue
             lines.extend(stub)

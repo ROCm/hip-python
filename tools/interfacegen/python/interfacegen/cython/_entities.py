@@ -208,7 +208,7 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
 
     def render_pyi_stub(
         self, cprefix: str, *, override_name: str = None,
-        base: str = None,
+        base: str = None, module_opts: dict = None,
     ):
         """Macro constants render as `<name>: Any` (no type info — the
         macro_type callback is best-effort and we don't pretend
@@ -510,7 +510,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
 
     def render_pyi_stub(
         self, cprefix: str, *, override_name: str = None,
-        base: str = None,
+        base: str = None, module_opts: dict = None,
     ):
         return self._render_pyi_class_stub(cprefix, override_name, base)
 
@@ -697,7 +697,7 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
 
     def render_pyi_stub(
         self, cprefix: str, *, override_name: str = None,
-        base: str = None,
+        base: str = None, module_opts: dict = None,
     ):
         return self._render_pyi_class_stub(cprefix, override_name, base)
 
@@ -984,7 +984,7 @@ class FunctionPointer(CythonMixin):
 
     def render_pyi_stub(
         self, cprefix: str, *, override_name: str = None,
-        base: str = None,
+        base: str = None, module_opts: dict = None,
     ):
         return self._render_pyi_class_stub(cprefix, override_name, base)
 
