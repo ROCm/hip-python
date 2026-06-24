@@ -61,8 +61,6 @@ add_subdirectory(bundled/libllvm)
 hip_python_collect_cython_depends(COMPILER_CYTHON_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings/llvm/**/*.pxd"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings/llvm/**/*.pyx"
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings/comgr/*.pxd"
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings/comgr/*.pyx"
 )
 
 # Include directories
@@ -243,26 +241,26 @@ list(APPEND COMGR_TARGETS rocm_bindings_amd_comgr rocm_bindings_cyamd_comgr)
 
 # libLLVM.so installation is handled in bundled/libllvm/CMakeLists.txt
 
-# Install .pxd files (for cimport)
-# NOTE: __init__.pxd files are intentionally excluded — they are build-time
-# package markers only. The installed namespace markers come from
-# rocm-bindings-core.
+# Install the llvm subtree's .pxd (for cimport) and .pyi (type stub) files,
+# including the generated __init__.pxd / __init__.pyi namespace markers.
+#
+# Ownership: rocm/__init__.pxd and rocm/bindings/__init__.pxd are owned and
+# installed by rocm-bindings-core; every subfolder a package provides under
+# rocm/ (here the rocm/bindings/llvm/** tree) is owned and installed by that
+# package — so this wheel installs its own llvm namespace markers.
+#
+# A single recursive install(DIRECTORY ...) is used rather than per-subfolder
+# rules: the llvm C tree is codegen-driven and its subfolders depend on the
+# ROCm/LLVM input (they can appear/disappear between versions). install(DIRECTORY)
+# recurses and preserves the structure, so it adapts to whatever codegen emits
+# and picks up the __init__ markers automatically (no EXCLUDE).
 install(
-  DIRECTORY src/rocm/bindings/llvm/c/
-  DESTINATION rocm/bindings/llvm/c
+  DIRECTORY src/rocm/bindings/llvm/
+  DESTINATION rocm/bindings/llvm
   COMPONENT rocm-bindings-compiler
   FILES_MATCHING
     PATTERN "*.pxd"
-    PATTERN "__init__.pxd" EXCLUDE
-)
-
-install(
-  DIRECTORY src/rocm/bindings/llvm/config/
-  DESTINATION rocm/bindings/llvm/config
-  COMPONENT rocm-bindings-compiler
-  FILES_MATCHING
-    PATTERN "*.pxd"
-    PATTERN "__init__.pxd" EXCLUDE
+    PATTERN "*.pyi"
 )
 
 # Install .pxd files for amd_comgr bindings
@@ -275,9 +273,10 @@ install(
 )
 
 # Install generator-emitted .pyi type stubs for the high-level Python API
-# modules. cy* modules are cimport-only and deliberately not stubbed (see
-# plan §B.2). All globs are no-ops until interfacegen actually emits the
-# stubs.
+# modules at the top of rocm/bindings (e.g. amd_comgr.pyi). cy* modules are
+# cimport-only and deliberately not stubbed (see plan §B.2). The llvm subtree's
+# .pyi stubs (including __init__.pyi markers) are installed by the recursive
+# llvm rule above. This glob is a no-op until interfacegen emits the stubs.
 file(GLOB _compiler_pyi_top
      RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
      "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings/*.pyi")
@@ -288,30 +287,15 @@ if(_compiler_pyi_top)
     COMPONENT rocm-bindings-compiler
   )
 endif()
-install(
-  DIRECTORY src/rocm/bindings/llvm/c/
-  DESTINATION rocm/bindings/llvm/c
-  COMPONENT rocm-bindings-compiler
-  FILES_MATCHING
-    PATTERN "*.pyi"
-)
-install(
-  DIRECTORY src/rocm/bindings/llvm/config/
-  DESTINATION rocm/bindings/llvm/config
-  COMPONENT rocm-bindings-compiler
-  FILES_MATCHING
-    PATTERN "*.pyi"
-)
 
-# Install Python modules
+# Install handcoded Python modules. The llvm subpackages are PEP 420 namespace
+# packages (markers installed by the recursive llvm rule above), so no
+# __init__.py is shipped for them; only the handcoded clang shim modules.
 install(
   FILES
-    src/rocm/bindings/llvm/__init__.py
-    src/rocm/bindings/llvm/c/__init__.py
-    src/rocm/bindings/llvm/config/__init__.py
     src/rocm/bindings/clang/__init__.py
     src/rocm/bindings/clang/cindex.py
-  DESTINATION rocm/bindings/
+  DESTINATION rocm/bindings/clang
   COMPONENT rocm-bindings-compiler
 )
 

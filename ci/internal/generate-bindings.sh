@@ -11,12 +11,12 @@ set -xeu
 #
 #   1. The Cython bindings (.pxd/.pyx/.pyi), per-package
 #      cmake/generated_{modules,versions}.cmake, and the docs-side outputs
-#      (docs_src/sphinx/_toc.yml.in + docs_src/python_api/*.rst) — emitted by
+#      (docs_src/sphinx/_toc.yml.in + docs_src/python_api/*.rst) - emitted by
 #      `hip-python-generate`.
-#   2. The hiprtc runtime header (rocm.comgr/hiprtc_runtime.h) — built from
+#   2. The hiprtc runtime header (rocm.comgr/hiprtc_runtime.h) - built from
 #      the clr/hipamd `hiprtc-builtins` target.
 #   3. The rocm.bindings.clang bindings (cindex.py et al. + LLVM LICENSE.TXT)
-#      — copied from the llvm-project clang Python bindings.
+#      - copied from the llvm-project clang Python bindings.
 #
 # The generated tree is written into ${BUILD_DIR}/hip_python so the sibling
 # commit step (ci/internal/commit-bindings.sh) can stage and commit it.
@@ -72,7 +72,7 @@ for pkg in rocm-bindings-core rocm-bindings-hip rocm-bindings-libraries \
     2>/dev/null || true
 done
 
-### step 1 — install the in-tree codegen tooling
+### step 1 - install the in-tree codegen tooling
 
 # interfacegen + the hip-python-generate recipe live in the hip-python
 # monorepo under tools/. libclang Python bindings often lag the system
@@ -83,17 +83,55 @@ python3 -m pip install "${interfacegen_dir}"
 python3 -m pip install "${hip_python_codegen_dir}"
 python3 -m pip install "libclang>=18,<19"
 
-### step 2 — generate the Cython bindings + docs outputs
+### step 2 - generate the Cython bindings + docs outputs
 
+# Best-effort generation: a single failing library must not abort the whole
+# run. Capture the generator's exit status (rather than letting `set -e` bail
+# out here) so the remaining steps still run and the partial tree is fully
+# populated; the captured status is re-raised at the very end of the script.
+gen_rc=0
 hip-python-generate ${build_dir} \
   --rocm-version ${ROCM_VERSION} \
   --rocm-path ${rocm_path} \
   --rocm-systems-dir ${rocm_systems_dir} \
   --rocm-libraries-dir ${rocm_libraries_dir} \
   --rocm-llvm-project-dir ${rocm_llvm_project_dir} \
-  --license-path ${build_dir}/LICENSE
+  --license-path ${build_dir}/LICENSE \
+  || gen_rc=$?
+if [[ ${gen_rc} -ne 0 ]]; then
+  echo "[warn] some libraries failed to generate; continuing to produce the most complete partial tree possible (see the per-library logs above)"
+fi
 
-### step 3 — generate the hiprtc runtime header
+### step 3 - copy the rocm.bindings.clang bindings
+
+# Done before the hiprtc header build (step 4): this is a pure, low-risk file
+# copy, whereas the hiprtc build is fragile. Running it first guarantees the
+# clang bindings are present even if a later step fails.
+cd ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/
+
+  # 1) copy clang bindings into the rocm-bindings-compiler wheel's
+  #    `rocm.bindings.clang` package.
+  echo "copy clang bindings into rocm.bindings.clang package"
+  for f in "__init__.py" "cindex.py"; do
+      rm -f ${f}
+      cp ${rocm_llvm_project_dir}/clang/bindings/python/clang/${f} .
+  done
+  # optional files, do not exist for all rocm versions
+  for f in "enumerations.py"; do
+      rm -f ${f}
+      cp ${rocm_llvm_project_dir}/clang/bindings/python/clang/${f} . || true
+  done
+  sed -s -i "s,clang\.enumerations,rocm.bindings.clang.enumerations," \
+    ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/cindex.py
+
+  # 2) copy LLVM LICENSE.TXT next to the clang bindings.
+  echo "copy LLVM LICENSE.TXT into rocm.bindings.clang package"
+  rm -f LICENSE.TXT
+  cp ${rocm_llvm_project_dir}/LICENSE.TXT .
+
+cd ${build_dir}
+
+### step 4 - generate the hiprtc runtime header
 
 cp -R ${rocm_systems_dir}/projects/clr ${BUILD_DIR}/
 
@@ -148,26 +186,9 @@ cp ${HIPAMD_BUILD_DIR}/src/hiprtc/hip_rtc_gen/hipRTC \
 deactivate
 rm -rf ${VENV_DIR} ${HIPAMD_BUILD_DIR}
 
-### step 4 — copy the rocm.bindings.clang bindings
+### re-raise the generator status
 
-cd ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/
-
-  # 1) copy clang bindings into the rocm-bindings-compiler wheel's
-  #    `rocm.bindings.clang` package.
-  echo "copy clang bindings into rocm.bindings.clang package"
-  for f in "__init__.py" "cindex.py"; do
-      rm -f ${f}
-      cp ${rocm_llvm_project_dir}/clang/bindings/python/clang/${f} .
-  done
-  # optional files, do not exist for all rocm versions
-  for f in "enumerations.py"; do
-      rm -f ${f}
-      cp ${rocm_llvm_project_dir}/clang/bindings/python/clang/${f} . || true
-  done
-  sed -s -i "s,clang\.enumerations,rocm.bindings.clang.enumerations," \
-    ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/cindex.py
-
-  # 2) copy LLVM LICENSE.TXT next to the clang bindings.
-  echo "copy LLVM LICENSE.TXT into rocm.bindings.clang package"
-  rm -f LICENSE.TXT
-  cp ${rocm_llvm_project_dir}/LICENSE.TXT .
+# All best-effort steps have run; surface the generator's exit status so a
+# partial generation is still signalled to the caller. Committing the (possibly
+# partial) tree is a separate concern handled by ci/internal/commit-bindings.sh.
+exit "${gen_rc:-0}"

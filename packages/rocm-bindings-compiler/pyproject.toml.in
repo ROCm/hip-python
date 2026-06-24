@@ -52,8 +52,7 @@ sdist.include = [
     "cmake/HipPythonBuild.cmake",
     "src/rocm/bindings/llvm/**/*.pxd",
     "src/rocm/bindings/llvm/**/*.pyx",
-    "src/rocm/bindings/comgr/*.pxd",
-    "src/rocm/bindings/comgr/*.pyx",
+    "src/rocm/bindings/llvm/**/*.pyi",
     "bundled/libllvm/CMakeLists.txt",
     "bundled/libllvm/Target.cpp",
 ]
