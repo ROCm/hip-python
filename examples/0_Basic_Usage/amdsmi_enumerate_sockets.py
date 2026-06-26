@@ -22,19 +22,30 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
-"""Smoke-test the AMD SMI binding: init, query library version, shut down.
+"""Enumerate AMD GPUs with the AMD SMI binding.
 
-Mirrors the lifecycle portion of the nodrm C example
-(`rocm-systems/projects/amdsmi/example/amd_smi_nodrm_example.cc`).
-Socket / processor enumeration is not exercised here because the
-codegen's handling of the C two-call (count → allocate → fill) pattern
-for opaque-handle arrays is incomplete in this iteration of the
-amdsmi profile. See the `_WHITELIST_*` notes in
-`interfacegen.support.recipes.rocm.amdsmi` for the current scope.
+Mirrors the lifecycle and enumeration portions of the nodrm C example
+(`rocm-systems/projects/amdsmi/example/amd_smi_nodrm_example.cc`):
+init, query library version, walk sockets -> processors, keep the AMD
+GPUs, then shut down.
+
+Socket / processor enumeration uses AMD SMI's C two-call (count ->
+allocate -> fill) pattern. The handle-array out-parameters bind to
+:py:obj:`.rocm.bindings.util.types.ListOfPointer`, so this example uses
+``ListOfPointer.allocate(n)``: a NULL (``None``) buffer first to read the
+count, then a wrapper sized to that count to fill. The filled wrapper is
+iterable and indexable, so the results read back as
+:py:obj:`.rocm.bindings.util.types.Pointer` elements. The caller-driven
+``count`` out-parameter is a plain ``ctypes`` scalar whose address is
+passed via :py:func:`ctypes.addressof`, while the pure-out
+``processor_type`` is returned directly by the binding.
 """
 
 # [literalinclude-begin]
+import ctypes
+
 from rocm.bindings import amdsmi
+from rocm.bindings.util import types
 
 
 def amdsmi_check(call_result):
@@ -49,6 +60,46 @@ def amdsmi_check(call_result):
     return result
 
 
+def get_socket_handles():
+    """Return the system socket handles as a list of ``Pointer``."""
+    count = ctypes.c_uint()
+    amdsmi_check(
+        amdsmi.amdsmi_get_socket_handles(ctypes.addressof(count), None)
+    )
+    handles = types.ListOfPointer.allocate(count.value)
+    amdsmi_check(
+        amdsmi.amdsmi_get_socket_handles(ctypes.addressof(count), handles)
+    )
+    return handles.to_list()
+
+
+def get_processor_handles(socket_handle):
+    """Return the processor handles on a socket as a list of ``Pointer``."""
+    count = ctypes.c_uint()
+    amdsmi_check(
+        amdsmi.amdsmi_get_processor_handles(
+            socket_handle, ctypes.addressof(count), None
+        )
+    )
+    handles = types.ListOfPointer.allocate(count.value)
+    amdsmi_check(
+        amdsmi.amdsmi_get_processor_handles(
+            socket_handle, ctypes.addressof(count), handles
+        )
+    )
+    return handles.to_list()
+
+
+def is_amd_gpu(processor_handle):
+    processor_type = amdsmi_check(
+        amdsmi.amdsmi_get_processor_type(processor_handle)
+    )
+    return (
+        processor_type
+        == amdsmi.processor_type_t.AMDSMI_PROCESSOR_TYPE_AMD_GPU
+    )
+
+
 amdsmi_check(amdsmi.amdsmi_init(amdsmi.amdsmi_init_flags_t.AMDSMI_INIT_AMD_GPUS))
 try:
     version = amdsmi_check(amdsmi.amdsmi_get_lib_version())
@@ -56,6 +107,25 @@ try:
         f"AMD SMI library version: "
         f"{version.major}.{version.minor}.{version.release}"
     )
+
+    sockets = get_socket_handles()
+    print(f"sockets: {len(sockets)}")
+
+    gpus = []
+    for socket_handle in sockets:
+        for processor_handle in get_processor_handles(socket_handle):
+            if is_amd_gpu(processor_handle):
+                gpus.append(processor_handle)
+    print(f"AMD GPUs: {len(gpus)}")
+
+    for index, processor_handle in enumerate(gpus):
+        asic = amdsmi_check(
+            amdsmi.amdsmi_get_gpu_asic_info(processor_handle)
+        )
+        name = asic.market_name
+        if isinstance(name, bytes):
+            name = name.split(b"\x00", 1)[0].decode("utf-8", "replace")
+        print(f"  GPU {index}: {name}")
 finally:
     amdsmi_check(amdsmi.amdsmi_shut_down())
 print("ok")

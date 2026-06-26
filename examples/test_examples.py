@@ -97,6 +97,12 @@ if have_hip_python_interop:
         "1_CUDA_Interop/cuda_error_hallucinate_enums.py",
     ]
 
+# The pynvml shim ships with hip-python-interop but is backed by AMD SMI.
+if have_hip_python_interop and have_amdsmi:
+    python_examples += [
+        "1_CUDA_Interop/pynvml_query_devices.py",
+    ]
+
 python_examples += [
     "2_Advanced/hiprtc_linking_device_functions.py",
 ]
