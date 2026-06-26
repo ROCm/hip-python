@@ -51,7 +51,10 @@ sdist.include = [
     "VERSION",
     "cmake/HipPythonBuild.cmake",
     "src/cuda/bindings/*.pxd",
-    "src/cuda/bindings/*.pyx"
+    "src/cuda/bindings/*.pyx",
+    # Handcoded high-level cuda.core shim (pure Python; wheel inclusion is
+    # handled by wheel.packages = ["src/cuda"]).
+    "src/cuda/core/*.py"
 ]
 
 [tool.cibuildwheel]
