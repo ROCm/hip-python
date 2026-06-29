@@ -179,6 +179,31 @@ def test_ptr_rank_handle_array_is_rank1_single_handle_is_rank0():
     assert rocm.amdsmi.ptr_rank(single) == 0
 
 
+def test_ptr_rank_single_enum_out_is_scalar_returned():
+    """A single pointer-to-enum `@param[out]` is a rank-0 scalar, so the
+    callee-allocated fallback (`is_out_ptr and ptr_rank == 0`) returns it
+    rather than binding a caller-supplied buffer.
+
+    Mirrors `amdsmi_get_processor_type(processor_handle, processor_type_t*)`.
+    Without the enum case in `ptr_rank` the pointer-to-enum would fall
+    through to the rank-1 default and bind as a caller argument.
+    """
+    root = _build("""
+        typedef enum { PT_UNKNOWN = 0, PT_AMD_GPU = 1 } processor_type_t;
+        /**
+         *  @param[in] processor_handle a processor handle
+         *  @param[out] processor_type a pointer to processor_type_t to which
+         *  the processor type will be written.
+         */
+        int amdsmi_get_processor_type(
+            void *processor_handle, processor_type_t *processor_type
+        );
+    """)
+    p = _parm(root, "amdsmi_get_processor_type", "processor_type")
+    assert rocm.amdsmi.ptr_rank(p) == 0
+    assert rocm.amdsmi.ptr_parm_intent(p).direction == ParmIntent.OUT
+
+
 # --- Real-header sweep -----------------------------------------------------
 
 AMDSMI_HEADER = "/opt/rocm/include/amd_smi/amdsmi.h"

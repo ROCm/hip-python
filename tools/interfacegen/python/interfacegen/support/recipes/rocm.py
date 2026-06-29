@@ -1633,8 +1633,15 @@ class amdsmi:
              traversal sees through the typedef. Only single-handle slots
              reach here (e.g. `node_handle`); the handle *arrays* are
              captured by rule 1.
-          3. Default → rank 0 (single-struct OUT or single-scalar OUT
-             dominates: `info`, `config`, `enabled`, `count`, etc.).
+          3. A single pointer-to-record/enum/basic-type slot is a scalar
+             (rank 0). Enums are included here so that a pure `@param[out]`
+             `enum_t*` (e.g. `amdsmi_get_processor_type`'s `processor_type`)
+             becomes a returned `OUT_CALLEE_ALLOCATED` scalar rather than a
+             caller-supplied argument; without this it would hit the default
+             below and be treated as a rank-1 array. Enum *arrays* are
+             captured by rule 1's buffer-name set (e.g. `sensor_types`).
+          4. Default → rank 1 (anything still unclassified is treated as an
+             array buffer).
         """
         if not isinstance(node, Parm):
             return 1
@@ -1647,6 +1654,8 @@ class amdsmi:
         if node.is_pointer_to_void(degree=1) or node.is_pointer_to_void(degree=2):
             return 0
         if node.is_pointer_to_record(degree=1):
+            return 0
+        if node.is_pointer_to_enum(degree=1):
             return 0
         if node.is_pointer_to_basic_type(degree=1):
             return 0
