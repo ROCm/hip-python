@@ -280,6 +280,16 @@ class ListOfBytes(Pointer):
 
         In case ``pyobj`` is itself an ``ListOfBytes`` instance, this method
         returns it directly. No new ``ListOfBytes`` is created."""
+    @staticmethod
+    def allocate(count) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` ``char *`` slots."""
+    def __len__(self) -> int: ...
+    def __getitem__(self, subscript) -> Any: ...
+    def __iter__(self) -> Any: ...
+    def to_list(self) -> Any:
+        """Return the elements as a Python ``list`` of ``bytes``."""
+    def to_tuple(self) -> Any:
+        """Return the elements as a Python ``tuple`` of ``bytes``."""
     def __reduce__(self):
         """ListOfBytes.__reduce_cython__(self)"""
 
@@ -343,6 +353,16 @@ class ListOfInt(Pointer):
 
         In case ``pyobj`` is itself a ``ListOfInt`` instance, this method
         returns it directly. No new ``ListOfInt`` is created."""
+    @staticmethod
+    def allocate(count) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` C ``int`` slots."""
+    def __len__(self) -> int: ...
+    def __getitem__(self, subscript) -> Any: ...
+    def __iter__(self) -> Any: ...
+    def to_list(self) -> Any:
+        """Return the elements as a Python ``list`` of ``int``."""
+    def to_tuple(self) -> Any:
+        """Return the elements as a Python ``tuple`` of ``int``."""
     def __reduce__(self):
         """ListOfInt.__reduce_cython__(self)"""
 
@@ -403,6 +423,16 @@ class ListOfPointer(Pointer):
 
         In case ``pyobj`` is itself a ``ListOfPointer`` instance, this method
         returns it directly. No new ``ListOfPointer`` is created."""
+    @staticmethod
+    def allocate(count) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` ``void *`` slots."""
+    def __len__(self) -> int: ...
+    def __getitem__(self, subscript) -> Any: ...
+    def __iter__(self) -> Any: ...
+    def to_list(self) -> Any:
+        """Return the elements as a Python ``list`` of ``Pointer``."""
+    def to_tuple(self) -> Any:
+        """Return the elements as a Python ``tuple`` of ``Pointer``."""
     def __reduce__(self):
         """ListOfPointer.__reduce_cython__(self)"""
 
@@ -466,6 +496,16 @@ class ListOfUnsigned(Pointer):
 
         In case ``pyobj`` is itself an ``ListOfUnsigned`` instance, this method
         returns it directly. No new ``ListOfUnsigned`` is created."""
+    @staticmethod
+    def allocate(count) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` C ``unsigned`` slots."""
+    def __len__(self) -> int: ...
+    def __getitem__(self, subscript) -> Any: ...
+    def __iter__(self) -> Any: ...
+    def to_list(self) -> Any:
+        """Return the elements as a Python ``list`` of ``int``."""
+    def to_tuple(self) -> Any:
+        """Return the elements as a Python ``tuple`` of ``int``."""
     def __reduce__(self):
         """ListOfUnsigned.__reduce_cython__(self)"""
 
@@ -530,6 +570,16 @@ class ListOfUnsignedLong(Pointer):
 
         In case ``pyobj`` is itself an ``ListOfUnsignedLong`` instance, this method
         returns it directly. No new ``ListOfUnsignedLong`` is created."""
+    @staticmethod
+    def allocate(count) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` C ``unsigned long`` slots."""
+    def __len__(self) -> int: ...
+    def __getitem__(self, subscript) -> Any: ...
+    def __iter__(self) -> Any: ...
+    def to_list(self) -> Any:
+        """Return the elements as a Python ``list`` of ``int``."""
+    def to_tuple(self) -> Any:
+        """Return the elements as a Python ``tuple`` of ``int``."""
     def __reduce__(self):
         """ListOfUnsignedLong.__reduce_cython__(self)"""
 

@@ -1588,6 +1588,34 @@ cdef class DeviceArray(NDBuffer):
         wrapper._set_ptr(ptr)
         return wrapper
 
+def _listof_require_len(Py_ssize_t n):
+    """Return ``n`` if the length is known, else raise.
+
+    The ``ListOf*`` element/iteration protocol needs a known element
+    count. Instances created via ``allocate(count)`` or from a
+    ``list``/``tuple`` track it; instances wrapping a raw pointer
+    (``fromPtr`` / an ``int`` / a buffer) do not (``_len == -1``).
+    """
+    if n < 0:
+        raise TypeError(
+            "length is unknown for this ListOf* instance; create it via "
+            "'allocate(count)' or from a 'list'/'tuple' to index, iterate, "
+            "or convert it to a Python list/tuple"
+        )
+    return n
+
+
+def _listof_norm_index(object subscript, Py_ssize_t n):
+    """Normalize a (possibly negative) integer ``subscript`` against a
+    known length ``n``, raising ``IndexError`` when out of range."""
+    cdef Py_ssize_t i = subscript
+    if i < 0:
+        i += n
+    if i < 0 or i >= n:
+        raise IndexError("ListOf* index out of range")
+    return i
+
+
 cdef class ListOfBytes(Pointer):
     """Handler for `list` / `tuple` whose entries are `bytes`, `str`, or `~.CStr`.
 
@@ -1644,6 +1672,7 @@ cdef class ListOfBytes(Pointer):
 
     def __cinit__(self):
         self._is_ptr_owner = False
+        self._len = -1
 
     @staticmethod
     cdef ListOfBytes fromPtr(void* ptr):
@@ -1672,6 +1701,7 @@ cdef class ListOfBytes(Pointer):
         self._is_ptr_owner = False
         if isinstance(pyobj, (tuple, list)):
             self._is_ptr_owner = True
+            self._len = len(pyobj)
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void*))
             libc.string.memset(self._ptr, 0, len(pyobj)*sizeof(void*))
             for i, entry in enumerate(pyobj):
@@ -1755,6 +1785,53 @@ cdef class ListOfBytes(Pointer):
         """
         ListOfBytes.init_from_pyobj(self, pyobj)
 
+    @staticmethod
+    def allocate(Py_ssize_t count):
+        """Allocate an owned, zero-initialized array of ``count`` ``char *`` slots.
+
+        The returned `~.ListOfBytes` owns the buffer (freed on garbage
+        collection) and has a known length, so it is indexable, iterable,
+        and convertible via `~.to_list`/`~.to_tuple`.
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef ListOfBytes wrapper = ListOfBytes.__new__(ListOfBytes)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(void*))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(void*))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    def __len__(self):
+        return _listof_require_len(self._len)
+
+    def __getitem__(self, subscript):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        cdef const char* s
+        if isinstance(subscript, slice):
+            return [self[j] for j in range(*subscript.indices(n))]
+        i = _listof_norm_index(subscript, n)
+        s = <const char*>(<void**>self._ptr)[i]
+        return None if s == NULL else <bytes>s
+
+    def __iter__(self):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        for i in range(n):
+            yield self[i]
+
+    def to_list(self):
+        """Return the elements as a Python `list` of `bytes`."""
+        return list(self)
+
+    def to_tuple(self):
+        """Return the elements as a Python `tuple` of `bytes`."""
+        return tuple(self)
+
 cdef class ListOfPointer(Pointer):
     """Handler for Python `list`/`tuple` whose entries can be converted to `~.Pointer`
 
@@ -1798,6 +1875,7 @@ cdef class ListOfPointer(Pointer):
 
     def __cinit__(self):
         self._is_ptr_owner = False
+        self._len = -1
 
     @staticmethod
     cdef ListOfPointer fromPtr(void* ptr):
@@ -1819,6 +1897,7 @@ cdef class ListOfPointer(Pointer):
 
         elif isinstance(pyobj, (tuple, list)):
             self._is_ptr_owner = True
+            self._len = len(pyobj)
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void *))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(void *))
             for i, entry in enumerate(pyobj):
@@ -1886,6 +1965,52 @@ cdef class ListOfPointer(Pointer):
         if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
 
+    @staticmethod
+    def allocate(Py_ssize_t count):
+        """Allocate an owned, zero-initialized array of ``count`` ``void *`` slots.
+
+        The returned `~.ListOfPointer` owns the buffer (freed on garbage
+        collection) and has a known length, so it is indexable, iterable,
+        and convertible via `~.to_list`/`~.to_tuple`. Each element is
+        returned as a `~.Pointer`.
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef ListOfPointer wrapper = ListOfPointer.__new__(ListOfPointer)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(void *))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(void *))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    def __len__(self):
+        return _listof_require_len(self._len)
+
+    def __getitem__(self, subscript):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        if isinstance(subscript, slice):
+            return [self[j] for j in range(*subscript.indices(n))]
+        i = _listof_norm_index(subscript, n)
+        return Pointer.fromPtr((<void**>self._ptr)[i])
+
+    def __iter__(self):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        for i in range(n):
+            yield self[i]
+
+    def to_list(self):
+        """Return the elements as a Python `list` of `~.Pointer`."""
+        return list(self)
+
+    def to_tuple(self):
+        """Return the elements as a Python `tuple` of `~.Pointer`."""
+        return tuple(self)
+
 cdef class ListOfInt(Pointer):
     """Handler for `list` / `tuple` whose entries can be converted to C type ``int``
 
@@ -1932,6 +2057,7 @@ cdef class ListOfInt(Pointer):
 
     def __cinit__(self):
         self._is_ptr_owner = False
+        self._len = -1
 
     @staticmethod
     cdef ListOfInt fromPtr(void* ptr):
@@ -1953,6 +2079,7 @@ cdef class ListOfInt(Pointer):
 
         elif isinstance(pyobj, (tuple, list)):
             self._is_ptr_owner = True
+            self._len = len(pyobj)
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(int))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(int))
             for i, entry in enumerate(pyobj):
@@ -2035,6 +2162,51 @@ cdef class ListOfInt(Pointer):
         """
         ListOfInt.init_from_pyobj(self, pyobj)
 
+    @staticmethod
+    def allocate(Py_ssize_t count):
+        """Allocate an owned, zero-initialized array of ``count`` C ``int`` slots.
+
+        The returned `~.ListOfInt` owns the buffer (freed on garbage
+        collection) and has a known length, so it is indexable, iterable,
+        and convertible via `~.to_list`/`~.to_tuple`.
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef ListOfInt wrapper = ListOfInt.__new__(ListOfInt)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(int))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(int))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    def __len__(self):
+        return _listof_require_len(self._len)
+
+    def __getitem__(self, subscript):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        if isinstance(subscript, slice):
+            return [self[j] for j in range(*subscript.indices(n))]
+        i = _listof_norm_index(subscript, n)
+        return (<int*>self._ptr)[i]
+
+    def __iter__(self):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        for i in range(n):
+            yield self[i]
+
+    def to_list(self):
+        """Return the elements as a Python `list` of `int`."""
+        return list(self)
+
+    def to_tuple(self):
+        """Return the elements as a Python `tuple` of `int`."""
+        return tuple(self)
+
 cdef class ListOfUnsigned(Pointer):
     """Handler for `list` / `tuple` whose entries can be converted to C ``unsigned``
 
@@ -2081,6 +2253,7 @@ cdef class ListOfUnsigned(Pointer):
 
     def __cinit__(self):
         self._is_ptr_owner = False
+        self._len = -1
 
     @staticmethod
     cdef ListOfUnsigned fromPtr(void* ptr):
@@ -2102,6 +2275,7 @@ cdef class ListOfUnsigned(Pointer):
 
         elif isinstance(pyobj, (tuple, list)):
             self._is_ptr_owner = True
+            self._len = len(pyobj)
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned int))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(unsigned int))
             for i, entry in enumerate(pyobj):
@@ -2190,6 +2364,51 @@ cdef class ListOfUnsigned(Pointer):
         """
         ListOfUnsigned.init_from_pyobj(self, pyobj)
 
+    @staticmethod
+    def allocate(Py_ssize_t count):
+        """Allocate an owned, zero-initialized array of ``count`` C ``unsigned`` slots.
+
+        The returned `~.ListOfUnsigned` owns the buffer (freed on garbage
+        collection) and has a known length, so it is indexable, iterable,
+        and convertible via `~.to_list`/`~.to_tuple`.
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef ListOfUnsigned wrapper = ListOfUnsigned.__new__(ListOfUnsigned)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(unsigned int))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(unsigned int))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    def __len__(self):
+        return _listof_require_len(self._len)
+
+    def __getitem__(self, subscript):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        if isinstance(subscript, slice):
+            return [self[j] for j in range(*subscript.indices(n))]
+        i = _listof_norm_index(subscript, n)
+        return (<unsigned int*>self._ptr)[i]
+
+    def __iter__(self):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        for i in range(n):
+            yield self[i]
+
+    def to_list(self):
+        """Return the elements as a Python `list` of `int`."""
+        return list(self)
+
+    def to_tuple(self):
+        """Return the elements as a Python `tuple` of `int`."""
+        return tuple(self)
+
 cdef class ListOfUnsignedLong(Pointer):
     """Handler for `list`/`tuple` whose entries can be converted to C ``unsigned long``
 
@@ -2237,6 +2456,7 @@ cdef class ListOfUnsignedLong(Pointer):
 
     def __cinit__(self):
         self._is_ptr_owner = False
+        self._len = -1
 
     @staticmethod
     cdef ListOfUnsignedLong fromPtr(void* ptr):
@@ -2258,6 +2478,7 @@ cdef class ListOfUnsignedLong(Pointer):
 
         elif isinstance(pyobj, (tuple, list)):
             self._is_ptr_owner = True
+            self._len = len(pyobj)
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned long))
             libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(unsigned long))
             for i, entry in enumerate(pyobj):
@@ -2348,6 +2569,52 @@ cdef class ListOfUnsignedLong(Pointer):
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
         if self._is_ptr_owner:
             libc.stdlib.free(self._ptr)
+
+    @staticmethod
+    def allocate(Py_ssize_t count):
+        """Allocate an owned, zero-initialized array of ``count`` C
+        ``unsigned long`` slots.
+
+        The returned `~.ListOfUnsignedLong` owns the buffer (freed on
+        garbage collection) and has a known length, so it is indexable,
+        iterable, and convertible via `~.to_list`/`~.to_tuple`.
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef ListOfUnsignedLong wrapper = ListOfUnsignedLong.__new__(ListOfUnsignedLong)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(unsigned long))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(unsigned long))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    def __len__(self):
+        return _listof_require_len(self._len)
+
+    def __getitem__(self, subscript):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        if isinstance(subscript, slice):
+            return [self[j] for j in range(*subscript.indices(n))]
+        i = _listof_norm_index(subscript, n)
+        return (<unsigned long*>self._ptr)[i]
+
+    def __iter__(self):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        for i in range(n):
+            yield self[i]
+
+    def to_list(self):
+        """Return the elements as a Python `list` of `int`."""
+        return list(self)
+
+    def to_tuple(self):
+        """Return the elements as a Python `tuple` of `int`."""
+        return tuple(self)
 
 
 def _clear_retained_inputs():

@@ -93,6 +93,7 @@ cdef class DeviceArray(NDBuffer):
 
 cdef class ListOfPointer(Pointer):
     cdef bint _is_ptr_owner
+    cdef Py_ssize_t _len
 
     @staticmethod
     cdef ListOfPointer fromPtr(void* ptr)
@@ -102,6 +103,7 @@ cdef class ListOfPointer(Pointer):
 
 cdef class ListOfBytes(Pointer):
     cdef bint _is_ptr_owner
+    cdef Py_ssize_t _len
 
     @staticmethod
     cdef ListOfBytes fromPtr(void* ptr)
@@ -111,6 +113,7 @@ cdef class ListOfBytes(Pointer):
 
 cdef class ListOfInt(Pointer):
     cdef bint _is_ptr_owner
+    cdef Py_ssize_t _len
 
     @staticmethod
     cdef ListOfInt fromPtr(void* ptr)
@@ -120,6 +123,7 @@ cdef class ListOfInt(Pointer):
 
 cdef class ListOfUnsigned(Pointer):
     cdef bint _is_ptr_owner
+    cdef Py_ssize_t _len
 
     @staticmethod
     cdef ListOfUnsigned fromPtr(void* ptr)
@@ -129,6 +133,7 @@ cdef class ListOfUnsigned(Pointer):
 
 cdef class ListOfUnsignedLong(Pointer):
     cdef bint _is_ptr_owner
+    cdef Py_ssize_t _len
 
     @staticmethod
     cdef ListOfUnsignedLong fromPtr(void* ptr)
