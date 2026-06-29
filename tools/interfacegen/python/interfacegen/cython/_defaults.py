@@ -281,6 +281,24 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
                 return f"{util_types_prefix}ListOfUnsigned"
             elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
                 return f"{util_types_prefix}ListOfUnsignedLong"
+            elif (
+                innermost_type_kind == clang.cindex.TypeKind.VOID
+                and node.get_pointer_degree() >= 2
+                and isinstance(node, tree.Parm)
+                and not node.is_out_callee_allocated_ptr
+            ):
+                # A *caller-allocated* ``void**`` at rank 1 is an
+                # array-of-pointers slot (e.g. amdsmi's ``socket_handles`` /
+                # ``processor_handles``) — expose it as ``ListOfPointer`` so it
+                # is list-constructible and a proper sequence.
+                #
+                # Deliberately NOT applied to callee-allocated ``void**``
+                # out-pointers (``hipMalloc``-style single-buffer returns,
+                # ``intent.allocated_by_callee``): those stay ``Pointer`` so a
+                # single allocated buffer is not mistyped as a list. A plain
+                # ``void *`` (degree 1) byte buffer also stays ``Pointer``
+                # (handled below).
+                return f"{util_types_prefix}ListOfPointer"
             elif innermost_type_kind == clang.cindex.TypeKind.CHAR_S:
                 # A NUL-terminated string is rank-1 data regardless of
                 # indirection depth (see ``generic.string_z``). Degree +

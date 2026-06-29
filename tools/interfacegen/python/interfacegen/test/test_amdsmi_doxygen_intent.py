@@ -120,6 +120,65 @@ def test_no_doc_comment_at_all_falls_back_to_verb_heuristic():
     assert rocm.amdsmi.ptr_parm_intent(p) == ParmIntent.IN
 
 
+def test_mistagged_by_type_node_handle_forced_out():
+    """Real `amdsmi_get_node_handle(processor_handle, node_handle)` documents
+    its OUT slot by the *type* spelling (`amdsmi_node_handle`), not the
+    identifier `node_handle`, so the doxygen-by-name rule misses it and the
+    `_handle -> IN` fallback would bind a *returned* handle as a caller input.
+    The `_MISTAGGED_OUT` override (keyed by the real parm index 1) forces OUT.
+    """
+    root = _build("""
+        /**
+         *  @param[in] processor_handle the processor.
+         *  @param[out] amdsmi_node_handle the new node handle is written here.
+         */
+        int amdsmi_get_node_handle(void *processor_handle, void **node_handle);
+    """)
+    p = _parm(root, "amdsmi_get_node_handle", "node_handle")
+    assert rocm.amdsmi.ptr_parm_intent(p) == ParmIntent.OUT
+
+
+def test_mistagged_out_array_forced_inout_by_type():
+    """`amdsmi_get_processor_handles_by_type` tags the caller-allocated
+    `processor_handles` array `@param[out]`, but its `[in,out]` siblings
+    (`amdsmi_get_processor_handles`, `amdsmi_get_socket_handles`) prove this
+    is an upstream mistag. `_FORCE_INOUT` keeps it on the caller-allocated
+    INOUT path instead of refining to OUT_CALLEE_ALLOCATED (a single `&ptr`
+    slot, which would corrupt the caller-sized array)."""
+    root = _build("""
+        /**
+         *  @param[in] socket_handle socket handle
+         *  @param[in] processor_type processor type
+         *  @param[out] processor_handles list of processor handles
+         *  @param[out] processor_count processor count
+         */
+        int amdsmi_get_processor_handles_by_type(
+            void *socket_handle,
+            int processor_type,
+            void **processor_handles,
+            unsigned int *processor_count
+        );
+    """)
+    p = _parm(root, "amdsmi_get_processor_handles_by_type", "processor_handles")
+    assert rocm.amdsmi.ptr_parm_intent(p) == ParmIntent.INOUT
+
+
+def test_ptr_rank_handle_array_is_rank1_single_handle_is_rank0():
+    """A void** *handle array* (documented buffer name) is a rank-1 array;
+    a void** *single* opaque-handle out-slot collapses to a rank-0 scalar.
+    The buffer-name check must run before the void**->scalar rule."""
+    root = _build("""
+        int amdsmi_get_socket_handles(unsigned int *socket_count,
+                                      void **socket_handles);
+        int amdsmi_get_node_handle(void *processor_handle,
+                                   void **node_handle);
+    """)
+    arr = _parm(root, "amdsmi_get_socket_handles", "socket_handles")
+    single = _parm(root, "amdsmi_get_node_handle", "node_handle")
+    assert rocm.amdsmi.ptr_rank(arr) == 1
+    assert rocm.amdsmi.ptr_rank(single) == 0
+
+
 # --- Real-header sweep -----------------------------------------------------
 
 AMDSMI_HEADER = "/opt/rocm/include/amd_smi/amdsmi.h"
@@ -192,6 +251,8 @@ def test_real_amdsmi_doxygen_audit_zero_unintended_mismatches():
         for p in n.parms:
             if (n.name, p.parm_index) in rocm.amdsmi._MISTAGGED_OUT:
                 intentional[(n.name, p.name)] = "OUT"
+            elif (n.name, p.parm_index) in rocm.amdsmi._FORCE_INOUT:
+                intentional[(n.name, p.name)] = "INOUT"
 
     mismatches = []
     for n in root.walk(postorder=False):

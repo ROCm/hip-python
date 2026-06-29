@@ -1542,12 +1542,35 @@ class amdsmi:
     #    parm is moved to the return tuple instead of being dragged
     #    into the python args.
     #
+    # A third upstream-doxygen failure mode also lands here: a param
+    # documented by its *type* spelling rather than its identifier, so
+    # the doxygen rule cannot match it by name and the verb/handle
+    # fallback misclassifies it. `amdsmi_get_node_handle`'s OUT
+    # `node_handle` is tagged `@param[out] amdsmi_node_handle*` (the
+    # type, not `node_handle`), so without an override the
+    # `_handle -> IN` fallback would bind a *returned* handle as a
+    # caller input. Forcing it to OUT lets the rank-0 callee-allocated
+    # fallback return it.
+    #
     # An upstream bug report (same overloaded-tag pattern across
     # many amdsmi `amdsmi_get_*` getters) has been filed against
     # ROCm/amdsmi. This entry list is incremental — extend as
     # additional ones surface.
     _MISTAGGED_OUT = frozenset((
         ("amdsmi_get_lib_version", 0),  # `version` is pure OUT
+        ("amdsmi_get_node_handle", 1),  # `node_handle` is a returned OUT
+                                        # handle (doc'd by type spelling)
+    ))
+
+    # Caller-allocated array buffers that upstream doxygen mistags
+    # `@param[out]` (instead of the `[in,out]` its siblings use), which
+    # would otherwise refine to OUT_CALLEE_ALLOCATED for a void** shape
+    # and emit a single `&ptr` slot — corrupting memory for what is
+    # actually a caller-sized array the callee fills. Forcing INOUT keeps
+    # them on the caller-allocated path (a `ListOfPointer` argument),
+    # matching the identically-typed `amdsmi_get_processor_handles`.
+    _FORCE_INOUT = frozenset((
+        ("amdsmi_get_processor_handles_by_type", 2),  # processor_handles
     ))
 
     @staticmethod
@@ -1555,9 +1578,10 @@ class amdsmi:
         """Classify pointer parameter intent for amdsmi APIs.
 
         Priority of rules (most specific first):
-          0. Hardcoded override for upstream-doxygen-mistagged parms
-             (`_MISTAGGED_OUT`). Runs BEFORE the doxygen rule because
-             the doxygen tag is the very thing that's wrong.
+          0. Hardcoded overrides for upstream-doxygen-mistagged parms
+             (`_MISTAGGED_OUT` -> OUT, `_FORCE_INOUT` -> INOUT). Run
+             BEFORE the doxygen rule because the doxygen tag is the very
+             thing that's wrong.
           1. Doxygen `@param[in|out|in,out]` tag on the parent function —
              trusted as the source of truth. Covers 294 of 302 pointer
              parms in amdsmi.h. Delegated to
@@ -1575,6 +1599,8 @@ class amdsmi:
         fname = node.parent.name
         if (fname, node.parm_index) in amdsmi._MISTAGGED_OUT:
             return ParmIntent.OUT
+        if (fname, node.parm_index) in amdsmi._FORCE_INOUT:
+            return ParmIntent.INOUT
         doxy = generic.documented_param_intent.ptr_parm_intent(node)
         if doxy is not None:
             return doxy
@@ -1596,21 +1622,30 @@ class amdsmi:
         """Underlying rank (0=scalar, 1=array) for an amdsmi pointer.
 
         Rules:
-          1. Opaque handles (`amdsmi_*_handle` typedefs of `void*`) are
-             scalars even when passed as `handle*` for OUT — detected via
-             `is_pointer_to_void` because libclang's canonical type
-             traversal sees through the typedef.
-          2. Documented array/buffer parameter names → rank 1.
+          1. Documented array/buffer parameter names → rank 1. This is
+             checked FIRST, before the void**->scalar rule below, so that
+             void** *handle arrays* (`socket_handles`, `processor_handles`)
+             are treated as rank-1 arrays (and pick up the `ListOfPointer`
+             wrapper) rather than collapsing to a single scalar slot.
+          2. Single opaque handles (`amdsmi_*_handle` typedefs of `void*`)
+             are scalars even when passed as `handle*` for OUT — detected
+             via `is_pointer_to_void` because libclang's canonical type
+             traversal sees through the typedef. Only single-handle slots
+             reach here (e.g. `node_handle`); the handle *arrays* are
+             captured by rule 1.
           3. Default → rank 0 (single-struct OUT or single-scalar OUT
              dominates: `info`, `config`, `enabled`, `count`, etc.).
         """
         if not isinstance(node, Parm):
             return 1
-        # Handles canonicalize to void* — pointer-to-handle is void**.
-        if node.is_pointer_to_void(degree=1) or node.is_pointer_to_void(degree=2):
-            return 0
+        # Array/buffer params (incl. void** handle arrays). MUST precede the
+        # void**->scalar rule, which is meant only for single handle slots.
         if (node.name or "") in _AMDSMI_BUFFER_PARM_NAMES:
             return 1
+        # A single opaque handle canonicalizes to void* — pointer-to-handle
+        # is void**; treat such a single slot as a scalar.
+        if node.is_pointer_to_void(degree=1) or node.is_pointer_to_void(degree=2):
+            return 0
         if node.is_pointer_to_record(degree=1):
             return 0
         if node.is_pointer_to_basic_type(degree=1):
