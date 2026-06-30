@@ -46,9 +46,9 @@ classifiers = [
 
 dependencies = [
     "numba>=0.58,<0.62",
-    "hip-python-interop>=7.13.0",
-    "rocm-bindings-hip>=7.13.0",
-    "rocm-bindings-compiler>=7.13.0",
+    "hip-python-interop>=7.2.3",
+    "rocm-bindings-hip>=7.2.3",
+    "rocm-bindings-compiler>=7.2.3",
 ]
 
 [dependency-groups]

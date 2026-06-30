@@ -1,8 +1,8 @@
 # numba-hip 0.2.0 (30 May 2026)
 
-* **Hard cut to the ROCm 7.13.0+ HIP Python bindings.** numba-hip now
+* **Hard cut to the new HIP Python bindings (ROCm 7.2.3+).** numba-hip now
   requires `rocm-bindings-hip`, `rocm-bindings-compiler`, and
-  `hip-python-interop` `>=7.13.0` as core dependencies; the legacy
+  `hip-python-interop` `>=7.2.3` as core dependencies; the legacy
   per-ROCm `[project.optional-dependencies]` extras (which pinned the
   old `hip-python` / `hip-python-as-cuda` / `rocm-llvm-python`
   packages) have been removed.
